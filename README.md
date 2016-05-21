@@ -1,2 +1,4 @@
-# cycopancore
-Cython World-Earth modelling framework
+# pycopancore
+Python World-Earth modelling framework
+
+Candidates for speeding up Python code: cython, numba, ...
