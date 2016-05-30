@@ -17,7 +17,13 @@ None yet.
 
 """
 
-from x import y
+from .integrator import Integrator
+from .anthroposphere import Anthroposphere
+from .macro_agent import MacroAgent
+from .micro_agent import MicroAgent
+from .ecosphere import Ecosphere
+from .global_stocks import GlobalStocks
+from .local_stocks import LocalStocks
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
