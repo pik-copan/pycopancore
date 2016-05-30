@@ -28,12 +28,48 @@ class Integrator(object):
     #  Definitions of internal methods
     #
 
-    def __init__(self):
+    def __init__(self, ecosphere, anthroposphere, step_size):
         """
         Initialize an instance of Integrator.
+
+        Parameters:
+        -----------
+        ...
+
         """
+        #  Pseudocode:
+        #
+        #  Initialize ecosphere
+        #  Initialize anthroposphere
+
+        #  Set internal variables
+        self.ecosphere = ecosphere
+        self.anthroposphere = anthroposphere
+        self.step_size = step_size
 
     #
     #  Definitions of further methods
     #
+
+    def run(self, n_steps, condition=None):
+        """
+        Integrate model for multiple steps.
+
+        TO DO: Time management including stochastic updates in anthroposphere.
+        """
+        for i in xrange(n_steps):
+            #  Integrate ecosphere for one time step
+            #  Update Anthroposphere stochastically for acting agent
+            pass
+
+    def step(self):
+        """
+        Integrate model for one single step.
+        """
+        self.run(n_steps=1)
+
+    def time_management(self):
+        """
+        Provide time management for model integration.
+        """
 
