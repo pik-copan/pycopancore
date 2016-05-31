@@ -72,4 +72,3 @@ class Integrator(object):
         """
         Provide time management for model integration.
         """
-

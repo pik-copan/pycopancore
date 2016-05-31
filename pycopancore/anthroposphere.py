@@ -32,8 +32,8 @@ class Anthroposphere(object):
         """
         Initialize an instance of Anthroposphere.
         """
+        pass
 
     #
     #  Definitions of further methods
     #
-

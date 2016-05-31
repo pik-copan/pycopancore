@@ -5,4 +5,3 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
