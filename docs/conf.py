@@ -18,7 +18,7 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('./../pycopancore'))
 
 # -- General configuration ------------------------------------------------
 
@@ -30,12 +30,20 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
 ]
+
+# Napoleon settings
+napoleon_numpy_docstring = True
+napoleon_google_docstring = False
+napoleon_include_special_with_doc = True
+# more info at http://www.sphinx-doc.org/en/stable/ext/
+#                   napoleon.html#module-sphinx.ext.napoleon
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -52,7 +60,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'copancore'
+project = u'pycopancore'
 copyright = u'2016, the copan team'
 author = u'the copan team'
 
@@ -70,7 +78,7 @@ release = u'0.1'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

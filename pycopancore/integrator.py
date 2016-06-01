@@ -22,6 +22,13 @@ Integrates copan:core model dynamics and organizes model runs.
 class Integrator(object):
     """
     Integrates copan:core model dynamics and organizes model runs.
+
+    Parameters
+    ----------
+    ecosphere : int
+        an ecosphere object
+    ....
+
     """
 
     #
@@ -31,10 +38,6 @@ class Integrator(object):
     def __init__(self, ecosphere, anthroposphere, step_size):
         """
         Initialize an instance of Integrator.
-
-        Parameters:
-        -----------
-        ...
 
         """
         #  Pseudocode:
@@ -55,7 +58,14 @@ class Integrator(object):
         """
         Integrate model for multiple steps.
 
-        TO DO: Time management including stochastic updates in anthroposphere.
+        TODO: Time management including stochastic updates in anthroposphere.
+
+        Parameters
+        ----------
+        n_steps : int
+            number of simulation steps to run
+        condition : func, optional
+            returns true if simulation shall end
         """
         for i in xrange(n_steps):
             #  Integrate ecosphere for one time step

@@ -16,3 +16,12 @@ Requires
 * pytest-pep8
 * pytest-flakes
 * pytest-cov, to check of test coverage
+
+
+## Documentation
+Create local html version of the docs in the `dos` directory with
+```
+> make html
+```
+
+to be extended ...
