@@ -16,8 +16,6 @@ Subpackages
 None yet.
 
 """
-
-from .integrator import Integrator
 from .abstract_groups import Groups
 from .abstract_individuals import Individuals
 from .abstract_planet import Planet

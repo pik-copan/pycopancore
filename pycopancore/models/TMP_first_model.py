@@ -5,9 +5,9 @@
 #
 
 import numpy as np
-from cells import abstract_cells
-from groups import abstract_groups
-from individuals import abstract_individuals
+from ..cells import abstract_cells
+from ..groups import abstract_groups
+from ..individuals import abstract_individuals
 
 #
 # Model execution

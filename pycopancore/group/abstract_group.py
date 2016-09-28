@@ -62,7 +62,7 @@ class Group(object):
     def set_member(self, member):
         """
         A function that generates a List with all members and the
-        following information: individual_identifier
+        following information: individual_identifier, cell identifier
         """
         self.member = member
 
