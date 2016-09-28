@@ -17,6 +17,8 @@ None yet.
 
 """
 
+from .abstract_cells import Cells
+
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
 __copyright__ = \
