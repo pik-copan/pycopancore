@@ -7,31 +7,27 @@
 # License: MIT license
 
 """
-Encapsulates environmental states and dynamics in copan:core.
+Encapsulates states and dynamics of social micro agents.
 """
 
 #
 #  Imports
 #
-
+from .abstract_micro_agents import MicroAgents
 
 #
-#  Define class Ecosphere
+#  Define class MicroAgents
 #
 
-class Ecosphere(object):
+
+class binary_socail_learner(MicroAgents):
     """
-    Encapsulates environmental states and dynamics in copan:core.
+    Encapsulates states and dynamics of social micro agents.
     """
 
     #
     #  Definitions of internal methods
     #
-
-    def __init__(self):
-        """
-        Initialize an instance of Ecosphere.
-        """
 
     #
     #  Definitions of further methods

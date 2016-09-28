@@ -13,13 +13,14 @@ Encapsulates states and dynamics of social macro agents.
 #
 #  Imports
 #
-
+from .abstract_mactro_agents import MacroAgents
 
 #
 #  Define class MacroAgents
 #
 
-class MacroAgents(object):
+
+class equal_distributors(MacroAgents):
     """
     Encapsulates states and dynamics of social macro agents.
     """
@@ -28,11 +29,16 @@ class MacroAgents(object):
     #  Definitions of internal methods
     #
 
-    def __init__(self):
-        """
-        Initialize an instance of MacroAgents.
-        """
-
     #
     #  Definitions of further methods
     #
+
+    def calculate_deathrate():
+        """
+        Method to calculate the deathrate in dependence of the harvest
+        """
+
+    def calculate_birthrate():
+        """
+        Method to calculate the birthrate in dependece of the harvest
+        """

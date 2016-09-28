@@ -7,7 +7,7 @@
 # License: MIT license
 
 """
-Encapsulates societal states and dynamics in copan:core.
+Encapsulates states and dynamics of global environmental stocks.
 """
 
 #
@@ -16,12 +16,13 @@ Encapsulates societal states and dynamics in copan:core.
 
 
 #
-#  Define class Anthroposphere
+#  Define class GlobalStocks
 #
 
-class Anthroposphere(object):
+
+class Planet(object):
     """
-    Encapsulates societal states and dynamics in copan:core.
+    Encapsulates states and dynamics of global environmental stocks.
     """
 
     #
@@ -30,9 +31,8 @@ class Anthroposphere(object):
 
     def __init__(self):
         """
-        Initialize an instance of Anthroposphere.
+        Initialize an instance of GlobalStocks.
         """
-        pass
 
     #
     #  Definitions of further methods
