@@ -18,10 +18,10 @@ Encapsulates states and dynamics of social micro agents.
 
 
 #
-#  Define class MicroAgents
+#  Define class Individual
 #
 
-class Individuals(object):
+class Individual(object):
     """
     Encapsulates states and dynamics of social micro agents.
     """

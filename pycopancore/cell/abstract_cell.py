@@ -15,11 +15,11 @@ Encapsulates states and dynamics of local environmental stocks.
 #
 
 #
-#  Define class LocalStocks
+#  Define class Cell
 #
 
 
-class Cells(object):
+class Cell(object):
     """
     Encapsulates states and dynamics of global environmental stocks.
     """

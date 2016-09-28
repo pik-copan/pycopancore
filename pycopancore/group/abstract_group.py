@@ -15,11 +15,11 @@ Encapsulates states and dynamics of social macro agents.
 #
 
 #
-#  Define class MacroAgents
+#  Define class Group
 #
 
 
-class Groups(object):
+class Group(object):
     """
     Encapsulates states and dynamics of social macro agents.
     """
