@@ -16,10 +16,10 @@ Subpackages
 None yet.
 
 """
-from .abstract_groups import Groups
-from .abstract_individuals import Individuals
-from .abstract_planet import Planet
-from .abstract_cells import Cells
+from .group import *
+from .individual import *
+from .cell import *
+from .models import *
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"

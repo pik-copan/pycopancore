@@ -5,9 +5,10 @@
 #
 
 import numpy as np
-from ..cells import abstract_cells
-from ..groups import abstract_groups
-from ..individuals import abstract_individuals
+
+from .. import Cell
+from .. import Group
+from .. import Individual
 
 #
 # Model execution
@@ -34,7 +35,7 @@ def Build_World(N_i,
     # Groups distributed to cells randomly
     for i in range(0, N_g):
         if N_g > N_c:
-            print 'More groups than cells'
+            print ('More groups than cells')
             break
         else:
             x = np.full((N_c, 1), np.nan)
@@ -77,7 +78,7 @@ def Build_World(N_i,
                 memberlist[j, 1] = big_list[j, 2]
         List_g[i].set_member(memberlist)
 
-    print 'this is cell 1 ? ', List_c[1]
-    print 'this is individual 0?', List_i[0]
-    print 'this is group 2', List_g[2]
+    print ('this is cell 1 ? ', List_c[1])
+    print ('this is individual 0?', List_i[0])
+    print ('this is group 2', List_g[2])
 Build_World(5, 3, 5)

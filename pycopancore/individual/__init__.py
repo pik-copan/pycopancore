@@ -17,7 +17,10 @@ None yet.
 
 """
 
-from .abstract_cells import Cells
+from .. import Cell
+from .. import Group
+
+from .abstract_individual import Individual
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"

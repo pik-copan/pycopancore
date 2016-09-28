@@ -17,6 +17,11 @@ None yet.
 
 """
 
+from .. import Cell
+from .. import Individual
+
+from .abstract_group import Group
+
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
 __copyright__ = \
