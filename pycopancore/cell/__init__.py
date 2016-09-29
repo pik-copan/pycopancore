@@ -17,9 +17,6 @@ None yet.
 
 """
 
-from .. import Individual
-from .. import Group
-
 from .abstract_cell import Cell
 
 

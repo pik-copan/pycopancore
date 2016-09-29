@@ -24,13 +24,13 @@ def Build_World(N_i,
     """
 
     List_c = [
-        abstract_cells.Cells(i, None) for i in range(N_c)]
+        abstract_cell.Cell(i, None) for i in range(N_c)]
 
     List_i = [
-        abstract_individuals.Individuals(i, None, None) for i in range(N_i)]
+        abstract_individual.Individual(i, None, None) for i in range(N_i)]
 
     List_g = [
-        abstract_groups.Groups(i, None, None) for i in range(N_g)]
+        abstract_group.Group(i, None, None) for i in range(N_g)]
 
     # Groups distributed to cells randomly
     for i in range(0, N_g):

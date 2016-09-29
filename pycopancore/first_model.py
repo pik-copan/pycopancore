@@ -5,9 +5,9 @@
 #
 
 import numpy as np
-from cells import abstract_cells
-from groups import abstract_groups
-from individuals import abstract_individuals
+from cell import abstract_cell
+from group import abstract_group
+from individual import abstract_individual
 
 #
 # Model execution
@@ -23,18 +23,18 @@ def Build_World(N_i,
     """
 
     List_c = [
-        abstract_cells.Cells(i, None) for i in range(N_c)]
+        abstract_cell.Cell(i, None) for i in range(N_c)]
 
     List_i = [
-        abstract_individuals.Individuals(i, None, None) for i in range(N_i)]
+        abstract_individual.Individual(i, None, None) for i in range(N_i)]
 
     List_g = [
-        abstract_groups.Groups(i, None, None) for i in range(N_g)]
+        abstract_group.Group(i, None, None) for i in range(N_g)]
 
     # Groups distributed to cells randomly
     for i in range(0, N_g):
         if N_g > N_c:
-            print 'More groups than cells'
+            print ('More groups than cells')
             break
         else:
             x = np.full((N_c, 1), np.nan)
@@ -42,12 +42,14 @@ def Build_World(N_i,
             List_g[i].set_territories(x)
 
     # Match individuals and Groups
-    big_list = np.full((N_i, 3), np.nan)
+    all_individuals_ident = []
+    all_individuals_cell = []
+    all_individuals_group = []
     for i in range(N_i):
         # Chose one group at random
         p1 = np.random.randint(0, N_g)
         # Check out how many territories this group owns
-        a = np.where(List_g[p1].territories != np.nan)[0]
+        a = np.where(np.isnan(List_g[p1].territories) == False)[0]
         b = len(a)
         # Chose on territory at random
         if b == 0:  # Accounts for random number generator intervall
@@ -60,24 +62,30 @@ def Build_World(N_i,
         # Assigne cell to individual
         List_i[i].set_cell_identifier(c)
         # Writing into biglist
-        big_list[i, 0] = i
-        big_list[i, 1] = p1
-        big_list[i, 2] = c
+        all_individuals_ident.append(i)
+        all_individuals_group.append(p1)
+        all_individuals_cell.append(c)
 
     #
     # Create the Memberlist for each group, containing individual idents and
     # their cell identifier
     #
 
-    for i in range(N_g):
-        memberlist = np.full((N_i, 2), np.nan)
-        for j in range(N_i):
-            if big_list[j, 1] == i:
-                memberlist[j, 0] = big_list[j, 0]
-                memberlist[j, 1] = big_list[j, 2]
+    for i in range(0, N_g + 1):  # Account for closed interval
+        memberlist = []
+        if all_individuals_group.count(i) == 0:
+            # assure group has a member to evade error in .index-func
+            continue
+        else:
+            # get indices of all individuals in the ith group
+            a = [y for y, val in enumerate(all_individuals_group) if val == i]
+            for j in a:
+                memberlist.append((all_individuals_ident[j],
+                                  all_individuals_cell[j]))
         List_g[i].set_member(memberlist)
 
-    print 'this is cell 1 ? ', List_c[1]
-    print 'this is individual 0?', List_i[0]
-    print 'this is group 2', List_g[2]
-Build_World(5, 3, 5)
+    print ('this is cell 1:', List_c[1])
+    print ('this is individual 0:', List_i[0])
+    print ('this is group 2:', List_g[2])
+
+Build_World(10, 5, 5)

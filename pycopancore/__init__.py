@@ -16,10 +16,9 @@ Subpackages
 None yet.
 
 """
-from .group import *
-from .individual import *
-from .cell import *
-from .models import *
+from .group import Group
+from .individual import Individual
+from .cell import Cell
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
