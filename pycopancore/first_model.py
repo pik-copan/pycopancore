@@ -16,10 +16,12 @@ from individual import abstract_individual
 
 def Build_World(N_i,
                 N_g,
-                N_c
+                N_c,
+                k
                 ):
     """
-    Build a world with N_c cells, N_g groups and N_i individuals
+    Build a world with N_c cells, N_g groups and N_i individuals. The average 
+    degree of the individuals in the network is k.
     """
 
     List_c = [
@@ -34,7 +36,7 @@ def Build_World(N_i,
     List_g = [
         abstract_group.Group(i, None, None) for i in range(N_g)]
 
-    # Groups distributed to cells randomly
+    # Groups distributed to cells
     for i in range(0, N_g):
         if N_g > N_c:
             print ('More groups than cells')
@@ -91,8 +93,28 @@ def Build_World(N_i,
     # Create connections between Individuals
     #
 
+    N_c = (k * N_i)/2
+    N_co = 0
+    while N_co <= N_c:
+        # Chose individual by random
+        i_1 = np.random.randint(0, N_i)
+        i_2 = np.random.randint(0, N_i)
+        if i_1 == i_2:
+            # Check for self-connection
+            continue
+        if  i_2 in List_i[i_1].connections:
+            # Check for double-connection
+            continue
+        List_i[i_1].add_connection(i_2)
+        List_i[i_2].add_connection(i_1)
+        N_co += 1
+
+
+
+
+
     print ('this is cell 1:', List_c[1])
-    print ('this is individual 0:', List_i[0])
+    print ('this is individual 9:', List_i[9])
     print ('this is group 2:', List_g[2])
 
-Build_World(10, 5, 5)
+Build_World(10, 5, 5, 3)

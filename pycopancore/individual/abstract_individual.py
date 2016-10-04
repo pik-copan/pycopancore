@@ -46,7 +46,7 @@ class Individual(object):
         self.individual_identifier = individual_identifier
         self.group_identifier = None
         self.cell_identifier = None
-        self.connections = None
+        self.connections = []
 
     def __str__(self):
         """
@@ -79,6 +79,12 @@ class Individual(object):
         A function to set the connnection-list
         """
         self.connections = connections
+
+    def add_connection(self, new_connection):
+        """
+        A function to add a connection
+        """
+        self.connections.append(new_connection)
 
     #
     #  Definitions of further methods
