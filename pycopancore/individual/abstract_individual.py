@@ -34,6 +34,7 @@ class Individual(object):
                  individual_identifier,
                  group_identifier,
                  cell_identifier,
+                 connections
                  ):
         """
         Initialize an instance of MicroAgents.
@@ -45,6 +46,7 @@ class Individual(object):
         self.individual_identifier = individual_identifier
         self.group_identifier = None
         self.cell_identifier = None
+        self.connections = None
 
     def __str__(self):
         """
@@ -52,11 +54,13 @@ class Individual(object):
         """
         return ('Individual with identifier % s, \
                 group % s, \
-                cell % s'
+                cell % s \
+                connections % s'
                 ) % (
                 self.individual_identifier,
                 self.group_identifier,
-                self.cell_identifier)
+                self.cell_identifier,
+                self.connections)
 
     def set_cell_identifier(self, cell_identifier):
         """
@@ -69,6 +73,12 @@ class Individual(object):
         A function to set the group membership of an individual
         """
         self.group_identifier = group_identifier
+
+    def set_connections(self, connections):
+        """
+        A function to set the connnection-list
+        """
+        self.connections = connections
 
     #
     #  Definitions of further methods

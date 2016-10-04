@@ -26,7 +26,10 @@ def Build_World(N_i,
         abstract_cell.Cell(i, None) for i in range(N_c)]
 
     List_i = [
-        abstract_individual.Individual(i, None, None) for i in range(N_i)]
+        abstract_individual.Individual(i,
+                                       None,
+                                       None,
+                                       None) for i in range(N_i)]
 
     List_g = [
         abstract_group.Group(i, None, None) for i in range(N_g)]
@@ -77,12 +80,16 @@ def Build_World(N_i,
             # assure group has a member to evade error in .index-func
             continue
         else:
-            # get indices of all individuals in the ith group
+            # get indices of all individuals in the i'th group
             a = [y for y, val in enumerate(all_individuals_group) if val == i]
             for j in a:
                 memberlist.append((all_individuals_ident[j],
                                   all_individuals_cell[j]))
         List_g[i].set_member(memberlist)
+
+    #
+    # Create connections between Individuals
+    #
 
     print ('this is cell 1:', List_c[1])
     print ('this is individual 0:', List_i[0])
