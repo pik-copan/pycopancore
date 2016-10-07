@@ -30,23 +30,27 @@ class Cell(object):
 
     def __init__(self,
                  cell_identifier,
-                 coordinates):
+                 coordinates,
+                 stock):
         """
         Initialize an instance of LocalStocks.
         """
 
         self.cell_identifier = cell_identifier
         self.coordinates = None
+        self.stock = None
 
     def __str__(self):
         """
         Return a string representation of the object of class cells
         """
         return ('Cell with identifier % s, \
-                coordinates % s'
+                coordinates % s, \
+                stock % s'
                 ) % (
                 self.cell_identifier,
-                self.coordinates
+                self.coordinates,
+                self.stock
                 )
 
     def set_coordinates(self, coordinates):
