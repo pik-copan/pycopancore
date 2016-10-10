@@ -1,0 +1,110 @@
+# This file is part of pycopancore.
+#
+# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# License: MIT license
+
+"""
+Encapsulates states and dynamics of local renewable resource with logistic
+growth equation due to Wiedermann 2015.
+"""
+
+#
+#  Imports
+#
+
+from abstract_cell import Cell
+
+#
+#  Define class Renweable_Stock
+#
+
+
+class Renewable_Resource(Cell):
+    """
+    Encapsulates states and dynamics of local renewable resource with logistic
+    growth equation due to Wiedermann 2015.
+    """
+
+    #
+    #  Definitions of internal methods
+    #
+
+    def __init__(self,
+                 cell_identifier,
+                 coordinates,
+                 stock,
+                 capacity,
+                 growth_rate,
+                 catch_coefficient,
+                 cell_effort
+                 ):
+        """
+        Initializes an instance of a renewable resource. Inherits
+        cell_identifier, coordinates and stock from class Cell.
+        Creates capacity, growth_rate and catch_coefficient for the ODE of
+        Wiedermann (2015).
+        """
+
+        super(Renewable_Resource, self).__init__(cell_identifier,
+                                                 coordinates, stock
+                                                 )
+        self.capacity = None
+        self.growth_rate = None
+        self.catch_coefficient = None
+        self.cell_effort = None
+
+    def __str__(self):
+        """
+        Returns a string representations of the object of class Renewable_Stock
+        """
+        return (super(Renewable_Resource, self).__str__() +
+                ('capacity % s, \
+                 growth rate % s, \
+                 catch coefficient % s, \
+                 cell effort % s '
+                 ) % (
+                 self.capacity,
+                 self.growth_rate,
+                 self.catch_coefficient,
+                 self.cell_effort
+                 )
+                )
+
+        def set_capacity(self, capacity):
+            """
+            A function to set the capacity of the renewable resource
+            """
+            self.capacity = capacity
+
+        def set_growth_rate(self, growth_rate):
+            """
+            A function to set the growth_rate of the renewable resource
+            """
+            self.growth_rate = growth_rate
+
+        def set_catch_coefficient(self, catch_coefficient):
+            """
+            A function to set the catch_coefficient of the renewable resource
+            """
+            self.catch_coefficient = catch_coefficient
+
+    #
+    #  Definitions of further methods
+    #
+
+    def renewable_resource(self, y, time):
+        """
+        The following ODE describes the dynamics of the renewable
+        ressource through logistic growth and its harvest (Wiedermann 2015).
+        Required variables are capacity, growth_rate, catch_coefficient and
+        cell_effort. Variable y is the stock of the renewable resource.
+        """
+        a = self.growth_rate
+        K = self.capacity
+        q = self.catch_coefficient
+        E = self.cell_effort
+        dydt = a * y * (1 - y / K) - q * y * E
+        return dydt
