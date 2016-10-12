@@ -25,7 +25,7 @@ def Build_World(N_i,
     """
 
     List_c = [
-        abstract_cell.Cell(i, None, None, None) for i in range(N_c)]
+        abstract_cell.Cell(i, None, None) for i in range(N_c)]
 
     List_i = [
         abstract_individual.Individual(i,
