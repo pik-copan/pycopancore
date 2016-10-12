@@ -20,8 +20,18 @@ def Build_World(N_i,
                 k
                 ):
     """
-    Build a world with N_c cells, N_g groups and N_i individuals. The average 
-    degree of the individuals in the network is k.
+    Build a world 
+
+    Parameters
+    ----------
+    N_i : integer
+        The desired number of individuals
+    N_g : integer
+        The number of groups, should be smaller or equal to the number of cells
+    N_c : integer
+        The number of cells, should be larger or equal to the number of groups
+    k : integer
+        the average degree of individuals in the network
     """
 
     List_c = [
@@ -63,9 +73,9 @@ def Build_World(N_i,
             p2 = np.random.randint(0, b)
         c = a[p2]
         # Assigne individual to group
-        List_i[i].set_group_identifier(p1)
+        List_i[i].set_group_affiliation(p1)
         # Assigne cell to individual
-        List_i[i].set_cell_identifier(c)
+        List_i[i].set_cell_affiliation(c)
         # Writing into biglist
         all_individuals_ident.append(i)
         all_individuals_group.append(p1)

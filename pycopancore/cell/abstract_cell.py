@@ -35,6 +35,18 @@ class Cell(object):
                  ):
         """
         Initialize an instance of LocalStocks.
+
+        Parameters
+        ----------
+        cell_identifier : integer
+            this is a number which identifies each cell
+        coordinates : integer or tuple?
+            It is not clear yet how to locate cells on the grid, either just
+            number them or give them real coordinates like lat/lon
+        stock : np.array of 3 rows and 10 lines
+            In this array, the Capacity, the growthrate and the current stock
+            of all resources are saved. If a slot in the array is not used, 
+            it is filled with np.nan
         """
 
         self.cell_identifier = cell_identifier

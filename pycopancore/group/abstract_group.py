@@ -34,6 +34,19 @@ class Group(object):
                  member):
         """
         Initialize an instance of MacroAgents.
+
+        Parameters
+        ----------
+        group_identifier : integer
+            This integer identifies each group
+        territories : list of integers
+            This list contains cell_identifiers which are the groups
+            territories
+        member : list of tuples of integers
+            This list hast tupels of integers of the form
+            (individual_identifier, cell_identifier)
+            This adds up to the memberlist with all individuals affiliated to
+            the group and their cell
         """
 
         self.group_identifier = group_identifier
