@@ -21,7 +21,7 @@ Encapsulates states and dynamics of local environmental stocks.
 
 class Cell(object):
     """
-    Encapsulates states and dynamics of global environmental stocks.
+    Encapsulates states and dynamics of local environmental stocks.
     """
 
     #
@@ -34,7 +34,7 @@ class Cell(object):
                  stock
                  ):
         """
-        Initialize an instance of LocalStocks.
+        Initializes an instance of Cell.
         """
 
         self.cell_identifier = cell_identifier
@@ -43,7 +43,7 @@ class Cell(object):
 
     def __str__(self):
         """
-        Return a string representation of the object of class cells
+        Return a string representation of the object of class Cell.
         """
         return ('Cell with identifier % s, \
                 coordinates % s, \

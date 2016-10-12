@@ -33,7 +33,7 @@ class Group(object):
                  territories,
                  member):
         """
-        Initialize an instance of MacroAgents.
+        Initialize an instance of 'Group'.
         """
 
         self.group_identifier = group_identifier
@@ -42,7 +42,7 @@ class Group(object):
 
     def __str__(self):
         """
-        Return a string representation of the object of class individual
+        Return a string representation of the object of class 'individual'
         """
         return ('Group with identifier % s, \
                 territories % s, \
