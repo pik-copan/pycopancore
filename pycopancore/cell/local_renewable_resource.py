@@ -47,7 +47,8 @@ class Renewable_Resource(Cell):
         """
 
         super(Renewable_Resource, self).__init__(cell_identifier,
-                                                 coordinates, stock
+                                                 coordinates,
+                                                 stock
                                                  )
         self.capacity = None
         self.growth_rate = None
