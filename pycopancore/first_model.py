@@ -76,7 +76,7 @@ def Build_World(N_i,
     # their cell identifier
     #
 
-    for i in range(0, N_g + 1):  # Account for closed interval
+    for i in range(0, N_g):
         memberlist = []
         if all_individuals_group.count(i) == 0:
             # assure group has a member to evade error in .index-func
