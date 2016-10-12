@@ -68,7 +68,7 @@ class Cell(object):
 
     def set_coordinates(self, coordinates):
         """
-        A function to get the coordinates from the identifiers of each cell
+        A function to set the coordinates from the identifiers of each cell
         """
         self.coordinates = coordinates
 
