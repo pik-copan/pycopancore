@@ -18,7 +18,7 @@ growth equation due to Wiedermann 2015.
 from abstract_cell import Cell
 
 #
-#  Define class Renweable_Stock
+#  Define class Renweable_Resource
 #
 
 
@@ -42,7 +42,7 @@ class Renewable_Resource(Cell):
         """
         Initializes an instance of a renewable resource. Inherits
         cell_identifier, coordinates and stock from class Cell.
-        Creates capacity, growth_rate and catch_coefficient for the ODE of
+        Generates capacity and growth_rate for the ODE of
         Wiedermann (2015).
         """
 
@@ -55,7 +55,8 @@ class Renewable_Resource(Cell):
 
     def __str__(self):
         """
-        Returns a string representations of the object of class Renewable_Stock
+        Returns a string representation of the object of class
+        'Renewable_Stock'.
         """
         return (super(Renewable_Resource, self).__str__() +
                 ('capacity % s, \
