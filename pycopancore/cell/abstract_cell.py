@@ -31,8 +31,7 @@ class Cell(object):
     def __init__(self,
                  cell_identifier,
                  coordinates,
-                 stock,
-                 cell_effort
+                 stock
                  ):
         """
         Initialize an instance of LocalStocks.
@@ -41,7 +40,6 @@ class Cell(object):
         self.cell_identifier = cell_identifier
         self.coordinates = None
         self.stock = None
-        self.cell_effort = None
 
     def __str__(self):
         """
@@ -49,13 +47,11 @@ class Cell(object):
         """
         return ('Cell with identifier % s, \
                 coordinates % s, \
-                stock % s, \
-                cell_effort % s, '
+                stock % s'
                 ) % (
                 self.cell_identifier,
                 self.coordinates,
-                self.stock,
-                self.cell_effort
+                self.stock
                 )
 
     def set_coordinates(self, coordinates):
@@ -69,12 +65,6 @@ class Cell(object):
         A function to set the stock of a cell.
         """
         self.stock = stock
-
-    def set_cell_effort(self, cell_effort):
-        """
-        A function to set the cell_effort of a cell
-        """
-        self.cell_effort = cell_effort
 
     #
     #  Definitions of further methods

@@ -37,9 +37,7 @@ class Renewable_Resource(Cell):
                  coordinates,
                  stock,
                  capacity,
-                 growth_rate,
-                 catch_coefficient,
-                 cell_effort
+                 growth_rate
                  ):
         """
         Initializes an instance of a renewable resource. Inherits
@@ -53,8 +51,6 @@ class Renewable_Resource(Cell):
                                                  )
         self.capacity = None
         self.growth_rate = None
-        self.catch_coefficient = None
-        self.cell_effort = None
 
     def __str__(self):
         """
@@ -62,14 +58,10 @@ class Renewable_Resource(Cell):
         """
         return (super(Renewable_Resource, self).__str__() +
                 ('capacity % s, \
-                 growth rate % s, \
-                 catch coefficient % s, \
-                 cell effort % s '
+                 growth rate % s'
                  ) % (
                  self.capacity,
-                 self.growth_rate,
-                 self.catch_coefficient,
-                 self.cell_effort
+                 self.growth_rate
                  )
                 )
 
@@ -85,12 +77,6 @@ class Renewable_Resource(Cell):
             """
             self.growth_rate = growth_rate
 
-        def set_catch_coefficient(self, catch_coefficient):
-            """
-            A function to set the catch_coefficient of the renewable resource
-            """
-            self.catch_coefficient = catch_coefficient
-
     #
     #  Definitions of further methods
     #
@@ -98,13 +84,11 @@ class Renewable_Resource(Cell):
     def renewable_resource(self, y, time):
         """
         The following ODE describes the dynamics of the renewable
-        ressource through logistic growth and its harvest (Wiedermann 2015).
-        Required variables are capacity, growth_rate, catch_coefficient and
-        cell_effort. Variable y is the stock of the renewable resource.
+        ressource through logistic growth (cf. Wiedermann 2015).
+        Required variables are capacity and growth_rate. Variable y is the
+        stock of the renewable resource.
         """
         a = self.growth_rate
         K = self.capacity
-        q = self.catch_coefficient
-        E = self.cell_effort
-        dydt = a * y * (1 - y / K) - q * y * E
+        dydt = a * y * (1 - y / K)
         return dydt

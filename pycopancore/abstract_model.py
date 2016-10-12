@@ -7,7 +7,7 @@
 # License: MIT license
 
 """
-This file 
+Constructing basic functions that will be needed in each model.
 """
 
 #
@@ -15,6 +15,24 @@ This file
 #
 
 #
-#  Define class Cell
+#  Define class abstract_model
 #                                                          
 
+
+class abstract_model(object):
+    """
+    Constructing basic functions that will be needed in each model.
+    """
+
+    #
+    # Definitions of internal methods
+    #
+
+    def __init__(self):
+        """
+        Initialize an instance of abstract_model.
+        """
+
+    #
+    # Definitions of further methods
+    #
