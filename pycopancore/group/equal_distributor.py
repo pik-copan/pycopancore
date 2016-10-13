@@ -7,7 +7,8 @@
 # License: MIT license
 
 """
-Encapsulates states and dynamics of subclass Equal_Distributor.
+Equal_Distributor is a subclass of 'Group' and describes a more specific
+behaviour of macro agents in the coevolutionary system.
 """
 
 #
@@ -23,7 +24,8 @@ from abstract_group import Group
 
 class Equal_Distributor(Group):
     """
-    Encapsulates states and dynamics of subclass Equal_Distributors.
+    Equal_Distributor is a subclass of 'Group' and describes a more specific
+    behaviour of macro agents.
     """
 
     #
@@ -38,9 +40,28 @@ class Equal_Distributor(Group):
                  group_harvest,
                  group_strategy):
         """
-        Initializes an instance of an 'Equal_Distributor'. Inherits
-        group_identifier, territories and member from class 'Group'.
-        Generates group_stock, group_harvest, group_strategy.
+        Initializes an instance of 'Equal_Distributor'.
+        Inherits group_identifier, territories and member from 'Group'.
+        
+        Parameters
+        ----------
+        group_identifier: integer
+            This integer identifies each group
+        territories: list of integers
+            This list contains cell_identifiers which are the groups
+            territories
+        member: list of tuples of integers
+            This list has tuples of integers of the form
+            (individual_identifier, cell_identifier)
+            This adds up to the memberlist with all individuals affilitated to
+            their group and their cell
+        group_stock: float
+            Summed up stock of territories
+        group_harvest: float
+            Total harvest of one group
+        group_strategy: integer
+            The strategy of a group [1 denotes sus.; 0 denotes non-sus.]
+            Results from member's strategy.
         """
         super(Equal_Distributor, self).__init__(group_identifier, 
                                                 territories,
@@ -52,8 +73,7 @@ class Equal_Distributor(Group):
 
     def __str__(self)
         """
-        Returns a string representation of the object of class
-        'Equal_Distributor'.
+        Returns a string representation of the instance
         """
         return (super(Equal_Distributor, self).__str__() +
                 ('group_stock % s, \
@@ -80,7 +100,7 @@ class Equal_Distributor(Group):
 
     def set_group_strategy(self, group_strategy):
         """
-        A function to set the group's strategy.
+        A function to set group's strategy.
         """
         self.group_strategy = group_strategy
 
