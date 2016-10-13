@@ -22,7 +22,7 @@ from abstract_individual import Individual
 #
 
 
-class BinarySocailLearner(Individual):
+class BinarySocialLearner(Individual):
     """
     Encapsulates states and dynamics of social micro agents.
     """
