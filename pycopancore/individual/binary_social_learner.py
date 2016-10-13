@@ -7,20 +7,22 @@
 # License: MIT license
 
 """
-Encapsulates states and dynamics of social micro agents.
+Binary_Social_Learner is a subclass of 'Individuals'. It defines a more
+specific instance of micro agents and can be used for network dynamics that
+use strategies,stocks and harvest of individuals as variables.
 """
 
 #
 #  Imports
 #
-from .abstract_micro_agents import MicroAgents
+from abstract_individual import Individual
 
 #
 #  Define class MicroAgents
 #
 
 
-class binary_socail_learner(MicroAgents):
+class BinarySocialLearner(Individual):
     """
     Encapsulates states and dynamics of social micro agents.
     """
