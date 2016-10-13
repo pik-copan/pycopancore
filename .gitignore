@@ -1,5 +1,6 @@
 *.swp
 *.swo
+*~
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -45,7 +46,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-*,cover
+*.cover
 .hypothesis/
 
 # Translations

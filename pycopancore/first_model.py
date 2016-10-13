@@ -67,10 +67,7 @@ def Build_World(N_i,
         a = np.where(np.isnan(List_g[p1].territories) == False)[0]
         b = len(a)
         # Chose on territory at random
-        if b == 0:  # Accounts for random number generator intervall
-            p2 = 0
-        else:
-            p2 = np.random.randint(0, b)
+        p2 = np.random.random_integers(0, b-1)
         c = a[p2]
         # Assigne individual to group
         List_i[i].set_group_affiliation(p1)
