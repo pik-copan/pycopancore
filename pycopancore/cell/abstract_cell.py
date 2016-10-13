@@ -51,7 +51,7 @@ class Cell(object):
 
         self.cell_identifier = cell_identifier
         self.coordinates = None
-        self.stock = None
+        self.stock = np.full((10, 3), np.nan)
 
     def __str__(self):
         """
