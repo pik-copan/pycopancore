@@ -33,7 +33,7 @@ class Group(object):
                  territories,
                  member):
         """
-        Initialize an instance of MacroAgents.
+        Initialize an instance of 'Group'.
 
         Parameters
         ----------
@@ -43,7 +43,7 @@ class Group(object):
             This list contains cell_identifiers which are the groups
             territories
         member : list of tuples of integers
-            This list hast tupels of integers of the form
+            This list has tupels of integers of the form
             (individual_identifier, cell_identifier)
             This adds up to the memberlist with all individuals affiliated to
             the group and their cell
