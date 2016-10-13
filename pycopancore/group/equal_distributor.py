@@ -22,7 +22,7 @@ from abstract_group import Group
 #
 
 
-class Equal_Distributor(Group):
+class EqualDistributor(Group):
     """
     Equal_Distributor is a subclass of 'Group' and describes a more specific
     behaviour of macro agents.

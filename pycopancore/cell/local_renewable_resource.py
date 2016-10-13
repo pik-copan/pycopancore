@@ -22,7 +22,7 @@ from abstract_cell import Cell
 #
 
 
-class Renewable_Resource(Cell):
+class RenewableResource(Cell):
     """
     Encapsulates states and dynamics of local renewable resource with logistic
     growth equation due to Wiedermann 2015.
