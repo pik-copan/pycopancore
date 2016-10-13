@@ -44,19 +44,17 @@ class Individual(object):
 
         Parameters
         ----------
-            individual_identifier : integer
-                this is a number which identifies each individual
-            group_affiliation : integer
-                this is a number which indicates to which group the individual
-                is affiliated
-            cell_affiliation : integer
-                this is a number which indicates to which cell the individual
-                is affiliated
-            connections : list of integers
-                this is a list with integers which are other individuals
-                identifier
-
-
+        individual_identifier : integer
+            this is a number which identifies each individual
+        group_affiliation : integer
+            this is a number which indicates to which group the individual
+            is affiliated
+        cell_affiliation : integer
+            this is a number which indicates to which cell the individual
+            is affiliated
+        connections : list of integers
+            this is a list with integers which are other individuals
+            identifier
         """
 
         self.individual_identifier = individual_identifier

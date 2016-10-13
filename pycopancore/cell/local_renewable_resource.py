@@ -83,12 +83,19 @@ class Renewable_Resource(Cell):
     #  Definitions of further methods
     #
 
-    def renewable_resource(self, y, time):
+    def time_differential(self, y, time):
         """
         The following ODE describes the dynamics of the renewable
         ressource through logistic growth (cf. Wiedermann 2015).
         Required variables are capacity and growth_rate. Variable y is the
         stock of the renewable resource.
+
+        Parameters
+        ---------
+        y : float
+            Stock in dependence of time
+        time : float
+            Time y is dependent on
         """
         a = self.growth_rate
         K = self.capacity
