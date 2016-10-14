@@ -31,7 +31,7 @@ class Cell(object):
     def __init__(self,
                  cell_identifier,
                  coordinates,
-                 stock
+                 stocks
                  ):
         """
         Initialize an instance of LocalStocks.
@@ -51,7 +51,7 @@ class Cell(object):
 
         self.cell_identifier = cell_identifier
         self.coordinates = None
-        self.stock = np.full((10, 3), np.nan)
+        self.stocks = np.full((10, 3), np.nan)
 
     def __str__(self):
         """
@@ -63,7 +63,7 @@ class Cell(object):
                 ) % (
                 self.cell_identifier,
                 self.coordinates,
-                self.stock
+                self.stocks
                 )
 
     def set_coordinates(self, coordinates):
@@ -72,11 +72,11 @@ class Cell(object):
         """
         self.coordinates = coordinates
 
-    def set_stock(self, stock):
+    def set_stocks(self, stocks):
         """
         A function to set the stock of a cell.
         """
-        self.stock = stock
+        self.stocks = stocks
 
     #
     #  Definitions of further methods
