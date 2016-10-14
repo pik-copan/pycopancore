@@ -15,14 +15,13 @@ Encapsulates states and dynamics of the network between Individuals
 #  Imports
 #
 
-
 #
 #  Define class Culture
 #
 
 class Culture(object):
     """
-    Encapsulates states and dynamics the network between Individuals
+    Encapsulates states and dynamics of the network between Individuals
     """
 
     #
@@ -43,7 +42,6 @@ class Culture(object):
             This is an array to describe different types of connections.
             Maybe several adjacency matrices will make sense, this is not 
             yet clear. 
-
         """
 
         self.individual_connections = individual_connections
