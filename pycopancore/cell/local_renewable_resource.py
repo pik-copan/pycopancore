@@ -37,7 +37,7 @@ class RenewableResource(Cell):
     def __init__(self,
                  cell_identifier,
                  coordinates,
-                 stock,
+                 stocks,
                  capacity,
                  growth_rate,
                  current_stock
@@ -70,15 +70,15 @@ class RenewableResource(Cell):
 
         super(Renewable_Resource, self).__init__(cell_identifier,
                                                  coordinates,
-                                                 stock
+                                                 stocks
                                                  )
         self.capacity = capacity
         self.growth_rate = growth_rate
         self.current_stock = current_stock
 
-        self.stock[0,0] = self.capacity
-        self.stock[0,1] = self.current_stock
-        self.stock[0,2] = self.growth_rate
+        self.stocks[0,0] = self.capacity
+        self.stocks[0,1] = self.current_stock
+        self.stocks[0,2] = self.growth_rate
 
     def __str__(self):
         """
@@ -101,21 +101,21 @@ class RenewableResource(Cell):
             A function to set the capacity of the renewable resource
             """
             self.capacity = capacity
-            self.stock[0,0] = capacity
+            self.stocks[0,0] = capacity
 
     def set_growth_rate(self, growth_rate):
             """
             A function to set the growth_rate of the renewable resource
             """
             self.growth_rate = growth_rate
-            self.stock[0,1] = growth_rate
+            self.stocks[0,1] = growth_rate
 
     def set_current_stock(self, current_stock):
             """
             A function to set the current stock of the renewable resource
             """
             self.current_stock = current_stock
-            self.stock[0,1] = current_stock
+            self.stocks[0,1] = current_stock
 
     #
     #  Definitions of further methods
