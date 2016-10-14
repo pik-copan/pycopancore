@@ -33,8 +33,7 @@ class Individual(object):
     def __init__(self,
                  individual_identifier,
                  group_affiliation,
-                 cell_affiliation,
-                 connections
+                 cell_affiliation
                  ):
         """
         Initialize an instance of MicroAgents.
@@ -52,15 +51,11 @@ class Individual(object):
         cell_affiliation : integer
             this is a number which indicates to which cell the individual
             is affiliated
-        connections : list of integers
-            this is a list with integers which are other individuals
-            identifier
         """
 
         self.individual_identifier = individual_identifier
         self.group_affiliation = None
         self.cell_affiliation = None
-        self.connections = []
 
     def __str__(self):
         """
@@ -68,13 +63,11 @@ class Individual(object):
         """
         return ('Individual with identifier % s, \
                 group % s, \
-                cell % s \
-                connections % s'
+                cell % s '
                 ) % (
                 self.individual_identifier,
                 self.group_affiliation,
-                self.cell_affiliation,
-                self.connections)
+                self.cell_affiliation)
 
     def set_cell_affiliation(self, cell_affiliation):
         """
@@ -87,18 +80,6 @@ class Individual(object):
         A function to set the group membership of an individual
         """
         self.group_affiliation = group_affiliation
-
-    def set_connections(self, connections):
-        """
-        A function to set the connnection-list
-        """
-        self.connections = connections
-
-    def add_connection(self, new_connection):
-        """
-        A function to add a connection
-        """
-        self.connections.append(new_connection)
 
     #
     #  Definitions of further methods

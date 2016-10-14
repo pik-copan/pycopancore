@@ -5,7 +5,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-# das habe ich veraendert
 
 
 """
@@ -31,10 +30,10 @@ class Culture(object):
     #
 
     def __init__(self,
-                 individual_connections
-                ):
+                 individual_connections):
+
         """
-        Initialize an INstance of Culture:
+        Initialize an Instance of Culture:
         The objects in Culture define connections and/or interactions 
         between objects of class Individual
 
@@ -56,6 +55,17 @@ class Culture(object):
         return ('Individual connections % s'
                 ) % (
                 self.individual_connections)
+
+    def set_individual_connections(self, connections):
+        """
+        A function to set connections.
+        
+        Parameters
+        ----------
+        connections : array?
+            This may be adjacency matrices, maybe an igraph object?
+        """
+        self.individual_connections = connections
 
     #
     #  Definitions of further methods
