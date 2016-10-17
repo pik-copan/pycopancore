@@ -36,11 +36,12 @@ class RenewableResource(Cell):
 
     def __init__(self,
                  cell_identifier,
-                 coordinates,
-                 stocks,
-                 capacity,
-                 growth_rate,
-                 current_stock
+                 coordinates = None,
+                 neighbours = None,
+                 stocks = None,
+                 capacity = 1,
+                 growth_rate = 0.2,
+                 current_stock = 1
                  ):
         """
         Initializes an instance of a renewable resource. Inherits
@@ -70,6 +71,7 @@ class RenewableResource(Cell):
 
         super(Renewable_Resource, self).__init__(cell_identifier,
                                                  coordinates,
+                                                 neighbours,
                                                  stocks
                                                  )
         self.capacity = capacity
