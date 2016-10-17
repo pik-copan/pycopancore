@@ -31,6 +31,7 @@ class Cell(object):
     def __init__(self,
                  cell_identifier,
                  coordinates,
+                 neighbours,
                  stocks
                  ):
         """
@@ -51,6 +52,7 @@ class Cell(object):
 
         self.cell_identifier = cell_identifier
         self.coordinates = None
+        self.neighbours = None
         self.stocks = np.full((10, 3), np.nan)
 
     def __str__(self):
@@ -59,10 +61,12 @@ class Cell(object):
         """
         return ('Cell with identifier % s, \
                 coordinates % s, \
+                neighbours % s, \
                 stock % s'
                 ) % (
                 self.cell_identifier,
                 self.coordinates,
+                self.neighbours,
                 self.stocks
                 )
 
@@ -77,6 +81,17 @@ class Cell(object):
         A function to set the stock of a cell.
         """
         self.stocks = stocks
+
+    def set_neighbours(self, neighb):
+        """
+        A function to set neighbours
+
+        Parameters
+        ----------
+        neighb : list
+            This is a list with identifiers of other cells which are
+            neighbouring
+        """
 
     #
     #  Definitions of further methods
