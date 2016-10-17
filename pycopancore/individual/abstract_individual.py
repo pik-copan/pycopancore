@@ -31,9 +31,9 @@ class Individual(object):
 
     def __init__(self,
                  individual_identifier,
-                 group_affiliation = None,
-                 cell_affiliation = None,
-                 individual_update_time = None
+                 group_affiliation=None,
+                 cell_affiliation=None,
+                 individual_update_time=None
                  ):
         """
         Initialize an instance of individuals:
@@ -58,7 +58,7 @@ class Individual(object):
         self.individual_identifier = individual_identifier
         self.group_affiliation = group_affiliation
         self.cell_affiliation = cell_affiliation
-        self.update_time = update_time
+        self.individual_update_time = individual_update_time
 
     def __str__(self):
         """

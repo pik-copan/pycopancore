@@ -46,10 +46,10 @@ class Metabolism(object):
         return ('group_connections % s'
                 ) % (self.group_connections)
 
-    def set_group_connections(self, connections)
+    def set_group_connections(self, connections):
         """
         A function to set connections.
-        
+
         Parameters
         ----------
         connections : array?

@@ -14,6 +14,8 @@ Encapsulates states and dynamics of local environmental stocks.
 #  Imports
 #
 
+import numpy as np
+
 #
 #  Define class Cell
 #
@@ -46,7 +48,7 @@ class Cell(object):
             number them or give them real coordinates like lat/lon
         stock : np.array of 3 rows and 10 lines
             In this array, the Capacity, the growthrate and the current stock
-            of all resources are saved. If a slot in the array is not used, 
+            of all resources are saved. If a slot in the array is not used,
             it is filled with np.nan
         """
 

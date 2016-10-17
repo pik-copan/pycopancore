@@ -7,7 +7,7 @@
 # License: MIT license
 
 """
-Encapsulates states and dynamics of global environmental stocks and 
+Encapsulates states and dynamics of global environmental stocks and
 the planets geometry.
 """
 
@@ -57,13 +57,13 @@ class Planet(object):
         Returns a string representation of an object of class Planet
         """
         return('Planet with global stocks % s, \
-                grid  % s, \
-                planet_geometry % s'
-                ) % (
-                self.global_stocks, 
-                self.grid,
-                self.planet_geometry
-                )
+               grid  % s, \
+               planet_geometry % s'
+               ) % (
+               self.global_stocks,
+               self.grid,
+               self.planet_geometry
+               )
 
     def set_global_stocks(self, stocks):
         """

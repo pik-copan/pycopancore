@@ -42,7 +42,7 @@ class EqualDistributor(Group):
         """
         Initializes an instance of 'Equal_Distributor'.
         Inherits group_identifier, territories and member from 'Group'.
-        
+
         Parameters
         ----------
         group_identifier: integer
@@ -63,19 +63,19 @@ class EqualDistributor(Group):
             The strategy of a group [1 denotes sus.; 0 denotes non-sus.]
             Results from member's strategy.
         """
-        super(Equal_Distributor, self).__init__(group_identifier, 
-                                                territories,
-                                                member
-                                                )
+        super(EqualDistributor, self).__init__(group_identifier,
+                                               territories,
+                                               member
+                                               )
         self.group_stock = None
-        self.group_harvest = None 
-        self.group_strategy = None 
+        self.group_harvest = None
+        self.group_strategy = None
 
-    def __str__(self)
+    def __str__(self):
         """
         Returns a string representation of the instance
         """
-        return (super(Equal_Distributor, self).__str__() +
+        return (super(EqualDistributor, self).__str__() +
                 ('group_stock % s, \
                  group_harvest % s, \
                  group_strategy % s'
@@ -107,8 +107,6 @@ class EqualDistributor(Group):
     #
     #  Definitions of further methods
     #
-
-    
 
     def calculate_deathrate():
         """

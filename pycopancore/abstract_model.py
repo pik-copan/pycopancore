@@ -16,7 +16,7 @@ Constructing basic functions that will be needed in each model.
 
 #
 #  Define class abstract_model
-#                                                          
+#
 
 
 class abstract_model(object):

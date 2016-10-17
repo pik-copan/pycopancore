@@ -19,6 +19,7 @@ Encapsulates states and dynamics of the network between Individuals
 #  Define class Culture
 #
 
+
 class Culture(object):
     """
     Encapsulates states and dynamics of the network between Individuals
@@ -33,15 +34,15 @@ class Culture(object):
 
         """
         Initializes an instance of Culture:
-        The objects of Culture define connections and/or interactions 
+        The objects of Culture define connections and/or interactions
         between objects of class Individual
 
         Parameters
         ----------
         individual_connections: matrix or set of matrices?
             This is an array to describe different types of connections.
-            Maybe several adjacency matrices will make sense, this is not 
-            yet clear. 
+            Maybe several adjacency matrices will make sense, this is not
+            yet clear.
         """
 
         self.individual_connections = individual_connections
@@ -57,7 +58,7 @@ class Culture(object):
     def set_individual_connections(self, connections):
         """
         A function to set connections.
-        
+
         Parameters
         ----------
         connections : array?
