@@ -19,8 +19,8 @@ None yet.
 
 from .integrator import Integrator
 from .anthroposphere import Anthroposphere
-from .macro_agent import MacroAgent
-from .micro_agent import MicroAgent
+from .macro_agents import MacroAgents
+from .micro_agents import MicroAgents
 from .ecosphere import Ecosphere
 from .global_stocks import GlobalStocks
 from .local_stocks import LocalStocks
