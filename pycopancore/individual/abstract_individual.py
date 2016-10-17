@@ -5,11 +5,10 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-# das habe ich veraendert
 
 
 """
-Encapsulates states and dynamics of social micro agents.
+Encapsulates states and dynamics of individuals.
 """
 
 #
@@ -23,7 +22,7 @@ Encapsulates states and dynamics of social micro agents.
 
 class Individual(object):
     """
-    Encapsulates states and dynamics of social micro agents.
+    Encapsulates states and dynamics of individuals.
     """
 
     #
@@ -32,42 +31,48 @@ class Individual(object):
 
     def __init__(self,
                  individual_identifier,
-                 group_affiliation,
-                 cell_affiliation
+                 group_affiliation = None,
+                 cell_affiliation = None,
+                 individual_update_time = None
                  ):
         """
-        Initialize an instance of MicroAgents.
-        The object_identifier variables are numbers to identify each object.
-        The behavour_dict includes information about behaviour
-        The connection_dict includes the identifers of connected individuals
+        Initialize an instance of individuals:
+        The objects of Individual define social micro agents with basic
+        parameters that are necessary to describe their behaviour.
 
         Parameters
         ----------
         individual_identifier : integer
-            this is a number which identifies each individual
+            This is a number which identifies each individual
         group_affiliation : integer
-            this is a number which indicates to which group the individual
+            This is a number which indicates to which group the individual
             is affiliated
         cell_affiliation : integer
-            this is a number which indicates to which cell the individual
+            This is a number which indicates to which cell the individual
             is affiliated
+        individual_update_time : float
+            The individual_update time determines a time for each individual
+            after that adaption and rewiring happens.
         """
 
         self.individual_identifier = individual_identifier
-        self.group_affiliation = None
-        self.cell_affiliation = None
+        self.group_affiliation = group_affiliation
+        self.cell_affiliation = cell_affiliation
+        self.update_time = update_time
 
     def __str__(self):
         """
-        Return a string representation of the object of class individual
+        Returns a string representation of the instance
         """
         return ('Individual with identifier % s, \
                 group % s, \
-                cell % s '
+                cell % s, \
+                update_time % s '
                 ) % (
                 self.individual_identifier,
                 self.group_affiliation,
-                self.cell_affiliation)
+                self.cell_affiliation,
+                self.update_time)
 
     def set_cell_affiliation(self, cell_affiliation):
         """
@@ -80,6 +85,12 @@ class Individual(object):
         A function to set the group membership of an individual
         """
         self.group_affiliation = group_affiliation
+
+    def set_update_time(self, update_time):
+        """
+        A function to set the update_time of the individuals
+        """
+        self.update_time = update_time
 
     #
     #  Definitions of further methods

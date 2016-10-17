@@ -32,8 +32,8 @@ class Culture(object):
                  individual_connections):
 
         """
-        Initialize an Instance of Culture:
-        The objects in Culture define connections and/or interactions 
+        Initializes an instance of Culture:
+        The objects of Culture define connections and/or interactions 
         between objects of class Individual
 
         Parameters
