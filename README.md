@@ -14,8 +14,10 @@ in the root of the project tree.
 Requires
 * pytest
 * pylama
+* pylint
+* pylama_pylint
 * pytest-cov, to check of test coverage
-(maybe more, let's see)
+
 
 ## Documentation
 Create local html version of the docs in the `dos` directory with
