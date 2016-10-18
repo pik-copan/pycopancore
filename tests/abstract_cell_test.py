@@ -2,7 +2,7 @@
 
 import unittest
 
-from ..pycopacore.cell.abstract_cell import Cell
+from pycopacore import Cell
 # Relative Imports are shit and do not work. So what now?
 
 #check if the stocks variable is an array:
