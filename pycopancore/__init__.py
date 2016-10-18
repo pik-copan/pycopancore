@@ -17,8 +17,16 @@ None yet.
 
 """
 from .group import Group
+from .group import Metabolism
+from .group import EqualDistributor
 from .individual import Individual
+from .individual import Culture
+from .individual import BinarySocialLearner
+from .individual import ExploitLike
 from .cell import Cell
+from .cell import Planet
+from .cell import DonutWorld
+from .cell import RenewableResource
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
