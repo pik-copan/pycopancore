@@ -18,6 +18,9 @@ None yet.
 """
 
 from .abstract_cell import Cell
+from .abstract_planet import Planet
+from .donut_world import DonutWorld
+from .local_renewable_resource import RenewableResource
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
