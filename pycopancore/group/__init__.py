@@ -18,6 +18,8 @@ None yet.
 """
 
 from .abstract_group import Group
+from .abstract_metabolism import Metabolism
+from .equal_distributor import EqualDistributor
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
