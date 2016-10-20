@@ -15,7 +15,7 @@ behaviour of macro agents in the coevolutionary system.
 #  Imports
 #
 
-from abstract_group import Group
+from .abstract_group import Group
 
 #
 #  Define class MacroAgents

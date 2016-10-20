@@ -20,7 +20,7 @@ None yet.
 from .abstract_individual import Individual
 from .abstract_culture import Culture
 from .binary_social_learner import BinarySocialLearner
-from exploit_like import ExploitLike
+from .exploit_like import ExploitLike
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"

@@ -15,7 +15,7 @@ model.
 #
 #  Imports
 #
-from abstract_individual import Individual
+from .abstract_individual import Individual
 
 #
 #  Define class MicroAgents
