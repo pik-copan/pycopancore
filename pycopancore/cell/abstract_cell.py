@@ -32,9 +32,9 @@ class Cell(object):
 
     def __init__(self,
                  cell_identifier,
-                 coordinates,
-                 neighbours,
-                 stocks
+                 coordinates=None,
+                 neighbours=None,
+                 stocks=np.full((10, 3), np.nan)
                  ):
         """
         Initialize an instance of LocalStocks.
@@ -55,8 +55,7 @@ class Cell(object):
         self.cell_identifier = cell_identifier
         self.coordinates = None
         self.neighbours = None
-        self.stocks = np.full((10, 3), np.nan)
-
+        self.stocks = stocks
     def __str__(self):
         """
         Return a string representation of the object of class cells
