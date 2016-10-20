@@ -51,7 +51,7 @@ class Individual(object):
             This is a number which indicates to which cell the individual
             is affiliated
         individual_update_time : float
-            The individual_update time determines a time for each individual
+            The individual_update_time assigns a time for each individual
             after that adaption and rewiring happens.
         """
 
