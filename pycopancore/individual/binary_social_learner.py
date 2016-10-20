@@ -93,10 +93,6 @@ class BinarySocialLearner(Individual):
                 self.individual_harvest)
                 )
 
-    #
-    #  Definitions of further methods
-    #
-
     def set_individual_strategy(self, individual_strategy):
         """
         A function to set the strategy of the SocialBinaryLeaner
@@ -113,3 +109,7 @@ class BinarySocialLearner(Individual):
         """
         A function to set the harvest of each individual
         """
+
+    #
+    #  Definitions of further methods
+    #
