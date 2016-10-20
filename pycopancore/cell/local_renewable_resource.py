@@ -16,7 +16,7 @@ growth equation due to Wiedermann 2015.
 #
 
 import numpy as np
-from abstract_cell import Cell
+from .abstract_cell import Cell
 
 #
 #  Define class Renweable_Resource

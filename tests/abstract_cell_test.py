@@ -3,14 +3,13 @@
 # import unittest
 import numpy as np
 
-# from pycopancore import Cell
-# Relative Imports are shit and do not work. So what now?
+from pycopancore import Cell
 
 # check if the stocks variable is an array:
 
 
 def array_test(stocks):
-    assert(type(stocks) != np.array)
+    assert(type(Cell.stocks) != np.array)
 
 
 def billo_test():

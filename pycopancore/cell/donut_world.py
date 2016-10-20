@@ -16,8 +16,8 @@ into a rectangular grid of some sort and assignes cooridnates
 #
 
 import numpy as np
-from local_renewable_resource import RenewableResource
-from abstract_planet import Planet
+from .local_renewable_resource import RenewableResource
+from .abstract_planet import Planet
 
 #
 # Define class flat_world
