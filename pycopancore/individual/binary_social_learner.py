@@ -34,10 +34,13 @@ class BinarySocialLearner(Individual):
     #
 
     def __init__(self,
+                 individual_identifier,
+                 group_affilitation,
+                 cell_affilitation,
+                 individual_update_time,
                  individual_strategy,
                  individual_rationality,
-                 stock_fraction,
-                 capacity_fraction
+                 individual_harvest
                  ):
 
         """
@@ -48,46 +51,65 @@ class BinarySocialLearner(Individual):
 
         Parameters
         ----------
+        individual_identifier: integer
+            This is a number which identifies each individual
+        group_affiliation: integer
+            This is a number which indicates to which group the individual is
+            affiliated
+        cell_affiliation: integer
+            This is a number which indicates to which cell the individual is
+            affiliated
+        individual_update_time: float
+            The individual_update_time assigns a time for each individual after
+            that adaption and rewiring happens.
         individual_strategy: integer
             Denotes the strategy of each individual (1: sus, 0: unsus)
         individual_rationality: float
             Parameter concerning the social imitation due to rational behaviour
-        stock_fraction: float
-            Number in between 0 and 1 that gives the fraction of the total
-            stock of which the individual is responsible for.
-        capacity_fraction: float
-            Number in between 0 and 1 that gives the fraction of the total
-            capacity each individual is assigned to.
+        individual_harvest: float
+            The harvest for each individual.
         """
+
+        super(BinarySocialLearner, self).__init__(individual_identifier,
+                                                  group_affilitation,
+                                                  cell_affilitation,
+                                                  individual_update_time)
+
+        self.individual_strategy = individual_strategy
+        self.individual_rationality = individual_rationality
+        self.individual_harvest = individual_harvest
 
     def __str__(self):
         """
         Returns a string representation of the instance
         """
         return (super(BinarySocialLearner, self).__str__() +
-                ('strategy % s, \
-                 rationality % s, \
-                 stock_fraction % s, \
-                 capacity_fraction % s'
+                ('individual_strategy % s, \
+                 individual_rationality % s, \
+                 individual_harvest % s'
                  ) % (
-                self.strategy,
-                self.rationality,
-                self.stock_fraction,
-                self.capacity_fraction)
+                self.individual_strategy,
+                self.individual_rationality,
+                self.individual_harvest)
                 )
 
     #
     #  Definitions of further methods
     #
 
-    def set_strategy(self, strategy):
+    def set_individual_strategy(self, individual_strategy):
         """
         A function to set the strategy of the SocialBinaryLeaner
         """
-        self.strategy = strategy
+        self.individual_strategy = individual_strategy
 
-    def set_rationality(self, rationality):
+    def set_individual_rationality(self, individual_rationality):
         """
-        A function to set the  rationality of the SocialBinaryLearner
+        A function to set the rationality of the SocialBinaryLearner
         """
-        self.rationality = rationality
+        self.individual_rationality = individual_rationality
+
+    def set_individual_harvest(self, individual_harvest):
+        """
+        A function to set the harvest of each individual
+        """
