@@ -19,7 +19,7 @@ Constructing basic functions that will be needed in each model.
 #
 
 
-class abstract_model(object):
+class AbstractModel(object):
     """
     Constructing basic functions that will be needed in each model.
     """
