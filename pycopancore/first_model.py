@@ -10,15 +10,19 @@ from group import abstract_group
 from individual import abstract_individual
 
 #
-# Model execution
+# Model execution/Define class FirstModel
 #
 
+class Firstmodel(AbstractModel):
+    """
+    This will be a simple model to test if all classes work together properly
+    """
 
-def Build_World(N_i,
-                N_g,
-                N_c,
-                k
-                ):
+    def __init__(N_i,
+                 N_g,
+                 N_c,
+                 k
+                 ):
     """
     Build a world 
 
@@ -124,4 +128,4 @@ def Build_World(N_i,
     print ('this is individual 9:', List_i[9])
     print ('this is group 2:', List_g[2])
 
-Build_World(10, 5, 5, 3)
+# Build_World(10, 5, 5, 3)
