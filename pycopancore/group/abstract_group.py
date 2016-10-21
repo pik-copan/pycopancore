@@ -39,9 +39,11 @@ class Group(object):
         ----------
         group_identifier : integer
             This integer identifies each group
-        territories : list of integers
-            This list contains cell_identifiers which are the groups
-            territories
+        territories : np.array
+            This array contains cell_identifiers which are the groups
+            territories. It has dimensions of (number of cells, 1)
+            TODO: Write assert statement into test od model (?) to make shure 
+            this is always the case
         member : list of tuples of integers
             This list has tupels of integers of the form
             (individual_identifier, cell_identifier)

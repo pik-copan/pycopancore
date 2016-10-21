@@ -31,7 +31,7 @@ class Metabolism(object):
     def __init__(self,
                  group_connections):
         """
-        Initialize an instance of 'Group'.
+        Initialize an instance of 'Metabolism'.
 
         Parameters
         ----------

@@ -35,12 +35,12 @@ class BinarySocialLearner(Individual):
 
     def __init__(self,
                  individual_identifier,
-                 group_affilitation,
-                 cell_affilitation,
-                 individual_update_time,
-                 individual_strategy,
-                 individual_rationality,
-                 individual_harvest
+                 group_affilitation=None,
+                 cell_affilitation=None,
+                 individual_update_time=None,
+                 individual_strategy=None,
+                 individual_rationality=None,
+                 individual_harvest=None
                  ):
 
         """

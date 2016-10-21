@@ -34,11 +34,11 @@ class EqualDistributor(Group):
 
     def __init__(self,
                  group_identifier,
-                 territories,
-                 member,
-                 group_stock,
-                 group_harvest,
-                 group_strategy):
+                 territories=None,
+                 member=None,
+                 group_stock=None,
+                 group_harvest=None,
+                 group_strategy=None):
         """
         Initializes an instance of 'Equal_Distributor'.
         Inherits group_identifier, territories and member from 'Group'.

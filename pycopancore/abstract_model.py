@@ -19,7 +19,7 @@ Constructing basic functions that will be needed in each model.
 #
 
 
-class AbstractModel(object):
+class Model(object):
     """
     Constructing basic functions that will be needed in each model.
     """
@@ -31,6 +31,11 @@ class AbstractModel(object):
     def __init__(self):
         """
         Initialize an instance of abstract_model.
+        """
+
+    def __str__(self):
+        """
+        Return a string representation of the object of class model
         """
 
     #
