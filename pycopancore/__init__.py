@@ -27,6 +27,8 @@ from .cell import Cell
 from .cell import Planet
 from .cell import DonutWorld
 from .cell import RenewableResource
+from .abstract_model import Model
+from .first_model import FirstModel
 
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
