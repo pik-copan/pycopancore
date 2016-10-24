@@ -86,7 +86,7 @@ class Firstmodel(Model):
             List_i[i].set_group_affiliation(p1)
             # Assigne cell to individual
             List_i[i].set_cell_affiliation(c)
-            # Writing into biglist
+            # Writing into lists
             all_individuals_ident.append(i)
             all_individuals_group.append(p1)
             all_individuals_cell.append(c)
