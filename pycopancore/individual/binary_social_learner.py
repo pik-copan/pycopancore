@@ -38,6 +38,7 @@ class BinarySocialLearner(Individual):
                  group_affilitation=None,
                  cell_affilitation=None,
                  individual_update_time=None,
+                 individual_connection=None,
                  individual_strategy=None,
                  individual_rationality=None,
                  individual_harvest=None
@@ -51,28 +52,31 @@ class BinarySocialLearner(Individual):
 
         Parameters
         ----------
-        individual_identifier: integer
+        individual_identifier : integer
             This is a number which identifies each individual
-        group_affiliation: integer
+        group_affiliation : integer
             This is a number which indicates to which group the individual is
             affiliated
-        cell_affiliation: integer
+        cell_affiliation : integer
             This is a number which indicates to which cell the individual is
             affiliated
-        individual_update_time: float
+        individual_update_time : float
             The individual_update_time assigns a time for each individual after
             that adaption and rewiring happens.
-        individual_strategy: integer
+        individual_connection : list
+             This list shows existing connections of the individual
+        individual_strategy : integer
             Denotes the strategy of each individual (1: sus, 0: unsus)
-        individual_rationality: float
+        individual_rationality : float
             Parameter concerning the social imitation due to rational behaviour
-        individual_harvest: float
+        individual_harvest : float
             The harvest for each individual.
         """
 
         super(BinarySocialLearner, self).__init__(individual_identifier,
                                                   group_affilitation,
                                                   cell_affilitation,
+                                                  individual_connection,
                                                   individual_update_time)
 
         self.individual_strategy = individual_strategy

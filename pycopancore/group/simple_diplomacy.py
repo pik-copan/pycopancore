@@ -7,8 +7,8 @@
 # License: MIT license
 
 """
-SimpleDiplomacy is a subclass of 'Metabolism' and describes a simple 
-Network of Groups. It does not include real things, this is just a 
+SimpleDiplomacy is a subclass of 'Metabolism' and describes a simple
+Network of Groups. It does not include real things, this is just a
 demonstrator
 """
 
@@ -16,6 +16,7 @@ demonstrator
 #  Imports
 #
 
+import numpy as np
 from .abstract_metabolism import Metabolism
 
 #
@@ -25,8 +26,8 @@ from .abstract_metabolism import Metabolism
 
 class SimpleDiplomacy(Metabolism):
     """
-    SimpleDiplomacy is a subclass of 'Metabolism' and describes a simple 
-    Network of Groups. It does not include real things, this is just a 
+    SimpleDiplomacy is a subclass of 'Metabolism' and describes a simple
+    Network of Groups. It does not include real things, this is just a
     demonstrator
     """
 
@@ -47,7 +48,6 @@ class SimpleDiplomacy(Metabolism):
         """
         super(SimpleDiplomacy, self).__init__(group_connections)
 
-
     def __str__(self):
         """
         Returns a string representation of the instance
@@ -57,6 +57,38 @@ class SimpleDiplomacy(Metabolism):
     #
     # Function to create a Network of groups like create_grid in donut_world
     #
+
+    def create_group_network(self, list_groups, av_network_degree):
+        """
+        Creates a network in between groups
+
+        Parameters
+        ----------
+        list_groups : list
+            list of the existing instances of groups
+        av_network_degree : integer
+            The average amount of connections in between groups
+        """
+        N_g = len(list_groups)
+        adj_mat = np.zeros(shape=(N_g, N_g))
+        k = av_network_degree
+        N_c = (k * N_g)/2
+        N_co = 0
+        while N_co <= N_c:
+            g_1 = np.random.randint(0, N_g)
+            g_2 = np.random.randint(0, N_g)
+            if g_1 == g_2:
+                # Check for self-connections
+                continue
+            if g_2 in list_groups[g_1].connections:
+                # Check for double-connection
+                continue
+            list_groups[g_1].add_group_connection(g_2)
+            list_groups[g_2].add_group_connection(g_1)
+            adj_mat[g_1, g_2] = 1
+            adj_mat[g_2, g_1] = 1
+            N_co += 1
+        Metabolism.set_group_connections(adj_mat)
 
     #
     #  Definitions of further methods

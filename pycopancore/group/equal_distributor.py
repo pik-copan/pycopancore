@@ -36,6 +36,7 @@ class EqualDistributor(Group):
                  group_identifier,
                  territories=None,
                  member=None,
+                 group_connection=None,
                  group_stock=None,
                  group_harvest=None,
                  group_strategy=None):
@@ -55,6 +56,8 @@ class EqualDistributor(Group):
             (individual_identifier, cell_identifier)
             This adds up to the memberlist with all individuals affilitated to
             their group and their cell
+        group_connection: list
+            This lists existing connections of corresponding group
         group_stock: float
             Summed up stock of territories
         group_harvest: float
@@ -65,7 +68,8 @@ class EqualDistributor(Group):
         """
         super(EqualDistributor, self).__init__(group_identifier,
                                                territories,
-                                               member
+                                               member,
+                                               group_connection
                                                )
         self.group_stock = None
         self.group_harvest = None

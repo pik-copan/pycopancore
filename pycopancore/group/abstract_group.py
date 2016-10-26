@@ -30,8 +30,9 @@ class Group(object):
 
     def __init__(self,
                  group_identifier,
-                 territories,
-                 member):
+                 territories=None,
+                 member=None,
+                 group_connection=None):
         """
         Initialize an instance of 'Group'.
 
@@ -42,18 +43,21 @@ class Group(object):
         territories : np.array
             This array contains cell_identifiers which are the groups
             territories. It has dimensions of (number of cells, 1)
-            TODO: Write assert statement into test od model (?) to make shure 
+            TODO: Write assert statement into test od model (?) to make shure
             this is always the case
         member : list of tuples of integers
             This list has tupels of integers of the form
             (individual_identifier, cell_identifier)
             This adds up to the memberlist with all individuals affiliated to
             the group and their cell
+        group_connection : list
+            This lists existing connections of corresponding group
         """
 
         self.group_identifier = group_identifier
-        self.territories = None
-        self.member = None
+        self.territories = territories
+        self.member = member
+        self.group_connection = group_connection
 
     def __str__(self):
         """
@@ -61,11 +65,13 @@ class Group(object):
         """
         return ('Group with identifier % s, \
                 territories % s, \
-                member % s'
+                member % s, \
+                group_connection % s'
                 ) % (
                 self.group_identifier,
                 self.territories,
-                self.member)
+                self.member,
+                self.group_connection)
 
     def set_territories(self, territories):
         """
@@ -80,6 +86,18 @@ class Group(object):
         following information: individual_identifier, cell identifier
         """
         self.member = member
+
+    def set_group_connection(self, group_connection):
+        """
+        A function to set the list of connections for the group
+        """
+        self.group_connection = group_connection
+
+    def add_group_connection(self, group_identifier):
+        """
+        A function to add a connection to the corresponding group
+        """
+        self.group_connection.append(group_identifier)
 
     #
     #  Definitions of further methods

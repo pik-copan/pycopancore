@@ -56,6 +56,7 @@ class Cell(object):
         self.coordinates = None
         self.neighbours = None
         self.stocks = stocks
+
     def __str__(self):
         """
         Return a string representation of the object of class cells

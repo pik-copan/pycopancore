@@ -33,6 +33,7 @@ class Individual(object):
                  individual_identifier,
                  group_affiliation=None,
                  cell_affiliation=None,
+                 individual_connection=None,
                  individual_update_time=None
                  ):
         """
@@ -50,6 +51,8 @@ class Individual(object):
         cell_affiliation : integer
             This is a number which indicates to which cell the individual
             is affiliated
+        individual_connection: list
+            This list shows existing connections of the individual
         individual_update_time : float
             The individual_update_time assigns a time for each individual
             after that adaption and rewiring happens.
@@ -58,6 +61,7 @@ class Individual(object):
         self.individual_identifier = individual_identifier
         self.group_affiliation = group_affiliation
         self.cell_affiliation = cell_affiliation
+        self.individual_connection = individual_connection
         self.individual_update_time = individual_update_time
 
     def __str__(self):
@@ -67,11 +71,13 @@ class Individual(object):
         return ('Individual with identifier % s, \
                 group % s, \
                 cell % s, \
+                individual_connection % s, \
                 update_time % s '
                 ) % (
                 self.individual_identifier,
                 self.group_affiliation,
                 self.cell_affiliation,
+                self.individual_connection,
                 self.update_time)
 
     def set_cell_affiliation(self, cell_affiliation):
@@ -88,10 +94,21 @@ class Individual(object):
 
     def set_update_time(self, update_time):
         """
-        A function to set the update_time of the individuals
+        A function to set the update_time of the individual
         """
         self.update_time = update_time
 
+    def set_individual_connection(self, individual_connection):
+        """
+        A function to set the individual_connection of the individual
+        """
+        self.individual_connection = individual_connection
+
+    def add_individual_connection(self, individual_identifier):
+        """
+        A function to add a connection to the individual_connection list
+        """
+        self.individual_connection.append(individual_identifier)
     #
     #  Definitions of further methods
     #
