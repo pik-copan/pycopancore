@@ -17,21 +17,10 @@ None yet.
 
 """
 
-<<<<<<< HEAD:pycopancore/cell/__init__.py
 from .abstract_cell import Cell
 from .abstract_planet import Planet
 from .donut_world import DonutWorld
 from .local_renewable_resource import RenewableResource
-=======
-from .integrator import Integrator
-from .anthroposphere import Anthroposphere
-from .macro_agents import MacroAgents
-from .micro_agents import MicroAgents
-from .ecosphere import Ecosphere
-from .global_stocks import GlobalStocks
-from .local_stocks import LocalStocks
->>>>>>> 8c33de86db0af8189344e4c6b6c0339ef90cdc7f:pycopancore/__init__.py
-
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
 __copyright__ = \
