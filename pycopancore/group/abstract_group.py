@@ -93,12 +93,6 @@ class Group(object):
         """
         self.group_connection = group_connection
 
-    def add_group_connection(self, group_identifier):
-        """
-        A function to add a connection to the corresponding group
-        """
-        self.group_connection.append(group_identifier)
-
     #
     #  Definitions of further methods
     #

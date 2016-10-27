@@ -83,8 +83,8 @@ class SimpleDiplomacy(Metabolism):
             if g_2 in list_groups[g_1].connections:
                 # Check for double-connection
                 continue
-            list_groups[g_1].add_group_connection(g_2)
-            list_groups[g_2].add_group_connection(g_1)
+            list_groups[g_1].group_connection.append(g_2)
+            list_groups[g_2].group_connection.append(g_1)
             adj_mat[g_1, g_2] = 1
             adj_mat[g_2, g_1] = 1
             N_co += 1

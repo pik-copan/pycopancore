@@ -104,11 +104,6 @@ class Individual(object):
         """
         self.individual_connection = individual_connection
 
-    def add_individual_connection(self, individual_identifier):
-        """
-        A function to add a connection to the individual_connection list
-        """
-        self.individual_connection.append(individual_identifier)
     #
     #  Definitions of further methods
     #
