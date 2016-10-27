@@ -4,3 +4,7 @@
 #
 
 from pycopancore import FirstModel as fm
+
+
+def test_setup():
+    fm(20, 5, 5)

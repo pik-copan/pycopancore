@@ -78,7 +78,7 @@ class Individual(object):
                 self.group_affiliation,
                 self.cell_affiliation,
                 self.individual_connection,
-                self.update_time)
+                self.individual_update_time)
 
     def set_cell_affiliation(self, cell_affiliation):
         """

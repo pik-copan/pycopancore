@@ -39,7 +39,7 @@ class RenewableResource(Cell):
                  cell_identifier,
                  coordinates=None,
                  neighbours=None,
-                 stocks=None,
+                 stocks=np.full((10, 3), np.nan),
                  capacity=1,
                  growth_rate=0.2,
                  current_stock=1

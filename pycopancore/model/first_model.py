@@ -5,20 +5,20 @@
 #
 
 import numpy as np
-from cell import RenewableResource as rr
-from cell import DonutWorld as dw
-from group import EqualDistributor as ed
+from pycopancore.cell.local_renewable_resource import RenewableResource as rr
+from pycopancore.cell.donut_world import DonutWorld as dw
+from pycopancore.group.equal_distributor import EqualDistributor as ed
 # from .group import Subclass of Metabolism?
-from individual import BinarySocialLearner as bsl
-from individual import ExploitLike as el
-from abstract_model import Model
+from pycopancore.individual.binary_social_learner import BinarySocialLearner as bsl
+from pycopancore.individual.exploit_like import ExploitLike as el
+from pycopancore.model.abstract_model import Model
 
 #
 # Model execution/Define class FirstModel
 #
 
 
-class Firstmodel(Model):
+class FirstModel(Model):
     """
     This will be a simple model to test if all classes work together properly
     """
@@ -73,7 +73,7 @@ class Firstmodel(Model):
         all_individuals_ident = []
         all_individuals_cell = []
         all_individuals_group = []
-        for i in range(N_i):
+        for i in range(number_individuals):
             # Chose one group at random
             p1 = np.random.randint(0, number_groups)
             # Check out how many territories this group owns
@@ -96,7 +96,7 @@ class Firstmodel(Model):
         # and their cell identifier
         #
 
-        for i in range(0, N_g):
+        for i in range(0, number_groups):
             memberlist = []
             if all_individuals_group.count(i) == 0:
                 # assure group has a member to evade error in .index-func
@@ -128,5 +128,3 @@ class Firstmodel(Model):
         print ('this is cell 1:', List_c[1])
         print ('this is individual 9:', List_i[9])
         print ('this is group 2:', List_g[2])
-
-# Build_World(10, 5, 5, 3)
