@@ -135,3 +135,5 @@ class DonutWorld(Planet):
             else:
                 d = self.grid[j, (i+1)]
             List_c[i].set_neighbours((a, b, c, d))
+
+        return List_c

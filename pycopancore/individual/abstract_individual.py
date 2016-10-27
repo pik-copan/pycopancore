@@ -33,7 +33,7 @@ class Individual(object):
                  individual_identifier,
                  group_affiliation=None,
                  cell_affiliation=None,
-                 individual_connection=None,
+                 individual_connection=[],
                  individual_update_time=None
                  ):
         """
@@ -104,6 +104,12 @@ class Individual(object):
         """
         self.individual_connection = individual_connection
 
+    def add_individual_connection(self, individual_connection):
+        """
+        A function to add the individual_connection to the individuals 
+        list of connections
+        """
+        self.individual_connection.append(individual_connection)
     #
     #  Definitions of further methods
     #

@@ -9,7 +9,8 @@ from pycopancore.cell.local_renewable_resource import RenewableResource as rr
 from pycopancore.cell.donut_world import DonutWorld as dw
 from pycopancore.group.equal_distributor import EqualDistributor as ed
 # from .group import Subclass of Metabolism?
-from pycopancore.individual.binary_social_learner import BinarySocialLearner as bsl
+from pycopancore.individual.binary_social_learner import BinarySocialLearner\
+     as bsl
 from pycopancore.individual.exploit_like import ExploitLike as el
 from pycopancore.model.abstract_model import Model
 
@@ -26,7 +27,9 @@ class FirstModel(Model):
     def __init__(self,
                  number_individuals,
                  number_groups,
-                 number_cells
+                 number_cells,
+                 width_grid,
+                 height_grid
                  ):
         """
         Build a world 
@@ -41,19 +44,30 @@ class FirstModel(Model):
         number_cells: integer
             The number of cells, should be larger or equal to the number of
             groups
+        width_grid: integer
+            The width of the grid of cells. Width*eight must be equal to
+            number_cells
+        heigth_grid: integer
+            The height of the grid of cells. Width*eight must be equal to
+            number_cell
         """
 
         self.number_individuals = number_individuals
         self.number_groups = number_groups
         self.number_cells = number_cells
+        self.width_grid = width_grid
+        self.height_grid = height_grid
 
-        # Create Cells of Subclass RenewableResource
-        List_c = [
-            rr(i) for i in range(number_cells)]
+        assert (width_grid*height_grid) == number_cells
+
+        # Create Grid of Cells of Subclass RenewableResource
+        DW = dw()
+        List_c = DW.create_grid(width_grid, height_grid)
 
         # Create Individuals of Subclass BinarySocialLearner
-        List_i = [
-            bsl(i) for i in range(number_individuals)]
+        EL = el()
+        List_i = EL.create_individuals(number_individuals)
+
 
         # Create Groups of Subclass EqualDistributor
         List_g = [
@@ -114,10 +128,7 @@ class FirstModel(Model):
         # Create connections between Individuals
         #
 
-
-        #
-        # Make Planet
-        #
+        EL.create_network(List_i, 1, 0.5)
 
         #
         # Make Metabolism

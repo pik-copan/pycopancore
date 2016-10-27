@@ -7,4 +7,4 @@ from pycopancore import FirstModel as fm
 
 
 def test_setup():
-    fm(20, 5, 5)
+    fm(50, 6, 6, 3, 2)

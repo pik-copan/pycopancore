@@ -38,7 +38,7 @@ class BinarySocialLearner(Individual):
                  group_affilitation=None,
                  cell_affilitation=None,
                  individual_update_time=None,
-                 individual_connection=None,
+                 individual_connection=[],
                  individual_strategy=None,
                  individual_rationality=None,
                  individual_harvest=None
