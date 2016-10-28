@@ -5,9 +5,9 @@ from sympy import Symbol
 
 # global variables (representing scalars):
 
-    temperature_ = Symbol("temperature")
-    atmospheric_carbon_ = Symbol("atmospheric carbon")
-    maritime_carbon_ = Symbol("maritime carbon")
+    #temperature_ = Symbol("temperature")
+    #atmospheric_carbon_ = Symbol("atmospheric carbon")
+    #maritime_carbon_ = Symbol("maritime carbon")
 
 # societal variables (representing vectors indexed by society id):
 
@@ -23,4 +23,4 @@ from sympy import Symbol
 
 # other variables (more complex data types):
 
-    common_border_network_ = Symbol("common border network")
+    #common_border_network_ = Symbol("common border network")

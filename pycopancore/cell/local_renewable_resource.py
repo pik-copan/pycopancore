@@ -124,7 +124,33 @@ class RenewableResource(Cell):
     #  Definitions of further methods
     #
 
-    def time_differential(self, y, time):
+    def get_ingredients(self):
+        """
+        This function returns a list of tuples, each of the form (label, type,
+        list of affected variables, specification). Entries of each tuple are
+        specified in the following clarification
+
+        Clarification
+        -------------
+        label : string
+            The denotation of the dynamical system
+        type : string
+            The type of the dynamics. Can be either "explicit", "derived",
+            "ODE", "step" or "event"
+        list of affected variables: any dtype
+            List of all variables that are affected from the specified dynamics
+        specification : any dtype
+            Further specifications that are necessary for the global
+            integration (e.g. methods to solve the specified dynamics)
+        """
+        return[
+               ("renewable stock", 
+                "ODE", 
+                [renewable_stock_],
+                self.renewable_stock_dynamics)
+               ]
+
+    def renewable_stock_dynamics(self, state, time):
         """
         The following ODE describes the dynamics of the renewable
         ressource through logistic growth (cf. Wiedermann 2015).
@@ -133,39 +159,12 @@ class RenewableResource(Cell):
 
         Parameters
         ---------
-        y : float
-            Stock in dependence of time
+        state : float
+            The current state for the ODE
         time : float
-            Time y is dependent on
+            Time for the ODE
         """
         a = self.growth_rate
         K = self.capacity
-        dydt = a * y * (1 - y / K)
-        return dydt
-
-    def recursive_logistic_solver(self,
-                                  max_cap,
-                                  cur_stock,
-                                  gro_rate,
-                                  time_step):
-        """
-        Solver for logistic growth in dependece of maximum capacity,
-        current_capacity and grwoth_rate
-
-        Parameters
-        ----------
-        max_cap : float
-            The maximum caoacity of the resource
-        cur_cap : float
-            the current capacity of the resource, smaller or equal to the
-            max_cap
-        gro_rate : float
-            the growth-rate
-        time_step: float
-            the time for which the result is desired
-        """
-        k = gro_rate
-        dt = time_step
-        s0 = cur_stock
-        s = max_cap
-        return (s*s0)/(s0+(s-s0)*np.exp(-k*s*dt))
+        dydt = a * state * (1 - state / K)
+        return [dydt]

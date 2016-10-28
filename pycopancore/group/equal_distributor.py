@@ -111,6 +111,27 @@ class EqualDistributor(Group):
     #
     #  Definitions of further methods
     #
+    
+    def get_ingredients(self):
+        """
+        This function returns a list of tuples, each of the form (label, type,
+        list of affected variables, specification). Entries of each tuple are
+        specified in the following clarification
+
+        Clarification
+        -------------
+        label : string
+            The denotation of the dynamical system
+        type : string
+            The type of the dynamics. Can be either "explicit", "derived",
+            "ODE", "step" or "event"
+        list of affected variables: any dtype
+            List of all variables that are affected from the specified dynamics
+        specification : any dtype
+            Further specifications that are necessary for the global
+            integration (e.g. methods to solve the specified dynamics)
+        """
+        return []
 
     def calculate_deathrate():
         """
