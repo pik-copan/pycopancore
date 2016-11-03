@@ -6,14 +6,22 @@
 TODO
 ----
 
+- zorder setup
+- Parameters as Individuals, cell size and coordinate choice on top
 - calibration to earth coordinates
 - grid of colormap to random values or so
 - societies: half way up to needle pins
 - transparancy issues (maybe its better to draw the  transparent colormap on
-bluemarble before doing the surface_plot)
+  bluemarble before doing the surface_plot)
+- Matplotlib 3d has problems with the perspective. Circling the earth makes the
+  picture look very weird
 - implementation of ocean-water recognition due to individuals positions (maybe
-somehow with the basemap package)
-- it could be possible to make a pseudo model animation (rotating earth, moving individuals, changing network,...)
+  somehow with the basemap package)
+- it could be possible to make a pseudo model animation (rotating earth, moving
+  individuals, changing network,...)
+- simplify coordinates choice for the range of individuals, society and cell
+- automation of the picture perspective due to coordinate window choice such
+  that it is always the best perspective
 """
 
 from PIL import Image
@@ -22,26 +30,9 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 
-#
-# Export and scaling of Image
-#
-
-
-# Create instance of Image with PIL Package
-im = Image.open('./bluemarble.jpg')
-
-# Resizing the image with scaling factor sc
-# max(sc) = 1 (computational expensive)
-sc = 10
-im = im.resize([int(d/sc) for d in im.size])
-
-# Getting np.array as RGB-Colorgrid and normalizing to python RGB-standard
-im = np.array(im)/256.
-
-
 
 #
-# Plotting Process
+# Plotting
 #
 
 
@@ -49,15 +40,26 @@ im = np.array(im)/256.
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 #ax.grid(False)
-ax.view_init(13,210) # 13-210setting initial view. first arg:lat, second:long
-ax.set_xlim3d(-2.5,1)
-ax.set_ylim3d(-2.5,1)
-ax.set_zlim3d(-0.5,2.5)
+ax.view_init(23,210) # 13-210setting initial view. first arg:lat, second:long
+ax.set_xlim3d(-3,1)
+ax.set_ylim3d(-3,1)
+ax.set_zlim3d(-0.5,4.5)
 
 #
 # Bluemarble surface_plot
 #
 
+"""
+# Create instance of Image with PIL Package
+im = Image.open('./bluemarble.jpg')
+
+# Resizing the image with scaling factor sc
+# max(sc) = 1 (computational expensive)
+sc = 5
+im = im.resize([int(d/sc) for d in im.size])
+
+# Getting np.array as RGB-Colorgrid and normalizing to python RGB-standard
+im = np.array(im)/256.
 
 # Getting arrays of coordinates for the bluemarple surface_plot.
 lons1 = np.linspace(0, 360, im.shape[1]) * np.pi/180 
@@ -70,7 +72,30 @@ y1 = R * np.outer(np.sin(lons1), np.sin(lats1)).T
 z1 = R * np.outer(np.ones(np.size(lons1)), -np.cos(lats1)).T
 
 # drawing the bluemarble image
-bluemarble = ax.plot_surface(x1, y1, z1, facecolors = im, alpha = 1, antialiased = True, linewidth=0,shade=False)
+
+bluemarble = ax.plot_surface(x1, y1, z1, facecolors = im, alpha = 1, antialiased = True, linewidth=1,shade=True)
+"""
+
+
+#
+# coral surface_plot as a test surface with less computational expense
+#
+
+
+# Getting arrays of coordinates for the coral surface_plot.
+n1 = 360
+n2 = 180
+lons3 = np.linspace(0, 360, n1) * np.pi/180 
+lats3 = np.linspace(0, 180, n2) * np.pi/180 
+
+# making grid for the coral surface plot
+R = 1 # radius of sphere
+x1 = R * np.outer(np.cos(lons3), np.sin(lats3)).T
+y1 = R * np.outer(np.sin(lons3), np.sin(lats3)).T
+z1 = R * np.outer(np.ones(np.size(lons3)), -np.cos(lats3)).T
+
+coral = ax.plot_surface(x1, y1, z1, color = "coral", alpha = 1, antialiased = True, linewidth=0.6,shade=True,rstride = 10, cstride = 10)
+
 
 
 #
@@ -97,19 +122,29 @@ colormap = ax.plot_surface(x2, y2, z2, cmap = "hot", rstride=10,cstride=10, alph
 """
 
 #
-# Other surface sphere plots methods
+# Other sphere plots on the surface
 #
 
 
-"""
-z = R + 0.01 
-u, v = np.mgrid[0:2*np.pi:2000j, 0:np.pi:1000j]
-x_c=z*np.cos(u)*np.sin(v)
-y_c=z*np.sin(u)*np.sin(v)
-z_c=z*np.cos(v)
+# Cells in specified area
+z_cells = R + 0.03
+u, v = np.mgrid[1.175 * np.pi:1.35 * np.pi:200j, 0.17 * np.pi:0.34 * np.pi:200j]
+x_c=z_cells*np.cos(u)*np.sin(v)
+y_c=z_cells*np.sin(u)*np.sin(v)
+z_c=z_cells*np.cos(v)
 
-ax.scatter(x_c,y_c,z_c, s=1, alpha=0.3,depthshade=False, color='red')
-"""
+ax.scatter(x_c,y_c,z_c, s=1, alpha=0.4,depthshade=True, color='red')
+
+# Societies in specified area
+z_soc = 2
+l_soc = R + z_soc
+u, v = np.mgrid[1.21 * np.pi:1.35*np.pi:200j, 0.17 * np.pi:0.34 * np.pi:200j]
+x_c=l_soc*np.cos(u)*np.sin(v)
+y_c=l_soc*np.sin(u)*np.sin(v)
+z_c=l_soc*np.cos(v)
+
+ax.scatter(x_c,y_c,z_c, s=1, alpha=0.4,depthshade=True, color='yellow', zorder=6)
+
 
 
 #
@@ -118,13 +153,13 @@ ax.scatter(x_c,y_c,z_c, s=1, alpha=0.3,depthshade=False, color='red')
 
 
 # number of individuals
-N_i=20 
+N_i=10 
 
 # Individual occurances as a square on the globe
-lons_min = 220 * np.pi/180
-lons_max = 270 * np.pi/180
-lats_min = 120 * np.pi/180
-lats_max = 150 * np.pi/180
+lons_min = 1.20 * np.pi
+lons_max = 1.3 * np.pi
+lats_min = 125 * np.pi/180 # = 0.66 * pi
+lats_max = 140 * np.pi/180 # = 0.83 *pi
 
 # arrays of which coordinates are randomly chosen
 lons_array = np.linspace(lons_min, lons_max)
@@ -144,23 +179,35 @@ x_i = np.cos(lons_i) * np.sin(lats_i)
 y_i = np.sin(lons_i) * np.sin(lats_i)
 z_i = -np.cos(lats_i)
 
-# draw needles of length r
-r = 2
-l = R + r # vector in r direction that points to the pin head
-dd1 = r * 100 # resolution of line
+###Drawing needles in two parts. First to societies, then to needle pins
+
+# draw needles to societies
+l_1 = R + z_soc # vector in r direction that points to society location
+dd1 = z_soc * 100 # resolution of line
 for j in range(N_i):
-    x_n = np.linspace(R*x_i[j], l*x_i[j],dd1)
-    y_n = np.linspace(R*y_i[j], l*y_i[j],dd1)
-    z_n = np.linspace(R*z_i[j], l*z_i[j],dd1)
-    ax.plot(x_n, y_n , z_n , color="black", linewidth = 0.5)
+    x_n = np.linspace(R*x_i[j], l_1*x_i[j],dd1)
+    y_n = np.linspace(R*y_i[j], l_1*y_i[j],dd1)
+    z_n = np.linspace(R*z_i[j], l_1*z_i[j],dd1)
+    ax.scatter(x_n, y_n , z_n , color="black", s = 0.5, zorder = 5, depthshade = True)
+
+# draw needles to pin heads
+z_pin = 2
+l_2 = l_soc + z_pin # vector in r direction that points to the pin head
+dd1 = z_pin * 500 # resolution of line
+for j in range(N_i):
+    x_n = np.linspace(l_1*x_i[j], l_2*x_i[j],dd1)
+    y_n = np.linspace(l_1*y_i[j], l_2*y_i[j],dd1)
+    z_n = np.linspace(l_1*z_i[j], l_2*z_i[j],dd1)
+    ax.scatter(x_n, y_n , z_n , color="black", s=0.5, zorder = 7, depthshade = True)
+
 
 # draw pin head 
 for i in range(N_i):
     p_val = np.random.rand(1)
     if p_val < 0.5:
-        ax.scatter(l * x_i[i], l * y_i[i], l * z_i[i], color = 'red', s=25)
+        ax.scatter(l_2 * x_i[i], l_2 * y_i[i], l_2 * z_i[i], color = 'red', s=20, depthshade = True, zorder = 9)
     if p_val >= 0.5:
-        ax.scatter(l * x_i[i], l * y_i[i], l * z_i[i], color = 'green', s=25)
+        ax.scatter(l_2 * x_i[i], l_2 * y_i[i], l_2 * z_i[i], color = 'green', s=20, depthshade = True, zorder = 9)
     else:
         continue
 
@@ -168,7 +215,7 @@ for i in range(N_i):
 # Network
 #
 
-
+"""
 # Get connections in between individuals
 nc = 5*N_i # number of connections
 
@@ -193,10 +240,12 @@ for j in range(nc):
             xl = np.cos(l1) * np.sin(l2)
             yl = np.sin(l1) * np.sin(l2)
             zl = -np.cos(l2)
-        ax.plot(l*xl,l*yl,l*zl, color = 'blue', linewidth = 0.3)
+        ax.plot(l_2*xl,l_2*yl,l_2*zl, color = 'blue', linewidth = 0.3)
     else:
         continue
+"""
 
 #plt.axis('off')
-fig.savefig('example.png',dpi=1000)
+fig.savefig('example.jpg',dpi=100)
 plt.show()
+plt.close()
