@@ -128,7 +128,6 @@ class FirstModel(Model):
         # Create connections between Individuals
         #
 
-        EL.create_network(List_i, 1, 0.5)
 
         #
         # Make Metabolism
