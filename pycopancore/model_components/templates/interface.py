@@ -7,12 +7,14 @@
 # License: MIT license
 
 """
-In this interface module variables for each entity are defined as sympy objects
+In this interface module, variables for each entity are defined as sympy objects
 """
 
 #
 #  Imports
 #
+
+from private import Variable
 
 #
 #  Define class Cell_
