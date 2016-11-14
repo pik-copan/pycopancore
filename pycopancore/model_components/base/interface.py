@@ -16,7 +16,7 @@ Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 #  Imports
 #
 
-from private import Variable
+from pycopancore import Variable
 
 #
 #  Define class Cell_
