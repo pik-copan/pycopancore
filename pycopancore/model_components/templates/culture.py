@@ -16,7 +16,7 @@ Inherits from Culture_ in that variables and parameters are defined.
 #  Imports
 #
 
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Culture_  # ,Cell_, Nature_, Individual_, Society_, Metabolism_, Model_
 
 #
 #  Define class Culture
@@ -34,7 +34,9 @@ class Culture(Culture_):
     #  Definitions of internal methods
     #
 
-    def __init__(self,*, **kwargs):
+    def __init__(self,
+                 # *,
+                 **kwargs):
         """
         Initialize an instance of Culture.
         """

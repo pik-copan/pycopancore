@@ -9,7 +9,7 @@
 """
 In this module a template for the Cell mixing class is composed to give an
 example of the basic structure for the in the model used Cell class. It
-Inherits from Cell_ in that variables and parameters are defined.
+Inherits from Cell_ in which variables and parameters are defined.
 """
 
 #
@@ -17,7 +17,7 @@ Inherits from Cell_ in that variables and parameters are defined.
 #
 
 
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Cell_  # , Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
 
 #
 #  Define class Cell
@@ -35,9 +35,13 @@ class Cell(Cell_):
     #  Definitions of internal methods
     #
 
-    def __init__(self,*, **kwargs):
+    def __init__(self,
+                 # ,*,
+                 **kwargs):
         """
         Initialize an instance of Cell.
+        Possible variables are something like resources of some kind, lokal
+        weather variables...
         """
         super(Cell, self).__init__(**kwargs)
 
