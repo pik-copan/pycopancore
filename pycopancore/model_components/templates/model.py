@@ -30,3 +30,27 @@ class Model(Model_):
     must use to compose their final Model class. Inherits from Model_ as the
     interface with all necessary variables and parameters.
     """
+
+    #
+    # Mixins
+    #
+
+    # Use Mixins as wanted
+
+    cell_mixin = None
+    society_mixin = None
+    individual_mixin = None
+
+    nature_mixin = None
+    culture_mixin = None
+    metabolism_mixin = None
+
+
+    def __init__(self, #*,
+                 **kwargs
+                 ):
+        """
+
+        :param kwargs:
+        """
+        super(Model, self).__init__(**kwargs)
