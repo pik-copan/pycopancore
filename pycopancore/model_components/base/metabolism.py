@@ -16,7 +16,7 @@ Metabolism_ in that basic variables and parameters are defined.
 #  Imports
 #
 
-from private import Variable
+from pycopancore import Variable
 from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
 
 #
@@ -41,6 +41,8 @@ class Metabolism(Metabolism_):
                  ):
         """
         Initialize an instance of Metabolism.
+
+        :param kwargs:
         """
         super(Metabolism, self).__init__(**kwargs)
         pass

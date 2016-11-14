@@ -16,7 +16,7 @@ Society_ in that basic variables and parameters are defined.
 #  Imports
 #
 
-from private import Variable
+from pycopancore import Variable
 from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
 
 #
@@ -42,6 +42,9 @@ class Society(Society_):
                  ):
         """
         Initialize an instance of Society.
+
+        :param population:
+        :param kwargs:
         """
         super(Society, self).__init__(**kwargs)
 

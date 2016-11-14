@@ -16,7 +16,7 @@ Individual_ in that basic variables and parameters are defined.
 #  Imports
 #
 
-from private import Variable
+from pycopancore import Variable
 from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
 
 #
@@ -42,6 +42,9 @@ class Individual(Individual_):
                  ):
         """
         Initialize an instance of Individual.
+
+        :param cell:
+        :param kwargs:
         """
         super(Individual, self).__init__(**kwargs)
 
