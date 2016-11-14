@@ -7,7 +7,8 @@
 # License: MIT license
 
 """
-
+A class to define model variables and inherits from Symbol. Each Varible
+is connected to an entity, of which it is a variable.
 """
 
 #
