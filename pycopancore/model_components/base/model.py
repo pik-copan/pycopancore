@@ -7,6 +7,7 @@
 # License: MIT license
 
 """
+Here the docstring is missing
 """
 
 #
@@ -25,6 +26,7 @@ import inspect
 
 class Model (Model_):
     """
+    Again, a docstring is missing
     """
 
     #

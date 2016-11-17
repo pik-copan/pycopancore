@@ -17,7 +17,8 @@ in that basic variables and parameters are defined.
 #
 
 from pycopancore import Variable
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Cell_, Nature_, Individual_, Culture_, Society_,\
+                       Metabolism_, Model_
 
 #
 #  Define class Cell
