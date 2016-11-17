@@ -36,7 +36,7 @@ class Nature(Nature_):
     #
 
     def __init__(self,
-                 *,
+                 # *,
                  **kwargs
                  ):
         """

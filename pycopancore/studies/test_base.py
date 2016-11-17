@@ -1,0 +1,1 @@
+from pycopancore.models import Model

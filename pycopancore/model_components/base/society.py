@@ -36,7 +36,7 @@ class Society(Society_):
     #
 
     def __init__(self,
-                 *,
+                 # *,
                  population=0,
                  **kwargs
                  ):

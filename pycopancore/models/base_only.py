@@ -15,7 +15,6 @@ This is a model module. It only import components of the base mixins
 #
 
 import pycopancore.model_components.base as base
-
 #
 # Entity Types
 #

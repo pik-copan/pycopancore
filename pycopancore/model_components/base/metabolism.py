@@ -36,7 +36,7 @@ class Metabolism(Metabolism_):
     #
 
     def __init__(self,
-                 *,
+                 # *,
                  **kwargs
                  ):
         """

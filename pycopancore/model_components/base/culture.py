@@ -36,7 +36,7 @@ class Culture(Culture_):
     #
 
     def __init__(self,
-                 *,
+                 # *,
                  **kwargs
                  ):
         """

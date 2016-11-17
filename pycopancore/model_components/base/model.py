@@ -19,7 +19,7 @@ from . import Cell, Nature, Individual, Culture, Society, Metabolism
 import inspect
 
 #
-#  Define class Cell
+#  Define class Model
 #
 
 
@@ -27,19 +27,56 @@ class Model (Model_):
     """
     """
 
+    #
+    # Definitions of class attributes
+    #
+
     cell_mixin = Cell
     individual_mixin = Individual
     society_mixin = Society
 
     nature_mixin = Nature
     culture_mixin = Culture
-    metablism_mixin = Metabolism
+    metabolism_mixin = Metabolism
+
+    #
+    #  Definitions of internal methods
+    #
+
+    def __init__(self,
+                 # *,
+                 cells=None,
+                 individuals=None,
+                 societies=None,
+                 nature=None,
+                 culture=None,
+                 metabolism=None,
+                 **kwargs
+                 ):
+        """
+        Initializes an instance of Model.
+
+        :param cells: List of cells
+        :param individuals: List of individuals
+        :param societies: List of societies
+        :param nature: Instance of nature
+        :param culture: Instance of culture
+        :param metabolism: Instance of metabolism
+        :param kwargs: other setup arguments
+        """
+        super(Model, self).__init__(**kwargs)
+
+    #
+    #  Definitions of further methods
+    #
 
     @classmethod
     def configure(cls):
         """
-        :return:
+        This classmethod configures the mixin models by allocating variables
+        and processes to designated lists.
         """
+
         cls.society_variables_dict = {}
         cls.society_processes = []
         cls.cell_variables_dict = {}
@@ -61,10 +98,16 @@ class Model (Model_):
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
         parents = list(inspect.getmro(cls))[1:]
-        cls.components = [c for c in parents if c is not Model_]
-
+        print("Dhis is parents:",parents)
+        cls.components = [c for c in parents
+                          if c is not Model_
+                          and Model_ in inspect.getmro(c)
+                          ]
+        print("Dhis are components", cls.components)
         for c in cls.components:
-            interfaceclass = c.__bases__[0]
+            print("DDDhis is c loop:",c)
+            interfaceclass = c.__base__
+            print("DDDhis is iclass:",interfaceclass)
             print("Model component:", interfaceclass.name, "(", c, ")...")
 
             if c.cell_mixin is not None:
@@ -206,26 +249,3 @@ class Model (Model_):
                     # TODO: Insert other process types
 
         print("...done")
-
-    def __init__(self,
-                 *,
-                 cells=None,
-                 individuals=None,
-                 societies=None,
-                 nature=None,
-                 culture=None,
-                 metabolism=None,
-                 **kwargs
-                 ):
-        """
-        Initializes an instance of Model.
-
-        :param cells: List of cells
-        :param individuals: List of individuals
-        :param societies: List of societies
-        :param nature: Instance of nature
-        :param culture: Instance of culture
-        :param metabolism: Instance of metabolism
-        :param kwargs: other setup arguments
-        """
-        super(Model, self).__init__(**kwargs)

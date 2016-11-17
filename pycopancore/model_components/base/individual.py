@@ -36,7 +36,7 @@ class Individual(Individual_):
     #
 
     def __init__(self,
-                 *,
+                 # *,
                  cell=None,
                  **kwargs
                  ):
