@@ -98,16 +98,12 @@ class Model (Model_):
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
         parents = list(inspect.getmro(cls))[1:]
-        print("Dhis is parents:",parents)
         cls.components = [c for c in parents
                           if c is not Model_
                           and Model_ in inspect.getmro(c)
                           ]
-        print("Dhis are components", cls.components)
         for c in cls.components:
-            print("DDDhis is c loop:",c)
             interfaceclass = c.__base__
-            print("DDDhis is iclass:",interfaceclass)
             print("Model component:", interfaceclass.name, "(", c, ")...")
 
             if c.cell_mixin is not None:

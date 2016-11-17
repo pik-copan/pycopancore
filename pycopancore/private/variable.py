@@ -31,7 +31,7 @@ class Variable(Symbol):
     entity_type = None
 
     def set_values(self,
-                   *,
+                   # *,
                    dict=None,
                    entities=None,
                    values=None

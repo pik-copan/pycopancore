@@ -36,7 +36,7 @@ class Cell(Cell_):
     #
 
     def __init__(self,
-                 *,
+                 # *,
                  location=(0, 0),
                  area=1,
                  society=None,
@@ -72,38 +72,6 @@ class Cell(Cell_):
         """
 
     processes = []
-
-    def set_location(self, location):
-        """
-        A function to set the variable location of the cell
-        :param loc:
-        :return:
-        """
-        self.location = location
-
-    def set_area(self, area):
-        """
-        A function to set the Area of the cell
-        :param area:
-        :return:
-        """
-        self.area = area
-
-    def set_society(self, society):
-        """
-        A function to set the Society which inhabits the cell
-        :param society:
-        :return:
-        """
-        self.society = society
-
-    def set_geometry(self, geometry):
-        """
-        A function to set the Geometry of the cell
-        :param geometry:
-        :return:
-        """
-        self.geometry = geometry
 
     #
     #  Definitions of further methods
