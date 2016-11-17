@@ -12,7 +12,7 @@
 
 
 #
-# Definition of class _AbstractProcess
+# Definition of class ODE
 #
 
 from pycopancore.private import _AbstractProcess
@@ -20,7 +20,8 @@ from pycopancore.private import _AbstractProcess
 
 class ODE(_AbstractProcess):
     """
-    Time-continuous process represented by a (system of) ordinary differential equation(s).
+    Time-continuous process represented by a (system of) ordinary differential
+    equation(s).
     """
 
     type = "ODE"
@@ -41,6 +42,7 @@ class ODE(_AbstractProcess):
                RHS of the equation(s)
         :param smoothness:
         """
+        super(ODE, self).__init__()
 
         self.name = name
         self.variables = variables

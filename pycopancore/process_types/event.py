@@ -12,7 +12,7 @@
 
 
 #
-# Definition of class _AbstractProcess
+# Definition of class Event
 #
 
 from pycopancore.private import _AbstractProcess
@@ -20,7 +20,7 @@ from pycopancore.private import _AbstractProcess
 
 class Event(_AbstractProcess):
     """
-
+    Discrete process
     """
 
     type = "Event"
@@ -30,17 +30,16 @@ class Event(_AbstractProcess):
                  name,
                  variables,
                  specification,
-                 smoothness=1,
+                 smoothness=0,
                  ):
         """
         :param name: string
-        :param variables: list of Variables whose time derivatives are added
-               to by specification
-        :param specification: function(t) storing the derivatives in instance
-               attributes d_varname, or list of sympy expressions giving the
-               RHS of the equation(s)
+        :param variables:
+        :param specification:
         :param smoothness:
         """
+
+        super(Event, self).__init__()
 
         self.name = name
         self.variables = variables
