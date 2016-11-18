@@ -4,7 +4,7 @@ Language, basic terminology, and main concepts
 Because of the interdisciplinary nature of this endeavour, finding a common *language* is a challenge 
 bound to lead to misunderstandings and unfounded tacit assumptions.
 In the copan\:CORE documentation and implementation, 
-we therefore try to use common language wherever possible,
+we therefore try to use simple non-disciplinary language wherever possible,
 and explain our usage of *terms* that have different meanings in different disciplines as good as possible
 using a combination of definitions and examples.
 
@@ -13,11 +13,12 @@ Entities, processes, attributes
 -------------------------------
 
 copan\:CORE treats the *real world* as consisting 
-of numerous sufficiently well-distinguishable **entities** (e.g., a spot on the Earth surface, the EU, yourself, ...) 
+of numerous sufficiently well-distinguishable **entities** ("things that are", e.g., a spot on the Earth surface, the EU, yourself, ...) 
 that are involved in 
-a number of sufficiently well-distinguishable **processes** (e.g., vegetation growth, economic production, opinion formation, ...)
-which affect one or more of the entities' **attributes** (e.g., the spot's harvestable biomass, the EU's gross product, your opinion on fossil fuels, ...).
-copan\:CORE classifies entities by **entity-types** (e.g., grid cell, society, individual, ..., see :doc:`../entity_types/index`),
+a number of sufficiently well-distinguishable **processes** ("things that happen", e.g., vegetation growth, economic production, opinion formation, ...)
+which affect one or more of the entities' **attributes** ("how things are", e.g., the spot's harvestable biomass, the EU's gross product, your opinion on fossil fuels, ...).
+
+copan\:CORE classifies entities by **entity-types** ("kinds of things that are", e.g., grid cell, society, individual, ..., see :doc:`../entity_types/index`),
 and also allows to group processes according to a certain taxonomy (natural, social-metabolic, cultural, ..., see :doc:`../process_taxonomy/index`).
 
 .. TODO: city taxonomy paper!
@@ -36,9 +37,13 @@ Other processes for which there appears to be no natural candidate entity to ser
 can be treated as if they are happening "inside" or "on" some larger entity that contains or otherwise supports all actually involved entities.
 In both cases, the process is treated as **belonging to some entity.**
 Still other processes may best be treated as not belonging to any entity 
-but rather as simply **belonging to some process group** (natural, metabolic, cultural, ...).
+but rather as simply **belonging to its process taxon** (natural, metabolic, cultural, ...).[#]_
 
-We deliberately do *not* specify sharp criteria whether a modeler should treat a certain process as being "done by" or "happening inside" an entity
+.. [#] The question where a process "belongs" will become important on the *software design* level:
+       processes belonging to individual entities will be represented by class attributes and instance methods of the corresponding entity-type class,
+       while processes belonging to a process taxon will be represented by class attributes and instance methods of the corresponding process taxon class.
+
+We deliberately do *not* specify sharp criteria for whether a modeler should treat a certain process as being "done by" or "happening inside" an entity
 since this is in part a question of style and academic discipline 
 and there will inevitably be examples where this choice appears to be quite arbitrary
 and will affect only the model's description, implementation, and maybe its running time, but not its results.
@@ -46,7 +51,7 @@ An example might be the photosynthesis part of the carbon cycle,
 which could be described by either saying "plants take carbon from the air" and attaching it to the plant as the subject
 or by saying "plants' RuBisCO enzymes and atmospheric carbon dioxide react to form 3-phosphoglycerate" 
 and attaching it to the grid cell it is happening on,
-or by simply attaching it to the group of natural processes.
+or by simply attaching it to the taxon of natural processes.
 
 Independently of where processes belong to, they are also classified by **process-type** 
 (continuous dynamics given by ordinary differential equations, 
@@ -63,3 +68,18 @@ TODO:
 *model components*
 
 *models*
+
+
+Variables vs. parameters
+------------------------
+
+TODO
+
+Treat all relevant quantities as (potential) variables since what one component considers an input parameter may be an output variable of another component.
+
+A posteriori (after model composition from model components), 
+the "parameters" (aka "invariables") of a specific composed model are simply those variables that will never be changed from their initial value during model runs. 
+Hence it is not known to a model component developer which of the quantities she deals with will turn out to be variables or parameters of a model that uses this component.
+
+(The term "parameter" is ambiguous anyway?)
+
