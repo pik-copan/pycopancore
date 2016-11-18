@@ -7,8 +7,8 @@
 # License: MIT license
 
 """
-pycopancore
-===========
+pycopancore.cell
+================
 
 Subpackages
 -----------

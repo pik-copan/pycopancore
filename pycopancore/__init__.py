@@ -13,7 +13,8 @@ pycopancore
 Subpackages
 -----------
 
-None yet.
+.. automodule:: pycopancore.cell 
+.. automodule:: pycopancore.group 
 
 """
 from .group.abstract_group import Group
