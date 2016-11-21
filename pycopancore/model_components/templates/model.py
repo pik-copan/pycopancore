@@ -51,6 +51,8 @@ class Model(Model_):
                  ):
         """
 
-        :param kwargs:
+        Parameters
+        ----------
+        kwargs
         """
         super(Model, self).__init__(**kwargs)

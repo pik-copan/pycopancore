@@ -58,13 +58,15 @@ class Model (Model_):
         """
         Initializes an instance of Model.
 
-        :param cells: List of cells
-        :param individuals: List of individuals
-        :param societies: List of societies
-        :param nature: Instance of nature
-        :param culture: Instance of culture
-        :param metabolism: Instance of metabolism
-        :param kwargs: other setup arguments
+        Parameters
+        ----------
+        cells
+        individuals
+        societies
+        nature
+        culture
+        metabolism
+        kwargs
         """
         super(Model, self).__init__(**kwargs)
 

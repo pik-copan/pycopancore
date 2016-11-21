@@ -43,8 +43,10 @@ class Individual(Individual_):
         """
         Initialize an instance of Individual.
 
-        :param cell:
-        :param kwargs:
+        Parameters
+        ----------
+        cell:
+        kwargs:
         """
         super(Individual, self).__init__(**kwargs)
 

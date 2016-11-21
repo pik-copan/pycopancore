@@ -42,7 +42,9 @@ class Culture(Culture_):
         """
         Initialize an instance of Culture.
 
-        :param kwargs:
+        Parameters
+        ----------
+        kwargs:
         """
         super(Culture, self).__init__(**kwargs)
         pass

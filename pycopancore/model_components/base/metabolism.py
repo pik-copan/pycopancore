@@ -42,7 +42,9 @@ class Metabolism(Metabolism_):
         """
         Initialize an instance of Metabolism.
 
-        :param kwargs:
+        Parameters
+        ----------
+        kwargs:
         """
         super(Metabolism, self).__init__(**kwargs)
         pass

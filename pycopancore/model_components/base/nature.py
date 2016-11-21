@@ -42,7 +42,9 @@ class Nature(Nature_):
         """
         Initialize an instance of Nature.
 
-        :param kwargs:
+        Parameters
+        ----------
+        kwargs:
         """
         super(Nature, self).__init__(**kwargs)
         pass

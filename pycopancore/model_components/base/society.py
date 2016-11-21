@@ -43,8 +43,10 @@ class Society(Society_):
         """
         Initialize an instance of Society.
 
-        :param population:
-        :param kwargs:
+        Parameters
+        ----------
+        population:
+        kwargs:
         """
         super(Society, self).__init__(**kwargs)
 

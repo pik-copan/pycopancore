@@ -47,11 +47,13 @@ class Cell(Cell_):
         """
         Initializes an instance of Cell.
 
-        :param location:
-        :param area:
-        :param society:
-        :param geometry:
-        :param kwargs:
+        Parameters
+        ----------
+        location
+        area
+        society
+        geometry
+        kwargs
         """
         super(Cell, self).__init__(**kwargs)
 
