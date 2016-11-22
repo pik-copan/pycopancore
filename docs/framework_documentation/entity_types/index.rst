@@ -55,4 +55,3 @@ Contents:
    household
    group
    firm
-      
