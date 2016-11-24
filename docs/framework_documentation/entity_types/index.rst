@@ -46,7 +46,7 @@ The following UML diagram shows the basic relationships
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    world
    cell
