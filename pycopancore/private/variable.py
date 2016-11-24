@@ -37,11 +37,20 @@ class Variable(Symbol):
                    values=None
                    ):
         """
-        :param dict: Optional dictionary of variable values keyed by Entity
-                     object (e.g. {cell:location, individual:age},...)
-        :param entities: Optional list of entities (Cell, Individual,...)
-        :param values: Optional corresponding list or array of values
-        :return: -
+
+        Parameters
+        ----------
+        dict : dict
+            Optional dictionary of variable values keyed by Entity
+            object (e.g. {cell:location, individual:age},...)
+        entities : list
+            Optional list of entities (Cell, Individual,...)
+        values : list/array
+            Optional corresponding list or array of values
+
+        Returns
+        -------
+
         """
         if dict is not None:
             for (e, val) in dict.items():
