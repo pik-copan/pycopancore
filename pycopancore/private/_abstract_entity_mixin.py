@@ -28,8 +28,6 @@ class _AbstractEntityMixin(object):
         """
         Initializes an _AbstractEntityMixin instance.
         """
-        # Is "super..." necessary here?
-        # super(_AbstractEntityMixin, self).__init__()
         pass
 
     def __repr__(self):

@@ -27,8 +27,6 @@ class _AbstractDynamicsMixin(object):
         """
         Initializes an _AbstractDynamicsMixin instance.
         """
-        # Is "super..." necessary here?
-        # super(AbstractDynamicsMixin, self).__init__()
         pass
 
     def __repr__(self):
