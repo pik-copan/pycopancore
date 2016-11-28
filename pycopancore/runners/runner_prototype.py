@@ -17,6 +17,7 @@ This is a model module. It only import components of the base mixins
 from pycopancore.private import _AbstractRunner
 from pycopancore.process_types import Event, Explicit, Implicit, ODE, Step
 from pycopancore.models import base_only
+import numpy as np
 
 #
 # Definition of class _AbstractRunner
@@ -97,26 +98,36 @@ class RunnerPrototype(_AbstractRunner):
             with their values over the time integrated
         """
 
-        #
-        # First: get initial values from model
-        # Second: Call discontinuity_finder to get next discontinuity
-        # Third: Calculate Values for timesteps of dt until next
-        # discontinuity is met
-        # Forth: Save them, repeat until end-time is met
-        # Fifth: Return values
-        #
+        # 1. output_variables, out_functions
+        # 2. Find next times/discontinuities of all events into dict
+        # 3. Find next times/discontinuities of all steps and perform them
+        # if they have attribute 'immediate' -> implement into abstract_step
+        # 4. Enter while-loop until t_1
+        # 4.a Calculate all explicit funtions up to the next discontinuity
+        # 4.b Take next discontinuity and integrate all ODEs in intervals dt
+        # 4.c Perform the thing that caused the next discontinuity
+        #   - if step of type 'immediate', calculate it
+        #   - if step of type '?' then do whatever is needed
+        #   - if event, do the event
+        #   - calculate the thing's next discontinuity and add it to the dict
+        # 4.d Do until t_1 is met, write out_vars into trajectory dict
+        # 5. Return out_vars from trajectory dict
 
-    def odeint_prepare(self,
-                       values):
+    def odeint_rhs(self,
+                   value_array,
+                   t):
         """
-        Function to to be passed to odeint.
+        Function to to be passed to odeint as callable.
         Parameters
         ----------
-        values
+        value_array : array
+            input array with values to be computed
+        t : float
+            time
 
         Returns
         -------
-        some_array : array
+        rhs_array : array
             Array with all the derivatives to be passed to odeint
         """
 
@@ -126,20 +137,38 @@ class RunnerPrototype(_AbstractRunner):
         # What is this offset thing?
         #
 
-    def discontinuitiy_finder(self):
-        """
-        Function to find and sort the discontinuities in event and
-        step type processes
-        Returns
-        -------
-        discontinuity_dict : dict
-            Dictionary with times as keys and the associated process as
-            entry
-        """
+        offset = 0  # this is a counter
+        for variable in self.model.ODE_variables:
+            # call all varibles which are in the list ODE_variables which is
+            # defined in model_components/base/model
+            next_offset = offset + len(variable.entities)
+            # second counter to count how many entities are using the variable
+            variable.set_values(entities=variable.entities,
+                                values=value_array[offset:next_offset])
+            # Write values to variables
+            variable.clear_derivatives(entities=variable.entities)
+            # Delete old derivatives if there are any
+            offset = next_offset
+            # set up the counter
+        rhs_array = np.zeros(offset)
+        # create the output-array as a flat array to give to odeint
 
         #
-        # First: Assemble all non-continuos functions
-        # Second: Call their distrinutions to see who is producing the next
-        # discontinuity
-        # Third: Return discontinuity-dictionary
+        # Now calculate the derivatives by calling the functions in the
+        # model-components
         #
+
+        for process in self.processes:
+            for entity in self.model.ODE_variables.entities:
+                process.specification(entity, t)
+
+        # Now Return the derivatives just calculate
+        offset = 0  # Again, a counter
+        for variable in self.model.ODE_variables:
+            next_offset = offset + len(variable.entities)
+            rhs_array[offset:next_offset] = variable.get_derivatives(
+                entities=variable.entities)
+            # Get the calculated derivatives and write them to output array
+            offset = next_offset
+
+        return rhs_array
