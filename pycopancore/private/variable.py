@@ -66,16 +66,53 @@ class Variable(Symbol):
 
                 e.__dict__[self._codename] = val
 
-            if entities is not None:
-                for i in range(len(entities)):
-                    e = entities[i]
+        if entities is not None:
+            for i in range(len(entities)):
+                e = entities[i]
 
-                    #
-                    # as above...
-                    # assert isinstance(e, _AbstractEntityMixin). /
-                    # "key is not a model entity"
-                    # assert self._codename in e.__dict__, /
-                    # "variable is not contained in entity"
-                    #
+                #
+                # as above...
+                # assert isinstance(e, _AbstractEntityMixin). /
+                # "key is not a model entity"
+                # assert self._codename in e.__dict__, /
+                # "variable is not contained in entity"
+                #
 
-                    e.__dict__[self._codename] = values[i]
+                e.__dict__[self._codename] = values[i]
+
+    def clear_derivatives(self,
+                          # *,
+                          entities=None
+                          ):
+        """
+        Set all derivatives to zero
+        Parameters
+        ----------
+        entities : list
+            List of the entities
+
+        Returns
+        -------
+
+        """
+        for e in entities:
+            e.__dict__['d_'+self._codename] = 0
+
+    def get_derivatives(self,
+                        # *,
+                        entities=None
+                        ):
+        """
+        Return a list of derivatives saved in entities, named
+        d_variablename
+
+        Parameters
+        ----------
+        entities : list
+            List of the entities
+
+        Returns
+        -------
+
+        """
+        return[e.__dict__['d_'+self._codename] for e in entities]
