@@ -34,14 +34,20 @@ class ODE(_AbstractProcess):
                  smoothness=1,
                  ):
         """
-        :param name: string
-        :param variables: list of Variables whose time derivatives are added
-               to by specification
-        :param specification: function(t) storing the derivatives in instance
-               attributes d_varname, or list of sympy expressions giving the
-               RHS of the equation(s)
-        :param smoothness:
+
+        Parameters
+        ----------
+        name : string
+        variables : list
+            list of Variables whose time derivatives are added
+            to by specification
+        specification : func
+            function(t) storing the derivatives in instance
+            attributes d_varname, or list of sympy expressions giving the
+            RHS of the equation(s)
+        smoothness
         """
+
         super(ODE, self).__init__()
 
         self.name = name

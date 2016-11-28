@@ -121,7 +121,8 @@ class Model (Model_):
                     print("Cell variable:", v)
                     if k in cls.cell_variables_dict:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype (not sure yet,need to think about this)
+                        continue  # This was not in Jobsts Prototype
+                        # (not sure yet,need to think about this)
                     v.entity_type = Cell
                     v._codename = k
                     cls.cell_variables_dict[k] = v
@@ -141,7 +142,8 @@ class Model (Model_):
                     print("Individual variable:", v)
                     if k in cls.individual_variables_dict:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype (not sure yet,need to think about this)
+                        continue  # This was not in Jobsts Prototype
+                        # (not sure yet,need to think about this)
                     v.entity_type = Individual
                     v._codename = k
                     cls.individual_variables_dict[k] = v
@@ -161,7 +163,8 @@ class Model (Model_):
                     print("Society variable:", v)
                     if k in cls.society_variables_dict:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype (not sure yet,need to think about this)
+                        continue  # This was not in Jobsts Prototype
+                        # (not sure yet,need to think about this)
                     v.entity_type = Society
                     v._codename = k
                     cls.society_variables_dict[k] = v
@@ -181,7 +184,8 @@ class Model (Model_):
                     print("Nature variable:", v)
                     if k in cls.nature_variables_dict:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype (not sure yet,need to think about this)
+                        continue  # This was not in Jobsts Prototype
+                        # (not sure yet,need to think about this)
                     v.entity_type = Nature
                     v._codename = k
                     cls.nature_variables_dict[k] = v
@@ -201,7 +205,8 @@ class Model (Model_):
                     print("Culture variable:", v)
                     if k in cls.culture_variables_dict:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype (not sure yet,need to think about this)
+                        continue  # This was not in Jobsts Prototype
+                        # (not sure yet,need to think about this)
                     v.entity_type = Culture
                     v._codename = k
                     cls.culture_variables_dict[k] = v
@@ -221,7 +226,8 @@ class Model (Model_):
                     print("Metabolism variable:", v)
                     if k in cls.metabolism_variables_dict:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype (not sure yet,need to think about this)
+                        continue  # This was not in Jobsts Prototype
+                        # (not sure yet,need to think about this)
                     v.entity_type = Metabolism
                     v._codename = k
                     cls.metabolism_variables_dict[k] = v
