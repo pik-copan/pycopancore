@@ -33,10 +33,13 @@ class Step(_AbstractProcess):
                  smoothness=0,
                  ):
         """
-        :param name: string
-        :param variables:
-        :param specification:
-        :param smoothness:
+
+        Parameters
+        ----------
+        name
+        variables
+        specification
+        smoothness
         """
 
         super(Step, self).__init__()
@@ -45,3 +48,6 @@ class Step(_AbstractProcess):
         self.variables = variables
         self.specification = specification
         self.smoothness = smoothness
+
+# TODO: add metadata like immediate, later... for step, since the dynamic may
+# happen with different dealys
