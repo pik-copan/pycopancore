@@ -2,6 +2,7 @@
 Python World-Earth modelling framework
 
 * responsible senior scientist: Jobst Heitzig
+* The versioning of pycopancore has been chosen to be administrated on the [github.com system](http://github.com/) as the future prospect of this model strongly encourages outside contributions. Any relese version will be pushed on the inhouse versioning systems, [gitlab](http://gitlab.pik-potsdam.de/) and [svn](https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion).
 
 Candidates for speeding up Python code: cython, numba, ...
 
@@ -22,7 +23,7 @@ Requires
 
 
 ## Documentation
-Create local html version of the docs in the `dos` directory with
+Create local html version of the docs in the `docs` directory with
 ```
 > make html
 ```
@@ -39,6 +40,7 @@ When Developing the Code, please follow the guidelines below:
 
 later:
 * Use [NetCDF, the CF conventions](http://cfconventions.org/) and [PIK's Typed Data Transfer](https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt) to store (input and) output data and share it with other models.
+* Read and follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
 
 
 
