@@ -1,7 +1,7 @@
 # pycopancore
 Python World-Earth modelling framework
 
-* responsible senior scientist: Jobst Heitzig
+* responsible senior scientists: Jobst Heitzig & Jonathan Donges
 * The versioning of pycopancore has been chosen to be administrated on the [github.com system](http://github.com/) as the future prospect of this model strongly encourages outside contributions. Any relese version will be pushed on the inhouse versioning systems, [gitlab](http://gitlab.pik-potsdam.de/) and [svn](https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion).
 
 Candidates for speeding up Python code: cython, numba, ...
