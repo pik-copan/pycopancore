@@ -17,7 +17,7 @@ This is a model module. It only import components of the base mixins
 from pycopancore.private import _AbstractRunner
 from pycopancore.process_types import Event, Explicit, Implicit, ODE, Step
 from pycopancore.models import base_only
-from scipy.integrate import odeint
+from scipy import integrate
 import numpy as np
 
 #
@@ -142,6 +142,7 @@ class RunnerPrototype(_AbstractRunner):
                 for variable in variables:
                     # loop over all entities of corresponding variable
                     for entity in self.model.step_variable.entities:
+                        # also possible: variable.entities
                         step_variable = method(entity, t)[1][i]
                         # returns variables that are returned in second index
                         step_variables.append(step_variable)
@@ -191,7 +192,9 @@ class RunnerPrototype(_AbstractRunner):
             npoints = np.ceil((next_time - t) / dt) + 1  # resolution
             # assure required resolution
             ts = np.linspace(t, next_time, npoints)
-            ode_matrix = odeint(self.odeint_rhs, initial_array_ode, ts)
+            ode_matrix = integrate.odeint(self.odeint_rhs,
+                                          initial_array_ode,
+                                          ts)
             # This is a flat matrix. maybe make like explicit_matrix
 
             #

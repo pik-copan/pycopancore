@@ -77,6 +77,7 @@ class Model (Model_):
         self.cells = cells
         self.societies = societies
 
+        # This is defined if model.configure was called before
         for v in self.variables:
             if v.entity_type == Individual:
                 v.entities = self.individuals
