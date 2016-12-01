@@ -39,9 +39,9 @@ class Step(_AbstractProcess):
         name
         variables
         specification : list
-            Structured as followed: [first execution (int),function to estimate
-            next_time (function(t)), function to calculate variables of each
-            entity (function(self,t)]
+            Structured as followed: [first execution (float),function to
+             estimate next_time (function(t)), function to calculate variables
+             of each entity (function(self,t)]
         smoothness
         """
 

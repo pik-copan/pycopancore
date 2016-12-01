@@ -282,16 +282,10 @@ class Model (Model_):
             for process in cls.processes:
                 if isinstance(process, ODE):
                     cls.ODE_variables += process.variables
-
-            for process in cls.processes:
                 if isinstance(process, Explicit):
                     cls.explicit_variables += process.variables
-
-            for process in cls.processes:
                 if isinstance(process, Step):
                     cls.step_variables += process.variables
-
-            for process in cls.processes:
                 if isinstance(process, Event):
                     cls.event_variables += process.variables
 

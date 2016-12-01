@@ -106,7 +106,8 @@ class RunnerPrototype(_AbstractRunner):
         past_discontinuities = {} # dict to store past discontinuities
         next_discontinuities = {} # dict to store upcoming discontinuities
         for event in self.event_processes:
-            eventtype , rate_or_timfunc = event.specification[:2]
+            eventtype = event.specification[0]
+            rate_or_timfunc = event.specification[1]
             if eventtype == "rate":
                 next_time = np.random.exponential(1. / rate_or_timfunc)
             elif eventtype == "time":
@@ -128,7 +129,7 @@ class RunnerPrototype(_AbstractRunner):
         # at t = t_0 storage of first_execution in next_time.
         # TODO: implementation of individualized next_times for entities
 
-        step_variables = [] # list to store
+        step_variables = []  # list to store
         # loop over all step processes
         for step in self.step_processes:
             first_execution_time = step.specification[0]
@@ -140,14 +141,16 @@ class RunnerPrototype(_AbstractRunner):
                 i = 0
                 for variable in variables:
                     # loop over all entities of corresponding variable
-                    for entity in variable.entities:
-                        step_variable = method(entity,t)[1][i]
+                    for entity in self.model.step_variable.entities:
+                        step_variable = method(entity, t)[1][i]
                         # returns variables that are returned in second index
                         step_variables.append(step_variable)
-                    variable.set_values(variable.entities, step_variables)
+                    variable.set_values(self.model.step_variable.entities,
+                                        step_variables)
                     # writes the calculated variable of entity into list
                     i += 1
-                next_time = next_time_func(t) # calling next_time with function
+                next_time = next_time_func(t)  # calling next_time with function
+                # Same time for all entities? self. necessary?
             else:
                 next_time = first_execution_time
             try:
@@ -183,11 +186,13 @@ class RunnerPrototype(_AbstractRunner):
                     variable.get_value_list(entities=variable.entities)
                 offset = next_offset
 
-            # odeint integration TODO: implement explicit function in odeint does not work properly
-            npoints = np.ceil((next_time - t) / dt) + 1 # resolution
+            # odeint integration
+            # TODO: implement explicit function in odeint does not work properly
+            npoints = np.ceil((next_time - t) / dt) + 1  # resolution
             # assure required resolution
             ts = np.linspace(t, next_time, npoints)
             ode_matrix = odeint(self.odeint_rhs, initial_array_ode, ts)
+            # This is a flat matrix. maybe make like explicit_matrix
 
             #
             # Computation and storage of explicit_variables in explicit_matrix
@@ -196,15 +201,14 @@ class RunnerPrototype(_AbstractRunner):
             # building matrix_explicit to store variable outcomes
             shape1 = len(self.model.explicit_variables.entities)
             shape2 = len(self.explicit_processes)
-            explicit_matrix = np.zeros(shape=(shape2,shape1))
-
+            explicit_matrix = np.zeros(shape=(shape2, shape1))
 
             # call explicit functions TODO: adjust indices of explicit matrix
             j = 0
             for process in self.explicit_processes:
                     i = 0
                     for entity in self.model.explicit_variables.entities:
-                        explicit_matrix[j,i] = process.specification(entity,t)
+                        explicit_matrix[j, i] = process.specification(entity, t)
                         i += 1
                     j += 1
 
@@ -217,20 +221,23 @@ class RunnerPrototype(_AbstractRunner):
             t = next_time
             past_discontinuities[t] = []
             for discontinuity in next_discontinuities.pop(t):
-                name =  discontinuity.name
+                name = discontinuity.name
                 variables = discontinuity.variables
                 if isinstance(discontinuity, Event):
                     eventtype = discontinuity.specification[0]
                     rate_or_timfunc = discontinuity.specification[1]
                     method = discontinuity.specification[2]
-                    event_variables = method(t) # performing event TODO!!!
+                    event_variables = method(t)  # performing event TODO!!!
                     if eventtype == "rate":
-                        next_time = (t + np.random.exponential(1. / rate_or_timfunc))
+                        next_time = (t + np.random.exponential(1. /
+                                                               rate_or_timfunc))
                     elif eventtype == "time":
                         next_time = rate_or_timfunc(t)
                         # TODO : Do we actually want to implement individualized
-                        # TODO : ... discontinuities for single entities as well? If so
-                        # TODO : ... we could add "time_individual" as eventtype and a
+                        # TODO : ... discontinuities for single entities as
+                        # TODO : ... well? If so
+                        # TODO : ... we could add "time_individual" as
+                        # TODO : ...eventtype and a
                         # TODO : ... for-loop.
                     else:
                         print(eventtype, "is not implemented yet")
@@ -247,7 +254,6 @@ class RunnerPrototype(_AbstractRunner):
                     except KeyError:
                         next_discontinuities[next_time] = [discontinuity]
                 past_discontinuities[t].append(name)
-
 
             #
             # TODO 1: sorting out odeint calculation with calls of explicit_func
@@ -304,7 +310,6 @@ class RunnerPrototype(_AbstractRunner):
         rhs_array = np.zeros(offset)
         # create the output-array as a flat array to give to odeint
 
-
         #
         # Call explicit functions
         #
@@ -324,7 +329,6 @@ class RunnerPrototype(_AbstractRunner):
         for process in self.ode_processes:
             for entity in self.model.ODE_variables.entities:
                 process.specification(entity, t)
-
 
         # Calculation of derivatives
         offset = 0  # Again, a counter
