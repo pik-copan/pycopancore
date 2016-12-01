@@ -20,14 +20,19 @@ from pycopancore import Variable
 #  Define class Cell_
 #
 
+
 class Cell_(object):
     """
     Interface for Cell.
     """
 
+    resource = Variable('current resource')
+    capacity = Variable('whole capacity')
+
 #
 #  Define class Model_
 #
+
 
 class Model_(object):
     """

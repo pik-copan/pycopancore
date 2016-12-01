@@ -17,6 +17,7 @@ Inherits from Cell_ in which variables and parameters are defined.
 #
 
 
+from pycopancore import ODE
 from .interface import Cell_  # , Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
 
 #
@@ -37,11 +38,11 @@ class Cell(Cell_):
 
     def __init__(self,
                  # ,*,
+                 capacity=None,
+                 resource=None
                  **kwargs):
         """
         Initialize an instance of Cell.
-        Possible variables are something like resources of some kind, lokal
-        weather variables...
         """
         super(Cell, self).__init__(**kwargs)
 
@@ -50,8 +51,26 @@ class Cell(Cell_):
         Return a string representation of the object of class cells
         """
 
-    processes = []
+    processes = [
+        ODE('growth_function', [Cell_.resource], a_growth_funtion)
+                 ]
 
     #
     #  Definitions of further methods
     #
+
+    def a_growth_funtion(self, t):
+        """
+        ODE
+        Parameters
+        ----------
+        t
+
+        Returns
+        -------
+
+        """
+        a = self.capacity
+        b = self.resource
+        growth_rate = 0.5
+        self.resource += b * growth_rate * (1 - b / a)
