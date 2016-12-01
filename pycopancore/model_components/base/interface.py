@@ -114,7 +114,6 @@ class Model_(object):
 
     components = None
 
-
     cells = []
     cell_variables_dict = None
     cell_processes = None
@@ -142,7 +141,6 @@ class Model_(object):
     other_parameters_dict = None
 
     ODE_variables = None
-
 
     variables = None
     processes = None
