@@ -33,10 +33,15 @@ class Event(_AbstractProcess):
                  smoothness=0,
                  ):
         """
-        :param name: string
-        :param variables:
-        :param specification:
-        :param smoothness:
+
+        Parameters
+        ----------
+        name
+        variables
+        specification : list
+            Structured as followed: [eventtype ("rate" or "time"), rate
+            or time-function, method/function of variable(s)]
+        smoothness
         """
 
         super(Event, self).__init__()

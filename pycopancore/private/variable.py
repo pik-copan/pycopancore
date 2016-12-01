@@ -116,3 +116,19 @@ class Variable(Symbol):
 
         """
         return[e.__dict__['d_'+self._codename] for e in entities]
+
+    def get_value_list(self,
+                       entities = None,
+                       ):
+        """
+
+        Parameters
+        ----------
+        entities: list
+            List of entities
+
+        Returns
+        -------
+        List of variable value of each entity
+        """
+        return [e.__dict__[self._codename] for e in entities]

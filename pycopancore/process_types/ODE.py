@@ -42,7 +42,7 @@ class ODE(_AbstractProcess):
             list of Variables whose time derivatives are added
             to by specification
         specification : func
-            function(t) storing the derivatives in instance
+            function(self,t) storing the derivatives in instance
             attributes d_varname, or list of sympy expressions giving the
             RHS of the equation(s)
         smoothness

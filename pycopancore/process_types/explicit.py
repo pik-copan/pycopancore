@@ -24,7 +24,7 @@ class Explicit(_AbstractProcess):
     """
 
     type = "Explicit"
-    timetype = "discrete"
+    timetype = "continious"
 
     def __init__(self,
                  name,
@@ -34,10 +34,13 @@ class Explicit(_AbstractProcess):
                  ):
         """
 
-        :param name: string
-        :param variables:
-        :param specification:
-        :param smoothness:
+        Parameters
+        ----------
+        name :
+        variables :
+        specification : func
+            function(self,t)
+        smoothness :
         """
         super(Explicit, self).__init__()
 

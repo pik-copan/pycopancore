@@ -17,6 +17,7 @@ This is a model module. It only import components of the base mixins
 from pycopancore.private import _AbstractRunner
 from pycopancore.process_types import Event, Explicit, Implicit, ODE, Step
 from pycopancore.models import base_only
+from scipy.integrate import odeint
 import numpy as np
 
 #
@@ -29,7 +30,6 @@ class RunnerPrototype(_AbstractRunner):
     This is the Runnerprototype. It shall be implemented:
     ODES
     Explicits
-    Implicits
     Events
     Steps
     """
@@ -51,7 +51,6 @@ class RunnerPrototype(_AbstractRunner):
                           + model.metabolism_processes + model.culture_processes
                           + model.processes)
         self.explicit_processes = []
-        self.implicit_processes = []
         self.event_processes = []
         self.step_processes = []
         self.ode_processes = []
@@ -59,8 +58,6 @@ class RunnerPrototype(_AbstractRunner):
         for process in self.processes:
             if isinstance(process, Explicit):
                 self.explicit_processes.append(process)
-            if isinstance(process, Implicit):
-                self.implicit_processes.append(process)
             if isinstance(process, Event):
                 self.event_processes.append(process)
             if isinstance(process, ODE):
@@ -89,7 +86,8 @@ class RunnerPrototype(_AbstractRunner):
         dt: float
             time resolution
         output_variables : list
-            list that includes all variables that shall be returned
+            list that includes all variables that shall be added to the
+            trajectories
 
         Returns
         -------
@@ -98,20 +96,175 @@ class RunnerPrototype(_AbstractRunner):
             with their values over the time integrated
         """
 
-        # 1. output_variables, out_functions
-        # 2. Find next times/discontinuities of all events into dict
-        # 3. Find next times/discontinuities of all steps and perform them
-        # if they have attribute 'immediate' -> implement into abstract_step
-        # 4. Enter while-loop until t_1
-        # 4.a Calculate all explicit funtions up to the next discontinuity
-        # 4.b Take next discontinuity and integrate all ODEs in intervals dt
-        # 4.c Perform the thing that caused the next discontinuity
-        #   - if step of type 'immediate', calculate it
-        #   - if step of type '?' then do whatever is needed
-        #   - if event, do the event
-        #   - calculate the thing's next discontinuity and add it to the dict
-        # 4.d Do until t_1 is met, write out_vars into trajectory dict
-        # 5. Return out_vars from trajectory dict
+        t = t_0
+
+        #
+        # Calculation of next times at that upcoming events occur and storage in
+        # next_discontinuities dict.
+        #
+
+        past_discontinuities = {} # dict to store past discontinuities
+        next_discontinuities = {} # dict to store upcoming discontinuities
+        for event in self.event_processes:
+            eventtype , rate_or_timfunc = event.specification[:2]
+            if eventtype == "rate":
+                next_time = np.random.exponential(1. / rate_or_timfunc)
+            elif eventtype == "time":
+                next_time = rate_or_timfunc(t)
+                # TODO : Do we actually want to implement individualized
+                # TODO : ... discontinuities for single entities as well? If so
+                # TODO : ... we could add "time_individual" as eventtype and a
+                # TODO : ... for-loop.
+            else:
+                print("Invalid specification of the Event: ", event.name)
+            try:
+                next_discontinuities[next_time].append(event)
+            except KeyError:
+                next_discontinuities[next_time] = [event]
+
+        #
+        # Performing the first step if first_execution of specification list is
+        # set to t = t_0 and storage of the next time. If first_execution is not
+        # at t = t_0 storage of first_execution in next_time.
+        # TODO: implementation of individualized next_times for entities
+
+        step_variables = [] # list to store
+        # loop over all step processes
+        for step in self.step_processes:
+            first_execution_time = step.specification[0]
+            next_time_func = step.specification[1]
+            method = step.specification[2]
+            variables = step.variables  # cache variable list
+            if first_execution_time == t_0:
+                # loop over all variables of corresponding step
+                i = 0
+                for variable in variables:
+                    # loop over all entities of corresponding variable
+                    for entity in variable.entities:
+                        step_variable = method(entity,t)[1][i]
+                        # returns variables that are returned in second index
+                        step_variables.append(step_variable)
+                    variable.set_values(variable.entities, step_variables)
+                    # writes the calculated variable of entity into list
+                    i += 1
+                next_time = next_time_func(t) # calling next_time with function
+            else:
+                next_time = first_execution_time
+            try:
+                next_discontinuities[next_time].append(step)
+            except KeyError:
+                next_discontinuities[next_time] = [step]
+
+        #
+        # In the following while-loop piecewise integration, from discontinuity
+        # to discontinuity is performed.
+        #
+
+        while t < t_1:
+
+            next_time = min(next_discontinuities.keys())
+            # find next discontinuity
+
+            #
+            # composition of initial_value array and integration of the ODEs.
+            # Storage in ode_matrix.
+            #
+
+            # compose initial value array
+            offset = 0
+            for variable in self.model.ODE_variables:
+                next_offset = offset + len(variable.entities)
+                offset = next_offset
+            initial_array_ode = np.zeros(offset)
+            offset = 0
+            for variable in self.model.ODE_variables:
+                next_offset = offset + len(variable.entities)
+                initial_array_ode[offset:next_offset] =\
+                    variable.get_value_list(entities=variable.entities)
+                offset = next_offset
+
+            # odeint integration TODO: implement explicit function in odeint does not work properly
+            npoints = np.ceil((next_time - t) / dt) + 1 # resolution
+            # assure required resolution
+            ts = np.linspace(t, next_time, npoints)
+            ode_matrix = odeint(self.odeint_rhs, initial_array_ode, ts)
+
+            #
+            # Computation and storage of explicit_variables in explicit_matrix
+            #
+
+            # building matrix_explicit to store variable outcomes
+            shape1 = len(self.model.explicit_variables.entities)
+            shape2 = len(self.explicit_processes)
+            explicit_matrix = np.zeros(shape=(shape2,shape1))
+
+
+            # call explicit functions TODO: adjust indices of explicit matrix
+            j = 0
+            for process in self.explicit_processes:
+                    i = 0
+                    for entity in self.model.explicit_variables.entities:
+                        explicit_matrix[j,i] = process.specification(entity,t)
+                        i += 1
+                    j += 1
+
+            #
+            # Performing Discontinuity (events and steps) and storing variables
+            # TODO: the whole calculation of the variables
+            # TODO: storing them in "event_matrix" and "step_matrix"
+            #
+
+            t = next_time
+            past_discontinuities[t] = []
+            for discontinuity in next_discontinuities.pop(t):
+                name =  discontinuity.name
+                variables = discontinuity.variables
+                if isinstance(discontinuity, Event):
+                    eventtype = discontinuity.specification[0]
+                    rate_or_timfunc = discontinuity.specification[1]
+                    method = discontinuity.specification[2]
+                    event_variables = method(t) # performing event TODO!!!
+                    if eventtype == "rate":
+                        next_time = (t + np.random.exponential(1. / rate_or_timfunc))
+                    elif eventtype == "time":
+                        next_time = rate_or_timfunc(t)
+                        # TODO : Do we actually want to implement individualized
+                        # TODO : ... discontinuities for single entities as well? If so
+                        # TODO : ... we could add "time_individual" as eventtype and a
+                        # TODO : ... for-loop.
+                    else:
+                        print(eventtype, "is not implemented yet")
+                    try:
+                        next_discontinuities[next_time].append(discontinuity)
+                    except KeyError:
+                        next_discontinuities[next_time] = [discontinuity]
+                # TODO: the following calculation of step_variables
+                elif isinstance(discontinuity, Step):
+                    method = discontinuity.specification[2]
+                    next_time, step_variables = method(t)
+                    try:
+                        next_discontinuities[next_time].append(discontinuity)
+                    except KeyError:
+                        next_discontinuities[next_time] = [discontinuity]
+                past_discontinuities[t].append(name)
+
+
+            #
+            # TODO 1: sorting out odeint calculation with calls of explicit_func
+            #
+            # TODO 2: finish the discontinuity calculation in the while-loop
+            #
+            # TODO 3: storing ode_matrix, explicit_matrix, step_matrix and
+            # TODO 3: ... event_matrix into entity variables with set_values of
+            # TODO 3: ... class "Variable"
+            #
+            # TODO 4: Creating Trajectory
+            #
+            #
+            # TODO 5: Ŕeturn value of this function/method
+            #
+            # TODO 6: Add individualized next_times
+            #
 
     def odeint_rhs(self,
                    value_array,
@@ -132,9 +285,7 @@ class RunnerPrototype(_AbstractRunner):
         """
 
         #
-        # This shall be the same as odeint_rhs in jobst prototype in the
-        # scipy_ODE_only_runner file. I do not yet understand it..
-        # What is this offset thing?
+        # Construction of derivative array from ode_variables in the following
         #
 
         offset = 0  # this is a counter
@@ -153,16 +304,29 @@ class RunnerPrototype(_AbstractRunner):
         rhs_array = np.zeros(offset)
         # create the output-array as a flat array to give to odeint
 
+
         #
-        # Now calculate the derivatives by calling the functions in the
-        # model-components
+        # Call explicit functions
+        #
+        # TODO: I am not sure if that works properly. I tried to implement an
+        # TODO: ... easy function in an ode in jupyter notebook and the outcomes
+        # TODO: ... were pretty strange. Maybe we need another integrator for
+        # TODO: ... this?
+
+        for process in self.explicit_processes:
+            for entity in self.model.explicit_variables.entities:
+                process.specification(entity,t)
+
+        #
+        # Call derivatives of odes
         #
 
-        for process in self.processes:
+        for process in self.ode_processes:
             for entity in self.model.ODE_variables.entities:
                 process.specification(entity, t)
 
-        # Now Return the derivatives just calculate
+
+        # Calculation of derivatives
         offset = 0  # Again, a counter
         for variable in self.model.ODE_variables:
             next_offset = offset + len(variable.entities)

@@ -14,7 +14,7 @@ Here the docstring is missing
 #  Imports
 #
 
-from pycopancore import Variable, ODE
+from pycopancore import Variable, ODE, Explicit, Step, Event
 from .interface import Model_
 from . import Cell, Nature, Individual, Culture, Society, Metabolism
 import inspect
@@ -70,9 +70,36 @@ class Model (Model_):
         """
         super(Model, self).__init__(**kwargs)
 
+        self.nature = nature
+        self.individuals = individuals
+        self.metabolism = metabolism
+        self.individuals = individuals
+        self.cells = cells
+        self.societies = societies
+
+        for v in self.variables:
+            if v.entity_type == Individual:
+                v.entities = self.individuals
+            elif v.entity_type == Cell:
+                v.entities = self.cells
+            elif v.entity_type == Society:
+                v.entities = self.societies
+
     #
     #  Definitions of further methods
     #
+
+    @property
+    def entities(self):
+        """
+        A function to return the entities to that corresponding variables are
+        assigned from the Model instance.
+
+        Returns
+        -------
+        A list of all to the corresponding Variable assigned entities
+        """
+        return self.individuals + self.societies + self.cells
 
     @classmethod
     def configure(cls):
@@ -98,6 +125,9 @@ class Model (Model_):
         cls.processes = []
 
         cls.ODE_variables = []
+        cls.explicit_variables = []
+        cls.step_variables = []
+        cls.event_variables = []
 
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
@@ -249,9 +279,20 @@ class Model (Model_):
                              cls.culture_processes +
                              cls.metabolism_processes)
 
-            for v in cls.processes:
-                if isinstance(v, ODE):
-                    cls.ODE_variables += v.variables
-                    # TODO: Insert other process types
+            for process in cls.processes:
+                if isinstance(process, ODE):
+                    cls.ODE_variables += process.variables
+
+            for process in cls.processes:
+                if isinstance(process, Explicit):
+                    cls.explicit_variables += process.variables
+
+            for process in cls.processes:
+                if isinstance(process, Step):
+                    cls.step_variables += process.variables
+
+            for process in cls.processes:
+                if isinstance(process, Event):
+                    cls.event_variables += process.variables
 
         print("...done")
