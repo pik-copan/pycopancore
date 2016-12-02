@@ -1,5 +1,5 @@
-copan\:CORE modeling framework
-==============================
+Abstract description of the copan\:CORE modeling framework
+==========================================================
 
 This section describes the copan\:CORE World-Earth modeling framework, its concepts and overall data model in abstract and mathematical terms.
 For its realization in computer software, see :doc:`../software_design/index`, and 

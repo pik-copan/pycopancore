@@ -1,9 +1,9 @@
-Programming language-independent copan\:CORE software design
-============================================================
+Software design (independent of programming language)
+=====================================================
 
 This section describes the programming language-independent parts of 
-how the abstract :doc:`../modeling_framework/index` is realized as computer software.
-For the current implementation concept in the Python programming language, see :doc:`../python_implementation/index`.
+how the :doc:`abstract description<../abstract_level/index>` of the modeling framework is realized as computer software.
+For the current implementation concept in the Python programming language, see :doc:`here<../python_implementation/index>`.
 
 .. (Later this may switch from Python to Cython!)
 

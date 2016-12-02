@@ -13,13 +13,18 @@ Entities, processes, attributes
 -------------------------------
 
 copan\:CORE treats the *real world* as consisting 
-of numerous sufficiently well-distinguishable **entities** ("things that are", e.g., a spot on the Earth surface, the EU, yourself, ...) [#]_
+of numerous sufficiently well-distinguishable **entities** 
+("things that are", e.g., a spot on the Earth surface, the EU, yourself, ...) [#]_
 that are involved in 
-a number of sufficiently well-distinguishable **processes** ("things that happen", e.g., vegetation growth, economic production, opinion formation, ...)
-which affect one or more **attributes** ("how things are", e.g., the spot's harvestable biomass, the EU's gross product, your opinion on fossil fuels, the ocean-atmosphere diffusion coefficient...).
+a number of sufficiently well-distinguishable **processes** 
+("things that happen", e.g., vegetation growth, economic production, opinion formation, ...)
+which affect one or more **attributes** 
+("how things are", e.g., the spot's harvestable biomass, the EU's gross product, your opinion on fossil fuels, the ocean-atmosphere diffusion coefficient...).
 
-copan\:CORE classifies entities by **entity-types** ("kinds of things that are", e.g., grid cell, society, individual, ..., see :doc:`../entity_types/index`),
-and groups processes into **process taxons** (natural, social-metabolic, cultural, ..., see :doc:`../process_taxonomy/index`).
+copan\:CORE classifies entities by **entity-types** 
+("kinds of things that are", e.g., grid cell, society, individual, ..., see :doc:`../entity_types/index`),
+and allows to group (some or all) processes into **process taxons** 
+(natural, social-metabolic, cultural, ..., see :doc:`../process_taxonomy/index`).
 
 
 Processes and attributes "belong to" entity-types or process taxons
@@ -35,7 +40,7 @@ Other processes for which there appears to be no natural candidate entity to ser
 can be treated as if they are happening "inside" or "on" some larger entity that contains or otherwise supports all actually involved entities.
 In both cases, the process is treated as **belonging to some entity-type.**
 Still other processes may best be treated as not belonging to any entity 
-but rather as simply **belonging to its process taxon** (natural, metabolic, cultural, ...) [#]_.
+but rather as simply **belonging to its process taxon** (nature, social metabolism, culture, ...) [#]_.
 
 We deliberately do *not* specify sharp criteria for 
 whether a modeler should treat a certain process as being "done by" or "happening inside" an entity
@@ -162,17 +167,26 @@ one might call those variables that will never be changed from their initial val
 
 A variable's specification will contain **metadata** such as 
 
-- its common language name
+- a common language label (used in human-directed output)
 
-- some longer description giving its definition
+- a description giving its (rough) definition and other relevant textual information
 
 - the mathematical symbol normally used to denote it
 
-- its level of measurement (ratio, interval, ordinal, nominal)
+- its `level of measurement`_ (aka scale of measure, i.e, ratio, interval, ordinal, or nominal)
 
-- its physical or socio-economic dimension and default unit
+.. _`level of measurement`: https://en.wikipedia.org/wiki/Level_of_measurement
+
+- its physical or socio-economic dimension and default unit (if possible following some established standard)
 
 - its default (constant or initial) value and range of possible values
+
+- references (preferably URLs) of any items in existing metadata catalogs that can be (roughly) identified with the variable
+   (e.g., a `CF Standard Name`_ or a `World Bank CETS code`_)
+
+.. _`CF Standard Name`: http://cfconventions.org/standard-names.html
+
+.. _`World Bank CETS code`: https://datahelpdesk.worldbank.org/knowledgebase/articles/201175-how-does-the-world-bank-code-its-indicators
 
 
 .. [#]   Since many models dealing with processes actually happening on a continuous spatial scale 

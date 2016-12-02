@@ -3,6 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
 pycopancore: a Python package implementing the copan\:CORE World-Earth modeling framework and base model
 ========================================================================================================
 
@@ -22,6 +23,7 @@ Contents:
    tutorials/index
    api_reference
    framework_documentation/index
+
 
 Indices and tables
 ------------------
