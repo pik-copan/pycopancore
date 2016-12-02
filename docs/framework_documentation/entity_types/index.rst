@@ -38,7 +38,7 @@ Basic relationships
 
 The following UML diagram shows the basic relationships between the entities of the different types:
 
-.. image:: basic_relationships.svg
+.. image:: basic_relationships.eps
 
 (`pdf version`_)
 
