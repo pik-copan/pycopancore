@@ -33,12 +33,12 @@ A group will usually...
 
 In addition, a group may...
 
--  have one or several "leader" :doc:`individuals<individual>` 
+-  have one or several "leader" :doc:`individuals<individual>`, of which one may be the dominant leader
 
 -  have a "headquarters" :doc:`cell<cell>`
 
--  have a network of links to other groups 
-   (which will typically interact with the network of personal links between member individuals)
+-  have a network of acquaintance to other groups 
+   (which will typically interact with the network of personal acquaintance between member individuals)
 
 -  act as the current "elite" in some :doc:`society<society>`
 

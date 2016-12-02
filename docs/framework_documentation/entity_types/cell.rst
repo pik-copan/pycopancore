@@ -26,7 +26,7 @@ Each cell may...
 
 -  belong to the territory of a single or a hierarchy of :doc:`societies<society>` 
 
--  contain the capital or headquarters of a :doc:`societies<society>` or some :doc:`groups<group>` and :doc:`firms<firm>` 
+-  contain the capital or headquarters of a :doc:`societies<society>` or some :doc:`groups<group>` 
 
 -  be the place of business of some :doc:`firms<firm>` 
 

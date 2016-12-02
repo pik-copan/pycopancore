@@ -17,9 +17,13 @@ Basic relationships to other entity-types
 
 A household will usually...
 
+-  reside in some :doc:`cell<cell>`
+
+-  have some :doc:`individuals<individual>` as members
+
 In addition, a household may...
 
-All these relationships may be dynamic.
+-  have one "head of household" :doc:`individual<individual>`
 
-Finally, a household may...
+All these relationships may be dynamic.
 

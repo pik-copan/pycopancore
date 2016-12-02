@@ -23,9 +23,15 @@ Basic relationships to other entity-types
 
 A firm will usually...
 
+-  have their legal headquarters in some :doc:`societies<society>`
+
 In addition, a firm may...
 
-All these relationships may be dynamic.
+-  be (mainly) owned by some :doc:`individual<individual>` or other firm
 
-Finally, a firm may...
+-  have some :doc:`individual<individual>` as CEO
+
+-  have its place of business in several :doc:`cells<cell>`
+
+All these relationships may be dynamic.
 

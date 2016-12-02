@@ -7,12 +7,13 @@ of considerable size
 or an economically very closely integrated world region such as the EU),
 having a well-defined *territory* (represented by a set of :doc:`cells<cell>`)
 and encompassing all the social-metabolic and cultural processes occurring within that territory.
-Societies are not meant to represent a single social group or stratum,
+Societies are *not* meant to represent a single social group or stratum,
 for which we provide a different entity-type (:doc:`"groups"<group>`).
 
 The societies in a model are either all disjoint (e.g., representing twelve world regions, or 200 countries),
 or they will form a nested hierarchy with no nontrivial overlaps 
-(e.g., representing a three-level hierarchy of world regions, countries, and urban areas).
+(e.g., representing a three-level hierarchy of world regions, countries, and urban areas),
+This is important for model components that assume a hierarchical organization of political decision-making and economic and social metabolic accounting.
 
 As the attributes of societies will often correspond to data assembled by official statistics,
 we encourage to use a partition of the world into individual societies that is compatible to

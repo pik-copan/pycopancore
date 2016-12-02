@@ -18,11 +18,29 @@ The set of all "Individual" entities contained in the model should be interprete
 Basic relationships to other entity-types
 -----------------------------------------
 
-An individual will usually...
+An individual will usually (i.e. in most models)...
 
-In addition, an individual may...
+-  reside in some :doc:`cell<cell>`
+
+In addition, in many or some models, an individual may...
+
+-  belong to one :doc:`household<household>`
+
+-  have an employer :doc:`firm<firm>`
+
+-  have a current spouse and (professional) supervisor individual
+
+-  belong to some :doc:`groups<group>` and identify primarily with one of them 
+
+-  have a network of acquaintance to other individuals 
+
+-  act as the head of some :doc:`household<household>`, leader of some :doc:`groups<group>`, 
+   CEO of some :doc:`firms<firm>`, or head of government of some :doc:`societies<society>`
 
 All these relationships may be dynamic.
 
 Finally, an individual may...
 
+-  have a father and mother individual
+
+-  have a birthplace :doc:`cell<cell>`
