@@ -17,7 +17,7 @@ and parameters are defined.
 #
 
 from .interface import Model_
-from . import Cell, Nature, Individual, Culture, Society, Metabolism
+from . import Cell
 
 #
 #  Define class Model
@@ -37,7 +37,7 @@ class Model(Model_):
 
     # Use Mixins as wanted
 
-    cell_mixin = None
+    cell_mixin = Cell
     society_mixin = None
     individual_mixin = None
 

@@ -16,8 +16,8 @@ Inherits from Cell_ in which variables and parameters are defined.
 #  Imports
 #
 
-
-from pycopancore import ODE
+import numpy as np
+from pycopancore import ODE, Step, Explicit, Event
 from .interface import Cell_  # , Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
 
 #
@@ -52,19 +52,24 @@ class Cell(Cell_):
         """
 
     processes = [
-        ODE('growth_function', [Cell_.resource], a_growth_funtion)
+        ODE('growth_function', [Cell_.resource], a_ode_function),
+        Step('step_function', [Cell_.step_resource], a_step_function),
+        Event('event_function', [Cell_.event_value], a_event_function),
+        Explicit('explicit_function', [Cell_.explicit_value],
+                 a_explicit_function)
                  ]
 
     #
     #  Definitions of further methods
     #
 
-    def a_growth_funtion(self, t):
+    def a_ode_function(self, t):
         """
         ODE
         Parameters
         ----------
-        t
+        t : float
+            time
 
         Returns
         -------
@@ -73,4 +78,48 @@ class Cell(Cell_):
         a = self.capacity
         b = self.resource
         growth_rate = 0.5
-        self.resource += b * growth_rate * (1 - b / a)
+        return b * growth_rate * (1 - b / a)
+
+    def a_step_function(self, t):
+        """
+        Step-Function
+
+        Parameters
+        ----------
+        t : float
+            time
+
+        Returns
+        -------
+        return_list : list
+            [first execution-time, time-step, new step_resource]
+        """
+        a = self.step_resource
+        return [0.5, t+1, a+2]
+
+    def a_event_function(self, t):
+        """
+        Event-generating function
+        Parameters
+        ----------
+        t
+
+        Returns
+        -------
+        """
+        a = self.event_value
+        b = 0.1
+        return ['rate', b, a+1]
+
+    def a_explicit_function(self):
+        """
+        Explicit function, calculates something like fertilizer that is
+        dependend on the current resource and capacity
+        Returns
+        -------
+
+        """
+        a = self.explicit_value
+        b = self.capacity
+        c = self.resource
+        return 0.3 * (b-c)

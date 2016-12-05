@@ -28,6 +28,9 @@ class Cell_(object):
 
     resource = Variable('current resource')
     capacity = Variable('whole capacity')
+    step_resource = Variable('step resource')
+    event_value = Variable('event value')
+    explicit_value = Variable('explicit value')
 
 #
 #  Define class Model_
