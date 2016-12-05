@@ -40,7 +40,8 @@ class Cell(Cell_):
                  # ,*,
                  capacity=None,
                  resource=None
-                 **kwargs):
+                 # **kwargs
+                 ):
         """
         Initialize an instance of Cell.
         """
@@ -50,14 +51,6 @@ class Cell(Cell_):
         """
         Return a string representation of the object of class cells
         """
-
-    processes = [
-        ODE('growth_function', [Cell_.resource], a_ode_function),
-        Step('step_function', [Cell_.step_resource], a_step_function),
-        Event('event_function', [Cell_.event_value], a_event_function),
-        Explicit('explicit_function', [Cell_.explicit_value],
-                 a_explicit_function)
-                 ]
 
     #
     #  Definitions of further methods
@@ -123,3 +116,11 @@ class Cell(Cell_):
         b = self.capacity
         c = self.resource
         return 0.3 * (b-c)
+
+    processes = [
+        ODE('growth_function', [Cell_.resource], a_ode_function),
+        Step('step_function', [Cell_.step_resource], a_step_function),
+        Event('event_function', [Cell_.event_value], a_event_function),
+        Explicit('explicit_function', [Cell_.explicit_value],
+                 a_explicit_function)
+                 ]

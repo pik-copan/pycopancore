@@ -1,4 +1,5 @@
-from pycopancore.studies import test_base as tb
+from pycopancore.studies import test_base_and_dummy as tb
+from pycopancore.runners.runner_prototype import RunnerPrototype
 
 
 ns = 3
@@ -13,4 +14,3 @@ cells = [tb.Cell(society=societies[0]) for c in range(nc)]
 individuals = [tb.Individual for i in range(ni)]
 
 m = tb.Model()
-
