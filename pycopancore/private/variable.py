@@ -29,6 +29,7 @@ class Variable(Symbol):
     """
 
     entity_type = None
+    _codename = None
 
     def set_values(self,
                    # *,

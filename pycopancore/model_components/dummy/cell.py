@@ -37,10 +37,7 @@ class Cell(Cell_):
     #
 
     def __init__(self,
-                 # ,*,
-                 capacity=None,
-                 resource=None
-                 # **kwargs
+                 **kwargs
                  ):
         """
         Initialize an instance of Cell.

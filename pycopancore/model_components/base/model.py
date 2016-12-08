@@ -76,6 +76,7 @@ class Model (Model_):
         self.individuals = individuals
         self.cells = cells
         self.societies = societies
+        self.culture = culture
 
         # This is defined if model.configure was called before
         for v in self.variables:

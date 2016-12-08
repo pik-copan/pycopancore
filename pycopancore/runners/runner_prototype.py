@@ -16,7 +16,6 @@ This is a model module. It only import components of the base mixins
 
 from pycopancore.private import _AbstractRunner
 from pycopancore.process_types import Event, Explicit, Implicit, ODE, Step
-from pycopancore.models import base_only
 from scipy import integrate
 import numpy as np
 
@@ -35,6 +34,7 @@ class RunnerPrototype(_AbstractRunner):
     """
 
     def __init__(self,
+                 *,
                  model,
                  **kwargs):
         """
@@ -103,8 +103,8 @@ class RunnerPrototype(_AbstractRunner):
         # next_discontinuities dict.
         #
 
-        past_discontinuities = {} # dict to store past discontinuities
-        next_discontinuities = {} # dict to store upcoming discontinuities
+        past_discontinuities = {}  # dict to store past discontinuities
+        next_discontinuities = {}  # dict to store upcoming discontinuities
         for event in self.event_processes:
             eventtype = event.specification[0]
             rate_or_timfunc = event.specification[1]
@@ -163,6 +163,13 @@ class RunnerPrototype(_AbstractRunner):
         # In the following while-loop piecewise integration, from discontinuity
         # to discontinuity is performed.
         #
+
+        print('discontinuities', next_discontinuities)
+        print('processes', self.processes)
+        print('explicit_processes', self.explicit_processes)
+        print('step_processes', self.step_processes)
+        print('ode_processes', self.ode_processes)
+        print('event_processes', self.event_processes)
 
         while t < t_1:
 

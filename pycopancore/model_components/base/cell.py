@@ -37,7 +37,7 @@ class Cell(Cell_):
     #
 
     def __init__(self,
-                 # *,
+                 *,
                  location=(0, 0),
                  area=1,
                  society=None,
