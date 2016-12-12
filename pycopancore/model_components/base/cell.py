@@ -17,6 +17,7 @@ in that basic variables and parameters are defined.
 #
 
 from pycopancore import Variable
+from pycopancore.model_components import abstract
 from .interface import Cell_, Nature_, Individual_, Culture_, Society_,\
                        Metabolism_, Model_
 
@@ -25,7 +26,7 @@ from .interface import Cell_, Nature_, Individual_, Culture_, Society_,\
 #
 
 
-class Cell(Cell_):
+class Cell(Cell_, abstract.Cell):
     """
     Basic Cell mixin class that every model must use in composing their Cell
     class. Inherits from Cell_ as the interface with all necessary variables

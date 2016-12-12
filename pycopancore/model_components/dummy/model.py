@@ -17,6 +17,7 @@ and parameters are defined.
 #
 
 from .interface import Model_
+from pycopancore.model_components import abstract
 from . import Cell
 
 #
@@ -24,7 +25,7 @@ from . import Cell
 #
 
 
-class Model(Model_):
+class Model(Model_, abstract.Model):
     """
     A template for the basic structure of the Model mixin class that every model
     must use to compose their final Model class. Inherits from Model_ as the

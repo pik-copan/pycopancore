@@ -16,6 +16,7 @@ Here the docstring is missing
 
 from pycopancore import Variable, ODE, Explicit, Step, Event
 from .interface import Model_
+from pycopancore.model_components import abstract
 from . import Cell, Nature, Individual, Culture, Society, Metabolism
 import inspect
 
@@ -24,7 +25,7 @@ import inspect
 #
 
 
-class Model (Model_):
+class Model (Model_, abstract.Model):
     """
     Again, a docstring is missing
     """
@@ -135,11 +136,11 @@ class Model (Model_):
         print("Analysing model structure...")
         parents = list(inspect.getmro(cls))[1:]
         cls.components = [c for c in parents
-                          if c is not Model_
-                          and Model_ in inspect.getmro(c)
+                          if c is not abstract.Model
+                          and abstract.Model in inspect.getmro(c)
                           ]
         for c in cls.components:
-            interfaceclass = c.__base__
+            interfaceclass = c.__bases__[0]
             print("Model component:", interfaceclass.name, "(", c, ")...")
 
             if c.cell_mixin is not None:

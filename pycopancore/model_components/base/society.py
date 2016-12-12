@@ -17,6 +17,7 @@ Society_ in that basic variables and parameters are defined.
 #
 
 from pycopancore import Variable
+from pycopancore.model_components import abstract
 from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
 
 #
@@ -24,7 +25,7 @@ from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metaboli
 #
 
 
-class Society(Society_):
+class Society(Society_, abstract.Society):
     """
     Basic Society mixin class that every model must use in composing their
     Society class. Inherits from Society_ as the interface with all necessary

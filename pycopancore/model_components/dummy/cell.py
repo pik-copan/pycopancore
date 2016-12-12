@@ -18,6 +18,7 @@ Inherits from Cell_ in which variables and parameters are defined.
 
 import numpy as np
 from pycopancore import ODE, Step, Explicit, Event
+from pycopancore.model_components import abstract
 from .interface import Cell_  # , Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
 
 #
@@ -25,7 +26,7 @@ from .interface import Cell_  # , Nature_, Individual_, Culture_, Society_, Meta
 #
 
 
-class Cell(Cell_):
+class Cell(Cell_, abstract.Cell):
     """
     A template for the basic structure of the Cell mixin class that every model
     must use to compose their Cell class. Inherits from Cell_ as the interface
@@ -37,12 +38,24 @@ class Cell(Cell_):
     #
 
     def __init__(self,
+                 *,
+                 resource=.5,
+                 capacity=1,
+                 step_resource=.3,
+                 event_value=.2,
+                 explicit_value=.1,
                  **kwargs
                  ):
         """
         Initialize an instance of Cell.
         """
         super(Cell, self).__init__(**kwargs)
+
+        self.resource = resource
+        self.capacity = capacity
+        self.event_value = event_value
+        self.explicit_value = explicit_value
+        self.step_resource =step_resource
 
     def __str__(self):
         """
