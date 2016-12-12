@@ -36,12 +36,14 @@ class Step(_AbstractProcess):
 
         Parameters
         ----------
-        name
+        name : string
         variables
         specification : list
             Structured as followed: [first execution (float),function to
              estimate next_time (function(t)), function to calculate variables
-             of each entity (function(self,t)]
+             of each entity (function(self)]
+             # Do we really want a function to give back next t? Or is a simple
+             # value enogh? then the value would specifiy how big a step is
         smoothness
         """
 

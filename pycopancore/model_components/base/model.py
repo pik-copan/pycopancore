@@ -47,7 +47,7 @@ class Model (Model_, abstract.Model):
     #
 
     def __init__(self,
-                 # *,
+                 *,
                  cells=None,
                  individuals=None,
                  societies=None,
@@ -275,6 +275,10 @@ class Model (Model_, abstract.Model):
                              list(cls.nature_variables_dict.values()) +
                              list(cls.culture_variables_dict.values()) +
                              list(cls.metabolism_variables_dict.values()))
+
+            # The following procedure is also done in the runner, why do it
+            # twice? This is just making the processes apeear twice in the
+            # process lists!
             cls.processes = (cls.cell_processes +
                              cls.individual_processes +
                              cls.society_processes +

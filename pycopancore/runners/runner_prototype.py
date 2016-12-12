@@ -15,7 +15,7 @@ This is a model module. It only import components of the base mixins
 #
 
 from pycopancore.private import _AbstractRunner
-from pycopancore.process_types import Event, Explicit, Implicit, ODE, Step
+from pycopancore import Event, Explicit, Implicit, ODE, Step
 from scipy import integrate
 import numpy as np
 
@@ -49,7 +49,10 @@ class RunnerPrototype(_AbstractRunner):
         self.processes = (model.individual_processes + model.cell_processes
                           + model.society_processes + model.nature_processes
                           + model.metabolism_processes + model.culture_processes
-                          + model.processes)
+                          #  + model.processes
+                          # model.processes already includes all of the above!
+                          # See comment in model.configure
+                          )
         self.explicit_processes = []
         self.event_processes = []
         self.step_processes = []
@@ -58,14 +61,16 @@ class RunnerPrototype(_AbstractRunner):
         for process in self.processes:
             if isinstance(process, Explicit):
                 self.explicit_processes.append(process)
-            if isinstance(process, Event):
+            elif isinstance(process, Event):
                 self.event_processes.append(process)
-            if isinstance(process, ODE):
+            elif isinstance(process, ODE):
                 self.ode_processes.append(process)
-            if isinstance(process, Step):
+            elif isinstance(process, Step):
                 self.step_processes.append(process)
             else:
-                print('process-type not specidfied')
+                print('process-type of', process, 'not specified')
+                print(process.__class__.__name__)
+                print(object.__str__(process))
 
     def run(self,
             t_0=0,
@@ -106,6 +111,7 @@ class RunnerPrototype(_AbstractRunner):
         past_discontinuities = {}  # dict to store past discontinuities
         next_discontinuities = {}  # dict to store upcoming discontinuities
         for event in self.event_processes:
+            print('event specification:', event.specification)
             eventtype = event.specification[0]
             rate_or_timfunc = event.specification[1]
             if eventtype == "rate":
@@ -193,6 +199,8 @@ class RunnerPrototype(_AbstractRunner):
                 initial_array_ode[offset:next_offset] =\
                     variable.get_value_list(entities=variable.entities)
                 offset = next_offset
+
+            # Now do/update all the explicit processes
 
             # odeint integration
             # TODO: implement explicit function in odeint does not work properly
@@ -330,7 +338,7 @@ class RunnerPrototype(_AbstractRunner):
 
         for process in self.explicit_processes:
             for entity in self.model.explicit_variables.entities:
-                process.specification(entity,t)
+                process.specification(entity, t)
 
         #
         # Call derivatives of odes

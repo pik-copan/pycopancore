@@ -19,7 +19,7 @@ Inherits from Cell_ in which variables and parameters are defined.
 import numpy as np
 from pycopancore import ODE, Step, Explicit, Event
 from pycopancore.model_components import abstract
-from .interface import Cell_  # , Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Cell_
 
 #
 #  Define class Cell
@@ -55,7 +55,7 @@ class Cell(Cell_, abstract.Cell):
         self.capacity = capacity
         self.event_value = event_value
         self.explicit_value = explicit_value
-        self.step_resource =step_resource
+        self.step_resource = step_resource
 
     def __str__(self):
         """
@@ -83,14 +83,12 @@ class Cell(Cell_, abstract.Cell):
         growth_rate = 0.5
         return b * growth_rate * (1 - b / a)
 
-    def a_step_function(self, t):
+    def a_step_function(self):
         """
         Step-Function
 
         Parameters
         ----------
-        t : float
-            time
 
         Returns
         -------
@@ -98,21 +96,32 @@ class Cell(Cell_, abstract.Cell):
             [first execution-time, time-step, new step_resource]
         """
         a = self.step_resource
-        return [0.5, t+1, a+2]
+        return a+2
 
-    def a_event_function(self, t):
+    def a_event_function(self):
         """
         Event-generating function
+        Parameters
+        ----------
+
+        Returns
+        -------
+        """
+        a = self.event_value
+        return a+1
+
+    def event_timing(self, t):
+        """
+        Function to return next time of a step-function
         Parameters
         ----------
         t
 
         Returns
         -------
+
         """
-        a = self.event_value
-        b = 0.1
-        return ['rate', b, a+1]
+        return t+1
 
     def a_explicit_function(self):
         """
@@ -129,8 +138,14 @@ class Cell(Cell_, abstract.Cell):
 
     processes = [
         ODE('growth_function', [Cell_.resource], a_ode_function),
-        Step('step_function', [Cell_.step_resource], a_step_function),
-        Event('event_function', [Cell_.event_value], a_event_function),
+        Step('step_function',
+             [Cell_.step_resource],
+             [0.1,
+              event_timing,
+              a_step_function]),
+        Event('event_function',
+              [Cell_.event_value],
+              ['rate', 0.1, a_event_function]),
         Explicit('explicit_function', [Cell_.explicit_value],
                  a_explicit_function)
                  ]
