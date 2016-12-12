@@ -109,7 +109,8 @@ class Model_(object):
     """
 
     name = "copan:CORE Base"
-    description = "Basic model only providing basic relationships between entity types."
+    description = "Basic model only providing basic relationships between " \
+                  "entity types."
     requires = []
 
     components = None

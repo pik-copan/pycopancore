@@ -22,7 +22,7 @@ import pycopancore.model_components.dummy as dummy
 #
 
 
-class Cell (base.Cell, dummy.Cell):
+class Cell (dummy.Cell, base.Cell):
     """
     Class to mix all Cell_mixins to create Cell class
     """
@@ -72,7 +72,7 @@ class Nature(base.Nature):
 #
 
 
-class Model(base.Model, dummy.Model):
+class Model(dummy.Model, base.Model):
     """
     Class to mix all Model_mixins to create Model class
     """
