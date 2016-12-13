@@ -131,7 +131,6 @@ class Cell(Cell_, abstract.Cell):
         -------
 
         """
-        a = self.explicit_value
         b = self.capacity
         c = self.resource
         return 0.3 * (b-c)

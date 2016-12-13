@@ -337,8 +337,9 @@ class RunnerPrototype(_AbstractRunner):
         # TODO: ... this?
 
         for process in self.explicit_processes:
+            print(type(self.model.explicit_variables[0].entities))
             for entity in self.model.explicit_variables.entities:
-                process.specification(entity, t)
+                process.specification(entity)
 
         #
         # Call derivatives of odes
