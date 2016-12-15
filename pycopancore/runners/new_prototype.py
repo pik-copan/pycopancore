@@ -245,6 +245,7 @@ class RunnerPrototype2(_AbstractRunner):
 
         # Enter while loop
         while t < t_1:
+
             # Get next discontinuity to find the next timestep where something
             # happens
             next_time = min(next_discontinuities.keys())
