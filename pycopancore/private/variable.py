@@ -32,7 +32,7 @@ class Variable(Symbol):
     _codename = None
 
     def set_values(self,
-                   # *,
+                   *,
                    dict=None,
                    entities=None,
                    values=None
@@ -82,7 +82,7 @@ class Variable(Symbol):
                 e.__dict__[self._codename] = values[i]
 
     def clear_derivatives(self,
-                          # *,
+                          *,
                           entities=None
                           ):
         """
@@ -100,7 +100,7 @@ class Variable(Symbol):
             e.__dict__['d_'+self._codename] = 0
 
     def get_derivatives(self,
-                        # *,
+                        *,
                         entities=None
                         ):
         """
