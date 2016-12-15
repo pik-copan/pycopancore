@@ -325,7 +325,7 @@ class RunnerPrototype(_AbstractRunner):
             # Delete old derivatives if there are any
             offset = next_offset
             # set up the counter
-        rhs_array = np.zeros(offset)
+
         # create the output-array as a flat array to give to odeint
 
         #
@@ -336,18 +336,21 @@ class RunnerPrototype(_AbstractRunner):
         # TODO: ... were pretty strange. Maybe we need another integrator for
         # TODO: ... this?
 
-        for process in self.explicit_processes:
-            print(type(self.model.explicit_variables[0].entities))
-            for entity in self.model.explicit_variables.entities:
-                process.specification(entity)
+            # Since the following are at a different identation level than in
+            # the prototype, I'm not shure that thid work the right way
+            for process in self.explicit_processes:
+                for entity in variable.entities:
+                    process.specification(entity)
 
         #
         # Call derivatives of odes
         #
 
-        for process in self.ode_processes:
-            for entity in self.model.ODE_variables.entities:
-                process.specification(entity, t)
+            for process in self.ode_processes:
+                for entity in variable.entities:
+                    process.specification(entity, t)
+
+        rhs_array = np.zeros(offset)
 
         # Calculation of derivatives
         offset = 0  # Again, a counter

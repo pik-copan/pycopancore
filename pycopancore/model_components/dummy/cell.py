@@ -81,7 +81,7 @@ class Cell(Cell_, abstract.Cell):
         a = self.capacity
         b = self.resource
         growth_rate = 0.5
-        return b * growth_rate * (1 - b / a)
+        self.resource = b * growth_rate * (1 - b / a)
 
     def a_step_function(self):
         """
@@ -95,8 +95,7 @@ class Cell(Cell_, abstract.Cell):
         return_list : list
             [first execution-time, time-step, new step_resource]
         """
-        a = self.step_resource
-        return a+2
+        self.step_resource += 2
 
     def a_event_function(self):
         """
@@ -107,10 +106,9 @@ class Cell(Cell_, abstract.Cell):
         Returns
         -------
         """
-        a = self.event_value
-        return a+1
+        self.event_value += 1
 
-    def event_timing(self, t):
+    def step_timing(self, t):
         """
         Function to return next time of a step-function
         Parameters
@@ -133,14 +131,14 @@ class Cell(Cell_, abstract.Cell):
         """
         b = self.capacity
         c = self.resource
-        return 0.3 * (b-c)
+        self.explicit_value = 0.3 * b + c
 
     processes = [
         ODE('growth_function', [Cell_.resource], a_ode_function),
         Step('step_function',
              [Cell_.step_resource],
              [0.1,
-              event_timing,
+              step_timing,
               a_step_function]),
         Event('event_function',
               [Cell_.event_value],
