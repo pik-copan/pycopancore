@@ -219,18 +219,10 @@ class RunnerPrototype2(_AbstractRunner):
             method = step.specification[2]
             if first_execution_time == t_0:
                 # loop over all variables of corresponding step
-                i = 0
                 for variable in self.model.step_variables:
-                    # loop over all entities of corresponding variable
-                    for entity in self.model.step_variable.entities:
-                        # also possible: variable.entities
-                        step_variable = method(entity)
-                        # returns variables that are returned in second index
-                        step_variables.append(step_variable)
-                    variable.set_values(self.model.step_variable.entities,
-                                        step_variables)
-                    # writes the calculated variable of entity into list
-                    i += 1
+                    for entity in variable.entities:
+                        # also possible: variable.entities ?
+                        method(entity)
                 next_time = next_time_func(t)  # calling next_time with function
                 # Same time for all entities? self. necessary?
             else:
@@ -280,6 +272,8 @@ class RunnerPrototype2(_AbstractRunner):
             # Now: How do we calculate explicit functions during the odeint?
             # This must be done in get_derivatives, which needs to call
             # ode_rhs and complete_explicits!
+
+            # Save ODE- and Explicit (?) variables to trajectory
 
             # After all that is done, calculate what happens at the
             # discontinuity
@@ -332,4 +326,4 @@ class RunnerPrototype2(_AbstractRunner):
             # It consists of the event/step information just calculated and the
             # information calculated by integrating and by doing explicit funcs
 
-        # After the while loop has done its work, return the trajectory-dict
+        return trajectory_dict
