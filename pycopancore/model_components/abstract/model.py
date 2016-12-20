@@ -7,18 +7,13 @@ class Model(object):
 
     name = None  # a unique name for the model component
     description = None  # some description
-    requires = []  # list of other model components required for this model
+    requires = None  # list of other model components required for this model
     # component to make sense
 
-    # Mixin classes contributed by this component:
-    individual_mixin = None
-    cell_mixin = None
-    society_mixin = None
-    world_mixin = None
+    # Lists of Mixin classes contributed by this component:
 
-    culture_mixin = None
-    nature_mixin = None
-    metabolism_mixin = None
+    entity_types = None
+    process_taxa = None
 
     def __init__(self):
         return NotImplemented

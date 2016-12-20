@@ -38,16 +38,12 @@ class Model(Model_, abstract.Model):
 
     # Use Mixins as wanted
 
-    cell_mixin = Cell
-    society_mixin = None
-    individual_mixin = None
+    entity_types = [Cell]
+    process_taxa = []
 
-    nature_mixin = None
-    culture_mixin = None
-    metabolism_mixin = None
-
-
-    def __init__(self, #*,
+    def __init__(self,
+                 *,
+                 cells=None,
                  **kwargs
                  ):
         """
@@ -57,3 +53,5 @@ class Model(Model_, abstract.Model):
         kwargs
         """
         super(Model, self).__init__(**kwargs)
+
+        self.cells = cells

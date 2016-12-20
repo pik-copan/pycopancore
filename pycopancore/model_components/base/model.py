@@ -27,20 +27,22 @@ import inspect
 
 class Model (Model_, abstract.Model):
     """
-    Again, a docstring is missing
+    This is the base.model file. It serves two purposes:
+    1. Be a the model class of the base component, providing the information
+    about which mixins are to be used of the component AND:
+    2. Provide the configure method.
+    The configure method has a very central role in the COPAN:core framework,
+    it is called before letting run a model. It then searches which model class
+    is used from the model module. It will then go through all components
+    listed there and collect all variables and processes of said components.
     """
 
     #
     # Definitions of class attributes
     #
 
-    cell_mixin = Cell
-    individual_mixin = Individual
-    society_mixin = Society
-
-    nature_mixin = Nature
-    culture_mixin = Culture
-    metabolism_mixin = Metabolism
+    entity_types = [Cell, Individual, Society]
+    process_taxa = [Nature, Culture, Metabolism]
 
     #
     #  Definitions of internal methods
@@ -79,14 +81,13 @@ class Model (Model_, abstract.Model):
         self.societies = societies
         self.culture = culture
 
-        # This is defined if model.configure was called before
-        for v in self.variables:
-            if v.entity_type == Individual:
-                v.entities = self.individuals
+        for (v, oc) in self.variables:
+            if v.entity_type == Society:
+                v.entities = self.societies
             elif v.entity_type == Cell:
                 v.entities = self.cells
-            elif v.entity_type == Society:
-                v.entities = self.societies
+            elif v.entity_type == Individual:
+                v.entities = self.individuals
 
     #
     #  Definitions of further methods
@@ -111,25 +112,13 @@ class Model (Model_, abstract.Model):
         and processes to designated lists.
         """
 
-        cls.society_variables_dict = {}
-        cls.society_processes = []
-        cls.cell_variables_dict = {}
-        cls.cell_processes = []
-        cls.individual_variables_dict = {}
-        cls.individual_processes = []
-        cls.metabolism_processes = []
-        cls.metabolism_variables_dict = {}
-        cls.nature_processes = []
-        cls.nature_variables_dict = {}
-        cls.culture_processes = []
-        cls.culture_variables_dict = {}
-        cls.other_variables_dict = {}
-
         cls.entity_variables = []
         cls.taxon_variables = []
 
-        cls.variables = []
-        cls.processes = []
+        cls.variables = []  # save in pairs: (variable, owning_class)
+        cls.processes = []  # save in pairs: (process, owning_class)
+
+        cls.variables_dict = {}
 
         cls.ODE_variables = []
         cls.explicit_variables = []
@@ -144,7 +133,6 @@ class Model (Model_, abstract.Model):
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
         parents = list(inspect.getmro(cls))[1:]
-        print('parent classses to are:', parents)
         cls.components = [c for c in parents
                           if c is not abstract.Model
                           and abstract.Model in inspect.getmro(c)
@@ -153,158 +141,81 @@ class Model (Model_, abstract.Model):
         for c in cls.components:
             interfaceclass = c.__bases__[0]
             print("Model component:", interfaceclass.name, "(", c, ")...")
-
-            if c.cell_mixin is not None:
-                cparents = list(inspect.getmro(c.cell_mixin))
+            # Iterate through all mixins of the component:
+            for et in c.entity_types:
+                print('     entity-type', et)
+                cparents = list(inspect.getmro(et))
                 cvardict = {k: v
                             for cp in cparents
                             for (k, v) in cp.__dict__.items()
                             if isinstance(v, Variable)
                             }
                 for (k, v) in cvardict.items():
-                    print("Cell variable:", v)
-                    if k in cls.cell_variables_dict:
+                    print("         variable:", v)
+                    # check if same var. object was already registered:
+                    if v in [v2 for (v2, et2) in cls.variables]:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype
-                        # (not sure yet,need to think about this)
-                    v.entity_type = Cell
-                    v._codename = k
-                    cls.cell_variables_dict[k] = v
-
-                for p in c.cell_mixin.processes:
-                    print("Cell process:", p)
-                    cls.cell_processes.append(p)
-
-            if c.individual_mixin is not None:
-                iparents = list(inspect.getmro(c.individual_mixin))
-                ivardict = {k: v
-                            for cp in iparents
-                            for (k, v) in cp.__dict__.items()
-                            if isinstance(v, Variable)
-                            }
-                for (k, v) in ivardict.items():
-                    print("Individual variable:", v)
-                    if k in cls.individual_variables_dict:
+                        assert v._codename == k, ('with Codename', k)
+                    if k in cls.variables_dict:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype
-                        # (not sure yet,need to think about this)
-                    v.entity_type = Individual
+                        assert cls.variables_dict[k] == v, \
+                            'Codename already in use by another variable'
                     v._codename = k
-                    cls.individual_variables_dict[k] = v
+                    cls.variables_dict[k] = v
+                    cls.variables.append((v, et))
 
-                for p in c.individual_mixin.processes:
-                    print("Individual process:", p)
-                    cls.individual_processes.append(p)
+                for p in et.processes:
+                    print("         process:", p)
+                    cls.processes.append((p, et))
 
-            if c.society_mixin is not None:
-                sparents = list(inspect.getmro(c.society_mixin))
-                svardict = {k: v
-                            for cp in sparents
-                            for (k, v) in cp.__dict__.items()
-                            if isinstance(v, Variable)
-                            }
-                for (k, v) in svardict.items():
-                    print("Society variable:", v)
-                    if k in cls.society_variables_dict:
-                        print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype
-                        # (not sure yet,need to think about this)
-                    v.entity_type = Society
-                    v._codename = k
-                    cls.society_variables_dict[k] = v
-
-                for p in c.society_mixin.processes:
-                    print("Society process:", p)
-                    cls.society_processes.append(p)
-
-            if c.nature_mixin is not None:
-                nparents = list(inspect.getmro(c.nature_mixin))
-                nvardict = {k: v
-                            for cp in nparents
-                            for (k, v) in cp.__dict__.items()
-                            if isinstance(v, Variable)
-                            }
-                for (k, v) in nvardict.items():
-                    print("Nature variable:", v)
-                    if k in cls.nature_variables_dict:
-                        print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype
-                        # (not sure yet,need to think about this)
-                    v.entity_type = Nature
-                    v._codename = k
-                    cls.nature_variables_dict[k] = v
-
-                for p in c.nature_mixin.processes:
-                    print("Nature process:", p)
-                    cls.nature_processes.append(p)
-
-            if c.culture_mixin is not None:
-                cparents = list(inspect.getmro(c.culture_mixin))
+            # Iterate through all process taxon mixins:
+            for pt in c.process_taxa:
+                print('     process taxon', pt)
+                cparents = list(inspect.getmro(pt))
                 cvardict = {k: v
                             for cp in cparents
                             for (k, v) in cp.__dict__.items()
                             if isinstance(v, Variable)
                             }
                 for (k, v) in cvardict.items():
-                    print("Culture variable:", v)
-                    if k in cls.culture_variables_dict:
+                    print("         variable:", v)
+                    # check if same var. object was already registered:
+                    if v in [v2 for (v2, et2) in cls.variables]:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype
-                        # (not sure yet,need to think about this)
-                    v.entity_type = Culture
-                    v._codename = k
-                    cls.culture_variables_dict[k] = v
-
-                for p in c.culture_mixin.processes:
-                    print("Culture process:", p)
-                    cls.culture_processes.append(p)
-
-            if c.metabolism_mixin is not None:
-                mparents = list(inspect.getmro(c.metabolism_mixin))
-                mvardict = {k: v
-                            for cp in mparents
-                            for (k, v) in cp.__dict__.items()
-                            if isinstance(v, Variable)
-                            }
-                for (k, v) in mvardict.items():
-                    print("Metabolism variable:", v)
-                    if k in cls.metabolism_variables_dict:
+                        assert v._codename == k, ('with Codename', k)
+                    if k in cls.variables_dict:
                         print("already registered by another component")
-                        continue  # This was not in Jobsts Prototype
-                        # (not sure yet,need to think about this)
-                    v.entity_type = Metabolism
+                        assert cls.variables_dict[k] == v, \
+                            'Codename already in use by another variable'
                     v._codename = k
-                    cls.metabolism_variables_dict[k] = v
+                    cls.variables_dict[k] = v
+                    cls.variables.append((v, pt))
 
-                for p in c.metabolism_mixin.processes:
-                    print("Metabolism process:", p)
-                    cls.metabolism_processes.append(p)
+                for p in pt.processes:
+                    print("         process:", p)
+                    cls.processes.append((p, pt))
 
-            cls.variables = (list(cls.cell_variables_dict.values()) +
-                             list(cls.individual_variables_dict.values()) +
-                             list(cls.society_variables_dict.values()) +
-                             list(cls.nature_variables_dict.values()) +
-                             list(cls.culture_variables_dict.values()) +
-                             list(cls.metabolism_variables_dict.values()))
-
-            # The following procedure is also done in the runner, why do it
-            # twice? This is just making the processes apeear twice in the
-            # process lists!
-            cls.processes = (cls.cell_processes +
-                             cls.individual_processes +
-                             cls.society_processes +
-                             cls.nature_processes +
-                             cls.culture_processes +
-                             cls.metabolism_processes)
-
-            for process in cls.processes:
+            for (process, owning_class) in cls.processes:
                 if isinstance(process, ODE):
-                    cls.ODE_variables += process.variables
-                if isinstance(process, Explicit):
-                    cls.explicit_variables += process.variables
-                if isinstance(process, Step):
-                    cls.step_variables += process.variables
-                if isinstance(process, Event):
-                    cls.event_variables += process.variables
+                    cls.ODE_variables += [(v, owning_class)
+                                          for v in process.variables]
+                    cls.ODE_processes += [(process, owning_class)]
+                elif isinstance(process, Explicit):
+                    cls.explicit_variables += [(v, owning_class)
+                                               for v in process.variables]
+                    cls.explicit_processes += [(process, owning_class)]
+                elif isinstance(process, Step):
+                    cls.step_variables += [(v, owning_class)
+                                           for v in process.variables]
+                    cls.step_processes += [(process, owning_class)]
+                elif isinstance(process, Event):
+                    cls.event_variables += [(v, owning_class)
+                                            for v in process.variables]
+                    cls.event_processes += [(process, owning_class)]
+                else:
+                    print('process-type of', process, 'not specified')
+                    print(process.__class__.__name__)
+                    print(object.__str__(process))
+            # TODO: Why is python always appending 2 processes?
 
         print("...done")

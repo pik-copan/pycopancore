@@ -1,7 +1,6 @@
 import numpy as np
 
 from pycopancore.models import base_and_dummy as tb
-from pycopancore.runners.runner_prototype import RunnerPrototype
 from pycopancore.runners.new_prototype import RunnerPrototype2
 
 
@@ -30,4 +29,4 @@ m = tb.Model(societies=societies, cells=cells, individuals=individuals)
 r = RunnerPrototype2(model=m)
 
 traj = r.run(t_1=10, dt=.1)
-#print(traj)
+# print(traj)

@@ -46,31 +46,11 @@ class RunnerPrototype2(_AbstractRunner):
         """
         super(RunnerPrototype2, self).__init__()
         self.model = model
-        self.processes = (model.individual_processes + model.cell_processes
-                          + model.society_processes + model.nature_processes
-                          + model.metabolism_processes + model.culture_processes
-                          #  + model.processes
-                          # model.processes already includes all of the above!
-                          # See comment in model.configure
-                          )
-        self.explicit_processes = []
-        self.event_processes = []
-        self.step_processes = []
-        self.ode_processes = []
-
-        for process in self.processes:
-            if isinstance(process, Explicit):
-                self.explicit_processes.append(process)
-            elif isinstance(process, Event):
-                self.event_processes.append(process)
-            elif isinstance(process, ODE):
-                self.ode_processes.append(process)
-            elif isinstance(process, Step):
-                self.step_processes.append(process)
-            else:
-                print('process-type of', process, 'not specified')
-                print(process.__class__.__name__)
-                print(object.__str__(process))
+        self.processes = (model.processes)
+        self.explicit_processes = model.explicit_processes
+        self.event_processes = model.event_processes
+        self.step_processes = model.step_processes
+        self.ode_processes = model.ODE_processes
 
     def complete_explicits(self, t):
         """
@@ -87,12 +67,11 @@ class RunnerPrototype2(_AbstractRunner):
         """
 
         # Iterate through explicit_processes:
-        for variable in self.model.explicit_variables:
-            for process in self.explicit_processes:
-                for entity in variable.entities:
-                    process.specification(entity, t)
-                # TODO: Do we need to return this as a matrix or is it included
-                # TODO in the output of the odeint?
+        for (p, oc) in self.explicit_processes:
+            print('process = ', p)
+            print('owning class =', oc)
+            for entity in oc.entities:
+                p.specification(entity, t)
 
     def get_derivatives(self, value_array, t):
         """
@@ -195,29 +174,29 @@ class RunnerPrototype2(_AbstractRunner):
         self.complete_explicits(t_0)
 
         # Fill the dictionary with initial values, 2.3 in runner schmeme:
-        for variable in self.model.event_variables:
-            for event in self.event_processes:
-                print('event specification:', event.specification)
-                eventtype = event.specification[0]
-                rate_or_timfunc = event.specification[1]
-                # TODO: Check if the following loop is correct:
-                for entity in variable.entities:
-                    if eventtype == "rate":
-                        next_time = np.random.exponential(1. / rate_or_timfunc)
-                    elif eventtype == "time":
-                        next_time = rate_or_timfunc(t)
-                    else:
-                        print("Invalid specification of the Event: ",
-                              event.name,
-                              "In entity:",
-                              variable.entity)
-                    try:
-                        next_discontinuities[next_time].append((event, entity))
-                    except KeyError:
-                        next_discontinuities[next_time] = [(event, entity)]
+        for (event, oc) in self.event_processes:
+            print('event specification:', event.specification)
+            print('owning class', oc)
+            eventtype = event.specification[0]
+            rate_or_timfunc = event.specification[1]
+            # TODO: Check if the following loop is correct:
+            for entity in oc.entities:
+                if eventtype == "rate":
+                    next_time = np.random.exponential(1. / rate_or_timfunc)
+                elif eventtype == "time":
+                    next_time = rate_or_timfunc(t)
+                else:
+                    print("Invalid specification of the Event: ",
+                          event.name,
+                          "In entity:",
+                          oc.entity)
+                try:
+                    next_discontinuities[next_time].append((event, entity))
+                except KeyError:
+                    next_discontinuities[next_time] = [(event, entity)]
 
         # Fill next_discontinuities with times of step and performn step if
-        # necessary, 2.3 in runner scheme
+        # necessary, also 2.3 in runner scheme
         for step in self.step_processes:
             first_execution_time = step.specification[0]
             next_time_func = step.specification[1]
