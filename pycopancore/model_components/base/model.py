@@ -124,6 +124,10 @@ class Model (Model_, abstract.Model):
         cls.culture_processes = []
         cls.culture_variables_dict = {}
         cls.other_variables_dict = {}
+
+        cls.entity_variables = []
+        cls.taxon_variables = []
+
         cls.variables = []
         cls.processes = []
 
@@ -132,13 +136,20 @@ class Model (Model_, abstract.Model):
         cls.step_variables = []
         cls.event_variables = []
 
+        cls.ODE_processes = []
+        cls.explicit_processes = []
+        cls.step_processes = []
+        cls.event_processes = []
+
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
         parents = list(inspect.getmro(cls))[1:]
+        print('parent classses to are:', parents)
         cls.components = [c for c in parents
                           if c is not abstract.Model
                           and abstract.Model in inspect.getmro(c)
                           ]
+        print('components are:', cls.components)
         for c in cls.components:
             interfaceclass = c.__bases__[0]
             print("Model component:", interfaceclass.name, "(", c, ")...")

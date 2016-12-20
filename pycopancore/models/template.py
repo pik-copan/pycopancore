@@ -78,3 +78,7 @@ class Model(base.Model, COMPONENT.Model):
     """
     name = "This model's name"
     description = "Description of the model"
+    # Make a list of all Entity Types:
+    entity_types = [Cell, Individual, Society]
+    # Make a list of all Process taxons/taxa:
+    process_taxa = [Culture, Metabolism, Nature]

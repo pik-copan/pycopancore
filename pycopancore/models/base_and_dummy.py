@@ -78,3 +78,5 @@ class Model(dummy.Model, base.Model):
     """
     name = "This model's name"
     description = "Description of the model"
+    entity_types = [Cell, Individual, Society]
+    process_taxa = [Culture, Metabolism, Nature]

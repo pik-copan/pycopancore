@@ -44,6 +44,7 @@ class Cell(Cell_, abstract.Cell):
                  step_resource=.3,
                  event_value=.2,
                  explicit_value=.1,
+                 next_step_time=2,
                  **kwargs
                  ):
         """
@@ -56,6 +57,7 @@ class Cell(Cell_, abstract.Cell):
         self.event_value = event_value
         self.explicit_value = explicit_value
         self.step_resource = step_resource
+        self.next_step_time = next_step_time
 
     def __str__(self):
         """
@@ -83,7 +85,7 @@ class Cell(Cell_, abstract.Cell):
         growth_rate = 0.5
         self.resource = b * growth_rate * (1 - b / a)
 
-    def a_step_function(self):
+    def a_step_function(self, t):
         """
         Step-Function
 
@@ -95,9 +97,11 @@ class Cell(Cell_, abstract.Cell):
         return_list : list
             [first execution-time, time-step, new step_resource]
         """
+        assert t == self.next_step_time, "it's not time yet"
         self.step_resource += 2
+        self.next_step_time += 4
 
-    def a_event_function(self):
+    def a_event_function(self, t):
         """
         Event-generating function
         Parameters
@@ -119,9 +123,9 @@ class Cell(Cell_, abstract.Cell):
         -------
 
         """
-        return t+1
+        return self.next_step_time
 
-    def a_explicit_function(self):
+    def a_explicit_function(self, t):
         """
         Explicit function, calculates something like fertilizer that is
         dependend on the current resource and capacity

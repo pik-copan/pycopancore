@@ -31,6 +31,7 @@ class Cell_(object):
     step_resource = Variable('step resource')
     event_value = Variable('event value')
     explicit_value = Variable('explicit value')
+    next_step_time = Variable('next time to call step func')
 
 #
 #  Define class Model_

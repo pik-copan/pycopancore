@@ -90,7 +90,7 @@ class RunnerPrototype2(_AbstractRunner):
         for variable in self.model.explicit_variables:
             for process in self.explicit_processes:
                 for entity in variable.entities:
-                    process.specification(entity)
+                    process.specification(entity, t)
                 # TODO: Do we need to return this as a matrix or is it included
                 # TODO in the output of the odeint?
 
@@ -108,10 +108,10 @@ class RunnerPrototype2(_AbstractRunner):
         -------
 
         """
-        # Call complete explicit functions
+        # Call complete explicit functions, 3.1.2 in runner scheme
         self.complete_explicits(self)
 
-        # Call ode_rhs
+        # Call ode_rhs, 3.1.3 in runner scheme
         return_array = self.ode_rhs(value_array, t)
 
         # return derivative_array
@@ -151,13 +151,14 @@ class RunnerPrototype2(_AbstractRunner):
 
         derivative_array = np.zeros(offset)
 
-        # Calculation of derivatives
+        # Calculation of derivatives:
         offset = 0  # Again, a counter
         for variable in self.model.ODE_variables:
             next_offset = offset + len(variable.entities)
+            # Get the calculated derivatives and write them to output array:
             derivative_array[offset:next_offset] = variable.get_derivatives(
                 entities=variable.entities)
-            # Get the calculated derivatives and write them to output array
+
             offset = next_offset
 
         return derivative_array
@@ -190,7 +191,10 @@ class RunnerPrototype2(_AbstractRunner):
         # Create dictionary to put in the discontinuities:
         next_discontinuities = {}
 
-        # Fill the dictionary with initial values:
+        # Complete/calculate explicit Functions, 2.2 in runner scheme
+        self.complete_explicits(t_0)
+
+        # Fill the dictionary with initial values, 2.3 in runner schmeme:
         for variable in self.model.event_variables:
             for event in self.event_processes:
                 print('event specification:', event.specification)
@@ -212,7 +216,8 @@ class RunnerPrototype2(_AbstractRunner):
                     except KeyError:
                         next_discontinuities[next_time] = [(event, entity)]
 
-        step_variables = []
+        # Fill next_discontinuities with times of step and performn step if
+        # necessary, 2.3 in runner scheme
         for step in self.step_processes:
             first_execution_time = step.specification[0]
             next_time_func = step.specification[1]
@@ -222,8 +227,9 @@ class RunnerPrototype2(_AbstractRunner):
                 for variable in self.model.step_variables:
                     for entity in variable.entities:
                         # also possible: variable.entities ?
-                        method(entity)
-                next_time = next_time_func(t)  # calling next_time with function
+                        method(entity, t)
+                        # calling next_time with function:
+                        next_time = next_time_func(entity, t)
                 # Same time for all entities? self. necessary?
             else:
                 next_time = first_execution_time
@@ -232,8 +238,8 @@ class RunnerPrototype2(_AbstractRunner):
             except KeyError:
                 next_discontinuities[next_time] = [step]
 
-        # Complete/calculate explicit Functions
-        self.complete_explicits(t_0)
+        # Complete/calculate explicit Functions not neccessary, since it is
+        # done in get_derivatives
 
         # Enter while loop
         while t < t_1:
@@ -256,27 +262,28 @@ class RunnerPrototype2(_AbstractRunner):
                 offset = next_offset
             initial_array_ode = np.zeros(offset)
             offset = 0
-            # Fill initial_array_ode with values
+            # Fill initial_array_ode with values:
             for variable in self.model.ODE_variables:
                 next_offset = offset + len(variable.entities)
                 initial_array_ode[offset:next_offset] = \
                     variable.get_value_list(entities=variable.entities)
                 offset = next_offset
 
-            # In Odeint, call ODE-rhs to get the functions, which odeint needs
-            # to integrate
+            # In Odeint, call Oget_derivatives to get the functions, which
+            # odeint needs to integrate, step 3.1 in runner scheme, then return
+            # the trajectory, 3.2 in runenr scheme
             ode_trajectory = integrate.odeint(self.get_derivatives,
                                               initial_array_ode,
                                               ts)
 
-            # Now: How do we calculate explicit functions during the odeint?
-            # This must be done in get_derivatives, which needs to call
-            # ode_rhs and complete_explicits!
+            # Now: Take the time steps used in odeint and calculate explicit
+            # functions in retrospect, step 3.3 in runner scheme
 
-            # Save ODE- and Explicit (?) variables to trajectory
+            # TODO: Save ODE- and Explicit variables to trajectory, empty
+            # TODO  buffer matrizes
 
             # After all that is done, calculate what happens at the
-            # discontinuity
+            # discontinuity, step 3.4 in runner scheme
             # Delete the discontinuity from the dictionary and calculate when
             # the next one happens:
             t = next_time
@@ -313,7 +320,7 @@ class RunnerPrototype2(_AbstractRunner):
                     for variable in self.model.step_variables:
                         for entity in variable.entities:
                             # also possible: variable.entities ?
-                            method(entity)
+                            method(entity, t)
                     next_time = timefunc(self, t)
                     try:
                         next_discontinuities[next_time].append(discontinuity)
@@ -322,8 +329,11 @@ class RunnerPrototype2(_AbstractRunner):
                 # On this ident-level the discontinuity_out variables have to be
                 # written into a discontinuity_trajectory_matrix
 
-            # Store information that has been calculated in the trajectory_dict
-            # It consists of the event/step information just calculated and the
-            # information calculated by integrating and by doing explicit funcs
+            # Complete state again, 3.5 in runner scheme
+            self.complete_explicits(t)
+
+            # Store all information that has been calculated at time t ->
+            # iterate thrugh all variables!
+
 
         return trajectory_dict
