@@ -55,3 +55,4 @@ class Model(Model_, abstract.Model):
         super(Model, self).__init__(**kwargs)
 
         self.cells = cells
+        print('this is the dummy model, cells type=', type(self.cells))

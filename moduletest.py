@@ -23,7 +23,7 @@ tb.Cell.event_value.set_values(entities=cells, values=np.random.rand(nc))
 tb.Cell.step_resource.set_values(entities=cells, values=np.random.rand(nc))
 tb.Cell.explicit_value.set_values(entities=cells, values=np.random.rand(nc))
 
-
+print('instantiating model')
 m = tb.Model(societies=societies, cells=cells, individuals=individuals)
 
 r = RunnerPrototype2(model=m)

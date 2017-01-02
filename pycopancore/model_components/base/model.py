@@ -81,6 +81,18 @@ class Model (Model_, abstract.Model):
         self.societies = societies
         self.culture = culture
 
+        # TODO:
+        # The following is a temporary workaround. In the future, it might make
+        # sense not to have to call all entities/taxa by itself, but to have a
+        # list like the entity_type list or the process_taxa list!
+        # Otherwise it is possible to take all objects and sort them in respect
+        # to their owning class. This might be slow though
+        print(type(individuals), type(cells), type(societies))
+        self.entity_instances = individuals + societies + cells
+
+        # TODO:
+        # Make this more general using owning class, as stated before for the
+        # entity_instances list:
         for (v, oc) in self.variables:
             if v.entity_type == Society:
                 v.entities = self.societies
@@ -103,7 +115,28 @@ class Model (Model_, abstract.Model):
         -------
         A list of all to the corresponding Variable assigned entities
         """
-        return self.individuals + self.societies + self.cells
+        # The entities dictionary is to be filled. It is a dictionary with
+        # owning class as key and the entities as entries. The owning class
+        # might be a entity type like cell or individual but also a taxon type
+
+        parents = list(inspect.getmro(Model))
+        parentclass = parents[0]
+        interfaceclass = parentclass.__bases__[0]
+        print("parent class is:",
+              interfaceclass.name,
+              "(", parentclass, ")...")
+        entity_dict = {}
+        # Iterate through all instances of all clases and match them with their
+        # owning class
+        for et in parentclass.entity_types:
+            for inst in self.entity_instances:
+                if isinstance(inst, et):
+                    try:
+                        entity_dict[et].append(inst)
+                    except KeyError:
+                        entity_dict[et] = [inst]
+
+        return entity_dict
 
     @classmethod
     def configure(cls):

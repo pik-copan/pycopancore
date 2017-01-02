@@ -68,10 +68,11 @@ class RunnerPrototype2(_AbstractRunner):
 
         # Iterate through explicit_processes:
         for (p, oc) in self.explicit_processes:
-            print('process = ', p)
-            print('owning class =', oc)
-            for entity in oc.entities:
-                p.specification(entity, t)
+            for e in self.model.entities[oc]:
+                print('process = ', p)
+                print('owning class =', oc)
+                print('entity =', e)
+                p.specification(e, t)
 
     def get_derivatives(self, value_array, t):
         """
@@ -180,7 +181,7 @@ class RunnerPrototype2(_AbstractRunner):
             eventtype = event.specification[0]
             rate_or_timfunc = event.specification[1]
             # TODO: Check if the following loop is correct:
-            for entity in oc.entities:
+            for entity in self.model.entities[oc]:
                 if eventtype == "rate":
                     next_time = np.random.exponential(1. / rate_or_timfunc)
                 elif eventtype == "time":
