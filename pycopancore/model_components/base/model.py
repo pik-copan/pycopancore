@@ -50,8 +50,8 @@ class Model (Model_, abstract.Model):
 
     def __init__(self,
                  *,
-                 cells=None,
                  individuals=None,
+                 cells=None,
                  societies=None,
                  nature=None,
                  culture=None,
@@ -71,6 +71,7 @@ class Model (Model_, abstract.Model):
         metabolism
         kwargs
         """
+        print('This is where it changes to None!', type(cells))
         super(Model, self).__init__(**kwargs)
 
         self.nature = nature
@@ -88,7 +89,8 @@ class Model (Model_, abstract.Model):
         # Otherwise it is possible to take all objects and sort them in respect
         # to their owning class. This might be slow though
         print(type(individuals), type(cells), type(societies))
-        self.entity_instances = individuals + societies + cells
+        # print(self.cells[0])
+        # self.entity_instances = individuals + societies + cells
 
         # TODO:
         # Make this more general using owning class, as stated before for the

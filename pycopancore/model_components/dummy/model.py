@@ -52,7 +52,9 @@ class Model(Model_, abstract.Model):
         ----------
         kwargs
         """
-        super(Model, self).__init__(**kwargs)
 
-        self.cells = cells
-        print('this is the dummy model, cells type=', type(self.cells))
+        # Super does not need specification in python 3:
+        super().__init__()
+        # super(Model, self).__init__(**kwargs)
+
+        print('this is the dummy model, cells type=', type(cells))
