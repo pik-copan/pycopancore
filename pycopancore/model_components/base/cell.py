@@ -74,10 +74,10 @@ class Cell(Cell_, abstract.Cell):
         """
         Return a string representation of the object of class base.Cell.
         """
-        return (super().__repr__() +
+        return (# super().__repr__() +
                 ('base.cell object with location %r /'
                  'area %r /'
-                 'society &r /'
+                 'society %r /'
                  'geometry %r '
                  ) % (
                  self.location,

@@ -37,16 +37,10 @@ class Model(Model_):
 
     # Use Mixins as wanted
 
-    cell_mixin = None
-    society_mixin = None
-    individual_mixin = None
+    entity_types = []
+    process_taxa = []
 
-    nature_mixin = None
-    culture_mixin = None
-    metabolism_mixin = None
-
-
-    def __init__(self, #*,
+    def __init__(self,
                  **kwargs
                  ):
         """
@@ -55,4 +49,12 @@ class Model(Model_):
         ----------
         kwargs
         """
-        super(Model, self).__init__(**kwargs)
+        super().__init__(**kwargs)
+
+    def __repr__(self):
+        """
+        Return a string representation of the object of class TEMPLATE.Model.
+        """
+        return (super().__repr__() +
+                ('TEMPLATE.model object')
+                )

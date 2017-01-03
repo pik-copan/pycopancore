@@ -19,6 +19,7 @@ and parameters are defined.
 from .interface import Model_
 from pycopancore.model_components import abstract
 from . import Cell
+import inspect
 
 #
 #  Define class Model
@@ -42,8 +43,6 @@ class Model(Model_, abstract.Model):
     process_taxa = []
 
     def __init__(self,
-                 *,
-                 cells=None,
                  **kwargs
                  ):
         """
@@ -53,13 +52,20 @@ class Model(Model_, abstract.Model):
         kwargs
         """
 
-        # Super does not need specification in python 3:
-        super().__init__()
+        # Super does not need specification in python 3. Also,when this is not
+        # called, base.model is not instantiated
+        super().__init__(**kwargs)
         # super(Model, self).__init__(**kwargs)
 
-        # self.cells = cells
+        self.all_entities = kwargs['entities']
 
-        print('this is the dummy model, cells type=', type(cells))
+        # Is the following necessary?
+        # Check this classes' entities and make them part of itself. Now this
+        # is just a dirty workaround, need clean solution for future!
+        subclass = Cell.__subclasses__()[0]
+        self.cells = self.all_entities[subclass]
+
+        print('     dummy model instantiated')
 
     def __repr__(self):
         """

@@ -58,7 +58,7 @@ class Society(Society_, abstract.Society):
         """
         Return a string representation of the object of class base.Society.
         """
-        return (super().__repr__() +
+        return (# super().__repr__() +
                 ('base.society object with population %r'
                  ) % (self.population)
                 )

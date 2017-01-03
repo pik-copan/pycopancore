@@ -49,13 +49,6 @@ class Model (Model_, abstract.Model):
     #
 
     def __init__(self,
-                 *,
-                 individuals=None,
-                 cells=None,
-                 societies=None,
-                 nature=None,
-                 culture=None,
-                 metabolism=None,
                  **kwargs
                  ):
         """
@@ -63,67 +56,62 @@ class Model (Model_, abstract.Model):
 
         Parameters
         ----------
-        cells
-        individuals
-        societies
-        nature
-        culture
-        metabolism
-        kwargs
+        kwargs: dict
+            entities being a dict containing entities as entries and their
+            class as key
         """
-        print('This is where it changes to None!', type(cells))
-        super(Model, self).__init__(**kwargs)
 
-        self.nature = nature
-        self.individuals = individuals
-        self.metabolism = metabolism
-        self.individuals = individuals
-        self.cells = cells
-        self.societies = societies
-        self.culture = culture
+        super().__init__()
 
-        # TODO:
-        # The following is a temporary workaround. In the future, it might make
-        # sense not to have to call all entities/taxa by itself, but to have a
-        # list like the entity_type list or the process_taxa list!
-        # Otherwise it is possible to take all objects and sort them in respect
-        # to their owning class. This might be slow though
-        print(type(individuals), type(cells), type(societies))
-        # print(self.cells[0])
-        self.entity_instances = individuals + societies + cells
+        self._process_taxon_objects = {pt: pt() for pt in self.process_taxa}
+        self.entities_dict = kwargs['entities']
 
-        # TODO:
-        # Make this more general using owning class, as stated before for the
-        # entity_instances list:
+        # tell all variables, to which entities they belong. Someone should be
+        # looking at this code and evaluate if this is sane...
+        # First iterate throug all variables:
         for (v, oc) in self.variables:
-            if v.entity_type == Society:
-                v.entities = self.societies
-            elif v.entity_type == Cell:
-                v.entities = self.cells
-            elif v.entity_type == Individual:
-                v.entities = self.individuals
+            # iterate through the dictionary
+            for key, item in self.entities_dict.items():
+                # iterate through subclasses of owning class, since when a
+                # class is used in more than one study, the right study has to
+                # be chosen:
+                for subclass in oc.__subclasses__():
+                    if subclass == key:
+                        v.entities = item
+                        continue
+
+        # TODO:
+        # is it necessary to make all items in self.entities_dict known
+        # to the object itself? Then we need something like this:
+        #   for et in Model.entity_types:
+        #       for key, item in self.entities_dict.items():
+        #           for subclass in et.__subclass__():
+        #               if subclass == key:
+        #                   self.('et'+'s') = item
+        #
+        # This is doing something like this hopefully:
+        # subclass = find the right subclass (study)
+        # self.cells = entities[subclass]
+        # But how do I tell it, that the variable is e.g. cells and not 'Cells'
+
+        print('     base model instantiated')
 
     def __repr__(self):
         """
         Return a string representation of the object of class base.Model.
         """
-        # Does this make sense here? Maybe it is better just to list the
-        # classes, of which the object stem from, since this is just a repr and
-        # it shall be readable!
+        # Is it necessary to list all objects? Or are classes sufficient?
+        keys_entities = []
+        keys_process_taxa = []
+        for key, item in self.entities_dict:
+            keys_entities.append(key)
+        for key, item in self._process_taxon_objects:
+            keys_process_taxa.append(key)
         return (super().__repr__() +
-                ('base.model object with individuals %r /'
-                 'cells %r /'
-                 'societies &r /'
-                 'nature %r /'
-                 'culture %r /'
-                 'metabolism %r'
-                 ) % (
-                      self.individuals,
-                      self.cells,
-                      self.societies,
-                      self.nature,
-                      self.culture,
-                      self.metabolism
+                ('base.model object with entities %r /'
+                 'and process taxa %r'
+                 ) % (keys_entities,
+                      keys_process_taxa
                       )
                 )
 
@@ -134,35 +122,22 @@ class Model (Model_, abstract.Model):
     @property
     def entities(self):
         """
-        A function to return the entities to that corresponding variables are
-        assigned from the Model instance.
+        A function to return a dictionary with classes as key and entities as
+        entries
 
         Returns
         -------
-        A list of all to the corresponding Variable assigned entities
+        A dictionary with classes as key and entites as entries
         """
-        # The entities dictionary is to be filled. It is a dictionary with
-        # owning class as key and the entities as entries. The owning class
-        # might be a entity type like cell or individual but also a taxon type
+        # Is it better to have the owning class as key or the subclass, so
+        # for example base.Cell or base_and_dummy.Cell?
 
-        parents = list(inspect.getmro(Model))
-        parentclass = parents[0]
-        interfaceclass = parentclass.__bases__[0]
-        print("parent class is:",
-              interfaceclass.name,
-              "(", parentclass, ")...")
-        entity_dict = {}
-        # Iterate through all instances of all clases and match them with their
-        # owning class
-        for et in parentclass.entity_types:
-            for inst in self.entity_instances:
-                if isinstance(inst, et):
-                    try:
-                        entity_dict[et].append(inst)
-                    except KeyError:
-                        entity_dict[et] = [inst]
+        entities_dict_2 = {}
+        for key, item in self.entities_dict.items():
+            print('\n key', key)
+            print('\n items:', item)
 
-        return entity_dict
+        return self.entities_dict
 
     @classmethod
     def configure(cls):

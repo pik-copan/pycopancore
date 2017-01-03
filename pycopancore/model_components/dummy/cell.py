@@ -66,7 +66,7 @@ class Cell(Cell_, abstract.Cell):
         return (super().__repr__() +
                 ('dummy.cell object with resource %r /'
                  'capacity %r /'
-                 'step_resource &r /'
+                 'step_resource %r /'
                  'event_value %r /'
                  'explicit_value %r /'
                  'next_step_time %r'

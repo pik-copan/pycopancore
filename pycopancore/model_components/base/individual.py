@@ -58,7 +58,7 @@ class Individual(Individual_, abstract.Individual):
         """
         Return a string representation of the object of class base.Individual.
         """
-        return (super().__repr__() +
+        return (# super().__repr__() +
                 ('base.individual object with cell %r'
                  ) % (
                  self.cell
