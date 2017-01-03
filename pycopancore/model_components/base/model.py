@@ -90,7 +90,7 @@ class Model (Model_, abstract.Model):
         # to their owning class. This might be slow though
         print(type(individuals), type(cells), type(societies))
         # print(self.cells[0])
-        # self.entity_instances = individuals + societies + cells
+        self.entity_instances = individuals + societies + cells
 
         # TODO:
         # Make this more general using owning class, as stated before for the
@@ -102,6 +102,30 @@ class Model (Model_, abstract.Model):
                 v.entities = self.cells
             elif v.entity_type == Individual:
                 v.entities = self.individuals
+
+    def __repr__(self):
+        """
+        Return a string representation of the object of class base.Model.
+        """
+        # Does this make sense here? Maybe it is better just to list the
+        # classes, of which the object stem from, since this is just a repr and
+        # it shall be readable!
+        return (super().__repr__() +
+                ('base.model object with individuals %r /'
+                 'cells %r /'
+                 'societies &r /'
+                 'nature %r /'
+                 'culture %r /'
+                 'metabolism %r'
+                 ) % (
+                      self.individuals,
+                      self.cells,
+                      self.societies,
+                      self.nature,
+                      self.culture,
+                      self.metabolism
+                      )
+                )
 
     #
     #  Definitions of further methods

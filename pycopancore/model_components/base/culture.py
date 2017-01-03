@@ -50,10 +50,13 @@ class Culture(Culture_, abstract.Culture):
         super(Culture, self).__init__(**kwargs)
         pass
 
-    def __str__(self):
+    def __repr__(self):
         """
-        Return a string representation of the object of class Culture.
+        Return a string representation of the object of class base.Culture.
         """
+        return (super().__repr__() +
+                ('base.culture object')
+                )
 
     processes = []
 

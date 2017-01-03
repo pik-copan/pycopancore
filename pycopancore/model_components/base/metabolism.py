@@ -16,9 +16,8 @@ Metabolism_ in that basic variables and parameters are defined.
 #  Imports
 #
 
-from pycopancore import Variable
 from pycopancore.model_components import abstract
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Metabolism_
 
 #
 #  Define class Metabolism
@@ -50,10 +49,13 @@ class Metabolism(Metabolism_, abstract.Metabolism):
         super(Metabolism, self).__init__(**kwargs)
         pass
 
-    def __str__(self):
+    def __repr__(self):
         """
-        Return a string representation of the object of class Metabolism.
+        Return a string representation of the object of class base.Metabolism.
         """
+        return (super().__repr__() +
+                ('base.metabolism')
+                )
 
     processes = []
 

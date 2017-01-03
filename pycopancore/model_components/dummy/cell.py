@@ -59,10 +59,26 @@ class Cell(Cell_, abstract.Cell):
         self.step_resource = step_resource
         self.next_step_time = next_step_time
 
-    def __str__(self):
+    def __repr__(self):
         """
-        Return a string representation of the object of class cells
+        Return a string representation of the object of class dummy.Cell.
         """
+        return (super().__repr__() +
+                ('dummy.cell object with resource %r /'
+                 'capacity %r /'
+                 'step_resource &r /'
+                 'event_value %r /'
+                 'explicit_value %r /'
+                 'next_step_time %r'
+                 ) % (
+                 self.resource,
+                 self.capacity,
+                 self.step_resource,
+                 self.event_value,
+                 self.explicit_value,
+                 self.next_step_time
+                 )
+                )
 
     #
     #  Definitions of further methods

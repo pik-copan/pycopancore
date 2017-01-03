@@ -70,10 +70,22 @@ class Cell(Cell_, abstract.Cell):
 
         self.geometry = geometry
 
-    def __str__(self):
+    def __repr__(self):
         """
-        Return a string representation of the object of class Cell.
+        Return a string representation of the object of class base.Cell.
         """
+        return (super().__repr__() +
+                ('base.cell object with location %r /'
+                 'area %r /'
+                 'society &r /'
+                 'geometry %r '
+                 ) % (
+                 self.location,
+                 self.area,
+                 self.society,
+                 self.geometry
+                 )
+                )
 
     processes = []
 

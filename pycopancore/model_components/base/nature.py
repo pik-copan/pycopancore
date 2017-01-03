@@ -50,10 +50,13 @@ class Nature(Nature_, abstract.Nature):
         super(Nature, self).__init__(**kwargs)
         pass
 
-    def __str__(self):
+    def __repr__(self):
         """
-        Return a string representation of the object of class Nature.
+        Return a string representation of the object of class base.Nature.
         """
+        return (super().__repr__() +
+                ('base.nature object with location')
+                )
 
     processes = []
 

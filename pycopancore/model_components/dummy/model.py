@@ -57,4 +57,15 @@ class Model(Model_, abstract.Model):
         super().__init__()
         # super(Model, self).__init__(**kwargs)
 
+        # self.cells = cells
+
         print('this is the dummy model, cells type=', type(cells))
+
+    def __repr__(self):
+        """
+        Return a string representation of the object of class dummy.Model.
+        """
+        return (super().__repr__() +
+                ('dummy.model object with cells %r '
+                 ) % (self.cells)
+                )
