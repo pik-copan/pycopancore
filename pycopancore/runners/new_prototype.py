@@ -249,15 +249,16 @@ class RunnerPrototype2(_AbstractRunner):
                     variable.get_value_list(entities=variable.entities)
                 offset = next_offset
 
-            # In Odeint, call Oget_derivatives to get the functions, which
+            # In Odeint, call get_derivatives to get the functions, which
             # odeint needs to integrate, step 3.1 in runner scheme, then return
-            # the trajectory, 3.2 in runenr scheme
+            # the trajectory, 3.2 in runner scheme
             ode_trajectory = integrate.odeint(self.get_derivatives,
                                               initial_array_ode,
                                               ts)
 
             # Now: Take the time steps used in odeint and calculate explicit
             # functions in retrospect, step 3.3 in runner scheme
+            # Don't forget to save them to an array
 
             # TODO: Save ODE- and Explicit variables to trajectory, empty
             # TODO  buffer matrizes
@@ -313,7 +314,6 @@ class RunnerPrototype2(_AbstractRunner):
             self.complete_explicits(t)
 
             # Store all information that has been calculated at time t ->
-            # iterate thrugh all variables!
-
+            # iterate through all variables!
 
         return trajectory_dict
