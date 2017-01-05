@@ -166,45 +166,45 @@ class Model (Model_, abstract.Model):
 
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
+        
+        # First analyse by component:
         parents = list(inspect.getmro(cls))[1:]
         cls.components = [c for c in parents
                           if c is not abstract.Model
                           and abstract.Model in inspect.getmro(c)
                           ]
-        print('components are:', cls.components)
+        print('\nComponents:', cls.components)
         for c in cls.components:
             interfaceclass = c.__bases__[0]
             print("Model component:", interfaceclass.name, "(", c, ")...")
             # Iterate through all mixins of the component:
-            for et in c.entity_types:
-                print('     entity-type', et)
-                cparents = list(inspect.getmro(et))
+            for etmixin in c.entity_types:
+                print('    Entity-type:', etmixin)
+                cparents = list(inspect.getmro(etmixin))
                 cvardict = {k: v
                             for cp in cparents
                             for (k, v) in cp.__dict__.items()
                             if isinstance(v, Variable)
                             }
                 for (k, v) in cvardict.items():
-                    print("         variable:", v)
+                    print("        Variable:", v)
                     # check if same var. object was already registered:
-                    if v in [v2 for (v2, et2) in cls.variables]:
-                        print("already registered by another component")
+                    if v in cls.variables_dict.values():
+                        print("            already registered by another component")
                         assert v._codename == k, ('with Codename', k)
-                    if k in cls.variables_dict:
-                        print("already registered by another component")
+                    if k in cls.variables_dict.keys():
+                        print("            already registered by another component")
                         assert cls.variables_dict[k] == v, \
                             'Codename already in use by another variable'
                     v._codename = k
                     cls.variables_dict[k] = v
-                    cls.variables.append((v, et))
 
-                for p in et.processes:
-                    print("         process:", p)
-                    cls.processes.append((p, et))
+                for p in etmixin.processes:
+                    print("        Process:", p)
 
             # Iterate through all process taxon mixins:
             for pt in c.process_taxa:
-                print('     process taxon', pt)
+                print('    Process taxon:', pt)
                 cparents = list(inspect.getmro(pt))
                 cvardict = {k: v
                             for cp in cparents
@@ -212,44 +212,66 @@ class Model (Model_, abstract.Model):
                             if isinstance(v, Variable)
                             }
                 for (k, v) in cvardict.items():
-                    print("         variable:", v)
+                    print("        Variable:", v)
                     # check if same var. object was already registered:
-                    if v in [v2 for (v2, et2) in cls.variables]:
-                        print("already registered by another component")
+                    if v in cls.variables_dict.values():
+                        print("          already registered by another component")
                         assert v._codename == k, ('with Codename', k)
-                    if k in cls.variables_dict:
-                        print("already registered by another component")
+                    if k in cls.variables_dict.keys():
+                        print("          already registered by another component")
                         assert cls.variables_dict[k] == v, \
                             'Codename already in use by another variable'
                     v._codename = k
                     cls.variables_dict[k] = v
-                    cls.variables.append((v, pt))
 
                 for p in pt.processes:
-                    print("         process:", p)
-                    cls.processes.append((p, pt))
+                    print("        Process:", p)
 
-            for (process, owning_class) in cls.processes:
-                if isinstance(process, ODE):
-                    cls.ODE_variables += [(v, owning_class)
-                                          for v in process.variables]
-                    cls.ODE_processes += [(process, owning_class)]
-                elif isinstance(process, Explicit):
-                    cls.explicit_variables += [(v, owning_class)
-                                               for v in process.variables]
-                    cls.explicit_processes += [(process, owning_class)]
-                elif isinstance(process, Step):
-                    cls.step_variables += [(v, owning_class)
+        # Now analyse by entity type and process taxon in order to find correct owning classes:
+        print('\nEntity types:', cls.entity_types)
+        print('Process taxa:', cls.process_taxa)
+        for owning_class in cls.entity_types + cls.process_taxa:
+            print('    Entity-type/Process taxon:', owning_class)
+            parents = list(inspect.getmro(owning_class))
+            for mixin in parents:
+                cparents = list(inspect.getmro(mixin))
+                cvardict = {k: v
+                            for cp in cparents
+                            for (k, v) in cp.__dict__.items()
+                            if isinstance(v, Variable)
+                            }
+                for (k, v) in cvardict.items():
+                    v.owning_classes.append(owning_class)
+                    if (v, owning_class) not in cls.variables: 
+                        print("        Variable:", v)
+                        cls.variables.append((v, owning_class))
+                for p in mixin.processes:
+                    p.owning_classes.append(owning_class)
+                    if (p, owning_class) not in cls.processes:
+                        print("        Process:", p)
+                        cls.processes.append((p, owning_class))
+
+        for (process, owning_class) in cls.processes:
+            if isinstance(process, ODE):
+                cls.ODE_variables += [(v, owning_class)
+                                      for v in process.variables]
+                cls.ODE_processes += [(process, owning_class)]
+            elif isinstance(process, Explicit):
+                cls.explicit_variables += [(v, owning_class)
                                            for v in process.variables]
-                    cls.step_processes += [(process, owning_class)]
-                elif isinstance(process, Event):
-                    cls.event_variables += [(v, owning_class)
-                                            for v in process.variables]
-                    cls.event_processes += [(process, owning_class)]
-                else:
-                    print('process-type of', process, 'not specified')
-                    print(process.__class__.__name__)
-                    print(object.__str__(process))
-            # TODO: Why is python always appending 2 processes?
+                cls.explicit_processes += [(process, owning_class)]
+            elif isinstance(process, Step):
+                cls.step_variables += [(v, owning_class)
+                                       for v in process.variables]
+                cls.step_processes += [(process, owning_class)]
+            elif isinstance(process, Event):
+                cls.event_variables += [(v, owning_class)
+                                        for v in process.variables]
+                cls.event_processes += [(process, owning_class)]
+            else:
+                print('process-type of', process, 'not specified')
+                print(process.__class__.__name__)
+                print(object.__str__(process))
+        # TODO: Why is python always appending 2 processes? Jobst: Probably solved...
 
         print("...done")
