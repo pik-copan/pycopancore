@@ -28,9 +28,13 @@ class Variable(Symbol):
     is connected to an entity, of which it is a variable.
     """
 
-    entity_type = None
+    owning_classes = None
     _codename = None
 
+    def __init__(self):
+        super().__init__()
+        self.owning_class = []
+        
     def set_values(self,
                    *,
                    dict=None,
