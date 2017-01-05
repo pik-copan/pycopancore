@@ -7,3 +7,5 @@ class Culture (_AbstractEntityMixin):
     """
     def __init__(self):
         super(_AbstractEntityMixin, self).__init__()
+
+    processes = []

@@ -14,7 +14,8 @@ Here the docstring is missing
 #  Imports
 #
 
-from pycopancore import Variable, ODE, Explicit, Step, Event
+from pycopancore import Variable, ODE, Explicit, Step, Event, \
+    _AbstractEntityMixin, _AbstractDynamicsMixin
 from .interface import Model_
 from pycopancore.model_components import abstract
 from . import Cell, Nature, Individual, Culture, Society, Metabolism
@@ -66,33 +67,20 @@ class Model (Model_, abstract.Model):
         self._process_taxon_objects = {pt: pt() for pt in self.process_taxa}
         self.entities_dict = kwargs['entities']
 
-        # tell all variables, to which entities they belong. Someone should be
-        # looking at this code and evaluate if this is sane...
-        # First iterate throug all variables:
-        for (v, oc) in self.variables:
-            # iterate through the dictionary
-            for key, item in self.entities_dict.items():
-                # iterate through subclasses of owning class, since when a
-                # class is used in more than one study, the right study has to
-                # be chosen:
-                for subclass in oc.__subclasses__():
-                    if subclass == key:
-                        v.entities = item
-                        continue
+
 
         # TODO:
         # is it necessary to make all items in self.entities_dict known
-        # to the object itself? Then we need something like this:
-        #   for et in Model.entity_types:
-        #       for key, item in self.entities_dict.items():
-        #           for subclass in et.__subclass__():
-        #               if subclass == key:
-        #                   self.('et'+'s') = item
-        #
-        # This is doing something like this hopefully:
-        # subclass = find the right subclass (study)
-        # self.cells = entities[subclass]
-        # But how do I tell it, that the variable is e.g. cells and not 'Cells'
+        # to the object itself?
+
+        # TODO:
+        # Is this really what owning_classes is about???
+        # Tell all variables and proceses which entities they have,
+        # so set v/p.owning_classes:
+        for (p, oc) in self.processes:
+            p.owning_classes = self.entities_dict[oc]
+        for (v, oc) in self.variables:
+            v.owning_classes = self.entities_dict[oc]
 
         print('     base model instantiated')
 
@@ -132,11 +120,6 @@ class Model (Model_, abstract.Model):
         # Is it better to have the owning class as key or the subclass, so
         # for example base.Cell or base_and_dummy.Cell?
 
-        entities_dict_2 = {}
-        for key, item in self.entities_dict.items():
-            print('\n key', key)
-            print('\n items:', item)
-
         return self.entities_dict
 
     @classmethod
@@ -166,7 +149,7 @@ class Model (Model_, abstract.Model):
 
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
-        
+
         # First analyse by component:
         parents = list(inspect.getmro(cls))[1:]
         cls.components = [c for c in parents
@@ -190,10 +173,12 @@ class Model (Model_, abstract.Model):
                     print("        Variable:", v)
                     # check if same var. object was already registered:
                     if v in cls.variables_dict.values():
-                        print("            already registered by another component")
+                        print("            already registered by another "
+                              "component")
                         assert v._codename == k, ('with Codename', k)
                     if k in cls.variables_dict.keys():
-                        print("            already registered by another component")
+                        print("            already registered by another "
+                              "component")
                         assert cls.variables_dict[k] == v, \
                             'Codename already in use by another variable'
                     v._codename = k
@@ -215,10 +200,12 @@ class Model (Model_, abstract.Model):
                     print("        Variable:", v)
                     # check if same var. object was already registered:
                     if v in cls.variables_dict.values():
-                        print("          already registered by another component")
+                        print("          already registered by another "
+                              "component")
                         assert v._codename == k, ('with Codename', k)
                     if k in cls.variables_dict.keys():
-                        print("          already registered by another component")
+                        print("          already registered by another "
+                              "component")
                         assert cls.variables_dict[k] == v, \
                             'Codename already in use by another variable'
                     v._codename = k
@@ -227,13 +214,20 @@ class Model (Model_, abstract.Model):
                 for p in pt.processes:
                     print("        Process:", p)
 
-        # Now analyse by entity type and process taxon in order to find correct owning classes:
+        # Now analyse by entity type and process taxon in order to find correct
+        # owning classes:
         print('\nEntity types:', cls.entity_types)
         print('Process taxa:', cls.process_taxa)
         for owning_class in cls.entity_types + cls.process_taxa:
             print('    Entity-type/Process taxon:', owning_class)
             parents = list(inspect.getmro(owning_class))
-            for mixin in parents:
+            components = [c for c in parents
+                          if issubclass(c, (_AbstractEntityMixin,
+                                            _AbstractEntityMixin))
+                          and c not in (_AbstractEntityMixin,
+                                        _AbstractEntityMixin)]
+            for mixin in components:
+                print('        Mixin:', mixin)
                 cparents = list(inspect.getmro(mixin))
                 cvardict = {k: v
                             for cp in cparents
@@ -242,7 +236,7 @@ class Model (Model_, abstract.Model):
                             }
                 for (k, v) in cvardict.items():
                     v.owning_classes.append(owning_class)
-                    if (v, owning_class) not in cls.variables: 
+                    if (v, owning_class) not in cls.variables:
                         print("        Variable:", v)
                         cls.variables.append((v, owning_class))
                 for p in mixin.processes:

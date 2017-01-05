@@ -25,15 +25,14 @@ class _AbstractProcess(object):
     type = None
     timetype = None
     smoothness = None
-    
+
     owning_classes = None
 
     def __init__(self):
         """
         Initializes an _AbstractProcess instance.
         """
-        # Is "super..." necessary here?
-        # super(_AbstractProcess, self).__init__()
+
         self.owning_classes = []
 
     def __repr__(self):

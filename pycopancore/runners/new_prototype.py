@@ -69,9 +69,6 @@ class RunnerPrototype2(_AbstractRunner):
         # Iterate through explicit_processes:
         for (p, oc) in self.explicit_processes:
             for e in self.model.entities[oc]:
-                print('process = ', p)
-                print('owning class =', oc)
-                print('entity =', e)
                 p.specification(e, t)
 
     def get_derivatives(self, value_array, t):
@@ -111,33 +108,33 @@ class RunnerPrototype2(_AbstractRunner):
 
         """
         offset = 0  # this is a counter
-        for variable in self.model.ODE_variables:
+        for (variable, oc) in self.model.ODE_variables:
             # call all varibles which are in the list ODE_variables which is
             # defined in model_components/base/model
-            next_offset = offset + len(variable.entities)
+            next_offset = offset + len(self.model.entities[oc])
             # second counter to count how many entities are using the variable
-            variable.set_values(entities=variable.entities,
+            variable.set_values(entities=self.model.entities[oc],
                                 values=value_array[offset:next_offset])
             # Write values to variables
-            variable.clear_derivatives(entities=variable.entities)
+            variable.clear_derivatives(entities=self.model.entities[oc])
             # Delete old derivatives if there are any
             offset = next_offset
             # set up the counter
 
             # call methods:
-            for process in self.ode_processes:
-                for entity in variable.entities:
+            for (process, oc) in self.ode_processes:
+                for entity in self.model.entities[oc]:
                     process.specification(entity, t)
 
         derivative_array = np.zeros(offset)
 
         # Calculation of derivatives:
         offset = 0  # Again, a counter
-        for variable in self.model.ODE_variables:
-            next_offset = offset + len(variable.entities)
+        for (variable, oc) in self.model.ODE_variables:
+            next_offset = offset + len(self.model.entities[oc])
             # Get the calculated derivatives and write them to output array:
             derivative_array[offset:next_offset] = variable.get_derivatives(
-                entities=variable.entities)
+                entities=self.model.entities[oc])
 
             offset = next_offset
 
@@ -198,14 +195,14 @@ class RunnerPrototype2(_AbstractRunner):
 
         # Fill next_discontinuities with times of step and performn step if
         # necessary, also 2.3 in runner scheme
-        for step in self.step_processes:
+        for (step, oc) in self.step_processes:
             first_execution_time = step.specification[0]
             next_time_func = step.specification[1]
             method = step.specification[2]
             if first_execution_time == t_0:
                 # loop over all variables of corresponding step
                 for variable in self.model.step_variables:
-                    for entity in variable.entities:
+                    for entity in self.model.entities[oc]:
                         # also possible: variable.entities ?
                         method(entity, t)
                         # calling next_time with function:
@@ -237,16 +234,16 @@ class RunnerPrototype2(_AbstractRunner):
             # Compose initial value-array:
             offset = 0
             # Find out how many variables we have:
-            for variable in self.model.ODE_variables:
-                next_offset = offset + len(variable.entities)
+            for (variable, oc) in self.model.ODE_variables:
+                next_offset = offset + len(self.model.entities[oc])
                 offset = next_offset
             initial_array_ode = np.zeros(offset)
             offset = 0
             # Fill initial_array_ode with values:
-            for variable in self.model.ODE_variables:
-                next_offset = offset + len(variable.entities)
+            for (variable, oc) in self.model.ODE_variables:
+                next_offset = offset + len(self.model.entities[oc])
                 initial_array_ode[offset:next_offset] = \
-                    variable.get_value_list(entities=variable.entities)
+                    variable.get_value_list(entities=self.model.entities[oc])
                 offset = next_offset
 
             # In Odeint, call get_derivatives to get the functions, which
@@ -298,8 +295,8 @@ class RunnerPrototype2(_AbstractRunner):
                 elif isinstance(discontinuity, Step):
                     method = discontinuity.specification[2]
                     timefunc = discontinuity.specification[1]
-                    for variable in self.model.step_variables:
-                        for entity in variable.entities:
+                    for (variable, oc) in self.model.step_variables:
+                        for entity in self.model.entities[oc]:
                             # also possible: variable.entities ?
                             method(entity, t)
                     next_time = timefunc(self, t)

@@ -33,6 +33,7 @@ class Cell_(object):
     explicit_value = Variable('explicit value')
     next_step_time = Variable('next time to call step func')
 
+
 #
 #  Define class Model_
 #
