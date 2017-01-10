@@ -44,7 +44,8 @@ class Cell(Cell_, abstract.Cell):
                  step_resource=.3,
                  event_value=.2,
                  explicit_value=.1,
-                 next_step_time=2,
+                 step_width=2,
+                 last_execution=None,
                  **kwargs
                  ):
         """
@@ -57,7 +58,8 @@ class Cell(Cell_, abstract.Cell):
         self.event_value = event_value
         self.explicit_value = explicit_value
         self.step_resource = step_resource
-        self.next_step_time = next_step_time
+        self.step_width = step_width
+        self.last_execution = last_execution
 
     def __repr__(self):
         """
@@ -69,19 +71,21 @@ class Cell(Cell_, abstract.Cell):
                  'step_resource %r /'
                  'event_value %r /'
                  'explicit_value %r /'
-                 'next_step_time %r'
+                 'step_width %r /'
+                 'last_execution %r'
                  ) % (
                  self.resource,
                  self.capacity,
                  self.step_resource,
                  self.event_value,
                  self.explicit_value,
-                 self.next_step_time
+                 self.step_width,
+                 self.last_execution
                  )
                 )
 
     #
-    #  Definitions of further methods
+    #  Definitions of further methodsnext_step_time,
     #
 
     def a_ode_function(self, t):
@@ -99,7 +103,7 @@ class Cell(Cell_, abstract.Cell):
         a = self.capacity
         b = self.resource
         growth_rate = 0.5
-        self.resource = b * growth_rate * (1 - b / a)
+        self.d_resource += b * growth_rate * (1 - b / a)
 
     def a_step_function(self, t):
         """
@@ -113,9 +117,11 @@ class Cell(Cell_, abstract.Cell):
         return_list : list
             [first execution-time, time-step, new step_resource]
         """
-        assert t == self.next_step_time, "it's not time yet"
+        nt = self.step_timing(t)
+        assert t == nt, "it's not time yet, t = %r and not %r" % (t, nt)
         self.step_resource += 2
-        self.next_step_time += 4
+        self.last_execution = t
+        self.resource += -0.1
 
     def a_event_function(self, t):
         """
@@ -128,7 +134,8 @@ class Cell(Cell_, abstract.Cell):
         """
         self.event_value += 1
 
-    def step_timing(self, t):
+    def step_timing(self,
+                    t):
         """
         Function to return next time of a step-function
         Parameters
@@ -139,7 +146,12 @@ class Cell(Cell_, abstract.Cell):
         -------
 
         """
-        return self.next_step_time
+        if isinstance(self.last_execution, type(None)):
+            self.last_execution = 0
+        if t < self.last_execution:
+            print('last execution time after t!')
+
+        return self.last_execution + self.step_width
 
     def a_explicit_function(self, t):
         """
@@ -157,8 +169,7 @@ class Cell(Cell_, abstract.Cell):
         ODE('growth_function', [Cell_.resource], a_ode_function),
         Step('step_function',
              [Cell_.step_resource],
-             [0.1,
-              step_timing,
+             [step_timing,
               a_step_function]),
         Event('event_function',
               [Cell_.event_value],

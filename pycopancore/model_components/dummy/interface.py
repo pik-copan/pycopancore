@@ -31,7 +31,8 @@ class Cell_(object):
     step_resource = Variable('step resource')
     event_value = Variable('event value')
     explicit_value = Variable('explicit value')
-    next_step_time = Variable('next time to call step func')
+    step_width = Variable('time between two steps')
+    last_execution = Variable('last time step was executed')
 
 
 #

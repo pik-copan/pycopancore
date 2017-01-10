@@ -32,4 +32,4 @@ print('\n runner starting')
 r = RunnerPrototype2(model=m)
 
 traj = r.run(t_1=10, dt=.1)
-# print(traj)
+print(traj)

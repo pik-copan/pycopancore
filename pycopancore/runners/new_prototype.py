@@ -163,7 +163,9 @@ class RunnerPrototype2(_AbstractRunner):
         t = t_0
 
         # First create the dictionary to fill in the trajectory:
-        trajectory_dict = {}
+        trajectory_dict = {'t': np.empty([0])}
+        for (v, oc) in self.model.variables:
+            trajectory_dict[v] = {}
 
         # Create dictionary to put in the discontinuities:
         next_discontinuities = {}
@@ -173,8 +175,8 @@ class RunnerPrototype2(_AbstractRunner):
 
         # Fill the dictionary with initial values, 2.3 in runner schmeme:
         for (event, oc) in self.event_processes:
-            print('event specification:', event.specification)
-            print('owning class', oc)
+            # print('    event specification:', event.specification)
+            # print('    owning class', oc)
             eventtype = event.specification[0]
             rate_or_timfunc = event.specification[1]
             # TODO: Check if the following loop is correct:
@@ -184,9 +186,9 @@ class RunnerPrototype2(_AbstractRunner):
                 elif eventtype == "time":
                     next_time = rate_or_timfunc(t)
                 else:
-                    print("Invalid specification of the Event: ",
+                    print("        Invalid specification of the Event: ",
                           event.name,
-                          "In entity:",
+                          "        In entity:",
                           oc.entity)
                 try:
                     next_discontinuities[next_time].append((event, entity))
@@ -196,35 +198,31 @@ class RunnerPrototype2(_AbstractRunner):
         # Fill next_discontinuities with times of step and performn step if
         # necessary, also 2.3 in runner scheme
         for (step, oc) in self.step_processes:
-            first_execution_time = step.specification[0]
-            next_time_func = step.specification[1]
-            method = step.specification[2]
-            if first_execution_time == t_0:
-                # loop over all variables of corresponding step
-                for variable in self.model.step_variables:
-                    for entity in self.model.entities[oc]:
-                        # also possible: variable.entities ?
-                        method(entity, t)
-                        # calling next_time with function:
-                        next_time = next_time_func(entity, t)
+            next_time_func = step.specification[0]
+            method = step.specification[1]
+            for entity in self.model.entities[oc]:
+                if next_time_func(entity, t) == t_0:
+                    method(entity, t)
+                    # calling next_time with function:
+                    next_time = next_time_func(entity, t)
                 # Same time for all entities? self. necessary?
-            else:
-                next_time = first_execution_time
-            try:
-                next_discontinuities[next_time].append(step)
-            except KeyError:
-                next_discontinuities[next_time] = [step]
+                else:
+                    next_time = next_time_func(entity, t)
+                try:
+                    next_discontinuities[next_time].append((step, entity))
+                except KeyError:
+                    next_discontinuities[next_time] = [(step, entity)]
 
         # Complete/calculate explicit Functions not neccessary, since it is
         # done in get_derivatives
 
         # Enter while loop
         while t < t_1:
-
+            print('    t is', t)
             # Get next discontinuity to find the next timestep where something
             # happens
             next_time = min(next_discontinuities.keys())
-
+            print('    next time is', next_time)
             # Divide time until discontinuity into timesteps of sice dt:
             npoints = np.ceil((next_time - t) / dt) + 1  # resolution
             ts = np.linspace(t, next_time, npoints)
@@ -253,32 +251,47 @@ class RunnerPrototype2(_AbstractRunner):
                                               initial_array_ode,
                                               ts)
 
+            offset = 0
+            for (v, oc) in self.model.ODE_variables:
+                # print('variable, oc:', v, oc)
+                next_offset = offset + len(self.model.entities[oc])
+                for i in range(len(self.model.entities[oc])):
+                    entity = self.model.entities[oc][i]
+                    values = ode_trajectory[:, offset + i]
+                    try:
+                        np.concatenate((trajectory_dict[v][entity], values))
+                    except KeyError:
+                        trajectory_dict[v][entity] = values
+                offset = next_offset
+
             # Now: Take the time steps used in odeint and calculate explicit
             # functions in retrospect, step 3.3 in runner scheme
             # Don't forget to save them to an array
 
-            # TODO: Save ODE- and Explicit variables to trajectory, empty
-            # TODO  buffer matrizes
+            # TODO: Save Explicit variables to trajectory, empty
+            #       buffer matrizes
 
             # After all that is done, calculate what happens at the
             # discontinuity, step 3.4 in runner scheme
             # Delete the discontinuity from the dictionary and calculate when
             # the next one happens:
             t = next_time
-            # I know this is sloppy, just had no other idea to do it:
-            disco = next_discontinuities[t]
             for discontinuity in next_discontinuities.pop(t):
-                if isinstance(discontinuity, Event):
-                    entity = disco[1]
-                    print('event specification:', event.specification)
-                    eventtype = event.specification[0]
-                    rate_or_timfunc = event.specification[1]
-                    method = discontinuity.specification[2]
+                # print('        Entering the dicontinuity loop, t=', t)
+                # discontinuity is a tupel with (event/step, entity)
+                entity = discontinuity[1]
+                happening = discontinuity[0]
+                if isinstance(happening, Event):
+                    # print('event specification:', happening.specification)
+                    eventtype = happening.specification[0]
+                    rate_or_timfunc = happening.specification[1]
+                    method = happening.specification[2]
                     # Perform the event:
-                    discontinuity_out = method(t)
+                    method(entity, t)
                     # Add its next discontinuity:
                     if eventtype == "rate":
-                        next_time = np.random.exponential(1. / rate_or_timfunc)
+                        next_time = t + np.random.exponential(1. /
+                                                              rate_or_timfunc)
                     elif eventtype == "time":
                         next_time = rate_or_timfunc(t)
                     else:
@@ -287,23 +300,21 @@ class RunnerPrototype2(_AbstractRunner):
                               "In entity:",
                               event.entity)
                     try:
-                        next_discontinuities[next_time].append((discontinuity,
+                        next_discontinuities[next_time].append((happening,
                                                                 entity))
                     except KeyError:
-                        next_discontinuities[next_time] = [(discontinuity,
+                        next_discontinuities[next_time] = [(happening,
                                                             entity)]
-                elif isinstance(discontinuity, Step):
-                    method = discontinuity.specification[2]
-                    timefunc = discontinuity.specification[1]
-                    for (variable, oc) in self.model.step_variables:
-                        for entity in self.model.entities[oc]:
-                            # also possible: variable.entities ?
-                            method(entity, t)
-                    next_time = timefunc(self, t)
+                elif isinstance(happening, Step):
+                    method = happening.specification[1]
+                    timefunc = happening.specification[0]
+                    method(entity, t)
+                    next_time = timefunc(entity, t)
                     try:
-                        next_discontinuities[next_time].append(discontinuity)
+                        next_discontinuities[next_time].append((happening,
+                                                                entity))
                     except KeyError:
-                        next_discontinuities[next_time] = [discontinuity]
+                        next_discontinuities[next_time] = [(happening, entity)]
                 # On this ident-level the discontinuity_out variables have to be
                 # written into a discontinuity_trajectory_matrix
 

@@ -39,9 +39,9 @@ class Step(_AbstractProcess):
         name : string
         variables
         specification : list
-            Structured as followed: [first execution (float),function to
-             estimate next_time (function(t)), function to calculate variables
-             of each entity (function(self)]
+            Structured as followed: [function to
+             return next_time (function(self, t)), function to calculate variables
+             of each entity (function(self, t)]
              # Do we really want a function to give back next t? Or is a simple
              # value enogh? then the value would specifiy how big a step is
         smoothness
