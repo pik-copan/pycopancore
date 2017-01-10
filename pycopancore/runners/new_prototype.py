@@ -264,12 +264,17 @@ class RunnerPrototype2(_AbstractRunner):
                         trajectory_dict[v][entity] = values
                 offset = next_offset
 
-            # Now: Take the time steps used in odeint and calculate explicit
+            # TODO:
+            # Take the time steps used in odeint and calculate explicit
             # functions in retrospect, step 3.3 in runner scheme
             # Don't forget to save them to an array
 
-            # TODO: Save Explicit variables to trajectory, empty
-            #       buffer matrizes
+            # TODO:
+            # Save Explicit variables to trajectory
+
+            # TODO:
+            # Now go through all other variables including t and save their
+            # values for the t values that passed
 
             # After all that is done, calculate what happens at the
             # discontinuity, step 3.4 in runner scheme
@@ -323,5 +328,16 @@ class RunnerPrototype2(_AbstractRunner):
 
             # Store all information that has been calculated at time t ->
             # iterate through all variables!
+            for (v, oc) in self.model.variables:
+                if v == 't':
+                    time = np.array[t]
+                    np.concatenate((trajectory_dict[v], time))
+                else:
+                    for entity in self.model.entities[oc]:
+                        value = np.array(entity.v)
+                        try:
+                            np.concatenate((trajectory_dict[v][entity], value))
+                        except KeyError:
+                            trajectory_dict[v][entity] = value
 
         return trajectory_dict
