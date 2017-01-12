@@ -1,0 +1,12 @@
+# Fdb version 3
+["pdflatex"] 1479373273 "/home/heitzig/git/pycopancore/docs/index.rst" "index.pdf" "index" 1479373273
+  "/etc/texmf/web2c/texmf.cnf" 1463065033 1101 af7716885e081ab43982cab7b4672c1a ""
+  "/home/heitzig/git/pycopancore/docs/index.rst" 1479373271 941 8b4719dbfb053a1c269b0335f76a840c ""
+  "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1458942643 31351 b32c45dce4a01cb7b53ed90c546614ca ""
+  "/usr/share/texmf/web2c/texmf.cnf" 1458942643 31351 b32c45dce4a01cb7b53ed90c546614ca ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1463065223 3854670 4ef2bd7cccf58e74696c919a2d1c2f32 ""
+  "index.aux" 1479373273 8 a94a2480d3289e625eea47cd1b285758 ""
+  "index.rst" 1479373271 941 8b4719dbfb053a1c269b0335f76a840c ""
+  (generated)
+  "index.pdf"
+  "index.log"

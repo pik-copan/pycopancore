@@ -1,0 +1,7 @@
+PWD /home/heitzig/git/pycopancore/docs
+INPUT /etc/texmf/web2c/texmf.cnf
+INPUT /usr/share/texmf/web2c/texmf.cnf
+INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
+INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
+INPUT /home/heitzig/git/pycopancore/docs/index.rst
+OUTPUT index.log
