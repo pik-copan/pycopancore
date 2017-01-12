@@ -54,16 +54,26 @@ class Individual(Individual_, abstract.Individual):
         assert isinstance(cell, Cell_), "cell must be an instance of Cell"
         self.cell = cell
 
-    def __repr__(self):
-        """
-        Return a string representation of the object of class base.Individual.
-        """
-        return (# super().__repr__() +
-                ('base.individual object with cell %r'
-                 ) % (
-                 self.cell
-                 )
-                )
+    # def __repr__(self):
+    #     """
+    #     Return a string representation of the object of class base.Individual.
+    #     """
+    #     return (  # super().__repr__() +
+    #             ('base.individual object'
+    #              ) % (
+    #              )
+    #             )
+    #
+    # def __str__(self):
+    #     """
+    #     Return readable representation of the object
+    #     """
+    #     return (  # super().__repr__() +
+    #             ('base.individual object with cell %r'
+    #              ) % (
+    #              self.cell
+    #              )
+    #             )
 
     processes = []
 

@@ -57,6 +57,14 @@ class Metabolism(Metabolism_, abstract.Metabolism):
                 ('base.metabolism')
                 )
 
+    def __str__(self):
+        """
+        Returns a readable representation of obkect
+        """
+        return (super().__str__() +
+                ('base.metabolism')
+                )
+
     processes = []
 
     #

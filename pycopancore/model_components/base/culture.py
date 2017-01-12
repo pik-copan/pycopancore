@@ -58,6 +58,14 @@ class Culture(Culture_, abstract.Culture):
                 ('base.culture object')
                 )
 
+    def __str__(self):
+        """
+        Returns readable represantation of object
+        """
+        return (super().__str__() +
+                ('base.culture object')
+                )
+
     processes = []
 
     #

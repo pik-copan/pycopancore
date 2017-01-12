@@ -54,14 +54,23 @@ class Society(Society_, abstract.Society):
         assert population >= 0, "population must be >= 0"
         self.population = population
 
-    def __repr__(self):
-        """
-        Return a string representation of the object of class base.Society.
-        """
-        return (# super().__repr__() +
-                ('base.society object with population %r'
-                 ) % (self.population)
-                )
+    # def __repr__(self):
+    #     """
+    #     Return a string representation of the object of class base.Society.
+    #     """
+    #     return (  # super().__repr__() +
+    #             ('base.society object'
+    #              ) % ()
+    #             )
+    #
+    # def __str__(self):
+    #         """
+    #         Return a string representation of the object of class base.Society.
+    #         """
+    #         return (  # super().__str__() +
+    #                 ('base.society object with population %r'
+    #                  ) % (self.population)
+    #                 )
 
     processes = []
 

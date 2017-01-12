@@ -55,7 +55,15 @@ class Nature(Nature_, abstract.Nature):
         Return a string representation of the object of class base.Nature.
         """
         return (super().__repr__() +
-                ('base.nature object with location')
+                ('base.nature object')
+                )
+
+    def __str__(self):
+        """
+        Return a readable representation of the object of class base.Nature.
+        """
+        return (super().__str__() +
+                ('base.nature object')
                 )
 
     processes = []

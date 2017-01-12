@@ -15,6 +15,23 @@
 # Definition of class _AbstractEntityMixin
 #
 
+NEXTUID = 0
+
+
+def get_next_uid():
+    """
+    Function to generate UIDs (Unique identifier)
+    Returns
+    -------
+    current_uid: int
+        the current uid
+    """
+    global NEXTUID
+    current_uid = NEXTUID
+    NEXTUID += 1
+    return current_uid
+
+
 class _AbstractEntityMixin(object):
     """
     Entity-unspecific abstract class from which all entity-specific abstract
@@ -28,10 +45,11 @@ class _AbstractEntityMixin(object):
         """
         Initializes an _AbstractEntityMixin instance.
         """
-        pass
+        self._uid = get_next_uid()
+        # pass
 
     def __repr__(self):
-        pass
+        return "{}[UID={}]".format(self.__class__.__name__, self._uid)
 
     def __str__(self):
-        pass
+        return repr(self)

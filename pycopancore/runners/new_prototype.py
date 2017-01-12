@@ -163,7 +163,7 @@ class RunnerPrototype2(_AbstractRunner):
         t = t_0
 
         # First create the dictionary to fill in the trajectory:
-        trajectory_dict = {'t': np.empty([0])}
+        trajectory_dict = {'t': np.zeros([0])}
         for (v, oc) in self.model.variables:
             trajectory_dict[v] = {}
 
@@ -251,6 +251,60 @@ class RunnerPrototype2(_AbstractRunner):
                                               initial_array_ode,
                                               ts)
 
+            # Take the time steps used in odeint and calculate explicit
+            # functions in retrospect, step 3.3 in runner scheme
+            # Save them to an arraySave them to the trajectory_dict
+
+            for i in range(len(ts)):
+                # write values to objects:
+                time = ts[i]
+                ode_values = ode_trajectory[i, :]
+                for (v, oc) in self.model.ODE_variables:
+                    entities = self.model.entities[oc]
+                    v.set_values(entities=entities, values=ode_values)
+                # calculate explicits
+                self.complete_explicits(time)
+                # save values of explicits AND all other variables including t!
+                for (v, oc) in self.model.explicit_variables:
+                    entities = self.model.entities[oc]
+                    values = v.get_value_list(entities)
+                    for i in range(len(entities)):
+                        value = np.array([values[i]])
+                        entity = entities[i]
+                        try:
+                            trajectory_dict[v][entity] = np.concatenate((
+                                trajectory_dict[v][entity], value))
+                        except KeyError:
+                            trajectory_dict[v][entity] = value
+                # TODO: Same for the rest
+                for (v, oc) in self.model.event_variables:
+                    entities = self.model.entities[oc]
+                    values = v.get_value_list(entities)
+                    for i in range(len(entities)):
+                        value = np.array([values[i]])
+                        entity = entities[i]
+                        try:
+                            trajectory_dict[v][entity] = np.concatenate((
+                                trajectory_dict[v][entity], value))
+                        except KeyError:
+                            trajectory_dict[v][entity] = value
+                for (v, oc) in self.model.step_variables:
+                    entities = self.model.entities[oc]
+                    values = v.get_value_list(entities)
+                    for i in range(len(entities)):
+                        value = np.array([values[i]])
+                        entity = entities[i]
+                        try:
+                            trajectory_dict[v][entity] = np.concatenate((
+                                trajectory_dict[v][entity], value))
+                        except KeyError:
+                            trajectory_dict[v][entity] = value
+            time_np = np.array(ts)
+            trajectory_dict['t'] = np.concatenate((trajectory_dict['t'],
+                                                   time_np))
+
+            # save odes to trajectory dict
+
             offset = 0
             for (v, oc) in self.model.ODE_variables:
                 # print('variable, oc:', v, oc)
@@ -259,22 +313,11 @@ class RunnerPrototype2(_AbstractRunner):
                     entity = self.model.entities[oc][i]
                     values = ode_trajectory[:, offset + i]
                     try:
-                        np.concatenate((trajectory_dict[v][entity], values))
+                        trajectory_dict[v][entity] = np.concatenate((
+                            trajectory_dict[v][entity], values))
                     except KeyError:
                         trajectory_dict[v][entity] = values
                 offset = next_offset
-
-            # TODO:
-            # Take the time steps used in odeint and calculate explicit
-            # functions in retrospect, step 3.3 in runner scheme
-            # Don't forget to save them to an array
-
-            # TODO:
-            # Save Explicit variables to trajectory
-
-            # TODO:
-            # Now go through all other variables including t and save their
-            # values for the t values that passed
 
             # After all that is done, calculate what happens at the
             # discontinuity, step 3.4 in runner scheme
@@ -321,23 +364,27 @@ class RunnerPrototype2(_AbstractRunner):
                     except KeyError:
                         next_discontinuities[next_time] = [(happening, entity)]
                 # On this ident-level the discontinuity_out variables have to be
-                # written into a discontinuity_trajectory_matrix
+                # written into a discontinuity_trajectory_matrix?
 
-            # Complete state again, 3.5 in runner scheme
+            # Complete state again, 3.5 in runner scheme:
             self.complete_explicits(t)
 
             # Store all information that has been calculated at time t ->
             # iterate through all variables!
+
             for (v, oc) in self.model.variables:
-                if v == 't':
-                    time = np.array[t]
-                    np.concatenate((trajectory_dict[v], time))
-                else:
-                    for entity in self.model.entities[oc]:
-                        value = np.array(entity.v)
-                        try:
-                            np.concatenate((trajectory_dict[v][entity], value))
-                        except KeyError:
-                            trajectory_dict[v][entity] = value
+                entities = self.model.entities[oc]
+                values = v.get_value_list(entities)
+                for i in range(len(entities)):
+                    entity = entities[i]
+                    value = np.array([values[i]])
+                    try:
+                        trajectory_dict[v][entity] = np.concatenate((
+                            trajectory_dict[v][entity], value))
+                    except KeyError:
+                        trajectory_dict[v][entity] = value
+
+            t_np = np.array([t])
+            trajectory_dict['t'] = np.concatenate((trajectory_dict['t'], t_np))
 
         return trajectory_dict
