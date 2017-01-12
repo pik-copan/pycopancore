@@ -67,8 +67,6 @@ class Model (Model_, abstract.Model):
         self._process_taxon_objects = {pt: pt() for pt in self.process_taxa}
         self.entities_dict = kwargs['entities']
 
-
-
         # TODO:
         # is it necessary to make all items in self.entities_dict known
         # to the object itself?
@@ -223,9 +221,10 @@ class Model (Model_, abstract.Model):
             parents = list(inspect.getmro(owning_class))
             components = [c for c in parents
                           if issubclass(c, (_AbstractEntityMixin,
-                                            _AbstractEntityMixin))
+                                            _AbstractDynamicsMixin))
                           and c not in (_AbstractEntityMixin,
-                                        _AbstractEntityMixin)]
+                                        _AbstractDynamicsMixin)
+                          ]
             for mixin in components:
                 print('        Mixin:', mixin)
                 cparents = list(inspect.getmro(mixin))
@@ -266,6 +265,5 @@ class Model (Model_, abstract.Model):
                 print('process-type of', process, 'not specified')
                 print(process.__class__.__name__)
                 print(object.__str__(process))
-        # TODO: Why is python always appending 2 processes? Jobst: Probably solved...
 
         print("...done")

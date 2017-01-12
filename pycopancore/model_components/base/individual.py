@@ -1,7 +1,7 @@
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
-# Impact Research
+# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
+# Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
@@ -16,9 +16,8 @@ Individual_ in that basic variables and parameters are defined.
 #  Imports
 #
 
-from pycopancore import Variable
 from pycopancore.model_components import abstract
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Cell_, Individual_
 
 #
 #  Define class Individual
@@ -28,8 +27,8 @@ from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metaboli
 class Individual(Individual_, abstract.Individual):
     """
     Basic Individual mixin class that every model must use in composing their
-    Individual class. Inherits from Individual_ as the interface with all necessary
-    variables and parameters.
+    Individual class. Inherits from Individual_ as the interface with all
+    necessary variables and parameters.
     """
 
     #
@@ -53,27 +52,6 @@ class Individual(Individual_, abstract.Individual):
 
         assert isinstance(cell, Cell_), "cell must be an instance of Cell"
         self.cell = cell
-
-    # def __repr__(self):
-    #     """
-    #     Return a string representation of the object of class base.Individual.
-    #     """
-    #     return (  # super().__repr__() +
-    #             ('base.individual object'
-    #              ) % (
-    #              )
-    #             )
-    #
-    # def __str__(self):
-    #     """
-    #     Return readable representation of the object
-    #     """
-    #     return (  # super().__repr__() +
-    #             ('base.individual object with cell %r'
-    #              ) % (
-    #              self.cell
-    #              )
-    #             )
 
     processes = []
 

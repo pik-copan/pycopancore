@@ -1,7 +1,7 @@
 import numpy as np
 
 from pycopancore.models import base_and_dummy as tb
-from pycopancore.runners.new_prototype import RunnerPrototype2
+from pycopancore.runners.runner import RunnerPrototype2
 
 
 ns = 3

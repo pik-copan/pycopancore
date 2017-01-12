@@ -54,7 +54,7 @@ class Metabolism(Metabolism_, abstract.Metabolism):
         Return a string representation of the object of class base.Metabolism.
         """
         return (super().__repr__() +
-                ('base.metabolism')
+                'base.metabolism'
                 )
 
     def __str__(self):
@@ -62,7 +62,7 @@ class Metabolism(Metabolism_, abstract.Metabolism):
         Returns a readable representation of obkect
         """
         return (super().__str__() +
-                ('base.metabolism')
+                'base.metabolism'
                 )
 
     processes = []

@@ -1,7 +1,7 @@
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
-# Impact Research
+# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
+# Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
@@ -16,9 +16,8 @@ Culture_ in that basic variables and parameters are defined.
 #  Imports
 #
 
-from pycopancore import Variable
 from pycopancore.model_components import abstract
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Culture_
 
 #
 #  Define class Culture
@@ -55,16 +54,14 @@ class Culture(Culture_, abstract.Culture):
         Return a string representation of the object of class base.Culture.
         """
         return (super().__repr__() +
-                ('base.culture object')
+                'base.culture object'
                 )
 
     def __str__(self):
         """
         Returns readable represantation of object
         """
-        return (super().__str__() +
-                ('base.culture object')
-                )
+        return repr(self)
 
     processes = []
 

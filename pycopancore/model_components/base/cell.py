@@ -1,7 +1,7 @@
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
-# Impact Research
+# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
+# Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
@@ -16,11 +16,8 @@ in that basic variables and parameters are defined.
 #  Imports
 #
 
-from pycopancore import Variable
 from pycopancore.model_components import abstract
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_,\
-                       Metabolism_, Model_
-
+from .interface import Cell_, Society_
 #
 #  Define class Cell
 #
@@ -69,32 +66,6 @@ class Cell(Cell_, abstract.Cell):
         self.society = society
 
         self.geometry = geometry
-
-    # def __repr__(self):
-    #     """
-    #     Return a string representation of the object of class base.Cell.
-    #     """
-    #     return (super().__str__() +
-    #             ('base.cell object with location {}'
-    #              ).format(self.location)
-    #             )
-    #
-    # def __str__(self):
-    #     """
-    #     Returns readable represantation of object
-    #     """
-    #     return (  # super().__str__() +
-    #         ('base.cell object with location %r /'
-    #          'area %r /'
-    #          'society %r /'
-    #          'geometry %r '
-    #          ) % (
-    #             self.location,
-    #             self.area,
-    #             self.society,
-    #             self.geometry
-    #               )
-    #             )
 
     processes = []
 
