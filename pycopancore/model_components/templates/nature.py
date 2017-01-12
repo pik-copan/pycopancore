@@ -16,14 +16,15 @@ Inherits from Nature_ in that variables and parameters are defined.
 #  Imports
 #
 
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Nature_
+from pycopancore.model_components import abstract
 
 #
 #  Define class Nature
 #
 
 
-class Nature(Nature_):
+class Nature(Nature_, abstract.Nature):
     """
     A template for the basic structure of the Nature mixin class that every model
     must use to compose their Nature class. Inherits from Nature_ as the interface
@@ -34,7 +35,8 @@ class Nature(Nature_):
     #  Definitions of internal methods
     #
 
-    def __init__(self,*, **kwargs):
+    def __init__(self,
+                 **kwargs):
         """
         Initialize an instance of Nature.
         """

@@ -16,14 +16,15 @@ It Inherits from individual_ in that variables and parameters are defined.
 #  Imports
 #
 
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Individual_
+from pycopancore.model_components import abstract
 
 #
 #  Define class Individual
 #
 
 
-class Individual(Individual_):
+class Individual(Individual_, abstract.Individual):
     """
     A template for the basic structure of the Individual mixin class that every
     model must use to compose their Individual class. Inherits from Individual_
@@ -34,16 +35,13 @@ class Individual(Individual_):
     #  Definitions of internal methods
     #
 
-    def __init__(self,*, **kwargs):
+    def __init__(self,
+                 # *,
+                 **kwargs):
         """
         Initialize an instance of Individual.
         """
-        super(Individual, self).__init__(**kwargs)
-
-    def __str__(self):
-        """
-        Return a string representation of the instance created by Individual
-        """
+        super().__init__(**kwargs)
 
     processes = []
 

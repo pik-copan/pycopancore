@@ -14,7 +14,7 @@ In this interface module, variables for each entity are defined as sympy objects
 #  Imports
 #
 
-from private import Variable
+from pycopancore import Variable
 
 #
 #  Define class Cell_

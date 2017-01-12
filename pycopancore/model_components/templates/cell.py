@@ -17,14 +17,15 @@ Inherits from Cell_ in which variables and parameters are defined.
 #
 
 
-from .interface import Cell_  # , Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Cell_
+from pycopancore.model_components import abstract
 
 #
 #  Define class Cell
 #
 
 
-class Cell(Cell_):
+class Cell(Cell_, abstract.Cell):
     """
     A template for the basic structure of the Cell mixin class that every model
     must use to compose their Cell class. Inherits from Cell_ as the interface
@@ -43,12 +44,7 @@ class Cell(Cell_):
         Possible variables are something like resources of some kind, lokal
         weather variables...
         """
-        super(Cell, self).__init__(**kwargs)
-
-    def __str__(self):
-        """
-        Return a string representation of the object of class cells
-        """
+        super().__init__(**kwargs)
 
     processes = []
 

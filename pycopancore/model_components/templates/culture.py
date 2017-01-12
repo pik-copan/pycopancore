@@ -16,18 +16,19 @@ Inherits from Culture_ in that variables and parameters are defined.
 #  Imports
 #
 
-from .interface import Culture_  # ,Cell_, Nature_, Individual_, Society_, Metabolism_, Model_
+from .interface import Culture_
+from pycopancore.model_components import abstract
 
 #
 #  Define class Culture
 #
 
 
-class Culture(Culture_):
+class Culture(Culture_, abstract.Culture):
     """
-    A template for the basic structure of the Culture mixin class that every model
-    must use to compose their Culture class. Inherits from Culture_ as the interface
-    with all necessary variables and parameters.
+    A template for the basic structure of the Culture mixin class that every
+    model must use to compose their Culture class. Inherits from Culture_ from
+    the interface with all necessary variables and parameters.
     """
 
     #
@@ -40,7 +41,7 @@ class Culture(Culture_):
         """
         Initialize an instance of Culture.
         """
-        super(Culture, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def __str__(self):
         """

@@ -16,14 +16,15 @@ It Inherits from Society_ in that variables and parameters are defined.
 #  Imports
 #
 
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Society_
+from pycopancore.model_components import abstract
 
 #
 #  Define class Society
 #
 
 
-class Society(Society_):
+class Society(Society_, abstract.Society):
     """
     A template for the basic structure of the Society mixin class that every
     model must use to compose their Society class. Inherits from Society_
@@ -34,16 +35,12 @@ class Society(Society_):
     #  Definitions of internal methods
     #
 
-    def __init__(self,*, **kwargs):
+    def __init__(self,
+                 **kwargs):
         """
         Initialize an instance of Society.
         """
         super(Society, self).__init__(**kwargs)
-
-    def __str__(self):
-        """
-        Return a string representation of the instance created by Society
-        """
 
     processes = []
 

@@ -7,9 +7,7 @@
 # License: MIT license
 
 """
-This is the abstract model-component package. All modules in this package are
-only used as flags to show that some other module is of the type of the module
-in the abstract package.
+This is the base model-component package
 """
 from .interface import Cell_, Nature_, Individual_, Culture_, Society_, \
     Metabolism_, Model_

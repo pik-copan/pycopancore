@@ -16,14 +16,15 @@ It Inherits from Metabolism_ in that variables and parameters are defined.
 #  Imports
 #
 
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_, Model_
+from .interface import Metabolism_
+from pycopancore.model_components import abstract
 
 #
 #  Define class Metabolism
 #
 
 
-class Metabolism(Metabolism_):
+class Metabolism(Metabolism_, abstract.Metabolism):
     """
     A template for the basic structure of the Metabolism mixin class that every
     model must use to compose their Metabolism class. Inherits from Metabolism_
@@ -34,7 +35,8 @@ class Metabolism(Metabolism_):
     #  Definitions of internal methods
     #
 
-    def __init__(self,*, **kwargs):
+    def __init__(self,
+                 **kwargs):
         """
         Initialize an instance of Nature.
         """

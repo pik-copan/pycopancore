@@ -7,7 +7,7 @@
 # License: MIT license
 
 """
-Here the docstring is missing
+This is the base.model file
 """
 
 #

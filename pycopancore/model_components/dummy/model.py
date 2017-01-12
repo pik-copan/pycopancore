@@ -7,9 +7,7 @@
 # License: MIT license
 
 """
-In this module a template for the Model mixing class is composed to give an
-example of the basic structure of it. It inherits from Model_ in that variables
-and parameters are defined.
+In this module the dummy model
 """
 
 #
@@ -19,7 +17,6 @@ and parameters are defined.
 from .interface import Model_
 from pycopancore.model_components import abstract
 from . import Cell
-import inspect
 
 #
 #  Define class Model
@@ -62,6 +59,4 @@ class Model(Model_, abstract.Model):
         Return a string representation of the object of class dummy.Model.
         """
         return (super().__repr__() +
-                ('dummy.model object with cells %r '
-                 ) % (self.cells)
-                )
+                'dummy.model object')

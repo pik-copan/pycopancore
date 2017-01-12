@@ -7,16 +7,13 @@
 # License: MIT license
 
 """
-In this module a template for the Cell mixing class is composed to give an
-example of the basic structure for the in the model used Cell class. It
-Inherits from Cell_ in which variables and parameters are defined.
+In this module the dummy cell module which is dumb
 """
 
 #
 #  Imports
 #
 
-import numpy as np
 from pycopancore import ODE, Step, Explicit, Event
 from pycopancore.model_components import abstract
 from .interface import Cell_
@@ -61,42 +58,8 @@ class Cell(Cell_, abstract.Cell):
         self.step_width = step_width
         self.last_execution = last_execution
 
-    # def __repr__(self):
-    #     """
-    #     Return a string representation of the object of class dummy.Cell.
-    #     """
-    #     return (super().__repr__() +
-    #             ('dummy.cell object with capacity %r'
-    #              ) % (
-    #              self.capacity,
-    #              )
-    #             )
     #
-    # def __str__(self):
-    #     """
-    #     Return a readable representation of the object of class dummy.Cell.
-    #     """
-    #     return (super().__str__() +
-    #             ('dummy.cell object with resource %r /'
-    #              'capacity %r /'
-    #              'step_resource %r /'
-    #              'event_value %r /'
-    #              'explicit_value %r /'
-    #              'step_width %r /'
-    #              'last_execution %r'
-    #              ) % (
-    #              self.resource,
-    #              self.capacity,
-    #              self.step_resource,
-    #              self.event_value,
-    #              self.explicit_value,
-    #              self.step_width,
-    #              self.last_execution
-    #              )
-    #             )
-
-    #
-    #  Definitions of further methodsnext_step_time,
+    #  Definitions of further methods
     #
 
     def a_ode_function(self, t):

@@ -18,13 +18,14 @@ and parameters are defined.
 
 from .interface import Model_
 from . import Cell, Nature, Individual, Culture, Society, Metabolism
+from pycopancore.model_components import abstract
 
 #
 #  Define class Model
 #
 
 
-class Model(Model_):
+class Model(Model_, abstract.Model):
     """
     A template for the basic structure of the Model mixin class that every model
     must use to compose their final Model class. Inherits from Model_ as the
