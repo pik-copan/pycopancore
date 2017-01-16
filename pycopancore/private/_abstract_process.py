@@ -6,6 +6,11 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the _AbstractProcess. It sets the basic structure of processes (ODE,
+explicit, step, event).
+"""
+
 #
 # Imports
 #
