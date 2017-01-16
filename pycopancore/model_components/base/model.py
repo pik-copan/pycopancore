@@ -127,9 +127,6 @@ class Model (Model_, abstract.Model):
         and processes to designated lists.
         """
 
-        cls.entity_variables = []
-        cls.taxon_variables = []
-
         cls.variables = []  # save in pairs: (variable, owning_class)
         cls.processes = []  # save in pairs: (process, owning_class)
 
