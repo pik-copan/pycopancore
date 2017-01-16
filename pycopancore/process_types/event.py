@@ -6,6 +6,12 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the process type Event. It is used for processes that do not occur
+in regular timesteps. An event might be something like a birth or death,
+catastrophes of all sorts...
+"""
+
 #
 # Imports
 #
@@ -44,7 +50,7 @@ class Event(_AbstractProcess):
         smoothness
         """
 
-        super(Event, self).__init__()
+        super().__init__()
 
         self.name = name
         self.variables = variables

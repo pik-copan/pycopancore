@@ -6,6 +6,12 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the process class ODE which stands for Ordinary Differential Equation.
+ODEs are used for continuos processes in which one of the variables is
+dependent of the time.
+"""
+
 #
 # Imports
 #
@@ -48,7 +54,7 @@ class ODE(_AbstractProcess):
         smoothness
         """
 
-        super(ODE, self).__init__()
+        super().__init__()
 
         self.name = name
         self.variables = variables

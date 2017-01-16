@@ -6,6 +6,10 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the implicit proccess class. Implicit functions are not yet implemented.
+"""
+
 #
 # Imports
 #
@@ -29,19 +33,19 @@ class Implicit(_AbstractProcess):
     def __init__(self,
                  name,
                  variables,
-                 specification,
-                 smoothness=0,
+                 specification
                  ):
         """
 
-        :param name: string
-        :param variables:
-        :param specification:
-        :param smoothness:
+        Parameters
+        ----------
+        name
+        variables
+        specification
         """
-        super(Implicit, self).__init__()
+
+        super().__init__()
 
         self.name = name
         self.variables = variables
         self.specification = specification
-        self.smoothness = smoothness

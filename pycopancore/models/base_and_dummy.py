@@ -7,7 +7,7 @@
 # License: MIT license
 
 """
-This is a template to create model modules
+This is a dummy model to create model modules
 """
 
 #

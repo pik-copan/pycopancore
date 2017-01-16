@@ -24,7 +24,7 @@ import numpy as np
 #
 
 
-class RunnerPrototype2(_AbstractRunner):
+class Runner(_AbstractRunner):
     """
     This is the Runnerprototype. It shall be implemented:
     ODES
@@ -44,7 +44,7 @@ class RunnerPrototype2(_AbstractRunner):
         model
         kwargs
         """
-        super(RunnerPrototype2, self).__init__()
+        super(Runner, self).__init__()
         self.model = model
         self.processes = (model.processes)
         self.explicit_processes = model.explicit_processes

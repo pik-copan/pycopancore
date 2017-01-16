@@ -6,6 +6,12 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the process type step class. A step process may be used for things that
+reoccur regularly. It might also be used for things that are contiuos but
+are approximated by steps.
+"""
+
 #
 # Imports
 #
@@ -29,8 +35,7 @@ class Step(_AbstractProcess):
     def __init__(self,
                  name,
                  variables,
-                 specification,
-                 smoothness=0,
+                 specification
                  ):
         """
 
@@ -40,19 +45,12 @@ class Step(_AbstractProcess):
         variables
         specification : list
             Structured as followed: [function to
-             return next_time (function(self, t)), function to calculate variables
-             of each entity (function(self, t)]
-             # Do we really want a function to give back next t? Or is a simple
-             # value enogh? then the value would specifiy how big a step is
-        smoothness
+             return next_time (function(self, t)), function to calculate
+             variables of each entity (function(self, t)]
         """
 
-        super(Step, self).__init__()
+        super().__init__()
 
         self.name = name
         self.variables = variables
         self.specification = specification
-        self.smoothness = smoothness
-
-# TODO: add metadata like immediate, later... for step, since the dynamic may
-# happen with different dealys

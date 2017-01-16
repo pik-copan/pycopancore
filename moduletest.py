@@ -1,7 +1,7 @@
 import numpy as np
 
 from pycopancore.models import base_and_dummy as tb
-from pycopancore.runners.runner import RunnerPrototype2
+from pycopancore.runners.runner import Runner
 
 
 ns = 3
@@ -29,7 +29,7 @@ print('\n instantiating model')
 m = tb.Model(entities=entities)
 
 print('\n runner starting')
-r = RunnerPrototype2(model=m)
+r = Runner(model=m)
 
 traj = r.run(t_1=10, dt=.1)
 

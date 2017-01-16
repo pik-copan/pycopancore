@@ -6,6 +6,12 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the process type explicit. Explicit functions are used to calculate
+variables to help other functions, for example calculate temperature from
+co2 level.
+"""
+
 #
 # Imports
 #
@@ -42,7 +48,7 @@ class Explicit(_AbstractProcess):
             function(self,t)
         smoothness :
         """
-        super(Explicit, self).__init__()
+        super().__init__()
 
         self.name = name
         self.variables = variables
