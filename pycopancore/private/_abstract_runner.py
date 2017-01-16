@@ -6,6 +6,11 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the _AbstractRunner. It sets the basic structure of
+runner modules (for integration).
+"""
+
 #
 # Imports
 #

@@ -6,6 +6,11 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the _abstract_entity_mixin.py. It sets the basic structure of
+entity mixins (individuals, cells , societies).
+"""
+
 #
 # Imports
 #

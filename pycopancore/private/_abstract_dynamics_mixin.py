@@ -6,10 +6,14 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+"""
+This is the _abstract_dynamics_mixin.py. It sets the basic structure of
+dynamic mixins (culture, metabolism, nature).
+"""
+
 #
 # Imports
 #
-
 
 #
 # Definition of class _AbstractDynamicsMixin
