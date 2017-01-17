@@ -105,6 +105,20 @@ class Model (Model_, abstract.Model):
     #  Definitions of further methods
     #
 
+    def add_entity(self):
+        """
+        This is a function to add an entity. It does not have a return value,
+        since the entity will be added to the entities_dict.
+        """
+        # 0. Find parent class (model class) of the class that adds entity
+        # 1. Instantiate the object that is to be added
+        # 2. Add it to self.entities_dict
+        # 3. Add its variables and processes to the corresponding lists
+        # 4- Write a 0/None-trajectory for the time passed before its creation
+        # into the traj_dict of the runner
+        # 4. If the object introduces discontinuities, find out when these are
+        # going to happen and add to the next_discontinuities dict
+
     @property
     def entities(self):
         """
