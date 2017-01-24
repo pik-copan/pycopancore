@@ -1,3 +1,9 @@
+"""Society mixing class Template.
+
+It is composed to give
+an example of the basic structure for the in the model used Society class.
+It Inherits from Society_ in that variables and parameters are defined.
+"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +11,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-In this module a template for the Society mixing class is composed to give
-an example of the basic structure for the in the model used Society class.
-It Inherits from Society_ in that variables and parameters are defined.
-"""
 
 #
 #  Imports
@@ -25,9 +25,10 @@ from pycopancore.model_components import abstract
 
 
 class Society(Society_, abstract.Society):
-    """
+    """Define the Society mixin class.
+
     A template for the basic structure of the Society mixin class that every
-    model must use to compose their Society class. Inherits from Society_
+    model may use to compose their Society class. Inherits from Society_
     as the interface with all necessary variables and parameters.
     """
 
@@ -37,10 +38,8 @@ class Society(Society_, abstract.Society):
 
     def __init__(self,
                  **kwargs):
-        """
-        Initialize an instance of Society.
-        """
-        super(Society, self).__init__(**kwargs)
+        """Initialize an instance of YOUR Society."""
+        super().__init__(**kwargs)
 
     processes = []
 

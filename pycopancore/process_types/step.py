@@ -1,3 +1,10 @@
+"""Step process class.
+
+A step process may be used for things that reoccur regularly.
+It might also be used for things that are continuos but are approximated by
+steps.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +12,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-This is the process type step class. A step process may be used for things that
-reoccur regularly. It might also be used for things that are contiuos but
-are approximated by steps.
-"""
 
 #
 # Imports
@@ -25,9 +26,7 @@ from pycopancore.private import _AbstractProcess
 
 
 class Step(_AbstractProcess):
-    """
-    Discrete process
-    """
+    """Define the step-process-type."""
 
     type = "Step"
     timetype = "discrete"
@@ -37,7 +36,7 @@ class Step(_AbstractProcess):
                  variables,
                  specification
                  ):
-        """
+        """Initiate a process of type step.
 
         Parameters
         ----------
@@ -48,7 +47,6 @@ class Step(_AbstractProcess):
              return next_time (function(self, t)), function to calculate
              variables of each entity (function(self, t)]
         """
-
         super().__init__()
 
         self.name = name

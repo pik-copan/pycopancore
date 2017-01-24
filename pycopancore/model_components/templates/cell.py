@@ -1,3 +1,9 @@
+"""Cell mixing class template.
+
+It is composed to give an
+example of the basic structure for the in the model used Cell class. It
+Inherits from Cell_ in which variables and parameters are defined.
+"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +11,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-In this module a template for the Cell mixing class is composed to give an
-example of the basic structure for the in the model used Cell class. It
-Inherits from Cell_ in which variables and parameters are defined.
-"""
 
 #
 #  Imports
@@ -26,9 +26,11 @@ from pycopancore.model_components import abstract
 
 
 class Cell(Cell_, abstract.Cell):
-    """
-    A template for the basic structure of the Cell mixin class that every model
-    must use to compose their Cell class. Inherits from Cell_ as the interface
+    """Define your Cell class.
+
+    A template for the basic structure of the Cell mixin class that every
+    component may use to compose their Cell class.
+    Inherits from Cell_ as the interface
     with all necessary variables and parameters.
     """
 
@@ -39,11 +41,7 @@ class Cell(Cell_, abstract.Cell):
     def __init__(self,
                  # ,*,
                  **kwargs):
-        """
-        Initialize an instance of Cell.
-        Possible variables are something like resources of some kind, lokal
-        weather variables...
-        """
+        """Initialize an instance of Cell."""
         super().__init__(**kwargs)
 
     processes = []

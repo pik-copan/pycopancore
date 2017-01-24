@@ -1,3 +1,9 @@
+"""Event-type process class.
+
+It is used for processes that do not occur in regular timesteps.
+An event might be something like a birth or death, catastrophes of all sorts.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +11,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-This is the process type Event. It is used for processes that do not occur
-in regular timesteps. An event might be something like a birth or death,
-catastrophes of all sorts...
-"""
 
 #
 # Imports
@@ -25,9 +25,7 @@ from pycopancore.private import _AbstractProcess
 
 
 class Event(_AbstractProcess):
-    """
-    Discrete process
-    """
+    """Define Event process class."""
 
     type = "Event"
     timetype = "discrete"
@@ -38,7 +36,7 @@ class Event(_AbstractProcess):
                  specification,
                  smoothness=0,
                  ):
-        """
+        """Initiate an instance of an Event process.
 
         Parameters
         ----------
@@ -49,7 +47,6 @@ class Event(_AbstractProcess):
             or time-function, method/function of variable(s)]
         smoothness
         """
-
         super().__init__()
 
         self.name = name

@@ -1,3 +1,8 @@
+"""_abstract_entity_mixin class.
+
+It sets the basic structure of entity mixins (individuals, cells , societies).
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,11 +10,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-This is the _abstract_entity_mixin.py. It sets the basic structure of
-entity mixins (individuals, cells , societies).
-"""
 
 #
 # Imports
@@ -24,8 +24,8 @@ NEXTUID = 0
 
 
 def get_next_uid():
-    """
-    Function to generate UIDs (Unique identifier)
+    """Generate UIDs (Unique identifier).
+
     Returns
     -------
     current_uid: int
@@ -38,7 +38,8 @@ def get_next_uid():
 
 
 class _AbstractEntityMixin(object):
-    """
+    """Define AbstractEntityMixin.
+
     Entity-unspecific abstract class from which all entity-specific abstract
     mixin classes are derived.
     """
@@ -47,9 +48,7 @@ class _AbstractEntityMixin(object):
     model = None
 
     def __init__(self):
-        """
-        Initializes an _AbstractEntityMixin instance.
-        """
+        """Initialize an _AbstractEntityMixin instance."""
         self._uid = get_next_uid()
         # pass
 

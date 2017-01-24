@@ -1,3 +1,10 @@
+"""Nature mixing class template.
+
+It is composed to give an
+example of the basic structure for the in the model used Nature class. It
+Inherits from Nature_ in that variables and parameters are defined.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +12,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-In this module a template for the Nature mixing class is composed to give an
-example of the basic structure for the in the model used Nature class. It
-Inherits from Nature_ in that variables and parameters are defined.
-"""
 
 #
 #  Imports
@@ -25,10 +26,11 @@ from pycopancore.model_components import abstract
 
 
 class Nature(Nature_, abstract.Nature):
-    """
-    A template for the basic structure of the Nature mixin class that every model
-    must use to compose their Nature class. Inherits from Nature_ as the interface
-    with all necessary variables and parameters.
+    """Define your Nature Class like this template.
+
+    A template for the basic structure of the Nature mixin class that every
+    model may use to compose their Nature class. Inherits from Nature_ via the
+    interface with all necessary variables and parameters.
     """
 
     #
@@ -37,15 +39,11 @@ class Nature(Nature_, abstract.Nature):
 
     def __init__(self,
                  **kwargs):
-        """
-        Initialize an instance of Nature.
-        """
-        super(Nature, self).__init__(**kwargs)
+        """Initialize an instance of your Nature."""
+        super().__init__(**kwargs)
 
     def __str__(self):
-        """
-        Return a string representation of the instance created by Nature
-        """
+        """Return a string representation of the instance created by Nature."""
 
     processes = []
 

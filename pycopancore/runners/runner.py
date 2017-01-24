@@ -1,3 +1,5 @@
+"""Returns the trajectory of a setup given as a model object."""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -6,16 +8,12 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-"""
-This is a model module. It only import components of the base mixins
-"""
-
 #
 #  Imports
 #
 
 from pycopancore.private import _AbstractRunner
-from pycopancore import Event, Explicit, Implicit, ODE, Step
+from pycopancore import Event, Step
 from scipy import integrate
 import numpy as np
 
@@ -25,19 +23,17 @@ import numpy as np
 
 
 class Runner(_AbstractRunner):
-    """
-    This is the Runnerprototype. It shall be implemented:
-    ODES
-    Explicits
-    Events
-    Steps
+    """Runner-class, it owns the run function which calculates trajectories.
+
+    Equations might be of type QDE, explicit, step and event, as stated in the
+    process_types package.
     """
 
     def __init__(self,
                  *,
                  model
                  ):
-        """
+        """Initiate an Instance of Runner.
 
         Parameters
         ----------
@@ -53,8 +49,7 @@ class Runner(_AbstractRunner):
         self.ode_processes = model.ODE_processes
 
     def complete_explicits(self, t):
-        """
-        A function to call all explicit functions to complete or update them
+        """Call all explicit functions to complete or update them.
 
         Parameters
         ----------
@@ -65,16 +60,16 @@ class Runner(_AbstractRunner):
         -------
 
         """
-
         # Iterate through explicit_processes:
         for (p, oc) in self.explicit_processes:
             for e in self.model.entities[oc]:
                 p.specification(e, t)
 
     def get_derivatives(self, value_array, t):
-        """
-        A function to get the derivatives of all ode-functions and make them
-        suitable for the odeint rhs
+        """Update explicits, Get derivatives.
+
+        Gets derivatives of all ode-functions and make them suitable for
+        the odeint rhs
 
         Parameters
         ----------
@@ -95,8 +90,10 @@ class Runner(_AbstractRunner):
         return return_array
 
     def ode_rhs(self, value_array, t):
-        """
-        A function to pass to odeint
+        """Pass this to odeint.
+
+        This function returns all variables in a form to be compatible with
+        ODEint from scipy.integrate
 
         Parameters
         ----------
@@ -141,13 +138,16 @@ class Runner(_AbstractRunner):
         return derivative_array
 
     def run(self,
+            *,
             t_0=0,
-            t_1=None,
-            dt=None
+            t_1,
+            dt
             ):
-        """
-        The run function
+        """Run function.
 
+        This is the run function which is a solver and uses all of the above
+        functions. It is given a model object and returns a trejectory as
+        a dictionary
         Parameters
         ----------
         self
@@ -156,9 +156,9 @@ class Runner(_AbstractRunner):
 
         Returns
         -------
+        trajectory_dict: dict
 
         """
-
         # Define time:
         t = t_0
 
@@ -363,8 +363,6 @@ class Runner(_AbstractRunner):
                                                                 entity))
                     except KeyError:
                         next_discontinuities[next_time] = [(happening, entity)]
-                # On this ident-level the discontinuity_out variables have to be
-                # written into a discontinuity_trajectory_matrix?
 
             # Complete state again, 3.5 in runner scheme:
             self.complete_explicits(t)

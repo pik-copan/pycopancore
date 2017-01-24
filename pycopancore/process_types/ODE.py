@@ -1,3 +1,10 @@
+"""ODE process class.
+
+ODE stands for Ordinary Differential Equation.
+ODEs are used for continuos processes in which one of the variables is
+dependent of the time.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +12,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-This is the process class ODE which stands for Ordinary Differential Equation.
-ODEs are used for continuos processes in which one of the variables is
-dependent of the time.
-"""
 
 #
 # Imports
@@ -25,10 +26,7 @@ from pycopancore.private import _AbstractProcess
 
 
 class ODE(_AbstractProcess):
-    """
-    Time-continuous process represented by a (system of) ordinary differential
-    equation(s).
-    """
+    """Define ODE process class."""
 
     type = "ODE"
     timetype = "continuous"
@@ -39,7 +37,7 @@ class ODE(_AbstractProcess):
                  specification,
                  smoothness=1,
                  ):
-        """
+        """Initiate an instance of an ODE process.
 
         Parameters
         ----------
@@ -53,7 +51,6 @@ class ODE(_AbstractProcess):
             RHS of the equation(s)
         smoothness
         """
-
         super().__init__()
 
         self.name = name

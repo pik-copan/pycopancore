@@ -1,3 +1,8 @@
+"""A class to define model variables and inherits from Symbol.
+
+Each Varible is connected to an entity, of which it is a variable.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,11 +10,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-A class to define model variables and inherits from Symbol. Each Varible
-is connected to an entity, of which it is a variable.
-"""
 
 #
 #  Imports
@@ -23,10 +23,7 @@ from sympy import Symbol
 
 
 class Variable(Symbol):
-    """
-    A class to define model variables and inherits from Symbol. Each Varible
-    is connected to an entity, of which it is a variable.
-    """
+    """Define the Variable Class."""
 
     owning_classes = []
     _codename = None
@@ -42,7 +39,10 @@ class Variable(Symbol):
                    entities=None,
                    values=None
                    ):
-        """
+        """Set values for the variable.
+
+        This function set values for the variable. If given a list of entities,
+        it sets values for all of them.
 
         Parameters
         ----------
@@ -90,8 +90,8 @@ class Variable(Symbol):
                           *,
                           entities=None
                           ):
-        """
-        Set all derivatives to zero
+        """Set all derivatives to zero.
+
         Parameters
         ----------
         entities : list
@@ -108,9 +108,7 @@ class Variable(Symbol):
                         *,
                         entities=None
                         ):
-        """
-        Return a list of derivatives saved in entities, named
-        d_variablename
+        """Return a list of derivatives saved in entities.
 
         Parameters
         ----------
@@ -126,7 +124,7 @@ class Variable(Symbol):
     def get_value_list(self,
                        entities=None,
                        ):
-        """
+        """Return values for given entities.
 
         Parameters
         ----------

@@ -1,3 +1,8 @@
+"""Implicit proccess class.
+
+Implicit functions are not yet implemented.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,10 +10,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-This is the implicit proccess class. Implicit functions are not yet implemented.
-"""
 
 #
 # Imports
@@ -23,9 +24,7 @@ from pycopancore.private import _AbstractProcess
 
 
 class Implicit(_AbstractProcess):
-    """
-    Implicit process
-    """
+    """Define the class Implicit."""
 
     type = "Implicit"
     timetype = "discrete"
@@ -35,7 +34,7 @@ class Implicit(_AbstractProcess):
                  variables,
                  specification
                  ):
-        """
+        """Initiate an instance of an implicit process.
 
         Parameters
         ----------
@@ -43,7 +42,6 @@ class Implicit(_AbstractProcess):
         variables
         specification
         """
-
         super().__init__()
 
         self.name = name

@@ -1,3 +1,7 @@
+"""_AbstractProcess class.
+
+It sets the basic structure of processes (ODE,explicit, step, event).
+"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,11 +9,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-This is the _AbstractProcess. It sets the basic structure of processes (ODE,
-explicit, step, event).
-"""
 
 #
 # Imports
@@ -21,9 +20,9 @@ explicit, step, event).
 #
 
 class _AbstractProcess(object):
-    """
-    Abstract class for representing types of model processes (ODEs, steps,
-    explicit/implicit equations, events).
+    """Define Abstract class for representing types of model processes.
+
+    These are ODEs, steps, explicit/implicit equations, events.
     """
 
     name = None
@@ -34,10 +33,7 @@ class _AbstractProcess(object):
     owning_classes = None
 
     def __init__(self):
-        """
-        Initializes an _AbstractProcess instance.
-        """
-
+        """Initialize an _AbstractProcess instance."""
         self.owning_classes = []
 
     def __repr__(self):
