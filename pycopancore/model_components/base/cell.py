@@ -53,7 +53,7 @@ class Cell(Cell_, abstract.Cell):
         geometry
         kwargs
         """
-        super(Cell, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         assert location is not None
         self.location = location
