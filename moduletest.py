@@ -1,3 +1,5 @@
+"""Moduletest, a study to test the runner with dummy dynamics."""
+
 import numpy as np
 
 from pycopancore.models import base_and_dummy as tb

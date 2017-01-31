@@ -1,3 +1,5 @@
+"""Interface module for a dummy component."""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,10 +7,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-This is the interface module for a dummy component to test the runner
-"""
 
 #
 #  Imports
@@ -22,9 +20,7 @@ from pycopancore import Variable
 
 
 class Cell_(object):
-    """
-    Interface for Cell.
-    """
+    """Define Interface for Cell."""
 
     resource = Variable('current resource')
     capacity = Variable('whole capacity')
@@ -41,9 +37,7 @@ class Cell_(object):
 
 
 class Model_(object):
-    """
-    Interface for Model.
-    """
+    """Define Interface for Model."""
 
     name = "copan:CORE Dummy"
     description = "Dummy Model to test and develop the runner_prototype "

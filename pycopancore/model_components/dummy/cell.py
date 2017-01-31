@@ -1,3 +1,8 @@
+"""The dummy cell module has some dynamics.
+
+That's about it.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,10 +10,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-In this module the dummy cell module which is dumb
-"""
 
 #
 #  Imports
@@ -24,9 +25,9 @@ from .interface import Cell_
 
 
 class Cell(Cell_, abstract.Cell):
-    """
-    A template for the basic structure of the Cell mixin class that every model
-    must use to compose their Cell class. Inherits from Cell_ as the interface
+    """Define properties of dummy cell.
+
+    Inherits from Cell_ as the interface
     with all necessary variables and parameters.
     """
 
@@ -45,9 +46,7 @@ class Cell(Cell_, abstract.Cell):
                  last_execution=None,
                  **kwargs
                  ):
-        """
-        Initialize an instance of Cell.
-        """
+        """Initialize an instance of Cell."""
         super(Cell, self).__init__(**kwargs)
 
         self.resource = resource
@@ -63,8 +62,9 @@ class Cell(Cell_, abstract.Cell):
     #
 
     def a_ode_function(self, t):
-        """
-        ODE
+        """Add a d_resource to resource.
+
+        Just a test function for ODEs.
         Parameters
         ----------
         t : float
@@ -80,9 +80,9 @@ class Cell(Cell_, abstract.Cell):
         self.d_resource += b * growth_rate * (1 - b / a)
 
     def a_step_function(self, t):
-        """
-        Step-Function
+        """Add something to step_resource.
 
+        Another testfunction with dummy dynamics.
         Parameters
         ----------
 
@@ -98,8 +98,9 @@ class Cell(Cell_, abstract.Cell):
         self.resource += -0.1
 
     def a_event_function(self, t):
-        """
-        Event-generating function
+        """Add 1 to event_value.
+
+         Another dumb test function.
         Parameters
         ----------
 
@@ -110,8 +111,10 @@ class Cell(Cell_, abstract.Cell):
 
     def step_timing(self,
                     t):
-        """
-        Function to return next time of a step-function
+        """Return the next time step is to be called.
+
+        This function is used to geet to know when the step function is
+        to be called.
         Parameters
         ----------
         t
@@ -128,7 +131,8 @@ class Cell(Cell_, abstract.Cell):
         return self.last_execution + self.step_width
 
     def a_explicit_function(self, t):
-        """
+        """Add something to explicit_value.
+
         Explicit function, calculates something like fertilizer that is
         dependend on the current resource and capacity
         Returns

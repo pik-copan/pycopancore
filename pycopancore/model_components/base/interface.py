@@ -1,3 +1,10 @@
+"""Define variables of the base components.
+
+In this base interface module, variables for each entity are defined in
+corresponding class as sympy objects . The corresponding classes are Cell_,
+Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +12,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-In this base interface module, variables for each entity are defined in
-corresponding class as sympy objects . The corresponding classes are Cell_,
-Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
-"""
 
 #
 #  Imports
@@ -24,7 +25,8 @@ from pycopancore import Variable
 
 
 class Cell_(object):
-    """
+    """Define variables of cell.
+
     Basic Cell interface. It contains all variables specified as mandatory
     ("base variables").
     """
@@ -41,10 +43,12 @@ class Cell_(object):
 
 
 class Nature_(object):
-    """
+    """Define variables of nature.
+
     Basic Nature interface. It contains all variables specified as mandatory
     ("base variables").
     """
+
     pass
 
 #
@@ -53,7 +57,8 @@ class Nature_(object):
 
 
 class Individual_(object):
-    """
+    """Define variables of individual.
+
     Basic Individual interface. It contains all variables specified as
     mandatory ("base variables").
     """
@@ -66,10 +71,12 @@ class Individual_(object):
 
 
 class Culture_(object):
-    """
+    """Define variables of culture.
+
     Basic Culture interface. It contains all variables specified as mandatory
     ("base variables").
     """
+
     pass
 
 #
@@ -78,7 +85,8 @@ class Culture_(object):
 
 
 class Society_(object):
-    """
+    """Define variables of society.
+
     Basic Society interface. It contains all variables specified as mandatory
     ("base variables").
     """
@@ -91,10 +99,12 @@ class Society_(object):
 
 
 class Metabolism_(object):
-    """
+    """Define variables of metabolism.
+
     Basic Metabolism interface. It contains all variables specified as
     mandatory ("base variables").
     """
+
     pass
 
 #
@@ -103,7 +113,8 @@ class Metabolism_(object):
 
 
 class Model_(object):
-    """
+    """Define variables of model.
+
     Basic Model interface. It contains all variables specified as mandatory
     ("base variables").
     """

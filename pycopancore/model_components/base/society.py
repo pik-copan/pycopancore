@@ -1,3 +1,9 @@
+"""Define the base society class.
+
+In this module the basic Society mixing class is composed to set the basic
+structure for the later in the model used Society class. It Inherits from
+Society_ in that basic variables and parameters are defined.
+"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +11,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-In this module the basic Society mixing class is composed to set the basic
-structure for the later in the model used Society class. It Inherits from
-Society_ in that basic variables and parameters are defined.
-"""
 
 #
 #  Imports
@@ -25,7 +25,8 @@ from .interface import Society_
 
 
 class Society(Society_, abstract.Society):
-    """
+    """Define class base.society.
+
     Basic Society mixin class that every model must use in composing their
     Society class. Inherits from Society_ as the interface with all necessary
     variables and parameters.
@@ -40,8 +41,7 @@ class Society(Society_, abstract.Society):
                  population=0,
                  **kwargs
                  ):
-        """
-        Initialize an instance of Society.
+        """Initialize an instance of Society.
 
         Parameters
         ----------

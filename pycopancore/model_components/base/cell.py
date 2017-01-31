@@ -1,3 +1,9 @@
+"""Define base.cell class.
+
+In this module the basic Cell mixing class is composed to set the basic
+structure for the later in the model used Cell class. It Inherits from Cell_
+in that basic variables and parameters are defined.
+"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
@@ -5,12 +11,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-In this module the basic Cell mixing class is composed to set the basic
-structure for the later in the model used Cell class. It Inherits from Cell_
-in that basic variables and parameters are defined.
-"""
 
 #
 #  Imports
@@ -24,7 +24,8 @@ from .interface import Cell_, Society_
 
 
 class Cell(Cell_, abstract.Cell):
-    """
+    """Define properties of base.cell.
+
     Basic Cell mixin class that every model must use in composing their Cell
     class. Inherits from Cell_ as the interface with all necessary variables
     and parameters.
@@ -42,8 +43,7 @@ class Cell(Cell_, abstract.Cell):
                  geometry=None,
                  **kwargs
                  ):
-        """
-        Initializes an instance of Cell.
+        """Initialize an instance of Cell.
 
         Parameters
         ----------

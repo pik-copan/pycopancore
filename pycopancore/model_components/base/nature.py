@@ -1,3 +1,10 @@
+"""Define base.nature class.
+
+In this module the basic Nature mixing class is composed to set the basic
+structure for the later in the model used Nature class. It Inherits from
+Nature_ in that basic variables and parameters are defined.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,12 +12,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-In this module the basic Nature mixing class is composed to set the basic
-structure for the later in the model used Nature class. It Inherits from
-Nature_ in that basic variables and parameters are defined.
-"""
 
 #
 #  Imports
@@ -25,7 +26,8 @@ from .interface import Nature_
 
 
 class Nature(Nature_, abstract.Nature):
-    """
+    """Define properties of the nature class.
+
     Basic Nature mixin class that every model must use in composing their
     Nature class. Inherits from Nature_ as the interface with all necessary
     variables and parameters.
@@ -39,8 +41,7 @@ class Nature(Nature_, abstract.Nature):
                  # *,
                  **kwargs
                  ):
-        """
-        Initialize an instance of Nature.
+        """Initialize an instance of Nature.
 
         Parameters
         ----------
@@ -50,17 +51,13 @@ class Nature(Nature_, abstract.Nature):
         pass
 
     def __repr__(self):
-        """
-        Return a string representation of the object of class base.Nature.
-        """
+        """Return a string representation of the object of base.Nature."""
         return (super().__repr__() +
                 'base.nature object'
                 )
 
     def __str__(self):
-        """
-        Return a readable representation of the object of class base.Nature.
-        """
+        """Return a readable representation of the object of base.Nature."""
         return (super().__str__() +
                 'base.nature object'
                 )

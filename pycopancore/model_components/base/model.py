@@ -1,3 +1,11 @@
+"""Central module in copan:core.
+
+This module is the model of the base component and also owns the configure
+method. This method is central to the framework since it fuses together
+the used classes and puts information about process types and variables
+in special list to be accessed by the runner.
+"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -5,10 +13,6 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-This is the base.model file
-"""
 
 #
 #  Imports
@@ -27,7 +31,8 @@ import inspect
 
 
 class Model (Model_, abstract.Model):
-    """
+    """Defnie the base.model class.
+
     This is the base.model file. It serves two purposes:
     1. Be a the model class of the base component, providing the information
     about which mixins are to be used of the component AND:
@@ -52,8 +57,7 @@ class Model (Model_, abstract.Model):
     def __init__(self,
                  **kwargs
                  ):
-        """
-        Initializes an instance of Model.
+        """Initialize an instance of Model.
 
         Parameters
         ----------
@@ -61,7 +65,6 @@ class Model (Model_, abstract.Model):
             entities being a dict containing entities as entries and their
             class as key
         """
-
         super().__init__()
 
         self._process_taxon_objects = {pt: pt() for pt in self.process_taxa}
@@ -83,9 +86,7 @@ class Model (Model_, abstract.Model):
         print('     base model instantiated')
 
     def __repr__(self):
-        """
-        Return a string representation of the object of class base.Model.
-        """
+        """Return a string representation of the base.Model."""
         # Is it necessary to list all objects? Or are classes sufficient?
         keys_entities = []
         keys_process_taxa = []
@@ -106,7 +107,8 @@ class Model (Model_, abstract.Model):
     #
 
     def add_entity(self):
-        """
+        """Add enity of some kind.
+
         This is a function to add an entity. It does not have a return value,
         since the entity will be added to the entities_dict.
         """
@@ -121,7 +123,8 @@ class Model (Model_, abstract.Model):
 
     @property
     def entities(self):
-        """
+        """Return the entites_dict.
+
         A function to return a dictionary with classes as key and entities as
         entries
 
@@ -136,11 +139,11 @@ class Model (Model_, abstract.Model):
 
     @classmethod
     def configure(cls):
-        """
+        """Configure the model.
+
         This classmethod configures the mixin models by allocating variables
         and processes to designated lists.
         """
-
         cls.variables = []  # save in pairs: (variable, owning_class)
         cls.processes = []  # save in pairs: (process, owning_class)
 

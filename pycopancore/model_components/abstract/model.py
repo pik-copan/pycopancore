@@ -1,3 +1,4 @@
+"""Abstract class from which all model components must be derived."""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
@@ -6,15 +7,9 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-"""
-Abstract class from which all model components must be derived
-"""
-
 
 class Model(object):
-    """
-    Abstract class from which all model components must be derived
-    """
+    """Abstract class from which all model components must be derived."""
 
     # class attributes later holding the specific model component's metadata:
 
@@ -29,4 +24,5 @@ class Model(object):
     process_taxa = None
 
     def __init__(self):
+        """Initialize object."""
         pass
