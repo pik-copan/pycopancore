@@ -57,7 +57,7 @@ class _AbstractEntityMixin(object):
             self.__class__.entities = [self]
 
     def __del__(self):
-        """Delete entity from its classe's list"""
+        """Delete entity from its classe's list."""
         self.__class__.entities.remove(self)
 
     def __repr__(self):

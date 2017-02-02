@@ -17,7 +17,7 @@ in that basic variables and parameters are defined.
 #
 
 from pycopancore.model_components import abstract
-from .interface import Cell_, Society_
+from .interface import Cell_
 #
 #  Define class Cell
 #
@@ -61,8 +61,6 @@ class Cell(Cell_, abstract.Cell):
         assert area > 0, "area must be > 0"
         self.area = area
 
-        assert isinstance(society, Society_), \
-            "society must be an instance of Society"
         self.society = society
 
         self.geometry = geometry
