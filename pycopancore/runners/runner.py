@@ -42,7 +42,7 @@ class Runner(_AbstractRunner):
         """
         super(Runner, self).__init__()
         self.model = model
-        self.processes = (model.processes)
+        self.processes = model.processes
         self.explicit_processes = model.explicit_processes
         self.event_processes = model.event_processes
         self.step_processes = model.step_processes
