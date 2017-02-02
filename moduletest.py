@@ -25,7 +25,9 @@ tb.Cell.event_value.set_values(entities=cells, values=np.random.rand(nc))
 tb.Cell.step_resource.set_values(entities=cells, values=np.random.rand(nc))
 tb.Cell.explicit_value.set_values(entities=cells, values=np.random.rand(nc))
 
-entities = {tb.Cell: cells, tb.Society: societies, tb.Individual: individuals}
+entities = {tb.Cell: tb.Cell.entities,
+            tb.Society: tb.Society.entities,
+            tb.Individual: tb.Individual.entities}
 
 print('\n instantiating model')
 m = tb.Model(entities=entities)
