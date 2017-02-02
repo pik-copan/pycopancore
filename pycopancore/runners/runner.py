@@ -368,9 +368,9 @@ class Runner(_AbstractRunner):
             self.complete_explicits(t)
 
             # Store all information that has been calculated at time t ->
-            # iterate through all variables!
+            # iterate through all process variables!
 
-            for (v, oc) in self.model.variables:
+            for (v, oc) in self.model.process_variables:
                 entities = oc.entities
                 values = v.get_value_list(entities)
                 for i in range(len(entities)):
@@ -384,5 +384,20 @@ class Runner(_AbstractRunner):
 
             t_np = np.array([t])
             trajectory_dict['t'] = np.concatenate((trajectory_dict['t'], t_np))
+
+        # Store all information that has been calculated and not yet stored:
+
+        for (v, oc) in self.model.variables:
+            if (v, oc) not in self.model.process_variables:
+                entities = oc.entities
+                values = v.get_value_list(entities)
+                for i in range(len(entities)):
+                    entity = entities[i]
+                    value = np.array([values[i]])
+                    try:
+                        trajectory_dict[v][entity] = np.concatenate((
+                            trajectory_dict[v][entity], value))
+                    except KeyError:
+                        trajectory_dict[v][entity] = value
 
         return trajectory_dict

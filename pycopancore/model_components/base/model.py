@@ -118,6 +118,8 @@ class Model (Model_, abstract.Model):
 
         cls.variables_dict = {}
 
+        cls.process_variables = []
+
         cls.ODE_variables = []
         cls.explicit_variables = []
         cls.step_variables = []
@@ -228,6 +230,8 @@ class Model (Model_, abstract.Model):
                         cls.processes.append((p, owning_class))
 
         for (process, owning_class) in cls.processes:
+            cls.process_variables += [(v, owning_class) for v in
+                                      process.variables]
             if isinstance(process, ODE):
                 cls.ODE_variables += [(v, owning_class)
                                       for v in process.variables]
