@@ -1,5 +1,4 @@
-"""The simple_extraction cell module has some dynamics of its resource.
-"""
+"""The simple_extraction cell module."""
 
 # This file is part of pycopancore.
 #
@@ -13,7 +12,7 @@
 #  Imports
 #
 
-#from pycopancore import ODE, Step, Explicit, Event
+# from pycopancore import ODE, Step, Explicit, Event
 from pycopancore.model_components import abstract
 from .interface import Cell_
 
@@ -46,6 +45,5 @@ class Cell(Cell_, abstract.Cell):
     #
     #  Definitions of further methods
     #
-
 
     processes = []

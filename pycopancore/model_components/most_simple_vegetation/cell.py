@@ -1,5 +1,4 @@
-"""The most_simple_vegetation cell module has some dynamics of its resource.
-"""
+"""The most_simple_vegetation cell module has some dynamics of its resource."""
 
 # This file is part of pycopancore.
 #
@@ -13,7 +12,8 @@
 #  Imports
 #
 
-from pycopancore import ODE, Step, Explicit, Event
+from pycopancore import ODE
+# from pycopancore import Step, Explicit, Event
 from pycopancore.model_components import abstract
 from .interface import Cell_
 
@@ -70,9 +70,13 @@ class Cell(Cell_, abstract.Cell):
         # Is this the right ode?
         self.d_stock += g * (1 - s / smax) * s
 
-
     # TODO:
-    # not sure here what has to go into the processes list. What is name, variables, specification, smoothness?
+    # not sure here what has to go into the processes list.
+    # What is name, variables, specification, smoothness?
     processes = [
-        ODE('logistic_growth_function', [Cell_.stock, Cell_.capacity, Cell_.growth_rate], logistic_growth)
+        ODE('logistic_growth_function',
+            [Cell_.stock,
+             Cell_.capacity,
+             Cell_.growth_rate],
+            logistic_growth)
         ]

@@ -1,6 +1,4 @@
-"""Metabolism mixin class template.
-
-"""
+"""Metabolism mixin class template."""
 
 # This file is part of pycopancore.
 #

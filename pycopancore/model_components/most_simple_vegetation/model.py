@@ -1,4 +1,7 @@
-"""The most_simple_vegetation model is a very simple model for vegetation growth."""
+"""The most_simple_vegetation model.
+
+This is a very simple model for vegetation growth.
+"""
 
 # This file is part of pycopancore.
 #

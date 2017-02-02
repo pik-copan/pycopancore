@@ -36,7 +36,7 @@ class Individual(Individual_, abstract.Individual):
 
     def __init__(self,
                  *,
-                 strategy = 0,
+                 strategy=0,
                  **kwargs
                  ):
         """Initialize an instance of Individual."""

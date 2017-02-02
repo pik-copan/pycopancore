@@ -18,19 +18,20 @@ from pycopancore import Variable
 #  Define class Cell_
 #
 
+
 class Cell_(object):
     """Define Interface for Cell."""
 
     stock = Variable('current stock of resource')
     capacity = Variable('capacity of resource')
     growth_rate = Variable('growth rate of resource')
-    #resource = Variable('current resource')
-    #capacity = Variable('whole capacity')
-    #step_resource = Variable('step resource')
-    #event_value = Variable('event value')
-    #explicit_value = Variable('explicit value')
-    #step_width = Variable('time between two steps')
-    #last_execution = Variable('last time step was executed')
+    # resource = Variable('current resource')
+    # capacity = Variable('whole capacity')
+    # step_resource = Variable('step resource')
+    # event_value = Variable('event value')
+    # explicit_value = Variable('explicit value')
+    # step_width = Variable('time between two steps')
+    # last_execution = Variable('last time step was executed')
 
 #
 #  Define class Individual_
