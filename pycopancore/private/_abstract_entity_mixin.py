@@ -46,11 +46,19 @@ class _AbstractEntityMixin(object):
 
     processes = None
     model = None
+    entities = None
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
         self._uid = get_next_uid()
-        # pass
+        try:
+            self.__class__.entities.append(self)
+        except AttributeError:
+            self.__class__.entities = [self]
+
+    def __del__(self):
+        """Delete entity from its classe's list."""
+        self.__class__.entities.remove(self)
 
     def __repr__(self):
         return "{}[UID={}]".format(self.__class__.__name__, self._uid)

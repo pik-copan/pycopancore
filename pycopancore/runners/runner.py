@@ -42,7 +42,7 @@ class Runner(_AbstractRunner):
         """
         super(Runner, self).__init__()
         self.model = model
-        self.processes = (model.processes)
+        self.processes = model.processes
         self.explicit_processes = model.explicit_processes
         self.event_processes = model.event_processes
         self.step_processes = model.step_processes
@@ -62,7 +62,7 @@ class Runner(_AbstractRunner):
         """
         # Iterate through explicit_processes:
         for (p, oc) in self.explicit_processes:
-            for e in self.model.entities[oc]:
+            for e in oc.entities:
                 p.specification(e, t)
 
     def get_derivatives(self, value_array, t):
@@ -108,19 +108,19 @@ class Runner(_AbstractRunner):
         for (variable, oc) in self.model.ODE_variables:
             # call all varibles which are in the list ODE_variables which is
             # defined in model_components/base/model
-            next_offset = offset + len(self.model.entities[oc])
+            next_offset = offset + len(oc.entities)
             # second counter to count how many entities are using the variable
-            variable.set_values(entities=self.model.entities[oc],
+            variable.set_values(entities=oc.entities,
                                 values=value_array[offset:next_offset])
             # Write values to variables
-            variable.clear_derivatives(entities=self.model.entities[oc])
+            variable.clear_derivatives(entities=oc.entities)
             # Delete old derivatives if there are any
             offset = next_offset
             # set up the counter
 
             # call methods:
             for (process, oc) in self.ode_processes:
-                for entity in self.model.entities[oc]:
+                for entity in oc.entities:
                     process.specification(entity, t)
 
         derivative_array = np.zeros(offset)
@@ -128,10 +128,10 @@ class Runner(_AbstractRunner):
         # Calculation of derivatives:
         offset = 0  # Again, a counter
         for (variable, oc) in self.model.ODE_variables:
-            next_offset = offset + len(self.model.entities[oc])
+            next_offset = offset + len(oc.entities)
             # Get the calculated derivatives and write them to output array:
             derivative_array[offset:next_offset] = variable.get_derivatives(
-                entities=self.model.entities[oc])
+                entities=oc.entities)
 
             offset = next_offset
 
@@ -180,7 +180,7 @@ class Runner(_AbstractRunner):
             eventtype = event.specification[0]
             rate_or_timfunc = event.specification[1]
             # TODO: Check if the following loop is correct:
-            for entity in self.model.entities[oc]:
+            for entity in oc.entities:
                 if eventtype == "rate":
                     next_time = np.random.exponential(1. / rate_or_timfunc)
                 elif eventtype == "time":
@@ -200,7 +200,7 @@ class Runner(_AbstractRunner):
         for (step, oc) in self.step_processes:
             next_time_func = step.specification[0]
             method = step.specification[1]
-            for entity in self.model.entities[oc]:
+            for entity in oc.entities:
                 if next_time_func(entity, t) == t_0:
                     method(entity, t)
                     # calling next_time with function:
@@ -233,15 +233,15 @@ class Runner(_AbstractRunner):
             offset = 0
             # Find out how many variables we have:
             for (variable, oc) in self.model.ODE_variables:
-                next_offset = offset + len(self.model.entities[oc])
+                next_offset = offset + len(oc.entities)
                 offset = next_offset
             initial_array_ode = np.zeros(offset)
             offset = 0
             # Fill initial_array_ode with values:
             for (variable, oc) in self.model.ODE_variables:
-                next_offset = offset + len(self.model.entities[oc])
+                next_offset = offset + len(oc.entities)
                 initial_array_ode[offset:next_offset] = \
-                    variable.get_value_list(entities=self.model.entities[oc])
+                    variable.get_value_list(entities=oc.entities)
                 offset = next_offset
 
             # In Odeint, call get_derivatives to get the functions, which
@@ -260,13 +260,13 @@ class Runner(_AbstractRunner):
                 time = ts[i]
                 ode_values = ode_trajectory[i, :]
                 for (v, oc) in self.model.ODE_variables:
-                    entities = self.model.entities[oc]
+                    entities = oc.entities
                     v.set_values(entities=entities, values=ode_values)
                 # calculate explicits
                 self.complete_explicits(time)
                 # save values of explicits AND all other variables including t!
                 for (v, oc) in self.model.explicit_variables:
-                    entities = self.model.entities[oc]
+                    entities = oc.entities
                     values = v.get_value_list(entities)
                     for i in range(len(entities)):
                         value = np.array([values[i]])
@@ -278,7 +278,7 @@ class Runner(_AbstractRunner):
                             trajectory_dict[v][entity] = value
                 # TODO: Same for the rest
                 for (v, oc) in self.model.event_variables:
-                    entities = self.model.entities[oc]
+                    entities = oc.entities
                     values = v.get_value_list(entities)
                     for i in range(len(entities)):
                         value = np.array([values[i]])
@@ -289,7 +289,7 @@ class Runner(_AbstractRunner):
                         except KeyError:
                             trajectory_dict[v][entity] = value
                 for (v, oc) in self.model.step_variables:
-                    entities = self.model.entities[oc]
+                    entities = oc.entities
                     values = v.get_value_list(entities)
                     for i in range(len(entities)):
                         value = np.array([values[i]])
@@ -308,9 +308,9 @@ class Runner(_AbstractRunner):
             offset = 0
             for (v, oc) in self.model.ODE_variables:
                 # print('variable, oc:', v, oc)
-                next_offset = offset + len(self.model.entities[oc])
-                for i in range(len(self.model.entities[oc])):
-                    entity = self.model.entities[oc][i]
+                next_offset = offset + len(oc.entities)
+                for i in range(len(oc.entities)):
+                    entity = oc.entities[i]
                     values = ode_trajectory[:, offset + i]
                     try:
                         trajectory_dict[v][entity] = np.concatenate((
@@ -371,7 +371,7 @@ class Runner(_AbstractRunner):
             # iterate through all variables!
 
             for (v, oc) in self.model.variables:
-                entities = self.model.entities[oc]
+                entities = oc.entities
                 values = v.get_value_list(entities)
                 for i in range(len(entities)):
                     entity = entities[i]

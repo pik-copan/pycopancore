@@ -25,14 +25,12 @@ tb.Cell.event_value.set_values(entities=cells, values=np.random.rand(nc))
 tb.Cell.step_resource.set_values(entities=cells, values=np.random.rand(nc))
 tb.Cell.explicit_value.set_values(entities=cells, values=np.random.rand(nc))
 
-entities = {tb.Cell: cells, tb.Society: societies, tb.Individual: individuals}
-
 print('\n instantiating model')
-m = tb.Model(entities=entities)
+m = tb.Model()
 
 print('\n runner starting')
 r = Runner(model=m)
 
 traj = r.run(t_1=10, dt=.1)
 
-print(traj)
+# print(traj)
