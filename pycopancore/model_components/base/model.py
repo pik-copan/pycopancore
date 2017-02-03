@@ -78,10 +78,10 @@ class Model (Model_, abstract.Model):
         # Is this really what owning_classes is about???
         # Tell all variables and proceses which entities they have,
         # so set v/p.owning_classes:
-        for (p, oc) in self.processes:
-            p.owning_classes = self.entities_dict[oc]
-        for (v, oc) in self.variables:
-            v.owning_classes = self.entities_dict[oc]
+        # for (p, oc) in self.processes:
+        #     p.owning_classes = self.entities_dict[oc]
+        # for (v, oc) in self.variables:
+        #     v.owning_classes = self.entities_dict[oc]
 
         print('     base model instantiated')
 
