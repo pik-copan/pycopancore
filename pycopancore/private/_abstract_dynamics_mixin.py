@@ -27,10 +27,15 @@ class _AbstractDynamicsMixin(object):
 
     processes = None
     model = None
+    entities = None
 
     def __init__(self):
         """Initialize an _AbstractDynamicsMixin instance."""
-        pass
+        if self.__class__.entities:
+            self.__class__.entities.append(self)
+            print('This Process Taxon is already initialized!')
+        else:
+            self.__class__.entities = [self]
 
     def __repr__(self):
         pass

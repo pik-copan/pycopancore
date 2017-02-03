@@ -78,10 +78,10 @@ class Model (Model_, abstract.Model):
         # Is this really what owning_classes is about???
         # Tell all variables and proceses which entities they have,
         # so set v/p.owning_classes:
-        for (p, oc) in self.processes:
-            p.owning_classes = self.entities_dict[oc]
-        for (v, oc) in self.variables:
-            v.owning_classes = self.entities_dict[oc]
+        # for (p, oc) in self.processes:
+        #     p.owning_classes = self.entities_dict[oc]
+        # for (v, oc) in self.variables:
+        #     v.owning_classes = self.entities_dict[oc]
 
         print('     base model instantiated')
 
@@ -117,6 +117,8 @@ class Model (Model_, abstract.Model):
         cls.processes = []  # save in pairs: (process, owning_class)
 
         cls.variables_dict = {}
+
+        cls.process_variables = []
 
         cls.ODE_variables = []
         cls.explicit_variables = []
@@ -228,6 +230,8 @@ class Model (Model_, abstract.Model):
                         cls.processes.append((p, owning_class))
 
         for (process, owning_class) in cls.processes:
+            cls.process_variables += [(v, owning_class) for v in
+                                      process.variables]
             if isinstance(process, ODE):
                 cls.ODE_variables += [(v, owning_class)
                                       for v in process.variables]
