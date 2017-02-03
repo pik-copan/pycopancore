@@ -67,7 +67,7 @@ class Cell(Cell_, abstract.Cell):
         s = self.stock
         smax = self.capacity
         # TODO:
-        # Is this the right ode?
+        # Is += correct?
         self.d_stock += g * (1 - s / smax) * s
 
     # TODO:

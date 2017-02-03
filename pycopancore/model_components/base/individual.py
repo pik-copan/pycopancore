@@ -51,7 +51,7 @@ class Individual(Individual_, abstract.Individual):
         """
         super().__init__(**kwargs)
 
-        assert isinstance(cell, Cell_), "cell must be an instance of Cell"
+        # assert isinstance(cell, Cell_), "cell must be an instance of Cell"
         self.cell = cell
 
     processes = []
