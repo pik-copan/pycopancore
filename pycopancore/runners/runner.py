@@ -247,60 +247,61 @@ class Runner(_AbstractRunner):
             # In Odeint, call get_derivatives to get the functions, which
             # odeint needs to integrate, step 3.1 in runner scheme, then return
             # the trajectory, 3.2 in runner scheme
-            ode_trajectory = integrate.odeint(self.get_derivatives,
-                                              initial_array_ode,
-                                              ts)
+            if len(self.model.ODE_processes) != 0:
+                ode_trajectory = integrate.odeint(self.get_derivatives,
+                                                  initial_array_ode,
+                                                  ts)
 
             # Take the time steps used in odeint and calculate explicit
             # functions in retrospect, step 3.3 in runner scheme
             # Save them to an arraySave them to the trajectory_dict
 
-            for i in range(len(ts)):
-                # write values to objects:
-                time = ts[i]
-                ode_values = ode_trajectory[i, :]
-                for (v, oc) in self.model.ODE_variables:
-                    entities = oc.entities
-                    v.set_values(entities=entities, values=ode_values)
-                # calculate explicits
-                self.complete_explicits(time)
-                # save values of explicits AND all other variables including t!
-                for (v, oc) in self.model.explicit_variables:
-                    entities = oc.entities
-                    values = v.get_value_list(entities)
-                    for i in range(len(entities)):
-                        value = np.array([values[i]])
-                        entity = entities[i]
-                        try:
-                            trajectory_dict[v][entity] = np.concatenate((
-                                trajectory_dict[v][entity], value))
-                        except KeyError:
-                            trajectory_dict[v][entity] = value
-                # TODO: Same for the rest
-                for (v, oc) in self.model.event_variables:
-                    entities = oc.entities
-                    values = v.get_value_list(entities)
-                    for i in range(len(entities)):
-                        value = np.array([values[i]])
-                        entity = entities[i]
-                        try:
-                            trajectory_dict[v][entity] = np.concatenate((
-                                trajectory_dict[v][entity], value))
-                        except KeyError:
-                            trajectory_dict[v][entity] = value
-                for (v, oc) in self.model.step_variables:
-                    entities = oc.entities
-                    values = v.get_value_list(entities)
-                    for i in range(len(entities)):
-                        value = np.array([values[i]])
-                        entity = entities[i]
-                        try:
-                            trajectory_dict[v][entity] = np.concatenate((
-                                trajectory_dict[v][entity], value))
-                        except KeyError:
-                            trajectory_dict[v][entity] = value
-            time_np = np.array(ts)
-            trajectory_dict['t'] = np.concatenate((trajectory_dict['t'],
+                for i in range(len(ts)):
+                    # write values to objects:
+                    time = ts[i]
+                    ode_values = ode_trajectory[i, :]
+                    for (v, oc) in self.model.ODE_variables:
+                        entities = oc.entities
+                        v.set_values(entities=entities, values=ode_values)
+                    # calculate explicits
+                    self.complete_explicits(time)
+                    # save values of explicits AND all other variables including t!
+                    for (v, oc) in self.model.explicit_variables:
+                        entities = oc.entities
+                        values = v.get_value_list(entities)
+                        for i in range(len(entities)):
+                            value = np.array([values[i]])
+                            entity = entities[i]
+                            try:
+                                trajectory_dict[v][entity] = np.concatenate((
+                                    trajectory_dict[v][entity], value))
+                            except KeyError:
+                                trajectory_dict[v][entity] = value
+                    # TODO: Same for the rest
+                    for (v, oc) in self.model.event_variables:
+                        entities = oc.entities
+                        values = v.get_value_list(entities)
+                        for i in range(len(entities)):
+                            value = np.array([values[i]])
+                            entity = entities[i]
+                            try:
+                                trajectory_dict[v][entity] = np.concatenate((
+                                    trajectory_dict[v][entity], value))
+                            except KeyError:
+                                trajectory_dict[v][entity] = value
+                    for (v, oc) in self.model.step_variables:
+                        entities = oc.entities
+                        values = v.get_value_list(entities)
+                        for i in range(len(entities)):
+                            value = np.array([values[i]])
+                            entity = entities[i]
+                            try:
+                                trajectory_dict[v][entity] = np.concatenate((
+                                    trajectory_dict[v][entity], value))
+                            except KeyError:
+                                trajectory_dict[v][entity] = value
+                time_np = np.array(ts)
+                trajectory_dict['t'] = np.concatenate((trajectory_dict['t'],
                                                    time_np))
 
             # save odes to trajectory dict
