@@ -106,20 +106,20 @@ class Runner(_AbstractRunner):
         """
 
         for (variable, oc) in self.model.ODE_variables:
-            variable.clear_derivatives(entities=self.model.entities[oc])
+            variable.clear_derivatives(entities=oc.entities)
 
         offset = 0  # this is a counter
+        # call all varibles which are in the list ODE_variables which is
+        # defined in model_components/base/model:
         for (variable, oc) in self.model.ODE_variables:
-            # call all varibles which are in the list ODE_variables which is
-            # defined in model_components/base/model
+            # second counter to count how many entities are using the variable:
             next_offset = offset + len(oc.entities)
-            # second counter to count how many entities are using the variable
+            # Write values to variables:
             variable.set_values(entities=oc.entities,
                                 values=value_array[offset:next_offset])
-            # Write values to variables
 
+            # set up the counter:
             offset = next_offset
-            # set up the counter
 
             # call methods:
             for (process, oc) in self.ode_processes:
