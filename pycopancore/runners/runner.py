@@ -104,6 +104,10 @@ class Runner(_AbstractRunner):
         -------
 
         """
+
+        for (variable, oc) in self.model.ODE_variables:
+            variable.clear_derivatives(entities=self.model.entities[oc])
+
         offset = 0  # this is a counter
         for (variable, oc) in self.model.ODE_variables:
             # call all varibles which are in the list ODE_variables which is
@@ -113,7 +117,6 @@ class Runner(_AbstractRunner):
             variable.set_values(entities=self.model.entities[oc],
                                 values=value_array[offset:next_offset])
             # Write values to variables
-            variable.clear_derivatives(entities=self.model.entities[oc])
             # Delete old derivatives if there are any
             offset = next_offset
             # set up the counter
