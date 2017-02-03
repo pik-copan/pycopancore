@@ -38,6 +38,7 @@ class Cell(Cell_, abstract.Cell):
     def __init__(self,
                  *,
                  resource=.5,
+                 resource2=0.3,
                  capacity=1,
                  step_resource=.3,
                  event_value=.2,
@@ -50,6 +51,7 @@ class Cell(Cell_, abstract.Cell):
         super(Cell, self).__init__(**kwargs)
 
         self.resource = resource
+        self.resource2 = resource2
         self.capacity = capacity
         self.event_value = event_value
         self.explicit_value = explicit_value
@@ -78,6 +80,16 @@ class Cell(Cell_, abstract.Cell):
         b = self.resource
         growth_rate = 0.5
         self.d_resource += b * growth_rate * (1 - b / a)
+
+    def a_ode_function2(self,t):
+        """
+        test ode function
+        """
+
+        a = self.capacity
+        b = self.resource2
+        growth_rate = 0.5
+        self.d_resource2 += b * growth_rate * (1 - b/ a)
 
     def a_step_function(self, t):
         """Add something to step_resource.
@@ -145,6 +157,7 @@ class Cell(Cell_, abstract.Cell):
 
     processes = [
         ODE('growth_function', [Cell_.resource], a_ode_function),
+        ODE('growth_function', [Cell_.resource2], a_ode_function2),
         Step('step_function',
              [Cell_.step_resource],
              [step_timing,
