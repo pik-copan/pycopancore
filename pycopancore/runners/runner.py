@@ -265,7 +265,8 @@ class Runner(_AbstractRunner):
                         v.set_values(entities=entities, values=ode_values)
                     # calculate explicits
                     self.complete_explicits(time)
-                    # save values of explicits AND all other variables including t!
+                    # save values of explicits AND all other variables
+                    # including t!
                     for (v, oc) in self.model.explicit_variables:
                         entities = oc.entities
                         values = v.get_value_list(entities)
@@ -302,7 +303,7 @@ class Runner(_AbstractRunner):
                                 trajectory_dict[v][entity] = value
                 time_np = np.array(ts)
                 trajectory_dict['t'] = np.concatenate((trajectory_dict['t'],
-                                                   time_np))
+                                                       time_np))
 
             # save odes to trajectory dict
 
