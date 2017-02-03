@@ -33,12 +33,12 @@ class _AbstractDynamicsMixin(object):
         """Initialize an _AbstractDynamicsMixin instance."""
         if self.__class__.entities:
             self.__class__.entities.append(self)
-            print('This Process Taxon is already initialized!')
+            raise ValueError('This Process Taxon is already initialized!')
         else:
             self.__class__.entities = [self]
 
     def __repr__(self):
-        pass
+        return ('Process taxon object')
 
     def __str__(self):
-        pass
+        return repr(self)
