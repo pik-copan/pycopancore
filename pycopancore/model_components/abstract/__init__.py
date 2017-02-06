@@ -12,6 +12,7 @@ exhibit dynamics, they are just handling the most basic properties of
 entity-types and process-taxa
 """
 
+from .world import World
 from .cell import Cell
 from .individual import Individual
 from .society import Society

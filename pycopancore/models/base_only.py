@@ -20,6 +20,12 @@ import pycopancore.model_components.base as base
 #
 
 
+class World (base.World):
+    """Class to mix all World_mixins to create World clas."""
+
+    pass
+
+
 class Cell (base.Cell):
     """Class to mix all Cell_mixins to create Cell class."""
 

@@ -104,7 +104,6 @@ class Runner(_AbstractRunner):
         -------
 
         """
-
         for (variable, oc) in self.model.ODE_variables:
             variable.clear_derivatives(entities=oc.entities)
 
@@ -280,7 +279,7 @@ class Runner(_AbstractRunner):
                         for (v, oc) in self.model.explicit_variables:
                             entities = oc.entities
                             values = v.get_value_list(entities)
-                            for i,entity in enumerate(entities):
+                            for i, entity in enumerate(entities):
                                 value = np.array([values[i]])
                                 entity = entities[i]
                                 try:
@@ -294,7 +293,7 @@ class Runner(_AbstractRunner):
                         for (v, oc) in self.model.event_variables:
                             entities = oc.entities
                             values = v.get_value_list(entities)
-                            for i,entity in enumerate(entities):
+                            for i, entity in enumerate(entities):
                                 value = np.array([values[i]])
                                 entity = entities[i]
                                 try:
@@ -308,7 +307,7 @@ class Runner(_AbstractRunner):
                         for (v, oc) in self.model.step_variables:
                             entities = oc.entities
                             values = v.get_value_list(entities)
-                            for i,entity in enumerate(entities):
+                            for i, entity in enumerate(entities):
                                 value = np.array([values[i]])
                                 entity = entities[i]
                                 try:
@@ -390,11 +389,10 @@ class Runner(_AbstractRunner):
 
             # Store all information that has been calculated at time t ->
             # iterate through all process variables!
-
             for (v, oc) in self.model.process_variables:
                 entities = oc.entities
                 values = v.get_value_list(entities)
-                for i,entity in enumerate(entities):
+                for i, entity in enumerate(entities):
                     entity = entities[i]
                     value = np.array([values[i]])
                     try:
@@ -406,18 +404,18 @@ class Runner(_AbstractRunner):
             t_np = np.array([t])
             trajectory_dict['t'] = np.concatenate((trajectory_dict['t'], t_np))
 
-        # Store all information that has been calculated and not yet stored:
-
-            for (v, oc) in self.model.variables:
-                if (v, oc) not in self.model.process_variables:
-                    entities = oc.entities
-                    values = v.get_value_list(entities)
-                    for i, entity in enumerate(entities):
-                        value = np.array([values[i]])
-                        try:
-                            trajectory_dict[v][entity] = np.concatenate((
-                                trajectory_dict[v][entity], value))
-                        except KeyError:
-                            trajectory_dict[v][entity] = value
+        # Store all information that has not been changed during calculations:
+        for (v, oc) in self.model.variables:
+            if (v, oc) not in self.model.process_variables:
+                entities = oc.entities
+                values = v.get_value_list(entities)
+                for i in range(len(entities)):
+                    entity = entities[i]
+                    value = np.array([values[i]])
+                    try:
+                        trajectory_dict[v][entity] = np.concatenate((
+                            trajectory_dict[v][entity], value))
+                    except KeyError:
+                        trajectory_dict[v][entity] = value
 
         return trajectory_dict

@@ -5,7 +5,7 @@ import numpy as np
 from pycopancore.models import base_and_dummy as tb
 from pycopancore.runners.runner import Runner
 
-
+nw = 1
 ns = 3
 nc = 7
 ni = 8
@@ -13,6 +13,7 @@ ni = 8
 
 tb.Model.configure()
 
+world = [tb.World() for w in range(nw)]
 societies = [tb.Society(population=1) for s in range(ns)]
 cells = [tb.Cell(society=societies[0]) for c in range(nc)]
 individuals = [tb.Individual(cell=cells[0]) for i in range(ni)]
@@ -33,4 +34,4 @@ r = Runner(model=m)
 
 traj = r.run(t_1=10, dt=.1)
 
-#print(traj)
+# print(traj)

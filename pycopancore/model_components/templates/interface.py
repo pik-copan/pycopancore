@@ -19,6 +19,14 @@ objects.
 # from pycopancore import Variable
 
 #
+#  Define class World_
+#
+
+
+class World_(object):
+    """Interface for World."""
+
+#
 #  Define class Cell_
 #
 
