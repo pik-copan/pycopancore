@@ -48,6 +48,9 @@ class World (World_, abstract.World):
         """
         super().__init__(**kwargs)
 
+        if len(self.__class__.entities) > 1:
+            raise ValueError('Only one world allowed!')
+
         self.contact_network = contact_network
 
     processes = []

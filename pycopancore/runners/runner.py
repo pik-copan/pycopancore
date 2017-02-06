@@ -104,7 +104,6 @@ class Runner(_AbstractRunner):
         -------
 
         """
-
         for (variable, oc) in self.model.ODE_variables:
             variable.clear_derivatives(entities=oc.entities)
 
