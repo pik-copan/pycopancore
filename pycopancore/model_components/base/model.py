@@ -22,7 +22,8 @@ from pycopancore import Variable, ODE, Explicit, Step, Event, \
     _AbstractEntityMixin, _AbstractDynamicsMixin
 from .interface import Model_
 from pycopancore.model_components import abstract
-from . import Cell, Nature, Individual, Culture, Society, Metabolism
+from . import World, Cell, Nature, Individual, Culture, Society, \
+    Metabolism
 import inspect
 
 #
@@ -47,7 +48,7 @@ class Model (Model_, abstract.Model):
     # Definitions of class attributes
     #
 
-    entity_types = [Cell, Individual, Society]
+    entity_types = [World, Cell, Individual, Society]
     process_taxa = [Nature, Culture, Metabolism]
 
     #

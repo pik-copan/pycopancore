@@ -1,8 +1,8 @@
 """Define variables of the base components.
 
 In this base interface module, variables for each entity are defined in
-corresponding class as sympy objects . The corresponding classes are Cell_,
-Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
+corresponding class as sympy objects . The corresponding classes are World_,
+Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 """
 
 # This file is part of pycopancore.
@@ -18,6 +18,21 @@ Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 #
 
 from pycopancore import Variable
+
+#
+# Define class World_
+#
+
+
+class World_(object):
+    """Define variables of world.
+
+    Basic World interface. It contains all variables specified as mandatory
+    ("base variables").
+    """
+
+    contact_network = Variable("contact network")
+
 
 #
 #  Define class Cell_
@@ -125,6 +140,10 @@ class Model_(object):
     requires = []
 
     components = None
+
+    worlds = []
+    world_variables_dict = None
+    world_processes = None
 
     cells = []
     cell_variables_dict = None

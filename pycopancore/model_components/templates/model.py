@@ -18,7 +18,7 @@ and parameters are defined.
 #
 
 from .interface import Model_
-# from . import Cell, Nature, Individual, Culture, Society, Metabolism
+# from . import World, Cell, Nature, Individual, Culture, Society, Metabolism
 from pycopancore.model_components import abstract
 
 #

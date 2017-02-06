@@ -20,6 +20,12 @@ import pycopancore.model_components.dummy as dummy
 #
 
 
+class World (base.World):
+    """Class to mix all World_mixins to create World clas."""
+
+    pass
+
+
 class Cell (dummy.Cell, base.Cell):
     """Class to mix all Cell_mixins to create Cell class."""
 
@@ -69,5 +75,5 @@ class Model(dummy.Model, base.Model):
 
     name = "This model's name"
     description = "Description of the model"
-    entity_types = [Cell, Individual, Society]
+    entity_types = [Cell, Individual, Society, World]
     process_taxa = [Culture, Metabolism, Nature]

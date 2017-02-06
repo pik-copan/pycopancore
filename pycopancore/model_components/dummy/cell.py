@@ -81,15 +81,12 @@ class Cell(Cell_, abstract.Cell):
         growth_rate = 0.5
         self.d_resource += b * growth_rate * (1 - b / a)
 
-    def a_ode_function2(self,t):
-        """
-        test ode function
-        """
-
+    def a_ode_function2(self, t):
+        """A test ode function."""
         a = self.capacity
         b = self.resource2
         growth_rate = 0.5
-        self.d_resource2 += b * growth_rate * (1 - b/ a)
+        self.d_resource2 += b * growth_rate * (1 - b / a)
 
     def a_step_function(self, t):
         """Add something to step_resource.
