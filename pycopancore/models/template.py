@@ -19,6 +19,12 @@ import pycopancore.model_components.COMPONENT as COMPONENT
 #
 
 
+class World (COMPONENT.World, base.World):
+    """Define Class by mixing all World_mixins to create World class."""
+
+    pass
+
+
 class Cell (COMPONENT.Cell, base.Cell):
     """Define Class by mixing all Cell_mixins to create Cell class."""
 
@@ -84,6 +90,6 @@ class Model(base.Model, COMPONENT.Model):
     name = "This model's name"
     description = "Description of the model"
     # Make a list of all Entity Types:
-    entity_types = [Cell, Individual, Society]
+    entity_types = [World, Cell, Individual, Society]
     # Make a list of all Process taxons/taxa:
     process_taxa = [Culture, Metabolism, Nature]

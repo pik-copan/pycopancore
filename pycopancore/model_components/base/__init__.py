@@ -9,9 +9,10 @@
 """
 This is the base model-component package
 """
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, \
-    Metabolism_, Model_
+from .interface import World_, Cell_, Nature_, Individual_, Culture_, \
+    Society_, Metabolism_, Model_
 
+from .world import World
 from .cell import Cell
 from .nature import Nature
 from .individual import Individual

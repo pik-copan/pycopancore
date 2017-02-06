@@ -61,7 +61,8 @@ class _AbstractEntityMixin(object):
         """Deactivate entity.
 
         Remove Entity from its classes entities list and add it to its classes
-        idle_entities list."""
+        idle_entities list.
+        """
         self.__class__.entities.remove(self)
         try:
             self.__class__.idle_entities.append(self)
@@ -72,8 +73,9 @@ class _AbstractEntityMixin(object):
         """Reactivate entity.
 
         Remove Entity from its classes idle_entities list and add it to its
-        classes entities list."""
-        assert self in self.__class__.idle_entities , 'Not deactivated'
+        classes entities list.
+        """
+        assert self in self.__class__.idle_entities, 'Not deactivated'
         self.__class__.idle_entities.remove(self)
         self.__class__.entities.append(self)
 
