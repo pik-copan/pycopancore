@@ -326,7 +326,7 @@ class Runner(_AbstractRunner):
                 for (v, oc) in self.model.ODE_variables:
                     # print('variable, oc:', v, oc)
                     next_offset = offset + len(oc.entities)
-                    for i,entity in enumerate(oc.entities):
+                    for i, entity in enumerate(oc.entities):
                         entity = oc.entities[i]
                         values = ode_trajectory[:, offset + i]
                         try:
