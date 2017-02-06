@@ -48,7 +48,7 @@ class Society(Society_, abstract.Society):
         population:
         kwargs:
         """
-        super(Society, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         assert population >= 0, "population must be >= 0"
         self.population = population

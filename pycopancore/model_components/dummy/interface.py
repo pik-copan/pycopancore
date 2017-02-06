@@ -23,6 +23,7 @@ class Cell_(object):
     """Define Interface for Cell."""
 
     resource = Variable('current resource')
+    resource2 = Variable('current resource2')
     capacity = Variable('whole capacity')
     step_resource = Variable('step resource')
     event_value = Variable('event value')

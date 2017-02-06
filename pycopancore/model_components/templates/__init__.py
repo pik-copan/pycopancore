@@ -12,10 +12,11 @@ amount of work needed when developing a new component
 """
 
 # Import of all interface modules
-from .interface import Cell_, Nature_, Individual_, Culture_, Society_, \
-    Metabolism_, Model_
+from .interface import World_, Cell_, Nature_, Individual_, Culture_, \
+    Society_, Metabolism_, Model_
 
 # Import entities
+from .world import World
 from .cell import Cell
 from .nature import Nature
 from .individual import Individual

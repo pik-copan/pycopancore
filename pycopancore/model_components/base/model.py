@@ -22,7 +22,8 @@ from pycopancore import Variable, ODE, Explicit, Step, Event, \
     _AbstractEntityMixin, _AbstractDynamicsMixin
 from .interface import Model_
 from pycopancore.model_components import abstract
-from . import Cell, Nature, Individual, Culture, Society, Metabolism
+from . import World, Cell, Nature, Individual, Culture, Society, \
+    Metabolism
 import inspect
 
 #
@@ -47,7 +48,7 @@ class Model (Model_, abstract.Model):
     # Definitions of class attributes
     #
 
-    entity_types = [Cell, Individual, Society]
+    entity_types = [World, Cell, Individual, Society]
     process_taxa = [Nature, Culture, Metabolism]
 
     #
@@ -61,14 +62,14 @@ class Model (Model_, abstract.Model):
 
         Parameters
         ----------
-        kwargs: dict
-            entities being a dict containing entities as entries and their
-            class as key
+        kwargs: Not in Use right now
         """
-        super().__init__()
+        super().__init__(**kwargs)
 
         self._process_taxon_objects = {pt: pt() for pt in self.process_taxa}
-        self.entities_dict = kwargs['entities']
+        self.entities_dict = {}
+        for c in self.entity_types:
+            self.entities_dict[c] = c.entities
 
         # TODO:
         # is it necessary to make all items in self.entities_dict known
@@ -78,10 +79,10 @@ class Model (Model_, abstract.Model):
         # Is this really what owning_classes is about???
         # Tell all variables and proceses which entities they have,
         # so set v/p.owning_classes:
-        for (p, oc) in self.processes:
-            p.owning_classes = self.entities_dict[oc]
-        for (v, oc) in self.variables:
-            v.owning_classes = self.entities_dict[oc]
+        # for (p, oc) in self.processes:
+        #     p.owning_classes = self.entities_dict[oc]
+        # for (v, oc) in self.variables:
+        #     v.owning_classes = self.entities_dict[oc]
 
         print('     base model instantiated')
 
@@ -106,37 +107,6 @@ class Model (Model_, abstract.Model):
     #  Definitions of further methods
     #
 
-    def add_entity(self):
-        """Add enity of some kind.
-
-        This is a function to add an entity. It does not have a return value,
-        since the entity will be added to the entities_dict.
-        """
-        # 0. Find parent class (model class) of the class that adds entity
-        # 1. Instantiate the object that is to be added
-        # 2. Add it to self.entities_dict
-        # 3. Add its variables and processes to the corresponding lists
-        # 4- Write a 0/None-trajectory for the time passed before its creation
-        # into the traj_dict of the runner
-        # 4. If the object introduces discontinuities, find out when these are
-        # going to happen and add to the next_discontinuities dict
-
-    @property
-    def entities(self):
-        """Return the entites_dict.
-
-        A function to return a dictionary with classes as key and entities as
-        entries
-
-        Returns
-        -------
-        A dictionary with classes as key and entites as entries
-        """
-        # Is it better to have the owning class as key or the subclass, so
-        # for example base.Cell or base_and_dummy.Cell?
-
-        return self.entities_dict
-
     @classmethod
     def configure(cls):
         """Configure the model.
@@ -148,6 +118,8 @@ class Model (Model_, abstract.Model):
         cls.processes = []  # save in pairs: (process, owning_class)
 
         cls.variables_dict = {}
+
+        cls.process_variables = []
 
         cls.ODE_variables = []
         cls.explicit_variables = []
@@ -259,6 +231,8 @@ class Model (Model_, abstract.Model):
                         cls.processes.append((p, owning_class))
 
         for (process, owning_class) in cls.processes:
+            cls.process_variables += [(v, owning_class) for v in
+                                      process.variables]
             if isinstance(process, ODE):
                 cls.ODE_variables += [(v, owning_class)
                                       for v in process.variables]

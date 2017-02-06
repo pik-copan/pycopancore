@@ -42,7 +42,7 @@ class Runner(_AbstractRunner):
         """
         super(Runner, self).__init__()
         self.model = model
-        self.processes = (model.processes)
+        self.processes = model.processes
         self.explicit_processes = model.explicit_processes
         self.event_processes = model.event_processes
         self.step_processes = model.step_processes
@@ -62,7 +62,7 @@ class Runner(_AbstractRunner):
         """
         # Iterate through explicit_processes:
         for (p, oc) in self.explicit_processes:
-            for e in self.model.entities[oc]:
+            for e in oc.entities:
                 p.specification(e, t)
 
     def get_derivatives(self, value_array, t):
@@ -104,23 +104,25 @@ class Runner(_AbstractRunner):
         -------
 
         """
-        offset = 0  # this is a counter
         for (variable, oc) in self.model.ODE_variables:
-            # call all varibles which are in the list ODE_variables which is
-            # defined in model_components/base/model
-            next_offset = offset + len(self.model.entities[oc])
-            # second counter to count how many entities are using the variable
-            variable.set_values(entities=self.model.entities[oc],
+            variable.clear_derivatives(entities=oc.entities)
+
+        offset = 0  # this is a counter
+        # call all varibles which are in the list ODE_variables which is
+        # defined in model_components/base/model:
+        for (variable, oc) in self.model.ODE_variables:
+            # second counter to count how many entities are using the variable:
+            next_offset = offset + len(oc.entities)
+            # Write values to variables:
+            variable.set_values(entities=oc.entities,
                                 values=value_array[offset:next_offset])
-            # Write values to variables
-            variable.clear_derivatives(entities=self.model.entities[oc])
-            # Delete old derivatives if there are any
+
+            # set up the counter:
             offset = next_offset
-            # set up the counter
 
             # call methods:
             for (process, oc) in self.ode_processes:
-                for entity in self.model.entities[oc]:
+                for entity in oc.entities:
                     process.specification(entity, t)
 
         derivative_array = np.zeros(offset)
@@ -128,10 +130,10 @@ class Runner(_AbstractRunner):
         # Calculation of derivatives:
         offset = 0  # Again, a counter
         for (variable, oc) in self.model.ODE_variables:
-            next_offset = offset + len(self.model.entities[oc])
+            next_offset = offset + len(oc.entities)
             # Get the calculated derivatives and write them to output array:
             derivative_array[offset:next_offset] = variable.get_derivatives(
-                entities=self.model.entities[oc])
+                entities=oc.entities)
 
             offset = next_offset
 
@@ -180,7 +182,7 @@ class Runner(_AbstractRunner):
             eventtype = event.specification[0]
             rate_or_timfunc = event.specification[1]
             # TODO: Check if the following loop is correct:
-            for entity in self.model.entities[oc]:
+            for entity in oc.entities:
                 if eventtype == "rate":
                     next_time = np.random.exponential(1. / rate_or_timfunc)
                 elif eventtype == "time":
@@ -200,7 +202,7 @@ class Runner(_AbstractRunner):
         for (step, oc) in self.step_processes:
             next_time_func = step.specification[0]
             method = step.specification[1]
-            for entity in self.model.entities[oc]:
+            for entity in oc.entities:
                 if next_time_func(entity, t) == t_0:
                     method(entity, t)
                     # calling next_time with function:
@@ -221,157 +223,174 @@ class Runner(_AbstractRunner):
             print('    t is', t)
             # Get next discontinuity to find the next timestep where something
             # happens
-            next_time = min(next_discontinuities.keys())
+            # If there are no discontinuities, the next_discontinuities
+            # dict is empty, therefore try is necessary:
+            try:
+                next_time = min(next_discontinuities.keys())
+            except:
+                next_time = t_1
             print('    next time is', next_time)
             # Divide time until discontinuity into timesteps of sice dt:
             npoints = np.ceil((next_time - t) / dt) + 1  # resolution
             ts = np.linspace(t, next_time, npoints)
 
-            # Call Odeint:
-
-            # Compose initial value-array:
-            offset = 0
-            # Find out how many variables we have:
-            for (variable, oc) in self.model.ODE_variables:
-                next_offset = offset + len(self.model.entities[oc])
-                offset = next_offset
-            initial_array_ode = np.zeros(offset)
-            offset = 0
-            # Fill initial_array_ode with values:
-            for (variable, oc) in self.model.ODE_variables:
-                next_offset = offset + len(self.model.entities[oc])
-                initial_array_ode[offset:next_offset] = \
-                    variable.get_value_list(entities=self.model.entities[oc])
-                offset = next_offset
+            # Call Odeint if there are ODEs:
+            if self.model.ODE_processes:
+                # Compose initial value-array:
+                offset = 0
+                # Find out how many variables we have:
+                for (variable, oc) in self.model.ODE_variables:
+                    next_offset = offset + len(oc.entities)
+                    offset = next_offset
+                initial_array_ode = np.zeros(offset)
+                offset = 0
+                # Fill initial_array_ode with values:
+                for (variable, oc) in self.model.ODE_variables:
+                    next_offset = offset + len(oc.entities)
+                    initial_array_ode[offset:next_offset] = \
+                        variable.get_value_list(entities=oc.entities)
+                    offset = next_offset
 
             # In Odeint, call get_derivatives to get the functions, which
             # odeint needs to integrate, step 3.1 in runner scheme, then return
             # the trajectory, 3.2 in runner scheme
-            ode_trajectory = integrate.odeint(self.get_derivatives,
-                                              initial_array_ode,
-                                              ts)
+
+                ode_trajectory = integrate.odeint(self.get_derivatives,
+                                                  initial_array_ode,
+                                                  ts)
 
             # Take the time steps used in odeint and calculate explicit
             # functions in retrospect, step 3.3 in runner scheme
             # Save them to an arraySave them to the trajectory_dict
+            # This is only done if there are explicit processes!
 
-            for i in range(len(ts)):
-                # write values to objects:
-                time = ts[i]
-                ode_values = ode_trajectory[i, :]
-                for (v, oc) in self.model.ODE_variables:
-                    entities = self.model.entities[oc]
-                    v.set_values(entities=entities, values=ode_values)
-                # calculate explicits
-                self.complete_explicits(time)
-                # save values of explicits AND all other variables including t!
-                for (v, oc) in self.model.explicit_variables:
-                    entities = self.model.entities[oc]
-                    values = v.get_value_list(entities)
-                    for i in range(len(entities)):
-                        value = np.array([values[i]])
-                        entity = entities[i]
-                        try:
-                            trajectory_dict[v][entity] = np.concatenate((
-                                trajectory_dict[v][entity], value))
-                        except KeyError:
-                            trajectory_dict[v][entity] = value
-                # TODO: Same for the rest
-                for (v, oc) in self.model.event_variables:
-                    entities = self.model.entities[oc]
-                    values = v.get_value_list(entities)
-                    for i in range(len(entities)):
-                        value = np.array([values[i]])
-                        entity = entities[i]
-                        try:
-                            trajectory_dict[v][entity] = np.concatenate((
-                                trajectory_dict[v][entity], value))
-                        except KeyError:
-                            trajectory_dict[v][entity] = value
-                for (v, oc) in self.model.step_variables:
-                    entities = self.model.entities[oc]
-                    values = v.get_value_list(entities)
-                    for i in range(len(entities)):
-                        value = np.array([values[i]])
-                        entity = entities[i]
-                        try:
-                            trajectory_dict[v][entity] = np.concatenate((
-                                trajectory_dict[v][entity], value))
-                        except KeyError:
-                            trajectory_dict[v][entity] = value
+                for i in range(len(ts)):
+                    # write values to objects:
+                    time = ts[i]
+                    ode_values = ode_trajectory[i, :]
+                    for (v, oc) in self.model.ODE_variables:
+                        entities = oc.entities
+                        v.set_values(entities=entities, values=ode_values)
+                    # calculate explicits if existent
+                    if self.model.explicit_processes:
+                        self.complete_explicits(time)
+                        # save values of explicits AND all other variables
+                        # including t!
+                        for (v, oc) in self.model.explicit_variables:
+                            entities = oc.entities
+                            values = v.get_value_list(entities)
+                            for i in range(len(entities)):
+                                value = np.array([values[i]])
+                                entity = entities[i]
+                                try:
+                                    trajectory_dict[v][entity] = \
+                                        np.concatenate((
+                                            trajectory_dict[v][entity], value))
+                                except KeyError:
+                                    trajectory_dict[v][entity] = value
+                    # Same with Event variables:
+                    if self.model.event_processes:
+                        for (v, oc) in self.model.event_variables:
+                            entities = oc.entities
+                            values = v.get_value_list(entities)
+                            for i in range(len(entities)):
+                                value = np.array([values[i]])
+                                entity = entities[i]
+                                try:
+                                    trajectory_dict[v][entity] = \
+                                        np.concatenate((
+                                            trajectory_dict[v][entity], value))
+                                except KeyError:
+                                    trajectory_dict[v][entity] = value
+                    # Same for step variables:
+                    if self.model.step_processes:
+                        for (v, oc) in self.model.step_variables:
+                            entities = oc.entities
+                            values = v.get_value_list(entities)
+                            for i in range(len(entities)):
+                                value = np.array([values[i]])
+                                entity = entities[i]
+                                try:
+                                    trajectory_dict[v][entity] = \
+                                        np.concatenate((
+                                            trajectory_dict[v][entity], value))
+                                except KeyError:
+                                    trajectory_dict[v][entity] = value
             time_np = np.array(ts)
             trajectory_dict['t'] = np.concatenate((trajectory_dict['t'],
                                                    time_np))
 
             # save odes to trajectory dict
-
-            offset = 0
-            for (v, oc) in self.model.ODE_variables:
-                # print('variable, oc:', v, oc)
-                next_offset = offset + len(self.model.entities[oc])
-                for i in range(len(self.model.entities[oc])):
-                    entity = self.model.entities[oc][i]
-                    values = ode_trajectory[:, offset + i]
-                    try:
-                        trajectory_dict[v][entity] = np.concatenate((
-                            trajectory_dict[v][entity], values))
-                    except KeyError:
-                        trajectory_dict[v][entity] = values
-                offset = next_offset
+            if self.model.ODE_processes:
+                offset = 0
+                for (v, oc) in self.model.ODE_variables:
+                    # print('variable, oc:', v, oc)
+                    next_offset = offset + len(oc.entities)
+                    for i in range(len(oc.entities)):
+                        entity = oc.entities[i]
+                        values = ode_trajectory[:, offset + i]
+                        try:
+                            trajectory_dict[v][entity] = np.concatenate((
+                                trajectory_dict[v][entity], values))
+                        except KeyError:
+                            trajectory_dict[v][entity] = values
+                    offset = next_offset
 
             # After all that is done, calculate what happens at the
             # discontinuity, step 3.4 in runner scheme
             # Delete the discontinuity from the dictionary and calculate when
             # the next one happens:
             t = next_time
-            for discontinuity in next_discontinuities.pop(t):
-                # print('        Entering the dicontinuity loop, t=', t)
-                # discontinuity is a tupel with (event/step, entity)
-                entity = discontinuity[1]
-                happening = discontinuity[0]
-                if isinstance(happening, Event):
-                    # print('event specification:', happening.specification)
-                    eventtype = happening.specification[0]
-                    rate_or_timfunc = happening.specification[1]
-                    method = happening.specification[2]
-                    # Perform the event:
-                    method(entity, t)
-                    # Add its next discontinuity:
-                    if eventtype == "rate":
-                        next_time = t + np.random.exponential(1. /
+            if next_discontinuities:
+                for discontinuity in next_discontinuities.pop(t):
+                    # print('        Entering the dicontinuity loop, t=', t)
+                    # discontinuity is a tupel with (event/step, entity)
+                    entity = discontinuity[1]
+                    happening = discontinuity[0]
+                    if isinstance(happening, Event):
+                        eventtype = happening.specification[0]
+                        rate_or_timfunc = happening.specification[1]
+                        method = happening.specification[2]
+                        # Perform the event:
+                        method(entity, t)
+                        # Add its next discontinuity:
+                        if eventtype == "rate":
+                            next_time = t + \
+                                        np.random.exponential(1. /
                                                               rate_or_timfunc)
-                    elif eventtype == "time":
-                        next_time = rate_or_timfunc(t)
-                    else:
-                        print("Invalid specification of the Event: ",
-                              event.name,
-                              "In entity:",
-                              event.entity)
-                    try:
-                        next_discontinuities[next_time].append((happening,
-                                                                entity))
-                    except KeyError:
-                        next_discontinuities[next_time] = [(happening,
-                                                            entity)]
-                elif isinstance(happening, Step):
-                    method = happening.specification[1]
-                    timefunc = happening.specification[0]
-                    method(entity, t)
-                    next_time = timefunc(entity, t)
-                    try:
-                        next_discontinuities[next_time].append((happening,
-                                                                entity))
-                    except KeyError:
-                        next_discontinuities[next_time] = [(happening, entity)]
+                        elif eventtype == "time":
+                            next_time = rate_or_timfunc(t)
+                        else:
+                            print("Invalid specification of the Event: ",
+                                  event.name,
+                                  "In entity:",
+                                  event.entity)
+                        try:
+                            next_discontinuities[next_time].append((happening,
+                                                                    entity))
+                        except KeyError:
+                            next_discontinuities[next_time] = [(happening,
+                                                                entity)]
+                    elif isinstance(happening, Step):
+                        method = happening.specification[1]
+                        timefunc = happening.specification[0]
+                        method(entity, t)
+                        next_time = timefunc(entity, t)
+                        try:
+                            next_discontinuities[next_time].append((happening,
+                                                                    entity))
+                        except KeyError:
+                            next_discontinuities[next_time] = [(happening,
+                                                                entity)]
 
             # Complete state again, 3.5 in runner scheme:
-            self.complete_explicits(t)
+            if self.model.explicit_processes:
+                self.complete_explicits(t)
 
             # Store all information that has been calculated at time t ->
-            # iterate through all variables!
-
-            for (v, oc) in self.model.variables:
-                entities = self.model.entities[oc]
+            # iterate through all process variables!
+            for (v, oc) in self.model.process_variables:
+                entities = oc.entities
                 values = v.get_value_list(entities)
                 for i in range(len(entities)):
                     entity = entities[i]
@@ -384,5 +403,19 @@ class Runner(_AbstractRunner):
 
             t_np = np.array([t])
             trajectory_dict['t'] = np.concatenate((trajectory_dict['t'], t_np))
+
+        # Store all information that has not been changed during calculations:
+        for (v, oc) in self.model.variables:
+            if (v, oc) not in self.model.process_variables:
+                entities = oc.entities
+                values = v.get_value_list(entities)
+                for i in range(len(entities)):
+                    entity = entities[i]
+                    value = np.array([values[i]])
+                    try:
+                        trajectory_dict[v][entity] = np.concatenate((
+                            trajectory_dict[v][entity], value))
+                    except KeyError:
+                        trajectory_dict[v][entity] = value
 
         return trajectory_dict

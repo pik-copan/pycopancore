@@ -49,7 +49,7 @@ class Individual(Individual_, abstract.Individual):
         cell:
         kwargs:
         """
-        super(Individual, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         assert isinstance(cell, Cell_), "cell must be an instance of Cell"
         self.cell = cell
