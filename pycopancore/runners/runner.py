@@ -279,7 +279,7 @@ class Runner(_AbstractRunner):
                         for (v, oc) in self.model.explicit_variables:
                             entities = oc.entities
                             values = v.get_value_list(entities)
-                            for i in range(len(entities)):
+                            for i, entity in enumerate(entities):
                                 value = np.array([values[i]])
                                 entity = entities[i]
                                 try:
@@ -293,7 +293,7 @@ class Runner(_AbstractRunner):
                         for (v, oc) in self.model.event_variables:
                             entities = oc.entities
                             values = v.get_value_list(entities)
-                            for i in range(len(entities)):
+                            for i, entity in enumerate(entities):
                                 value = np.array([values[i]])
                                 entity = entities[i]
                                 try:
@@ -307,7 +307,7 @@ class Runner(_AbstractRunner):
                         for (v, oc) in self.model.step_variables:
                             entities = oc.entities
                             values = v.get_value_list(entities)
-                            for i in range(len(entities)):
+                            for i, entity in enumerate(entities):
                                 value = np.array([values[i]])
                                 entity = entities[i]
                                 try:
@@ -326,7 +326,7 @@ class Runner(_AbstractRunner):
                 for (v, oc) in self.model.ODE_variables:
                     # print('variable, oc:', v, oc)
                     next_offset = offset + len(oc.entities)
-                    for i in range(len(oc.entities)):
+                    for i, entity in enumerate(oc.entities):
                         entity = oc.entities[i]
                         values = ode_trajectory[:, offset + i]
                         try:
@@ -392,7 +392,7 @@ class Runner(_AbstractRunner):
             for (v, oc) in self.model.process_variables:
                 entities = oc.entities
                 values = v.get_value_list(entities)
-                for i in range(len(entities)):
+                for i, entity in enumerate(entities):
                     entity = entities[i]
                     value = np.array([values[i]])
                     try:
