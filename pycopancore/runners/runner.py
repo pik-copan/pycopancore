@@ -47,6 +47,7 @@ class Runner(_AbstractRunner):
         self.event_processes = model.event_processes
         self.step_processes = model.step_processes
         self.ode_processes = model.ODE_processes
+        self.trajectory_dict = {}
 
     def complete_explicits(self, t):
         """Call all explicit functions to complete or update them.
@@ -165,9 +166,9 @@ class Runner(_AbstractRunner):
         t = t_0
 
         # First create the dictionary to fill in the trajectory:
-        trajectory_dict = {'t': np.zeros([0])}
+        self.trajectory_dict['t'] = np.zeros([0])
         for (v, oc) in self.model.variables:
-            trajectory_dict[v] = {}
+            self.trajectory_dict[v] = {}
 
         # Create dictionary to put in the discontinuities:
         next_discontinuities = {}
@@ -227,7 +228,7 @@ class Runner(_AbstractRunner):
             # dict is empty, therefore try is necessary:
             try:
                 next_time = min(next_discontinuities.keys())
-            except:
+            except ValueError:
                 next_time = t_1
             print('    next time is', next_time)
             # Divide time until discontinuity into timesteps of sice dt:
@@ -274,51 +275,22 @@ class Runner(_AbstractRunner):
                     # calculate explicits if existent
                     if self.model.explicit_processes:
                         self.complete_explicits(time)
-                        # save values of explicits AND all other variables
-                        # including t!
-                        for (v, oc) in self.model.explicit_variables:
-                            entities = oc.entities
-                            values = v.get_value_list(entities)
-                            for i in range(len(entities)):
-                                value = np.array([values[i]])
-                                entity = entities[i]
-                                try:
-                                    trajectory_dict[v][entity] = \
-                                        np.concatenate((
-                                            trajectory_dict[v][entity], value))
-                                except KeyError:
-                                    trajectory_dict[v][entity] = value
+                        # save values of explicits:
+                        self.save_to_traj(self.model.explicit_variables)
+
                     # Same with Event variables:
                     if self.model.event_processes:
-                        for (v, oc) in self.model.event_variables:
-                            entities = oc.entities
-                            values = v.get_value_list(entities)
-                            for i in range(len(entities)):
-                                value = np.array([values[i]])
-                                entity = entities[i]
-                                try:
-                                    trajectory_dict[v][entity] = \
-                                        np.concatenate((
-                                            trajectory_dict[v][entity], value))
-                                except KeyError:
-                                    trajectory_dict[v][entity] = value
+                        self.save_to_traj(self.model.event_variables)
+
                     # Same for step variables:
                     if self.model.step_processes:
-                        for (v, oc) in self.model.step_variables:
-                            entities = oc.entities
-                            values = v.get_value_list(entities)
-                            for i in range(len(entities)):
-                                value = np.array([values[i]])
-                                entity = entities[i]
-                                try:
-                                    trajectory_dict[v][entity] = \
-                                        np.concatenate((
-                                            trajectory_dict[v][entity], value))
-                                except KeyError:
-                                    trajectory_dict[v][entity] = value
+                        self.save_to_traj(self.model.step_variables)
+
+            # Also save t values
             time_np = np.array(ts)
-            trajectory_dict['t'] = np.concatenate((trajectory_dict['t'],
-                                                   time_np))
+            self.trajectory_dict['t'] = np.concatenate((
+                                            self.trajectory_dict['t'],
+                                            time_np))
 
             # save odes to trajectory dict
             if self.model.ODE_processes:
@@ -326,14 +298,14 @@ class Runner(_AbstractRunner):
                 for (v, oc) in self.model.ODE_variables:
                     # print('variable, oc:', v, oc)
                     next_offset = offset + len(oc.entities)
-                    for i in range(len(oc.entities)):
+                    for i, entity in enumerate(oc.entities):
                         entity = oc.entities[i]
                         values = ode_trajectory[:, offset + i]
                         try:
-                            trajectory_dict[v][entity] = np.concatenate((
-                                trajectory_dict[v][entity], values))
+                            self.trajectory_dict[v][entity] = np.concatenate((
+                                self.trajectory_dict[v][entity], values))
                         except KeyError:
-                            trajectory_dict[v][entity] = values
+                            self.trajectory_dict[v][entity] = values
                     offset = next_offset
 
             # After all that is done, calculate what happens at the
@@ -389,33 +361,43 @@ class Runner(_AbstractRunner):
 
             # Store all information that has been calculated at time t ->
             # iterate through all process variables!
-            for (v, oc) in self.model.process_variables:
-                entities = oc.entities
-                values = v.get_value_list(entities)
-                for i in range(len(entities)):
-                    entity = entities[i]
-                    value = np.array([values[i]])
-                    try:
-                        trajectory_dict[v][entity] = np.concatenate((
-                            trajectory_dict[v][entity], value))
-                    except KeyError:
-                        trajectory_dict[v][entity] = value
+            self.save_to_traj(self.model.process_variables)
 
             t_np = np.array([t])
-            trajectory_dict['t'] = np.concatenate((trajectory_dict['t'], t_np))
+            self.trajectory_dict['t'] = np.concatenate((
+                                            self.trajectory_dict['t'],
+                                            t_np))
 
         # Store all information that has not been changed during calculations:
-        for (v, oc) in self.model.variables:
-            if (v, oc) not in self.model.process_variables:
-                entities = oc.entities
-                values = v.get_value_list(entities)
-                for i in range(len(entities)):
-                    entity = entities[i]
-                    value = np.array([values[i]])
-                    try:
-                        trajectory_dict[v][entity] = np.concatenate((
-                            trajectory_dict[v][entity], value))
-                    except KeyError:
-                        trajectory_dict[v][entity] = value
+        non_process_vars = [(v, oc) for (v, oc) in self.model.variables
+                            if (v, oc) not in self.model.process_variables]
+        self.save_to_traj(non_process_vars)
 
-        return trajectory_dict
+        return self.trajectory_dict
+
+    def save_to_traj(self, liste):
+        """Save to dictionary.
+
+        Function to save a given list like self.model.variables
+        to the trajectory dictionary. It saves to self.trajectory_dict. To use
+        it do:
+        trajectory_dict = save_to_traj(self.model.variables)
+
+        Parameters
+        ----------
+        liste
+        traj_dict
+
+        Returns
+        -------
+        """
+        for (v, oc) in liste:
+            entities = oc.entities
+            values = v.get_value_list(entities)
+            for i, entity in enumerate(entities):
+                value = np.array([values[i]])
+                try:
+                    self.trajectory_dict[v][entity] = np.concatenate((
+                        self.trajectory_dict[v][entity], value))
+                except KeyError:
+                    self.trajectory_dict[v][entity] = value
