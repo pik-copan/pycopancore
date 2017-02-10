@@ -53,7 +53,6 @@ class _AbstractEntityMixin(object):
                  **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
         self._uid = get_next_uid()
-        self.world = kwargs['world']
         try:
             self.__class__.entities.append(self)
         except AttributeError:

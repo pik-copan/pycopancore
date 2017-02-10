@@ -50,6 +50,7 @@ class Cell_(object):
     area = Variable("area")
     geometry = Variable("geometry")
     society = Variable("society")
+    world = Variable("world")
 
 
 #
