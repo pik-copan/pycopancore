@@ -49,9 +49,11 @@ class _AbstractEntityMixin(object):
     entities = None
     idle_entities = None
 
-    def __init__(self, **kwargs):
+    def __init__(self,
+                 **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
         self._uid = get_next_uid()
+        self.world = kwargs['world']
         try:
             self.__class__.entities.append(self)
         except AttributeError:

@@ -14,8 +14,8 @@ from pycopancore.private import _AbstractEntityMixin
 class Cell (_AbstractEntityMixin):
     """Abstract class which all Cell mixin classes must implement."""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         """Initialize object."""
-        super().__init__()
+        super().__init__(**kwargs)
 
     processes = []

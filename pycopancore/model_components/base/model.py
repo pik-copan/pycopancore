@@ -96,11 +96,9 @@ class Model (Model_, abstract.Model):
         for key, item in self._process_taxon_objects:
             keys_process_taxa.append(key)
         return (super().__repr__() +
-                ('base.model object with entities %r /'
-                 'and process taxa %r'
-                 ) % (keys_entities,
-                      keys_process_taxa
-                      )
+                ('base.model object with entities {} /'
+                 'and process taxa {}'.format(keys_entities, keys_process_taxa)
+                 )
                 )
 
     #
