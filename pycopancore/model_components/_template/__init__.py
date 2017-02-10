@@ -7,25 +7,24 @@
 # License: MIT license
 
 """
-This is the tmeplate package. Here, templates are written for reducing the
-amount of work needed when developing a new component
+This is the model component template package. 
+Here, templates are written for reducing the amount of work needed when developing a new component
 """
 
-# Import of all interface modules
-from .interface import World_, Cell_, Nature_, Individual_, Culture_, \
-    Society_, Metabolism_, Model_
+# Import all interface classes:
+from .interface import *
 
-# Import entities
+# Import all needed entity types:
 from .world import World
 from .cell import Cell
-from .nature import Nature
+from .society import Society
 from .individual import Individual
 
-# Import the dynamics
+# Import all needed process taxons:
+from .nature import Nature
 from .culture import Culture
-from .society import Society
 from .metabolism import Metabolism
 
-# Import Model
+# Import model component class:
 from .model import Model
 

@@ -17,7 +17,7 @@ Inherits from Culture_ in that variables and parameters are defined.
 #  Imports
 #
 
-from .interface import Culture_
+from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
 from pycopancore.model_components import abstract
 
 #
@@ -41,8 +41,10 @@ class Culture(Culture_, abstract.Culture):
     def __init__(self,
                  # *,
                  **kwargs):
-        """Initialize an instance of Culture."""
+        """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)
+        # add custom code here:
+        pass
 
     def __str__(self):
         """Return a string representation of the instance."""

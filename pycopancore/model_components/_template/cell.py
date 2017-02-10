@@ -17,7 +17,7 @@ Inherits from Cell_ in which variables and parameters are defined.
 #
 
 
-from .interface import Cell_
+from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
 from pycopancore.model_components import abstract
 
 #
@@ -43,6 +43,8 @@ class Cell(Cell_, abstract.Cell):
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)
+        # add custom code here:
+        pass
 
     processes = []
 

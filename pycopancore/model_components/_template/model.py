@@ -1,8 +1,7 @@
 """Model mixing class template.
 
-It is composed to give an
-example of the basic structure of it. It inherits from Model_ in that variables
-and parameters are defined.
+It is composed to give an example of the basic structure of it. 
+It inherits from Model_.
 """
 
 # This file is part of pycopancore.
@@ -17,8 +16,11 @@ and parameters are defined.
 #  Imports
 #
 
-from .interface import Model_
-# from . import World, Cell, Nature, Individual, Culture, Society, Metabolism
+from .interface import Model_ 
+# import all needed entity type implementation classes:
+from . import World, Cell, Individual, Society # adjust!
+# import all needed process taxon implementation classes:
+from . import Nature, Culture, Metabolism # adjust!
 from pycopancore.model_components import abstract
 
 #
@@ -30,9 +32,9 @@ class Model(Model_, abstract.Model):
     """Define your model class.
 
     A template for the basic structure of the Model mixin class that every
-    component must use. Inherits from Model_ via the
-    interface with all necessary variables and parameters.
+    component must use.
     """
+    # Note: Model_ does NOT define variables or parameters, only entity types and process taxons do!
 
     #
     # Mixins
@@ -40,13 +42,13 @@ class Model(Model_, abstract.Model):
 
     # Use Mixins as wanted
 
-    entity_types = []
-    process_taxa = []
+    entity_types = [World, Cell, Individual, Society] # adjust!
+    process_taxa = [Nature, Culture, Metabolism] # adjust!
 
     def __init__(self,
                  **kwargs
                  ):
-        """Initialize your model.
+        """Initialize your model component.
 
         Parameters
         ----------
@@ -57,5 +59,5 @@ class Model(Model_, abstract.Model):
     def __repr__(self):
         """Return a string representation of the object of the class."""
         return (super().__repr__() +
-                ('TEMPLATE.model object')
+                ('TEMPLATE.model component object')
                 )

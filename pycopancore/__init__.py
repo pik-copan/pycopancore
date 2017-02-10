@@ -4,7 +4,9 @@ This is the pycopancore package
 from .private import _AbstractRunner, _AbstractEntityMixin
 from .private import _AbstractProcess, _AbstractDynamicsMixin, Variable
 from .process_types import ODE, Explicit, Step, Event, Implicit
-from .models import Model
+from .models import Model # FIXME: Jobst: I don't see that this makes sense
+
+from .data_model import *
 
 __author__ = "Jonathan F. Donges <donges@pik-potsdam.de>"
 __copyright__ = \
