@@ -14,8 +14,8 @@ from pycopancore.private import _AbstractEntityMixin
 class World (_AbstractEntityMixin):
     """Abstract class all World mixin classes must implement."""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         """Initialize object."""
-        super().__init__()
+        super().__init__(**kwargs)
 
     processes = []
