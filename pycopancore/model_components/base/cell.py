@@ -41,6 +41,7 @@ class Cell(Cell_, abstract.Cell):
                  area=1,
                  society=None,
                  geometry=None,
+                 world=None,
                  **kwargs
                  ):
         """Initialize an instance of Cell.
@@ -62,7 +63,7 @@ class Cell(Cell_, abstract.Cell):
         self.area = area
 
         self.society = society
-
+        self.world = world
         self.geometry = geometry
 
     processes = []

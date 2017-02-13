@@ -13,10 +13,10 @@ ni = 8
 
 tb.Model.configure()
 
-world = [tb.World(world=None) for w in range(nw)]
-societies = [tb.Society(population=1, world=world) for s in range(ns)]
+world = [tb.World() for w in range(nw)]
+societies = [tb.Society(population=1) for s in range(ns)]
 cells = [tb.Cell(society=societies[0], world=world) for c in range(nc)]
-individuals = [tb.Individual(cell=cells[0], world=world) for i in range(ni)]
+individuals = [tb.Individual(cell=cells[0]) for i in range(ni)]
 
 tb.Cell.location.set_values(dict={c: (0, 0) for c in cells})
 tb.Cell.area.set_values(entities=cells, values=np.random.rand(nc))
