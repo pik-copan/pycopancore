@@ -3,7 +3,9 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build +PYREVERSE = pyreverse +DOT = dot
+SPHINXBUILD   = sphinx-build
+PYREVERSE = pyreverse
+DOT = dot
 PAPER         =
 BUILDDIR      = _build
 
@@ -55,9 +57,16 @@ clean:
 
 .PHONY: html
 html:
-	$(BUILDDIR)/pycopancore.UML.png $(BUILDDIR)/pycopancore.UML.svg $(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	mv $(BUILDDIR)/pycopancore.UML.png $(BUILDDIR)/html/_images/
-	mv $(BUILDDIR)/pycopancore.UML.svg $(BUILDDIR)/html/_images/
+	@echo "Generating UML diagram... (PNG format)"
+	cd .. ; $(PYREVERSE) -p coreuml -a1 -o png pycopancore ;
+	@echo "Moving files to docs/_build/html/_images folder"
+	cd .. ; mv classes_coreuml.png ./docs/_build/html/_images
+	cd .. ; mv packages_coreuml.png ./docs/_build/html/_images/
+	@echo "Removing old files"
+	cd ; rm -rf classes_coreuml.dot
+	cd ; rm -rf packages_coreuml.dot
+	cd ; rm -rf classes_coreuml.png
+	cd ; rm -rf packages_coreuml.png
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
@@ -230,12 +239,3 @@ dummy:
 	$(SPHINXBUILD) -b dummy $(ALLSPHINXOPTS) $(BUILDDIR)/dummy
 	@echo
 	@echo "Build finished. Dummy builder generates no files."
-
-+classes_pycopancore.dot:
-
-    $(PYREVERSE) -p pycopancore ../pycopancore ../pycopancore + +$(BUILDDIR)/pycopancore.UML.png: classes_pycopancore.dot
-    @echo "Generating UML diagram... (PNG format)"
-    $(DOT) -Tpng classes_pycopancore.dot > $(BUILDDIR)/pycopancore.UML.png + +$(BUILDDIR)/pycopancore.UML.svg: classes_pycopancore.dot
-    @echo "Generating UML diagram... (SVG format)"
-    $(DOT) -Tsvg classes_pycopancore.dot > $(BUILDDIR)/pycopancore.UML.svg + pickle: $(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) $(BUILDDIR)/pickle @echo
-
