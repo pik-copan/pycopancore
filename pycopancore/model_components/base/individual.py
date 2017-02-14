@@ -18,7 +18,7 @@ Individual_ in that basic variables and parameters are defined.
 #
 
 from pycopancore.model_components import abstract
-from .interface import Cell_, Individual_
+from .interface import Individual_
 
 #
 #  Define class Individual
