@@ -248,27 +248,33 @@ class Model (Model_, abstract.Model):
                         cls.processes.append((p, owning_class))
 
         for (process, owning_class) in cls.processes:
-            cls.process_variables += [(v, owning_class) for v in
-                                      process.variables]
-            if isinstance(process, ODE):
-                cls.ODE_variables += [(v, owning_class)
-                                      for v in process.variables]
-                cls.ODE_processes += [(process, owning_class)]
-            elif isinstance(process, Explicit):
-                cls.explicit_variables += [(v, owning_class)
-                                           for v in process.variables]
-                cls.explicit_processes += [(process, owning_class)]
-            elif isinstance(process, Step):
-                cls.step_variables += [(v, owning_class)
-                                       for v in process.variables]
-                cls.step_processes += [(process, owning_class)]
-            elif isinstance(process, Event):
-                cls.event_variables += [(v, owning_class)
-                                        for v in process.variables]
-                cls.event_processes += [(process, owning_class)]
-            else:
-                print('process-type of', process, 'not specified')
-                print(process.__class__.__name__)
-                print(object.__str__(process))
+            for v in process.variables:
+                # Find the tuple (var,owc) in cls.variables with var == v
+                # to get the owning class of the variable, not necessarily
+                # the owning class of the process.
+                for (var, owc) in cls.variables:
+                    if var == v:
+                        voc = owc
+                # Add the tuple (v, voc) to process_variables
+                cls.process_variables += [(v, voc)]
+
+                # Add the tuple (v, voc) to the process-type_variables
+                # and (process, owning_class) to process-type_variables
+                if isinstance(process, ODE):
+                    cls.ODE_variables += [(v, voc)]
+                    cls.ODE_processes += [(process, owning_class)]
+                elif isinstance(process, Explicit):
+                    cls.explicit_variables += [(v, voc)]
+                    cls.explicit_processes += [(process, owning_class)]
+                elif isinstance(process, Step):
+                    cls.step_variables += [(v, voc)]
+                    cls.step_processes += [(process, owning_class)]
+                elif isinstance(process, Event):
+                    cls.event_variables += [(v, voc)]
+                    cls.event_processes += [(process, owning_class)]
+                else:
+                    print('process-type of', process, 'not specified')
+                    print(process.__class__.__name__)
+                    print(object.__str__(process))
 
         print("...done")
