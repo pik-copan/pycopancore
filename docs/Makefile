@@ -4,6 +4,8 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
+PYREVERSE = pyreverse
+DOT = dot
 PAPER         =
 BUILDDIR      = _build
 
@@ -56,6 +58,16 @@ clean:
 .PHONY: html
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@echo "Generating UML diagram... (PNG format)"
+	cd .. ; $(PYREVERSE) -p coreuml -a1 -o png pycopancore ;
+	@echo "Moving files to docs/_build/html/_images folder"
+	cd .. ; mv classes_coreuml.png ./docs/_build/html/_images
+	cd .. ; mv packages_coreuml.png ./docs/_build/html/_images/
+	@echo "Removing old files"
+	cd ; rm -rf classes_coreuml.dot
+	cd ; rm -rf packages_coreuml.dot
+	cd ; rm -rf classes_coreuml.png
+	cd ; rm -rf packages_coreuml.png
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
