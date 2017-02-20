@@ -109,8 +109,10 @@ class Model (Model_, abstract.Model):
     def configure(cls):
         """Configure the model.
 
-        This classmethod configures the mixin models by allocating variables
-        and processes to designated lists.
+        This classmethod configures the chosen mixin model of the 'models'
+        package by allocating all required variables and processes to
+        designated
+        lists.
         """
         cls.variables = []  # save in pairs: (variable, owning_class)
         cls.processes = []  # save in pairs: (process, owning_class)
@@ -132,32 +134,49 @@ class Model (Model_, abstract.Model):
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
 
-        # First analyse by component:
+        # Construction of a list for the subsequent for-loop. It contains all
+        # model mixins the model component inherits from. Only model mixins
+        # that inherit from 'abstract.model' are considered. The abstract model
+        # itself is excluded as well as the model component:
         parents = list(inspect.getmro(cls))[1:]
         cls.components = [c for c in parents
                           if c is not abstract.Model
                           and abstract.Model in inspect.getmro(c)
                           ]
         print('\nComponents:', cls.components)
+
+        # The for-loop goes through all model mixins as outlined above:
         for c in cls.components:
             interfaceclass = c.__bases__[0]
             print("Model component:", interfaceclass.name, "(", c, ")...")
-            # Iterate through all mixins of the component:
+            # Iterate through all entity type components the model mixin uses:
             for etmixin in c.entity_types:
                 print('    Entity-type:', etmixin)
+                # getting mixins of the entity type components:
+                # TODO: we only need to iterate through interfaces since
+                # TODO: ...variables are only defined there:
                 cparents = list(inspect.getmro(etmixin))
+                # writing variable codenames k and corresponding values v into
+                # a dictionary that is needed to check that variables of
+                # different components do only overwrite if they are meant to
+                # be the same:
                 cvardict = {k: v
                             for cp in cparents
                             for (k, v) in cp.__dict__.items()
                             if isinstance(v, Variable)
                             }
+                # check if variables and their codenames are unique:
                 for (k, v) in cvardict.items():
                     print("        Variable:", v)
-                    # check if same var. object was already registered:
+                    # check if same var. object was already registered. If its
+                    # codename k is different to a previous assigned codename
+                    # an assertion error is the output:
                     if v in cls.variables_dict.values():
                         print("            already registered by another "
                               "component")
                         assert v._codename == k, ('with Codename', k)
+                    # check if same codename was already registered if not,
+                    # same assertion error as above:
                     if k in cls.variables_dict.keys():
                         print("            already registered by another "
                               "component")
