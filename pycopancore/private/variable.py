@@ -36,12 +36,12 @@ class Variable(Symbol):
     def set_values(self,
                    *,
                    dict=None,
-                   entities=None,
+                   instances=None,
                    values=None
                    ):
         """Set values for the variable.
 
-        This function set values for the variable. If given a list of entities,
+        This function set values for the variable. If given a list of instances,
         it sets values for all of them.
 
         Parameters
@@ -49,8 +49,8 @@ class Variable(Symbol):
         dict : dict
             Optional dictionary of variable values keyed by Entity
             object (e.g. {cell:location, individual:age},...)
-        entities : list
-            Optional list of entities (Cell, Individual,...)
+        instances : list
+            List of the instances, e.g. Cells or Process Taxa Objects
         values : list/array
             Optional corresponding list or array of values
 
@@ -72,9 +72,10 @@ class Variable(Symbol):
 
                 e.__dict__[self._codename] = val
 
-        if entities is not None:
-            for i in range(len(entities)):
-                e = entities[i]
+        if instances is not None:
+            for i in range(len(instances)):
+                # Items may be entities or process taxa objects
+                item = instances[i]
 
                 #
                 # as above...
@@ -84,55 +85,55 @@ class Variable(Symbol):
                 # "variable is not contained in entity"
                 #
 
-                e.__dict__[self._codename] = values[i]
+                item.__dict__[self._codename] = values[i]
 
     def clear_derivatives(self,
                           *,
-                          entities=None
+                          instances=None
                           ):
         """Set all derivatives to zero.
 
         Parameters
         ----------
-        entities : list
-            List of the entities
+        instances : list
+            List of the instances, e.g. Cells or Process Taxa Objects
 
         Returns
         -------
 
         """
-        for e in entities:
-            e.__dict__['d_'+self._codename] = 0
+        for item in instances:
+            item.__dict__['d_'+self._codename] = 0
 
     def get_derivatives(self,
                         *,
-                        entities=None
+                        instances=None
                         ):
-        """Return a list of derivatives saved in entities.
+        """Return a list of derivatives saved in instances.
 
         Parameters
         ----------
-        entities : list
-            List of the entities
+        instances : list
+            List of the instances, e.g. Cells or Process Taxa Objects
 
         Returns
         -------
 
         """
-        return[e.__dict__['d_'+self._codename] for e in entities]
+        return[item.__dict__['d_'+self._codename] for item in instances]
 
     def get_value_list(self,
-                       entities=None,
+                       instances=None,
                        ):
-        """Return values for given entities.
+        """Return values for given instances.
 
         Parameters
         ----------
-        entities: list
-            List of entities
+        instances : list
+            List of the instances, e.g. Cells or Process Taxa Objects
 
         Returns
         -------
         List of variable value of each entity
         """
-        return [e.__dict__[self._codename] for e in entities]
+        return [item.__dict__[self._codename] for item in instances]

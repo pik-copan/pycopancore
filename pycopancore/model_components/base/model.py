@@ -69,7 +69,7 @@ class Model (Model_, abstract.Model):
         self._process_taxon_objects = {pt: pt() for pt in self.process_taxa}
         self.entities_dict = {}
         for c in self.entity_types:
-            self.entities_dict[c] = c.entities
+            self.entities_dict[c] = c.instances
 
         # TODO:
         # is it necessary to make all items in self.entities_dict known
