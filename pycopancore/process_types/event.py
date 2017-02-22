@@ -47,9 +47,8 @@ class Event(_AbstractProcess):
             or time-function, method/function of variable(s)]
         smoothness
         """
-        super().__init__()
+        super().__init__(name)
 
-        self.name = name
         self.variables = variables
         self.specification = specification
         self.smoothness = smoothness

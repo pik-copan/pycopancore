@@ -14,6 +14,7 @@ upper_ocean_carbon = CFVariable(ref="???", unit=gigatons_carbon)
 deep_ocean_carbon = CFVariable(ref="???", unit=gigatons_carbon)
 
 # Land:
+photosynthesis_flow = Variable("photosynthesis flow", unit=gigatons_carbon/years)
 terrestrial_carbon = CFVariable(ref="???", unit=gigatons_carbon)
 # in base: Implicit(terrestrial_carbon == soil_carbon + biomass_carbon)
 soil_carbon = CFVariable(ref="???", unit=gigatons_carbon)

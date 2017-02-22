@@ -29,11 +29,12 @@ class _AbstractProcess(object):
     type = None
     timetype = None
     smoothness = None
-
+    
     owning_classes = None
 
-    def __init__(self):
+    def __init__(self, name=""):
         """Initialize an _AbstractProcess instance."""
+        self.name = name
         self.owning_classes = []
 
     def __repr__(self):

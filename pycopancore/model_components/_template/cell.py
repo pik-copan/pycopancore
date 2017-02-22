@@ -12,17 +12,8 @@ Inherits from Cell_ in which variables and parameters are defined.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
-
 from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
 from pycopancore.model_components import abstract
-
-#
-#  Define class Cell
-#
 
 
 class Cell(Cell_, abstract.Cell):
@@ -34,10 +25,8 @@ class Cell(Cell_, abstract.Cell):
     with all necessary variables and parameters.
     """
 
-    #
-    #  Definitions of internal methods
-    #
-
+    # standard methods:
+    
     def __init__(self,
                  # ,*,
                  **kwargs):
@@ -46,8 +35,21 @@ class Cell(Cell_, abstract.Cell):
         # add custom code here:
         pass
 
-    processes = []
+    def __deactivate(self):
+        """Deactivate a cell."""
+        # add custom code here:
+        pass
+        super().__deactivate()
 
-    #
-    #  Definitions of further methods
-    #
+    def __reactivate(self):
+        """Reactivate a cell."""
+        super().__reactivate()
+        # add custom code here:
+        pass
+
+
+    # process-related methods:
+
+    # TODO: add some if needed...
+    
+    processes = [] # TODO: instantiate and list process objects here

@@ -1,4 +1,4 @@
-"""Define variables of the base components.
+"""Base model component interface
 
 In this base interface module, variables for each entity are defined in
 corresponding class as sympy objects . The corresponding classes are World_,
@@ -13,163 +13,114 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
+from pycopancore import Variable, ReferenceVariable
+from pycopancore.base_dimensions_units import gigatons_carbon, square_kilometers, years, kelvins
 
-from pycopancore import Variable
 
-#
-# Define class World_
-#
+# entity types:
 
 
 class World_(object):
-    """Define variables of world.
-
-    Basic World interface. It contains all variables specified as mandatory
-    ("base variables").
+    """
+    Basic World interface. 
+    It contains all variables specified as mandatory ("base variables").
     """
 
     contact_network = Variable("contact network")
 
-
-#
-#  Define class Cell_
-#
-
-
-class Cell_(object):
-    """Define variables of cell.
-
-    Basic Cell interface. It contains all variables specified as mandatory
-    ("base variables").
-    """
-
-    location = Variable("location")
-    area = Variable("area")
-    geometry = Variable("geometry")
-    society = Variable("society")
-
-
-#
-#  Define class Nature_
-#
-
-
-class Nature_(object):
-    """Define variables of nature.
-
-    Basic Nature interface. It contains all variables specified as mandatory
-    ("base variables").
-    """
-
-    pass
-
-#
-#  Define class Individual_
-#
-
-
-class Individual_(object):
-    """Define variables of individual.
-
-    Basic Individual interface. It contains all variables specified as
-    mandatory ("base variables").
-    """
-
-    cell = Variable("cell")
-
-#
-#  Define class Culture_
-#
-
-
-class Culture_(object):
-    """Define variables of culture.
-
-    Basic Culture interface. It contains all variables specified as mandatory
-    ("base variables").
-    """
-
-    pass
-
-#
-#  Define class Society_
-#
+    # attributes storing redundant information (backward references):
+    societies = set() # set of Societies
+    cells = set() # set of Cells
 
 
 class Society_(object):
-    """Define variables of society.
-
-    Basic Society interface. It contains all variables specified as mandatory
-    ("base variables").
+    """
+    Basic Society interface. 
+    It contains all variables specified as mandatory ("base variables").
     """
 
+    # references:
+    world = ReferenceVariable("world", entity_type=World_)
+    territory = SetVariable("territory") # set of Cells
+    
+    # other variables:
     population = Variable("population")
 
-#
-#  Define class Metabolism_
-#
+
+class Cell_(object):
+    """
+    Basic Cell interface. 
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # references:
+    world = ReferenceVariable("world", entity_type=World_)
+    
+    # other variables:
+    location = Variable("location")
+    area = Variable("area", unit=square_kilometers)
+
+    # attributes storing redundant information (backward references):
+    residents = set() # set of resident Individuals
+
+Society_.territory.entity_type = Cell_
 
 
-class Metabolism_(object):
-    """Define variables of metabolism.
+class Individual_(object):
+    """
+    Basic Individual interface.
+    It contains all variables specified as mandatory ("base variables").
+    """
 
-    Basic Metabolism interface. It contains all variables specified as
-    mandatory ("base variables").
+    # references:
+    residence = ReferenceVariable("residence", entity_type=Cell_)
+    
+    # other variables:
+    pass
+
+# process taxa:
+
+class Nature_(object):
+    """
+    Basic Nature interface. 
+    It contains all variables specified as mandatory ("base variables").
     """
 
     pass
 
-#
-#  Define class Model_
-#
-
-
-class Model_(object):
-    """Define variables of model.
-
-    Basic Model interface. It contains all variables specified as mandatory
-    ("base variables").
+class Metabolism_(object):
+    """
+    Basic Metabolism interface. 
+    It contains all variables specified as mandatory ("base variables").
     """
 
+    pass
+
+class Culture_(object):
+    """
+    Basic Culture interface. 
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    pass
+
+
+# basic model component:
+
+class Model_(object):
+    """
+    Basic Model interface
+    """
+
+    # metadata:
     name = "copan:CORE Base"
     description = "Basic model only providing basic relationships between " \
                   "entity types."
     requires = []
 
+    # additional attributes for internal logics:
+    
     components = None
-
-    worlds = []
-    world_variables_dict = None
-    world_processes = None
-
-    cells = []
-    cell_variables_dict = None
-    cell_processes = None
-
-    Nature = None
-    Nature_processes = None
-    Nature_parameters_dict = None
-
-    individuals = []
-    individual_variables_dict = None
-    individual_processes = None
-
-    Culture = None
-    Culture_processes = None
-    Culture_parameters_dict = None
-
-    societies = []
-    society_variables_dict = None
-    society_processes = None
-
-    Metabolism = None
-    Metabolism_processes = None
-    Metabolism_parameters_dict = None
-
-    other_parameters_dict = None
 
     ODE_variables = None
 

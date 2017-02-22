@@ -31,9 +31,7 @@ class Cell(Cell_, abstract.Cell):
     and parameters.
     """
 
-    #
-    #  Definitions of internal methods
-    #
+    # standard methods:
 
     def __init__(self,
                  *,
@@ -65,8 +63,15 @@ class Cell(Cell_, abstract.Cell):
 
         self.geometry = geometry
 
-    processes = []
 
-    #
-    #  Definitions of further methods
-    #
+    # setters for references:
+    
+    @world.setter
+    def world(self, w):
+        assert isinstance(w, World_)
+        if self.world is not None: self.world.cells.remove(self) 
+        w.cells.add(self) 
+        self.world = w
+
+
+    processes = []

@@ -46,9 +46,8 @@ class Explicit(_AbstractProcess):
             function(self,t)
         smoothness :
         """
-        super().__init__()
+        super().__init__(name)
 
-        self.name = name
         self.variables = variables
         self.specification = specification
         self.smoothness = smoothness

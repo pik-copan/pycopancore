@@ -33,9 +33,7 @@ class Individual(Individual_, abstract.Individual):
     necessary variables and parameters.
     """
 
-    #
-    #  Definitions of internal methods
-    #
+    # standard methods:
 
     def __init__(self,
                  # *,
@@ -54,8 +52,15 @@ class Individual(Individual_, abstract.Individual):
         assert isinstance(cell, Cell_), "cell must be an instance of Cell"
         self.cell = cell
 
-    processes = []
 
-    #
-    #  Definitions of further methods
-    #
+    # setters for references:
+    
+    @residence.setter
+    def residence(self, c):
+        assert isinstance(c, Cell_)
+        if self.world is not None: self.cell.residents.remove(self) 
+        c.cell.add(self) 
+        self.residence = c
+
+
+    processes = []

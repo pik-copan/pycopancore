@@ -17,7 +17,7 @@ Society_ in that basic variables and parameters are defined.
 #
 
 from pycopancore.model_components import abstract
-from .interface import Society_
+from .interface import Society_, World_
 
 #
 #  Define class Society
@@ -32,9 +32,7 @@ class Society(Society_, abstract.Society):
     variables and parameters.
     """
 
-    #
-    #  Definitions of internal methods
-    #
+    # standard methods:
 
     def __init__(self,
                  # *,
@@ -53,8 +51,16 @@ class Society(Society_, abstract.Society):
         assert population >= 0, "population must be >= 0"
         self.population = population
 
+
+    # setters for references:
+    
+    @world.setter
+    def world(self, w):
+        assert isinstance(w, World_)
+        if self.world is not None: self.world.societies.remove(self) 
+        w.societies.add(self) 
+        self.world = w
+
+
     processes = []
 
-    #
-    #  Definitions of further methods
-    #

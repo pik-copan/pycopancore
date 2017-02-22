@@ -42,8 +42,7 @@ class Implicit(_AbstractProcess):
         variables
         specification
         """
-        super().__init__()
+        super().__init__(name)
 
-        self.name = name
         self.variables = variables
         self.specification = specification

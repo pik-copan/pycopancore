@@ -25,6 +25,8 @@ class Cell_(object):
     """Interface for Cell mixin"""
 
     # variables:
+    photosynthesis_flow = MDM.photosynthesis_flow
+    respiration_flow = Variable("respiration flow", unit=gigatons_carbon/years)
     terrestrial_carbon = MDM.terrestrial_carbon
 
 
@@ -34,6 +36,7 @@ class Nature_(object):
     """Interface for Nature mixin"""
     
     # parameters / exogenous veriables:
+    total_carbon = Variable("total carbon", unit=gigatons_carbon)
     basic_photosynthesis_productivity = Variable("basic photosynthesis productivity", 
                                                  unit = 1/years / sqrt(gigatons_carbon/square_kilometers))
     photosynthesis_temperature_sensitivity = Variable("sensitivity of photosynthesis productivity on temperature", 

@@ -20,21 +20,22 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # Definition of class _AbstractEntityMixin
 #
 
-NEXTUID = 0
-
-
-def get_next_uid():
-    """Generate UIDs (Unique identifier).
-
-    Returns
-    -------
-    current_uid: int
-        the current uid
-    """
-    global NEXTUID
-    current_uid = NEXTUID
-    NEXTUID += 1
-    return current_uid
+# Jobst: FIX the following: class modules cannot contain bare code or function defs such as the next lines, and are only allowed to contain class definitions!
+# NEXTUID = 0
+# 
+# 
+# def get_next_uid():
+#     """Generate UIDs (Unique identifier).
+# 
+#     Returns
+#     -------
+#     current_uid: int
+#         the current uid
+#     """
+#     global NEXTUID
+#     current_uid = NEXTUID
+#     NEXTUID += 1
+#     return current_uid
 
 
 class _AbstractEntityMixin(object):
@@ -57,7 +58,7 @@ class _AbstractEntityMixin(object):
         except AttributeError:
             self.__class__.entities = [self]
 
-    def deactivate(self):
+    def __deactivate(self):
         """Deactivate entity.
 
         Remove Entity from its classes entities list and add it to its classes
@@ -69,7 +70,7 @@ class _AbstractEntityMixin(object):
         except AttributeError:
             self.__class__.idle_entities = [self]
 
-    def reactivate(self):
+    def __reactivate(self):
         """Reactivate entity.
 
         Remove Entity from its classes idle_entities list and add it to its
