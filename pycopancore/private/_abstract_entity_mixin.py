@@ -46,7 +46,7 @@ class _AbstractEntityMixin(object):
 
     processes = None
     model = None
-    entities = None
+    instances = None
     idle_entities = None
 
     def __init__(self,
@@ -54,9 +54,9 @@ class _AbstractEntityMixin(object):
         """Initialize an _AbstractEntityMixin instance."""
         self._uid = get_next_uid()
         try:
-            self.__class__.entities.append(self)
+            self.__class__.instances.append(self)
         except AttributeError:
-            self.__class__.entities = [self]
+            self.__class__.instances = [self]
 
     def deactivate(self):
         """Deactivate entity.
@@ -64,7 +64,7 @@ class _AbstractEntityMixin(object):
         Remove Entity from its classes entities list and add it to its classes
         idle_entities list.
         """
-        self.__class__.entities.remove(self)
+        self.__class__.instances.remove(self)
         try:
             self.__class__.idle_entities.append(self)
         except AttributeError:
@@ -78,7 +78,7 @@ class _AbstractEntityMixin(object):
         """
         assert self in self.__class__.idle_entities, 'Not deactivated'
         self.__class__.idle_entities.remove(self)
-        self.__class__.entities.append(self)
+        self.__class__.instances.append(self)
 
     def __repr__(self):
         return "{}[UID={}]".format(self.__class__.__name__, self._uid)
