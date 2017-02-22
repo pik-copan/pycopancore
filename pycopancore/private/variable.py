@@ -41,8 +41,8 @@ class Variable(Symbol):
                    ):
         """Set values for the variable.
 
-        This function set values for the variable. If given a list of instances,
-        it sets values for all of them.
+        This function set values for the variable. If given a list of
+        instances, it sets values for all of them.
 
         Parameters
         ----------

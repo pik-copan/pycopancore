@@ -340,11 +340,10 @@ class Runner(_AbstractRunner):
                         elif eventtype == "time":
                             next_time = rate_or_timfunc(t)
                         else:
-                            # TODO: Comment.. What is event.entity?
                             print("Invalid specification of the Event: ",
-                                  event.name,
+                                  happening.name,
                                   "In entity/process taxon:",
-                                  event.entity)
+                                  item)
                         try:
                             next_discontinuities[next_time].append((happening,
                                                                     item))
