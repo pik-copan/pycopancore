@@ -15,11 +15,11 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 #
 
 #
-# Definition of class _AbstractDynamicsMixin
+# Definition of class _AbstractProcessTaxonMixin
 #
 
 
-class _AbstractDynamicsMixin(object):
+class _AbstractProcessTaxonMixin(object):
     """Define Entity-unspecific abstract class.
 
     From this class all entity-specific abstract mixin classes are derived.
@@ -30,7 +30,7 @@ class _AbstractDynamicsMixin(object):
     entities = None
 
     def __init__(self):
-        """Initialize an _AbstractDynamicsMixin instance."""
+        """Initialize an _AbstractProcessTaxonMixin instance."""
         if self.__class__.entities:
             self.__class__.entities.append(self)
             print('This Process Taxon is already initialized!')
