@@ -1,4 +1,4 @@
-"""Abstract class which all Nature mixin classes must implement."""
+"""Abstract Nature process taxon class, inherited by base model component"""
 
 # This file is part of pycopancore.
 #
@@ -8,14 +8,10 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.private import _AbstractDynamicsMixin
+from pycopancore.private import _AbstractProcessTaxonMixin
 
 
-class Nature (_AbstractDynamicsMixin):
-    """Abstract class which all Nature mixin classes must implement."""
+class Nature (_AbstractProcessTaxonMixin):
+    """Abstract Nature process taxon class, inherited by base model component"""
 
-    def __init__(self):
-        """Initialize object."""
-        super().__init__()
-
-    processes = []
+    pass

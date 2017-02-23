@@ -1,4 +1,5 @@
-"""Abstract class  which all Metabolism mixin classes must implement."""
+"""Abstract Metabolism process taxon class, inherited by base model component"""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
@@ -7,14 +8,10 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.private import _AbstractDynamicsMixin
+from pycopancore.private import _AbstractProcessTaxonMixin
 
 
-class Metabolism (_AbstractDynamicsMixin):
-    """Abstract class  which all Metabolism mixin classes must implement."""
+class Metabolism (_AbstractProcessTaxonMixin):
+    """Abstract Metabolism process taxon class, inherited by base model component"""
 
-    def __init__(self):
-        """Initialize object."""
-        super().__init__()
-
-    processes = []
+    pass
