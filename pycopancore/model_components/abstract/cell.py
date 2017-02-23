@@ -1,4 +1,4 @@
-"""Abstract cell module, which all cell must implement."""
+"""Abstract Cell entity type class, inherited by base model component"""
 
 # This file is part of pycopancore.
 #
@@ -12,10 +12,6 @@ from pycopancore.private import _AbstractEntityMixin
 
 
 class Cell (_AbstractEntityMixin):
-    """Abstract class which all Cell mixin classes must implement."""
+    """Abstract Cell entity type class, inherited by base model component"""
 
-    def __init__(self):
-        """Initialize object."""
-        super().__init__()
-
-    processes = []
+    pass

@@ -1,4 +1,4 @@
-"""Abstract class which all Soiety mixin classes must implement."""
+"""Abstract Society entity type class, inherited by base model component"""
 
 # This file is part of pycopancore.
 #
@@ -12,10 +12,6 @@ from pycopancore.private import _AbstractEntityMixin
 
 
 class Society (_AbstractEntityMixin):
-    """Abstract class which all Soiety mixin classes must implement."""
+    """Abstract Society entity type class, inherited by base model component"""
 
-    def __init__(self):
-        """Initialize object."""
-        super().__init__()
-
-    processes = []
+    pass
