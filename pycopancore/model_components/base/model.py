@@ -69,7 +69,7 @@ class Model (Model_, abstract.Model):
         self._process_taxon_objects = {pt: pt() for pt in self.process_taxa}
         self.entities_dict = {}
         for c in self.entity_types:
-            self.entities_dict[c] = c.entities
+            self.entities_dict[c] = c.instances
 
         # TODO:
         # is it necessary to make all items in self.entities_dict known
@@ -248,6 +248,18 @@ class Model (Model_, abstract.Model):
                         cls.processes.append((p, owning_class))
 
         for (process, owning_class) in cls.processes:
+            if isinstance(process, ODE):
+                cls.ODE_processes += [(process, owning_class)]
+            elif isinstance(process, Explicit):
+                cls.explicit_processes += [(process, owning_class)]
+            elif isinstance(process, Step):
+                cls.step_processes += [(process, owning_class)]
+            elif isinstance(process, Event):
+                cls.event_processes += [(process, owning_class)]
+            else:
+                print('process-type of', process, 'not specified')
+                print(process.__class__.__name__)
+                print(object.__str__(process))
             for v in process.variables:
                 # Find the tuple (var,owc) in cls.variables with var == v
                 # to get the owning class of the variable, not necessarily
@@ -262,19 +274,11 @@ class Model (Model_, abstract.Model):
                 # and (process, owning_class) to process-type_variables
                 if isinstance(process, ODE):
                     cls.ODE_variables += [(v, voc)]
-                    cls.ODE_processes += [(process, owning_class)]
                 elif isinstance(process, Explicit):
                     cls.explicit_variables += [(v, voc)]
-                    cls.explicit_processes += [(process, owning_class)]
                 elif isinstance(process, Step):
                     cls.step_variables += [(v, voc)]
-                    cls.step_processes += [(process, owning_class)]
                 elif isinstance(process, Event):
                     cls.event_variables += [(v, voc)]
-                    cls.event_processes += [(process, owning_class)]
-                else:
-                    print('process-type of', process, 'not specified')
-                    print(process.__class__.__name__)
-                    print(object.__str__(process))
 
         print("...done")
