@@ -1,3 +1,12 @@
+"""
+Model component package template.
+
+TODO: 
+Copy this folder, rename it to the name of your model component, 
+then adjust or fill in code and documentation in all modules wherever marked by "TODO:", 
+finally remove these instructions.
+See the model component development tutorial for details.
+"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
@@ -6,25 +15,21 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-"""
-This is the model component template package. 
-Here, templates are written for reducing the amount of work needed when developing a new component
-"""
 
 # Import all interface classes:
 from .interface import *
 
-# Import all needed entity types:
+# Import all provided entity type implementation mixin classes:
 from .world import World
 from .cell import Cell
 from .society import Society
 from .individual import Individual
 
-# Import all needed process taxons:
+# Import all provided process taxon implementation mixin classes:
 from .nature import Nature
 from .culture import Culture
 from .metabolism import Metabolism
 
-# Import model component class:
+# Import model component mixin class:
 from .model import Model
 

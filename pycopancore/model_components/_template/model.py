@@ -1,7 +1,6 @@
-"""Model mixing class template.
+"""Model component mixing class template.
 
-It is composed to give an example of the basic structure of it. 
-It inherits from Model_.
+TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
 """
 
 # This file is part of pycopancore.
@@ -12,52 +11,17 @@ It inherits from Model_.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 from .interface import Model_ 
 # import all needed entity type implementation classes:
-from . import World, Cell, Individual, Society # adjust!
+from . import World, Society, Cell, Individual # TODO: adjust!
 # import all needed process taxon implementation classes:
-from . import Nature, Culture, Metabolism # adjust!
-from pycopancore.model_components import abstract
-
-#
-#  Define class Model
-#
+from . import Nature, Metabolism, Culture # TODO: adjust!
 
 
-class Model(Model_, abstract.Model):
-    """Define your model class.
+class Model (Model_):
+    """Model component mixin class"""
 
-    A template for the basic structure of the Model mixin class that every
-    component must use.
-    """
-    # Note: Model_ does NOT define variables or parameters, only entity types and process taxons do!
+    # mixins provided by this model component:
 
-    #
-    # Mixins
-    #
-
-    # Use Mixins as wanted
-
-    entity_types = [World, Cell, Individual, Society] # adjust!
-    process_taxa = [Nature, Culture, Metabolism] # adjust!
-
-    def __init__(self,
-                 **kwargs
-                 ):
-        """Initialize your model component.
-
-        Parameters
-        ----------
-        kwargs
-        """
-        super().__init__(**kwargs)
-
-    def __repr__(self):
-        """Return a string representation of the object of the class."""
-        return (super().__repr__() +
-                ('TEMPLATE.model component object')
-                )
+    entity_types = [World, Society, Cell, Individual] # TODO: adjust!
+    process_taxa = [Nature, Metabolism, Culture] # TODO: adjust!

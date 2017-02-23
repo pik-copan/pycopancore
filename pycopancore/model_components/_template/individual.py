@@ -1,8 +1,6 @@
-"""Individual class template.
+"""Individual entity type class template.
 
-In this module a template for the Individual mixing class is composed to give
-an example of the basic structure for the in the model used Individual class.
-It Inherits from individual_ in that variables and parameters are defined.
+TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
 """
 
 # This file is part of pycopancore.
@@ -13,41 +11,37 @@ It Inherits from individual_ in that variables and parameters are defined.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
-from pycopancore.model_components import abstract
-
-#
-#  Define class Individual
-#
 
 
-class Individual(Individual_, abstract.Individual):
-    """Define your Individual class.
+class Individual(Individual_):
+    """Individual entity type mixin implementation class"""
 
-    A template for the basic structure of the Individual mixin class that every
-    component may use to compose their Individual class.
-    Inherits from Individual_
-    as the interface with all necessary variables and parameters.
-    """
-
-    #
-    #  Definitions of internal methods
-    #
-
+    # standard methods:
+    
     def __init__(self,
-                 # *,
+                 # ,*,
                  **kwargs):
         """Initialize an instance of Individual."""
-        super().__init__(**kwargs)
-        # add custom code here:
+        super().__init__(**kwargs) # must be the first line
+        # TODO: add custom code here:
         pass
 
-    processes = []
+    def __deactivate(self):
+        """Deactivate an individual."""
+        # TODO: add custom code here:
+        pass
+        super().__deactivate() # must be the last line
 
-    #
-    #  Definitions of further methods
-    #
+    def __reactivate(self):
+        """Reactivate an individual."""
+        super().__reactivate() # must be the first line
+        # TODO: add custom code here:
+        pass
+
+
+    # process-related methods:
+
+    # TODO: add some if needed...
+    
+    processes = [] # TODO: instantiate and list process objects here

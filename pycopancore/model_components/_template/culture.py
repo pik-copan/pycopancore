@@ -1,8 +1,6 @@
-"""Culture mixing class template.
+"""Culture process taxon mixing class template.
 
-It is composed to give an
-example of the basic structure for the in the model used Culture class. It
-Inherits from Culture_ in that variables and parameters are defined.
+TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
 """
 
 # This file is part of pycopancore.
@@ -13,44 +11,25 @@ Inherits from Culture_ in that variables and parameters are defined.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
-from pycopancore.model_components import abstract
-
-#
-#  Define class Culture
-#
 
 
-class Culture(Culture_, abstract.Culture):
-    """Define your culture class.
+class Culture (Culture_):
+    """Culture process taxon mixin implementation class"""
 
-    A template for the basic structure of the Culture mixin class that every
-    compomemt may use to compose their Culture class.
-    Inherits from Culture_ from
-    the interface with all necessary variables and parameters.
-    """
-
-    #
-    #  Definitions of internal methods
-    #
-
+    # standard methods:
+    
     def __init__(self,
                  # *,
                  **kwargs):
         """Initialize the unique instance of Culture."""
-        super().__init__(**kwargs)
-        # add custom code here:
+        super().__init__(**kwargs) # must be the first line
+        # TODO: add custom code here:
         pass
 
-    def __str__(self):
-        """Return a string representation of the instance."""
 
-    processes = []
+    # process-related methods:
 
-    #
-    #  Definitions of further methods
-    #
+    # TODO: add some if needed...
+    
+    processes = [] # TODO: instantiate and list process objects here

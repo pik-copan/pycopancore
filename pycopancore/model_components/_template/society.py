@@ -1,8 +1,6 @@
-"""Society mixing class Template.
+"""Society entity type mixing class template.
 
-It is composed to give
-an example of the basic structure for the in the model used Society class.
-It Inherits from Society_ in that variables and parameters are defined.
+TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
 """
 # This file is part of pycopancore.
 #
@@ -12,39 +10,37 @@ It Inherits from Society_ in that variables and parameters are defined.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
-from pycopancore.model_components import abstract
-
-#
-#  Define class Society
-#
 
 
-class Society(Society_, abstract.Society):
-    """Define the Society mixin class.
+class Society(Society_):
+    """Society entity type mixin implementation class"""
 
-    A template for the basic structure of the Society mixin class that every
-    model may use to compose their Society class. Inherits from Society_
-    as the interface with all necessary variables and parameters.
-    """
-
-    #
-    #  Definitions of internal methods
-    #
-
+    # standard methods:
+    
     def __init__(self,
+                 # ,*,
                  **kwargs):
-        """Initialize an instance of YOUR Society."""
-        super().__init__(**kwargs)
-        # add custom code here:
+        """Initialize an instance of Society."""
+        super().__init__(**kwargs) # must be the first line
+        # TODO: add custom code here:
         pass
 
-    processes = []
+    def __deactivate(self):
+        """Deactivate a society."""
+        # TODO: add custom code here:
+        pass
+        super().__deactivate() # must be the last line
 
-    #
-    #  Definitions of further methods
-    #
+    def __reactivate(self):
+        """Reactivate a society."""
+        super().__reactivate() # must be the first line
+        # TODO: add custom code here:
+        pass
+
+
+    # process-related methods:
+
+    # TODO: add some if needed...
+    
+    processes = [] # TODO: instantiate and list process objects here

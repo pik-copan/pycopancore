@@ -1,4 +1,7 @@
-"""Interface of model component AAA"""
+"""model component Interface template
+
+TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
+"""
 
 # This file is part of pycopancore.
 #
@@ -14,7 +17,7 @@ from pycopancore import master_data_model as MDM # TODO: use variables from the 
 #from pycopancore import Variable # TODO: uncomment only if you really need other variables
 
 
-class Model_(object):
+class Model_ (object):
     """Interface for Model mixin"""
 
     # metadata:
@@ -22,10 +25,12 @@ class Model_(object):
     description = "..." # some description
     requires = [] # list of other model components required for this model component to make sense
 
+    # Note: Model_ does NOT define variables or parameters, only entity types and process taxons do!
+
 
 # entity types:
 
-class World_(object):
+class World_ (object):
     """Interface for World mixin"""
 
     # endogenous variables:
@@ -38,22 +43,22 @@ class World_(object):
     # exogenous variables / parameters:
     # TODO: similarly
     
-class Cell_(object):
-    """Interface for Cell mixin"""
+class Society_ (object):
+    """Interface for Society entity type mixin"""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-class Individual_(object):
-    """Interface for Individual mixin"""
+class Cell_ (object):
+    """Interface for Cell entity type mixin"""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-class Society_(object):
-    """Interface for Society mixin"""
+class Individual_ (object):
+    """Interface for Individual entity type mixin"""
 
     # endogenous variables:
 
@@ -62,22 +67,22 @@ class Society_(object):
 
 # process taxa:
 
-class Nature_(object):
-    """Interface for Nature mixin"""
+class Nature_ (object):
+    """Interface for Nature process taxon mixin"""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-class Metabolism_(object):
-    """Interface for Metabolism mixin"""
+class Metabolism_ (object):
+    """Interface for Metabolism process taxon mixin"""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-class Culture_(object):
-    """Interface for Culture mixin"""
+class Culture_ (object):
+    """Interface for Culture process taxon mixin"""
 
     # endogenous variables:
 
