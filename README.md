@@ -27,7 +27,10 @@ Create local html version of the docs in the `docs` directory with
 ```
 > make html
 ```
-To be able to create the automatic UML-Diagrams, [pylint](https://www.pylint.org/) and [graphviz](http://www.graphviz.org/) needs to be installed.
+To be able to create the automatic UML-Diagrams, [pylint](https://www.pylint.org/) and [graphviz](http://www.graphviz.org/) needs to be installed. To finally create the diagrams, use
+```
+> make uml
+```
 
 ## Code of Good Practice
 When Developing the Code, please follow the guidelines below:
