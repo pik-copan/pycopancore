@@ -1,4 +1,4 @@
-"""Abstract class from which all World mixin class must implement."""
+"""Abstract World entity type class, inherited by base model component."""
 
 # This file is part of pycopancore.
 #
@@ -12,10 +12,6 @@ from pycopancore.private import _AbstractEntityMixin
 
 
 class World (_AbstractEntityMixin):
-    """Abstract class all World mixin classes must implement."""
+    """Abstract World entity type class, inherited by base model component."""
 
-    def __init__(self, **kwargs):
-        """Initialize object."""
-        super().__init__(**kwargs)
-
-    processes = []
+    pass

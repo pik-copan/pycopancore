@@ -19,7 +19,7 @@ in special list to be accessed by the runner.
 #
 
 from pycopancore import Variable, ODE, Explicit, Step, Event, \
-    _AbstractEntityMixin, _AbstractDynamicsMixin
+    _AbstractEntityMixin, _AbstractProcessTaxonMixin
 from .interface import Model_
 from pycopancore.model_components import abstract
 from . import World, Cell, Nature, Individual, Culture, Society, \
@@ -224,10 +224,11 @@ class Model (Model_, abstract.Model):
             parents = list(inspect.getmro(owning_class))
             components = [c for c in parents
                           if issubclass(c, (_AbstractEntityMixin,
-                                            _AbstractDynamicsMixin))
+                                            _AbstractProcessTaxonMixin))
                           and c not in (_AbstractEntityMixin,
-                                        _AbstractDynamicsMixin)
+                                        _AbstractProcessTaxonMixin)
                           ]
+            print('...............components', components)
             for mixin in components:
                 print('        Mixin:', mixin)
                 cparents = list(inspect.getmro(mixin))

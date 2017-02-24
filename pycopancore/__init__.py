@@ -2,7 +2,7 @@
 This is the pycopancore package
 """
 from .private import _AbstractRunner, _AbstractEntityMixin
-from .private import _AbstractProcess, _AbstractDynamicsMixin, Variable
+from .private import _AbstractProcess, _AbstractProcessTaxonMixin, Variable
 from .process_types import ODE, Explicit, Step, Event, Implicit
 from .models import Model
 
