@@ -1,6 +1,7 @@
 """World entity type mixing class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
+TODO: adjust or fill in code and documentation wherever marked by "TODO:",
+then remove these instructions
 """
 # This file is part of pycopancore.
 #
@@ -10,19 +11,22 @@ TODO: adjust or fill in code and documentation wherever marked by "TODO:", then 
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
+# import all interface classes since one typically wants to cross-ref variables
+# between entity types (this is the whole point of having an interface in the
+# first place):
+from .interface import *
 
 
 class World (World_):
-    """World entity type mixin implementation class"""
+    """World entity type mixin implementation class."""
 
     # standard methods:
-    
+
     def __init__(self,
                  # ,*,
                  **kwargs):
         """Initialize an instance of World."""
-        super().__init__(**kwargs) # must be the first line
+        super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
         pass
 
@@ -30,17 +34,16 @@ class World (World_):
         """Deactivate a world."""
         # TODO: add custom code here:
         pass
-        super().__deactivate() # must be the last line
+        super().__deactivate()  # must be the last line
 
     def __reactivate(self):
         """Reactivate a world."""
-        super().__reactivate() # must be the first line
+        super().__reactivate()  # must be the first line
         # TODO: add custom code here:
         pass
-
 
     # process-related methods:
 
     # TODO: add some if needed...
-    
-    processes = [] # TODO: instantiate and list process objects here
+
+    processes = []  # TODO: instantiate and list process objects here
