@@ -44,7 +44,7 @@ class _AbstractEntityMixin(object):
     mixin classes are derived.
     """
 
-    processes = None
+    processes = []
     model = None
     instances = None
     idle_entities = None
