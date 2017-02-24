@@ -1,4 +1,4 @@
-"""Abstract Cell entity type class, inherited by base model component"""
+"""Abstract Cell entity type class, inherited by base model component."""
 
 # This file is part of pycopancore.
 #
@@ -12,6 +12,6 @@ from pycopancore.private import _AbstractEntityMixin
 
 
 class Cell (_AbstractEntityMixin):
-    """Abstract Cell entity type class, inherited by base model component"""
+    """Abstract Cell entity type class, inherited by base model component."""
 
     pass

@@ -1,4 +1,4 @@
-"""Abstract Culture process taxon class, inherited by base model component"""
+"""Abstract Culture process taxon class, inherited by base model component."""
 
 # This file is part of pycopancore.
 #
@@ -12,6 +12,9 @@ from pycopancore.private import _AbstractProcessTaxonMixin
 
 
 class Culture (_AbstractProcessTaxonMixin):
-    """Abstract Culture process taxon class, inherited by base model component"""
+    """Abstract Culture process taxon class.
+
+    Inherited by base model component.
+    """
 
     pass

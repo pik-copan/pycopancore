@@ -1,4 +1,7 @@
-"""Abstract Metabolism process taxon class, inherited by base model component"""
+"""Abstract Metabolism process taxon class.
+
+Inherited by base model component.
+"""
 
 # This file is part of pycopancore.
 #
@@ -12,6 +15,9 @@ from pycopancore.private import _AbstractProcessTaxonMixin
 
 
 class Metabolism (_AbstractProcessTaxonMixin):
-    """Abstract Metabolism process taxon class, inherited by base model component"""
+    """Abstract Metabolism process taxon class.
+
+    Inherited by base model component.
+    """
 
     pass
