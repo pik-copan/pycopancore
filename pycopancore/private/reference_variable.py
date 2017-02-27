@@ -1,17 +1,16 @@
-from ._abstract_entity_mixin import _AbstractEntityMixin
 from .variable import Variable
 
 class ReferenceVariable(Variable):
     """
-    reference to another entity
+    reference to another entity or process taxon
     """
     
-    entity_type = None
-    """required entity type of referred entity"""
+    type = None
+    """required type of referred entity or taxon"""
     
     def __init__(self, 
-                 entity_type=_AbstractEntityMixin, 
+                 type=object, 
                  **kwargs):
         super().__init__(**kwargs)
-        self.entity_type = entity_type
+        self.type = type
         
