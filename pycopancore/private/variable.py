@@ -155,6 +155,23 @@ class Variable (Symbol):
         self.assert_valid(value)
         entity.__dict__[self._codename] = value
         
+    def convert_to_standard_units(self,
+                                  entities=None, # if None: all entities/taxa
+                                  ):
+        """replace all variable values of type DimensionalQuantity 
+        to float using the standard unit"""
+        if entities is not None:
+            for e in entities:
+                val = e.__dict__[self._codename]
+                if isinstance(val, DimensionalQuantity):
+                    self.set_value(e, val) # does the conversion
+        else:
+            for c in self.owning_classes:
+                for e in c.entities:
+                    val = e.__dict__[self._codename]
+                    if isinstance(val, DimensionalQuantity):
+                        self.set_value(e, val) # does the conversion
+
     def set_to_default(self,
                        entities=None, # if None: all entities/taxa
                        ):
