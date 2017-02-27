@@ -5,6 +5,7 @@ import operator
 
 from .dimension import Dimension
 
+
 class Unit():
     
     is_base = None
@@ -24,6 +25,8 @@ class Unit():
     
     exponents = None
     """dict of base Unit: nonzero exponent"""
+    
+    _dimension = None
     
     @property
     def dimension(self):
@@ -66,6 +69,17 @@ class Unit():
                     desc=self.desc if desc is None else desc, 
                     factor=self.factor, exponents=self.exponents)
 
+    def convert(self, multiple, unit):
+        assert unit.dimension == self.dimension, \
+            "can't convert from " + str(self) \
+            + " to " + str(unit)
+        if isinstance(multiple, list):
+            return [i * self.factor / unit.factor for i in multiple]
+        else:
+            return multiple * self.factor / unit.factor
+
+    # standard methods and operators:
+    
     def __repr__(self):
         return self.name + " [" + self.symbol + "]"
     
@@ -87,7 +101,7 @@ class Unit():
     def __mul__(self, other):
         """multiplication *"""
         pex = self.exponents.copy()
-        if type(other) == Unit:
+        if isinstance(other, Unit):
             oex = other.exponents
             for unit, ex in oex.items():
                 if unit in pex:
@@ -102,7 +116,7 @@ class Unit():
     def __truediv__(self, other):
         """division /"""
         qex = self.exponents.copy()
-        if type(other) == Unit:
+        if isinstance(other, Unit):
             oex = other.exponents
             for dim, ex in oex.items():
                 if dim in qex:
