@@ -11,15 +11,6 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-# Imports
-#
-
-
-#
-# Definition of class _AbstractEntityMixin
-#
-
 # Jobst: FIX the following: class modules cannot contain bare code or function defs such as the next lines, and are only allowed to contain class definitions!
 # NEXTUID = 0
 # 
@@ -37,8 +28,9 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 #     NEXTUID += 1
 #     return current_uid
 
+from . import Variable
 
-class _AbstractEntityMixin(object):
+class _AbstractEntityMixin (object):
     """Define AbstractEntityMixin.
 
     Entity-unspecific abstract class from which all entity-specific abstract
@@ -85,3 +77,8 @@ class _AbstractEntityMixin(object):
 
     def __str__(self):
         return repr(self)
+
+    def set_value(self, variable, value):
+        assert isinstance(variable, Variable), \
+            "variable must be a Variable object"
+        variable.set_value(self, value)
