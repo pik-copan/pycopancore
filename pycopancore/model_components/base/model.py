@@ -251,7 +251,6 @@ class Model (Model_, abstract.Model):
                           and c not in (_AbstractEntityMixin,
                                         _AbstractProcessTaxonMixin)
                           ]
-            print('...............components', components)
             for mixin in components:
                 print('        Mixin:', mixin)
                 cparents = list(inspect.getmro(mixin))
