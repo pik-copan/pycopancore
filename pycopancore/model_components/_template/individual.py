@@ -1,6 +1,7 @@
 """Individual entity type class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
+TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
+then remove these instructions
 """
 
 # This file is part of pycopancore.
@@ -11,7 +12,10 @@ TODO: adjust or fill in code and documentation wherever marked by "TODO:", then 
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
+# import all interface classes since one typically wants to cross-ref 
+# variables between entity types (this is the whole point of having an 
+# interface in the first place):
+from .interface import * 
 
 
 class Individual(Individual_):
@@ -27,15 +31,15 @@ class Individual(Individual_):
         # TODO: add custom code here:
         pass
 
-    def __deactivate(self):
+    def deactivate(self):
         """Deactivate an individual."""
         # TODO: add custom code here:
         pass
-        super().__deactivate() # must be the last line
+        super().deactivate() # must be the last line
 
-    def __reactivate(self):
+    def reactivate(self):
         """Reactivate an individual."""
-        super().__reactivate() # must be the first line
+        super().reactivate() # must be the first line
         # TODO: add custom code here:
         pass
 

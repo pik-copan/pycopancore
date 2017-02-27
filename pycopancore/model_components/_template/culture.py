@@ -1,6 +1,7 @@
 """Culture process taxon mixing class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
+TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
+then remove these instructions
 """
 
 # This file is part of pycopancore.
@@ -11,7 +12,10 @@ TODO: adjust or fill in code and documentation wherever marked by "TODO:", then 
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
+# import all interface classes since one typically wants to cross-ref 
+# variables between entity types (this is the whole point of having an 
+# interface in the first place):
+from .interface import * 
 
 
 class Culture (Culture_):

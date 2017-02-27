@@ -1,6 +1,7 @@
 """model component Interface template
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", then remove these instructions
+TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
+then remove these instructions
 """
 
 # This file is part of pycopancore.
@@ -11,10 +12,18 @@ TODO: adjust or fill in code and documentation wherever marked by "TODO:", then 
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore import master_data_model as MDM # TODO: use variables from the master data model wherever possible
-#from pycopancore import CFVariable, CETSVariable # TODO: uncomment if you need further variables from some catalogue
-#import pycopancore.model_components.BBB.interface as BBB # TODO: uncomment and adjust of you need further variables from another model component
-#from pycopancore import Variable # TODO: uncomment only if you really need other variables
+# TODO: use variables from the master data model wherever possible:
+from pycopancore import master_data_model as MDM 
+
+# TODO: uncomment if you need further variables from some catalogue:
+#from pycopancore import CFVariable, CETSVariable 
+
+# TODO: uncomment and adjust of you need further variables 
+# from another model component:
+#import pycopancore.model_components.BBB.interface as BBB 
+
+# TODO: uncomment only if you really need other variables:
+#from pycopancore import Variable 
 
 
 class Model_ (object):
@@ -23,9 +32,10 @@ class Model_ (object):
     # metadata:
     name = "..." # a unique name for the model component
     description = "..." # some description
-    requires = [] # list of other model components required for this model component to make sense
-
-    # Note: Model_ does NOT define variables or parameters, only entity types and process taxons do!
+    # list of other model components required for this component to make sense:
+    requires = [] 
+    # Note: Model_ does NOT define variables or parameters, 
+    # only entity types and process taxons do!
 
 
 # entity types:
@@ -34,11 +44,19 @@ class World_ (object):
     """Interface for World mixin"""
 
     # endogenous variables:
-    #X = MDM.X # TODO: use variables from the master data model wherever possible wherever possible!
-    #Y1 = CFVariable(ref="...") # TODO: uncomment and adjust if you need further variables from some catalogue
-    #Y2 = CETSVariable(ref="...") # TODO: uncomment and adjust if you need further variables from some catalogue
-    #Z = BBB.Z TODO: uncomment and adjust of you need further variables from another model component
-    #W = Variable(name="W", unit=..., ...) # TODO: uncomment and adjust only if you really need other variables
+    
+    # TODO: use variables from the master data model wherever possible:
+    #X = MDM.X 
+    
+    # TODO: uncomment/adjust if you need further variables from a catalogue:
+    #Y1 = CFVariable(ref="...") 
+    #Y2 = CETSVariable(ref="...")
+    
+    # TODO: uncomment/adjust of you need variables from another component:
+    #Z = BBB.Z 
+    
+    # TODO: uncomment and adjust only if you really need other variables:
+    #W = Variable(name="W", unit=..., ...) 
 
     # exogenous variables / parameters:
     # TODO: similarly
