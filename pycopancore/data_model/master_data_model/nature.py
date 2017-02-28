@@ -1,6 +1,5 @@
 from pycopancore.data_model import Variable, CFVariable
-from pycopancore.data_model.base_dimensions_units import \
-        gigatons_carbon, kelvins, years
+from . import gigatons_carbon, kelvins, years
 
 # Atmosphere:
 atmospheric_carbon = CFVariable(ref="???", unit=gigatons_carbon)

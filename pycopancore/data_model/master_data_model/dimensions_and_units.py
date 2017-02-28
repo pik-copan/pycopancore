@@ -1,10 +1,5 @@
-from .dimension import Dimension
-from .unit import Unit
-
-nondim = Dimension(name="non-dimensional", desc="non-dimensional",
-                   exponents={})
-nondim.default_unit = unity = Unit(name="unity", symbol="",
-                                   desc="number of unity", exponents={})
+from .. import Dimension
+from .. import Unit
 
 # fundamental physical dimensions and units:
 
