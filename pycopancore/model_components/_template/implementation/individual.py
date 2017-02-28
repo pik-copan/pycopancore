@@ -1,4 +1,4 @@
-"""Culture process taxon mixing class template.
+"""Individual entity type class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
 then remove these instructions
@@ -12,22 +12,31 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# import all interface classes since one typically wants to cross-ref 
-# variables between entity types (this is the whole point of having an 
-# interface in the first place):
-from .interface import * 
+from . import interface as I 
 
 
-class Culture (Culture_):
-    """Culture process taxon mixin implementation class"""
+class Individual(I.Individual):
+    """Individual entity type mixin implementation class"""
 
     # standard methods:
     
     def __init__(self,
-                 # *,
+                 # ,*,
                  **kwargs):
-        """Initialize the unique instance of Culture."""
+        """Initialize an instance of Individual."""
         super().__init__(**kwargs) # must be the first line
+        # TODO: add custom code here:
+        pass
+
+    def deactivate(self):
+        """Deactivate an individual."""
+        # TODO: add custom code here:
+        pass
+        super().deactivate() # must be the last line
+
+    def reactivate(self):
+        """Reactivate an individual."""
+        super().reactivate() # must be the first line
         # TODO: add custom code here:
         pass
 

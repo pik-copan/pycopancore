@@ -1,4 +1,4 @@
-"""World entity type mixing class template.
+"""Society entity type mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
 then remove these instructions
@@ -11,33 +11,30 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# import all interface classes since one typically wants to cross-ref 
-# variables between entity types (this is the whole point of having an 
-# interface in the first place):
-from .interface import * 
+from . import interface as I 
 
 
-class World (World_):
-    """World entity type mixin implementation class"""
+class Society (I.Society):
+    """Society entity type mixin implementation class"""
 
     # standard methods:
     
     def __init__(self,
                  # ,*,
                  **kwargs):
-        """Initialize an instance of World."""
+        """Initialize an instance of Society."""
         super().__init__(**kwargs) # must be the first line
         # TODO: add custom code here:
         pass
 
     def deactivate(self):
-        """Deactivate a world."""
+        """Deactivate a society."""
         # TODO: add custom code here:
         pass
         super().deactivate() # must be the last line
 
     def reactivate(self):
-        """Reactivate a world."""
+        """Reactivate a society."""
         super().reactivate() # must be the first line
         # TODO: add custom code here:
         pass

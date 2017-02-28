@@ -6,20 +6,20 @@ then remove these instructions
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .interface import Model_ 
+from . import interface as I 
 # import all needed entity type implementation classes:
 from . import World, Society, Cell, Individual # TODO: adjust!
 # import all needed process taxon implementation classes:
 from . import Nature, Metabolism, Culture # TODO: adjust!
 
 
-class Model (Model_):
+class Model (I.Model):
     """Model component mixin class"""
 
     # mixins provided by this model component:

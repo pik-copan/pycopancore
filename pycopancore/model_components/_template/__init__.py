@@ -16,20 +16,9 @@ See the model component development tutorial for details.
 # License: MIT license
 
 
-# Import all interface classes:
-from .interface import *
+# export all implementation classes:
+from .implementation import *
 
-# Import all provided entity type implementation mixin classes:
-from .world import World
-from .cell import Cell
-from .society import Society
-from .individual import Individual
-
-# Import all provided process taxon implementation mixin classes:
-from .nature import Nature
-from .culture import Culture
-from .metabolism import Metabolism
-
-# Import model component mixin class:
+# export model component mixin class:
 from .model import Model
 

@@ -26,7 +26,7 @@ from pycopancore import master_data_model as MDM
 #from pycopancore import Variable 
 
 
-class Model_ (object):
+class Model (object):
     """Interface for Model mixin"""
 
     # metadata:
@@ -34,13 +34,13 @@ class Model_ (object):
     description = "..." # some description
     # list of other model components required for this component to make sense:
     requires = [] 
-    # Note: Model_ does NOT define variables or parameters, 
+    # Note: Model does NOT define variables or parameters, 
     # only entity types and process taxons do!
 
 
 # entity types:
 
-class World_ (object):
+class World (object):
     """Interface for World mixin"""
 
     # endogenous variables:
@@ -61,21 +61,21 @@ class World_ (object):
     # exogenous variables / parameters:
     # TODO: similarly
     
-class Society_ (object):
+class Society (object):
     """Interface for Society entity type mixin"""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-class Cell_ (object):
+class Cell (object):
     """Interface for Cell entity type mixin"""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-class Individual_ (object):
+class Individual (object):
     """Interface for Individual entity type mixin"""
 
     # endogenous variables:
@@ -85,21 +85,21 @@ class Individual_ (object):
 
 # process taxa:
 
-class Nature_ (object):
+class Nature (object):
     """Interface for Nature process taxon mixin"""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-class Metabolism_ (object):
+class Metabolism (object):
     """Interface for Metabolism process taxon mixin"""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-class Culture_ (object):
+class Culture (object):
     """Interface for Culture process taxon mixin"""
 
     # endogenous variables:
