@@ -18,7 +18,8 @@ in special list to be accessed by the runner.
 
 # only used in this component, not in others:
 from pycopancore.model_components import abstract 
-from pycopancore import Variable, ODE, Explicit, Step, Event, \
+from pycopancore import Variable, ODE, Explicit, Step, Event
+from pycopancore.private import \
     _AbstractEntityMixin, _AbstractProcessTaxonMixin
 import inspect
 

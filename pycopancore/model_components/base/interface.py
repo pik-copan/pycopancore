@@ -7,7 +7,7 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
@@ -15,16 +15,14 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 
 from pycopancore import Variable, ReferenceVariable
 from pycopancore import master_data_model as MDM
-from pycopancore.base_dimensions_units import \
-    gigatons_carbon, square_kilometers, years, kelvins, people
 
 
 # process taxa:
 
 
 class Nature (object):
-    """
-    Basic Nature interface. 
+    """Basic Nature interface.
+
     It contains all variables specified as mandatory ("base variables").
     """
 
@@ -32,8 +30,8 @@ class Nature (object):
 
 
 class Metabolism (object):
-    """
-    Basic Metabolism interface. 
+    """Basic Metabolism interface.
+
     It contains all variables specified as mandatory ("base variables").
     """
 
@@ -41,105 +39,156 @@ class Metabolism (object):
 
 
 class Culture (object):
-    """
-    Basic Culture interface. 
+    """Basic Culture interface.
+
     It contains all variables specified as mandatory ("base variables").
     """
 
-    basic_social_network = MDM.basic_social_network
-    # Note: don't forget to add and remove nodes in __init__, !
+    acquaintance_network = MDM.acquaintance_network
+    # Note: don't forget to add and remove nodes in __init__, ...!
 
 
 # entity types:
 
 
 class World (object):
-    """
-    Basic World interface. 
+    """Basic World interface.
+
     It contains all variables specified as mandatory ("base variables").
     """
 
-    # attributes storing redundant information (backward references):
-    societies = None # set of Societies
-    cells = None # set of Cells
-
     # references:
-    nature = ReferenceVariable("nature", type=Nature)
-    metabolism = ReferenceVariable("metabolism", type=Metabolism)
-    culture = ReferenceVariable("culture", type=Culture)
+    nature = ReferenceVariable("nature",
+                               "Nature taxon working on this world",
+                               type=Nature)
+    metabolism = ReferenceVariable("metabolism",
+                                   "Metabolism taxon working on this world",
+                                   type=Metabolism)
+    culture = ReferenceVariable("culture",
+                                "Culture taxon working on this world",
+                                type=Culture)
+
+    human_population = MDM.human_population
+    # TODO: make sure it is no smaller than aggregate top-level societies'
+
+    # attributes storing redundant information (backward references):
+    societies = None
+    """set of all Societies on this world"""
+    top_level_societies = None
+    """set of top-level Societies on this world"""
+    cells = None
+    """set of Cells on this world"""
+    individuals = None
+    """set of Individuals residing on this world"""
 
 
 class Society (object):
-    """
-    Basic Society interface. 
+    """Basic Society interface.
+
     It contains all variables specified as mandatory ("base variables").
     """
 
     # references:
-    world = ReferenceVariable("world", type=World)
-    next_higher_society = ReferenceVariable("next higher society")
-    
+    world = ReferenceVariable("world", "", type=World)
+    next_higher_society = ReferenceVariable("next higher society", "optional",
+                                            allow_none=True)
+
     # other variables:
-    population = Variable("population", unit=people)
+    # population is explicitly allowed to be non-integer so that we can use
+    # ODEs:
+    # TODO: replace by suitable CETSVariable!
+    human_population = MDM.human_population
+    # TODO: make sure it is no smaller than aggregate next_lower_level societies'
 
-    # read-only attributes storing redundant information (backward references):
-    next_lower_societies = None # set of sub-Societies of next lower level
-    direct_cells = None # set of direct territory Cells
-    cells = None # set of direct and indirect territory Cells
+    # read-only attributes storing redundant information:
+    nature = None
+    metabolism = None
+    culture = None
+    higher_societies = None
+    """upward list of (in)direct super-Societies"""
+    next_lower_societies = None
+    """set of sub-Societies of next lower level"""
+    lower_societies = None
+    """set of all direct and indirect sub-Societies"""
+    direct_cells = None
+    """set of direct territory Cells"""
+    cells = None
+    """set of direct and indirect territory Cells"""
+    direct_individuals = None
+    """set of resident Individuals not in subsocieties"""
+    individuals = None
+    """set of direct or indirect resident Individuals"""
 
-Society.next_higher_society.type = Society # specified only now to avoid recursion
+# specified only now to avoid recursion:
+Society.next_higher_society.type = Society
 
 
 class Cell (object):
-    """
-    Basic Cell interface. 
+    """Basic Cell interface.
+
     It contains all variables specified as mandatory ("base variables").
     """
 
     # references:
-    world = ReferenceVariable("world", type=World)
-    society = ReferenceVariable("society", type=Society,
-                    desc="lowest-level society this cell is a cells of")
-    
+    world = ReferenceVariable("world", "", type=World)
+    society = ReferenceVariable("society",
+                                "optional lowest-level soc. cell belongs to",
+                                type=Society, allow_none=True)
+
     # other variables:
-    location = Variable("location")
-    area = Variable("area", unit=square_kilometers)
-    geometry = Variable("geometry")
+    location = Variable("location", "pair of coordinates?")
+    area = Variable("area", "", unit=MDM.square_kilometers,
+                    strict_lower_bound=0)
+    geometry = Variable("geometry", "polygon?")
 
-    # attributes storing redundant information (backward references):
-    individuals = None # set of resident Individuals
-
-Society.cells.type = Cell # specified only now to avoid recursion
+    # attributes storing redundant information:
+    nature = None
+    metabolism = None
+    culture = None
+    societies = None
+    """upward list of Societies it belongs to (in)directly"""
+    individuals = None
+    """set of resident Individuals"""
 
 
 class Individual (object):
-    """
-    Basic Individual interface.
+    """Basic Individual interface.
+
     It contains all variables specified as mandatory ("base variables").
     """
 
-    # references:    
-    cell = ReferenceVariable("cell", desc="cell of residence", type=Cell)
-    
-    # other variables:
-    relative_weight = Variable("relative representation weight", 
-                unit=unity, lower_bound=0, default=1,
-                desc="relative weight ")
+    # references:
+    cell = ReferenceVariable("cell", "cell of residence", type=Cell)
 
-    # attributes storing redundant information (aggregate information):
-    
-    # share of society's direct population represented by this individual:
-    population_share = None 
-    # absolute population represented by this individual:
+    # other variables:
+    relative_weight = \
+        Variable("relative representation weight",
+                 "relative representation weight for society's population",
+                 unit=MDM.unity, lower_bound=0, default=1)
+
+    # attributes storing redundant information:
+    world = None
+    nature = None
+    metabolism = None
+    culture = None
+    society = None
+    """lowest level Society this individual is resident of"""
+    societies = None
+    """upward list of all Societies it is resident of"""
+
+    population_share = None
+    """share of society's direct population represented by this individual"""
     represented_population = None
-    
+    """absolute population represented by this individual"""
+
+    acquaintances = None
+    """Individuals this is acquainted with"""
 
 # basic model component:
 
 
 class Model (object):
-    """
-    Basic Model interface
+    """Basic Model interface.
     """
 
     # metadata:
@@ -147,8 +196,3 @@ class Model (object):
     description = "Basic model only providing basic relationships between " \
                   "entity types."
     requires = []
-
-    # references of base component:
-    nature = ReferenceVariable("nature", type=Nature)
-    metabolism = ReferenceVariable("metabolism", type=Metabolism)
-    culture = ReferenceVariable("culture", type=Culture)

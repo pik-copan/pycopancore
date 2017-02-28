@@ -2,22 +2,24 @@
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate Impact
 # Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.model_components import abstract # only used in this component, not in others
-from . import interface as I
+# only used in this component, not in others:
+from pycopancore.model_components import abstract
+
+from .. import interface as I
 
 
 class Cell (I.Cell, abstract.Cell):
     """Cell entity type mixin implementation class.
 
-    Base component's Cell mixin that every model must use in composing their Cell
-    class. Inherits from Cell_ as the interface with all necessary variables
-    and parameters.
+    Base component's Cell mixin that every model must use in composing their
+    Cell class. Inherits from I.Cell as the interface with all necessary
+    variables and parameters.
     """
 
     # standard methods:
@@ -32,7 +34,10 @@ class Cell (I.Cell, abstract.Cell):
                  **kwargs
                  ):
         """Initialize an instance of Cell"""
-        super().__init__(**kwargs) # must be the first line
+        super().__init__(**kwargs)  # must be the first line
+
+        self._world = None
+        self._society = None
 
         self.world = world
         self.society = society
@@ -40,50 +45,60 @@ class Cell (I.Cell, abstract.Cell):
         self.area = area
         self.geometry = geometry
 
-        self.residents = set()
+        self._individuals = set()
 
+    # getters and setters for references:
 
-    # getters and setters:
-    
     @property
     def world(self):
         return self._world
-    
+
     @world.setter
     def world(self, w):
-        if self._world is not None: self._world.cells.remove(self) 
-        if w is not None: 
+        if self._world is not None:
+            self._world.cells.remove(self)
+        if w is not None:
             assert isinstance(w, I.World), "world must be of entity type World"
-            w._cells.add(self) 
+            w._cells.add(self)
         self._world = w
-        
+
     @property
     def society(self):
         return self._society
-    
-    @territory_of.setter
+
+    @society.setter
     def society(self, s):
-        if self._society is not None: self._society._cells.remove(self) 
-        if s is not None: 
+        if self._society is not None:
+            self._society._direct_cells.remove(self)
+        if s is not None:
             assert isinstance(s, I.Society), \
                 "society must be of entity type Society"
-            s._cells.add(self) 
+            s._direct_cells.add(self)
         self._society = s
-        
-    @property
-    def area(self):
-        return self._area
-    
-    @area.setter
-    def area(self, a):
-        if a is not None: assert a >= 0, "area must be >= 0"
-        self._area = a
-        
-    @property # read-only
-    def residents(self):
-        return self._residents
-    
-    
+
+    # getters for backwards references and convenience variables:
+
+    @property  # read-only
+    def nature(self):
+        return self._world.nature
+
+    @property  # read-only
+    def metabolism(self):
+        return self._world.metabolism
+
+    @property  # read-only
+    def culture(self):
+        return self._world.culture
+
+    @property  # read-only
+    def societies(self):
+        return [] if self.society is None \
+                    else [self.society] + self.society.higher_societies
+
+    @property  # read-only
+    def individuals(self):
+        return self._individuals
+
     # no process-related methods
 
     processes = []
