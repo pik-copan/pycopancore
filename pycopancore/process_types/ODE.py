@@ -36,7 +36,7 @@ class ODE(_AbstractProcess):
                  variables,
                  specification,
                  *,
-                 smoothness=1,
+                 smoothness=1
                  ):
         """Initiate an instance of an ODE process.
 

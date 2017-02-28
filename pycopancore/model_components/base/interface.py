@@ -14,73 +14,15 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 # License: MIT license
 
 from pycopancore import Variable, ReferenceVariable
-from pycopancore.base_dimensions_units import gigatons_carbon, square_kilometers, years, kelvins
+from pycopancore import master_data_model as MDM
+from pycopancore.base_dimensions_units import \
+    gigatons_carbon, square_kilometers, years, kelvins, people
 
-
-# entity types:
-
-
-class World_(object):
-    """
-    Basic World interface. 
-    It contains all variables specified as mandatory ("base variables").
-    """
-
-    contact_network = Variable("contact network")
-
-    # attributes storing redundant information (backward references):
-    societies = set() # set of Societies
-    cells = set() # set of Cells
-
-
-class Society_(object):
-    """
-    Basic Society interface. 
-    It contains all variables specified as mandatory ("base variables").
-    """
-
-    # references:
-    world = ReferenceVariable("world", entity_type=World_)
-    territory = SetVariable("territory") # set of Cells
-    
-    # other variables:
-    population = Variable("population")
-
-
-class Cell_(object):
-    """
-    Basic Cell interface. 
-    It contains all variables specified as mandatory ("base variables").
-    """
-
-    # references:
-    world = ReferenceVariable("world", entity_type=World_)
-    
-    # other variables:
-    location = Variable("location")
-    area = Variable("area", unit=square_kilometers)
-
-    # attributes storing redundant information (backward references):
-    residents = set() # set of resident Individuals
-
-Society_.territory.entity_type = Cell_
-
-
-class Individual_(object):
-    """
-    Basic Individual interface.
-    It contains all variables specified as mandatory ("base variables").
-    """
-
-    # references:
-    residence = ReferenceVariable("residence", entity_type=Cell_)
-    
-    # other variables:
-    pass
 
 # process taxa:
 
-class Nature_(object):
+
+class Nature (object):
     """
     Basic Nature interface. 
     It contains all variables specified as mandatory ("base variables").
@@ -88,7 +30,8 @@ class Nature_(object):
 
     pass
 
-class Metabolism_(object):
+
+class Metabolism (object):
     """
     Basic Metabolism interface. 
     It contains all variables specified as mandatory ("base variables").
@@ -96,18 +39,105 @@ class Metabolism_(object):
 
     pass
 
-class Culture_(object):
+
+class Culture (object):
     """
     Basic Culture interface. 
     It contains all variables specified as mandatory ("base variables").
     """
 
-    pass
+    basic_social_network = MDM.basic_social_network
+    # Note: don't forget to add and remove nodes in __init__, !
 
+
+# entity types:
+
+
+class World (object):
+    """
+    Basic World interface. 
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # attributes storing redundant information (backward references):
+    societies = None # set of Societies
+    cells = None # set of Cells
+
+    # references:
+    nature = ReferenceVariable("nature", type=Nature)
+    metabolism = ReferenceVariable("metabolism", type=Metabolism)
+    culture = ReferenceVariable("culture", type=Culture)
+
+
+class Society (object):
+    """
+    Basic Society interface. 
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # references:
+    world = ReferenceVariable("world", type=World)
+    next_higher_society = ReferenceVariable("next higher society")
+    
+    # other variables:
+    population = Variable("population", unit=people)
+
+    # read-only attributes storing redundant information (backward references):
+    next_lower_societies = None # set of sub-Societies of next lower level
+    direct_cells = None # set of direct territory Cells
+    cells = None # set of direct and indirect territory Cells
+
+Society.next_higher_society.type = Society # specified only now to avoid recursion
+
+
+class Cell (object):
+    """
+    Basic Cell interface. 
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # references:
+    world = ReferenceVariable("world", type=World)
+    society = ReferenceVariable("society", type=Society,
+                    desc="lowest-level society this cell is a cells of")
+    
+    # other variables:
+    location = Variable("location")
+    area = Variable("area", unit=square_kilometers)
+    geometry = Variable("geometry")
+
+    # attributes storing redundant information (backward references):
+    individuals = None # set of resident Individuals
+
+Society.cells.type = Cell # specified only now to avoid recursion
+
+
+class Individual (object):
+    """
+    Basic Individual interface.
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # references:    
+    cell = ReferenceVariable("cell", desc="cell of residence", type=Cell)
+    
+    # other variables:
+    relative_weight = Variable("relative representation weight", 
+                unit=unity, lower_bound=0, default=1,
+                desc="relative weight ")
+
+    # attributes storing redundant information (aggregate information):
+    
+    # share of society's direct population represented by this individual:
+    population_share = None 
+    # absolute population represented by this individual:
+    represented_population = None
+    
 
 # basic model component:
 
-class Model_(object):
+
+class Model (object):
     """
     Basic Model interface
     """
@@ -118,11 +148,7 @@ class Model_(object):
                   "entity types."
     requires = []
 
-    # additional attributes for internal logics:
-    
-    components = None
-
-    ODE_variables = None
-
-    variables = None
-    processes = None
+    # references of base component:
+    nature = ReferenceVariable("nature", type=Nature)
+    metabolism = ReferenceVariable("metabolism", type=Metabolism)
+    culture = ReferenceVariable("culture", type=Culture)

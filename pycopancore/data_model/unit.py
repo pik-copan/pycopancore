@@ -6,28 +6,28 @@ import operator
 from .dimension import Dimension
 
 
-class Unit():
-    
+class Unit (object):
+
     is_base = None
     """whether this is a base unit"""
-    
+
     name = None
     """full name"""
-    
+
     symbol = None
     """symbol"""
-    
+
     desc = None
     """description"""
-    
+
     factor = None
     """scalar factor in front of product of powers of base Units"""
-    
+
     exponents = None
     """dict of base Unit: nonzero exponent"""
-    
+
     _dimension = None
-    
+
     @property
     def dimension(self):
         """corresponding Dimension"""
@@ -35,7 +35,6 @@ class Unit():
             return self._dimension
         else:
             nondim = Dimension(name="non-dimensional", desc="non-dimensional", exponents={}, default_unit = Unit(name="unity", symbol="", desc="number of unity", exponents={}))
-#            nondim.default_unit = 
             return reduce(operator.mul, [unit.dimension**ex for unit, ex in self.exponents.items()], nondim)
 
     def __init__(self, is_base=True, name=None, symbol=None, desc=None, factor=1, exponents=None, dimension=None):
@@ -64,10 +63,11 @@ class Unit():
             assert dimension is None, "dimension of non-base unit is derived automatically"
 
     def named(self, name, symbol=None, desc=None):
-        return Unit(is_base=self.is_base, name=name, 
-                    symbol=self.symbol if symbol is None else symbol, 
-                    desc=self.desc if desc is None else desc, 
-                    factor=self.factor, exponents=self.exponents)
+        return Unit(is_base=self.is_base, name=name,
+                    symbol=self.symbol if symbol is None else symbol,
+                    desc=self.desc if desc is None else desc,
+                    factor=self.factor, exponents=self.exponents,
+                    dimension=self.dimension if self.is_base else None)
 
     def convert(self, multiple, unit):
         assert unit.dimension == self.dimension, \

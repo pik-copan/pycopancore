@@ -1,9 +1,4 @@
-"""Define base.nature class.
-
-In this module the basic Nature mixing class is composed to set the basic
-structure for the later in the model used Nature class. It Inherits from
-Nature_ in that basic variables and parameters are defined.
-"""
+"""base component's Nature process taxon mixin implementation class"""
 
 # This file is part of pycopancore.
 #
@@ -17,7 +12,7 @@ Nature_ in that basic variables and parameters are defined.
 #  Imports
 #
 
-from pycopancore.model_components import abstract
+from pycopancore.model_components import abstract # only used in this component, not in others
 from .interface import Nature_
 
 #
@@ -25,7 +20,7 @@ from .interface import Nature_
 #
 
 
-class Nature(Nature_, abstract.Nature):
+class Nature (Nature_, abstract.Nature):
     """Define properties of the nature class.
 
     Basic Nature mixin class that every model must use in composing their
@@ -41,7 +36,7 @@ class Nature(Nature_, abstract.Nature):
                  # *,
                  **kwargs
                  ):
-        """Initialize an instance of Nature.
+        """Initialize the unique instance of Nature.
 
         Parameters
         ----------

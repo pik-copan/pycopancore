@@ -1,9 +1,4 @@
-"""Define base.individual class.
-
-In this module the basic Individual mixing class is composed to set the basic
-structure for the later in the model used Indvidual class. It Inherits from
-Individual_ in that basic variables and parameters are defined.
-"""
+"""base component's Individual entity type mixin implementation class"""
 
 # This file is part of pycopancore.
 #
@@ -13,54 +8,82 @@ Individual_ in that basic variables and parameters are defined.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
+# only used in this component, not in others
 from pycopancore.model_components import abstract
-from .interface import Cell_, Individual_
-
-#
-#  Define class Individual
-#
+from . import interface as I
 
 
-class Individual(Individual_, abstract.Individual):
-    """Define properites of base.individual.
+class Individual (I.Individual, abstract.Individual):
+    """Individual entity type mixin implementation class.
 
-    Basic Individual mixin class that every model must use in composing their
-    Individual class. Inherits from Individual_ as the interface with all
+    Base component's Individual mixin that every model must use in composing
+    their Individual class. Inherits from Individual as the interface with all
     necessary variables and parameters.
     """
 
     # standard methods:
 
     def __init__(self,
-                 # *,
+                 *,
                  cell=None,
                  **kwargs
                  ):
-        """Initialize an instance of Individual.
+        """Initialize an instance of Individual"""
+        super().__init__(**kwargs) # must be the first line
 
-        Parameters
-        ----------
-        cell:
-        kwargs:
-        """
-        super().__init__(**kwargs)
-
-        assert isinstance(cell, Cell_), "cell must be an instance of Cell"
         self.cell = cell
 
+        self.world.culture.basic_social_network.add_node(self)
 
-    # setters for references:
+    def deactivate(self):
+        """Deactivate an individual."""
+        self.world.culture.basic_social_network.remove_node(self)
+        super().deactivate() # must be the last line
+
+    def reactivate(self):
+        """Reactivate an individual."""
+        super().reactivate() # must be the first line
+        self.world.culture.basic_social_network.add_node(self)
+
+
+    # getters and setters:
+    
+    @property
+    def world(self):
+        return self._world
+    
+    @world.setter
+    def world(self, w):
+        if self._world is not None: self._world.individuals.remove(self) 
+        if w is not None: 
+            assert isinstance(w, World_), "world must be of entity type World"
+            w._individuals.add(self) 
+        self._world = w
+        
+    @property
+    def cell(self):
+        return self._cell
     
     @residence.setter
-    def residence(self, c):
-        assert isinstance(c, Cell_)
-        if self.world is not None: self.cell.residents.remove(self) 
-        c.cell.add(self) 
-        self.residence = c
+    def cell(self, c):
+        if self._cell is not None: self._cell._individuals.remove(self) 
+        if c is not None: 
+            assert isinstance(c, Cell_), "cell must be of entity type Cell"
+            c._individuals.add(self) 
+        self._cell = c
 
+    @property
+    def population_share(self):
+        total_relative_weight = sum([i.relative_weight
+                                     for i in c.individuals 
+                                     for c in self.cell.society.cells])
+        return self.relative_weight / total_relative_weight
+
+    @property
+    def represented_population(self):
+        return self.population_share * self.cell.society.population
+
+
+    # no process-related methods
 
     processes = []

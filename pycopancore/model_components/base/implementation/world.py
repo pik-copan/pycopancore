@@ -1,9 +1,5 @@
-"""Define base.world class.
+"""base component's World entity type mixin implementation class"""
 
-In this module the basic World mixing class is composed to set the basic
-structure for the later use in the model used World class. It Inherits from
-World_ in that basic variables and parameters are defined.
-"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
@@ -12,49 +8,40 @@ World_ in that basic variables and parameters are defined.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
+# only used in this component, not in others:
 from pycopancore.model_components import abstract
-from .interface import World_
 
-# Should the type of graph already be determined?
-# Like igraph, networkx, sparse matrix, ...?
-# from igraph import Graph
+from . import interface as I
 
 
-class World (World_, abstract.World):
-    """Define properties of base.world.
+class World (I.World, abstract.World):
+    """World entity type mixin implementation class.
 
-    Basic World mixin class that every model must use in composing their World
-    class. Inherits from World_ as the interface with all necessary variables
-    and parameters.
+    Base component's World mixin that every model must use in composing their
+    World class. Inherits from I.World as the interface with all necessary
+    variables and parameters.
     """
 
-    #
-    #  Definitions of internal methods
-    #
+    # standard methods:
 
-    def __init__(self, *,
-                 contact_network=None,
+    def __init__(self,
+                 *,
                  **kwargs
                  ):
-        """Initialize an instance of World.
+        """Initialize an (typically the only) instance of World"""
+        super().__init__(**kwargs)  # must be the first line
+        pass
 
-        Parameters
-        ----------
-        contact_network
-        """
-        super().__init__(**kwargs)
+    # getters and setters:
 
-        if len(self.__class__.entities) > 1:
-            raise ValueError('Only one world allowed!')
+    @property  # read-only
+    def societies(self):
+        return self._societies
 
-        self.contact_network = contact_network
+    @property  # read-only
+    def cells(self):
+        return self._cells
+
+    # no process-related methods
 
     processes = []
-
-#
-#  Definitions of further methods
-#

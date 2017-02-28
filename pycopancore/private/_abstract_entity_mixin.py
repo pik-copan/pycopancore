@@ -28,7 +28,8 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 #     NEXTUID += 1
 #     return current_uid
 
-from . import Variable
+from pycopancore import Variable
+
 
 class _AbstractEntityMixin (object):
     """Define AbstractEntityMixin.

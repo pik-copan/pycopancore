@@ -1,9 +1,5 @@
-"""Define base.culture class.
+"""base component's Culture process taxon mixin implementation class"""
 
-In this module the basic Culture mixing class is composed to set the basic
-structure for the later in the model used Culture class. It Inherits from
-Culture_ in that basic variables and parameters are defined.
-"""
 
 # This file is part of pycopancore.
 #
@@ -13,19 +9,11 @@ Culture_ in that basic variables and parameters are defined.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
-from pycopancore.model_components import abstract
-from .interface import Culture_
-
-#
-#  Define class Culture
-#
+from pycopancore.model_components import abstract # only used in this component, not in others
+from . import interface as I
 
 
-class Culture(Culture_, abstract.Culture):
+class Culture (I.Culture, abstract.Culture):
     """Define properties of base.culture.
 
     Basic Culture mixin class that every model must use in composing their
@@ -38,30 +26,12 @@ class Culture(Culture_, abstract.Culture):
     #
 
     def __init__(self,
-                 # *,
+                 *,
+                 basic_social_network=None,
                  **kwargs
                  ):
-        """Initialize an instance of Culture.
+        """Initialize the unique instance of Culture"""
+        super().__init__(**kwargs)
 
-        Parameters
-        ----------
-        kwargs:
-        """
-        super(Culture, self).__init__(**kwargs)
-        pass
+        self.basic_social_network = basic_social_network
 
-    def __repr__(self):
-        """Return a string representation of the object of base.Culture."""
-        return (super().__repr__() +
-                'base.culture object'
-                )
-
-    def __str__(self):
-        """Return readable represantation of the object."""
-        return repr(self)
-
-    processes = []
-
-    #
-    #  Definitions of further methods
-    #

@@ -1,9 +1,5 @@
-"""Define base.cell class.
+"""base component's Cell entity type mixin implementation class"""
 
-In this module the basic Cell mixing class is composed to set the basic
-structure for the later in the model used Cell class. It Inherits from Cell_
-in that basic variables and parameters are defined.
-"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
@@ -12,21 +8,14 @@ in that basic variables and parameters are defined.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
-from pycopancore.model_components import abstract
-from .interface import Cell_
-#
-#  Define class Cell
-#
+from pycopancore.model_components import abstract # only used in this component, not in others
+from . import interface as I
 
 
-class Cell(Cell_, abstract.Cell):
-    """Define properties of base.cell.
+class Cell (I.Cell, abstract.Cell):
+    """Cell entity type mixin implementation class.
 
-    Basic Cell mixin class that every model must use in composing their Cell
+    Base component's Cell mixin that every model must use in composing their Cell
     class. Inherits from Cell_ as the interface with all necessary variables
     and parameters.
     """
@@ -35,43 +24,66 @@ class Cell(Cell_, abstract.Cell):
 
     def __init__(self,
                  *,
-                 location=(0, 0),
-                 area=1,
+                 world=None,
                  society=None,
+                 location=None,
+                 area=0,
                  geometry=None,
                  **kwargs
                  ):
-        """Initialize an instance of Cell.
+        """Initialize an instance of Cell"""
+        super().__init__(**kwargs) # must be the first line
 
-        Parameters
-        ----------
-        location
-        area
-        society
-        geometry
-        kwargs
-        """
-        super().__init__(**kwargs)
-
-        assert location is not None
-        self.location = location
-
-        assert area > 0, "area must be > 0"
-        self.area = area
-
+        self.world = world
         self.society = society
-
+        self.location = location
+        self.area = area
         self.geometry = geometry
 
+        self.residents = set()
 
-    # setters for references:
+
+    # getters and setters:
+    
+    @property
+    def world(self):
+        return self._world
     
     @world.setter
     def world(self, w):
-        assert isinstance(w, World_)
-        if self.world is not None: self.world.cells.remove(self) 
-        w.cells.add(self) 
-        self.world = w
-
+        if self._world is not None: self._world.cells.remove(self) 
+        if w is not None: 
+            assert isinstance(w, I.World), "world must be of entity type World"
+            w._cells.add(self) 
+        self._world = w
+        
+    @property
+    def society(self):
+        return self._society
+    
+    @territory_of.setter
+    def society(self, s):
+        if self._society is not None: self._society._cells.remove(self) 
+        if s is not None: 
+            assert isinstance(s, I.Society), \
+                "society must be of entity type Society"
+            s._cells.add(self) 
+        self._society = s
+        
+    @property
+    def area(self):
+        return self._area
+    
+    @area.setter
+    def area(self, a):
+        if a is not None: assert a >= 0, "area must be >= 0"
+        self._area = a
+        
+    @property # read-only
+    def residents(self):
+        return self._residents
+    
+    
+    # no process-related methods
 
     processes = []

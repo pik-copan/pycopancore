@@ -10,7 +10,7 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from . import Variable
+from pycopancore import Variable
 
 class _AbstractProcessTaxonMixin(object):
     """Define Entity-unspecific abstract class.

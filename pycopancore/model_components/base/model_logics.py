@@ -37,6 +37,13 @@ class ModelLogics (abstract.Model):
     listed there and collect all variables and processes of said components.
     """
 
+    components = None
+
+    ODE_variables = None
+
+    variables = None
+    processes = None
+
     def __repr__(self):
         """Return a string representation of the base.Model."""
         # Is it necessary to list all objects? Or are classes sufficient?
