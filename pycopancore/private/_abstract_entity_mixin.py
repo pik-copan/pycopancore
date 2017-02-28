@@ -45,7 +45,7 @@ class _AbstractEntityMixin (object):
 
     def __init__(self, **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
-        self._uid = get_next_uid()
+#        self._uid = get_next_uid()  # Jobst: I don't see why we need this
         try:
             self.__class__.entities.append(self)
         except AttributeError:
@@ -73,11 +73,12 @@ class _AbstractEntityMixin (object):
         self.__class__.idle_entities.remove(self)
         self.__class__.entities.append(self)
 
-    def __repr__(self):
-        return "{}[UID={}]".format(self.__class__.__name__, self._uid)
-
-    def __str__(self):
-        return repr(self)
+# Jobst: I don't see why we need this:
+#    def __repr__(self):
+#        return "{}[UID={}]".format(self.__class__.__name__, self._uid)
+#
+#    def __str__(self):
+#        return repr(self)
 
     def set_value(self, variable, value):
         assert isinstance(variable, Variable), \

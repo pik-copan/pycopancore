@@ -12,7 +12,7 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 
 from pycopancore import Variable
 
-class _AbstractProcessTaxonMixin(object):
+class _AbstractProcessTaxonMixin (object):
     """Define Entity-unspecific abstract class.
 
     From this class all entity-specific abstract mixin classes are derived.
@@ -29,12 +29,6 @@ class _AbstractProcessTaxonMixin(object):
             print('This Process Taxon is already initialized!')
         else:
             self.__class__.entities = [self]
-
-    def __repr__(self):
-        pass
-
-    def __str__(self):
-        pass
 
     def set_value(self, variable, value):
         assert isinstance(variable, Variable), \
