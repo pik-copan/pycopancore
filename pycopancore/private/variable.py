@@ -153,7 +153,7 @@ class Variable (Symbol):
         if isinstance(value, DimensionalQuantity):
             value = value.multiple(unit=self.unit)
         self.assert_valid(value)
-        entity.__dict__[self._codename] = value
+        setattr(entity, self._codename, value)
         
     def convert_to_standard_units(self,
                                   entities=None, # if None: all entities/taxa
@@ -162,15 +162,15 @@ class Variable (Symbol):
         to float using the standard unit"""
         if entities is not None:
             for e in entities:
-                val = e.__dict__[self._codename]
-                if isinstance(val, DimensionalQuantity):
-                    self.set_value(e, val) # does the conversion
+                v = getattr(e, self._codename)
+                if isinstance(v, DimensionalQuantity):
+                    self.set_value(e, v) # does the conversion
         else:
             for c in self.owning_classes:
                 for e in c.entities:
-                    val = e.__dict__[self._codename]
-                    if isinstance(val, DimensionalQuantity):
-                        self.set_value(e, val) # does the conversion
+                    v = getattr(e, self._codename)
+                    if isinstance(v, DimensionalQuantity):
+                        self.set_value(e, v) # does the conversion
 
     def set_to_default(self,
                        entities=None, # if None: all entities/taxa
@@ -232,7 +232,7 @@ class Variable (Symbol):
                 # maybe should move them into the test environment:
                 # assert isinstance(e, _AbstractEntityMixin), /
                 # "key is not a model entity"
-                # assert self._codename in e.__dict__, /
+                # assert hastattr(e, self._codename), /
                 # "variable is not contained in entity"
                 #
 
@@ -246,7 +246,7 @@ class Variable (Symbol):
                 # as above...
                 # assert isinstance(e, _AbstractEntityMixin). /
                 # "key is not a model entity"
-                # assert self._codename in e.__dict__, /
+                # assert hastattr(e, self._codename), /
                 # "variable is not contained in entity"
                 #
 
@@ -268,7 +268,7 @@ class Variable (Symbol):
 
         """
         for e in entities:
-            e.__dict__['d_'+self._codename] = 0
+            setattr(e, 'd_'+self._codename, 0)
 
     def get_derivatives(self,
                         *,
@@ -285,7 +285,7 @@ class Variable (Symbol):
         -------
 
         """
-        return[e.__dict__['d_'+self._codename] for e in entities]
+        return [getattr(e, 'd_'+self._codename) for e in entities]
 
     def get_value_list(self,
                        entities=None,
@@ -303,6 +303,6 @@ class Variable (Symbol):
         -------
         List of variable value of each entity
         """
-        l = [e.__dict__[self._codename], unit) for e in entities]
+        l = [getattr(e, self._codename) for e in entities]
         return l if unit is None else self._unit.convert(l, unit)
             
