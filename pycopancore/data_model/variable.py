@@ -146,38 +146,38 @@ class Variable (Symbol):
                 if res is not True:
                     return res
 
-        if self.datatype is not None:
-            if not isinstance(v, self.datatype):
-                return False, "must be instance of " + str(self.datatype)
-
-        if self.allow_none is False:
-            if v is None:
+        if v is None:
+            if self.allow_none is False:
                 return False, "may not be None"
+        else:
+            if self.datatype is not None:
+                if not isinstance(v, self.datatype):
+                    return False, "must be instance of " + str(self.datatype)
 
-        if self.lower_bound is not None:
-            if not v >= self.lower_bound:
-                return False, "must be >= " + str(self.lower_bound)
+            if self.lower_bound is not None:
+                if not v >= self.lower_bound:
+                    return False, "must be >= " + str(self.lower_bound)
 
-        if self.strict_lower_bound is not None:
-            if not v > self.strict_lower_bound:
-                return False, "must be > " + str(self.strict_lower_bound)
+            if self.strict_lower_bound is not None:
+                if not v > self.strict_lower_bound:
+                    return False, "must be > " + str(self.strict_lower_bound)
 
-        if self.upper_bound is not None:
-            if not v <= self.upper_bound:
-                return False, "must be <= " + str(self.upper_bound)
+            if self.upper_bound is not None:
+                if not v <= self.upper_bound:
+                    return False, "must be <= " + str(self.upper_bound)
 
-        if self.strict_upper_bound is not None:
-            if not v < self.strict_upper_bound:
-                return False, "must be < " + str(self.strict_upper_bound)
+            if self.strict_upper_bound is not None:
+                if not v < self.strict_upper_bound:
+                    return False, "must be < " + str(self.strict_upper_bound)
 
-        if self.quantum is not None:
-            if not v % self.quantum == 0:
-                return False, "must be integer multiple of " \
-                                + str(self.quantum)
+            if self.quantum is not None:
+                if not v % self.quantum == 0:
+                    return False, "must be integer multiple of " \
+                                    + str(self.quantum)
 
-        if self.levels is not None:
-            if v not in self.levels:
-                return False, "must be in " + str(self.levels)
+            if self.levels is not None:
+                if v not in self.levels:
+                    return False, "must be in " + str(self.levels)
 
         return True
 
