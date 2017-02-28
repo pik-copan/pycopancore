@@ -33,6 +33,7 @@ class Variable (Symbol):
     uninformed_prior = None # random value generator (prob. distrib.)
      
     datatype = None # e.g. float, integer, numpy.ndarray, networkx.Graph, ...
+    allow_none = None # whether None is an allowed value
     lower_bound = None # inclusive
     strict_lower_bound = None # exclusive
     upper_bound = None # inclusive
@@ -65,6 +66,7 @@ class Variable (Symbol):
                  default=None,
                  uninformed_prior=None,
                  datatype=float,
+                 allow_none=True, # by default, var may be none
                  lower_bound=None,
                  strict_lower_bound=None,
                  upper_bound=None,
@@ -88,6 +90,7 @@ class Variable (Symbol):
         self.uninformed_prior = uninformed_prior
         
         self.datatype = datatype
+        self.allow_none = allow_none
         self.lower_bound = lower_bound
         self.strict_lower_bound = strict_lower_bound
         self.upper_bound = upper_bound
@@ -96,7 +99,28 @@ class Variable (Symbol):
         self.unit = unit
         self.levels = levels
         
-  
+    def __repr__(self):
+        r = "Variable " + self.name + "(" + self.desc + "), scale=" \
+            + self.scale + ", datatype=" + str(self.datatype)
+        if self.unit is not None:
+            r += ", unit=" + str(self.unit)
+        if self.default is not None:
+            r += ", default=" + str(self.default)
+        if self.allow_none is False:
+            r += ", not None"
+        if self.lower_bound is not None:
+            r += ", >=" + str(self.lower_bound)
+        if self.strict_lower_bound is not None:
+            r += ", >" + str(self.strict_lower_bound)
+        if self.upper_bound is not None:
+            r += ", <=" + str(self.upper_bound)
+        if self.strict_upper_bound is not None:
+            r += ", <" + str(self.strict_upper_bound)
+        if self.quantum is not None:
+            r += ", % " + str(self.quantum) + " == 0"
+        if self.levels is not None:
+            r += ", levels=" + str(self.levels)
+
     # validation:
     
     def _check_valid(self, v):
@@ -105,6 +129,10 @@ class Variable (Symbol):
         if self.datatype is not None:
             if not isinstance(v, self.datatype):
                 return False, "must be instance of " + str(self.datatype)
+            
+        if self.allow_none is False:
+            if v is None:
+                return False, "may not be None"
             
         if self.lower_bound is not None:
             if not v >= self.lower_bound: 
