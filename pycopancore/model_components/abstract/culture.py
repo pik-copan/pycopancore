@@ -1,4 +1,5 @@
-"""Abstract class which all Culture mixin classes must implement."""
+"""Abstract Culture process taxon class, inherited by base model component."""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
@@ -7,14 +8,13 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.private import _AbstractDynamicsMixin
+from pycopancore.private import _AbstractProcessTaxonMixin
 
 
-class Culture (_AbstractDynamicsMixin):
-    """Abstract class which all Culture mixin classes must implement."""
+class Culture (_AbstractProcessTaxonMixin):
+    """Abstract Culture process taxon class.
 
-    def __init__(self):
-        """Initialize object."""
-        super().__init__()
+    Inherited by base model component.
+    """
 
-    processes = []
+    pass

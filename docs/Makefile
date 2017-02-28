@@ -58,6 +58,12 @@ clean:
 .PHONY: html
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+.PHONY : uml
+uml:
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo "Generating UML diagram... (PNG format)"
 	cd .. ; $(PYREVERSE) -p coreuml -a1 -o png pycopancore ;
 	@echo "Moving files to docs/_build/html/_images folder"
