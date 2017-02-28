@@ -12,11 +12,11 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from . import interface as I 
+from . import interface as I
 # import all needed entity type implementation classes:
-from . import World, Society, Cell, Individual # TODO: adjust!
+from .implementation import World, Society, Cell, Individual  # TODO: adjust!
 # import all needed process taxon implementation classes:
-from . import Nature, Metabolism, Culture # TODO: adjust!
+from .implementation import Nature, Metabolism, Culture  # TODO: adjust!
 
 
 class Model (I.Model):
@@ -24,5 +24,5 @@ class Model (I.Model):
 
     # mixins provided by this model component:
 
-    entity_types = [World, Society, Cell, Individual] # TODO: adjust!
-    process_taxa = [Nature, Metabolism, Culture] # TODO: adjust!
+    entity_types = [World, Society, Cell, Individual]  # TODO: adjust!
+    process_taxa = [Nature, Metabolism, Culture]  # TODO: adjust!
