@@ -50,7 +50,7 @@ class _AbstractEntityMixin (object):
         except AttributeError:
             self.__class__.entities = [self]
 
-    def __deactivate(self):
+    def deactivate(self):
         """Deactivate entity.
 
         Remove Entity from its classes entities list and add it to its classes
@@ -62,7 +62,7 @@ class _AbstractEntityMixin (object):
         except AttributeError:
             self.__class__.idle_entities = [self]
 
-    def __reactivate(self):
+    def reactivate(self):
         """Reactivate entity.
 
         Remove Entity from its classes idle_entities list and add it to its
