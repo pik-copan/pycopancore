@@ -10,13 +10,7 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-# Imports
-#
-
-#
-# Definition of class _AbstractProcessTaxonMixin
-#
+from pycopancore import Variable
 
 
 class _AbstractProcessTaxonMixin(object):
@@ -37,8 +31,7 @@ class _AbstractProcessTaxonMixin(object):
         else:
             self.__class__.instances = [self]
 
-    def __repr__(self):
-        pass
-
-    def __str__(self):
-        pass
+    def set_value(self, variable, value):
+        assert isinstance(variable, Variable), \
+            "variable must be a Variable object"
+        variable.set_value(self, value)

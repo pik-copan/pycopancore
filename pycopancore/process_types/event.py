@@ -34,7 +34,7 @@ class Event(_AbstractProcess):
                  name,
                  variables,
                  specification,
-                 smoothness=0,
+                 smoothness=0
                  ):
         """Initiate an instance of an Event process.
 
@@ -47,9 +47,8 @@ class Event(_AbstractProcess):
             or time-function, method/function of variable(s)]
         smoothness
         """
-        super().__init__()
+        super().__init__(name)
 
-        self.name = name
         self.variables = variables
         self.specification = specification
         self.smoothness = smoothness

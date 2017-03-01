@@ -47,8 +47,7 @@ class Step(_AbstractProcess):
              return next_time (function(self, t)), function to calculate
              variables of each entity (function(self, t)]
         """
-        super().__init__()
+        super().__init__(name)
 
-        self.name = name
         self.variables = variables
         self.specification = specification

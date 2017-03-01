@@ -1,5 +1,5 @@
 """
-This is the base model-component package
+This is the model-components folder (subpackage)
 """
 # This file is part of pycopancore.
 #
@@ -8,11 +8,3 @@ This is the base model-component package
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-from . import interface
-
-# export all implementation classes:
-from .implementation import *
-
-# export model component mixin class:
-from .model import Model
