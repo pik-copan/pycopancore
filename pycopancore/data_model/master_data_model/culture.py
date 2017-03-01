@@ -1,4 +1,4 @@
-from pycopancore.data_model import Variable, CETSVariable
+from pycopancore.data_model import Variable
 from networkx import Graph
 
 # Social networks:
