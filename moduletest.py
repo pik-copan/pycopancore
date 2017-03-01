@@ -17,7 +17,7 @@ cells = [tb.Cell(society=societies[0], world=world) for c in range(nc)]
 individuals = [tb.Individual(cell=cells[0]) for i in range(ni)]
 
 for cell in cells:
-    cell.location = (0,0)
+    cell.location = (0, 0)
     cell.area = np.random.rand(1)
     cell.capacity = 1
     cell.resource = np.random.rand(1)
