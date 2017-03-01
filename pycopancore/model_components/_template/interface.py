@@ -1,7 +1,7 @@
 """model component Interface template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:", then
-remove these instructions
+remove these instructions.
 """
 
 # This file is part of pycopancore.

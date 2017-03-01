@@ -8,6 +8,8 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+# TODO: at beginning of run(), call model.convert_to_standard_units()
+
 #
 #  Imports
 #

@@ -22,14 +22,14 @@ from pycopancore import Variable
 class Cell_(object):
     """Define Interface for Cell."""
 
-    resource = Variable('current resource')
-    resource2 = Variable('current resource2')
-    capacity = Variable('whole capacity')
-    step_resource = Variable('step resource')
-    event_value = Variable('event value')
-    explicit_value = Variable('explicit value')
-    step_width = Variable('time between two steps')
-    last_execution = Variable('last time step was executed')
+    resource = Variable('current resource', 'resource of dummy.cell')
+    resource2 = Variable('current resource2', 'second resource of dummy cell')
+    capacity = Variable('whole capacity', 'capacity of resource of dummy.cell')
+    step_resource = Variable('step resource', 'resource for step process')
+    event_value = Variable('event value', 'value for event process')
+    explicit_value = Variable('explicit value', 'value for explicit process')
+    step_width = Variable('time between two steps', 'step width in dummy.cell')
+    last_execution = Variable('last time step was executed', 'last ex. time')
 
 
 #
