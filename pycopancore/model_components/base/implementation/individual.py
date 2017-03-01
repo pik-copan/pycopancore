@@ -38,20 +38,20 @@ class Individual (I.Individual, abstract.Individual):
         self.cell = cell
         self.relative_weight = relative_weight
 
-        # TODO: Define order in which entities and process taxa are to be
-        # instantiated. The following line only works if culture is
-        # instantiated before individuals are.
-        # self.culture.acquaintance_network.add_node(self)
+        if self.culture:
+            self.culture.acquaintance_network.add_node(self)
 
     def deactivate(self):
         """Deactivate an individual."""
-        self.culture.acquaintance_network.remove_node(self)
+        if self.culture:
+            self.culture.acquaintance_network.remove_node(self)
         super().deactivate()  # must be the last line
 
     def reactivate(self):
         """Reactivate an individual."""
         super().reactivate()  # must be the first line
-        self.culture.acquaintance_network.add_node(self)
+        if self.culture:
+            self.culture.acquaintance_network.add_node(self)
 
     # getters and setters for references:
 
@@ -63,11 +63,10 @@ class Individual (I.Individual, abstract.Individual):
     @cell.setter
     def cell(self, c):
         """Set cell c."""
-        if self._cell is not None:
+        if self._cell:
             self._cell._individuals.remove(self)
-        if c is not None:
-            assert isinstance(c, I.Cell), "cell must be of entity type Cell"
-            c._individuals.add(self)
+        assert isinstance(c, I.Cell), "cell must be of entity type Cell"
+        c._individuals.add(self)
         self._cell = c
 
     # getters for backwards references and convenience variables:
