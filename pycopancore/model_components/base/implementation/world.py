@@ -29,7 +29,7 @@ class World (I.World, abstract.World):
                  nature=None,
                  metabolism=None,
                  culture=None,
-                 human_population=0,
+                 population=0,
                  **kwargs
                  ):
         """Initialize an (typically the only) instance of World."""
@@ -41,7 +41,7 @@ class World (I.World, abstract.World):
         self.nature = nature
         self.metabolism = metabolism
         self.culture = culture
-        self.human_population = human_population
+        self.population = population
 
         self._societies = set()
         self._cells = set()
