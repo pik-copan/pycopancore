@@ -55,6 +55,20 @@ class Model (Model_, abstract.Model):
     #  Definitions of internal methods
     #
 
+    __configured = False
+
+    def __new__(cls, *args, reconfigure=False, **kwargs):
+        """Perform __new__ method.
+
+        Only when an instance of Model is created for the first time the
+        method configure is called.
+        """
+        # reconfigure = kwargs['reconfigure']
+        # reconfigure = kwargs.get('reconfigure', False)
+        if not cls.__configured or reconfigure:
+            cls.configure()
+        return super(Model, cls).__new__(cls)
+
     def __init__(self,
                  **kwargs
                  ):
@@ -106,14 +120,23 @@ class Model (Model_, abstract.Model):
     #
 
     @classmethod
-    def configure(cls):
+    def configure(cls, reconfigure=False, **kwargs):
         """Configure the model.
 
         This classmethod configures the chosen mixin model of the 'models'
         package by allocating all required variables and processes to
         designated
         lists.
+
+        Parameter
+        ---------
+        reconfigure : bool
+            Flag that indicates if the model should be reconfigured
         """
+        if cls.__configured and not reconfigure:
+            raise ConfigureError("This model is already configured. "
+                                 "Use optional argument 'reconfigure'")
+
         cls.variables = []  # save in pairs: (variable, owning_class)
         cls.processes = []  # save in pairs: (process, owning_class)
 
@@ -228,7 +251,6 @@ class Model (Model_, abstract.Model):
                           and c not in (_AbstractEntityMixin,
                                         _AbstractProcessTaxonMixin)
                           ]
-            print('...............components', components)
             for mixin in components:
                 print('        Mixin:', mixin)
                 cparents = list(inspect.getmro(mixin))
@@ -282,4 +304,11 @@ class Model (Model_, abstract.Model):
                 elif isinstance(process, Event):
                     cls.event_variables += [(v, voc)]
 
+        cls.__configured = True
         print("...done")
+
+
+class ConfigureError(Exception):
+    """Define Error."""
+
+    pass
