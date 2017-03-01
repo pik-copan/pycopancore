@@ -67,16 +67,11 @@ class Cell(Cell_, abstract.Cell):
         s = self.stock
         smax = self.capacity
         # TODO:
-        # Is += correct?
+        # Why += and not = ?
         self.d_stock += g * (1 - s / smax) * s
 
-    # TODO:
-    # not sure here what has to go into the processes list.
-    # What is name, variables, specification, smoothness?
     processes = [
         ODE('logistic_growth_function',
-            [Cell_.stock,
-             Cell_.capacity,
-             Cell_.growth_rate],
+            [Cell_.stock],
             logistic_growth)
         ]
