@@ -28,7 +28,7 @@ from . import World, Cell, Nature, Individual, Culture, Society, \
 #
 
 
-class Model (I.Model, abstract.Model):
+class Model (I.Model, abstract.Model, ModelLogics):
     """base model component mixin class.
 
     This is the base.model file. It serves two purposes:
@@ -51,20 +51,6 @@ class Model (I.Model, abstract.Model):
     #
     #  Definitions of internal methods
     #
-
-    _configured = False
-
-    def __new__(cls, *args, reconfigure=False, **kwargs):
-        """Perform __new__ method.
-
-        Only when an instance of Model is created for the first time the
-        method configure is called.
-        """
-        # reconfigure = kwargs['reconfigure']
-        # reconfigure = kwargs.get('reconfigure', False)
-        if not cls._configured or reconfigure:
-            ModelLogics.configure(cls)
-        return super(Model, cls).__new__(cls)
 
     def __init__(self,
                  **kwargs

@@ -68,7 +68,7 @@ class World (object):
                                 "Culture taxon working on this world",
                                 type=Culture)
 
-    human_population = MDM.human_population
+    population = MDM.population
     # TODO: make sure it is no smaller than aggregate top-level societies'
 
     # attributes storing redundant information (backward references):
@@ -97,7 +97,7 @@ class Society (object):
     # population is explicitly allowed to be non-integer so that we can use
     # ODEs:
     # TODO: replace by suitable CETSVariable!
-    human_population = MDM.human_population
+    population = MDM.population
     # TODO: make sure it is no smaller than
     # aggregate next_lower_level societies'
 
