@@ -14,10 +14,11 @@ taxa.
 
 from sympy import Symbol
 from pycopancore.data_model import DimensionalQuantity
+from boto.iam.connection import IAMConnection
 
 
 class Variable (Symbol):
-    """Define the Variable Class."""
+    """Metadata object representing a model variable or parameter."""
 
     # standard metadata:
 
@@ -27,7 +28,7 @@ class Variable (Symbol):
     """longer description text"""
     symbol = None
     """mathematical symbol or abbrev. to be used as a short label"""
-    reference = None
+    ref = None
     """some URI, e.g. a wikipedia page"""
 
     scale = None
@@ -39,6 +40,24 @@ class Variable (Symbol):
     uninformed_prior = None
     """random value generator (probability distribution) 
     if nothing else is known about the value"""
+
+    # catalog references:
+
+    CF = None
+    """corresponding CF Standard Name
+    (http://cfconventions.org/Data/cf-standard-names)"""
+    AMIP = None
+    """corresponding AMIP2 variable name
+    (http://pcmdi.github.io/projects/amip/OUTPUT/AMIP2/outlist.html)"""
+    IAMC = None
+    """corresponding IAMC variable name
+    (https://tntcat.iiasa.ac.at/ADVANCEWP1DB/static/download/Diagnostics_template_2015-08-12.xlsx)"""
+    CETS = None
+    """corresponding World Bank CETS code
+    (https://databank.worldbank.org/data/download/site-content/WDI_CETS.xls)"""
+
+
+    # data type and constraints:
 
     datatype = None
     """e.g. float, integer, numpy.ndarray, networkx.Graph, ..."""
@@ -88,10 +107,14 @@ class Variable (Symbol):
                  desc,
                  *,
                  symbol=None,
-                 reference=None,
+                 ref=None,
                  scale="ratio",
                  default=None,
                  uninformed_prior=None,
+                 CF=None,
+                 AMIP=None,
+                 IAMC=None,
+                 CETS=None,
                  datatype=float,
                  array_shape=None,
                  allow_none=True,  # by default, var may be none
@@ -111,7 +134,7 @@ class Variable (Symbol):
         self.name = name
         self.desc = desc
         self.symbol = symbol
-        self.reference = reference
+        self.ref = ref
 
         assert scale in ("ratio", "interval", "ordinal", "nominal"), \
             "scale must be ratio, interval, ordinal, or nominal"
@@ -119,6 +142,11 @@ class Variable (Symbol):
 
         self.default = default
         self.uninformed_prior = uninformed_prior
+
+        self.CF = CF
+        self.AMIP = AMIP
+        self.IAMC = IAMC
+        self.CETS = CETS
 
         self.datatype = datatype
         self.array_shape = array_shape

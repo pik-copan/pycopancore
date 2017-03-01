@@ -9,8 +9,6 @@ nondim.default_unit = unity = Unit(name="unity", symbol="",
 from .dimensional_quantity import DimensionalQuantity
 
 from .variable import Variable
-from .cets_variable import CETSVariable
-from .cf_variable import CFVariable
 from .reference_variable import ReferenceVariable
 #from .set_variable import SetVariable
 
