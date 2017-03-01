@@ -1,5 +1,5 @@
-from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
 from pycopancore.model_components import abstract
+from .interface import * # import all interface classes since one typically wants to cross-ref variables between entity types (this is the whole point of having an interface in the first place)
 
 
 class World (World_, abstract.World):
