@@ -11,13 +11,15 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# Jobst: FIX the following: class modules cannot contain bare code or function defs such as the next lines, and are only allowed to contain class definitions!
+# Jobst: FIX the following: class modules cannot contain bare code or function
+#  defs such as the next lines, and are only allowed to contain class
+# definitions!
 # NEXTUID = 0
-# 
-# 
+#
+#
 # def get_next_uid():
 #     """Generate UIDs (Unique identifier).
-# 
+#
 #     Returns
 #     -------
 #     current_uid: int
@@ -28,7 +30,7 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 #     NEXTUID += 1
 #     return current_uid
 
-from pycopancore import Variable
+from pycopancore.data_model import Variable
 
 
 class _AbstractEntityMixin (object):

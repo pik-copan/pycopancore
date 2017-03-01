@@ -1,6 +1,6 @@
 """Metabolism process taxon mixin class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
+TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
 
@@ -16,12 +16,12 @@ from .. import interface as I
 
 
 class Metabolism (I.Metabolism):
-    """Metabolism process taxon mixin implementation class"""
+    """Metabolism process taxon mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 #*,  # TODO: uncomment when adding named args behind here
+                 # *,  # TODO: uncomment when adding named args behind here
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line

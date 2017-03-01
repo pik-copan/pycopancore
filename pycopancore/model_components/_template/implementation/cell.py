@@ -1,6 +1,6 @@
 """Cell entity type mixing class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
+TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
 # This file is part of pycopancore.
@@ -15,12 +15,12 @@ from .. import interface as I
 
 
 class Cell (I.Cell):
-    """Cell entity type mixin implementation class"""
+    """Cell entity type mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 #*,  # TODO: uncomment when adding named args behind here
+                 # *,  # TODO: uncomment when adding named args behind here
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line

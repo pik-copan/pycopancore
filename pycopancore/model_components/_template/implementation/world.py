@@ -15,12 +15,12 @@ from .. import interface as I
 
 
 class World (I.World):
-    """World entity type mixin implementation class"""
+    """World entity type mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 #*,  # TODO: uncomment when adding named args behind here
+                 # *,  # TODO: uncomment when adding named args behind here
                  **kwargs):
         """Initialize an instance of World."""
         super().__init__(**kwargs)  # must be the first line

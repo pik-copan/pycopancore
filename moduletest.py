@@ -11,9 +11,9 @@ nc = 7
 ni = 8
 
 
-world = [tb.World() for w in range(nw)]
+worlds = [tb.World() for w in range(nw)]
 societies = [tb.Society(population=1) for s in range(ns)]
-cells = [tb.Cell(society=societies[0], world=world) for c in range(nc)]
+cells = [tb.Cell(society=societies[0], world=worlds[0]) for c in range(nc)]
 individuals = [tb.Individual(cell=cells[0]) for i in range(ni)]
 
 for cell in cells:

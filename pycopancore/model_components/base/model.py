@@ -1,12 +1,13 @@
-"""base component's Model component mixin class plus essential framework logics 
+"""base component's Model component mixin class and essential framework logics.
 
-This class is the Model component mixin of the base model component and also owns the configure
-method. This method is central to the framework since it fuses together
-the used classes and puts information about process types and variables
-in special list to be accessed by the runner.
+This class is the Model component mixin of the base model component and also
+owns the configure method. This method is central to the framework since it
+fuses together the used classes and puts information about process types and
+variables in special list to be accessed by the runner.
 """
 
-# TODO: for clarity, move framework logics into separate class this class inherits from
+# TODO: for clarity, move framework logics into separate class this class
+# inherits from
 
 # This file is part of pycopancore.
 #
@@ -16,7 +17,7 @@ in special list to be accessed by the runner.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .model_logics import ModelLogics # only in base component
+from .model_logics import ModelLogics  # only in base component
 from pycopancore.model_components import abstract
 from . import interface as I
 from . import World, Cell, Nature, Individual, Culture, Society, \
@@ -27,7 +28,7 @@ from . import World, Cell, Nature, Individual, Culture, Society, \
 #
 
 
-class Model (ModelLogics, I.Model, abstract.Model):
+class Model (I.Model, abstract.Model):
     """base model component mixin class.
 
     This is the base.model file. It serves two purposes:
@@ -51,7 +52,7 @@ class Model (ModelLogics, I.Model, abstract.Model):
     #  Definitions of internal methods
     #
 
-    __configured = False
+    _configured = False
 
     def __new__(cls, *args, reconfigure=False, **kwargs):
         """Perform __new__ method.
@@ -61,7 +62,7 @@ class Model (ModelLogics, I.Model, abstract.Model):
         """
         # reconfigure = kwargs['reconfigure']
         # reconfigure = kwargs.get('reconfigure', False)
-        if not cls.__configured or reconfigure:
+        if not cls._configured or reconfigure:
             ModelLogics.configure(cls)
         return super(Model, cls).__new__(cls)
 

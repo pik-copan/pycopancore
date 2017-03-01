@@ -1,4 +1,4 @@
-"""base component's Metabolism process taxon mixin implementation class"""
+"""Base component's Metabolism process taxon mixin implementation class."""
 
 # This file is part of pycopancore.
 #
@@ -15,12 +15,12 @@ from .. import interface as I
 
 
 class Metabolism (I.Metabolism, abstract.Metabolism):
-    """Metabolism process taxon mixin implementation class"""
+    """Metabolism process taxon mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 #*,
+                 # *,
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line

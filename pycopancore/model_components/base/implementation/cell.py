@@ -1,4 +1,4 @@
-"""base component's Cell entity type mixin implementation class"""
+"""Base component's Cell entity type mixin implementation class."""
 
 # This file is part of pycopancore.
 #
@@ -33,7 +33,7 @@ class Cell (I.Cell, abstract.Cell):
                  geometry=None,
                  **kwargs
                  ):
-        """Initialize an instance of Cell"""
+        """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
 
         self._world = None
@@ -51,10 +51,12 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def world(self):
+        """Return world."""
         return self._world
 
     @world.setter
     def world(self, w):
+        """Set world."""
         if self._world is not None:
             self._world.cells.remove(self)
         if w is not None:
@@ -64,10 +66,12 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def society(self):
+        """Return society."""
         return self._society
 
     @society.setter
     def society(self, s):
+        """Set society."""
         if self._society is not None:
             self._society._direct_cells.remove(self)
         if s is not None:
@@ -80,23 +84,28 @@ class Cell (I.Cell, abstract.Cell):
 
     @property  # read-only
     def nature(self):
+        """Return nature."""
         return self._world.nature
 
     @property  # read-only
     def metabolism(self):
+        """Return metabolism."""
         return self._world.metabolism
 
     @property  # read-only
     def culture(self):
+        """Return culture."""
         return self._world.culture
 
     @property  # read-only
     def societies(self):
+        """Return societies."""
         return [] if self.society is None \
-                    else [self.society] + self.society.higher_societies
+            else [self.society] + self.society.higher_societies
 
     @property  # read-only
     def individuals(self):
+        """Return individuals."""
         return self._individuals
 
     # no process-related methods

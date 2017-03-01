@@ -1,6 +1,6 @@
 """Culture process taxon mixing class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
+TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
 
@@ -12,16 +12,16 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .. import interface as I 
+from .. import interface as I
 
 
 class Culture (I.Culture):
-    """Culture process taxon mixin implementation class"""
+    """Culture process taxon mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 #*,  # TODO: uncomment when adding named args behind here
+                 # *,  # TODO: uncomment when adding named args behind here
                  **kwargs):
         """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)  # must be the first line

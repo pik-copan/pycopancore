@@ -228,53 +228,53 @@ class Variable (Symbol):
         setattr(entity, self._codename, value)
 
     def convert_to_standard_units(self,
-                                  entities=None,  # if None: all entities/taxa
+                                  instances=None,  # if None: all entities/taxa
                                   ):
         """replace all variable values of type DimensionalQuantity
         to float using the standard unit"""
-        if entities is not None:
-            for e in entities:
+        if instances is not None:
+            for e in instances:
                 v = getattr(e, self._codename)
                 if isinstance(v, DimensionalQuantity):
                     self.set_value(e, v)  # does the conversion
         else:
             for c in self.owning_classes:
-                for e in c.entities:
+                for e in c.instances:
                     v = getattr(e, self._codename)
                     if isinstance(v, DimensionalQuantity):
                         self.set_value(e, v)  # does the conversion
 
     def set_to_default(self,
-                       entities=None,  # if None: all entities/taxa
+                       instances=None,  # if None: all entities/taxa
                        ):
         """Set values in selected entities to default"""
-        if entities is not None:
-            for e in entities:
+        if instances is not None:
+            for e in instances:
                 self.set_value(e, self.default)
         else:
             for c in self.owning_classes:
-                for e in c.entities:
+                for e in c.instances:
                     self.set_value(e, self.default)
 
     def set_to_random(self,
-                      entities=None,  # if None: all entities/taxa
+                      instances=None,  # if None: all entities/taxa
                       distribution=None,  # if None: self.uninformed_prior
                       ):
         """Set values in selected entities to default"""
         if distribution is None:
             distribution = self.uninformed_prior
-        if entities is not None:
-            for e in entities:
+        if instances is not None:
+            for e in instances:
                 self.set_value(e, distribution())
         else:
             for c in self.owning_classes:
-                for e in c.entities:
+                for e in c.instances:
                     self.set_value(e, distribution())
 
     def set_values(self,
                    *,
                    dictionary=None,
-                   entities=None,
+                   instances=None,
                    values=None
                    ):
         """Set values for the variable.
@@ -287,7 +287,7 @@ class Variable (Symbol):
         dictionary : dictionary
             Optional dictionary of variable values keyed by Entity
             object (e.g. {cell:location, individual:age}, ...)
-        entities : list
+        instances : list
             Optional list of entities (Cells, Individuals, ...)
         values : list/array
             Optional corresponding list or array of values
@@ -310,9 +310,9 @@ class Variable (Symbol):
 
                 self.set_value(e, v)
 
-        if entities is not None:
-            for i in range(len(entities)):
-                e = entities[i]
+        if instances is not None:
+            for i in range(len(instances)):
+                inst = instances[i]
 
                 #
                 # as above...
@@ -322,45 +322,45 @@ class Variable (Symbol):
                 # "variable is not contained in entity"
                 #
 
-                self.set_value(e, values[i])
+                self.set_value(inst, values[i])
 
     def clear_derivatives(self,
                           *,
-                          entities=None
+                          instances=None
                           ):
         """Set all derivatives to zero.
 
         Parameters
         ----------
-        entities : list
+        instances : list
             List of the entities
 
         Returns
         -------
 
         """
-        for e in entities:
-            setattr(e, 'd_'+self._codename, 0)
+        for inst in instances:
+            setattr(inst, 'd_'+self._codename, 0)
 
     def get_derivatives(self,
                         *,
-                        entities=None
+                        instances=None
                         ):
         """Return a list of derivatives saved in entities.
 
         Parameters
         ----------
-        entities : list
+        instances : list
             List of the entities
 
         Returns
         -------
 
         """
-        return [getattr(e, 'd_'+self._codename) for e in entities]
+        return [getattr(e, 'd_'+self._codename) for e in instances]
 
     def get_value_list(self,
-                       entities=None,
+                       instances=None,
                        unit=None
                        ):
         """Return values for given entities,
@@ -368,12 +368,12 @@ class Variable (Symbol):
 
         Parameters
         ----------
-        entities: list
+        instances: list
             List of entities
 
         Returns
         -------
         List of variable value of each entity
         """
-        l = [getattr(e, self._codename) for e in entities]
+        l = [getattr(e, self._codename) for e in instances]
         return l if unit is None else self._unit.convert(l, unit)

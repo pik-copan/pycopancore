@@ -15,12 +15,12 @@ from .. import interface as I
 
 
 class Society (I.Society):
-    """Society entity type mixin implementation class"""
+    """Society entity type mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 #*,  # TODO: uncomment when adding named args behind here
+                 # *,  # TODO: uncomment when adding named args behind here
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line

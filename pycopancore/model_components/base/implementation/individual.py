@@ -1,4 +1,4 @@
-"""base component's Individual entity type mixin implementation class"""
+"""Base component's Individual entity type mixin implementation class."""
 
 # This file is part of pycopancore.
 #
@@ -30,7 +30,7 @@ class Individual (I.Individual, abstract.Individual):
                  relative_weight=1,
                  **kwargs
                  ):
-        """Initialize an instance of Individual"""
+        """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
 
         self._cell = None
@@ -38,7 +38,10 @@ class Individual (I.Individual, abstract.Individual):
         self.cell = cell
         self.relative_weight = relative_weight
 
-        self.culture.acquaintance_network.add_node(self)
+        # TODO: Define order in which entities and process taxa are to be
+        # instantiated. The following line only works if culture is
+        # instantiated before individuals are.
+        # self.culture.acquaintance_network.add_node(self)
 
     def deactivate(self):
         """Deactivate an individual."""
@@ -54,10 +57,12 @@ class Individual (I.Individual, abstract.Individual):
 
     @property
     def cell(self):
+        """Return cell."""
         return self._cell
 
     @cell.setter
     def cell(self, c):
+        """Set cell c."""
         if self._cell is not None:
             self._cell._individuals.remove(self)
         if c is not None:
@@ -69,40 +74,49 @@ class Individual (I.Individual, abstract.Individual):
 
     @property  # read-only
     def world(self):
+        """Return world."""
         return self._cell.world
 
     @property  # read-only
     def nature(self):
+        """Return nature."""
         return self._cell.nature
 
     @property  # read-only
     def metabolism(self):
+        """Return metabolism."""
         return self._cell.metabolism
 
     @property  # read-only
     def culture(self):
+        """Return culture."""
         return self._cell.culture
 
     @property  # read-only
     def society(self):
+        """Return society."""
         return self._cell.society
 
     @property  # read-only
     def societies(self):
+        """Return societies."""
         return self._cell.societies
 
     @property
     def population_share(self):
+        """Return population share."""
         total_relative_weight = sum([i.relative_weight
                                      for i in self.society.individuals])
         return self.relative_weight / total_relative_weight
 
     @property
     def represented_population(self):
+        """Return represented population."""
         return self.population_share * self.society.human_population
 
     @property
     def acquaintances(self):
+        """Return acquaintances."""
         return self.culture.acquaintance_network.neighbors(self)
 
     # no process-related methods

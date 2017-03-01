@@ -1,6 +1,6 @@
 """Individual entity type class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", 
+TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
 
@@ -16,12 +16,12 @@ from .. import interface as I
 
 
 class Individual (I.Individual):
-    """Individual entity type mixin implementation class"""
+    """Individual entity type mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 #*,  # TODO: uncomment when adding named args behind here
+                 # *,  # TODO: uncomment when adding named args behind here
                  **kwargs):
         """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
