@@ -39,6 +39,12 @@ class ModelLogics (object):
     listed there and collect all variables and processes of said components.
     """
 
+    _configured = False
+
+    def __init__(self):
+        if not self.__class__._configured:
+            self.configure(self.__class__)
+
     @classmethod
     def configure(cls, mc, reconfigure=False, **kwargs):
         """Configure the model.
