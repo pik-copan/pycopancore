@@ -42,7 +42,7 @@ carbon = Dimension(name="carbon",
 carbon.default_unit = tons_carbon = \
     Unit(name="tons carbon", symbol="tC",
          desc="tons of carbon, whether atomic or in some chemical compound")
-gigatons_carbon = (1e9 * tons_carbon).named("gigatons arbon", symbol="GtC")
+gigatons_carbon = (1e9 * tons_carbon).named("gigatons carbon", symbol="GtC")
 
 humans = Dimension(name="humans", desc="cardinality of a set of human beings")
 humans.default_unit = people = \
