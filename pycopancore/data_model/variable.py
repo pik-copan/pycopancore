@@ -156,6 +156,7 @@ class Variable (Symbol):
             r += ", levels=" + str(self.levels)
         if self.array_shape is not None:
             r += ", shape=" + str(self.array_shape)
+        return r
 
     # validation:
 
