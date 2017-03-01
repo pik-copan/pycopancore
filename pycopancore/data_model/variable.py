@@ -21,31 +21,51 @@ class Variable (Symbol):
 
     # standard metadata:
 
-    name = None  # human-readable name to be used as label etc.
-    desc = None  # longer description text
-    symbol = None  # mathematical symbol or abbrev. to be used as a short label
-    reference = None  # some URI, e.g. a wikipedia page
+    name = None
+    """human-readable name to be used as label etc."""
+    desc = None
+    """longer description text"""
+    symbol = None
+    """mathematical symbol or abbrev. to be used as a short label"""
+    reference = None
+    """some URI, e.g. a wikipedia page"""
 
-    # level of measurement: "ratio" (default), "interval", "ordinal",
-    # or "nominal" (see https://en.wikipedia.org/wiki/Level_of_measurement):
     scale = None
+    """level of measurement: "ratio" (default), "interval", "ordinal",
+    or "nominal" (see https://en.wikipedia.org/wiki/Level_of_measurement)"""
 
-    default = None  # default initial value
-    uninformed_prior = None  # random value generator (prob. distrib.)
+    default = None
+    """default initial value"""
+    uninformed_prior = None
+    """random value generator (probability distribution) 
+    if nothing else is known about the value"""
 
-    datatype = None  # e.g. float, integer, numpy.ndarray, networkx.Graph, ...
-    array_shape = None  # if numpy array, specify shape
-    allow_none = None  # whether None is an allowed value
-    lower_bound = None  # inclusive
-    strict_lower_bound = None  # exclusive
-    upper_bound = None  # inclusive
-    strict_upper_bound = None  # exclusive
-    quantum = None  # values must be integer multiples of this
+    datatype = None
+    """e.g. float, integer, numpy.ndarray, networkx.Graph, ..."""
+    array_shape = None
+    """if numpy array, specifies its shape"""
+    allow_none = None
+    """whether None is an allowed value"""
+    lower_bound = None
+    """(inclusive, value must be >=)"""
+    strict_lower_bound = None
+    """(exclusive, value must be >)"""
+    upper_bound = None
+    """(inclusive, value must be <=)"""
+    strict_upper_bound = None
+    """(exclusive, value must be <)"""
+    quantum = None
+    """values must be integer multiples of this"""
 
     # scale-specific metadata:
 
-    # if "ratio" or "interval":
-    unit = None  # a pycopancore.data_model.Unit
+    unit = None
+    """a pycopancore.data_model.Unit (only for ratio- or interval-scaled)"""
+    is_extensive = None
+    """whether variable scales proportionally with system size
+    (only for ratio-scaled)"""
+    is_intensive = None
+    """whether variable must remain invariant when doubling system"""
 
     # if "ordinal" or "nominal":
     levels = None  # values must be element of this
@@ -81,6 +101,8 @@ class Variable (Symbol):
                  strict_upper_bound=None,
                  quantum=None,
                  unit=None,
+                 is_extensive=False,
+                 is_intensive=False,
                  levels=None,
                  **kwargs
                  ):
@@ -107,6 +129,8 @@ class Variable (Symbol):
         self.strict_upper_bound = strict_upper_bound
         self.quantum = quantum
         self.unit = unit
+        self.is_extensive = is_extensive
+        self.is_intensive = is_intensive
         self.levels = levels
 
     def __repr__(self):
