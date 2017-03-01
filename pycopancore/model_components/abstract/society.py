@@ -1,4 +1,4 @@
-"""Abstract Society entity type class, inherited by base model component"""
+"""Abstract Society entity type class, inherited by base model component."""
 
 # This file is part of pycopancore.
 #
@@ -12,6 +12,9 @@ from pycopancore.private import _AbstractEntityMixin
 
 
 class Society (_AbstractEntityMixin):
-    """Abstract Society entity type class, inherited by base model component"""
+    """Abstract Society entity type class.
+
+    Inherited by base model component.
+    """
 
     pass

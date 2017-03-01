@@ -1,4 +1,4 @@
-"""base component's World entity type mixin implementation class"""
+"""Base component's World entity type mixin implementation class."""
 
 # This file is part of pycopancore.
 #
@@ -32,8 +32,11 @@ class World (I.World, abstract.World):
                  human_population=0,
                  **kwargs
                  ):
-        """Initialize an (typically the only) instance of World"""
+        """Initialize an (typically the only) instance of World."""
         super().__init__(**kwargs)  # must be the first line
+
+        if len(self.__class__.instances) > 1:
+            raise ValueError('Only one world allowed!')
 
         self.nature = nature
         self.metabolism = metabolism
@@ -47,20 +50,24 @@ class World (I.World, abstract.World):
 
     @property  # read-only
     def societies(self):
+        """Return societies of world."""
         return self._societies
 
     @property  # read-only
     def top_level_societies(self):
+        """Return top level society of world."""
         # find by filtering:
         return set([s for s in self._societies
                     if s.next_higher_society is None])
 
     @property  # read-only
     def cells(self):
+        """Return cells of world."""
         return self._cells
 
     @property  # read-only
     def individuals(self):
+        """Return individuals of world."""
         # find indirectly via cells:
         r = set()
         for c in self._cells:

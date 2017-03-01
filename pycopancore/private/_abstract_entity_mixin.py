@@ -11,13 +11,15 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# Jobst: FIX the following: class modules cannot contain bare code or function defs such as the next lines, and are only allowed to contain class definitions!
+# Jobst: FIX the following: class modules cannot contain bare code or function
+#  defs such as the next lines, and are only allowed to contain class
+# definitions!
 # NEXTUID = 0
-# 
-# 
+#
+#
 # def get_next_uid():
 #     """Generate UIDs (Unique identifier).
-# 
+#
 #     Returns
 #     -------
 #     current_uid: int
@@ -28,7 +30,7 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 #     NEXTUID += 1
 #     return current_uid
 
-from pycopancore import Variable
+from pycopancore.data_model import Variable
 
 
 class _AbstractEntityMixin (object):
@@ -38,18 +40,19 @@ class _AbstractEntityMixin (object):
     mixin classes are derived.
     """
 
-    processes = None
+    processes = []
     model = None
-    entities = None
+    instances = None
     idle_entities = None
 
-    def __init__(self, **kwargs):
+    def __init__(self,
+                 **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
 #        self._uid = get_next_uid()  # Jobst: I don't see why we need this
         try:
-            self.__class__.entities.append(self)
+            self.__class__.instances.append(self)
         except AttributeError:
-            self.__class__.entities = [self]
+            self.__class__.instances = [self]
 
     def deactivate(self):
         """Deactivate entity.
@@ -57,7 +60,7 @@ class _AbstractEntityMixin (object):
         Remove Entity from its classes entities list and add it to its classes
         idle_entities list.
         """
-        self.__class__.entities.remove(self)
+        self.__class__.instances.remove(self)
         try:
             self.__class__.idle_entities.append(self)
         except AttributeError:
@@ -71,7 +74,7 @@ class _AbstractEntityMixin (object):
         """
         assert self in self.__class__.idle_entities, 'Not deactivated'
         self.__class__.idle_entities.remove(self)
-        self.__class__.entities.append(self)
+        self.__class__.instances.append(self)
 
 # Jobst: I don't see why we need this:
 #    def __repr__(self):

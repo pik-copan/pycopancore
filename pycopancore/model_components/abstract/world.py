@@ -1,4 +1,4 @@
-"""Abstract World entity type class, inherited by base model component"""
+"""Abstract World entity type class, inherited by base model component."""
 
 # This file is part of pycopancore.
 #
@@ -12,6 +12,6 @@ from pycopancore.private import _AbstractEntityMixin
 
 
 class World (_AbstractEntityMixin):
-    """Abstract World entity type class, inherited by base model component"""
+    """Abstract World entity type class, inherited by base model component."""
 
     pass

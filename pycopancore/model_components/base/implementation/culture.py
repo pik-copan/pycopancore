@@ -1,4 +1,4 @@
-"""base component's Culture process taxon mixin implementation class"""
+"""Base component's Culture process taxon mixin implementation class."""
 
 # This file is part of pycopancore.
 #
@@ -17,7 +17,7 @@ from networkx import Graph
 
 
 class Culture (I.Culture, abstract.Culture):
-    """Culture process taxon mixin implementation class"""
+    """Culture process taxon mixin implementation class."""
 
     # standard methods:
 

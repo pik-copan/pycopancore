@@ -1,4 +1,4 @@
-"""base component's Nature process taxon mixin implementation class"""
+"""Base component's Nature process taxon mixin implementation class."""
 
 # This file is part of pycopancore.
 #
@@ -15,12 +15,12 @@ from .. import interface as I
 
 
 class Nature (I.Nature, abstract.Nature):
-    """Nature process taxon mixin implementation class"""
+    """Nature process taxon mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 #*,
+                 # *,
                  **kwargs):
         """Initialize the unique instance of Nature."""
         super().__init__(**kwargs)  # must be the first line

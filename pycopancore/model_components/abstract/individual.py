@@ -1,4 +1,4 @@
-"""Abstract Individual entity type class, inherited by base model component"""
+"""Abstract Individual entity type class, inherited by base model component."""
 
 # This file is part of pycopancore.
 #
@@ -12,6 +12,9 @@ from pycopancore.private import _AbstractEntityMixin
 
 
 class Individual (_AbstractEntityMixin):
-    """Abstract Individual entity type class, inherited by base model component"""
+    """Abstract Individual entity type class.
+
+    Inherited by base model component.
+    """
 
     pass

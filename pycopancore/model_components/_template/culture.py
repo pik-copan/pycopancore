@@ -6,22 +6,25 @@ then remove these instructions
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .. import interface as I
+# import all interface classes since one typically wants to cross-ref variables
+# between entity types (this is the whole point of having an interface in the
+# first place):
+from .interface import *
 
 
-class Culture (I.Culture):
+class Culture (Culture_):
     """Culture process taxon mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                 # *,
                  **kwargs):
         """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)  # must be the first line

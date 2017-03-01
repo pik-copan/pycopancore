@@ -1,12 +1,11 @@
 """
-This is the pycopancore package
+This is the pycopancore package.
 """
+from .private import _AbstractRunner, _AbstractEntityMixin, _AbstractProcess, \
+    _AbstractProcessTaxonMixin
+from .process_types import ODE, Explicit, Step, Event, Implicit
 from .data_model import *
-from . import private
-
-from .process_types import *
-from .runners import *
-
+from .runners.runner import Runner
 from . import model_components, models
 
 __url__ = "http://www.pik-potsdam.de/copan/software"

@@ -10,25 +10,26 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore import Variable
+from pycopancore.data_model import Variable
 
-class _AbstractProcessTaxonMixin (object):
+
+class _AbstractProcessTaxonMixin(object):
     """Define Entity-unspecific abstract class.
 
     From this class all entity-specific abstract mixin classes are derived.
     """
 
-    processes = None
+    processes = []
     model = None
-    entities = None
+    instances = None
 
     def __init__(self):
         """Initialize an _AbstractProcessTaxonMixin instance."""
-        if self.__class__.entities:
-            self.__class__.entities.append(self)
+        if self.__class__.instances:
+            self.__class__.instances.append(self)
             print('This Process Taxon is already initialized!')
         else:
-            self.__class__.entities = [self]
+            self.__class__.instances = [self]
 
     def set_value(self, variable, value):
         assert isinstance(variable, Variable), \

@@ -1,4 +1,4 @@
-"""base component's Society entity type mixin implementation class"""
+"""Base component's Society entity type mixin implementation class."""
 
 # This file is part of pycopancore.
 #
@@ -31,7 +31,7 @@ class Society (I.Society, abstract.Society):
                  human_population=0,
                  **kwargs
                  ):
-        """Initialize an instance of Society"""
+        """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
 
         self._world = None
@@ -48,10 +48,12 @@ class Society (I.Society, abstract.Society):
 
     @property
     def world(self):
+        """Return world."""
         return self._world
 
     @world.setter
     def world(self, w):
+        """Set world."""
         if self._world is not None:
             self._world._societies.remove(self)
         if w is not None:
@@ -61,10 +63,12 @@ class Society (I.Society, abstract.Society):
 
     @property
     def next_higher_society(self):
+        """Return next higher society."""
         return self._next_higher_society
 
     @next_higher_society.setter
     def next_higher_society(self, s):
+        """Set next higher society."""
         if self._next_higher_society is not None:
             self._next_higher_society._next_lower_societies.remove(self)
         if s is not None:
@@ -78,18 +82,22 @@ class Society (I.Society, abstract.Society):
 
     @property  # read-only
     def nature(self):
+        """Return nature."""
         return self._world.nature
 
     @property  # read-only
     def metabolism(self):
+        """Return metabolism."""
         return self._world.metabolism
 
     @property  # read-only
     def culture(self):
+        """Return culture."""
         return self._world.culture
 
     @property  # read-only
     def higher_societies(self):
+        """Return higher societies."""
         # find by following the ref-chain:
         h = []
         s = self
@@ -100,10 +108,12 @@ class Society (I.Society, abstract.Society):
 
     @property  # read-only
     def next_lower_societies(self):
+        """Read next lower societies."""
         return self._next_lower_societies
 
     @property  # read-only
     def lower_societies(self):
+        """Return lower societies."""
         # aggregate recursively:
         l = self._next_lower_societies
         for s in self._next_lower_societies:
@@ -112,10 +122,12 @@ class Society (I.Society, abstract.Society):
 
     @property  # read-only
     def direct_cells(self):
+        """Return direct cells."""
         return self._direct_cells
 
     @property  # read-only
     def cells(self):
+        """Return cells."""
         # aggregate recursively:
         c = self.direct_cells
         for s in self._next_lower_societies:
@@ -124,6 +136,7 @@ class Society (I.Society, abstract.Society):
 
     @property  # read-only
     def direct_individuals(self):
+        """Return direct individuals."""
         # aggregate from direct_cells:
         i = set()
         for c in self._direct_cells:
@@ -132,6 +145,7 @@ class Society (I.Society, abstract.Society):
 
     @property  # read-only
     def individuals(self):
+        """Return individuals."""
         # aggregate from cells:
         i = set()
         for c in self.cells:

@@ -1,4 +1,4 @@
-"""Base model component interface
+"""Base model component interface.
 
 In this base interface module, variables for each entity are defined in
 corresponding class as sympy objects . The corresponding classes are World_,
@@ -98,7 +98,8 @@ class Society (object):
     # ODEs:
     # TODO: replace by suitable CETSVariable!
     human_population = MDM.human_population
-    # TODO: make sure it is no smaller than aggregate next_lower_level societies'
+    # TODO: make sure it is no smaller than
+    # aggregate next_lower_level societies'
 
     # read-only attributes storing redundant information:
     nature = None
@@ -118,6 +119,7 @@ class Society (object):
     """set of resident Individuals not in subsocieties"""
     individuals = None
     """set of direct or indirect resident Individuals"""
+
 
 # specified only now to avoid recursion:
 Society.next_higher_society.type = Society
@@ -188,8 +190,7 @@ class Individual (object):
 
 
 class Model (object):
-    """Basic Model interface.
-    """
+    """Basic Model interface."""
 
     # metadata:
     name = "copan:CORE Base"
