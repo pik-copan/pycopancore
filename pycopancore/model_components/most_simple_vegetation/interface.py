@@ -22,9 +22,9 @@ from pycopancore import Variable
 class Cell_(object):
     """Define Interface for Cell."""
 
-    stock = Variable('current stock of resource')
-    capacity = Variable('capacity of resource')
-    growth_rate = Variable('growth rate of resource')
+    stock = Variable('current stock', 'current stock of resource')
+    capacity = Variable('capacity', 'capacity of resource')
+    growth_rate = Variable('growth rate', 'growth rate of resource')
     # resource = Variable('current resource')
     # capacity = Variable('whole capacity')
     # step_resource = Variable('step resource')
@@ -41,8 +41,8 @@ class Cell_(object):
 class Individual_(object):
     """Define Interface for Individual."""
 
-    strategy = Variable('harvesting strategy')
-    imitation_tendency = Variable('imitation tendency (former rationality)')
+    strategy = Variable('harvesting strategy', 'harvesting strategy indiv.')
+    imitation_tendency = Variable('imitation tendency', 'former rationality')
 
 
 #
