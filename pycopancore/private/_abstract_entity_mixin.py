@@ -11,39 +11,18 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-# Imports
-#
+from pycopancore.data_model import Variable
 
 
-#
-# Definition of class _AbstractEntityMixin
-#
-
-NEXTUID = 0
-
-
-def get_next_uid():
-    """Generate UIDs (Unique identifier).
-
-    Returns
-    -------
-    current_uid: int
-        the current uid
-    """
-    global NEXTUID
-    current_uid = NEXTUID
-    NEXTUID += 1
-    return current_uid
-
-
-class _AbstractEntityMixin(object):
+class _AbstractEntityMixin (object):
     """Define AbstractEntityMixin.
 
     Entity-unspecific abstract class from which all entity-specific abstract
     mixin classes are derived.
     """
 
+    # NEXTUID is variable to adress identifiers.
+    NEXTUID = 0
     processes = []
     model = None
     instances = None
@@ -52,7 +31,7 @@ class _AbstractEntityMixin(object):
     def __init__(self,
                  **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
-        self._uid = get_next_uid()
+        self._uid = self.get_next_uid()  # Jobst: I don't see why we need this
         try:
             self.__class__.instances.append(self)
         except AttributeError:
@@ -80,8 +59,27 @@ class _AbstractEntityMixin(object):
         self.__class__.idle_entities.remove(self)
         self.__class__.instances.append(self)
 
+# Jobst: I don't see why we need this:
     def __repr__(self):
         return "{}[UID={}]".format(self.__class__.__name__, self._uid)
 
     def __str__(self):
         return repr(self)
+
+    def set_value(self, variable, value):
+        assert isinstance(variable, Variable), \
+            "variable must be a Variable object"
+        variable.set_value(self, value)
+
+    @classmethod
+    def get_next_uid(cls):
+        """Generate UIDs (Unique identifier).
+
+        Returns
+        -------
+        current_uid: int
+            the current uid
+        """
+        current_uid = cls.NEXTUID
+        cls.NEXTUID += 1
+        return current_uid

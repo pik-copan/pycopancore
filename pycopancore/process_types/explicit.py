@@ -34,7 +34,7 @@ class Explicit(_AbstractProcess):
                  name,
                  variables,
                  specification,
-                 smoothness=0,
+                 smoothness=0
                  ):
         """Initiate an instance of an explicit process.
 
@@ -46,9 +46,8 @@ class Explicit(_AbstractProcess):
             function(self,t)
         smoothness :
         """
-        super().__init__()
+        super().__init__(name)
 
-        self.name = name
         self.variables = variables
         self.specification = specification
         self.smoothness = smoothness

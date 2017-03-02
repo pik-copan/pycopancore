@@ -35,7 +35,8 @@ class ODE(_AbstractProcess):
                  name,
                  variables,
                  specification,
-                 smoothness=1,
+                 *,
+                 smoothness=1
                  ):
         """Initiate an instance of an ODE process.
 
@@ -51,9 +52,8 @@ class ODE(_AbstractProcess):
             RHS of the equation(s)
         smoothness
         """
-        super().__init__()
+        super().__init__(name)
 
-        self.name = name
         self.variables = variables
         self.specification = specification
         self.smoothness = smoothness

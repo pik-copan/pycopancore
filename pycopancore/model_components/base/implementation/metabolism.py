@@ -1,24 +1,20 @@
-"""Metabolism process taxon mixin class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
-"""
+"""Base component's Metabolism process taxon mixin implementation class."""
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# import all interface classes since one typically wants to cross-ref variables
-# between entity types (this is the whole point of having an interface in the
-# first place)
-from .interface import *
+# only used in this component, not in others:
+from pycopancore.model_components import abstract
+
+from .. import interface as I
 
 
-class Metabolism(Metabolism_):
+class Metabolism (I.Metabolism, abstract.Metabolism):
     """Metabolism process taxon mixin implementation class."""
 
     # standard methods:

@@ -12,15 +12,15 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .interface import Model_
+from . import interface as I
 # import all needed entity type implementation classes:
-from . import World, Society, Cell, Individual  # TODO: adjust!
+from .implementation import World, Society, Cell, Individual  # TODO: adjust!
 # import all needed process taxon implementation classes:
-from . import Nature, Metabolism, Culture  # TODO: adjust!
+from .implementation import Nature, Metabolism, Culture  # TODO: adjust!
 
 
-class Model (Model_):
-    """Model component mixin class."""
+class Model (I.Model):
+    """Model component mixin class"""
 
     # mixins provided by this model component:
 

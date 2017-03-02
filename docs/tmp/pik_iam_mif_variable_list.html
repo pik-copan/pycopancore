@@ -1,0 +1,2109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head>
+<title>Variable template</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+</style>
+</head>
+<body>
+<a name="Variable-template"></a>
+<h1>Variable template<a href="#Variable-template" class="wiki-anchor">¶</a></h1>
+
+
+	<p>This is the list of variables and corresponding names and units 
+which can be used in a MIF-file. Alternative names and units are not 
+allowed! If you want to add a variable which is not yet part of the MIF 
+structure please contact the Model Operations group (<a class="email" href="mailto:mo@pik-potsdam.de">mo@pik-potsdam.de</a>)</p>
+
+
+	<table>
+		<tbody><tr>
+			<th><strong>Variable</strong></th>
+			<th><strong>Unit</strong></th>
+			<th><strong>Definition</strong></th>
+		</tr>
+		<tr>
+			<td>Population</td>
+			<td>million</td>
+			<td>total population</td>
+		</tr>
+		<tr>
+			<td>GDP|MER</td>
+			<td>billion US$2005/yr</td>
+			<td>GDP at market exchange rate</td>
+		</tr>
+		<tr>
+			<td>GDP|PPP</td>
+			<td>billion US$2005/yr</td>
+			<td>GDP converted to US $ using purchasing power parity</td>
+		</tr>
+		<tr>
+			<td>Primary Energy</td>
+			<td>EJ/yr</td>
+			<td>total primary energy consumption (direct equivalent)</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Fossil</td>
+			<td>EJ/yr</td>
+			<td>coal, gas, conventional and unconventional oil primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Fossil|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>coal, gas, conventional and unconventional oil primary energy consumption used in combination with CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Fossil|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>coal, gas, conventional and unconventional oil primary energy consumption without CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Coal</td>
+			<td>EJ/yr</td>
+			<td>coal primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Coal|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>coal primary energy consumption used in combination with CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Coal|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>coal primary energy consumption without CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Oil</td>
+			<td>EJ/yr</td>
+			<td>conventional &amp; unconventional oil primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Oil|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>conventional &amp; unconventional oil primary energy consumption used in combination with CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Oil|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>conventional &amp; unconventional oil primary energy consumption without CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Gas</td>
+			<td>EJ/yr</td>
+			<td>gas primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Gas|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>gas primary energy consumption used in combination with CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Gas|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>gas primary energy consumption without CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass</td>
+			<td>EJ/yr</td>
+			<td>purpose-grown bioenergy crops, crop and forestry residue 
+bioenergy, municipal solid waste bioenergy, traditional biomass primary 
+energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>purpose-grown bioenergy crops, crop and forestry residue 
+bioenergy, municipal solid waste bioenergy, traditional biomass primary 
+energy consumption used in combination with CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>purpose-grown bioenergy crops, crop and forestry residue 
+bioenergy, municipal solid waste bioenergy, traditional biomass primary 
+energy consumption without CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Modern</td>
+			<td>EJ/yr</td>
+			<td>modern biomass primary energy consumption, including 
+purpose-grown bioenergy crops, crop and forestry residue bioenergy and 
+municipal solid waste bioenergy</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Traditional</td>
+			<td>EJ/yr</td>
+			<td>traditional biomass primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Nuclear</td>
+			<td>EJ/yr</td>
+			<td>nuclear primary energy consumption (direct equivalent, includes electricity, heat and hydrogen production from nuclear energy)</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Non-Biomass Renewables</td>
+			<td>EJ/yr</td>
+			<td>non-biomass renewable energy consumption (direct equivalent, 
+includes hydro electricity, wind electricity, geothermal electricity and
+ heat, solar electricity and heat and hydrogen, ocean energy)</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Hydro</td>
+			<td>EJ/yr</td>
+			<td>total hydro primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Wind</td>
+			<td>EJ/yr</td>
+			<td>total wind primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Solar</td>
+			<td>EJ/yr</td>
+			<td>total solar primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Geothermal</td>
+			<td>EJ/yr</td>
+			<td>total geothermal primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Ocean</td>
+			<td>EJ/yr</td>
+			<td>total ocean primary energy consumption</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Secondary Energy Trade</td>
+			<td>EJ/yr</td>
+			<td>trade in secondary energy carriers than cannot be attributed 
+unambiguously to a primary energy source (e.g. electricity, hydrogen, 
+fossil synfuels, negative means net exports)</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Other</td>
+			<td>EJ/yr</td>
+			<td>primary energy consumption from sources that do not fit to any 
+other category (direct equivalent, please provide a definition of the 
+sources in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy</td>
+			<td>EJ/yr</td>
+			<td>total secondary energy - the sum of all secondary energy carrier production (for consistency checks)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity</td>
+			<td>EJ/yr</td>
+			<td>total net electricity production</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Coal</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from coal</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Coal|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from coal with a CO2 capture component</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Coal|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from coal with freely vented CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Oil</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from refined liquids</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Oil|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from refined liquids with a CO2 capture component</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Oil|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from refined liquids with freely vented CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Gas</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from natural gas</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Gas|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from natural gas with a CO2 capture component</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Gas|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from natural gas with freely vented CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Biomass</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from municipal solid waste, purpose-grown biomass, crop residues, forest industry waste, biogas</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Biomass|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from municipal solid waste, 
+purpose-grown biomass, crop residues, forest industry waste with a CO2 
+capture component</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Biomass|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from municipal solid waste, 
+purpose-grown biomass, crop residues, forest industry waste with freely 
+vented CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Nuclear</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from nuclear energy</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Non-Biomass Renewables</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from hydro, wind, solar, geothermal, 
+ocean, and other renewable sources (excluding bioenergy). This is a 
+summary category for all the non-biomass renewables.</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Hydro</td>
+			<td>EJ/yr</td>
+			<td>net hydroelectric production</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Solar</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from all sources of solar energy (e.g., PV and concentrating solar power)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Solar|PV</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from solar photovoltaics (PV)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Solar|CSP</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from concentrating solar power (CSP)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Wind</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from wind energy (on- and offshore)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Wind|Onshore</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from onshore wind energy</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Wind|Offshore</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from offshore wind energy</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Geothermal</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from all sources of geothermal energy (e.g., hydrothermal, enhanced geothermal systems)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Ocean</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from all sources of ocean energy (e.g., tidal, wave, ocean thermal electricity generation)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Other</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from sources that do not fit to any 
+other category (please provide a definition of the sources in this 
+category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen</td>
+			<td>EJ/yr</td>
+			<td>total hydrogen production</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids</td>
+			<td>EJ/yr</td>
+			<td>total final energy </td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Biomass</td>
+			<td>EJ/yr</td>
+			<td>total liquid biofuels production</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Biomass|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>total production of liquid biofuels from facilities with CCS</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Biomass|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>total production of liquid biofuels from facilities without CCS</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Fossil</td>
+			<td>EJ/yr</td>
+			<td>total production of fossil liquid synfuels</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Fossil|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>total production of fossil liquid synfuels from facilities with CCS</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Fossil|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>total production of fossil liquid synfuels from facilities without CCS</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Coal</td>
+			<td>EJ/yr</td>
+			<td>total production of fossil liquid synfuels from coal-to-liquids (CTL) technologies</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Gas</td>
+			<td>EJ/yr</td>
+			<td>total production of fossil liquid synfuels from gas-to-liquids (GTL) technologies</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Oil</td>
+			<td>EJ/yr</td>
+			<td>total production of liquid fuels from petroleum, including both conventional and unconventional sources</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Other</td>
+			<td>EJ/yr</td>
+			<td>total production of liquids from sources that do not fit any other category</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Gases</td>
+			<td>EJ/yr</td>
+			<td>total production of gaseous fuels, including natural gas</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Gases|Natural Gas</td>
+			<td>EJ/yr</td>
+			<td>total production of natural gas</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Gases|Biomass</td>
+			<td>EJ/yr</td>
+			<td>total production of biogas</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Gases|Coal</td>
+			<td>EJ/yr</td>
+			<td>total production of coal gas from coal gasification</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Gases|Other</td>
+			<td>EJ/yr</td>
+			<td>total production of gases from sources that do not fit any other category</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Solids</td>
+			<td>EJ/yr</td>
+			<td>solid secondary energy carriers (e.g., briquettes, coke, wood chips, wood pellets)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Solids|Coal</td>
+			<td>EJ/yr</td>
+			<td>solid secondary energy carriers produced from coal (e.g., briquettes, coke)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Solids|Biomass</td>
+			<td>EJ/yr</td>
+			<td>solid secondary energy carriers produced from biomass (e.g., commercial charcoal, wood chips, wood pellets)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat</td>
+			<td>EJ/yr</td>
+			<td>total centralized heat generation</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat|Coal</td>
+			<td>EJ/yr</td>
+			<td>centralized heat generation from coal</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat|Oil</td>
+			<td>EJ/yr</td>
+			<td>centralized heat generation from oil products </td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat|Gas</td>
+			<td>EJ/yr</td>
+			<td>centralized heat generation from gases</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat|Biomass</td>
+			<td>EJ/yr</td>
+			<td>centralized heat generation from biomass</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat|Solar</td>
+			<td>EJ/yr</td>
+			<td>centralized heat generation from solar energy</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat|Geothermal</td>
+			<td>EJ/yr</td>
+			<td>centralized heat generation from geothermal energy EXCLUDING geothermal heat pumps</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat|Nuclear</td>
+			<td>EJ/yr</td>
+			<td>centralized heat generation from nuclear energy</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Heat|Other</td>
+			<td>EJ/yr</td>
+			<td>centralized heat generation from sources that do not fit any other category</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Other Carrier</td>
+			<td>EJ/yr</td>
+			<td>generation of other secondary energy carriers that do not fit any
+ other category (please provide a definition of other energy carrier in 
+this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Other Carrier|Coal</td>
+			<td>EJ/yr</td>
+			<td>generation of other secondary energy carriers from coal that do 
+not fit any other category (please provide a definition of other energy 
+carrier in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Other Carrier|Oil</td>
+			<td>EJ/yr</td>
+			<td>generation of other secondary energy carriers from oil that do 
+not fit any other category (please provide a definition of other energy 
+carrier in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Other Carrier|Gas</td>
+			<td>EJ/yr</td>
+			<td>generation of other secondary energy carriers from natural gas 
+that do not fit any other category (please provide a definition of other
+ energy carrier in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Other Carrier|Biomass</td>
+			<td>EJ/yr</td>
+			<td>generation of other secondary energy carriers from biomass that 
+do not fit any other category (please provide a definition of other 
+energy carrier in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Other Carrier|Non-Biomass Renewables</td>
+			<td>EJ/yr</td>
+			<td>generation of other secondary energy carriers from non-biomass 
+renewables that do not fit any other category (please provide a 
+definition of other energy carrier in this category in the 'comments' 
+tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Other Carrier|Nuclear</td>
+			<td>EJ/yr</td>
+			<td>generation of other secondary energy carriers from nuclear energy
+ that do not fit any other category (please provide a definition of 
+other energy carrier in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Other Carrier|Other</td>
+			<td>EJ/yr</td>
+			<td>generation of other secondary energy carriers from other sources 
+that do not fit any other category (please provide a definition of other
+ energy carrier and the other source in this category in the 'comments' 
+tab)</td>
+		</tr>
+		<tr>
+			<td>Final Energy</td>
+			<td>EJ/yr</td>
+			<td>final final energy consumed by end-use sectors, excluding transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry</td>
+			<td>EJ/yr</td>
+			<td>final energy consumed by the industrial sector, including feedstocks, including agriculture and fishing</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial</td>
+			<td>EJ/yr</td>
+			<td>final energy consumed in the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Transportation</td>
+			<td>EJ/yr</td>
+			<td>final energy consumed in the transportation sector, including bunker fuels, excluding pipelines</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Transportation|Passenger</td>
+			<td>EJ/yr</td>
+			<td>final energy consumed for passenger transportation</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Transportation|Freight</td>
+			<td>EJ/yr</td>
+			<td>final energy consumed for freight transportation</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector</td>
+			<td>EJ/yr</td>
+			<td>total final energy consumption by other sectors</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Solids</td>
+			<td>EJ/yr</td>
+			<td>final energy solid fuel consumption (including coal and solid biomass)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Solids|Coal</td>
+			<td>EJ/yr</td>
+			<td>final energy coal consumption</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Solids|Biomass</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of solid biomass (modern and 
+traditional), excluding final energy consumption of bioliquids which are
+ reported in the liquids category</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Solids|Biomass|Traditional</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of traditional biomass</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Liquids</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of refined liquids (conventional &amp; unconventional oil, biofuels, coal-to-liquids, gas-to-liquids)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Gases</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of gases (natural gas, biogas, coal-gas), excluding transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Electricity</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of electricity (including on-site solar PV), excluding transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Hydrogen</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of hydrogen</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Heat</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of heat (e.g., district heat, process 
+heat, solar heating and warm water), excluding transmission/distribution
+ losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of other sources that do not fit to any 
+other category (please provide a definition of the sources in this 
+category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Energy Service|Transportation|Passenger</td>
+			<td>bn pkm/yr</td>
+			<td>energy service demand for passenger transport</td>
+		</tr>
+		<tr>
+			<td>Energy Service|Transportation|Freight</td>
+			<td>bn tkm/yr</td>
+			<td>energy service demand for freight transport</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2</td>
+			<td>Mt CO2/yr</td>
+			<td>total carbon dioxide emissions, including emissions from fossil fuel combustion, industrial processes and land-use change</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Fossil Fuels and Industry</td>
+			<td>Mt CO2/yr</td>
+			<td>carbon dioxide emissions from fossil fuel combustion and 
+industrial processes, negative emissions from bioenergy with CCS should 
+be included in this category</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Fossil Fuels and Industry|Energy Supply</td>
+			<td>Mt CO2/yr</td>
+			<td>carbon dioxide emissions from power and heat generation, other 
+energy conversion (e.g. refineries, synfuel production), resource 
+extration and energy transmission and distribution (e.g. gas pipelines),
+  negative emissions from bioenergy with CCS should be included in this 
+category</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Fossil Fuels and Industry|Energy Supply|Electricity</td>
+			<td>Mt CO2/yr</td>
+			<td>carbon dioxide emissions from electric power generation, negative
+ emissions from bioenergy with CCS should be included in this category</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Fossil Fuels and Industry|Energy Demand</td>
+			<td>Mt CO2/yr</td>
+			<td>carbon dioxide emissions from all energy end-use sectors</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Fossil Fuels and Industry|Energy Demand|Industry</td>
+			<td>Mt CO2/yr</td>
+			<td>carbon dioxide emissions from the industrial sector, including feedstocks, including agriculture and fishing</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Fossil Fuels and Industry|Energy Demand|Residential and Commercial</td>
+			<td>Mt CO2/yr</td>
+			<td>carbon dioxide emissions from the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Fossil Fuels and Industry|Energy Demand|Transportation</td>
+			<td>Mt CO2/yr</td>
+			<td>carbon dioxide emissions from the transportation sector and bunker fuels (excluding pipelines)</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Fossil Fuels and Industry|Energy Demand|Other Sector</td>
+			<td>Mt CO2/yr</td>
+			<td>carbon dioxide emissions from other energy end-use sectors that 
+do not fit to any other category (please provide a definition of the 
+sectors in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Land Use</td>
+			<td>Mt CO2/yr</td>
+			<td>net carbon dioxide emissions from all categories of land use and 
+land-use change (e.g., pasture conversion, deforestation, afforestation,
+ reforestation, soil management, etc.)</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Carbon Capture and Storage</td>
+			<td>Mt CO2/yr</td>
+			<td>total carbon dioxide emissions captured and stored in geological 
+deposits (e.g. in depleted oil and gas fields, unmined coal seams, 
+saline aquifers) and the deep ocean, stored amounts should be reported 
+as positive numbers</td>
+		</tr>
+		<tr>
+			<td>Emissions|N2O</td>
+			<td>kt N2O/yr</td>
+			<td>total nitrous oxide emissions</td>
+		</tr>
+		<tr>
+			<td>Emissions|CH4</td>
+			<td>Mt CH4/yr</td>
+			<td>total methane emissions</td>
+		</tr>
+		<tr>
+			<td>Emissions|F-Gases</td>
+			<td>Mt CO2-equiv/yr</td>
+			<td>total F-gas emissions, including sulfur hexafluoride (SF6), hydrofluorocarbons (HFCs), perfluorocarbons (PFCs), others?</td>
+		</tr>
+		<tr>
+			<td>Emissions|Kyoto Gases</td>
+			<td>Mt CO2-equiv/yr</td>
+			<td>total Kyoto gas emissions, including CO2, CH4, N2O and F-Gases. 
+Equivalent emissions calculated based on 100 yr GWP from IPCC AR4, Chap.
+ 2 of WGI report</td>
+		</tr>
+		<tr>
+			<td>Concentration|CO2</td>
+			<td>ppm</td>
+			<td>atmospheric concentration of carbon dioxide</td>
+		</tr>
+		<tr>
+			<td>Concentration|CH4</td>
+			<td>ppb</td>
+			<td>atmospheric concentration of methane</td>
+		</tr>
+		<tr>
+			<td>Concentration|N2O</td>
+			<td>ppb</td>
+			<td>atmospheric concentration of nitrous oxide</td>
+		</tr>
+		<tr>
+			<td>Forcing</td>
+			<td>W/m2</td>
+			<td>radiative forcing from all greenhouse gases and forcing agents, including contributions from albedo, nitrate, and mineral dust</td>
+		</tr>
+		<tr>
+			<td>Forcing|AN3A</td>
+			<td>W/m2</td>
+			<td>radiative forcing from all greenhouse gases and forcing agents, excluding contributions from albedo, nitrate, and mineral dust</td>
+		</tr>
+		<tr>
+			<td>Forcing|Kyoto Gases</td>
+			<td>W/m2</td>
+			<td>radiative forcing of the six Kyoto gases (CO2, CH4, N2O, SF6, HFCs, PFCs)</td>
+		</tr>
+		<tr>
+			<td>Price|Carbon</td>
+			<td>US$2005/t CO2</td>
+			<td>marginal cost of abatement</td>
+		</tr>
+		<tr>
+			<td>Price|N2O</td>
+			<td>US$2005/t N2O</td>
+			<td>marginal cost of abatement</td>
+		</tr>
+		<tr>
+			<td>Price|CH4</td>
+			<td>US$2005/t CH4</td>
+			<td>marginal cost of abatement</td>
+		</tr>
+		<tr>
+			<td>Price|Primary Energy|Oil</td>
+			<td>US$2005/GJ</td>
+			<td>crude oil price at the primary level (i.e. the spot price at the global or regional market)</td>
+		</tr>
+		<tr>
+			<td>Price|Primary Energy|Gas</td>
+			<td>US$2005/GJ</td>
+			<td>natural gas price at the primary level (i.e. the spot price at the global or regional market)</td>
+		</tr>
+		<tr>
+			<td>Price|Primary Energy|Coal</td>
+			<td>US$2005/GJ</td>
+			<td>coal price at the primary level (i.e. the spot price at the global or regional market)</td>
+		</tr>
+		<tr>
+			<td>Price|Secondary Energy|Liquids|Oil</td>
+			<td>US$2005/GJ</td>
+			<td>light fuel oil price at the secondary level, i.e. for large scale
+ consumers (e.g. oil power plant). Prices should include the effect of 
+carbon prices.</td>
+		</tr>
+		<tr>
+			<td>Price|Secondary Energy|Gases|Natural Gas</td>
+			<td>US$2005/GJ</td>
+			<td>natural gas price at the secondary level, i.e. for large scale 
+consumers (e.g. gas power plant). Prices should include the effect of 
+carbon prices.</td>
+		</tr>
+		<tr>
+			<td>Price|Secondary Energy|Solids|Coal</td>
+			<td>US$2005/GJ</td>
+			<td>coal price at the secondary level, i.e. for large scale consumers
+ (e.g. coal power plant). Prices should include the effect of carbon 
+prices.</td>
+		</tr>
+		<tr>
+			<td>Price|Secondary Energy|Solids|Biomass</td>
+			<td>US$2005/GJ</td>
+			<td>biomass price at the secondary level, i.e. for large scale 
+consumers (e.g. biomass power plant). Prices should include the effect 
+of carbon prices.</td>
+		</tr>
+		<tr>
+			<td>Price|Primary Energy|Biomass</td>
+			<td>US$2005/GJ</td>
+			<td>biomass producer price</td>
+		</tr>
+		<tr>
+			<td>Price|Secondary Energy|Electricity</td>
+			<td>US$2005/GJ</td>
+			<td>electricity price at the secondary level, i.e. for large scale 
+consumers (e.g. aluminum production).  Prices should include the effect 
+of carbon prices.</td>
+		</tr>
+		<tr>
+			<td>Consumption</td>
+			<td>billion US$2005/yr</td>
+			<td>total consumption of all goods, by all consumers in a region</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Coal|w/ CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of coal-fired power with 
+CCS  (weighted by the share of electricity of the various power plant 
+types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+ LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Coal|w/o CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of coal-fired power without
+ CCS  (weighted by the share of electricity of the various power plant 
+types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+ LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Gas|w/ CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of gas-fired power with CCS
+  (weighted by the share of electricity of the various power plant 
+types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+ LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Gas|w/o CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of gas-fired power without 
+CCS  (weighted by the share of electricity of the various power plant 
+types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+ LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Nuclear</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of nuclear generated power 
+(weighted by the share of electricity of the various power plant types).
+ LCOE should include the investment, O&amp;M, fuel and decomissioning 
+costs. Each model is free to chose its own discount rate.  LCOE should 
+NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Non-Biomass Renewables</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of non-biomass renewable 
+generated power (weighted by the share of electricity of the various 
+power plant types). LCOE should include the investment, O&amp;M, fuel 
+and decomissioning costs. Each model is free to chose its own discount 
+rate.  LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Solar|Marginal</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of solar power (weighted by
+ the share of electricity of the various power plant types). LCOE should
+ include the investment, O&amp;M, fuel and decomissioning costs. Each 
+model is free to chose its own discount rate.  LCOE should NOT include 
+effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Solar|Average</td>
+			<td>US$2005/MWh</td>
+			<td>marginal levelized cost of electricity of solar power (weighted 
+by the share of electricity of the various power plant types). LCOE 
+should include the investment, O&amp;M, fuel and decomissioning costs. 
+Each model is free to chose its own discount rate.  LCOE should NOT 
+include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Wind|Marginal</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of wind power (weighted by 
+the share of electricity of the various power plant types). LCOE should 
+include the investment, O&amp;M, fuel and decomissioning costs. Each 
+model is free to chose its own discount rate.  LCOE should NOT include 
+effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Wind|Average</td>
+			<td>US$2005/MWh</td>
+			<td>marginal levelized cost of electricity of wind power (weighted by
+ the share of electricity of the various power plant types). LCOE should
+ include the investment, O&amp;M, fuel and decomissioning costs. Each 
+model is free to chose its own discount rate.  LCOE should NOT include 
+effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Biomass|w/ CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of biomass generated power 
+with CCS (weighted by the share of electricity of the various power 
+plant types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+  LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Electricity|Biomass|w/o CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of electricity of biomass generated power 
+without CCS (weighted by the share of electricity of the various power 
+plant types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+  LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>Policy Cost|Area under MAC Curve</td>
+			<td>billion US$2005/yr</td>
+			<td>total costs of the policy, i.e. the area under the Marginal Abatement Cost (MAC) curve</td>
+		</tr>
+		<tr>
+			<td>Policy Cost|GDP Loss</td>
+			<td>billion US$2005/yr</td>
+			<td>GDP loss in a policy scenario compared to the corresponding baseline (losses should be reported as negative numbers)</td>
+		</tr>
+		<tr>
+			<td>Policy Cost|Consumption Loss</td>
+			<td>billion US$2005/yr</td>
+			<td>consumption loss in a policy scenario compared to the corresponding baseline (losses should be reported as negative numbers)</td>
+		</tr>
+		<tr>
+			<td>Policy Cost|Equivalent Variation</td>
+			<td>billion US$2005/yr</td>
+			<td>equivalent variation associated with the given policy</td>
+		</tr>
+		<tr>
+			<td>Policy Cost|Additional Total Energy System Cost</td>
+			<td>billion US$2005/yr</td>
+			<td>additional energy system cost associated with the policy</td>
+		</tr>
+		<tr>
+			<td>Policy Cost|Other</td>
+			<td>billion US$2005/yr</td>
+			<td>any other indicator of policy cost (e.g., compensated variation).
+ (please indicate what type of policy cost is measured on the 'comments'
+ tab)</td>
+		</tr>
+		<tr>
+			<td>Trade|Primary Energy|Coal|Volume</td>
+			<td>EJ/yr</td>
+			<td>net exports of coal, at the global level these should add up to the trade losses only</td>
+		</tr>
+		<tr>
+			<td>Trade|Primary Energy|Gas|Volume</td>
+			<td>EJ/yr</td>
+			<td>net exports of natural gas, at the global level these should add up to the trade losses only</td>
+		</tr>
+		<tr>
+			<td>Trade|Primary Energy|Oil|Volume</td>
+			<td>EJ/yr</td>
+			<td>net exports of crude oil (excluding refined oil products), at the global level these should add up to the trade losses only</td>
+		</tr>
+		<tr>
+			<td>Trade|Secondary Energy|Solids and Liquids|Biomass|Volume</td>
+			<td>EJ/yr</td>
+			<td>net exports of bioenergy, at the global level these should add up to the trade losses only</td>
+		</tr>
+		<tr>
+			<td>Trade|Secondary Energy|Electricity|Volume</td>
+			<td>EJ/yr</td>
+			<td>net exports of electricity, at the global level these should add up to the trade losses only</td>
+		</tr>
+		<tr>
+			<td>Trade|Secondary Energy|Other|Volume</td>
+			<td>EJ/yr</td>
+			<td>net exports of other secondary energy carriers not covered by 
+above categories (eg, hydrogen, fossil liquids, etc..), at the global 
+level these should add up to the trade losses only</td>
+		</tr>
+		<tr>
+			<td>Capital Cost|Electricity|Coal|IGCC|w/o CCS</td>
+			<td>$/kW</td>
+			<td>capital cost for a new IGCC facility</td>
+		</tr>
+		<tr>
+			<td>Efficiency|Electricity|Coal|IGCC|w/o CCS</td>
+			<td>%</td>
+			<td>efficiency of a new IGCC facility</td>
+		</tr>
+		<tr>
+			<td>Capital Cost|Electricity|Gas|CC|w/o CCS</td>
+			<td>$/kW</td>
+			<td>capital cost of a new gas CC facility</td>
+		</tr>
+		<tr>
+			<td>Efficiency|Electricity|Gas|CC|w/o CCS</td>
+			<td>%</td>
+			<td>efficiency of a new gas CC facility</td>
+		</tr>
+		<tr>
+			<td>Capital Cost|Electricity|Solar|PV</td>
+			<td>$/kW</td>
+			<td>capital cost of new solar PV cells</td>
+		</tr>
+		<tr>
+			<td>Capital Cost|Electricity|Solar|CSP</td>
+			<td>$/kW</td>
+			<td>capital cost of a new solar CSP facility</td>
+		</tr>
+		<tr>
+			<td>Capital Cost|Electricity|Nuclear</td>
+			<td>$/kW</td>
+			<td>capital cost of a new nuclear power plant</td>
+		</tr>
+		<tr>
+			<td>Capital Cost|Electricity|Wind|Onshore</td>
+			<td>$/kW</td>
+			<td>capital cost of a new onshore wind power plant</td>
+		</tr>
+		<tr>
+			<td>Emissions|GHG|Allowance Allocation</td>
+			<td>Mt CO2-equiv/yr</td>
+			<td>Initial allocation of GHG emission allowances under International Emissions Trading System implied by burden sharing scheme</td>
+		</tr>
+		<tr>
+			<td>Trade|Emissions Allowances|Value</td>
+			<td>billion US$2005/yr</td>
+			<td>net exports of emission allowances, at the global level these should add up to zero.</td>
+		</tr>
+		<tr>
+			<td>Trade|Emissions Allowances|Volume</td>
+			<td>Mt CO2-equiv/yr</td>
+			<td>volume of traded emissions (exports minus imports). At the global level, these should add up to zero</td>
+		</tr>
+		<tr>
+			<td>Resource|Cumulative Extraction|Coal</td>
+			<td>EJ</td>
+			<td>Cumulative coal extraction</td>
+		</tr>
+		<tr>
+			<td>Resource|Cumulative Extraction|Gas</td>
+			<td>EJ</td>
+			<td>Cumulative gas extraction</td>
+		</tr>
+		<tr>
+			<td>Resource|Cumulative Extraction|Gas|Conventional</td>
+			<td>EJ</td>
+			<td>Cumulative extraction of conventional gas</td>
+		</tr>
+		<tr>
+			<td>Resource|Cumulative Extraction|Gas|Unconventional</td>
+			<td>EJ</td>
+			<td>Cumulative extraction of unconventional gas</td>
+		</tr>
+		<tr>
+			<td>Resource|Cumulative Extraction|Oil</td>
+			<td>EJ</td>
+			<td>Cumulative oil extraction</td>
+		</tr>
+		<tr>
+			<td>Resource|Cumulative Extraction|Oil|Conventional</td>
+			<td>EJ</td>
+			<td>Cumulative extraction of conventional oil</td>
+		</tr>
+		<tr>
+			<td>Resource|Cumulative Extraction|Oil|Unconventional</td>
+			<td>EJ</td>
+			<td>Cumulative extraction of unconventional oil</td>
+		</tr>
+		<tr>
+			<td>Resource|Cumulative Extraction|Uranium</td>
+			<td>ktU</td>
+			<td>Cumulative extraction of uranium</td>
+		</tr>
+		<tr>
+			<td>Investment|Energy Supply</td>
+			<td>billion US$2005/yr</td>
+			<td>Investments into the energy supply system</td>
+		</tr>
+		<tr>
+			<td>Investment|Energy Supply|Electricity</td>
+			<td>billion US$2005/yr</td>
+			<td>Investments into new electricity generation capacity</td>
+		</tr>
+		<tr>
+			<td>Trade|All</td>
+			<td>billion US$2005/yr</td>
+			<td>net exports of all goods, at the global level these should add up to the trade losses only</td>
+		</tr>
+		<tr>
+			<td>Emissions|Sulfur</td>
+			<td>Mt SO2/yr</td>
+			<td>total sulfur emissions</td>
+		</tr>
+		<tr>
+			<td>Emissions|BC</td>
+			<td>Mt BC/yr</td>
+			<td>total black carbon emissions</td>
+		</tr>
+		<tr>
+			<td>Emissions|OC</td>
+			<td>Mt OC/yr</td>
+			<td>total organic carbon emissions</td>
+		</tr>
+		<tr>
+			<td>Emissions|NOx</td>
+			<td>Mt NO2/yr</td>
+			<td>total nitrogen oxide emissions</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO</td>
+			<td>Mt CO/yr</td>
+			<td>total carbon monoxide emissions</td>
+		</tr>
+		<tr>
+			<td>Emissions|Sulfur|Energy Supply|Electricity</td>
+			<td>Mt SO2/yr</td>
+			<td>total sulfur emissions from electricity generation</td>
+		</tr>
+		<tr>
+			<td>Emissions|Sulfur|Energy Supply and Demand</td>
+			<td>Mt SO2/yr</td>
+			<td>total sulfur emissions from energy use on supply and demand side</td>
+		</tr>
+		<tr>
+			<td>Emissions|Sulfur|Land Use</td>
+			<td>Mt SO2/yr</td>
+			<td>total sulfur emissions from land sources</td>
+		</tr>
+		<tr>
+			<td>Emissions|BC|Energy Supply|Electricity</td>
+			<td>Mt BC/yr</td>
+			<td>total black carbon emissions from electricity generation</td>
+		</tr>
+		<tr>
+			<td>Emissions|BC|Energy Supply and Demand</td>
+			<td>Mt BC/yr</td>
+			<td>total black carbon emissions from energy use on supply and demand side</td>
+		</tr>
+		<tr>
+			<td>Emissions|BC|Land Use</td>
+			<td>Mt BC/yr</td>
+			<td>total black carbon emissions from land sources</td>
+		</tr>
+		<tr>
+			<td>Emissions|OC|Energy Supply|Electricity</td>
+			<td>Mt OC/yr</td>
+			<td>total organic carbon emissions from electricity generation</td>
+		</tr>
+		<tr>
+			<td>Emissions|OC|Energy Supply and Demand</td>
+			<td>Mt OC/yr</td>
+			<td>total organic carbon emissions from energy use on supply and demand side</td>
+		</tr>
+		<tr>
+			<td>Emissions|OC|Land Use</td>
+			<td>Mt OC/yr</td>
+			<td>total organic carbon emissions from land sources</td>
+		</tr>
+		<tr>
+			<td>Emissions|NOx|Energy Supply|Electricity</td>
+			<td>Mt NO2/yr</td>
+			<td>total nitrogen oxide emissions from electricity generation</td>
+		</tr>
+		<tr>
+			<td>Emissions|NOx|Energy Supply and Demand</td>
+			<td>Mt NO2/yr</td>
+			<td>total nitrogen oxide emissions from energy use on supply and demand side</td>
+		</tr>
+		<tr>
+			<td>Emissions|NOx|Land Use</td>
+			<td>Mt NO2/yr</td>
+			<td>total nitrogen oxide emissions from land sources</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO|Energy Supply|Electricity</td>
+			<td>Mt CO/yr</td>
+			<td>total carbon monoxide emissions from electricity generation</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO|Energy Supply and Demand</td>
+			<td>Mt CO/yr</td>
+			<td>total carbon monoxide emissions from energy use on supply and demand side</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO|Land Use</td>
+			<td>Mt CO/yr</td>
+			<td>total carbon monoxide emissions from land sources</td>
+		</tr>
+		<tr>
+			<td>Forcing|Montreal Gases</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from Montreal gases</td>
+		</tr>
+		<tr>
+			<td>Forcing|CO2</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from CO2</td>
+		</tr>
+		<tr>
+			<td>Forcing|CH4</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from CH4</td>
+		</tr>
+		<tr>
+			<td>Forcing|N2O</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from N2O</td>
+		</tr>
+		<tr>
+			<td>Forcing|F-Gases</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from F-gases</td>
+		</tr>
+		<tr>
+			<td>Forcing|Aerosol</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from all aerosols</td>
+		</tr>
+		<tr>
+			<td>Forcing|Aerosol|Sulfate Direct</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from direct sufate effects</td>
+		</tr>
+		<tr>
+			<td>Forcing|Aerosol|Cloud Indirect</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from indirect effects of aerosols on clouds</td>
+		</tr>
+		<tr>
+			<td>Forcing|Aerosol|BC and OC</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from black and organic carbon</td>
+		</tr>
+		<tr>
+			<td>Forcing|Aerosol|Other</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from aerosols not covered in the other categories (including aerosols from biomass burning)</td>
+		</tr>
+		<tr>
+			<td>Forcing|Tropospheric Ozone</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from tropospheric ozone</td>
+		</tr>
+		<tr>
+			<td>Forcing|Other</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from factors not covered in other 
+categories (including stratospheric ozone and startospheric water vapor)</td>
+		</tr>
+		<tr>
+			<td>Forcing|Albedo Change and Mineral Dust</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from albedo change and mineral dust</td>
+		</tr>
+		<tr>
+			<td>Forcing|Aerosol|Nitrate Direct</td>
+			<td>W/m2</td>
+			<td>total radiative forcing from direct nitrate aerosols</td>
+		</tr>
+		<tr>
+			<td>Temperature|Global Mean</td>
+			<td> °C</td>
+			<td>change in global mean temperature relative to pre-industrial</td>
+		</tr>
+		<tr>
+			<td>LCOE|Liquids|Oil</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of liquids produced from conventional or 
+unconventional oil (weighted by the share of producton from the various 
+plant types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+ LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Liquids|Biomass|w/ CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of liquids produced from biomass sources 
+and using CCS (weighted by the share of producton from the various plant
+ types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+ LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Liquids|Biomass|w/o CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of liquids produced from biomass sources 
+and not using CCS (weighted by the share of producton from the various 
+plant types). LCOE should include the investment, O&amp;M, fuel and 
+decomissioning costs. Each model is free to chose its own discount rate.
+ LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Liquids|Coal|w/ CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of liquids produced from coal-to-liquids 
+processes and not using CCS (weighted by the share of producton from the
+ various plant types). LCOE should include the investment, O&amp;M, fuel
+ and decomissioning costs. Each model is free to chose its own discount 
+rate. LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>LCOE|Liquids|Coal|w/o CCS</td>
+			<td>US$2005/MWh</td>
+			<td>average levelized cost of liquids produced from coal-to-liquids 
+processes and not using CCS (weighted by the share of producton from the
+ various plant types). LCOE should include the investment, O&amp;M, fuel
+ and decomissioning costs. Each model is free to chose its own discount 
+rate. LCOE should NOT include effect of carbon price.</td>
+		</tr>
+		<tr>
+			<td>Land Cover</td>
+			<td>million Ha/yr</td>
+			<td>total land cover</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Cropland</td>
+			<td>million Ha/yr</td>
+			<td>total arable land, i.e. land in non-forest bioenergy crop, food, 
+and feed/fodder crops, as well as other arable land (cultivated area)</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Cropland|Irrigated</td>
+			<td>million Ha/yr</td>
+			<td>total arable land actually irrigated</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Cropland|Energy Crops|Irrigated</td>
+			<td>million Ha/yr</td>
+			<td>land dedicated to energy crops actually irrigated</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Pasture</td>
+			<td>million Ha/yr</td>
+			<td>pasture</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Forest</td>
+			<td>million Ha/yr</td>
+			<td>managed and unmanaged forest area</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Other Land</td>
+			<td>million Ha/yr</td>
+			<td>other land cover that does not fit into any other category (e.g.,
+ rock, ice, desert, water, build-up area, please provide a definition of
+ the sources in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Forest|Managed</td>
+			<td>million Ha/yr</td>
+			<td>"managed forests producing commercial wood supply for timber or 
+energy (note: woody energy crops reported under ""energy crops"")"|good 
+to distinguish b/w commercial and other forests</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Cropland|Energy Crops</td>
+			<td>million Ha/yr</td>
+			<td>land dedicated to energy crops (e.g., switchgrass, miscanthus, 
+fast-growing wood species)|use, but need clear definition, esp for 
+models like message.</td>
+		</tr>
+		<tr>
+			<td>Land Cover|Other Arable Land</td>
+			<td>million Ha/yr</td>
+			<td>other arable land that is unmanaged (e.g., grassland, savannah, shrubland), excluding unmanaged forests that are arable</td>
+		</tr>
+		<tr>
+			<td>Emissions|CH4|Energy Supply and Demand</td>
+			<td>Mt CH4/yr</td>
+			<td>total methane emissions from energy use on supply and demand side</td>
+		</tr>
+		<tr>
+			<td>Emissions|CH4|Land Use</td>
+			<td>Mt CH4/yr</td>
+			<td>total anthropogenic methane emissions from land use, including agriculture and livestock</td>
+		</tr>
+		<tr>
+			<td>Emissions|CH4|Other</td>
+			<td>Mt CH4/yr</td>
+			<td>anthropogenic methane emissions from other sources (e.g., 
+landfills, sewage, please provide a definition of other sources in this 
+category in the 'comments' tab) </td>
+		</tr>
+		<tr>
+			<td>Emissions|N2O|Energy Supply and Demand</td>
+			<td>kt N2O/yr</td>
+			<td>total nitrous oxide emissions from energy use on supply and demand side</td>
+		</tr>
+		<tr>
+			<td>Emissions|N2O|Land Use</td>
+			<td>kt N2O/yr</td>
+			<td>total anthropogenic nitrous oxide emissions from land use, including agriculture and livestock</td>
+		</tr>
+		<tr>
+			<td>Emissions|N2O|Other</td>
+			<td>kt N2O/yr</td>
+			<td>anthropogenic nitrous oxide emissions from other sources (please 
+provide a definition of other sources in this category in the 'comments'
+ tab)</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Land Use|Soil Carbon</td>
+			<td>Mt CO2/yr</td>
+			<td>Net soil carbon emissions (positive numbers imply net emissions 
+to the atmosphere while negative numbers imply net carbon uptake from 
+the atmosphere)</td>
+		</tr>
+		<tr>
+			<td>Emissions|CO2|Carbon Capture and Storage|Biomass</td>
+			<td>Mt CO2/yr</td>
+			<td>total carbon dioxide emissions captured  from bioenergy use and 
+stored in geological deposits (e.g. in depleted oil and gas fields, 
+unmined coal seams, saline aquifers) and the deep ocean, stored amounts 
+should be reported as positive numbers</td>
+		</tr>
+		<tr>
+			<td>Price|Secondary Energy|Liquids|Biomass</td>
+			<td>US$2005/GJ</td>
+			<td>biofuel price at the secondary level, i.e. for biofuel consumers</td>
+		</tr>
+		<tr>
+			<td>Price|Agriculture|Non-Energy Crops|Index</td>
+			<td>Index (2005 = 1)</td>
+			<td>Laspeyres price index for non-energy crops</td>
+		</tr>
+		<tr>
+			<td>Price|Agriculture|Water|Index</td>
+			<td>Index (2005 = 1)</td>
+			<td>water shadow price index</td>
+		</tr>
+		<tr>
+			<td>Trade|Primary Energy|Biomass|Volume</td>
+			<td>EJ/yr</td>
+			<td>net exports of solid, unprocessed biomass, at the global level these should add up to the trade losses only</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Energy Crops</td>
+			<td>EJ/yr</td>
+			<td>biomass primary energy from purpose-grown bioenergy crops</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|1st Generation</td>
+			<td>EJ/yr</td>
+			<td>biomass primary energy from 1st generation biofuel crops (e.g., sugar cane, rapeseed oil, maize, sugar beet)</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Residues</td>
+			<td>EJ/yr</td>
+			<td>biomass primary energy from residues</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Other</td>
+			<td>EJ/yr</td>
+			<td>biomass primary energy from other sources (including logs, algae,
+ etc.) that do not fit to any other category (please provide a 
+definition of the sources in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Electricity</td>
+			<td>EJ/yr</td>
+			<td>primary modern bioenergy input to the electricity generation</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Electricity|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>primary modern bioenergy input to the electricity generation with CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Liquids</td>
+			<td>EJ/yr</td>
+			<td>primary modern bioenergy input to biofuel production processes</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Liquids|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>primary modern bioenergy input to biofuel production processes with CCS</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Gases</td>
+			<td>EJ/yr</td>
+			<td>primary modern bioenergy input to gasification processes</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Hydrogen</td>
+			<td>EJ/yr</td>
+			<td>primary modern bioenergy input to hydrogen production processes</td>
+		</tr>
+		<tr>
+			<td>Primary Energy|Biomass|Hydrogen|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>primary modern bioenergy input to hydrogen production processes with CCS</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Biomass|Energy Crops</td>
+			<td>EJ/yr</td>
+			<td>liquid biofuels production from energy crops</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Biomass|Residues</td>
+			<td>EJ/yr</td>
+			<td>liquid biofuels production from residues (forest and agriculture)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Biomass|1st Generation</td>
+			<td>EJ/yr</td>
+			<td>liquid biofuels production from 1st generation technologies, relying on e.g. corn, sugar, oil </td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Biomass|Energy Crops</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from purpose-grown biomass</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Biomass|Residues</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from biomass residues</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Electricity|Biomass|Other</td>
+			<td>EJ/yr</td>
+			<td>net electricity production from biomass that does not fit to any 
+other category (please provide a definition of the sources in this 
+category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Liquids|Biomass|Other</td>
+			<td>EJ/yr</td>
+			<td>biofuel production from biomass that does not fit to any other 
+category (please provide a definition of the sources in this category in
+ the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Primary Energy Production|Biomass|Energy Crops</td>
+			<td>EJ/yr</td>
+			<td>domestically produced biomass primary energy from purpose-grown bioenergy crops</td>
+		</tr>
+		<tr>
+			<td>Primary Energy Production|Biomass|1st Generation</td>
+			<td>EJ/yr</td>
+			<td>domestically produced biomass primary energy from 1st generation 
+biofuel crops (e.g., sugar cane, rapeseed oil, maize, sugar beet)</td>
+		</tr>
+		<tr>
+			<td>Food Energy Demand</td>
+			<td>EJ/yr</td>
+			<td>total calory food demand</td>
+		</tr>
+		<tr>
+			<td>Food Energy Demand|Livestock </td>
+			<td>EJ/yr</td>
+			<td>calory food demand for livestock products</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Solids</td>
+			<td>EJ/yr</td>
+			<td>final energy solid fuel consumption by the industrial sector (including coal and solid biomass)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Solids|Coal</td>
+			<td>EJ/yr</td>
+			<td>final energy coal consumption by the industrial sector</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Solids|Biomass</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the industrial sector of solid 
+biomass (modern and traditional), excluding final energy consumption of 
+bioliquids which are reported in the liquids category</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Liquids</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the industrial sector of refined 
+liquids (conventional &amp; unconventional oil, biofuels, 
+coal-to-liquids, gas-to-liquids)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Gases</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the industrial sector of gases 
+(natural gas, biogas, coal-gas), excluding transmission/distribution 
+losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Electricity</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the industrial sector of electricity 
+(including on-site solar PV), excluding transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Hydrogen</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the industrial sector of hydrogen</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Heat</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the industrial sector of heat (e.g., 
+district heat, process heat, solar heating and warm water), excluding 
+transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Industry|Other</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the industrial sector of other 
+sources that do not fit to any other category (please provide a 
+definition of the sources in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Solids</td>
+			<td>EJ/yr</td>
+			<td>final energy solid fuel consumption by the residential &amp; commercial sector (including coal and solid biomass)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Solids|Coal</td>
+			<td>EJ/yr</td>
+			<td>final energy coal consumption by the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Solids|Biomass</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the residential &amp; commercial 
+sector of solid biomass (modern and traditional), excluding final energy
+ consumption of bioliquids which are reported in the liquids category</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Liquids</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the residential &amp; commercial 
+sector of refined liquids (conventional &amp; unconventional oil, 
+biofuels, coal-to-liquids, gas-to-liquids)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Gases</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the residential &amp; commercial 
+sector of gases (natural gas, biogas, coal-gas), excluding 
+transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Electricity</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the residential &amp; commercial 
+sector of electricity (including on-site solar PV), excluding 
+transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Hydrogen</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the residential &amp; commercial sector of hydrogen</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Heat</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the residential &amp; commercial 
+sector of heat (e.g., district heat, process heat, solar heating and 
+warm water), excluding transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Residential and Commercial|Other</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the residential &amp; commercial 
+sector of other sources that do not fit to any other category (please 
+provide a definition of the sources in this category in the 'comments' 
+tab)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Transportation|Liquids</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the transportation sector of refined 
+liquids (conventional &amp; unconventional oil, biofuels, 
+coal-to-liquids, gas-to-liquids)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Transportation|Gases</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the transportation sector of gases 
+(natural gas, biogas, coal-gas), excluding transmission/distribution 
+losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Transportation|Hydrogen</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the transportation sector of hydrogen</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Transportation|Electricity</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the transportation sector of 
+electricity (including on-site solar PV), excluding 
+transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Transportation|Other</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by the transportation sector of other 
+sources that do not fit to any other category (please provide a 
+definition of the sources in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Solids</td>
+			<td>EJ/yr</td>
+			<td>final energy solid fuel consumption by other sectors (including coal and solid biomass)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Solids|Coal</td>
+			<td>EJ/yr</td>
+			<td>final energy coal consumption by other sectors</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Solids|Biomass</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by other sectors of solid biomass 
+(modern and traditional), excluding final energy consumption of 
+bioliquids which are reported in the liquids category</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Liquids</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by other sectors of refined liquids 
+(conventional &amp; unconventional oil, biofuels, coal-to-liquids, 
+gas-to-liquids)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Gases</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by other sectors of gases (natural gas, biogas, coal-gas), excluding transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Electricity</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by other sectors of electricity 
+(including on-site solar PV), excluding transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Hydrogen</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by other sectors of hydrogen</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Heat</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by other sectors of heat (e.g., district
+ heat, process heat, solar heating and warm water), excluding 
+transmission/distribution losses</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Other Sector|Other</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption by other sectors of other sources that 
+do not fit to any other category (please provide a definition of the 
+sources in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Industry|Solids|Coal|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of coal including taxes in the industrial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Industry|Solids|Biomass|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of solid biomass including taxes in the industrial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Industry|Liquids|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of refined liquids (from conventional &amp; unconventional 
+oil, biofuels, coal-to-liquids, gas-to-liquids) including taxes in the 
+industrial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Industry|Gases|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of gases (natural gas, biogas, coal-gas) including taxes in the industrial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Industry|Electricity|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of electricity including taxes in the industrial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Industry|Hydrogen|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of hydrogen including taxes in the industrial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Industry|Heat|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of heat (e.g., district heat, solar heat) including taxes in the industrial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Residential and Commercial|Solids|Coal|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of coal including taxes in the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Residential and Commercial|Solids|Biomass|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of solid biomass including taxes in the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Residential and Commercial|Liquids|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of refined liquids (from conventional &amp; unconventional 
+oil, biofuels, coal-to-liquids, gas-to-liquids) including taxes in the 
+residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Residential and Commercial|Gases|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of gases (natural gas, biogas, coal-gas) including taxes in the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Residential and Commercial|Electricity|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of electricity including taxes in the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Residential and Commercial|Hydrogen|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of hydrogen including taxes in the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Residential and Commercial|Heat|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of heat (e.g., district heat, solar heat) including taxes in the residential &amp; commercial sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Transportation|Liquids|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of refined liquids (from conventional &amp; unconventional 
+oil, biofuels, coal-to-liquids, gas-to-liquids) including taxes in the 
+transportation sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Transportation|Gases|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of gases (natural gas, biogas, coal-gas) including taxes in the transportation sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Transportation|Hydrogen|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of electricity including taxes in the transportation sector</td>
+		</tr>
+		<tr>
+			<td>Price|Final Energy|Transportation|Electricity|w/ Taxes</td>
+			<td>US$2005/GJ</td>
+			<td>price of hydrogen including taxes in the transportation sector</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Coal</td>
+			<td>EJ/yr</td>
+			<td>total hydrogen production from coal</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Coal|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>hydrogen production from coal with a CO2 capture component</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Coal|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>hydrogen production from coal with freely vented CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Gas</td>
+			<td>EJ/yr</td>
+			<td>total hydrogen production from natural gas</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Gas|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>hydrogen production from natural gas with a CO2 capture component</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Gas|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>hydrogen production from natural gas with freely vented CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Biomass</td>
+			<td>EJ/yr</td>
+			<td>total hydrogen production from biomass</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Biomass|w/ CCS</td>
+			<td>EJ/yr</td>
+			<td>hydrogen production from biomass with a CO2 capture component</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Biomass|w/o CCS</td>
+			<td>EJ/yr</td>
+			<td>hydrogen production from biomass with freely vented CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Nuclear</td>
+			<td>EJ/yr</td>
+			<td>total hydrogen production from nuclear energy (e.g. thermochemical water splitting with nucelar heat)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Solar</td>
+			<td>EJ/yr</td>
+			<td>total hydrogen production from solar energy (e.g. thermalchemical water splitting with solar heat)</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Electricity</td>
+			<td>EJ/yr</td>
+			<td>total hydrogen production from electrolysis</td>
+		</tr>
+		<tr>
+			<td>Secondary Energy|Hydrogen|Other</td>
+			<td>EJ/yr</td>
+			<td>total hydrogen production from other sources (please provide a definition of the sources in this category in the 'comments' tab)</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Geothermal</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of geothermal energy (e.g., from 
+decentralized or small-scale geothermal heating systems) EXCLUDING 
+geothermal heat pumps</td>
+		</tr>
+		<tr>
+			<td>Final Energy|Solar</td>
+			<td>EJ/yr</td>
+			<td>final energy consumption of solar energy (e.g., from roof-top solar hot water collector systems)</td>
+		</tr>
+		<tr>
+			<td>Capacity|Electricity|Solar|CSP</td>
+			<td>GW</td>
+			<td>total installed capacity of operating solar CSP facilities</td>
+		</tr>
+		<tr>
+			<td>Capacity|Electricity|Solar|PV</td>
+			<td>GW</td>
+			<td>total installed capacity of operating solar PV systems</td>
+		</tr>
+		<tr>
+			<td>Capacity|Electricity|Wind</td>
+			<td>GW</td>
+			<td>total installed capacity of operating wind plants</td>
+		</tr>
+		<tr>
+			<td>Capacity|Electricity|Hydro</td>
+			<td>GW</td>
+			<td>total installed capacity of operating hydro power plants</td>
+		</tr>
+		<tr>
+			<td>Resource|Average Extraction Cost|Coal</td>
+			<td>US$2005/GJ</td>
+			<td>Average cost of coal extraction</td>
+		</tr>
+		<tr>
+			<td>Resource|Average Extraction Cost|Oil</td>
+			<td>US$2005/GJ</td>
+			<td>Average cost of oil extraction</td>
+		</tr>
+		<tr>
+			<td>Resource|Average Extraction Cost|Gas</td>
+			<td>US$2005/GJ</td>
+			<td>Average cost of gas extraction</td>
+		</tr>
+		<tr>
+			<td>Trade|Exports|Primary Energy|Coal|Volume</td>
+			<td>EJ/yr</td>
+			<td>exports of coal</td>
+		</tr>
+		<tr>
+			<td>Trade|Exports|Primary Energy|Gas|Volume</td>
+			<td>EJ/yr</td>
+			<td>exports of natural gas</td>
+		</tr>
+		<tr>
+			<td>Trade|Exports|Primary Energy|Oil|Volume</td>
+			<td>EJ/yr</td>
+			<td>exports of crude oil (excluding refined oil products)</td>
+		</tr>
+		<tr>
+			<td>Trade|Exports|Secondary Energy|Solids and Liquids|Biomass|Volume</td>
+			<td>EJ/yr</td>
+			<td>exports of bioenergy (solid and liquid)</td>
+		</tr>
+		<tr>
+			<td>Trade|Exports|Secondary Energy|Electricity|Volume</td>
+			<td>EJ/yr</td>
+			<td>exports of electricity</td>
+		</tr>
+		<tr>
+			<td>Trade|Exports|Secondary Energy|Other|Volume</td>
+			<td>EJ/yr</td>
+			<td>exports of other secondary energy carriers not covered by above categories (e.g., hydrogen, fossil-based synthetic liquids)</td>
+		</tr>
+		<tr>
+			<td>Trade|Imports|Primary Energy|Coal|Volume</td>
+			<td>EJ/yr</td>
+			<td>imports of coal</td>
+		</tr>
+		<tr>
+			<td>Trade|Imports|Primary Energy|Gas|Volume</td>
+			<td>EJ/yr</td>
+			<td>imports of natural gas</td>
+		</tr>
+		<tr>
+			<td>Trade|Imports|Primary Energy|Oil|Volume</td>
+			<td>EJ/yr</td>
+			<td>imports of crude oil (excluding refined oil products)</td>
+		</tr>
+		<tr>
+			<td>Trade|Imports|Secondary Energy|Solids and Liquids|Biomass|Volume</td>
+			<td>EJ/yr</td>
+			<td>imports of bioenergy (solid and liquid)</td>
+		</tr>
+		<tr>
+			<td>Trade|Imports|Secondary Energy|Electricity|Volume</td>
+			<td>EJ/yr</td>
+			<td>imports of electricity</td>
+		</tr>
+		<tr>
+			<td>Trade|Imports|Secondary Energy|Other|Volume</td>
+			<td>EJ/yr</td>
+			<td>imports of other secondary energy carriers not covered by above categories (e.g., hydrogen, fossil-based synthetic liquids)</td>
+		</tr>
+		<tr>
+			<td>Production Cost|Agriculture</td>
+			<td>billion US$2005/yr</td>
+			<td>total agricultural production cost</td>
+		</tr>
+		<tr>
+			<td>Production Cost|Agriculture excl GHG market</td>
+			<td>billion US$2005/yr</td>
+			<td>agricultural production cost without GHG market costs (CO2 and Non-CO2 emissions as well as revenues from negative CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>GHG market|Agriculture|CO2</td>
+			<td>billion US$2005/yr</td>
+			<td>net CO2 emission costs (cost - revenue)</td>
+		</tr>
+		<tr>
+			<td>GHG market|Agriculture|CO2|Cost</td>
+			<td>billion US$2005/yr</td>
+			<td>CO2 emission costs</td>
+		</tr>
+		<tr>
+			<td>GHG market|Agriculture|CO2|Revenue</td>
+			<td>billion US$2005/yr</td>
+			<td>Revneues from negative CO2 emissions</td>
+		</tr>
+		<tr>
+			<td>GHG market|Agriculture|Non-CO2</td>
+			<td>billion US$2005/yr</td>
+			<td>Non-CO2 emission costs</td>
+		</tr>
+		<tr>
+			<td>Water|Withdrawal|Irrigation</td>
+			<td>million m3/yr</td>
+			<td>withdrawals of blue water for irrigation</td>
+		</tr>
+		<tr>
+			<td>Trade|Imports|Agriculture|Volume</td>
+			<td>million ton/yr</td>
+			<td>imports of agricultural commodities (in dry matter)</td>
+		</tr>
+		<tr>
+			<td>Trade|Exports|Agriculture|Volume</td>
+			<td>million ton/yr</td>
+			<td>exports of agricultural commodities (in dry matter)</td>
+		</tr>
+		<tr>
+			<td>Fertilizer Use|Nitrogen</td>
+			<td>Tg Nr/yr</td>
+			<td>Nitrogen application due to fertilizer use</td>
+		</tr>
+		<tr>
+			<td>Yield|Cereal</td>
+			<td>tDM/ha/yr</td>
+			<td>average cereal yields</td>
+		</tr>
+	</tbody></table>
+
+
+</body></html>
