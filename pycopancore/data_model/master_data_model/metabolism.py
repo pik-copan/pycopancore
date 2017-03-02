@@ -21,3 +21,26 @@ population_by_age = Variable("human population by age",
 
 # Economy:
 
+# labour, physical capital, energy input, other factors,
+# and their elasticities, prices (wages, capital rents, energy prices etc.),
+# depreciation rates
+# (total and by sector: energy(fossil/biomass/renewables)/final(clean/dirty)
+
+# productivities, efficiencies etc.
+
+# learning rates
+
+# discounting/interest rates etc.
+
+# financial capital?
+
+# transaction costs?
+
+# trade network?
+
+
+# Infrastructure:
+
+# transportation network?
+
+# housing and similar assets?

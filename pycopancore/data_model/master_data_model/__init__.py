@@ -39,6 +39,6 @@ from .culture import *
 #    population = labour
 #    economic_production (final sector)
 #    human_wellbeing (per capita consumption plus ecosystem services)
-#    
+#
 
 #
