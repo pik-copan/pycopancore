@@ -15,14 +15,14 @@
 from pycopancore import ODE
 # from pycopancore import Step, Explicit, Event
 from pycopancore.model_components import abstract
-from .interface import Cell_
+from . import interface as I
 
 #
 #  Define class Cell
 #
 
 
-class Cell(Cell_, abstract.Cell):
+class Cell(I.Cell, abstract.Cell):
     """Define properties of most_simple_vegetation cell.
 
     Inherits from Cell_ as the interface
@@ -72,6 +72,6 @@ class Cell(Cell_, abstract.Cell):
 
     processes = [
         ODE('logistic_growth_function',
-            [Cell_.stock],
+            [I.Cell.stock],
             logistic_growth)
         ]

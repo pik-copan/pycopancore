@@ -11,7 +11,7 @@ This is the most_simple_vegetation model-component package.
 """
 
 # Import of all interface modules
-from .interface import Cell_, Model_
+from . import interface as I
 
 # Import entities
 from .cell import Cell
@@ -20,4 +20,3 @@ from .cell import Cell
 
 # Import Model
 from .model import Model
-

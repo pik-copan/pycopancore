@@ -15,16 +15,12 @@ This is a very simple model for vegetation growth.
 #  Imports
 #
 
-from .interface import Model_
+from . import interface as I
 from . import Cell
 from pycopancore.model_components import abstract
 
-#
-#  Define class Model
-#
 
-
-class Model(Model_, abstract.Model):
+class Model(I.Model, abstract.Model):
     """Define properties of the most_simple_vegetation model.
 
     Inherits from Model_ via the

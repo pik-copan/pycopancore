@@ -14,12 +14,8 @@
 
 from pycopancore import Variable
 
-#
-#  Define class Cell_
-#
 
-
-class Cell_(object):
+class Cell(object):
     """Define Interface for Cell."""
 
     stock = Variable('current stock', 'current stock of resource')
@@ -33,24 +29,15 @@ class Cell_(object):
     # step_width = Variable('time between two steps')
     # last_execution = Variable('last time step was executed')
 
-#
-#  Define class Individual_
-#
 
-
-class Individual_(object):
+class Individual(object):
     """Define Interface for Individual."""
 
     strategy = Variable('harvesting strategy', 'harvesting strategy indiv.')
-    imitation_tendency = Variable('imitation tendency', 'former rationality')
+    #imitation_tendency = Variable('imitation tendency', 'former rationality')
 
 
-#
-#  Define class Model_
-#
-
-
-class Model_(object):
+class Model(object):
     """Define Interface for Model."""
 
     name = "most simple vegetation"
