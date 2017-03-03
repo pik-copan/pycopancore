@@ -8,28 +8,16 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
-from .interface import Metabolism_
+from . import interface as I
 from pycopancore.model_components import abstract
 
-#
-#  Define class Metabolism
-#
 
-
-class Metabolism(Metabolism_, abstract.Metabolism):
+class Metabolism(I.Metabolism, abstract.Metabolism):
     """Define properties of simple_extraction metabolism.
 
-    Inherits from Metabolism_
+    Inherits from I.Metabolism
     as the interface with all necessary variables and parameters.
     """
-
-    #
-    #  Definitions of internal methods
-    #
 
     def __init__(self,
                  **kwargs):
@@ -43,7 +31,3 @@ class Metabolism(Metabolism_, abstract.Metabolism):
                 )
 
     processes = []
-
-    #
-    #  Definitions of further methods
-    #

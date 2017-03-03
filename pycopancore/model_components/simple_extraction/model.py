@@ -8,29 +8,17 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
-from .interface import Model_
+from . import interface as I
 from . import Cell, Individual, Metabolism
 from pycopancore.model_components import abstract
 
-#
-#  Define class Model
-#
 
-
-class Model(Model_, abstract.Model):
+class Model(I.Model, abstract.Model):
     """Define properties of the simple_extraction model.
 
-    Inherits from Model_ via the
+    Inherits from I.Model via the
     interface with all necessary variables and parameters.
     """
-
-    #
-    # Mixins
-    #
 
     # Use Mixins as wanted
 

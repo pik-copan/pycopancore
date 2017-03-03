@@ -8,18 +8,11 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
 
 from pycopancore import ODE
 # from pycopancore import Step, Explicit, Event
 from pycopancore.model_components import abstract
 from . import interface as I
-
-#
-#  Define class Cell
-#
 
 
 class Cell(I.Cell, abstract.Cell):
@@ -28,10 +21,6 @@ class Cell(I.Cell, abstract.Cell):
     Inherits from Cell_ as the interface
     with all necessary variables and parameters.
     """
-
-    #
-    #  Definitions of internal methods
-    #
 
     def __init__(self,
                  *,
@@ -46,10 +35,6 @@ class Cell(I.Cell, abstract.Cell):
         self.stock = stock
         self.capacity = capacity
         self.growth_rate = growth_rate
-
-    #
-    #  Definitions of further methods
-    #
 
     def logistic_growth(self, t):
         """Compute the biophysical logistic growth function of cell's stock.

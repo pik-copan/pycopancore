@@ -11,10 +11,6 @@ This is a very simple model for vegetation growth.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 from . import interface as I
 from . import Cell
 from pycopancore.model_components import abstract
@@ -26,10 +22,6 @@ class Model(I.Model, abstract.Model):
     Inherits from Model_ via the
     interface with all necessary variables and parameters.
     """
-
-    #
-    # Mixins
-    #
 
     # Use Mixins as wanted
 

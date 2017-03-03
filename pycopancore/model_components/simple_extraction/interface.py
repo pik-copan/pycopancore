@@ -8,47 +8,26 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 from pycopancore import Variable
 
-#
-#  Define class Cell_
-#
 
-
-class Cell_(object):
+class Cell(object):
     """Interface for Cell."""
 
-    stock = Variable('current stock of resource')
-
-#
-#  Define class Individual_
-#
+    stock = Variable('current stock', 'current stock of resource')
 
 
-class Individual_(object):
+class Individual(object):
     """Interface for Individual."""
 
-    strategy = Variable('harvesting strategy')
+    strategy = Variable('harvesting strategy', 'harvesting strategy indiv.')
 
 
-#
-#  Define class Metabolism_
-#
-
-
-class Metabolism_(object):
+class Metabolism(object):
     """Interface for Metabolism."""
 
-#
-#  Define class Model_
-#
 
-
-class Model_(object):
+class Model(object):
     """Interface for Model."""
 
     name = "simple extraction"

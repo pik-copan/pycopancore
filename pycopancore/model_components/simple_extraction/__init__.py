@@ -11,7 +11,7 @@ This is the simple_extraction model-component package.
 """
 
 # Import of all interface modules
-from .interface import Cell_, Individual_, Metabolism_, Model_
+from . import interface as I
 
 # Import entities
 from .cell import Cell

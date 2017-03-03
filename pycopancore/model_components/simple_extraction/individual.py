@@ -11,28 +11,16 @@ That's about it.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 from pycopancore.model_components import abstract
-from .interface import Individual_
-
-#
-#  Define class Individual
-#
+from . import interface as I
 
 
-class Individual(Individual_, abstract.Individual):
+class Individual(I.Individual, abstract.Individual):
     """Define properties of simple_extraction individual.
 
-    Inherits from Individual_ as the interface
+    Inherits from I.Individual as the interface
     with all necessary variables and parameters.
     """
-
-    #
-    #  Definitions of internal methods
-    #
 
     def __init__(self,
                  *,
@@ -43,9 +31,5 @@ class Individual(Individual_, abstract.Individual):
         super(Individual, self).__init__(**kwargs)
 
         self.strategy = strategy,
-
-    #
-    #  Definitions of further methods
-    #
 
     processes = []

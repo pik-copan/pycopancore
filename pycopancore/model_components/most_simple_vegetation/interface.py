@@ -8,15 +8,11 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 from pycopancore import Variable
 
 
 class Cell(object):
-    """Define Interface for Cell."""
+    """Interface for Cell."""
 
     stock = Variable('current stock', 'current stock of resource')
     capacity = Variable('capacity', 'capacity of resource')
@@ -31,14 +27,14 @@ class Cell(object):
 
 
 class Individual(object):
-    """Define Interface for Individual."""
+    """Interface for Individual."""
 
     strategy = Variable('harvesting strategy', 'harvesting strategy indiv.')
-    #imitation_tendency = Variable('imitation tendency', 'former rationality')
+    # imitation_tendency = Variable('imitation tendency', 'former rationality')
 
 
 class Model(object):
-    """Define Interface for Model."""
+    """Interface for Model."""
 
     name = "most simple vegetation"
     description = "A most simple vegetation growth model"

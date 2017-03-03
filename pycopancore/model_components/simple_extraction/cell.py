@@ -8,29 +8,17 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
-
 # from pycopancore import ODE, Step, Explicit, Event
 from pycopancore.model_components import abstract
-from .interface import Cell_
-
-#
-#  Define class Cell
-#
+from . import interface as I
 
 
-class Cell(Cell_, abstract.Cell):
+class Cell(I.Cell, abstract.Cell):
     """Define properties of simple_extraction cell.
 
-    Inherits from Cell_ as the interface
+    Inherits from I.Cell as the interface
     with all necessary variables and parameters.
     """
-
-    #
-    #  Definitions of internal methods
-    #
 
     def __init__(self,
                  *,
@@ -41,9 +29,5 @@ class Cell(Cell_, abstract.Cell):
         super(Cell, self).__init__(**kwargs)
 
         self.stock = stock
-
-    #
-    #  Definitions of further methods
-    #
 
     processes = []
