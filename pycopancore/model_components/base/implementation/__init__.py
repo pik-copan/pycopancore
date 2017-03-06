@@ -11,9 +11,10 @@ This is the base model-component implementation subpackage
 
 
 from .world import World
-from .cell import Cell
-from .nature import Nature
-from .individual import Individual
-from .culture import Culture
 from .society import Society
+from .cell import Cell
+from .individual import Individual
+
+from .nature import Nature
 from .metabolism import Metabolism
+from .culture import Culture
