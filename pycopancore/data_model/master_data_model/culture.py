@@ -1,6 +1,5 @@
 from pycopancore.data_model import Variable
 from networkx import DiGraph, Graph
-from docutils.nodes import thead
 
 # Social networks between individuals:
 
@@ -21,6 +20,7 @@ friendship_network = \
              ref="https://en.wikipedia.org/wiki/Intimate_relationship",
              datatype=Graph)
 
+# TODO: maybe use "professional_network":
 trusted_business_network = \
     Variable("trusted business partners/colleagues network",
              """Similar undirected network for the business side of life, may

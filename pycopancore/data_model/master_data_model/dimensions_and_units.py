@@ -26,6 +26,7 @@ absolute_temperature.default_unit = kelvins = \
 
 # other base dimensions and units:
 
+# TODO: maybe rename to monetary value:
 value = Dimension(name="value",
                   desc="inflation-adjusted monetary value of goods, services etc.")
 value.default_unit = dollars = \

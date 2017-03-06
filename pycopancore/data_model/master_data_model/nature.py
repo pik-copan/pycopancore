@@ -1,5 +1,6 @@
 from pycopancore.data_model import Variable
-from . import gigatons_carbon, kelvins, years
+from . import gigatons_carbon, kelvins, years, unity
+from networkx import DiGraph, Graph
 
 # TODO: complete desc strings!
 
@@ -102,6 +103,16 @@ undiscovered_fossil_reserves = \
              unit=gigatons_carbon,
              is_extensive=True, lower_bound=0)
 
+# For ocean-atmosphere interactions:
+
+ocean_atmosphere_diffusion_coefficient = \
+    Variable("ocean-atmosphere diffusion coefficient", "",
+             unit=1/years, lower_bound=0)
+carbon_solubility_in_sea_water = \
+    Variable("carbon solubility in sea water",
+             "(in the sense of Anderies et al. 2013)",
+             unit=unity, lower_bound=0, default=1)
+
 # For land-atmosphere interactions:
 
 photosynthesis_carbon_flow = \
@@ -130,3 +141,10 @@ soil_respiration_carbon_flow = \
 
 # Note: there are no corresponding CF vars. yet
 
+
+geographic_network = \
+    Variable("geographic network",
+             """Undirected network of cells and geographic neighborhood.
+             Two cells should be linked iff they share a common boundary of positive
+             measure.""",
+             datatype=Graph)
