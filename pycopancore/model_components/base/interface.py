@@ -17,6 +17,19 @@ from pycopancore import Variable, ReferenceVariable
 from pycopancore import master_data_model as MDM
 
 
+# model component:
+
+
+class Model (object):
+    """Basic Model component interface."""
+
+    # metadata:
+    name = "copan:CORE Base"
+    description = "Basic model component only providing basic relationships between " \
+                  "entity types."
+    requires = []
+
+
 # process taxa:
 
 
@@ -45,7 +58,6 @@ class Culture (object):
     """
 
     acquaintance_network = MDM.acquaintance_network
-    # Note: don't forget to add and remove nodes in __init__, ...!
 
 
 # entity types:
@@ -70,6 +82,14 @@ class World (object):
 
     population = MDM.population
     # TODO: make sure it is no smaller than aggregate top-level societies'
+
+    geographic_network = MDM.geographic_network
+
+    atmospheric_carbon = MDM.atmospheric_carbon
+    surface_air_temperature = MDM.surface_air_temperature
+    ocean_carbon = MDM.ocean_carbon
+    terrestrial_carbon = MDM.terrestrial_carbon
+    fossil_carbon = MDM.fossil_carbon
 
     # attributes storing redundant information (backward references):
     societies = None
@@ -141,7 +161,9 @@ class Cell (object):
     location = Variable("location", "pair of coordinates?")
     area = Variable("area", "", unit=MDM.square_kilometers,
                     strict_lower_bound=0)
-    geometry = Variable("geometry", "polygon?")
+
+    terrestrial_carbon = MDM.terrestrial_carbon
+    fossil_carbon = MDM.fossil_carbon
 
     # attributes storing redundant information:
     nature = None
@@ -186,14 +208,3 @@ class Individual (object):
     acquaintances = None
     """Individuals this is acquainted with"""
 
-# basic model component:
-
-
-class Model (object):
-    """Basic Model interface."""
-
-    # metadata:
-    name = "copan:CORE Base"
-    description = "Basic model only providing basic relationships between " \
-                  "entity types."
-    requires = []

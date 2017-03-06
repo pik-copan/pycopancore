@@ -12,6 +12,7 @@
 from pycopancore.model_components import abstract
 
 from .. import interface as I
+from pycopancore import Explicit
 
 
 class World (I.World, abstract.World):
@@ -65,6 +66,8 @@ class World (I.World, abstract.World):
         """Return cells of world."""
         return self._cells
 
+    # TODO: use a cache (and last_modified dates) to speed up this and similar
+    # aggregations:
     @property  # read-only
     def individuals(self):
         """Return individuals of world."""
@@ -74,6 +77,17 @@ class World (I.World, abstract.World):
             r.update(c.individuals)
         return r
 
-    # no process-related methods
+    # process-related methods:
 
-    processes = []
+    def aggregate_cell_carbon_stocks(self, unused_t):
+        cs = self.cells
+        self.terrestrial_carbon = sum([c.terrestrial_carbon for c in cs])
+        self.fossil_carbon = sum([c.fossil_carbon for c in cs])
+
+    processes = [
+                 # TODO: convert this into an Implicit equation once supported:
+                 Explicit("aggregate cell carbon stocks",
+                          [I.World.terrestrial_carbon,
+                           I.World.fossil_carbon],
+                          aggregate_cell_carbon_stocks)
+                 ]
