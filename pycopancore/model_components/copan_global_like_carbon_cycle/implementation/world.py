@@ -1,44 +1,56 @@
-from pycopancore.model_components import abstract
 """Jobst: write docstring."""
-from .interface import *
+from pycopancore import Explicit, ODE
+from .. import interface as I
+import pycopancore.base.interface as base
 
 
-class World (World_, abstract.World):
+class World (I.World):
     """Jobst: write docstring."""
 
-    # standard methods:    
+    # standard methods:
 
     def __init__(self,
                  *,
                  atmospheric_carbon = 1,
-                 upper_ocean_carbon = 1,
-                 mean_surface_air_temperature = 0,
+                 ocean_carbon = 1,
+                 surface_air_temperature = 0,
                  **kwargs
                  ):
         """Initialize an (typically the unique) instance of World."""
         super().__init__(**kwargs)
         # initial values:
         self.atmospheric_carbon = atmospheric_carbon
-        self.upper_ocean_carbon = upper_ocean_carbon
-        self.mean_surface_air_temperature = mean_surface_air_temperature
+        self.ocean_carbon = ocean_carbon
+        self.surface_air_temperature = surface_air_temperature
 
     # process-related methods:
-    
-    def aggregate_stocks(self, unused_t):
-        """Aggregate world stocks from cell stocks."""
-        self.terrestrial_carbon = sum([c.terrestrial_carbon
-                                       for c in self.cells])
-        self.geological_carbon = sum([c.geological_carbon for c in self.cells])
 
+    def convert_temperature(self, unused_t):
+        """(see Anderies et al. 2013)"""
+        self.surface_air_temperature = self.nature.temperature_offset \
+            + self.nature.temperature_sensitivity_on_atmospheric_carbon \
+              * self.atmospheric_carbon
+
+    def ocean_atmosphere_diffusion(self, unused_t):
+        """(see Anderies et al. 2013)"""
+        flow = self.nature.ocean_atmosphere_diffusion_coefficient * (
+                self.nature.carbon_solubility_in_sea_water * self.ocean_carbon
+                - self.atmospheric_carbon)
+        self.d_ocean_carbon -= flow
+        self.d_atmospheric_carbon += flow
 
     processes = [
-                 Explicit("aggregate stocks",
-                          [terrestrial_carbon, geological_carbon],
-                          aggregate_stocks),
+                 Explicit("convert temperature",
+                          [I.World.surface_air_temperature],
+                          convert_temperature),
                  Explicit("carbon preservation",
-                          [World.maritime_carbon],
-                          [Nature_.total_carbon - World.atmospheric_carbon -
-                           World.terrestrial_carbon - World.geological_carbon]
+                          [I.World.ocean_carbon],
+                          [I.Nature.total_carbon
+                           - I.World.atmospheric_carbon
+                           - base.World.terrestrial_carbon
+                           - base.World.fossil_carbon]
                           ),
-                 ODE("")
+                 ODE("ocean-atmosphere diffusion",
+                     [I.World.ocean_carbon, I.World.atmospheric_carbon],
+                     ocean_atmosphere_diffusion)
                  ]
