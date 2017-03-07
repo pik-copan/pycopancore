@@ -30,6 +30,19 @@ class Individual(I.Individual, abstract.Individual):
         """Initialize an instance of Individual."""
         super(Individual, self).__init__(**kwargs)
 
-        self.strategy = strategy,
+        self.strategy = strategy
+        # register self in the attribute individual of the corresponding cell
+        self.cell.individual = self
+
+    def get_harvest_rate(self):
+        """Compute the harvest rate of the individual on its cell.
+
+        Returns
+        -------
+        harvest : float
+        """
+        effort = 0.5 * self.cell.growth_rate * (3 - 2 * self.strategy)
+        harvest = effort * self.cell.stock
+        return harvest
 
     processes = []

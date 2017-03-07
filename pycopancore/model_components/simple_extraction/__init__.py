@@ -18,7 +18,6 @@ from .cell import Cell
 from .individual import Individual
 
 # Import the dynamics
-from .metabolism import Metabolism
 
 # Import Model
 from .model import Model

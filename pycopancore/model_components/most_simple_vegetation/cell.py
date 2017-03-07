@@ -51,8 +51,6 @@ class Cell(I.Cell, abstract.Cell):
         g = self.growth_rate
         s = self.stock
         smax = self.capacity
-        # TODO:
-        # Why += and not = ?
         self.d_stock += g * (1 - s / smax) * s
 
     processes = [

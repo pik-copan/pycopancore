@@ -11,20 +11,18 @@
 from pycopancore import Variable
 
 
-class Cell(object):
-    """Interface for Cell."""
-
-    stock = Variable('current stock', 'current stock of resource')
-
-
 class Individual(object):
     """Interface for Individual."""
 
     strategy = Variable('harvesting strategy', 'harvesting strategy indiv.')
 
 
-class Metabolism(object):
-    """Interface for Metabolism."""
+class Cell(object):
+    """Interface for Cell."""
+
+    stock = Variable('current stock', 'current stock of resource')
+    growth_rate = Variable('growth rate', 'growth rate of resource')
+    individual = None
 
 
 class Model(object):

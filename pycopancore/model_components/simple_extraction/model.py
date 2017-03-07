@@ -9,7 +9,7 @@
 # License: MIT license
 
 from . import interface as I
-from . import Cell, Individual, Metabolism
+from . import Cell, Individual
 from pycopancore.model_components import abstract
 
 
@@ -23,7 +23,7 @@ class Model(I.Model, abstract.Model):
     # Use Mixins as wanted
 
     entity_types = [Cell, Individual]
-    process_taxa = [Metabolism]
+    process_taxa = []
 
     def __init__(self,
                  **kwargs
