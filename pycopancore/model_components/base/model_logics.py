@@ -216,20 +216,19 @@ class ModelLogics (object):
                 for (var, owc) in cls.variables:
                     if var == v:
                         voc = owc
+                        break
                 # Add the tuple (v, voc) to process_variables
-                cls.process_variables += [(v, voc)]
-
-                # Add the tuple (v, voc) to the process-type_variables
-                # and (process, owning_class) to process-type_variables
-                if isinstance(process, ODE) \
-                        and (v, voc) not in cls.ODE_variables:
-                    cls.ODE_variables += [(v, voc)]
-                elif isinstance(process, Explicit):
-                    cls.explicit_variables += [(v, voc)]
-                elif isinstance(process, Step):
-                    cls.step_variables += [(v, voc)]
-                elif isinstance(process, Event):
-                    cls.event_variables += [(v, voc)]
+                if (v, voc) not in cls.process_variables:
+                    cls.process_variables += [(v, voc)]
+                    # Add the tuple (v, voc) to the process-type_variables
+                    if isinstance(process, ODE):
+                        cls.ODE_variables += [(v, voc)]
+                    elif isinstance(process, Explicit):
+                        cls.explicit_variables += [(v, voc)]
+                    elif isinstance(process, Step):
+                        cls.step_variables += [(v, voc)]
+                    elif isinstance(process, Event):
+                        cls.event_variables += [(v, voc)]
 
         cls._configured = True
         print("...done")
