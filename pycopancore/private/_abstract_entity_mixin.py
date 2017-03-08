@@ -31,7 +31,7 @@ class _AbstractEntityMixin (object):
     def __init__(self,
                  **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
-        self._uid = self.get_next_uid()  # Jobst: I don't see why we need this
+        self._uid = _AbstractEntityMixin.get_next_uid()  # Jobst: I don't see why we need this
         try:
             self.__class__.instances.append(self)
         except AttributeError:
