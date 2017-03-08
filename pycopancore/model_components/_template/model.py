@@ -1,4 +1,4 @@
-"""Model component mixing class template.
+"""Model mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
@@ -20,7 +20,7 @@ from .implementation import Nature, Metabolism, Culture  # TODO: adjust!
 
 
 class Model (I.Model):
-    """Model component mixin class"""
+    """Model mixin class"""
 
     # mixins provided by this model component:
 

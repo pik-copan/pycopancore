@@ -9,7 +9,7 @@ See the model component development tutorial for details.
 """
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate Impact
 # Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>

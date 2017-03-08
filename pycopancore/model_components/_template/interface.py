@@ -6,7 +6,7 @@ remove these instructions.
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
@@ -14,55 +14,52 @@ remove these instructions.
 
 # TODO: use variables from the master data model wherever possible:
 # from pycopancore import master_data_model as MDM
-# TODO: uncomment if you need further variables from some catalogue:
-# from pycopancore import CFVariable, CETSVariable
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
 # import pycopancore.model_components.BBB.interface as BBB
-# TODO: uncomment only if you really need other variables:
+# TODO: uncomment and adjust only if you really need other variables:
 # from pycopancore import Variable
 
 
-class Model_ (object):
+class Model (object):
     """Interface for Model mixin."""
 
     # metadata:
-    name = "..."  # a unique name for the model component
-    description = "..."  # some description
-    # list of other model components required for this model component to
-    # make sense:
+    name = "..."
+    """a unique name for the model component"""
+    description = "..."
+    """some longer description"""
     requires = []
+    """list of other model components required for this model component to
+    make sense"""
 
-    # Note: Model_ does NOT define variables or parameters, only entity types
-    # and process taxons do!
+    # Notes:
+    # - Model does NOT define variables or parameters, only entity types
+    #   and process taxons do!
+    # - implementation.Model lists these entity-types and process taxons
+
 
 # entity types:
 
 
-class World_ (object):
+class World (object):
     """Interface for World mixin."""
 
     # endogenous variables:
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
     # X = MDM.X
-    # TODO: uncomment and adjust if you need further variables from some
-    # catalogue:
-    # Y1 = CFVariable(ref="...")
-    # TODO: uncomment and adjust if you need further variables from some
-    # catalogue:
-    # Y2 = CETSVariable(ref="...")
     # TODO: uncomment and adjust of you need further variables from another
     # model component:
     # Z = BBB.Z
     # TODO: uncomment and adjust only if you really need other variables:
-    # W = Variable(name="W", unit=..., ...)
+    # W = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
     # TODO: similarly
 
 
-class Society_ (object):
+class Society (object):
     """Interface for Society entity type mixin."""
 
     # endogenous variables:
@@ -70,7 +67,7 @@ class Society_ (object):
     # exogenous variables / parameters:
 
 
-class Cell_ (object):
+class Cell (object):
     """Interface for Cell entity type mixin."""
 
     # endogenous variables:
@@ -78,17 +75,18 @@ class Cell_ (object):
     # exogenous variables / parameters:
 
 
-class Individual_ (object):
+class Individual (object):
     """Interface for Individual entity type mixin."""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
+
 # process taxa:
 
 
-class Nature_ (object):
+class Nature (object):
     """Interface for Nature process taxon mixin."""
 
     # endogenous variables:
@@ -96,7 +94,7 @@ class Nature_ (object):
     # exogenous variables / parameters:
 
 
-class Metabolism_ (object):
+class Metabolism (object):
     """Interface for Metabolism process taxon mixin."""
 
     # endogenous variables:
@@ -104,7 +102,7 @@ class Metabolism_ (object):
     # exogenous variables / parameters:
 
 
-class Culture_ (object):
+class Culture (object):
     """Interface for Culture process taxon mixin."""
 
     # endogenous variables:
