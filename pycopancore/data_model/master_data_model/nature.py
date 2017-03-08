@@ -1,5 +1,5 @@
 from pycopancore.data_model import Variable
-from . import gigatons_carbon, kelvins, years, unity
+from . import unity, gigatonnes_carbon, kelvins, years
 from networkx import DiGraph, Graph
 
 # TODO: complete desc strings!
@@ -8,7 +8,7 @@ from networkx import DiGraph, Graph
 
 atmospheric_carbon = Variable("atmospheric carbon stock",
                               "(mass of C in any chemical compound)",
-                              unit=gigatons_carbon,
+                              unit=gigatonnes_carbon,
                               is_extensive=True, lower_bound=0)
 # Note: this is NOT the same as the CF var. atmosphere_mass_of_carbon_dioxide
 
@@ -26,7 +26,7 @@ surface_air_temperature = \
 
 ocean_carbon = Variable("ocean carbon stock",
                         "(mass of C in any chemical compound)",
-                        unit=gigatons_carbon,
+                        unit=gigatonnes_carbon,
                         is_extensive=True, lower_bound=0)
 
 # Note: when using the following, include
@@ -34,12 +34,12 @@ ocean_carbon = Variable("ocean carbon stock",
 upper_ocean_carbon = \
     Variable("upper ocean carbon stock",
              "(that which interacts relatively much/fast with atmosphere)",
-             unit=gigatons_carbon,
+             unit=gigatonnes_carbon,
              is_extensive=True, lower_bound=0)
 deep_ocean_carbon = \
     Variable("deep ocean carbon stock",
              "(that which interacts relatively little/slow with atmosphere)",
-             unit=gigatons_carbon,
+             unit=gigatonnes_carbon,
              is_extensive=True, lower_bound=0)
 
 # Note: there are no corresponding CF vars. yet
@@ -49,19 +49,19 @@ deep_ocean_carbon = \
 
 terrestrial_carbon = Variable("terrestrial carbon stock",
                               "(mass of C in any chemical compound)",
-                              unit=gigatons_carbon, 
+                              unit=gigatonnes_carbon, 
                               is_extensive=True, lower_bound=0)
 
 # Note: when using the following, include
 # Implicit(terrestrial_carbon == soil_carbon + biomass_carbon)
 soil_carbon = Variable("soil carbon stock",
                        "(mass of C in any chemical compound)",
-                       unit=gigatons_carbon,
+                       unit=gigatonnes_carbon,
                        is_extensive=True, lower_bound=0)
 # Note: has to do with CF var. soil_carbon_content
 biomass_carbon = Variable("biomass/plant carbon stock",
                           "(mass of C in any chemical compound)",
-                          unit=gigatons_carbon,
+                          unit=gigatonnes_carbon,
                           is_extensive=True, lower_bound=0)
 
 # Note: when using the following, include
@@ -70,12 +70,12 @@ harvestable_biomass_carbon = \
     Variable("harvestable biomass carbon stock",
              """(that which can be accessed easily for direct harvesting,
                 in particular agricultural biomass)""",
-             unit=gigatons_carbon,
+             unit=gigatonnes_carbon,
              is_extensive=True, lower_bound=0)
 other_biomass_carbon = \
     Variable("other (non-harvestable) biomass carbon stock",
              "(that which cannot be accessed easily for direct harvesting)",
-             unit=gigatons_carbon,
+             unit=gigatonnes_carbon,
              is_extensive=True, lower_bound=0)
 
 # Note: there are no corresponding CF vars. yet
@@ -87,7 +87,7 @@ fossil_carbon = Variable("fossil carbon stock",
                          """(mass of C in any chemical compound,
                          potentially accessible for human extraction
                          and combustion)""",
-                         unit=gigatons_carbon,
+                         unit=gigatonnes_carbon,
                          is_extensive=True, lower_bound=0)
 
 # Note: when using the following, include
@@ -95,12 +95,12 @@ fossil_carbon = Variable("fossil carbon stock",
 discovered_fossil_reserves = \
     Variable("discovered fossil reserves carbon stock",
              """(that which can currently be accessed for extraction)""",
-             unit=gigatons_carbon,
+             unit=gigatonnes_carbon,
              is_extensive=True, lower_bound=0)
 undiscovered_fossil_reserves = \
     Variable("undiscovered fossil reserves carbon stock",
              "(that which cannot currently be accessed for extraction)",
-             unit=gigatons_carbon,
+             unit=gigatonnes_carbon,
              is_extensive=True, lower_bound=0)
 
 # For ocean-atmosphere interactions:
@@ -118,11 +118,11 @@ carbon_solubility_in_sea_water = \
 photosynthesis_carbon_flow = \
     Variable("photosynthesis carbon flow", "",
              ref="https://en.wikipedia.org/wiki/Photosynthesis",
-             unit=gigatons_carbon/years,
+             unit=gigatonnes_carbon/years,
              is_extensive=True, lower_bound=0)
 terrestrial_respiration_carbon_flow = \
     Variable("plant and soil respiration carbon flow", "",
-             unit=gigatons_carbon/years,
+             unit=gigatonnes_carbon/years,
              is_extensive=True, lower_bound=0)
 
 # Note: when using the following, include
@@ -131,12 +131,12 @@ terrestrial_respiration_carbon_flow = \
 plant_respiration_carbon_flow = \
     Variable("plant respiration carbon flow", "",
              ref="https://en.wikipedia.org/wiki/Cellular_respiration",
-             unit=gigatons_carbon/years,
+             unit=gigatonnes_carbon/years,
              is_extensive=True, lower_bound=0)
 soil_respiration_carbon_flow = \
     Variable("soil respiration carbon flow", "",
              ref="https://en.wikipedia.org/wiki/Soil_respiration",
-             unit=gigatons_carbon/years,
+             unit=gigatonnes_carbon/years,
              is_extensive=True, lower_bound=0)
 
 # Note: there are no corresponding CF vars. yet
