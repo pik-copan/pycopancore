@@ -11,7 +11,7 @@
 
 from .. import interface as I
 from pycopancore.data_model.master_data_model.dimensions_and_units import \
-    gigatons_carbon, years, square_kilometers, kelvins
+    gigatonnes_carbon, years, square_kilometers, kelvins
 
 class Nature (I.Nature):
     """Nature process taxon mixin implementation class."""
@@ -20,19 +20,19 @@ class Nature (I.Nature):
 
     def __init__(self,
                  *,  # TODO: uncomment when adding named args behind here
-                 total_carbon = 5500 * gigatons_carbon, # see Nitzbon 2016
+                 total_carbon = 5500 * gigatonnes_carbon, # see Nitzbon 2016
                  ocean_atmosphere_diffusion_coefficient = 0.016 / years, # see Nitzbon 2016
                  carbon_solubility_in_sea_water = 1 / 1.43, # see Nitzbon 2016
                  basic_photosynthesis_productivity =
-                    26.4/years / (gigatons_carbon/square_kilometers)**.5, # see Nitzbon 2016
+                    26.4/years / (gigatonnes_carbon/square_kilometers)**.5, # see Nitzbon 2016
                  photosynthesis_sensitivity_on_atmospheric_carbon =
-                    1.1e6/years / (gigatons_carbon/square_kilometers)**.5
+                    1.1e6/years / (gigatonnes_carbon/square_kilometers)**.5
                         / kelvins, # see Nitzbon 2016
                  terrestrial_carbon_capacity_per_area =
-                    5000/1.5e8 * gigatons_carbon/square_kilometers, # ca. 2 times current value
+                    5000/1.5e8 * gigatonnes_carbon/square_kilometers, # ca. 2 times current value
                  basic_respiration_rate = 0.0298 / years, # see Nitzbon 2016
                  respiration_sensitivity_on_atmospheric_carbon =
-                    3200/years / (gigatons_carbon/square_kilometers), # see Nitzbon 2016
+                    3200/years / (gigatonnes_carbon/square_kilometers), # see Nitzbon 2016
                  temperature_offset=0, # TODO!
                  temperature_sensitivity_on_atmospheric_carbon=0, # TODO!
                  **kwargs):
