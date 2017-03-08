@@ -1,4 +1,5 @@
-from . import Unit, nondim, unity
+from . import nondim, unity
+#from . import Unit # would cause a circular import...
 
 
 class DimensionalQuantity (object):
@@ -33,7 +34,7 @@ class DimensionalQuantity (object):
 
     def __init__(self, multiple, unit):
         self._multiple = multiple
-        assert isinstance(unit, Unit), "unit must be a Unit object"
+#        assert isinstance(unit, Unit), "unit must be a Unit object" # would require circular import...
         self._unit = unit
         self._dimension = unit.dimension
 
