@@ -157,8 +157,12 @@ class Variable (Symbol):
         self.strict_upper_bound = strict_upper_bound
         self.quantum = quantum
         self.unit = unit
+
+        assert not (is_extensive is True and is_intensive is True), \
+                        "cannot be both extensive and intensive"
         self.is_extensive = is_extensive
         self.is_intensive = is_intensive
+
         self.levels = levels
 
     def __repr__(self):
