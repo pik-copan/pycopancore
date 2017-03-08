@@ -3,51 +3,57 @@ from .. import Unit
 
 # fundamental physical dimensions and units:
 
-length = Dimension(name="length", desc="1D spatial dimension")
-meters = Unit(name="meters", symbol="m", desc="meters", dimension=length)
+length = Dimension("length", "1D spatial dimension")
+meters = Unit("meters", "meters", symbol="m", dimension=length)
 length.default_unit = kilometers = \
-    (1000 * meters).named("kilometers", symbol="km")
+    (meters * 1000).named("kilometers", symbol="km")
 
-time = Dimension(name="time", desc="time")
-time.default_unit = years = Unit(name="years", symbol="a", desc="years")
+time = Dimension("time", "time")
+time.default_unit = years = Unit("years", "years", symbol="a")
+seconds = (years / 31556952).named("seconds")
 
-mass = Dimension(name="mass",
-                 desc="mass (only use for matter changing its type, otherwise use specific mass dimension, e.g. 'carbon')")
-mass.default_unit = tons = \
-    Unit(name="tons", symbol="t",
-         desc="tons (only use for matter changing its type, otherwise use specific mass units, e.g. 'GtC')")
-gigatons = (1e9 * tons).named("gigatons", symbol="Gt")
+mass = Dimension("mass",
+                 "mass (only use for matter changing its type, otherwise use specific mass dimension, e.g. 'carbon')")
+mass.default_unit = tonnes = \
+    Unit("tonnes",
+         "metric tonnes (only use for matter changing its type, otherwise use specific mass units, e.g. 'GtC')",
+         symbol="t")
+gigatonnes = (tonnes * 1e9).named("gigatonnes", symbol="Gt")
+kilograms = (tonnes * 1e-3).named("kilograms", symbol="kg")
 
-absolute_temperature = Dimension(name="absolute temperature",
-                                 desc="absolute temperature")
+absolute_temperature = Dimension("absolute temperature",
+                                 "absolute temperature")
 absolute_temperature.default_unit = kelvins = \
-    Unit(name="kelvins", symbol="K", desc="kelvins (degrees Kelvin)")
+    Unit("kelvins", "kelvins (degrees Kelvin)", symbol="K")
 
 
 # other base dimensions and units:
 
 # TODO: maybe rename to monetary value:
-value = Dimension(name="value",
-                  desc="inflation-adjusted monetary value of goods, services etc.")
-value.default_unit = dollars = \
-    Unit(name="dollars", symbol="$",
-         desc="inflation-adjusted 1990 US dollars")
+value = Dimension("value",
+                  "inflation-adjusted monetary value of goods, services etc.")
+value.default_unit = dollars = US_dollars_2005 = \
+    Unit("dollars",
+         "inflation-adjusted 2005 US dollars", symbol="$")
+# TODO: also provide US_dollars_1992 etc. for conversion
 
-utility = Dimension(name="utility",
-                    desc="abstract utility, representing an individual's preferences. BEWARE: this may not be considered to be interpersonally comparable!")
+utility = Dimension("utility",
+                    "abstract utility, representing an individual's preferences. BEWARE: this may not be considered to be interpersonally comparable!")
 utility.default_unit = utils = \
-    Unit(name="utils", symbol="u", desc="utility points")
+    Unit("utils", "utility points", symbol="u")
 
-carbon = Dimension(name="carbon",
-                   desc="mass of carbon, whether atomic or in some chemical compound")
-carbon.default_unit = tons_carbon = \
-    Unit(name="tons carbon", symbol="tC",
-         desc="tons of carbon, whether atomic or in some chemical compound")
-gigatons_carbon = (1e9 * tons_carbon).named("gigatons carbon", symbol="GtC")
+carbon = Dimension("carbon",
+                   "mass of carbon, whether atomic or in some chemical compound")
+carbon.default_unit = tonnes_carbon = \
+    Unit("tonnes carbon",
+         "tonnes of carbon, whether atomic or in some chemical compound",
+         symbol="tC")
+gigatonnes_carbon = (tonnes_carbon * 1e9).named("gigatonnes carbon",
+                                                symbol="GtC")
 
-humans = Dimension(name="humans", desc="cardinality of a set of human beings")
+humans = Dimension("humans", "cardinality of a set of human beings")
 humans.default_unit = people = \
-    Unit(name="people", symbol="H", desc="number of human beings")
+    Unit("people", "number of human beings", symbol="H")
 
 # derived flow dimensions:
 
@@ -57,11 +63,16 @@ human_flow = (humans / time).named("human flow")
 
 # other derived dimensions and units:
 
-area = (length**2).named("area", desc="2D spatial dimension")
+area = (length**2).named("area", "2D spatial dimension")
 square_kilometers = kilometers**2
 
-volume = (length**3).named("volume", desc="3D spatial dimension")
+volume = (length**3).named("volume", "3D spatial dimension")
 
 velocity = (length / time).named("velocity")
 
 acceleration = (velocity / time).named("acceleration")
+
+energy = (mass * velocity**2).named("energy")
+joules = kilograms * meters**2 / seconds**2
+energy.default_unit = gigajoules = \
+    (joules * 1e9).named("gigajoules", symbol="GJ")
