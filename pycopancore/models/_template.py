@@ -1,95 +1,95 @@
-"""Template to create model class modules."""
+"""
+Model class template.
+
+TODO:
+Copy this file, rename it to the name of your model, 
+then adjust or fill in code and documentation wherever marked by "TODO:", 
+finally remove these instructions.
+See the model development tutorial for details.
+"""
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-#
-#  Imports
-#
+import pycopancore.model_components.base as base  # all models must use the base component
 
-import pycopancore.model_components.base as base
-import pycopancore.model_components.COMPONENT as COMPONENT
-
-#
-# Entity Types
-#
+# TODO: import all other needed model components:
+#import pycopancore.model_components.COMPONENT1 as ABBR1
+#import pycopancore.model_components.COMPONENT2 as ABBR2
 
 
-class World (COMPONENT.World, base.World):
-    """Define Class by mixing all World_mixins to create World class."""
+# entity types:
 
+# TODO: compose all needed entity type implementation classes
+# by mixing the above model components' mixin classes of the same name.
+# Only compose those entity types and process taxons that the model needs,
+# delete the templates for the unneeded ones, and add those for missing ones:
+
+
+class World (ABBR1.World, ABBR2.World,  # TODO: list all mixin classes needed
+             base.World):
+    """World entity type"""
     pass
 
 
-class Cell (COMPONENT.Cell, base.Cell):
-    """Define Class by mixing all Cell_mixins to create Cell class."""
-
+class Society (ABBR1.Society, ABBR2.Society,  # TODO: list all mixin classes needed
+               base.Society):
+    """Society entity type"""
     pass
 
 
-class Individual (COMPONENT.Individual, base.Individual):
-    """Define Class by mixing all Individual_mixins to create Individual class.
-
-    Always put base.Individual last.
-    """
-
+class Cell (ABBR1.Cell, ABBR2.Cell,  # TODO: list all mixin classes needed
+            base.Cell):
+    """Cell entity type"""
     pass
 
 
-class Society (COMPONENT.Society, base.Society):
-    """Define Class by mixing all Society_mixins to create Society class.
-
-    Always put base.Society last.
-    """
-
-    pass
-
-#
-# Dynamics
-#
-
-
-class Culture(COMPONENT.Culture, base.Culture):
-    """Define Class by mixing all Culture_mixins to create Culture class.
-
-    Always put base.Culture last.
-    """
-
+class Individual (ABBR1.Individual, ABBR2.Individual,  # TODO: list all mixin classes needed
+             base.Individual):
+    """Individual entity type"""
     pass
 
 
-class Metabolism(COMPONENT.Metabolism, base.Metabolism):
-    """Define Class by mixing all Metabolism_mixins to create Metabolism class.
+# process taxa:
 
-    Always put base.Metabolism last.
-    """
+# TODO: do the same for process taxa:
 
+
+class Nature (ABBR1.Nature, ABBR2.Nature,  # TODO: list all mixin classes needed
+              base.Nature):
+    """Nature process taxon"""
     pass
 
 
-class Nature(COMPONENT.Nature, base.Nature):
-    """Define Class by mixing all Nature_mixins to create Nature class.
-
-    Always put base.Nature last.
-    """
-
+class Metabolism (ABBR1.Metabolism, ABBR2.Metabolism,  # TODO: list all mixin classes needed
+                  base.Metabolism):
+    """Metabolism process taxon"""
     pass
 
-#
-# Models
-#
+
+class Culture (ABBR1.Culture, ABBR2.Culture,  # TODO: list all mixin classes needed
+               base.Culture):
+    """Culture process taxon"""
+    pass
 
 
-class Model(base.Model, COMPONENT.Model):
-    """Define Model Class by mixing all Model_mixins."""
+# Model class:
 
-    name = "This model's name"
-    description = "Description of the model"
-    # Make a list of all Entity Types:
-    entity_types = [World, Cell, Individual, Society]
-    # Make a list of all Process taxons/taxa:
-    process_taxa = [Culture, Metabolism, Nature]
+
+class Model (ABBR1.Model, ABBR2.Model,  # TODO: list all used model components
+             base.Model):
+    """Class representing the whole model"""
+
+    name = "..."
+    """Name of the model"""
+    description = "..."
+    """Longer description"""
+
+    entity_types = [World, Society, Cell, Individual]  # TODO: list all entity types you composed above
+    """List of entity types used in the model"""
+    process_taxa = [Nature, Metabolism, Culture]  # TODO: list all entity types you composed above
+    """List of process taxa used in the model"""
