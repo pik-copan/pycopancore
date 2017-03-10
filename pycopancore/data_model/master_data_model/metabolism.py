@@ -29,14 +29,6 @@ fossil_extraction_flow = Variable("fossil extraction flow", "",
                                 unit=gigatonnes_carbon/years,
                                 lower_bound=0, is_extensive=True)
 
-biomass_energy_density = Variable("biomass energy density", "",
-                                  unit=gigajoules/gigatonnes_carbon,
-                                  lower_bound=0, is_intensive=True)
-
-fossil_energy_density = Variable("fossil energy density", "",
-                                 unit=gigajoules/gigatonnes_carbon,
-                                 lower_bound=0, is_intensive=True)
-
 carbon_emission_flow = Variable("carbon emission flow", "",
                                 unit=gigatonnes_carbon/years,
                                 IAMC="Emissions|CO2",
@@ -49,6 +41,8 @@ carbon_emission_flow = Variable("carbon emission flow", "",
 # depreciation rates
 # (total and by sector: energy(fossil/biomass/renewables)/final(clean/dirty)
 
+# stocks:
+
 physical_capital = \
     Variable("physical capital", """(in value units)""", unit=dollars,
              lower_bound=0, is_extensive=True, default=0)
@@ -59,6 +53,8 @@ renewable_energy_knowledge = \
              Interpreted as in Wright's law""",
              unit=gigajoules,
              lower_bound=0, is_extensive=True, default=0)
+
+# flows:
 
 # TODO: clarify whether biomass should include food...
 biomass_input_flow = \
@@ -113,6 +109,8 @@ investment_flow = \
              unit=dollars/years,
              lower_bound=0, is_extensive=True, default=0)
 
+# per-capita quantities:
+
 welfare_flow_per_capita = \
     Variable("cardinal social welfare flow 'per capita'",
              """Note that 'per capita' here does not imply that the value is
@@ -120,12 +118,35 @@ welfare_flow_per_capita = \
              unit = utils/people / years,
              lower_bound=0, is_intensive=True, default=0)
 
-
 # productivities, efficiencies etc.
 
-# learning rates
+biomass_energy_density = Variable("biomass energy density", "",
+                                  unit=gigajoules/gigatonnes_carbon,
+                                  lower_bound=0, is_intensive=True)
 
-# discounting/interest rates etc.
+fossil_energy_density = Variable("fossil energy density", "",
+                                 unit=gigajoules/gigatonnes_carbon,
+                                 lower_bound=0, is_intensive=True)
+
+# depreciation, learning, discounting, interest etc. rates
+
+physical_capital_depreciation_rate = \
+    Variable("physical capital depreciation rate", "",
+             unit=1/years,
+             lower_bound=0, is_intensive=True)
+
+renewable_energy_knowledge_depreciation_rate = \
+    Variable("renewable energy production knowledge depreciation rate", "",
+             unit=1/years,
+             lower_bound=0, is_intensive=True)
+
+# other non-time rates:
+
+savings_rate = \
+    Variable("savings (investment) rate", "",
+             unit=unity,
+             lower_bound=0, upper_bound=1, is_intensive=True)
+
 
 # financial capital?
 
