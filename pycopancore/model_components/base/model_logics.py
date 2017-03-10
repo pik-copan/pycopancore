@@ -186,13 +186,13 @@ class ModelLogics (object):
                             if isinstance(v, Variable)
                             }
                 for (k, v) in cvardict.items():
-                    v.owning_classes.append(owning_class)
                     if (v, owning_class) not in cls.variables:
+                        v.owning_classes.append(owning_class)
                         print("        Variable:", v)
                         cls.variables.append((v, owning_class))
                 for p in mixin.processes:
-                    p.owning_classes.append(owning_class)
                     if (p, owning_class) not in cls.processes:
+                        p.owning_classes.append(owning_class)
                         print("        Process:", p)
                         cls.processes.append((p, owning_class))
 
@@ -238,7 +238,7 @@ class ModelLogics (object):
 
         Using the standard unit.
         """
-        for var in self.variables:
+        for var,cl in self.variables:
             var.convert_to_standard_units()
 
 
