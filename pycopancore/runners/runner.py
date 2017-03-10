@@ -33,13 +33,18 @@ class Runner(_AbstractRunner):
 
     def __init__(self,
                  *,
-                 model  # TODO: allow this to be given without name!
+                 model,  # TODO: allow this to be given without name!
+                 termination_calls=False
                  ):
         """Initiate an Instance of Runner.
 
         Parameters
         ----------
         model
+        termination_calls : list
+            List of lists of callables and instances on which they are to be
+            called to determine if the runner should terminate in special
+            cases prior to the time limit.
         kwargs
         """
         super(Runner, self).__init__()
@@ -50,6 +55,7 @@ class Runner(_AbstractRunner):
         self.step_processes = model.step_processes
         self.ode_processes = model.ODE_processes
         self.trajectory_dict = {}
+        self.termination_calls = termination_calls
 
     def complete_explicits(self, t):
         """Call all explicit functions to complete or update them.
@@ -230,16 +236,19 @@ class Runner(_AbstractRunner):
 
         # Enter while loop
         while t < t_1:
-            print('    t is', t)
+            # print('    t is', t)
             # Get next discontinuity to find the next timestep where something
             # happens
             # If there are no discontinuities, the next_discontinuities
             # dict is empty, therefore try is necessary:
+            if self.terminate():
+                print('Break out of while-loop at time ', t)
+                break
             try:
                 next_time = min(next_discontinuities.keys())
             except ValueError:
                 next_time = t_1
-            print('    next time is', next_time)
+            # print('    next time is', next_time)
             # Divide time until discontinuity into timesteps of sice dt:
             npoints = np.ceil((next_time - t) / dt) + 1  # resolution
             ts = np.linspace(t, next_time, npoints)
@@ -413,3 +422,24 @@ class Runner(_AbstractRunner):
                         self.trajectory_dict[v][item], value))
                 except KeyError:
                     self.trajectory_dict[v][item] = value
+
+    def terminate(self):
+        """Determine if the runner should stop.
+
+        Apply all callables specified in self.termination_calls on their
+        respective instances. If one of them indicates a termination condition
+        by returning True, then return True. Else return False.
+
+        Returns
+        -------
+        boolean : True, if the runner should stop according to one of the
+            callables in self.termination_calls.
+            False, if there are no such callables or if they all return False.
+        """
+        if self.termination_calls:
+            for signal in self.termination_calls:
+                method = signal[0]
+                item = signal[1]
+                if method(item):
+                    return True
+        return False
