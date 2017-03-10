@@ -132,12 +132,12 @@ fossil_energy_density = Variable("fossil energy density", "",
 
 physical_capital_depreciation_rate = \
     Variable("physical capital depreciation rate", "",
-             unit=1/years,
+             unit=years**-1,
              lower_bound=0, is_intensive=True)
 
 renewable_energy_knowledge_depreciation_rate = \
     Variable("renewable energy production knowledge depreciation rate", "",
-             unit=1/years,
+             unit=years**-1,
              lower_bound=0, is_intensive=True)
 
 # other non-time rates:

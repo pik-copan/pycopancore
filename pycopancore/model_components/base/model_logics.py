@@ -89,8 +89,9 @@ class ModelLogics (object):
         # itself is excluded as well as the model component:
         parents = list(inspect.getmro(cls))[1:]
         cls.components = [c for c in parents
-                          if c is not abstract.Model
-                          and abstract.Model in inspect.getmro(c)
+                          if c not in (object, abstract.Model)
+#                          and abstract.Model in inspect.getmro(c)
+                          and object not in c.__bases__  # exclude interface classes (which inherit from object)
                           ]
         print('\nComponents:', cls.components)
 

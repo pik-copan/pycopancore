@@ -16,7 +16,6 @@ class DimensionalQuantity (object):
 
     _dimension = None
 
-    @property
     def multiple(self, unit=None):
         """return multiple in some (or the default) unit"""
         if unit is None:

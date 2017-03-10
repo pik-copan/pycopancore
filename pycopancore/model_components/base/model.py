@@ -81,7 +81,7 @@ class Model (I.Model, abstract.Model, ModelLogics):
         # for (v, oc) in self.variables:
         #     v.owning_classes = self.entities_dict[oc]
 
-        print('     base model instantiated')
+        print('     model instantiated')
 
     def __repr__(self):
         """Return a string representation of the base.Model."""

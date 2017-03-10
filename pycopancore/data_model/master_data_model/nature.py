@@ -107,7 +107,7 @@ undiscovered_fossil_reserves = \
 
 ocean_atmosphere_diffusion_coefficient = \
     Variable("ocean-atmosphere diffusion coefficient", "",
-             unit=1/years, lower_bound=0)
+             unit=years**-1, lower_bound=0)
 carbon_solubility_in_sea_water = \
     Variable("carbon solubility in sea water",
              "(in the sense of Anderies et al. 2013)",
