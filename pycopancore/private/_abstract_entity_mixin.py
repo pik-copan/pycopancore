@@ -11,7 +11,7 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.data_model import Variable
+from .. import Variable
 
 
 class _AbstractEntityMixin (object):

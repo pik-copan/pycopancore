@@ -1,4 +1,4 @@
-from pycopancore.data_model import Variable
+from .. import Variable
 from . import unity, gigatonnes_carbon, kelvins, years
 from networkx import DiGraph, Graph
 

@@ -50,7 +50,7 @@ class DimensionalQuantity (object):
             if self._dimension == nondim else self
 
     def __pow__(self, power):
-        return DimensionalQuantity(self._multiple**power, self._unit**power)\
+        return DimensionalQuantity(self._multiple**power, self._unit**power) \
             .reduce()
 
     def __add__(self, other):

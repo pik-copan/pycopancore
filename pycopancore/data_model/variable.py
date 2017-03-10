@@ -15,7 +15,7 @@ taxa.
 import random
 from sympy import Symbol
 from pycopancore.data_model import DimensionalQuantity
-from pycopancore.private import _AbstractEntityMixin, _AbstractProcessTaxon
+#from pycopancore.private import _AbstractEntityMixin, _AbstractProcessTaxon  # would cause circular import
 
 EPS = 1e-10
 """infinitesimal value for ensuring strict bounds"""
@@ -95,8 +95,10 @@ class Variable (Symbol):
 
     # attributes needed for internal framework logics:
 
-    owning_classes = []
+    owning_classes = None
     _codename = None
+    _et_abc = None  # class to check whether entity type
+    _pt_abc = None  # class to check whether process taxon
 
     # standard methods:
 
@@ -168,6 +170,8 @@ class Variable (Symbol):
         self.is_intensive = is_intensive
 
         self.levels = levels
+        
+        self.owning_classes = []
 
     def __repr__(self):
         r = "Variable " + self.name + "(" + self.desc + "), scale=" \
@@ -294,7 +298,7 @@ class Variable (Symbol):
                 instances.update(self._get_instances(k))
                 instances.update(self._get_instances(i))
         elif isinstance(instances,
-                        (_AbstractEntityMixin, _AbstractProcessTaxon)):
+                        (self._et_abc, self._pt_abc)):
             instances = set([instances])
         else:
             instances = set(instances)

@@ -61,7 +61,7 @@ humans.default_unit = H = people = \
 #joules = kilograms * meters**2 / seconds**2
 # but:
 energy = Dimension("energy", "(not convertible to mass velocity²)")
-J = joules = Unit("joules", "(not convertible to kg m²/s²)", symbol="J")
+J = joules = Unit("joules", "(not convertible to kg m²/s²)", symbol="J", dimension=energy)
 energy.default_unit = GJ = gigajoules = \
     (joules * 1e9).named("gigajoules", symbol="GJ")
 # TODO: provide other common units: Btu, kcal., MWh, etc.

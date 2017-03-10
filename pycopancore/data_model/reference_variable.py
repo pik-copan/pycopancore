@@ -1,4 +1,4 @@
-from .variable import Variable
+from . import Variable
 
 # TODO: complete logics, set other Variable attributes, validate etc.
 

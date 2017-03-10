@@ -49,10 +49,10 @@ class Dimension (object):
 
     def __repr__(self):
         return self.name
-    
+
     def __hash__(self):
         return hash(self.name) if self.is_base else None
-    
+
     def __eq__(self, other):
         if self.is_base: 
             return other.is_base and other.name == self.name
@@ -65,7 +65,7 @@ class Dimension (object):
                          exponents = { dim: ex*power for dim, ex in self.exponents.items() },
                          default_unit = self.default_unit**power
                             if self.default_unit is not None else None)
-        
+
     def __mul__(self, other):
         """multiplication *"""
         pex = self.exponents.copy()
@@ -82,7 +82,7 @@ class Dimension (object):
                             if self.default_unit is not None 
                             and other.default_unit is not None 
                             else None)
-        
+
     def __truediv__(self, other):
         """division /"""
         qex = self.exponents.copy()

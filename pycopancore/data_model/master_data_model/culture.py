@@ -1,4 +1,4 @@
-from pycopancore.data_model import Variable
+from .. import Variable
 from networkx import DiGraph, Graph
 
 # Social networks between individuals:

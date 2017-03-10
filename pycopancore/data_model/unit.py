@@ -3,8 +3,8 @@
 from functools import reduce
 import operator
 
-from .dimension import Dimension
-from .dimensional_quantity import DimensionalQuantity
+from pycopancore.data_model.dimension import Dimension
+#from .dimensional_quantity import DimensionalQuantity  # would cause circular import
 
 
 class Unit (object):
@@ -29,6 +29,8 @@ class Unit (object):
 
     _dimension = None
 
+    _dimensional_quantity_class = None  # will be set in data_model.__init__
+
     @property
     def dimension(self):
         """corresponding Dimension"""
@@ -41,11 +43,11 @@ class Unit (object):
                                                    desc="number of unity",
                                                    exponents={}))
             return reduce(operator.mul,
-                          [unit.dimension**ex 
+                          [unit.dimension**ex
                            for unit, ex in self.exponents.items()], nondim)
 
     def __init__(self,
-                 name,
+                 name="",
                  desc="",
                  *,
                  is_base=True,
@@ -168,8 +170,8 @@ class Unit (object):
 
     def __rtruediv__(self, other):
         """non-unit / unit returns a DimensionalQuantity"""
-        return DimensionalQuantity(multiple=other, unit=self**(-1))
+        return self._dimensional_quantity_class(multiple=other, unit=self**(-1))
 
     def __rmul__(self, other):
         """non-unit * unit returns a DimensionalQuantity"""
-        return DimensionalQuantity(multiple=other, unit=self)
+        return self._dimensional_quantity_class(multiple=other, unit=self)

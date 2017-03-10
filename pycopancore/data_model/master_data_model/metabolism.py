@@ -1,7 +1,7 @@
-from pycopancore.data_model import Variable
+from .. import Variable
 from . import unity, gigajoules, dollars, gigatonnes_carbon, years, utils, \
                 people
-from data_model.master_data_model.dimensions_and_units import gigatonnes_carbon
+from . import gigatonnes_carbon
 
 # Population, demographics:
 
