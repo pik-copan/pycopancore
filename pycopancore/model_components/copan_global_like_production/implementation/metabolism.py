@@ -13,6 +13,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from pycopancore import master_data_model as D
 
 
 class Metabolism (I.Metabolism):
@@ -21,15 +22,16 @@ class Metabolism (I.Metabolism):
     # standard methods:
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                 *,
+                 biomass_energy_density = 
+                    40e9 * D.gigajoules/D.gigatonnes_carbon,  # see Nitzbon 2016
+                 fossil_energy_density =
+                    47e9 * D.gigajoules/D.gigatonnes_carbon,  # see Nitzbon 2016
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
-        pass
 
-    # process-related methods:
+        self.biomass_energy_density = biomass_energy_density
+        self.fossil_energy_density = fossil_energy_density
 
-    # TODO: add some if needed...
-
-    processes = []  # TODO: instantiate and list process objects here
+    processes = []

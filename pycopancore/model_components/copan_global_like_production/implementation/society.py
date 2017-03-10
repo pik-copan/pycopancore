@@ -22,33 +22,10 @@ class Society (I.Society):
     # standard methods:
 
     def __init__(self,
-                 *,  # TODO: uncomment when adding named args behind here
-                 physical_capital=1,
-                 renewable_energy_knowledge=1,
-                 protected_terrestrial_carbon_share=0,
-                 protected_fossil_carbon_share=0,
+                 #*,
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
-
-        self.physical_capital = physical_capital
-        self.renewable_energy_knowledge = renewable_energy_knowledge
-        self.protected_terrestrial_carbon_share = \
-            protected_terrestrial_carbon_share
-        self.protected_fossil_carbon_share = \
-            protected_fossil_carbon_share
-
-    def deactivate(self):
-        """Deactivate a society."""
-        # TODO: add custom code here:
-        pass
-        super().deactivate()  # must be the last line
-
-    def reactivate(self):
-        """Reactivate a society."""
-        super().reactivate()  # must be the first line
-        # TODO: add custom code here:
-        pass
 
     # process-related methods:
 

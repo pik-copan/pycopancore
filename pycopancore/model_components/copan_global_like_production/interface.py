@@ -1,4 +1,4 @@
-"""copan_global_like_economy model component Interface
+"""copan_global_like_production model component Interface
 """
 
 # This file is part of pycopancore.
@@ -10,9 +10,6 @@
 # License: MIT license
 
 from pycopancore import master_data_model as D
-# TODO: uncomment and adjust of you need further variables from another
-# model component:
-# import pycopancore.model_components.BBB.interface as BBB
 from pycopancore import Variable
 
 
@@ -20,7 +17,7 @@ class Model (object):
     """Interface for Model mixin."""
 
     # metadata:
-    name = "copan:GLOBAL-like economy"
+    name = "copan:GLOBAL-like economic production"
     """a unique name for the model component"""
     description = """Simple four-sector (three energy, one final) economy
         as in copan:GLOBAL, but with cell-based harvesting of terrestrial
@@ -48,24 +45,20 @@ class World (object):
 class Society (object):
     """Interface for Society entity type mixin."""
 
-    # endogenous variables:
-
-    population = D.population
-    physical_capital = D.physical_capital
-    renewable_energy_knowledge = D.renewable_energy_knowledge
+    # pure output variables:
 
     biomass_input_flow = D.biomass_input_flow
     fossil_fuel_input_flow = D.fossil_fuel_input_flow
     renewable_energy_input_flow = D.renewable_energy_input_flow
     secondary_energy_flow = D.secondary_energy_flow
     carbon_emission_flow = D.carbon_emission_flow
-
     total_output_flow = D.total_output_flow
-    consumption_flow = D.consumption_flow
-    investment_flow = D.investment_flow
-    welfare_flow_per_capita = D.welfare_flow_per_capita
 
     # exogenous variables / parameters:
+
+    population = D.population
+    physical_capital = D.physical_capital
+    renewable_energy_knowledge = D.renewable_energy_knowledge
 
     protected_terrestrial_carbon_share = \
         Variable("protected share of terrestrial carbon",
@@ -88,6 +81,8 @@ class Cell (object):
 
     terrestrial_carbon = D.terrestrial_carbon
     fossil_carbon = D.fossil_carbon
+
+    # pure output variables:
 
     biomass_harvest_flow = D.biomass_harvest_flow
     fossil_extraction_flow = D.fossil_extraction_flow
