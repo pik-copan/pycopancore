@@ -1,7 +1,7 @@
 """Jobst: write docstring."""
 from pycopancore import Explicit, ODE
 from .. import interface as I
-import pycopancore.base.interface as base
+import pycopancore.model_components.base.interface as base
 
 
 class World (I.World):
@@ -31,6 +31,12 @@ class World (I.World):
             + self.nature.temperature_sensitivity_on_atmospheric_carbon \
               * self.atmospheric_carbon
 
+    def preserve_carbon(self, unused_t):
+        self.ocean_carbon = self.nature.total_carbon \
+            - self.atmospheric_carbon \
+            - self.terrestrial_carbon \
+            - self.fossil_carbon
+
     def ocean_atmosphere_diffusion(self, unused_t):
         """(see Anderies et al. 2013)"""
         flow = self.nature.ocean_atmosphere_diffusion_coefficient * (
@@ -45,10 +51,11 @@ class World (I.World):
                           convert_temperature),
                  Explicit("carbon preservation",
                           [I.World.ocean_carbon],
-                          [I.Nature.total_carbon
-                           - I.World.atmospheric_carbon
-                           - base.World.terrestrial_carbon
-                           - base.World.fossil_carbon]
+                          preserve_carbon
+#                          [I.Nature.total_carbon
+#                           - I.World.atmospheric_carbon
+#                           - base.World.terrestrial_carbon
+#                           - base.World.fossil_carbon]
                           ),
                  ODE("ocean-atmosphere diffusion",
                      [I.World.ocean_carbon, I.World.atmospheric_carbon],
