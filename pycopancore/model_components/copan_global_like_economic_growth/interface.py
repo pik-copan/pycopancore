@@ -9,13 +9,7 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# TODO: use variables from the master data model wherever possible:
 from pycopancore import master_data_model as D
-# TODO: uncomment and adjust of you need further variables from another
-# model component:
-# import pycopancore.model_components.BBB.interface as BBB
-# TODO: uncomment and adjust only if you really need other variables:
-# from pycopancore import Variable
 
 
 class Model (object):

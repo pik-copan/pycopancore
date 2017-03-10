@@ -11,9 +11,8 @@
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import World, Society, Cell, Individual  # TODO: adjust!
-# import all needed process taxon implementation classes:
-from .implementation import Nature, Metabolism, Culture  # TODO: adjust!
+from .implementation import Society
+
 
 
 class Model (I.Model):
