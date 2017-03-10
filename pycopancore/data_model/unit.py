@@ -148,7 +148,8 @@ class Unit (object):
                         exponents = pex)
 
     def __truediv__(self, other):
-        """division /"""
+        """unit / other returns a unit
+        (while non-unit / unit would return a DimensionalQuantity)"""
         qex = self.exponents.copy()
         if isinstance(other, Unit):
             oex = other.exponents
@@ -166,7 +167,8 @@ class Unit (object):
                         exponents = qex)
 
     def __rtruediv__(self, other):
-        return self**(-1) * other
+        """non-unit / unit returns a DimensionalQuantity"""
+        return DimensionalQuantity(multiple=other, unit=self**(-1))
 
     def __rmul__(self, other):
         """non-unit * unit returns a DimensionalQuantity"""

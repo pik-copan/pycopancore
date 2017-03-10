@@ -12,9 +12,13 @@ taxa.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+import random
 from sympy import Symbol
 from pycopancore.data_model import DimensionalQuantity
-from boto.iam.connection import IAMConnection
+from pycopancore.private import _AbstractEntityMixin, _AbstractProcessTaxon
+
+EPS = 1e-10
+"""infinitesimal value for ensuring strict bounds"""
 
 
 class Variable (Symbol):
@@ -250,15 +254,15 @@ class Variable (Symbol):
 
     # "getters" and "setters":
 
-    def set_value(self, entity, value):
-        """Set value for some entity,
+    def set_value(self, instance, value):
+        """Set value for some instance,
         possibly performing conversion to correct unit
         if value is a DimensionalQuantity,
         otherwise using own default unit"""
         if isinstance(value, DimensionalQuantity):
             value = value.multiple(unit=self.unit)
         self.assert_valid(value)
-        setattr(entity, self._codename, value)
+        setattr(instance, self._codename, value)
 
     def convert_to_standard_units(self,
                                   instances=None,  # if None: all entities/taxa
@@ -277,38 +281,89 @@ class Variable (Symbol):
                     if isinstance(v, DimensionalQuantity):
                         self.set_value(e, v)  # does the conversion
 
+    def _get_instances(self, instances):
+        """converts argument into a set of instances
+        (entities or process taxa)"""
+        if instances is None: # use all that have this variable
+            instances = set()
+            for c in self.owning_classes:
+                instances.update(c.instances)
+        elif isinstance(instances, dict): # use all that appear in keys or values
+            instances = set()
+            for k,i in instances.keys():
+                instances.update(self._get_instances(k))
+                instances.update(self._get_instances(i))
+        elif isinstance(instances,
+                        (_AbstractEntityMixin, _AbstractProcessTaxon)):
+            instances = set([instances])
+        else:
+            instances = set(instances)
+        return instances
+
     def set_to_default(self,
                        instances=None,  # if None: all entities/taxa
                        ):
         """Set values in selected entities to default"""
-        if instances is not None:
-            for e in instances:
-                self.set_value(e, self.default)
-        else:
-            for c in self.owning_classes:
-                for e in c.instances:
-                    self.set_value(e, self.default)
+        instances = self._get_instances(instances)
+        for e in instances:
+            self.set_value(e, self.default)
 
     def set_to_random(self,
                       instances=None,  # if None: all entities/taxa
                       distribution=None,  # if None: self.uninformed_prior
+                      *,
+                      p=1
                       ):
-        """Set values in selected entities to default"""
+        """Set values in selected entities to random value.
+        If distribution=None, use uninformed_prior.
+        If optional p is given, replace current value only with probability p."""
         if distribution is None:
             distribution = self.uninformed_prior
-        if instances is not None:
-            for e in instances:
-                self.set_value(e, distribution())
-        else:
-            for c in self.owning_classes:
-                for e in c.instances:
-                    self.set_value(e, distribution())
+        instances = self._get_instances(instances)
+        for i in instances:
+            if random.random() < p:
+                self.set_value(i, distribution())
+
+    def add_noise(self,
+                  instances=None,  # if None: all entities/taxa
+                  distribution=random.gauss, # basic noise distribution
+                  *,
+                  factor=1, # scale factor
+                  offset=0, # location offset
+                  multiplicative=False
+                  ):
+        """Set values in selected entities to random value.
+        If distribution=None, use uninformed_prior.
+        If optional p is given, replace current value only with probability p."""
+        assert self.scale in ("ratio", "interval"), \
+                "can only add noise to ratio or interval scaled variables"
+        instances = self._get_instances(instances)
+        for i in instances:
+            v = self.get_value(i)
+            noise = factor * distribution() + offset
+            if multiplicative:
+                v *= noise
+            else:
+                v += noise
+            # enforce bounds and quantization
+            if self.lower_bound is not None:
+                v = max(v, self.lower_bound)
+            if self.strict_lower_bound is not None:
+                v = max(v, self.strict_lower_bound + EPS)
+            if self.upper_bound is not None:
+                v = min(v, self.upper_bound)
+            if self.strict_upper_bound is not None:
+                v = min(v, self.strict_upper_bound - EPS)
+            if self.quantum is not None:
+                v = round(v / self.quantum) * self.quantum
+            # TODO: deal with possible interferences between bounds and quantum
+            self.set_value(i, v)
 
     def set_values(self,
-                   *,
-                   dictionary=None,
                    instances=None,
-                   values=None
+                   values=None,
+                   *,
+                   dictionary=None
                    ):
         """Set values for the variable.
 
@@ -321,7 +376,7 @@ class Variable (Symbol):
             Optional dictionary of variable values keyed by Entity
             object (e.g. {cell:location, individual:age}, ...)
         instances : list
-            Optional list of entities (Cells, Individuals, ...)
+            List of entities/process taxa
         values : list/array
             Optional corresponding list or array of values
 
@@ -343,19 +398,18 @@ class Variable (Symbol):
 
                 self.set_value(e, v)
 
-        if instances is not None:
-            for i in range(len(instances)):
-                inst = instances[i]
+        for i in range(len(instances)):
+            inst = instances[i]
 
-                #
-                # as above...
-                # assert isinstance(e, _AbstractEntityMixin). /
-                # "key is not a model entity"
-                # assert hastattr(e, self._codename), /
-                # "variable is not contained in entity"
-                #
+            #
+            # as above...
+            # assert isinstance(e, _AbstractEntityMixin). /
+            # "key is not a model entity"
+            # assert hastattr(e, self._codename), /
+            # "variable is not contained in entity"
+            #
 
-                self.set_value(inst, values[i])
+            self.set_value(inst, values[i])
 
     def clear_derivatives(self,
                           *,
@@ -372,11 +426,11 @@ class Variable (Symbol):
         -------
 
         """
-        for inst in instances:
-            setattr(inst, 'd_'+self._codename, 0)
+        instances = self._get_instances(instances)
+        for i in instances:
+            setattr(i, 'd_'+self._codename, 0)
 
     def get_derivatives(self,
-                        *,
                         instances=None
                         ):
         """Return a list of derivatives saved in entities.
@@ -384,7 +438,7 @@ class Variable (Symbol):
         Parameters
         ----------
         instances : list
-            List of the entities
+            List of entities/process taxa
 
         Returns
         -------
@@ -392,21 +446,26 @@ class Variable (Symbol):
         """
         return [getattr(e, 'd_'+self._codename) for e in instances]
 
-    def get_value_list(self,
-                       instances=None,
-                       unit=None
-                       ):
+    def get_value(self, instance, unit=None):
+        v = getattr(instance, self._codename)
+        return v if unit is None else self._unit.convert(v, unit)
+
+    def get_values(self,
+                   instances=None,
+                   *,
+                   unit=None
+                   ):
         """Return values for given entities,
         optionally in a different unit.
 
         Parameters
         ----------
-        instances: list
-            List of entities
+        instances: iterable
+            List of entities/process taxa
 
         Returns
         -------
         List of variable value of each entity
         """
-        l = [getattr(e, self._codename) for e in instances]
+        l = [getattr(i, self._codename) for i in instances]
         return l if unit is None else self._unit.convert(l, unit)
