@@ -7,7 +7,6 @@
 # License: MIT license
 
 """
-This is the dummy model-component package.
 """
 
 from ._abstract_process import _AbstractProcess
