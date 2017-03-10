@@ -33,7 +33,7 @@ class Runner(_AbstractRunner):
 
     def __init__(self,
                  *,
-                 model
+                 model  # TODO: allow this to be given without name!
                  ):
         """Initiate an Instance of Runner.
 
@@ -169,6 +169,8 @@ class Runner(_AbstractRunner):
         """
         # Define time:
         t = t_0
+
+        self.model.convert_to_standard_units()  # so that no DimensionalQuantities are left
 
         # First create the dictionary to fill in the trajectory:
         self.trajectory_dict['t'] = np.zeros([0])
