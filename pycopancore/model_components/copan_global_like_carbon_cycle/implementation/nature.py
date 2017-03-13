@@ -33,8 +33,9 @@ class Nature (I.Nature):
                  basic_respiration_rate = 0.0298 / years, # see Nitzbon 2016
                  respiration_sensitivity_on_atmospheric_carbon =
                     3200/years / (gigatonnes_carbon/square_kilometers), # see Nitzbon 2016
-                 temperature_offset=0, # TODO!
-                 temperature_sensitivity_on_atmospheric_carbon=0, # TODO!
+                 temperature_offset = 0 * kelvins, # TODO!
+                 temperature_sensitivity_on_atmospheric_carbon = \
+                    0 * kelvins/gigatonnes_carbon, # TODO!
                  **kwargs):
         """Initialize the unique instance of Nature."""
         super().__init__(**kwargs)  # must be the first line

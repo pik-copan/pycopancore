@@ -5,8 +5,8 @@ from pycopancore.runners import Runner
 # parameters:
 
 nw = 1  # no. worlds
-ns = 10  # no. societies
-nc = 100  # no. cells
+ns = 1 #0  # no. societies
+nc = 1 #00  # no. cells
 
 # instantiate process taxa:
 nature = M.Nature()

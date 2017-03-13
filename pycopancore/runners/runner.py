@@ -267,7 +267,7 @@ class Runner(_AbstractRunner):
                 for (variable, oc) in self.model.ODE_variables:
                     next_offset = offset + len(oc.instances)
                     initial_array_ode[offset:next_offset] = \
-                        variable.get_value_list(instances=oc.instances)
+                        variable.get_values(instances=oc.instances)
                     offset = next_offset
 
             # In Odeint, call get_derivatives to get the functions, which

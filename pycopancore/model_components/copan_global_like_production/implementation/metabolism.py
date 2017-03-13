@@ -1,7 +1,4 @@
-"""Metabolism process taxon mixin class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
+"""Metabolism process taxon mixin class.
 """
 
 # This file is part of pycopancore.

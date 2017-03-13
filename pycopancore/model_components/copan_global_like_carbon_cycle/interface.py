@@ -64,12 +64,12 @@ class Nature (object):
 
     basic_photosynthesis_productivity = \
         Variable("basic photosynthesis productivity", "",
-                 unit = 1/D.years
+                 unit = D.years**-1
                         / (D.gigatonnes_carbon/D.square_kilometers)**.5,
                  lower_bound=0)
     photosynthesis_sensitivity_on_atmospheric_carbon = \
         Variable("sensitivity of photosynthesis productivity on atmospheric carbon", "",
-                 unit = 1/D.years
+                 unit = D.years**-1
                         / (D.gigatonnes_carbon/D.square_kilometers)**.5
                         / D.kelvins)
     terrestrial_carbon_capacity_per_area = \
@@ -78,10 +78,11 @@ class Nature (object):
                  lower_bound=0)
 
     basic_respiration_rate = Variable("basic respiration rate", "",
-                                      unit=1/D.years)
+                                      unit=D.years**-1)
     respiration_sensitivity_on_atmospheric_carbon = \
         Variable("sensitivity of respiration rate on atmospheric carbon", "",
-                 unit = 1/D.years / D.kelvins)
+                 unit = D.years**-1 \
+                        / (D.gigatonnes_carbon/D.square_kilometers))
 
     temperature_offset = \
         Variable("offset of temperature for zero atmospheric carbon", "",

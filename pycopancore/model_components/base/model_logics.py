@@ -199,6 +199,7 @@ class ModelLogics (object):
 
         for (process, owning_class) in cls.processes:
             if isinstance(process, ODE):
+                print("ODE",process)
                 cls.ODE_processes += [(process, owning_class)]
             elif isinstance(process, Explicit):
                 cls.explicit_processes += [(process, owning_class)]
@@ -223,6 +224,7 @@ class ModelLogics (object):
                     cls.process_variables += [(v, voc)]
                     # Add the tuple (v, voc) to the process-type_variables
                     if isinstance(process, ODE):
+                        print("ODE VAR:",v,voc)
                         cls.ODE_variables += [(v, voc)]
                     elif isinstance(process, Explicit):
                         cls.explicit_variables += [(v, voc)]

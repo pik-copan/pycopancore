@@ -41,7 +41,7 @@ class Unit (object):
                                exponents={},
                                default_unit = Unit(name="unity", symbol="",
                                                    desc="number of unity",
-                                                   exponents={}))
+                                                   exponents={}, is_base=False))
             return reduce(operator.mul,
                           [unit.dimension**ex
                            for unit, ex in self.exponents.items()], nondim)
@@ -69,7 +69,7 @@ class Unit (object):
                         "dimension of base unit must be base dimension"
             self._dimension = dimension
         else:
-            self.exponents = exponents
+            self.exponents = exponents.copy()
             # TODO: use words "per", "square", "cubic" and sort be descending exponents
             self.name = (str(self.factor) + " " if self.factor != 1 else "") \
                         + " ".join([unit.name
@@ -95,7 +95,7 @@ class Unit (object):
         return Unit(is_base=self.is_base, name=name,
                     symbol=self.symbol if symbol is None else symbol,
                     desc=self.desc if desc is None else desc,
-                    factor=self.factor, exponents=self.exponents,
+                    factor=self.factor, exponents=self.exponents.copy(),
                     dimension=self.dimension if self.is_base else None)
 
     def convert(self, multiple, unit):

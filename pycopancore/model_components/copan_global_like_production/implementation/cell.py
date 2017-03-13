@@ -23,16 +23,16 @@ class Cell (I.Cell):
     def __init__(self,
                  *,
                  biomass_sector_productivity =
-                    1e5 * (D.gigajoules / D.years)**5
-                        / (D.gigatonnes_carbon * D.dollars * D.people)**2,
+                    1e5, #* (D.gigajoules / D.years)**5
+                        #/ (D.gigatonnes_carbon * D.dollars * D.people)**2,
                 fossil_sector_productivity =
-                    1e6 * (D.gigajoules / D.years)**5
-                        / (D.gigatonnes_carbon * D.dollars * D.people)**2,
+                    1e6, #* (D.gigajoules / D.years)**5
+                        #/ (D.gigatonnes_carbon * D.dollars * D.people)**2,
                 renewable_sector_productivity =
-                    1e-18 * D.gigajoules**3 / D.years**5
-                        / (D.dollars * D.people)**2,  # TODO!
+                    1e-18, #* D.gigajoules**3 / D.years**5
+                        #/ (D.dollars * D.people)**2,  # TODO!
                 total_energy_intensity =
-                    1/147 * D.gigajoules/D.dollars,  # see Nitzbon 2016
+                    1/147, #* D.gigajoules/D.dollars,  # see Nitzbon 2016
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line

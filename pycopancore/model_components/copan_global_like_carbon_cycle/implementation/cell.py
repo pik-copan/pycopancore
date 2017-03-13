@@ -1,5 +1,6 @@
 """Jobst: write docstring."""
 from pycopancore import ODE
+from pycopancore import master_data_model as D
 from .. import interface as I
 from numpy import sqrt
 
@@ -11,7 +12,7 @@ class Cell (I.Cell):
 
     def __init__(self,
                  *,
-                 terrestrial_carbon = 1,
+                 terrestrial_carbon = 1 * D.gigatonnes_carbon,
                  **kwargs
                  ):
         """Initialize a cell"""

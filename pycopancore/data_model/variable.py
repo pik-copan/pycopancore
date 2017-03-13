@@ -283,7 +283,6 @@ class Variable (Symbol):
                 for e in c.instances:
                     v = getattr(e, self._codename)
                     if isinstance(v, DimensionalQuantity):
-                        print(self)
                         self.set_value(e, v)  # does the conversion
 
     def _get_instances(self, instances):
