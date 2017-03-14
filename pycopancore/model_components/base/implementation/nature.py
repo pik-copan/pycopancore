@@ -9,9 +9,11 @@
 # License: MIT license
 
 # only used in this component, not in others:
-from pycopancore.model_components import abstract
+from ... import abstract
 
 from .. import interface as I
+
+from networkx import Graph
 
 
 class Nature (I.Nature, abstract.Nature):
@@ -20,12 +22,16 @@ class Nature (I.Nature, abstract.Nature):
     # standard methods:
 
     def __init__(self,
-                 # *,
+                 *,
+                 geographic_network=None,
                  **kwargs):
         """Initialize the unique instance of Nature."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
-        pass
+
+        if geographic_network is None:
+            geographic_network = Graph()
+        self.geographic_network = geographic_network
+
 
     # process-related methods:
 

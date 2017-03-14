@@ -17,7 +17,6 @@ from ... import Variable, ReferenceVariable
 from ... import master_data_model as D
 from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
 
-print(W.terrestrial_carbon == C.terrestrial_carbon)
 
 # model component:
 

@@ -173,6 +173,4 @@ class Unit (object):
         return dimensional_quantity.DimensionalQuantity(number=other, 
                                                         unit=self)
 
-dimension.nondim.default_unit = unity = \
-    Unit(name="unity", symbol="",
-         desc="number of unity", exponents={})
+unity = Unit(name="unity", symbol="", desc="number of unity", exponents={})

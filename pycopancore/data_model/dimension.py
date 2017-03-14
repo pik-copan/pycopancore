@@ -54,10 +54,7 @@ class Dimension (object):
         return hash(self.name) if self.is_base else None
 
     def __eq__(self, other):
-        if self.is_base: 
-            return other.is_base and other.name == self.name
-        else:
-            return self.exponents == other.exponents
+        return self.exponents == other.exponents
 
     def __pow__(self, power):
         """exponentiation **"""
@@ -98,4 +95,4 @@ class Dimension (object):
                          default_unit = self.default_unit / other.default_unit)
 
 nondim = Dimension(name="non-dimensional", desc="non-dimensional",
-                   exponents={})
+                   exponents={}, is_base=False)

@@ -25,13 +25,17 @@ class Nature (I.Nature):
                  basic_photosynthesis_productivity =
                     26.4 / years / (gigatonnes_carbon/square_kilometers)**.5, # see Nitzbon 2016
                  photosynthesis_sensitivity_on_atmospheric_carbon =
-                    1.1e6 / years / (gigatonnes_carbon/square_kilometers)**.5
+                    0 \
+#                    1.1e6 \
+                        / years / (gigatonnes_carbon/square_kilometers)**.5
                         / kelvins, # see Nitzbon 2016
                  terrestrial_carbon_capacity_per_area =
                     5000/1.5e8 * gigatonnes_carbon/square_kilometers, # ca. 2 times current value
                  basic_respiration_rate = 0.0298 / years, # see Nitzbon 2016
                  respiration_sensitivity_on_atmospheric_carbon =
-                    3200 / years / (gigatonnes_carbon/square_kilometers), # see Nitzbon 2016
+                    0 \
+#                    3200 \
+                        / years / (gigatonnes_carbon/square_kilometers), # see Nitzbon 2016
                  temperature_offset = 0 * kelvins, # TODO!
                  temperature_sensitivity_on_atmospheric_carbon = \
                     1 * kelvins/gigatonnes_carbon, # TODO!

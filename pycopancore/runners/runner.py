@@ -88,12 +88,10 @@ class Runner(_AbstractRunner):
 
         """
         # Call complete explicit functions, 3.1.2 in runner scheme
-        self.complete_explicits(self)
+        self.complete_explicits(t)
 
         # Call ode_rhs, 3.1.3 in runner scheme
         return_array = self.ode_rhs(value_array, t)
-
-        print(t, return_array)
 
         # return derivative_array
         return return_array
@@ -259,7 +257,6 @@ class Runner(_AbstractRunner):
                 offset = 0
                 # Find out how many variables we have:
                 for (variable, oc) in self.model.ODE_variables:
-                    print("ODE var",variable,oc)
                     next_offset = offset + len(oc.instances)
                     offset = next_offset
                 initial_array_ode = np.zeros(offset)

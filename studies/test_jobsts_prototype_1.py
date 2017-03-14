@@ -6,7 +6,6 @@ from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
 from pylab import plot, gca, show
-from pycopancore.data_model.master_data_model.nature import ocean_carbon
 
 # parameters:
 
@@ -51,26 +50,21 @@ M.Society.population.set_values(cells, P0)
 
 r = random.uniform(size=nsocs)
 S0 = 1e13 * D.gigajoules * r / sum(r) # in AWS paper: 1e12 (alternatively: 1e13)
-#M.Society.renewable_energy_knowledge.set_values(cells, S0)
+M.Society.renewable_energy_knowledge.set_values(cells, S0)
 
 r = random.uniform(size=nsocs)
 K0 = sum(P0) * 1e4 * D.dollars/D.people * r / sum(r) # ?
-#M.Society.physical_capital.set_values(cells, K0)
-
-print(M.Cell.terrestrial_carbon == M.World.terrestrial_carbon)
-print(M.Cell.terrestrial_carbon.owning_classes)
-print(M.World.terrestrial_carbon.owning_classes)
+M.Society.physical_capital.set_values(cells, K0)
 
 # TODO: add noise to parameters
 
 runner = Runner(model=model)
 
-traj = runner.run(t_1=1, dt=0.01)
+traj = runner.run(t_1=.01, dt=.0001)
 
 t = traj['t']
-print(traj[M.World.atmospheric_carbon][worlds[0]])
 plot(t, traj[M.World.atmospheric_carbon][worlds[0]])
 #plot(t, traj[M.Cell.photosynthesis_carbon_flow][cells[0]])
-#plot(t, traj[M.Cell.biomass_harvest_flow][cells[0]])
-#gca().set_yscale('symlog')
+plot(t, traj[M.Cell.fossil_extraction_flow][cells[0]])
+gca().set_yscale('symlog')
 show()

@@ -32,9 +32,9 @@ class Cell (I.Cell):
         Sigma = self.land_area
 
         self.photosynthesis_carbon_flow = \
-            ((self.nature.basic_photosynthesis_productivity 
+            ((self.nature.basic_photosynthesis_productivity
               - self.nature.photosynthesis_sensitivity_on_atmospheric_carbon
-                * self.world.surface_air_temperature)
+                * self.world.atmospheric_carbon)
              * sqrt(self.world.atmospheric_carbon / Sigma)
              * (1 - L / (self.nature.terrestrial_carbon_capacity_per_area 
                          * Sigma))) \
