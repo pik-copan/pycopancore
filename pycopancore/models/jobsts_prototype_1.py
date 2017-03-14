@@ -9,36 +9,42 @@ jobsts_prototype_1 model.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-import pycopancore.model_components.base as base  # all models must use the base component
+from .. import base  # all models must use the base component
 
-import pycopancore.model_components.copan_global_like_carbon_cycle \
+from ..model_components import copan_global_like_carbon_cycle \
     as cc
-import pycopancore.model_components.copan_global_like_production \
+from ..model_components import copan_global_like_production \
     as prod
-import pycopancore.model_components.copan_global_like_economic_growth \
+from ..model_components import copan_global_like_economic_growth \
     as growth
-#import pycopancore.model_components.copan_global_like_population_growth \
+#from ..model_components import copan_global_like_population_growth \
 #    as population
-#import pycopancore.model_components....migration \
+#from ..model_components import ...migration \
 #    as migration
 
 
 # entity types:
 
 
-class World (cc.World, prod.World,  # TODO: list all mixin classes needed
+class World (
+             cc.World,
+             prod.World,
              base.World):
     """World entity type"""
     pass
 
 
-class Society (prod.Society, growth.Society,  # TODO: list all mixin classes needed
+class Society (
+               prod.Society,
+               growth.Society,
                base.Society):
     """Society entity type"""
     pass
 
 
-class Cell (cc.Cell, prod.Cell,  # TODO: list all mixin classes needed
+class Cell (
+            cc.Cell,
+            prod.Cell,
             base.Cell):
     """Cell entity type"""
     pass
@@ -53,13 +59,15 @@ class Cell (cc.Cell, prod.Cell,  # TODO: list all mixin classes needed
 # process taxa:
 
 
-class Nature (cc.Nature,  # TODO: list all mixin classes needed
+class Nature (
+              cc.Nature,
               base.Nature):
     """Nature process taxon"""
     pass
 
 
-class Metabolism (prod.Metabolism,  # TODO: list all mixin classes needed
+class Metabolism (
+                  prod.Metabolism,
                   base.Metabolism):
     """Metabolism process taxon"""
     pass
@@ -74,7 +82,10 @@ class Metabolism (prod.Metabolism,  # TODO: list all mixin classes needed
 # Model class:
 
 
-class Model (cc.Model, prod.Model, growth.Model,
+class Model (
+             cc.Model,
+             prod.Model,
+             growth.Model,
              base.Model):
     """Class representing the whole model"""
 

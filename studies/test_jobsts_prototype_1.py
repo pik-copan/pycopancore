@@ -1,12 +1,13 @@
 from random import choice
 import pycopancore.models.jobsts_prototype_1 as M
 from pycopancore.runners import Runner
+from pylab import semilogy, show
 
 # parameters:
 
 nw = 1  # no. worlds
-ns = 1 #0  # no. societies
-nc = 1 #00  # no. cells
+ns = 10  # no. societies
+nc = 100  # no. cells
 
 # instantiate process taxa:
 nature = M.Nature()
@@ -23,10 +24,10 @@ for c in cells:
 
 model = M.Model()
 
-print(M.World.atmospheric_carbon.owning_classes)
-
 runner = Runner(model=model)
 
 traj = runner.run(t_1=1, dt=0.1)
 
-print(traj)
+print(traj['t'], traj[M.World.ocean_carbon][worlds[0]])
+semilogy(traj['t'], traj[M.World.ocean_carbon][worlds[0]])
+show()
