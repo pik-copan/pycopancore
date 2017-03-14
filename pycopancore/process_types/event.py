@@ -21,7 +21,7 @@ An event might be something like a birth or death, catastrophes of all sorts.
 # Definition of class Event
 #
 
-from pycopancore.private import _AbstractProcess
+from ..private import _AbstractProcess
 
 
 class Event(_AbstractProcess):

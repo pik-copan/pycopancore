@@ -22,7 +22,7 @@ steps.
 # Definition of class Event
 #
 
-from pycopancore.private import _AbstractProcess
+from ..private import _AbstractProcess
 
 
 class Step(_AbstractProcess):

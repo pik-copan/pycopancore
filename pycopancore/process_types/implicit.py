@@ -20,7 +20,7 @@ Implicit functions are not yet implemented.
 # Definition of class Event
 #
 
-from pycopancore.private import _AbstractProcess
+from ..private import _AbstractProcess
 
 
 class Implicit(_AbstractProcess):
