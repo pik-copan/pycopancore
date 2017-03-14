@@ -1,5 +1,3 @@
-from .. import nondim, unity
-
 from .dimensions_and_units import *
 
 from .nature import *
