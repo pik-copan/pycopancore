@@ -10,7 +10,7 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.data_model import Variable
+from ..data_model import variable
 
 
 class _AbstractProcessTaxonMixin(object):
@@ -32,6 +32,6 @@ class _AbstractProcessTaxonMixin(object):
             self.__class__.instances = [self]
 
     def set_value(self, variable, value):
-        assert isinstance(variable, Variable), \
+        assert isinstance(variable, variable.Variable), \
             "variable must be a Variable object"
         variable.set_value(self, value)

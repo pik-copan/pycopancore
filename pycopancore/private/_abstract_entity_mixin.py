@@ -11,7 +11,7 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .. import Variable
+from ..data_model import variable
 
 
 class _AbstractEntityMixin (object):
@@ -67,7 +67,7 @@ class _AbstractEntityMixin (object):
         return repr(self)
 
     def set_value(self, variable, value):
-        assert isinstance(variable, Variable), \
+        assert isinstance(variable, variable.Variable), \
             "variable must be a Variable object"
         variable.set_value(self, value)
 
