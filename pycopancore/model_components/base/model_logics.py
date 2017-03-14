@@ -63,22 +63,22 @@ class ModelLogics (object):
             raise ConfigureError("This model is already configured. "
                                  "Use optional argument 'reconfigure'")
 
-        cls.variables = []  # save in pairs: (variable, owning_class)
-        cls.processes = []  # save in pairs: (process, owning_class)
+        cls.variables = set()  # save in pairs: (variable, owning_class)
+        cls.processes = set()  # save in pairs: (process, owning_class)
 
         cls.variables_dict = {}
 
-        cls.process_variables = []
+        cls.process_variables = set()
 
-        cls.ODE_variables = []
-        cls.explicit_variables = []
-        cls.step_variables = []
-        cls.event_variables = []
+        cls.ODE_variables = set()
+        cls.explicit_variables = set()
+        cls.step_variables = set()
+        cls.event_variables = set()
 
-        cls.ODE_processes = []
-        cls.explicit_processes = []
-        cls.step_processes = []
-        cls.event_processes = []
+        cls.ODE_processes = set()
+        cls.explicit_processes = set()
+        cls.step_processes = set()
+        cls.event_processes = set()
 
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
@@ -172,13 +172,23 @@ class ModelLogics (object):
         for owning_class in cls.entity_types + cls.process_taxa:
             print('    Entity-type/Process taxon:', owning_class)
             parents = list(inspect.getmro(owning_class))
+#            components = [c for c in parents
+#                          if issubclass(c, (_AbstractEntityMixin,
+#                                            _AbstractProcessTaxonMixin))
+#                          and c not in (_AbstractEntityMixin,
+#                                        _AbstractProcessTaxonMixin)
+#                          ]
             components = [c for c in parents
-                          if issubclass(c, (_AbstractEntityMixin,
-                                            _AbstractProcessTaxonMixin))
-                          and c not in (_AbstractEntityMixin,
-                                        _AbstractProcessTaxonMixin)
+                          if c not in (object, abstract.Model)
+#                          and abstract.Model in inspect.getmro(c)
+                          and object not in c.__bases__  # exclude interface classes (which inherit from object)
                           ]
             for mixin in components:
+                # FIXME: currently this does not report the correct
+                # "owning" mixin for most variables/processes. This is not
+                # a problem for logics, only for reporting, since we DO
+                # store the correct owning class (namely the composed
+                # class rather than some mixin).
                 print('        Mixin:', mixin)
                 cparents = list(inspect.getmro(mixin))
                 cvardict = {k: v
@@ -190,48 +200,45 @@ class ModelLogics (object):
                     if (v, owning_class) not in cls.variables:
                         v.owning_classes.append(owning_class)
                         print("        Variable:", v)
-                        cls.variables.append((v, owning_class))
+                        cls.variables.add((v, owning_class))
                 for p in mixin.processes:
                     if (p, owning_class) not in cls.processes:
                         p.owning_classes.append(owning_class)
                         print("        Process:", p)
-                        cls.processes.append((p, owning_class))
+                        cls.processes.add((p, owning_class))
 
         for (process, owning_class) in cls.processes:
             if isinstance(process, ODE):
-                print("ODE",process)
-                cls.ODE_processes += [(process, owning_class)]
+                cls.ODE_processes.add((process, owning_class))
             elif isinstance(process, Explicit):
-                cls.explicit_processes += [(process, owning_class)]
+                cls.explicit_processes.add((process, owning_class))
             elif isinstance(process, Step):
-                cls.step_processes += [(process, owning_class)]
+                cls.step_processes.add((process, owning_class))
             elif isinstance(process, Event):
-                cls.event_processes += [(process, owning_class)]
+                cls.event_processes.add((process, owning_class))
             else:
                 print('process-type of', process, 'not specified')
                 print(process.__class__.__name__)
                 print(object.__str__(process))
             for v in process.variables:
-                # Find the tuple (var,owc) in cls.variables with var == v
-                # to get the owning class of the variable, not necessarily
+                # Find all tuples (var,owc) in cls.variables with var == v
+                # to get the owning classes of the variable, not necessarily
                 # the owning class of the process.
+                # FIXME: why not simply take var.owning_classes?
                 for (var, owc) in cls.variables:
                     if var == v:
                         voc = owc
-                        break
-                # Add the tuple (v, voc) to process_variables
-                if (v, voc) not in cls.process_variables:
-                    cls.process_variables += [(v, voc)]
-                    # Add the tuple (v, voc) to the process-type_variables
-                    if isinstance(process, ODE):
-                        print("ODE VAR:",v,voc)
-                        cls.ODE_variables += [(v, voc)]
-                    elif isinstance(process, Explicit):
-                        cls.explicit_variables += [(v, voc)]
-                    elif isinstance(process, Step):
-                        cls.step_variables += [(v, voc)]
-                    elif isinstance(process, Event):
-                        cls.event_variables += [(v, voc)]
+                        # Add the tuple (v, voc) to process_variables
+                        cls.process_variables.add((v, voc))
+                        # Add the tuple (v, voc) to the process-type_variables
+                        if isinstance(process, ODE):
+                            cls.ODE_variables.add((v, voc))
+                        elif isinstance(process, Explicit):
+                            cls.explicit_variables.add((v, voc))
+                        elif isinstance(process, Step):
+                            cls.step_variables.add((v, voc))
+                        elif isinstance(process, Event):
+                            cls.event_variables.add((v, voc))
 
         cls._configured = True
         print("...done")
@@ -241,7 +248,7 @@ class ModelLogics (object):
 
         Using the standard unit.
         """
-        for var,cl in self.variables:
+        for (var, cl) in self.variables:
             var.convert_to_standard_units()
 
 
