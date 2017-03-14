@@ -3,8 +3,7 @@
 from functools import reduce
 import operator
 
-from pycopancore.data_model.dimension import Dimension
-#from .dimensional_quantity import DimensionalQuantity  # would cause circular import
+from . import dimension, dimensional_quantity
 
 
 class Unit (object):
@@ -37,14 +36,10 @@ class Unit (object):
         if self.is_base: 
             return self._dimension
         else:
-            nondim = Dimension(name="non-dimensional", desc="non-dimensional",
-                               exponents={},
-                               default_unit = Unit(name="unity", symbol="",
-                                                   desc="number of unity",
-                                                   exponents={}, is_base=False))
             return reduce(operator.mul,
                           [unit.dimension**ex
-                           for unit, ex in self.exponents.items()], nondim)
+                           for unit, ex in self.exponents.items()],
+                          dimension.nondim)
 
     def __init__(self,
                  name="",
@@ -98,14 +93,14 @@ class Unit (object):
                     factor=self.factor, exponents=self.exponents.copy(),
                     dimension=self.dimension if self.is_base else None)
 
-    def convert(self, multiple, unit):
+    def convert(self, number, unit):
         assert unit.dimension == self.dimension, \
             "can't convert from " + str(self) \
             + " to " + str(unit)
-        if isinstance(multiple, list):
-            return [i * self.factor / unit.factor for i in multiple]
+        if isinstance(number, list):
+            return [i * self.factor / unit.factor for i in number]
         else:
-            return multiple * self.factor / unit.factor
+            return number * self.factor / unit.factor
 
     # standard methods and operators:
 
@@ -170,8 +165,14 @@ class Unit (object):
 
     def __rtruediv__(self, other):
         """non-unit / unit returns a DimensionalQuantity"""
-        return self._dimensional_quantity_class(multiple=other, unit=self**(-1))
+        return dimensional_quantity.DimensionalQuantity(number=other, 
+                                                        unit=self**(-1))
 
     def __rmul__(self, other):
         """non-unit * unit returns a DimensionalQuantity"""
-        return self._dimensional_quantity_class(multiple=other, unit=self)
+        return dimensional_quantity.DimensionalQuantity(number=other, 
+                                                        unit=self)
+
+dimension.nondim.default_unit = unity = \
+    Unit(name="unity", symbol="",
+         desc="number of unity", exponents={})

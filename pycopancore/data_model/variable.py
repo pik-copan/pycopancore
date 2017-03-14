@@ -14,8 +14,11 @@ taxa.
 
 import random
 from sympy import Symbol
-from pycopancore.data_model import DimensionalQuantity
-#from pycopancore.private import _AbstractEntityMixin, _AbstractProcessTaxon  # would cause circular import
+
+from . import DimensionalQuantity
+from .. import private
+# , _AbstractProcessTaxon  # would cause circular import
+
 
 EPS = 1e-10
 """infinitesimal value for ensuring strict bounds"""
@@ -97,8 +100,6 @@ class Variable (Symbol):
 
     owning_classes = None
     _codename = None
-    _et_abc = None  # class to check whether entity type
-    _pt_abc = None  # class to check whether process taxon
 
     # standard methods:
 
@@ -121,7 +122,7 @@ class Variable (Symbol):
                  AMIP=None,
                  IAMC=None,
                  CETS=None,
-                 datatype=float,
+                 datatype=(float,int),
                  array_shape=None,
                  allow_none=True,  # by default, var may be none
                  lower_bound=None,
@@ -170,8 +171,12 @@ class Variable (Symbol):
         self.is_intensive = is_intensive
 
         self.levels = levels
-        
+
         self.owning_classes = []
+
+    def __str__(self):
+        return self._codename + " (" + self.name + ")" if self._codename \
+            else self.name
 
     def __repr__(self):
         r = "Variable " + self.name + "(" + self.desc + "), scale=" \
@@ -205,7 +210,8 @@ class Variable (Symbol):
 
         if self.array_shape is not None:
             if not v.shape == self.array_shape:
-                return False, "array shape must be " + str(self.array_shape)
+                return False, \
+                    str(self) + " array shape must be " + str(self.array_shape)
             for item in v:
                 res = self._check_valid(item)
                 if res is not True:
@@ -213,42 +219,49 @@ class Variable (Symbol):
 
         if v is None:
             if self.allow_none is False:
-                return False, "may not be None"
+                return False, str(self) + " may not be None"
         else:
             if self.datatype is not None:
                 if not isinstance(v, self.datatype):
-                    return False, "must be instance of " + str(self.datatype)
+                    return False, \
+                        str(self) + " must be instance of " + str(self.datatype)
 
             if self.lower_bound is not None:
                 if not v >= self.lower_bound:
-                    return False, "must be >= " + str(self.lower_bound)
+                    return False, \
+                        str(self) + " must be >= " + str(self.lower_bound)
 
             if self.strict_lower_bound is not None:
                 if not v > self.strict_lower_bound:
-                    return False, "must be > " + str(self.strict_lower_bound)
+                    return False, \
+                        str(self) + " must be > " + str(self.strict_lower_bound)
 
             if self.upper_bound is not None:
                 if not v <= self.upper_bound:
-                    return False, "must be <= " + str(self.upper_bound)
+                    return False, \
+                        str(self) + " must be <= " + str(self.upper_bound)
 
             if self.strict_upper_bound is not None:
                 if not v < self.strict_upper_bound:
-                    return False, "must be < " + str(self.strict_upper_bound)
+                    return False, \
+                        str(self) + " must be < " + str(self.strict_upper_bound)
 
             if self.quantum is not None:
                 if not v % self.quantum == 0:
-                    return False, "must be integer multiple of " \
-                                    + str(self.quantum)
+                    return False, \
+                        str(self) + " must be integer number of " \
+                        + str(self.quantum)
 
             if self.levels is not None:
                 if v not in self.levels:
-                    return False, "must be in " + str(self.levels)
+                    return False, \
+                        str(self) + " must be in " + str(self.levels)
 
         return True
 
     def is_valid(self, value):
         if isinstance(value, DimensionalQuantity):
-            value = value.multiple(unit=self.unit)
+            value = value.number(unit=self.unit)
         return self._check_valid(value) == True
 
     def assert_valid(self, value):
@@ -264,8 +277,8 @@ class Variable (Symbol):
         if value is a DimensionalQuantity,
         otherwise using own default unit"""
         if isinstance(value, DimensionalQuantity):
-            value = value.multiple(unit=self.unit)
-        self.assert_valid(value)
+            value = value.number(unit=self.unit)
+#        self.assert_valid(value)
         setattr(instance, self._codename, value)
 
     def convert_to_standard_units(self,
@@ -298,7 +311,8 @@ class Variable (Symbol):
                 instances.update(self._get_instances(k))
                 instances.update(self._get_instances(i))
         elif isinstance(instances,
-                        (self._et_abc, self._pt_abc)):
+                        (private._AbstractEntityMixin,
+                         private._AbstractProcessTaxonMixin)):
             instances = set([instances])
         else:
             instances = set(instances)
@@ -448,10 +462,13 @@ class Variable (Symbol):
         -------
 
         """
-        return [getattr(e, 'd_'+self._codename) for e in instances]
+        return [getattr(i, 'd_'+self._codename) for i in instances]
 
     def get_value(self, instance, unit=None):
         v = getattr(instance, self._codename)
+        assert not isinstance(v, Variable), \
+            "Variable " + str(self) + " uninitialized at instance " \
+            + str(instance)
         return v if unit is None else self._unit.convert(v, unit)
 
     def get_values(self,
@@ -471,5 +488,4 @@ class Variable (Symbol):
         -------
         List of variable value of each entity
         """
-        l = [getattr(i, self._codename) for i in instances]
-        return l if unit is None else self._unit.convert(l, unit)
+        return [self.get_value(i, unit=unit) for i in instances]

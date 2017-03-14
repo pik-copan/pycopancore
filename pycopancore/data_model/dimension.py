@@ -96,3 +96,6 @@ class Dimension (object):
         return Dimension(is_base = False, 
                          exponents = qex,
                          default_unit = self.default_unit / other.default_unit)
+
+nondim = Dimension(name="non-dimensional", desc="non-dimensional",
+                   exponents={})
