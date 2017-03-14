@@ -13,12 +13,14 @@ class Cell (I.Cell):
     def __init__(self,
                  *,
                  terrestrial_carbon = 1 * D.gigatonnes_carbon,
+                 fossil_carbon = 1 * D.gigatonnes_carbon,
                  **kwargs
                  ):
         """Initialize a cell"""
         super().__init__(**kwargs)
         # initial values:
         self.terrestrial_carbon = terrestrial_carbon
+        self.fossil_carbon = fossil_carbon
 
     # process-related methods:
 
@@ -32,7 +34,7 @@ class Cell (I.Cell):
         self.photosynthesis_carbon_flow = \
             ((self.nature.basic_photosynthesis_productivity 
               - self.nature.photosynthesis_sensitivity_on_atmospheric_carbon
-                * self.world.mean_surface_air_temperature)
+                * self.world.surface_air_temperature)
              * sqrt(self.world.atmospheric_carbon / Sigma)
              * (1 - L / (self.nature.terrestrial_carbon_capacity_per_area 
                          * Sigma))) \
@@ -43,13 +45,13 @@ class Cell (I.Cell):
     def do_respiration(self, unused_t):
         """compute and store rhs of ODE respiration"""
 
-        self.respiration_carbon_flow = \
+        self.terrestrial_respiration_carbon_flow = \
             (self.nature.basic_respiration_rate
              + self.nature.respiration_sensitivity_on_atmospheric_carbon
                * self.world.atmospheric_carbon) \
             * self.terrestrial_carbon
 
-        self.d_terrestrial_carbon += - self.respiration_carbon_flow
+        self.d_terrestrial_carbon += - self.terrestrial_respiration_carbon_flow
 
     processes = [
                  ODE("photosynthesis", [I.Cell.terrestrial_carbon],

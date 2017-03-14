@@ -20,6 +20,9 @@ class Society (I.Society):
 
     def __init__(self,
                  *,
+                 population = 1 * D.people,
+                 physical_capital = 1 * D.dollars,
+                 renewable_energy_knowledge = 1 * D.gigajoules,
                  savings_rate = 0.244,  # see Nitzbon 2016
                  physical_capital_depreciation_rate = 0.1 / D.years,  # see Nitzbon 2016
                  renewable_energy_knowledge_depreciation_rate = 0.02 / D.years,
@@ -27,6 +30,10 @@ class Society (I.Society):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
 
+        self.population = population
+        self.physical_capital = physical_capital
+        self.renewable_energy_knowledge = \
+            renewable_energy_knowledge
         self.savings_rate = savings_rate
         self.physical_capital_depreciation_rate = \
             physical_capital_depreciation_rate

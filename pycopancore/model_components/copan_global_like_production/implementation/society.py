@@ -22,10 +22,17 @@ class Society (I.Society):
     # standard methods:
 
     def __init__(self,
-                 #*,
+                 *,
+                 protected_terrestrial_carbon_share = 0,
+                 protected_fossil_carbon_share = 0,
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
+
+        self.protected_terrestrial_carbon_share = \
+            protected_terrestrial_carbon_share
+        self.protected_fossil_carbon_share = \
+            protected_fossil_carbon_share
 
     # process-related methods:
 

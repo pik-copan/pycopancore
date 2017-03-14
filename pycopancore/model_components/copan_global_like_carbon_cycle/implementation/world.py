@@ -2,6 +2,7 @@
 from pycopancore import Explicit, ODE
 from .. import interface as I
 import pycopancore.model_components.base.interface as base
+from pycopancore import master_data_model as D
 
 
 class World (I.World):
@@ -11,9 +12,9 @@ class World (I.World):
 
     def __init__(self,
                  *,
-                 atmospheric_carbon = 1,
-                 ocean_carbon = 1,
-                 surface_air_temperature = 0,
+                 atmospheric_carbon = 1 * D.gigatonnes_carbon,
+                 ocean_carbon = 1 * D.gigatonnes_carbon,
+                 surface_air_temperature = 1 * D.kelvins,
                  **kwargs
                  ):
         """Initialize an (typically the unique) instance of World."""
@@ -31,12 +32,6 @@ class World (I.World):
             + self.nature.temperature_sensitivity_on_atmospheric_carbon \
               * self.atmospheric_carbon
 
-    def preserve_carbon(self, unused_t):
-        self.ocean_carbon = self.nature.total_carbon \
-            - self.atmospheric_carbon \
-            - self.terrestrial_carbon \
-            - self.fossil_carbon
-
     def ocean_atmosphere_diffusion(self, unused_t):
         """(see Anderies et al. 2013)"""
         flow = self.nature.ocean_atmosphere_diffusion_coefficient * (
@@ -49,14 +44,6 @@ class World (I.World):
                  Explicit("convert temperature",
                           [I.World.surface_air_temperature],
                           convert_temperature),
-                 Explicit("carbon preservation",
-                          [I.World.ocean_carbon],
-                          preserve_carbon
-#                          [I.Nature.total_carbon
-#                           - I.World.atmospheric_carbon
-#                           - base.World.terrestrial_carbon
-#                           - base.World.fossil_carbon]
-                          ),
                  ODE("ocean-atmosphere diffusion",
                      [I.World.ocean_carbon, I.World.atmospheric_carbon],
                      ocean_atmosphere_diffusion)
