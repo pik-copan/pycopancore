@@ -1,5 +1,6 @@
 from .. import Variable
 from . import unity, gigatonnes_carbon, kelvins, years
+
 from networkx import DiGraph, Graph
 
 # TODO: complete desc strings!

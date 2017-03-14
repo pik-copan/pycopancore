@@ -1,5 +1,7 @@
 from .. import Variable
+
 from networkx import DiGraph, Graph
+
 
 # Social networks between individuals:
 

@@ -1,5 +1,5 @@
-from .. import Dimension
-from .. import Unit
+from .. import Dimension, nondim
+from .. import Unit, unity
 
 # fundamental physical dimensions and units:
 
