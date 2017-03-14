@@ -8,14 +8,12 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# TODO: at beginning of run(), call model.convert_to_standard_units()
 
-#
-#  Imports
-#
+# TODO: rename to ScipyODEintRunner
 
-from pycopancore.private import _AbstractRunner
-from pycopancore import Event, Step
+from ..private import _AbstractRunner
+from .. import Event, Step
+
 from scipy import integrate
 import numpy as np
 
@@ -414,7 +412,7 @@ class Runner(_AbstractRunner):
         """
         for (v, oc) in liste:
             instances = oc.instances
-            values = v.get_value_list(instances)
+            values = v.get_values(instances)
             for i, item in enumerate(instances):
                 value = np.array([values[i]])
                 try:
