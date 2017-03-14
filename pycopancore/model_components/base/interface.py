@@ -14,7 +14,7 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 # License: MIT license
 
 from pycopancore import Variable, ReferenceVariable
-from pycopancore import master_data_model as MDM
+from pycopancore import master_data_model as D
 
 
 # model component:
@@ -57,7 +57,7 @@ class Culture (object):
     It contains all variables specified as mandatory ("base variables").
     """
 
-    acquaintance_network = MDM.acquaintance_network
+    acquaintance_network = D.acquaintance_network
 
 
 # entity types:
@@ -80,16 +80,16 @@ class World (object):
                                 "Culture taxon working on this world",
                                 type=Culture)
 
-    population = MDM.population
+    population = D.population
     # TODO: make sure it is no smaller than aggregate top-level societies'
 
-    geographic_network = MDM.geographic_network
+    geographic_network = D.geographic_network
 
-    atmospheric_carbon = MDM.atmospheric_carbon
-    surface_air_temperature = MDM.surface_air_temperature
-    ocean_carbon = MDM.ocean_carbon
-    terrestrial_carbon = MDM.terrestrial_carbon
-    fossil_carbon = MDM.fossil_carbon
+    atmospheric_carbon = D.atmospheric_carbon
+    surface_air_temperature = D.surface_air_temperature
+    ocean_carbon = D.ocean_carbon
+    terrestrial_carbon = D.terrestrial_carbon
+    fossil_carbon = D.fossil_carbon
 
     # attributes storing redundant information (backward references):
     societies = None
@@ -117,7 +117,7 @@ class Society (object):
     # population is explicitly allowed to be non-integer so that we can use
     # ODEs:
     # TODO: replace by suitable CETSVariable!
-    population = MDM.population
+    population = D.population
     # TODO: make sure it is no smaller than
     # aggregate next_lower_level societies'
 
@@ -159,11 +159,11 @@ class Cell (object):
 
     # other variables:
     location = Variable("location", "pair of coordinates?")
-    area = Variable("area", "", unit=MDM.square_kilometers,
+    land_area = Variable("land area", "", unit=D.square_kilometers,
                     strict_lower_bound=0)
 
-    terrestrial_carbon = MDM.terrestrial_carbon
-    fossil_carbon = MDM.fossil_carbon
+    terrestrial_carbon = D.terrestrial_carbon
+    fossil_carbon = D.fossil_carbon
 
     # attributes storing redundant information:
     nature = None
@@ -188,7 +188,7 @@ class Individual (object):
     relative_weight = \
         Variable("relative representation weight",
                  "relative representation weight for society's population",
-                 unit=MDM.unity, lower_bound=0, default=1)
+                 unit=D.unity, lower_bound=0, default=1)
 
     # attributes storing redundant information:
     world = None

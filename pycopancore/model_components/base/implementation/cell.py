@@ -10,6 +10,7 @@
 
 # only used in this component, not in others:
 from pycopancore.model_components import abstract
+from pycopancore import master_data_model as D
 
 from .. import interface as I
 
@@ -29,7 +30,7 @@ class Cell (I.Cell, abstract.Cell):
                  world=None,
                  society=None,
                  location=None,
-                 area=0,
+                 land_area = 1 * D.square_kilometers,
                  geometry=None,
                  **kwargs
                  ):
@@ -42,7 +43,7 @@ class Cell (I.Cell, abstract.Cell):
         self.world = world
         self.society = society
         self.location = location
-        self.area = area
+        self.land_area = land_area
         self.geometry = geometry
 
         self._individuals = set()

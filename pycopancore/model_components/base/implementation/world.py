@@ -10,9 +10,12 @@
 
 # only used in this component, not in others:
 from pycopancore.model_components import abstract
+from pycopancore import master_data_model as D
 
 from .. import interface as I
 from pycopancore import Explicit
+
+from networkx import Graph
 
 
 class World (I.World, abstract.World):
@@ -30,7 +33,8 @@ class World (I.World, abstract.World):
                  nature=None,
                  metabolism=None,
                  culture=None,
-                 population=0,
+                 population = 0 * D.people,
+                 geographic_network=None,
                  **kwargs
                  ):
         """Initialize an (typically the only) instance of World."""
@@ -43,6 +47,10 @@ class World (I.World, abstract.World):
         self.metabolism = metabolism
         self.culture = culture
         self.population = population
+
+        if geographic_network is None:
+            geographic_network = Graph()
+        self.geographic_network = geographic_network
 
         self._societies = set()
         self._cells = set()
