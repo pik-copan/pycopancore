@@ -104,10 +104,15 @@ class Variable (Symbol):
     # standard methods:
 
     # inheritance from Symbol is a little tricky since Symbol has a custom
-    # __new__ method:
+    # __new__ method that returns the same object everytime the name is the
+    # same! We break this behaviour by using random Symbol.names so that we
+    # can multiple copies of a Variable having the same name, to be attached
+    # to different entity types:
     @staticmethod
     def __new__(cls, name, *args, **assumptions):
-        return super().__new__(cls, name, **assumptions)
+        return super().__new__(cls,
+                               str(random.random()),
+                               **assumptions)
 
     def __init__(self,
                  name,
@@ -174,6 +179,9 @@ class Variable (Symbol):
 
         self.owning_classes = []
 
+    def __eq__(self, other):
+        return object.__eq__(self, other)
+
     def copy(self):
         # TODO: do this more elegantly??
         c = Variable(self.name,
@@ -201,6 +209,9 @@ class Variable (Symbol):
                      levels=self.levels
                      )
         return c
+
+    def __hash__(self):
+        return object.__hash__(self)
 
     def __str__(self):
         return self._codename + " (" + self.name + ")" if self._codename \

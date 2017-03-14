@@ -9,8 +9,9 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore import master_data_model as D
-from pycopancore import Variable
+from ... import master_data_model as D
+from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+from ... import Variable
 
 
 class Model (object):
@@ -33,19 +34,19 @@ class World (object):
     """Interface for World mixin"""
 
     # variables:
-    atmospheric_carbon = D.atmospheric_carbon
-    ocean_carbon = D.ocean_carbon
-    surface_air_temperature = D.surface_air_temperature
+    atmospheric_carbon = W.atmospheric_carbon
+    ocean_carbon = W.ocean_carbon
+    surface_air_temperature = W.surface_air_temperature
 
 
 class Cell (object):
     """Interface for Cell mixin"""
 
     # variables:
-    terrestrial_carbon = D.terrestrial_carbon
-    photosynthesis_carbon_flow = D.photosynthesis_carbon_flow
+    terrestrial_carbon = C.terrestrial_carbon
+    photosynthesis_carbon_flow = C.photosynthesis_carbon_flow
     terrestrial_respiration_carbon_flow = \
-        D.terrestrial_respiration_carbon_flow
+        C.terrestrial_respiration_carbon_flow
 
 
 # process taxa:
@@ -56,8 +57,8 @@ class Nature (object):
 
     # parameters / exogenous veriables:
     ocean_atmosphere_diffusion_coefficient = \
-        D.ocean_atmosphere_diffusion_coefficient
-    carbon_solubility_in_sea_water = D.carbon_solubility_in_sea_water
+        NAT.ocean_atmosphere_diffusion_coefficient
+    carbon_solubility_in_sea_water = NAT.carbon_solubility_in_sea_water
 
     basic_photosynthesis_productivity = \
         Variable("basic photosynthesis productivity", "",

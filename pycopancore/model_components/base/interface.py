@@ -13,9 +13,11 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore import Variable, ReferenceVariable
-from pycopancore import master_data_model as D
+from ... import Variable, ReferenceVariable
+from ... import master_data_model as D
+from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
 
+print(W.terrestrial_carbon == C.terrestrial_carbon)
 
 # model component:
 
@@ -39,7 +41,7 @@ class Nature (object):
     It contains all variables specified as mandatory ("base variables").
     """
 
-    pass
+    geographic_network = NAT.geographic_network
 
 
 class Metabolism (object):
@@ -57,7 +59,7 @@ class Culture (object):
     It contains all variables specified as mandatory ("base variables").
     """
 
-    acquaintance_network = D.acquaintance_network
+    acquaintance_network = CUL.acquaintance_network
 
 
 # entity types:
@@ -80,16 +82,14 @@ class World (object):
                                 "Culture taxon working on this world",
                                 type=Culture)
 
-    population = D.population
+    population = W.population
     # TODO: make sure it is no smaller than aggregate top-level societies'
 
-    geographic_network = D.geographic_network
-
-    atmospheric_carbon = D.atmospheric_carbon
-    surface_air_temperature = D.surface_air_temperature
-    ocean_carbon = D.ocean_carbon
-    terrestrial_carbon = D.terrestrial_carbon
-    fossil_carbon = D.fossil_carbon
+    atmospheric_carbon = W.atmospheric_carbon
+    surface_air_temperature = W.surface_air_temperature
+    ocean_carbon = W.ocean_carbon
+    terrestrial_carbon = W.terrestrial_carbon
+    fossil_carbon = W.fossil_carbon
 
     # attributes storing redundant information (backward references):
     societies = None
@@ -117,7 +117,7 @@ class Society (object):
     # population is explicitly allowed to be non-integer so that we can use
     # ODEs:
     # TODO: replace by suitable CETSVariable!
-    population = D.population
+    population = S.population
     # TODO: make sure it is no smaller than
     # aggregate next_lower_level societies'
 
@@ -162,8 +162,8 @@ class Cell (object):
     land_area = Variable("land area", "", unit=D.square_kilometers,
                     strict_lower_bound=0)
 
-    terrestrial_carbon = D.terrestrial_carbon
-    fossil_carbon = D.fossil_carbon
+    terrestrial_carbon = C.terrestrial_carbon
+    fossil_carbon = C.fossil_carbon
 
     # attributes storing redundant information:
     nature = None

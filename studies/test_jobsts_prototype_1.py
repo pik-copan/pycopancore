@@ -57,6 +57,10 @@ r = random.uniform(size=nsocs)
 K0 = sum(P0) * 1e4 * D.dollars/D.people * r / sum(r) # ?
 #M.Society.physical_capital.set_values(cells, K0)
 
+print(M.Cell.terrestrial_carbon == M.World.terrestrial_carbon)
+print(M.Cell.terrestrial_carbon.owning_classes)
+print(M.World.terrestrial_carbon.owning_classes)
+
 # TODO: add noise to parameters
 
 runner = Runner(model=model)

@@ -9,7 +9,8 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore import master_data_model as D
+from ... import master_data_model as D
+from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
 
 
 class Model (object):
@@ -39,20 +40,20 @@ class Society (object):
 
     # endogenous variables:
 
-    physical_capital = D.physical_capital
-    renewable_energy_knowledge = D.renewable_energy_knowledge
+    physical_capital = S.physical_capital
+    renewable_energy_knowledge = S.renewable_energy_knowledge
 
     # output-only variables:
 
-    investment_flow = D.investment_flow
-    consumption_flow = D.consumption_flow
+    investment_flow = S.investment_flow
+    consumption_flow = S.consumption_flow
 
     # exogenous variables / parameters:
 
-    total_output_flow = D.total_output_flow
-    renewable_energy_input_flow = D.renewable_energy_input_flow
+    total_output_flow = S.total_output_flow
+    renewable_energy_input_flow = S.renewable_energy_input_flow
 
-    savings_rate = D.savings_rate
-    physical_capital_depreciation_rate = D.physical_capital_depreciation_rate
+    savings_rate = S.savings_rate
+    physical_capital_depreciation_rate = S.physical_capital_depreciation_rate
     renewable_energy_knowledge_depreciation_rate = \
-        D.renewable_energy_knowledge_depreciation_rate
+        S.renewable_energy_knowledge_depreciation_rate

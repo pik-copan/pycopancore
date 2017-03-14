@@ -24,10 +24,6 @@ from pycopancore.private import \
     _AbstractEntityMixin, _AbstractProcessTaxonMixin
 import inspect
 
-#
-#  Define class Model
-#
-
 
 class ModelLogics (object):
     """Model logics class.
@@ -66,7 +62,9 @@ class ModelLogics (object):
         cls.variables = set()  # save in pairs: (variable, owning_class)
         cls.processes = set()  # save in pairs: (process, owning_class)
 
-        cls.variables_dict = {}
+        # FIXME: decide whether this is needed, and if so, make it work with
+        # several entity types using the same variable name:
+#        cls.variables_dict = {}
 
         cls.process_variables = set()
 
@@ -121,19 +119,19 @@ class ModelLogics (object):
                     # check if same var. object was already registered. If its
                     # codename k is different to a previous assigned codename
                     # an assertion error is the output:
-                    if v in cls.variables_dict.values():
-                        print("            already registered by another "
-                              "component")
-                        assert v._codename == k, ('with Codename', k)
+#                    if v in cls.variables_dict.values():
+#                        print("            already registered by another "
+#                              "component")
+#                        assert v._codename == k, ('with Codename', k)
                     # check if same codename was already registered if not,
                     # same assertion error as above:
-                    if k in cls.variables_dict.keys():
-                        print("            already registered by another "
-                              "component")
-                        assert cls.variables_dict[k] == v, \
-                            'Codename already in use by another variable'
+#                    if k in cls.variables_dict.keys():
+#                        print("            already registered by another "
+#                              "component")
+#                        assert cls.variables_dict[k] == v, \
+#                            'Codename already in use by another variable'
                     v._codename = k
-                    cls.variables_dict[k] = v
+#                    cls.variables_dict[k] = v
 
                 for p in etmixin.processes:
                     print("        Process:", p)
@@ -150,17 +148,17 @@ class ModelLogics (object):
                 for (k, v) in cvardict.items():
                     print("        Variable:", v)
                     # check if same var. object was already registered:
-                    if v in cls.variables_dict.values():
-                        print("          already registered by another "
-                              "component")
-                        assert v._codename == k, ('with Codename', k)
-                    if k in cls.variables_dict.keys():
-                        print("          already registered by another "
-                              "component")
-                        assert cls.variables_dict[k] == v, \
-                            'Codename already in use by another variable'
+#                    if v in cls.variables_dict.values():
+#                        print("          already registered by another "
+#                              "component")
+#                        assert v._codename == k, ('with Codename', k)
+#                    if k in cls.variables_dict.keys():
+#                        print("          already registered by another "
+#                              "component")
+#                        assert cls.variables_dict[k] == v, \
+#                            'Codename already in use by another variable'
                     v._codename = k
-                    cls.variables_dict[k] = v
+#                    cls.variables_dict[k] = v
 
                 for p in pt.processes:
                     print("        Process:", p)

@@ -9,8 +9,9 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore import master_data_model as D
-from pycopancore import Variable
+from ... import master_data_model as D
+from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+from ... import Variable
 
 
 class Model (object):
@@ -37,7 +38,7 @@ class World (object):
 
     # endogenous variables:
 
-    atmospheric_carbon = D.atmospheric_carbon
+    atmospheric_carbon = W.atmospheric_carbon
 
     # exogenous variables / parameters:
 
@@ -47,18 +48,18 @@ class Society (object):
 
     # pure output variables:
 
-    biomass_input_flow = D.biomass_input_flow
-    fossil_fuel_input_flow = D.fossil_fuel_input_flow
-    renewable_energy_input_flow = D.renewable_energy_input_flow
-    secondary_energy_flow = D.secondary_energy_flow
-    carbon_emission_flow = D.carbon_emission_flow
-    total_output_flow = D.total_output_flow
+    biomass_input_flow = S.biomass_input_flow
+    fossil_fuel_input_flow = S.fossil_fuel_input_flow
+    renewable_energy_input_flow = S.renewable_energy_input_flow
+    secondary_energy_flow = S.secondary_energy_flow
+    carbon_emission_flow = S.carbon_emission_flow
+    total_output_flow = S.total_output_flow
 
     # exogenous variables / parameters:
 
-    population = D.population
-    physical_capital = D.physical_capital
-    renewable_energy_knowledge = D.renewable_energy_knowledge
+    population = S.population
+    physical_capital = S.physical_capital
+    renewable_energy_knowledge = S.renewable_energy_knowledge
 
     protected_terrestrial_carbon_share = \
         Variable("protected share of terrestrial carbon",
@@ -79,13 +80,13 @@ class Cell (object):
 
     # endogenous variables:
 
-    terrestrial_carbon = D.terrestrial_carbon
-    fossil_carbon = D.fossil_carbon
+    terrestrial_carbon = C.terrestrial_carbon
+    fossil_carbon = C.fossil_carbon
 
     # pure output variables:
 
-    biomass_harvest_flow = D.biomass_harvest_flow
-    fossil_extraction_flow = D.fossil_extraction_flow
+    biomass_harvest_flow = C.biomass_harvest_flow
+    fossil_extraction_flow = C.fossil_extraction_flow
 
     # exogenous variables / parameters:
 
@@ -104,7 +105,7 @@ class Cell (object):
                  unit = D.gigajoules**3 / D.years**5 \
                         / (D.dollars * D.people)**2,
                  lower_bound=0, is_intensive=True)
-    total_energy_intensity = D.total_energy_intensity
+    total_energy_intensity = C.total_energy_intensity
 
 
 # process taxa:
@@ -115,7 +116,7 @@ class Metabolism (object):
 
     # endogenous variables:
 
-    biomass_energy_density = D.biomass_energy_density
-    fossil_energy_density = D.fossil_energy_density
+    biomass_energy_density = MET.biomass_energy_density
+    fossil_energy_density = MET.fossil_energy_density
 
     # exogenous variables / parameters:

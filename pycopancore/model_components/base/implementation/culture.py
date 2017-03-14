@@ -33,3 +33,5 @@ class Culture (I.Culture, abstract.Culture):
         self.acquaintance_network = acquaintance_network
 
     # no process-related methods
+
+    processes = []  # TODO: instantiate and list process objects here

@@ -1,10 +1,15 @@
 from .dimensions_and_units import *
 
-from .nature import *
-from .metabolism import *
-from .culture import *
+from . import nature, metabolism, culture
+from . import nature as NAT
+from . import metabolism as MET
+from . import culture as CUL
 
-
+from . import world, society, cell, individual
+from . import world as W
+from . import society as S
+from . import cell as C
+from . import individual as I 
 
 # what models need:
 
