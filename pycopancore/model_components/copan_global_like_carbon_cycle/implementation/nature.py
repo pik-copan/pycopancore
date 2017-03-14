@@ -20,27 +20,25 @@ class Nature (I.Nature):
 
     def __init__(self,
                  *,  # TODO: uncomment when adding named args behind here
-                 total_carbon = 5500 * gigatonnes_carbon, # see Nitzbon 2016
                  ocean_atmosphere_diffusion_coefficient = 0.016 / years, # see Nitzbon 2016
                  carbon_solubility_in_sea_water = 1 / 1.43, # see Nitzbon 2016
                  basic_photosynthesis_productivity =
-                    26.4/years / (gigatonnes_carbon/square_kilometers)**.5, # see Nitzbon 2016
+                    26.4 / years / (gigatonnes_carbon/square_kilometers)**.5, # see Nitzbon 2016
                  photosynthesis_sensitivity_on_atmospheric_carbon =
-                    1.1e6/years / (gigatonnes_carbon/square_kilometers)**.5
+                    1.1e6 / years / (gigatonnes_carbon/square_kilometers)**.5
                         / kelvins, # see Nitzbon 2016
                  terrestrial_carbon_capacity_per_area =
                     5000/1.5e8 * gigatonnes_carbon/square_kilometers, # ca. 2 times current value
                  basic_respiration_rate = 0.0298 / years, # see Nitzbon 2016
                  respiration_sensitivity_on_atmospheric_carbon =
-                    3200/years / (gigatonnes_carbon/square_kilometers), # see Nitzbon 2016
+                    3200 / years / (gigatonnes_carbon/square_kilometers), # see Nitzbon 2016
                  temperature_offset = 0 * kelvins, # TODO!
                  temperature_sensitivity_on_atmospheric_carbon = \
-                    0 * kelvins/gigatonnes_carbon, # TODO!
+                    1 * kelvins/gigatonnes_carbon, # TODO!
                  **kwargs):
         """Initialize the unique instance of Nature."""
         super().__init__(**kwargs)  # must be the first line
 
-        self.total_carbon = total_carbon
         self.ocean_atmosphere_diffusion_coefficient = \
             ocean_atmosphere_diffusion_coefficient
         self.carbon_solubility_in_sea_water = carbon_solubility_in_sea_water

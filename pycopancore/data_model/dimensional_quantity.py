@@ -55,6 +55,8 @@ class DimensionalQuantity (object):
             .reduce()
 
     def __add__(self, other):
+        if other == 0:
+            other = DimensionalQuantity(number=0, unit=self._unit)
         if len(self._unit.exponents) > 0:
             assert isinstance(other, DimensionalQuantity), \
                 "can only add DimensionalQuantity to DimensionalQuantity"
@@ -67,6 +69,8 @@ class DimensionalQuantity (object):
                 self._unit).reduce()
 
     def __sub__(self, other):
+        if other == 0:
+            other = DimensionalQuantity(number=0, unit=self._unit)
         if len(self._unit.exponents) > 0:
             assert isinstance(other, DimensionalQuantity), \
                 "can only subtract DimensionalQuantity from DimensionalQuantity"
@@ -113,3 +117,6 @@ class DimensionalQuantity (object):
 
     def __rtruediv__(self, other):
         return self**(-1) * other
+
+    def __getitem__(self, items):
+        return DimensionalQuantity(self._number[items], self._unit)

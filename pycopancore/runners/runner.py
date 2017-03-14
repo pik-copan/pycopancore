@@ -93,6 +93,8 @@ class Runner(_AbstractRunner):
         # Call ode_rhs, 3.1.3 in runner scheme
         return_array = self.ode_rhs(value_array, t)
 
+        print(t, return_array)
+
         # return derivative_array
         return return_array
 
@@ -115,7 +117,7 @@ class Runner(_AbstractRunner):
             variable.clear_derivatives(instances=oc.instances)
 
         offset = 0  # this is a counter
-        # call all varibles which are in the list ODE_variables which is
+        # call all variables which are in the list ODE_variables which is
         # defined in model_components/base/model:
         for (variable, oc) in self.model.ODE_variables:
             # second counter to count how many instances of process_taxa or
@@ -257,6 +259,7 @@ class Runner(_AbstractRunner):
                 offset = 0
                 # Find out how many variables we have:
                 for (variable, oc) in self.model.ODE_variables:
+                    print("ODE var",variable,oc)
                     next_offset = offset + len(oc.instances)
                     offset = next_offset
                 initial_array_ode = np.zeros(offset)
@@ -293,15 +296,18 @@ class Runner(_AbstractRunner):
                     if self.model.explicit_processes:
                         self.complete_explicits(time)
                         # save values of explicits:
-                        self.save_to_traj(self.model.explicit_variables)
+#                        self.save_to_traj(self.model.explicit_variables)
 
                     # Same with Event variables:
-                    if self.model.event_processes:
-                        self.save_to_traj(self.model.event_variables)
+#                    if self.model.event_processes:
+#                        self.save_to_traj(self.model.event_variables)
 
                     # Same for step variables:
-                    if self.model.step_processes:
-                        self.save_to_traj(self.model.step_variables)
+#                    if self.model.step_processes:
+#                        self.save_to_traj(self.model.step_variables)
+
+                    # FIXME: dirty fix for missing variables:
+                    self.save_to_traj(self.model.variables - self.model.ODE_variables)
 
             # Also save t values
             time_np = np.array(ts)
@@ -394,7 +400,7 @@ class Runner(_AbstractRunner):
 
         return self.trajectory_dict
 
-    def save_to_traj(self, liste):
+    def save_to_traj(self, vars):
         """Save to dictionary.
 
         Function to save a given list like self.model.variables
@@ -404,13 +410,13 @@ class Runner(_AbstractRunner):
 
         Parameters
         ----------
-        liste
+        vars
         traj_dict
 
         Returns
         -------
         """
-        for (v, oc) in liste:
+        for (v, oc) in vars:
             instances = oc.instances
             values = v.get_values(instances)
             for i, item in enumerate(instances):

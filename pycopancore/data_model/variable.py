@@ -174,6 +174,34 @@ class Variable (Symbol):
 
         self.owning_classes = []
 
+    def copy(self):
+        # TODO: do this more elegantly??
+        c = Variable(self.name,
+                     self.desc,
+                     symbol=self.symbol,
+                     ref=self.ref,
+                     scale=self.scale,
+                     default=self.default,
+                     uninformed_prior=self.uninformed_prior,
+                     CF=self.CF,
+                     AMIP=self.AMIP,
+                     IAMC=self.IAMC,
+                     CETS=self.CETS,
+                     datatype=self.datatype,
+                     array_shape=self.array_shape,
+                     allow_none=self.allow_none,
+                     lower_bound=self.lower_bound,
+                     strict_lower_bound=self.strict_lower_bound,
+                     upper_bound=self.upper_bound,
+                     strict_upper_bound=self.strict_upper_bound,
+                     quantum=self.quantum,
+                     unit=self.unit,
+                     is_extensive=self.is_extensive,
+                     is_intensive=self.is_intensive,
+                     levels=self.levels
+                     )
+        return c
+
     def __str__(self):
         return self._codename + " (" + self.name + ")" if self._codename \
             else self.name

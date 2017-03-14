@@ -28,15 +28,15 @@ from ..model_components import copan_global_like_economic_growth \
 
 class World (
              cc.World,
-             prod.World,
+#             prod.World,
              base.World):
     """World entity type"""
     pass
 
 
 class Society (
-               prod.Society,
-               growth.Society,
+#               prod.Society,
+#               growth.Society,
                base.Society):
     """Society entity type"""
     pass
@@ -44,7 +44,7 @@ class Society (
 
 class Cell (
             cc.Cell,
-            prod.Cell,
+#            prod.Cell,
             base.Cell):
     """Cell entity type"""
     pass
@@ -67,7 +67,7 @@ class Nature (
 
 
 class Metabolism (
-                  prod.Metabolism,
+#                  prod.Metabolism,
                   base.Metabolism):
     """Metabolism process taxon"""
     pass
@@ -84,8 +84,8 @@ class Metabolism (
 
 class Model (
              cc.Model,
-             prod.Model,
-             growth.Model,
+#             prod.Model,
+#             growth.Model,
              base.Model):
     """Class representing the whole model"""
 

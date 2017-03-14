@@ -50,7 +50,7 @@ deep_ocean_carbon = \
 
 terrestrial_carbon = Variable("terrestrial carbon stock",
                               "(mass of C in any chemical compound)",
-                              unit=gigatonnes_carbon, 
+                              unit=gigatonnes_carbon,
                               is_extensive=True, lower_bound=0)
 
 # Note: when using the following, include

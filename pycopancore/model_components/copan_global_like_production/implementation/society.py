@@ -56,11 +56,15 @@ class Society (I.Society):
         # are equal across cells (efficient allocation):
         relative_weight = relative_productivity
         total_relative_weight = sum(relative_weight)
+        if total_relative_weight == 0:
+            total_relative_weight = 1  # unimportant since relative_weight == 0
         weight = relative_weight / total_relative_weight
         P = weight * self.population
         K = weight * self.physical_capital
         # resulting cell-wise harvest, extraction and production:
-        fac = (P * K)**0.4 / (relative_productivity * intensity)**0.8
+        denom = (relative_productivity * intensity)**0.8
+        denom[np.where(denom == 0)] = 1  # unimportant since numerator is then 0
+        fac = (P * K)**0.4 / denom
         eB = self.metabolism.biomass_energy_density
         eF = self.metabolism.fossil_energy_density
         B = aB * L**2 * fac / eB

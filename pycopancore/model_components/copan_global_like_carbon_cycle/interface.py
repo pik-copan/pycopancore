@@ -55,9 +55,6 @@ class Nature (object):
     """Interface for Nature mixin"""
 
     # parameters / exogenous veriables:
-    total_carbon = Variable("total carbon", "", unit=D.gigatonnes_carbon,
-                            lower_bound=0)
-
     ocean_atmosphere_diffusion_coefficient = \
         D.ocean_atmosphere_diffusion_coefficient
     carbon_solubility_in_sea_water = D.carbon_solubility_in_sea_water

@@ -10,6 +10,7 @@
 
 # only used in this component, not in others:
 from pycopancore.model_components import abstract
+from pycopancore import master_data_model as D
 
 from .. import interface as I
 
@@ -28,7 +29,7 @@ class Society (I.Society, abstract.Society):
                  *,
                  world=None,
                  next_higher_society=None,
-                 human_population=0,
+                 population = 0 * D.people,
                  **kwargs
                  ):
         """Initialize an instance of Society."""
@@ -39,7 +40,7 @@ class Society (I.Society, abstract.Society):
 
         self.world = world
         self.next_higher_society = next_higher_society
-        self.human_population = human_population
+        self.population = population
 
         self._next_lower_societies = set()
         self._direct_cells = set()

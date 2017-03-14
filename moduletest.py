@@ -5,15 +5,15 @@ import numpy as np
 from pycopancore.models import base_and_dummy as tb
 from pycopancore.runners.runner import Runner
 
-nw = 1
-ns = 3
-nc = 7
+nworlds = 1
+nsocs = 3
+ncells = 7
 ni = 8
 
 
-worlds = [tb.World() for w in range(nw)]
-societies = [tb.Society(population=1) for s in range(ns)]
-cells = [tb.Cell(society=societies[0], world=worlds[0]) for c in range(nc)]
+worlds = [tb.World() for w in range(nworlds)]
+societies = [tb.Society(population=1) for s in range(nsocs)]
+cells = [tb.Cell(society=societies[0], world=worlds[0]) for c in range(ncells)]
 individuals = [tb.Individual(cell=cells[0]) for i in range(ni)]
 
 for cell in cells:
