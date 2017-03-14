@@ -15,11 +15,11 @@ See the model development tutorial for details.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-import pycopancore.model_components.base as base  # all models must use the base component
+from .. import base  # all models must use the base component
 
 # TODO: import all other needed model components:
-#import pycopancore.model_components.COMPONENT1 as ABBR1
-#import pycopancore.model_components.COMPONENT2 as ABBR2
+#from ..model_components import COMPONENT1 as ABBR1
+#from ..model_components import COMPONENT2 as ABBR2
 
 
 # entity types:
