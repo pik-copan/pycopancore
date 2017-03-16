@@ -41,7 +41,7 @@ class Cell (I.Cell, abstract.Cell):
         self._society = None
 
         self.world = world
-        self.society = society
+        self.society = society  # must be after setting world!
         self.location = location
         self.land_area = land_area
         self.geometry = geometry
@@ -79,6 +79,7 @@ class Cell (I.Cell, abstract.Cell):
             assert isinstance(s, I.Society), \
                 "society must be of entity type Society"
             s._direct_cells.add(self)
+            self.world = s.world
         self._society = s
 
     # getters for backwards references and convenience variables:
