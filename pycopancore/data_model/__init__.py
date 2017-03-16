@@ -1,3 +1,5 @@
+from .ordered_set import OrderedSet
+
 from .dimension import Dimension, nondim
 from .unit import Unit, unity
 from .dimensional_quantity import DimensionalQuantity
