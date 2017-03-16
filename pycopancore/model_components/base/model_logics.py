@@ -18,10 +18,10 @@ variables in special list to be accessed by the runner.
 # License: MIT license
 
 # only used in this component, not in others:
-from pycopancore.model_components import abstract
-from pycopancore import Variable, ODE, Explicit, Step, Event
-from pycopancore.private import \
-    _AbstractEntityMixin, _AbstractProcessTaxonMixin
+from .. import abstract
+from ... import Variable, ODE, Explicit, Step, Event, OrderedSet
+from ...private import _AbstractEntityMixin, _AbstractProcessTaxonMixin
+
 import inspect
 
 
@@ -59,24 +59,24 @@ class ModelLogics (object):
             raise ConfigureError("This model is already configured. "
                                  "Use optional argument 'reconfigure'")
 
-        cls.variables = set()  # save in pairs: (variable, owning_class)
-        cls.processes = set()  # save in pairs: (process, owning_class)
+        cls.variables = OrderedSet()  # save in pairs: (variable, owning_class)
+        cls.processes = OrderedSet()  # save in pairs: (process, owning_class)
 
         # FIXME: decide whether this is needed, and if so, make it work with
         # several entity types using the same variable name:
 #        cls.variables_dict = {}
 
-        cls.process_variables = set()
+        cls.process_variables = OrderedSet()
 
-        cls.ODE_variables = set()
-        cls.explicit_variables = set()
-        cls.step_variables = set()
-        cls.event_variables = set()
+        cls.ODE_variables = OrderedSet()
+        cls.explicit_variables = OrderedSet()
+        cls.step_variables = OrderedSet()
+        cls.event_variables = OrderedSet()
 
-        cls.ODE_processes = set()
-        cls.explicit_processes = set()
-        cls.step_processes = set()
-        cls.event_processes = set()
+        cls.ODE_processes = OrderedSet()
+        cls.explicit_processes = OrderedSet()
+        cls.step_processes = OrderedSet()
+        cls.event_processes = OrderedSet()
 
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")

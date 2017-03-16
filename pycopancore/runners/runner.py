@@ -94,6 +94,7 @@ class Runner(_AbstractRunner):
         return_array = self.ode_rhs(value_array, t)
 
         # return derivative_array
+#        print(t,value_array,return_array)
         return return_array
 
     def ode_rhs(self, value_array, t):
@@ -111,19 +112,19 @@ class Runner(_AbstractRunner):
         -------
 
         """
-        for (variable, oc) in self.model.ODE_variables:
-            variable.clear_derivatives(instances=oc.instances)
+        for (v, oc) in self.model.ODE_variables:
+            v.clear_derivatives(instances=oc.instances)
 
         offset = 0  # this is a counter
         # call all variables which are in the list ODE_variables which is
         # defined in model_components/base/model:
-        for (variable, oc) in self.model.ODE_variables:
+        for (v, oc) in self.model.ODE_variables:
             # second counter to count how many instances of process_taxa or
-            # entities are using the variable:
+            # entities are using the v:
             next_offset = offset + len(oc.instances)
             # Write values to variables:
-            variable.set_values(instances=oc.instances,
-                                values=value_array[offset:next_offset])
+            v.set_values(instances=oc.instances,
+                         values=value_array[offset:next_offset])
 
             # set up the counter:
             offset = next_offset
@@ -139,11 +140,11 @@ class Runner(_AbstractRunner):
 
         # Calculation of derivatives:
         offset = 0  # Again, a counter
-        for (variable, oc) in self.model.ODE_variables:
+        for (v, oc) in self.model.ODE_variables:
             next_offset = offset + len(oc.instances)
             # Get the calculated derivatives and write them to output array:
-            derivative_array[offset:next_offset] = variable.get_derivatives(
-                instances=oc.instances)
+            derivative_array[offset:next_offset] = \
+                v.get_derivatives(instances=oc.instances)
 
             offset = next_offset
 
@@ -247,25 +248,22 @@ class Runner(_AbstractRunner):
             except ValueError:
                 next_time = t_1
             # print('    next time is', next_time)
-            # Divide time until discontinuity into timesteps of sice dt:
+            # Divide time until discontinuity into timesteps of size dt:
             npoints = np.ceil((next_time - t) / dt) + 1  # resolution
             ts = np.linspace(t, next_time, npoints)
 
             # Call Odeint if there are ODEs:
             if self.model.ODE_processes:
                 # Compose initial value-array:
-                offset = 0
-                # Find out how many variables we have:
-                for (variable, oc) in self.model.ODE_variables:
-                    next_offset = offset + len(oc.instances)
-                    offset = next_offset
-                initial_array_ode = np.zeros(offset)
+                arraylen = sum([len(oc.instances)
+                                for (v, oc) in self.model.ODE_variables])
+                initial_array_ode = np.zeros(arraylen)
                 offset = 0
                 # Fill initial_array_ode with values:
-                for (variable, oc) in self.model.ODE_variables:
+                for (v, oc) in self.model.ODE_variables:
                     next_offset = offset + len(oc.instances)
                     initial_array_ode[offset:next_offset] = \
-                        variable.get_values(instances=oc.instances)
+                        v.get_values(instances=oc.instances)
                     offset = next_offset
 
             # In Odeint, call get_derivatives to get the functions, which
@@ -274,7 +272,9 @@ class Runner(_AbstractRunner):
 
                 ode_trajectory = integrate.odeint(self.get_derivatives,
                                                   initial_array_ode,
-                                                  ts)
+                                                  ts,
+                                                  mxstep=10000  # FIXME: ??
+                                                  )
 
             # Take the time steps used in odeint and calculate explicit
             # functions in retrospect, step 3.3 in runner scheme
@@ -285,10 +285,13 @@ class Runner(_AbstractRunner):
                     # write values to objects:
                     time = ts[i]
                     ode_values = ode_trajectory[i, :]
+                    offset = 0
+                    # read values from result vector in same order as written into it:
                     for (v, oc) in self.model.ODE_variables:
-                        # take all entities or process taxa objects:
-                        items = oc.instances
-                        v.set_values(instances=items, values=ode_values)
+                        next_offset = offset + len(oc.instances)
+                        v.set_values(instances=oc.instances,
+                                     values=ode_values[offset:next_offset])
+                        offset = next_offset
                     # calculate explicits if existent
                     if self.model.explicit_processes:
                         self.complete_explicits(time)
@@ -304,7 +307,8 @@ class Runner(_AbstractRunner):
 #                        self.save_to_traj(self.model.step_variables)
 
                     # FIXME: dirty fix for missing variables:
-                    self.save_to_traj(self.model.variables - self.model.ODE_variables)
+                    self.save_to_traj(self.model.variables 
+                                      - self.model.ODE_variables)
 
             # Also save t values
             time_np = np.array(ts)
@@ -316,7 +320,7 @@ class Runner(_AbstractRunner):
             if self.model.ODE_processes:
                 offset = 0
                 for (v, oc) in self.model.ODE_variables:
-                    # print('variable, oc:', v, oc)
+                    # print('v, oc:', v, oc)
                     next_offset = offset + len(oc.instances)
                     for i, item in enumerate(oc.instances):
                         item = oc.instances[i]
