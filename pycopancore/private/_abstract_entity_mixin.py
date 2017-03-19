@@ -11,6 +11,12 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+# TODO:
+# - since this is beginning to contain logics, the name "Abstract..." is
+#   no longer suitable. Rename to "_EntityMixin". Similar for _ProcessTaxon
+# - in __init__, add logics that sets all variables to either their specified
+#   values or their default values as given in Variable.
+
 from ..data_model import variable
 
 
