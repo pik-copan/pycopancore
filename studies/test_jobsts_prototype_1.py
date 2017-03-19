@@ -10,8 +10,8 @@ from pylab import plot, gca, show
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 10  # no. societies
-ncells = 100  # no. cells
+nsocs = 2  # no. societies
+ncells = 4  # no. cells
 
 model = M.Model()
 
@@ -63,7 +63,10 @@ print(M.Society.physical_capital.get_values(societies))
 
 runner = Runner(model=model)
 
-traj = runner.run(t_1=10, dt=.1)
+from time import time
+start = time()
+traj = runner.run(t_1=1, dt=.01)
+print(time()-start, " seconds")
 
 t = traj['t'][:-1]
 plot(t, traj[M.World.atmospheric_carbon][worlds[0]][:-1],"b",lw=3)
