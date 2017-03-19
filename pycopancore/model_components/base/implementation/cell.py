@@ -9,8 +9,9 @@
 # License: MIT license
 
 # only used in this component, not in others:
-from pycopancore.model_components import abstract
-from pycopancore import master_data_model as D
+from ... import abstract
+from .... import master_data_model as D
+from ....private import unknown
 
 from .. import interface as I
 
@@ -75,12 +76,20 @@ class Cell (I.Cell, abstract.Cell):
         """Set society."""
         if self._society is not None:
             self._society._direct_cells.remove(self)
+            # reset dependent caches:
+            self._society.cells = unknown
+            self._society.direct_individuals = unknown
         if s is not None:
             assert isinstance(s, I.Society), \
                 "society must be of entity type Society"
             s._direct_cells.add(self)
+            # reset dependent caches:
+            s.cells = unknown
+            s.direct_individuals = unknown
             self.world = s.world
         self._society = s
+        # reset dependent caches:
+        self.societies = unknown
 
     # getters for backwards references and convenience variables:
 
@@ -99,11 +108,22 @@ class Cell (I.Cell, abstract.Cell):
         """Return culture."""
         return self._world.culture
 
+    _societies = unknown
+    """cache, depends on self.society, self.society.higher_societies"""
     @property  # read-only
     def societies(self):
         """Return societies."""
-        return [] if self.society is None \
-            else [self.society] + self.society.higher_societies
+        if self._societies is unknown:
+            self._societies = [] if self.society is None \
+                else [self.society] + self.society.higher_societies
+        return self._societies
+
+    @societies.setter
+    def societies(self, u):
+        assert u == unknown, "setter can only be used to reset cache"
+        self._societies = unknown
+        # reset dependent caches:
+        pass
 
     @property  # read-only
     def individuals(self):

@@ -9,7 +9,9 @@
 # License: MIT license
 
 # only used in this component, not in others
-from pycopancore.model_components import abstract
+from ... import abstract
+from .... import master_data_model as D
+from ....private import unknown
 
 from .. import interface as I
 
@@ -65,9 +67,19 @@ class Individual (I.Individual, abstract.Individual):
         """Set cell c."""
         if self._cell:
             self._cell._individuals.remove(self)
+            # reset dependent caches:
+            if self._cell.society is not None:
+                self._cell.society.direct_individuals = unknown
+                self._cell.society.individuals = unknown
+            self.world.individuals = unknown
         assert isinstance(c, I.Cell), "cell must be of entity type Cell"
         c._individuals.add(self)
         self._cell = c
+        # reset dependent caches:
+        if c.society is not None:
+            c.society.direct_individuals = unknown
+            c.society.individuals = unknown
+        self.world.individuals = unknown
 
     # getters for backwards references and convenience variables:
 

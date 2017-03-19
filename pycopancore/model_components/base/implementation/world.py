@@ -9,11 +9,13 @@
 # License: MIT license
 
 # only used in this component, not in others:
-from pycopancore.model_components import abstract
-from pycopancore import master_data_model as D
+from ... import abstract
+from .... import master_data_model as D
+from ....private import unknown
 
 from .. import interface as I
-from pycopancore import Explicit
+
+from .... import Explicit
 
 
 class World (I.World, abstract.World):
@@ -67,16 +69,25 @@ class World (I.World, abstract.World):
         """Return cells of world."""
         return self._cells
 
-    # TODO: use a cache (and last_modified dates) to speed up this and similar
-    # aggregations:
+    _individuals = unknown
+    """cache, depends on self.cells, cell.individuals"""
     @property  # read-only
     def individuals(self):
-        """Return individuals of world."""
-        # find indirectly via cells:
-        r = set()
-        for c in self._cells:
-            r.update(c.individuals)
-        return r
+        """Return individuals."""
+        if self._individuals is unknown:
+            # aggregate from cells:
+            self._individuals = set()
+            for c in self.cells:
+                self._individuals.update(c.individuals)
+        return self._individuals
+
+    @individuals.setter
+    def individuals(self, u):
+        assert u == unknown, "setter can only be used to reset cache"
+        self._individuals = unknown
+        # reset dependent caches:
+        pass
+
 
     # process-related methods:
 

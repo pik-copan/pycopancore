@@ -32,7 +32,6 @@ class Nature (I.Nature, abstract.Nature):
             geographic_network = Graph()
         self.geographic_network = geographic_network
 
-
     # process-related methods:
 
     # TODO: add some if needed...
