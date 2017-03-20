@@ -1,11 +1,13 @@
 # python recipe at https://code.activestate.com/recipes/576694/
+# plus __iadd__
 
 import collections
 
-class OrderedSet(collections.MutableSet):
+
+class OrderedSet (collections.MutableSet):
 
     def __init__(self, iterable=None):
-        self.end = end = [] 
+        self.end = end = []
         end += [None, end, end]         # sentinel node for doubly linked list
         self.map = {}                   # key --> [key, prev, next]
         if iterable is not None:
@@ -23,8 +25,13 @@ class OrderedSet(collections.MutableSet):
             curr = end[1]
             curr[2] = end[1] = self.map[key] = [key, curr, end]
 
+    def __iadd__(self, other):
+        for key in other:
+            self.add(key)
+        return self
+
     def discard(self, key):
-        if key in self.map:        
+        if key in self.map:
             key, prev, next = self.map.pop(key)
             prev[2] = next
             next[1] = prev
@@ -59,11 +66,3 @@ class OrderedSet(collections.MutableSet):
         if isinstance(other, OrderedSet):
             return len(self) == len(other) and list(self) == list(other)
         return set(self) == set(other)
-
-            
-if __name__ == '__main__':
-    s = OrderedSet('abracadaba')
-    t = OrderedSet('simsalabim')
-    print(s | t)
-    print(s & t)
-    print(s - t)

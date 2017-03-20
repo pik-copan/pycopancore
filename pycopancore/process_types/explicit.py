@@ -28,7 +28,7 @@ class Explicit(_AbstractProcess):
     """Define explicit process class."""
 
     type = "Explicit"
-    timetype = "continious"
+    timetype = "continuous"
 
     def __init__(self,
                  name,

@@ -26,11 +26,16 @@ class _AbstractProcess(object):
     """
 
     name = None
+    """short human-readable name"""
     type = None
+    """mathematical type (ODE, Explicit, ...)"""
     timetype = None
+    """time type"""
     smoothness = None
+    """degree of smoothness"""
 
-    owning_classes = None
+    owning_class = None
+    """the class (entity-type or process taxon) owning the process""" 
 
     def __init__(self, name=""):
         """Initialize an _AbstractProcess instance."""

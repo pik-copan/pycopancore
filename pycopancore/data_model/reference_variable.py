@@ -1,4 +1,5 @@
 from . import Variable
+from ..private import _AttributeReference
 
 # TODO: complete logics, set other Variable attributes, validate etc.
 
@@ -9,7 +10,9 @@ class ReferenceVariable (Variable):
     """
 
     type = None
-    """required type of referred entity or taxon"""
+    """required type of referred entity or taxon
+    (will be adjusted by model.configure to point to composite class 
+    instead of mixin class)"""
 
     def __init__(self,
                  name,
@@ -19,3 +22,7 @@ class ReferenceVariable (Variable):
                  **kwargs):
         super().__init__(name, desc, **kwargs)
         self.type = type
+
+    def __getattr__(self, name):
+        """return an object representing a class attribute of the referenced class"""
+        return _AttributeReference(self, [name])

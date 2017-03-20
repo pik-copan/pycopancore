@@ -19,7 +19,7 @@ class _AbstractProcessTaxonMixin(object):
     From this class all entity-specific abstract mixin classes are derived.
     """
 
-    processes = []
+    processes = None
     model = None
     instances = None
 

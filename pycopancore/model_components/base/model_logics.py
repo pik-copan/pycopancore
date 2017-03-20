@@ -37,6 +37,33 @@ class ModelLogics (object):
 
     _configured = False
 
+    components = None
+    """ordered set of model components in method resolution order"""
+
+    variables = None
+    """ordered set of Variables"""
+    explicit_variables = None
+    """ordered set of Variables controlled by processes of type Explicit"""
+    step_variables = None
+    """ordered set of Variables changed by processes of type Step"""
+    event_variables = None
+    """ordered set of Variables changed by processes of type Event"""
+    ODE_targets = None
+    """ordered set of Variables or _AttributeReferences changed by processes of type ODE"""
+    process_targets = None
+    """ordered set of Variables or _AttributeReferences changed by any process"""
+
+    processes = None
+    """ordered set of processes"""
+    ODE_processes = None
+    """ordered set of processes of type ODE"""
+    explicit_processes = None
+    """ordered set of processes of type Explicit"""
+    step_processes = None
+    """ordered set of processes of type Step"""
+    event_processes = None
+    """ordered set of processes of type Event"""
+
     def __init__(self):
         if not self.__class__._configured:
             self.configure()
@@ -59,20 +86,14 @@ class ModelLogics (object):
             raise ConfigureError("This model is already configured. "
                                  "Use optional argument 'reconfigure'")
 
-        cls.variables = OrderedSet()  # save in pairs: (variable, owning_class)
-        cls.processes = OrderedSet()  # save in pairs: (process, owning_class)
-
-        # FIXME: decide whether this is needed, and if so, make it work with
-        # several entity types using the same variable name:
-#        cls.variables_dict = {}
-
-        cls.process_variables = OrderedSet()
-
-        cls.ODE_variables = OrderedSet()
+        cls.variables = OrderedSet()  # set of Variables (no longer of pairs!)
         cls.explicit_variables = OrderedSet()
         cls.step_variables = OrderedSet()
         cls.event_variables = OrderedSet()
+        cls.ODE_targets = OrderedSet()
+        cls.process_targets = OrderedSet()  # Variables or _AttributeReferences
 
+        cls.processes = OrderedSet()  # set of Processes (no longer of pairs!)
         cls.ODE_processes = OrderedSet()
         cls.explicit_processes = OrderedSet()
         cls.step_processes = OrderedSet()
@@ -81,162 +102,96 @@ class ModelLogics (object):
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
 
-        # Construction of a list for the subsequent for-loop. It contains all
-        # model mixins the model component inherits from. Only model mixins
-        # that inherit from 'abstract.model' are considered. The abstract model
-        # itself is excluded as well as the model component:
-        parents = list(inspect.getmro(cls))[1:]
-        cls.components = [c for c in parents
-                          if c not in (object, abstract.Model)
-#                          and abstract.Model in inspect.getmro(c)
-                          and object not in c.__bases__  # exclude interface classes (which inherit from object)
-                          ]
-        print('\nComponents:', cls.components)
-
-        # The for-loop goes through all model mixins as outlined above:
-        for c in cls.components:
-            interfaceclass = c.__bases__[0]
-            print("Model component:", interfaceclass.name, "(", c, ")...")
-            # Iterate through all entity type components the model mixin uses:
-            for etmixin in c.entity_types:
-                print('    Entity-type:', etmixin)
-                # getting mixins of the entity type components:
-                # TODO: we only need to iterate through interfaces since
-                # TODO: ...variables are only defined there:
-                cparents = list(inspect.getmro(etmixin))
-                # writing variable codenames k and corresponding values v into
-                # a dictionary that is needed to check that variables of
-                # different components do only overwrite if they are meant to
-                # be the same:
-                cvardict = {k: v
-                            for cp in cparents
-                            for (k, v) in cp.__dict__.items()
-                            if isinstance(v, Variable)
-                            }
-                # check if variables and their codenames are unique:
-                for (k, v) in cvardict.items():
-                    print("        Variable:", v)
-                    # check if same var. object was already registered. If its
-                    # codename k is different to a previous assigned codename
-                    # an assertion error is the output:
-#                    if v in cls.variables_dict.values():
-#                        print("            already registered by another "
-#                              "component")
-#                        assert v._codename == k, ('with Codename', k)
-                    # check if same codename was already registered if not,
-                    # same assertion error as above:
-#                    if k in cls.variables_dict.keys():
-#                        print("            already registered by another "
-#                              "component")
-#                        assert cls.variables_dict[k] == v, \
-#                            'Codename already in use by another variable'
-                    v._codename = k
-#                    cls.variables_dict[k] = v
-
-                for p in etmixin.processes:
-                    print("        Process:", p)
-
-            # Iterate through all process taxon mixins:
-            for pt in c.process_taxa:
-                print('    Process taxon:', pt)
-                cparents = list(inspect.getmro(pt))
-                cvardict = {k: v
-                            for cp in cparents
-                            for (k, v) in cp.__dict__.items()
-                            if isinstance(v, Variable)
-                            }
-                for (k, v) in cvardict.items():
-                    print("        Variable:", v)
-                    # check if same var. object was already registered:
-#                    if v in cls.variables_dict.values():
-#                        print("          already registered by another "
-#                              "component")
-#                        assert v._codename == k, ('with Codename', k)
-#                    if k in cls.variables_dict.keys():
-#                        print("          already registered by another "
-#                              "component")
-#                        assert cls.variables_dict[k] == v, \
-#                            'Codename already in use by another variable'
-                    v._codename = k
-#                    cls.variables_dict[k] = v
-
-                for p in pt.processes:
-                    print("        Process:", p)
-
-        # Now analyse by entity type and process taxon in order to find correct
-        # owning classes:
-        print('\nEntity types:', cls.entity_types)
-        print('Process taxa:', cls.process_taxa)
-        for owning_class in cls.entity_types + cls.process_taxa:
-            print('    Entity-type/Process taxon:', owning_class)
-            parents = list(inspect.getmro(owning_class))
-#            components = [c for c in parents
-#                          if issubclass(c, (_AbstractEntityMixin,
-#                                            _AbstractProcessTaxonMixin))
-#                          and c not in (_AbstractEntityMixin,
-#                                        _AbstractProcessTaxonMixin)
-#                          ]
-            components = [c for c in parents
-                          if c not in (object, abstract.Model)
-#                          and abstract.Model in inspect.getmro(c)
-                          and object not in c.__bases__  # exclude interface classes (which inherit from object)
-                          ]
-            for mixin in components:
-                # FIXME: currently this does not report the correct
-                # "owning" mixin for most variables/processes. This is not
-                # a problem for logics, only for reporting, since we DO
-                # store the correct owning class (namely the composed
-                # class rather than some mixin).
-                print('        Mixin:', mixin)
-                cparents = list(inspect.getmro(mixin))
-                cvardict = {k: v
-                            for cp in cparents
-                            for (k, v) in cp.__dict__.items()
-                            if isinstance(v, Variable)
-                            }
-                for (k, v) in cvardict.items():
-                    if (v, owning_class) not in cls.variables:
-                        v.owning_classes.append(owning_class)
-                        print("        Variable:", v)
-                        cls.variables.add((v, owning_class))
+        variable_pool = OrderedSet()
+        # find and iterate through model components:
+        cls.components = OrderedSet(
+                [c for c in list(inspect.getmro(cls))  # exclude self
+                 if c not in (object, abstract.Model, ModelLogics)
+                 and not "name" in c.__dict__  # exclude interface classes (which have an attribute "name")
+                 ])
+        for component in cls.components:
+            component_interface = component.__bases__[0]
+            print("Model component ", component_interface.name, "(", component, ")...")
+            # iterate through all entity-type and process taxon mixins this model components defines:
+            for mixin in component.entity_types + component.process_taxa:
+                mixin_interface = mixin.__bases__[0]
+                if mixin in component.entity_types:
+                    print("    Entity-type ", mixin)
+                else:
+                    print("    Process taxon ", mixin)
+                # find and register all Variables defined directly in this mixin's interface:
+                for (k, v) in mixin_interface.__dict__.items():
+                    if isinstance(v, Variable):
+                        if v not in variable_pool:
+                            assert v.codename is None
+                            v.codename = k
+                            variable_pool.add(v)
+                            print("        Variable ", v)
+                        else:
+                            print("        Variable ", v)
+                            assert v.codename == k, \
+                                "Variable was already registered by a different component using a different codename"
+                # find and register all processes defined directly in this mixin:
                 for p in mixin.processes:
-                    if (p, owning_class) not in cls.processes:
-                        p.owning_classes.append(owning_class)
-                        print("        Process:", p)
-                        cls.processes.add((p, owning_class))
+                    print("        Process ", p)
+                    assert p not in cls.processes, \
+                            "Process was already registered by a different component"
+                    cls.processes.add(p)
 
-        for (process, owning_class) in cls.processes:
-            if isinstance(process, ODE):
-                cls.ODE_processes.add((process, owning_class))
-            elif isinstance(process, Explicit):
-                cls.explicit_processes.add((process, owning_class))
-            elif isinstance(process, Step):
-                cls.step_processes.add((process, owning_class))
-            elif isinstance(process, Event):
-                cls.event_processes.add((process, owning_class))
+        # now iterate through all composed entity-types and process taxa:
+        for composed_class in cls.entity_types + cls.process_taxa:
+            if composed_class in cls.entity_types:
+                print("Entity-type ", composed_class)
             else:
-                print('process-type of', process, 'not specified')
-                print(process.__class__.__name__)
-                print(object.__str__(process))
-            for v in process.variables:
-                # Find all tuples (var,owc) in cls.variables with var == v
-                # to get the owning classes of the variable, not necessarily
-                # the owning class of the process.
-                # FIXME: why not simply take var.owning_classes?
-                for (var, owc) in cls.variables:
-                    if var == v:
-                        voc = owc
-                        # Add the tuple (v, voc) to process_variables
-                        cls.process_variables.add((v, voc))
-                        # Add the tuple (v, voc) to the process-type_variables
-                        if isinstance(process, ODE):
-                            cls.ODE_variables.add((v, voc))
-                        elif isinstance(process, Explicit):
-                            cls.explicit_variables.add((v, voc))
-                        elif isinstance(process, Step):
-                            cls.step_variables.add((v, voc))
-                        elif isinstance(process, Event):
-                            cls.event_variables.add((v, voc))
+                print("Process taxon ", composed_class)
+            # find all parent classes:
+            parents = OrderedSet(list(inspect.getmro(composed_class)))
+            # iterate through all Variables and set their owning_class:
+            vars = OrderedSet([(k, v) for c in parents
+                               for (k, v) in c.__dict__.items()
+                               if isinstance(v, Variable)])
+            for (k, v) in vars:
+                if isinstance(v, Variable):
+                    print("    Variable ", v)
+                    assert v in variable_pool, \
+                        "Variable was not defined in any component interface!"
+                    assert v.codename == k, \
+                        "Variable was registered under a different codename"
+                    assert v.owning_class is None
+                    cls.variables.add(v)
+                    v.owning_class = composed_class
+            for c in parents:
+                if "processes" in c.__dict__ and c.processes is not None:
+                    for p in c.processes:
+                        print("    Process ", p)
+                        assert p in cls.processes, \
+                            "Process was not listed in any implementation class!"
+                        p.owning_class = composed_class
+                        if isinstance(p, ODE):
+                            cls.ODE_processes.add(p)
+                            for target in p.targets:
+                                if isinstance(target, Variable):
+                                    assert target.owning_class == composed_class, \
+                                        "ODE target Variable owned by different entity-type/taxon! (maybe try accessing it via a ReferenceVariable)"
+                                else:  # it's an _AttributeReference
+                                    assert target.reference_variable.owning_class == composed_class, \
+                                        "ODE target attribute reference starts at a wrong entity-type/taxon"
+                            cls.ODE_targets += p.targets
+                            cls.process_targets += p.targets
+                        elif isinstance(p, Explicit):
+                            cls.explicit_processes.add(p)
+                            cls.explicit_variables += p.variables
+                            cls.process_targets += p.variables
+                        elif isinstance(p, Step):
+                            cls.step_processes.add(p)
+                            cls.step_variables += p.variables
+                            cls.process_targets += p.variables
+                        elif isinstance(p, Event):
+                            cls.event_processes.add(p)
+                            cls.event_variables += p.variables
+                            cls.process_targets += p.variables
+                        else:
+                            raise Exception("unsupported process type")
 
         cls._configured = True
         print("...done")
@@ -246,8 +201,8 @@ class ModelLogics (object):
 
         Using the standard unit.
         """
-        for (var, cl) in self.variables:
-            var.convert_to_standard_units()
+        for v in self.variables:
+            v.convert_to_standard_units()
 
 
 class ConfigureError(Exception):

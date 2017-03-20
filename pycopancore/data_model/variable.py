@@ -98,8 +98,10 @@ class Variable (Symbol):
 
     # attributes needed for internal framework logics:
 
-    owning_classes = None
-    _codename = None
+    owning_class = None
+    """the class owning the Variable as its attribute"""
+    codename = None
+    """the attribute name of the Variable in its owning class"""
 
     # standard methods:
 
@@ -177,8 +179,6 @@ class Variable (Symbol):
 
         self.levels = levels
 
-        self.owning_classes = []
-
     def __eq__(self, other):
         return object.__eq__(self, other)
 
@@ -214,10 +214,11 @@ class Variable (Symbol):
         return object.__hash__(self)
 
     def __str__(self):
-        return self._codename + " (" + self.name + ")" if self._codename \
-            else self.name
+        return self.codename + " (" + self.name + ")" \
+            if self.codename is not None else self.name
 
     def __repr__(self):
+        return str(self)  # dirty fix for lengthy output 
         r = "Variable " + self.name + "(" + self.desc + "), scale=" \
             + self.scale + ", datatype=" + str(self.datatype)
         if self.unit is not None:
@@ -318,7 +319,7 @@ class Variable (Symbol):
         if isinstance(value, DimensionalQuantity):
             value = value.number(unit=self.unit)
 #        self.assert_valid(value)
-        setattr(instance, self._codename, value)
+        setattr(instance, self.codename, value)
 
     def convert_to_standard_units(self,
                                   instances=None,  # if None: all entities/taxa
@@ -326,16 +327,15 @@ class Variable (Symbol):
         """replace all variable values of type DimensionalQuantity
         to float using the standard unit"""
         if instances is not None:
-            for e in instances:
-                v = getattr(e, self._codename)
+            for i in instances:
+                v = getattr(i, self.codename)
                 if isinstance(v, DimensionalQuantity):
-                    self.set_value(e, v)  # does the conversion
+                    self.set_value(i, v)  # does the conversion
         else:
-            for c in self.owning_classes:
-                for e in c.instances:
-                    v = getattr(e, self._codename)
-                    if isinstance(v, DimensionalQuantity):
-                        self.set_value(e, v)  # does the conversion
+            for i in self.owning_class.instances:
+                v = getattr(i, self.codename)
+                if isinstance(v, DimensionalQuantity):
+                    self.set_value(i, v)  # does the conversion
 
     def _get_instances(self, instances):
         """converts argument into a set of instances
@@ -449,7 +449,7 @@ class Variable (Symbol):
                 # maybe should move them into the test environment:
                 # assert isinstance(e, _AbstractEntityMixin), /
                 # "key is not a model entity"
-                # assert hastattr(e, self._codename), /
+                # assert hastattr(e, self.codename), /
                 # "variable is not contained in entity"
                 #
 
@@ -462,7 +462,7 @@ class Variable (Symbol):
             # as above...
             # assert isinstance(e, _AbstractEntityMixin). /
             # "key is not a model entity"
-            # assert hastattr(e, self._codename), /
+            # assert hastattr(e, self.codename), /
             # "variable is not contained in entity"
             #
 
@@ -485,7 +485,7 @@ class Variable (Symbol):
         """
         instances = self._get_instances(instances)
         for i in instances:
-            setattr(i, 'd_'+self._codename, 0)
+            setattr(i, 'd_'+self.codename, 0)
 
     def get_derivatives(self,
                         instances=None
@@ -501,10 +501,10 @@ class Variable (Symbol):
         -------
 
         """
-        return [getattr(i, 'd_'+self._codename) for i in instances]
+        return [getattr(i, 'd_'+self.codename) for i in instances]
 
     def get_value(self, instance, unit=None):
-        v = getattr(instance, self._codename)
+        v = getattr(instance, self.codename)
         assert not isinstance(v, Variable), \
             "Variable " + str(self) + " uninitialized at instance " \
             + str(instance)

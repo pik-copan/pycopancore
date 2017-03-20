@@ -11,8 +11,8 @@
 
 # TODO: rename to ScipyODEintRunner
 
-from ..private import _AbstractRunner
-from .. import Event, Step
+from .. import Event, Step, Variable
+from ..private import _AbstractRunner, eval
 
 from scipy import integrate
 import numpy as np
@@ -68,85 +68,62 @@ class Runner(_AbstractRunner):
 
         """
         # Iterate through explicit_processes:
-        for (p, oc) in self.explicit_processes:
-            for e in oc.instances:
-                p.specification(e, t)
+        for p in self.explicit_processes:
+            inst = p.owning_class.instances
+            spec = p.specification
+            if isinstance(spec, list):
+                # evaluate symbolic expression and store result in
+                # instances' attributes:
+                for pos in range(len(spec)):
+                    p.variables[pos].set_values(inst, eval(spec[pos], inst))
+            else:
+                # call process' implementation method which writes
+                # to instances' attributes:
+                for i in inst:
+                    spec(i, t)
 
-    def get_derivatives(self, value_array, t):
-        """Update explicits, Get derivatives.
+    def get_rhs_array(self, value_array, t, 
+                      froms, tos, targetclasses, targetvars):
+        """Return RHS of composite ODE system as an array.
 
-        Gets derivatives of all ode-functions and make them suitable for
-        the odeint rhs
-
-        Parameters
-        ----------
-        self
-        t
-
-        Returns
-        -------
-
-        """
+        Will be passed to scipy.odeint"""
         # Call complete explicit functions, 3.1.2 in runner scheme
         self.complete_explicits(t)
 
-        # Call ode_rhs, 3.1.3 in runner scheme
-        return_array = self.ode_rhs(value_array, t)
+        # copy values from input array into instance attributes
+        # and clear instances' derivative attributes:
+        for i in range(len(froms)):
+            inst = targetclasses[i].instances
+            targetvars[i].set_values(instances=inst,
+                                     values=value_array[froms[i]:tos[i]])
+            targetvars[i].clear_derivatives(instances=inst)
 
-        # return derivative_array
-#        print(t,value_array,return_array)
-        return return_array
+        # let all processes calculate their derivative terms:
+        derivative_array = np.zeros(value_array.size)
+        for p in self.ode_processes:
+            spec = p.specification
+            if isinstance(spec, list):
+                # evaluate symbolic expression:
+                for pos in range(len(spec)):
+                    target = p.targets[pos]
+                    summands = eval(spec[pos], p.owning_class.instances)
+                    if isinstance(target, Variable):
+                        # add result directly to
+                        # output array (rather than in instances' derivative attrs.):
+                        derivative_array[target._from:target._to] += summands
+                    else:
+                        # adds terms to instances' derivative attributes:
+                        target.add_derivatives(p.owning_class.instances, summands)
+            else:
+                # call process' implementation method which adds terms
+                # to instances' derivative attributes:
+                for i in p.owning_class.instances:
+                    spec(i, t)
 
-    def ode_rhs(self, value_array, t):
-        """Pass this to odeint.
-
-        This function returns all variables in a form to be compatible with
-        ODEint from scipy.integrate
-
-        Parameters
-        ----------
-        self
-        t
-
-        Returns
-        -------
-
-        """
-        for (v, oc) in self.model.ODE_variables:
-            v.clear_derivatives(instances=oc.instances)
-
-        offset = 0  # this is a counter
-        # call all variables which are in the list ODE_variables which is
-        # defined in model_components/base/model:
-        for (v, oc) in self.model.ODE_variables:
-            # second counter to count how many instances of process_taxa or
-            # entities are using the v:
-            next_offset = offset + len(oc.instances)
-            # Write values to variables:
-            v.set_values(instances=oc.instances,
-                         values=value_array[offset:next_offset])
-
-            # set up the counter:
-            offset = next_offset
-
-            # call methods:
-            for (process, oc) in self.ode_processes:
-                # Items may be entities like Cells or Process Taxa objects
-                # like Culture
-                for item in oc.instances:
-                    process.specification(item, t)
-
-        derivative_array = np.zeros(offset)
-
-        # Calculation of derivatives:
-        offset = 0  # Again, a counter
-        for (v, oc) in self.model.ODE_variables:
-            next_offset = offset + len(oc.instances)
-            # Get the calculated derivatives and write them to output array:
-            derivative_array[offset:next_offset] = \
-                v.get_derivatives(instances=oc.instances)
-
-            offset = next_offset
+        # add derivative terms from derivative attributes to output array:
+        for i in range(len(froms)):
+            derivative_array[froms[i]:tos[i]] += \
+                targetvars[i].get_derivatives(instances=targetclasses[i].instances)
 
         return derivative_array
 
@@ -178,8 +155,8 @@ class Runner(_AbstractRunner):
         self.model.convert_to_standard_units()  # so that no DimensionalQuantities are left
 
         # First create the dictionary to fill in the trajectory:
-        self.trajectory_dict['t'] = np.zeros([0])
-        for (v, oc) in self.model.variables:
+        self.trajectory_dict['t'] = []
+        for v in self.model.variables:
             self.trajectory_dict[v] = {}
 
         # Create dictionary to put in the discontinuities:
@@ -189,23 +166,21 @@ class Runner(_AbstractRunner):
         self.complete_explicits(t_0)
 
         # Fill the dictionary with initial values, 2.3 in runner schmeme:
-        for (event, oc) in self.event_processes:
-            # print('    event specification:', event.specification)
-            # print('    owning class', oc)
+        for event in self.event_processes:
             eventtype = event.specification[0]
-            rate_or_timfunc = event.specification[1]
+            rate_or_timefunc = event.specification[1]
             # TODO: Check if the following loop is correct:
             # items are instances of process taxa or entities
-            for item in oc.instances:
+            for item in event.owning_class.instances:
                 if eventtype == "rate":
-                    next_time = np.random.exponential(1. / rate_or_timfunc)
+                    next_time = np.random.exponential(1. / rate_or_timefunc)
                 elif eventtype == "time":
-                    next_time = rate_or_timfunc(t)
+                    next_time = rate_or_timefunc(t)
                 else:
                     print("        Invalid specification of the Event: ",
                           event.name,
                           "        In entity/process taxa:",
-                          oc.instances)
+                          event.owning_class.instances)
                 try:
                     next_discontinuities[next_time].append((event, item))
                 except KeyError:
@@ -213,11 +188,11 @@ class Runner(_AbstractRunner):
 
         # Fill next_discontinuities with times of step and performn step if
         # necessary, also 2.3 in runner scheme
-        for (step, oc) in self.step_processes:
+        for step in self.step_processes:
             next_time_func = step.specification[0]
             method = step.specification[1]
             # Here, items are instances of process taxa or entities
-            for item in oc.instances:
+            for item in step.owning_class.instances:
                 if next_time_func(item, t) == t_0:
                     method(item, t)
                     # calling next_time with function:
@@ -254,83 +229,69 @@ class Runner(_AbstractRunner):
 
             # Call Odeint if there are ODEs:
             if self.model.ODE_processes:
-                # Compose initial value-array:
-                arraylen = sum([len(oc.instances)
-                                for (v, oc) in self.model.ODE_variables])
+
+                # determine array layouts
+                # and compose initial value-array:
+                targetclasses = [(target.owning_class
+                                  if isinstance(target, Variable)
+                                  else target.get_target_class(target.reference_variable.owning_class.instances[0])
+                                  ) for target in self.model.ODE_targets]
+                targetvars = [(target if isinstance(target, Variable)
+                               else target.get_target_variable(target.reference_variable.owning_class.instances[0])
+                               ) for target in self.model.ODE_targets]
+                lens = [len(c.instances) for c in targetclasses]
+                tos = np.cumsum(lens)
+                froms = np.concatenate(([0],tos[:-1]))
+                arraylen = sum(lens)
                 initial_array_ode = np.zeros(arraylen)
-                offset = 0
-                # Fill initial_array_ode with values:
-                for (v, oc) in self.model.ODE_variables:
-                    next_offset = offset + len(oc.instances)
-                    initial_array_ode[offset:next_offset] = \
-                        v.get_values(instances=oc.instances)
-                    offset = next_offset
+                for i, target in enumerate(self.model.ODE_targets):
+                    target._from = froms[i]
+                    target._to = tos[i]
+                    initial_array_ode[froms[i]:tos[i]] = \
+                        targetvars[i].get_values(instances=targetclasses[i].instances)
 
-            # In Odeint, call get_derivatives to get the functions, which
-            # odeint needs to integrate, step 3.1 in runner scheme, then return
-            # the trajectory, 3.2 in runner scheme
+                # In Odeint, call get_rhs_array to get the RHS of the ODE system
+                # as an array, step 3.1 in runner scheme, then return
+                # the trajectory, 3.2 in runner scheme:
 
-                ode_trajectory = integrate.odeint(self.get_derivatives,
+                ode_trajectory = integrate.odeint(self.get_rhs_array,
                                                   initial_array_ode,
                                                   ts,
+                                                  args=(froms, tos, targetclasses, targetvars),
                                                   mxstep=10000  # FIXME: ??
                                                   )
 
-            # Take the time steps used in odeint and calculate explicit
-            # functions in retrospect, step 3.3 in runner scheme
-            # Save them to an arraySave them to the trajectory_dict
-            # This is only done if there are explicit processes!
+                # Take the time steps used in odeint and calculate explicit
+                # functions in retrospect, step 3.3 in runner scheme
+                # Save them to an arraySave them to the trajectory_dict
+                # This is only done if there are explicit processes:
 
-                for i in range(len(ts)):
+                for pos, t in enumerate(ts):
                     # write values to objects:
-                    time = ts[i]
-                    ode_values = ode_trajectory[i, :]
-                    offset = 0
+                    ode_values = ode_trajectory[pos, :]
                     # read values from result vector in same order as written into it:
-                    for (v, oc) in self.model.ODE_variables:
-                        next_offset = offset + len(oc.instances)
-                        v.set_values(instances=oc.instances,
-                                     values=ode_values[offset:next_offset])
-                        offset = next_offset
+                    for i in range(len(lens)):
+                        targetvars[i].set_values(
+                                instances=targetclasses[i].instances,
+                                values=ode_values[froms[i]:tos[i]])
                     # calculate explicits if existent
                     if self.model.explicit_processes:
-                        self.complete_explicits(time)
-                        # save values of explicits:
-#                        self.save_to_traj(self.model.explicit_variables)
+                        self.complete_explicits(t)
 
-                    # Same with Event variables:
-#                    if self.model.event_processes:
-#                        self.save_to_traj(self.model.event_variables)
-
-                    # Same for step variables:
-#                    if self.model.step_processes:
-#                        self.save_to_traj(self.model.step_variables)
-
-                    # FIXME: dirty fix for missing variables:
-                    self.save_to_traj(self.model.variables 
-                                      - self.model.ODE_variables)
+                    self.save_to_traj(self.model.process_targets 
+                                      - self.model.ODE_targets)
 
             # Also save t values
-            time_np = np.array(ts)
-            self.trajectory_dict['t'] = np.concatenate((
-                                            self.trajectory_dict['t'],
-                                            time_np))
+            self.trajectory_dict['t'] += list(ts)
 
             # save odes to trajectory dict
-            if self.model.ODE_processes:
-                offset = 0
-                for (v, oc) in self.model.ODE_variables:
-                    # print('v, oc:', v, oc)
-                    next_offset = offset + len(oc.instances)
-                    for i, item in enumerate(oc.instances):
-                        item = oc.instances[i]
-                        values = ode_trajectory[:, offset + i]
-                        try:
-                            self.trajectory_dict[v][item] = np.concatenate((
-                                self.trajectory_dict[v][item], values))
-                        except KeyError:
-                            self.trajectory_dict[v][item] = values
-                    offset = next_offset
+            for i in range(len(lens)):
+                for pos, item in enumerate(targetclasses[i].instances):
+                    values = list(ode_trajectory[:, froms[i] + pos])
+                    try:
+                        self.trajectory_dict[targetvars[i]][item] += values
+                    except KeyError:
+                        self.trajectory_dict[targetvars[i]][item] = values
 
             # After all that is done, calculate what happens at the
             # discontinuity, step 3.4 in runner scheme
@@ -346,7 +307,7 @@ class Runner(_AbstractRunner):
                     happening = discontinuity[0]
                     if isinstance(happening, Event):
                         eventtype = happening.specification[0]
-                        rate_or_timfunc = happening.specification[1]
+                        rate_or_timefunc = happening.specification[1]
                         method = happening.specification[2]
                         # Perform the event:
                         method(item, t)
@@ -354,9 +315,9 @@ class Runner(_AbstractRunner):
                         if eventtype == "rate":
                             next_time = t + \
                                         np.random.exponential(1. /
-                                                              rate_or_timfunc)
+                                                              rate_or_timefunc)
                         elif eventtype == "time":
-                            next_time = rate_or_timfunc(t)
+                            next_time = rate_or_timefunc(t)
                         else:
                             print("Invalid specification of the Event: ",
                                   happening.name,
@@ -387,27 +348,22 @@ class Runner(_AbstractRunner):
 
             # Store all information that has been calculated at time t ->
             # iterate through all process variables!
-            self.save_to_traj(self.model.process_variables)
+            self.save_to_traj(self.model.process_targets)
 
-            t_np = np.array([t])
-            self.trajectory_dict['t'] = np.concatenate((
-                                            self.trajectory_dict['t'],
-                                            t_np))
+            self.trajectory_dict['t'].append(t)
 
         # Store all information that has not been changed during calculations:
-        non_process_vars = [(v, oc) for (v, oc) in self.model.variables
-                            if (v, oc) not in self.model.process_variables]
-        self.save_to_traj(non_process_vars)
+#        self.save_to_traj(self.model.variables - self.model.process_targets)
 
         return self.trajectory_dict
 
-    def save_to_traj(self, vars):
+    def save_to_traj(self, targets):
         """Save to dictionary.
 
-        Function to save a given list like self.model.variables
+        Function to save a given list like self.model.targets
         to the trajectory dictionary. It saves to self.trajectory_dict. To use
         it do:
-        trajectory_dict = save_to_traj(self.model.variables)
+        trajectory_dict = save_to_traj(self.model.targets)
 
         Parameters
         ----------
@@ -417,16 +373,16 @@ class Runner(_AbstractRunner):
         Returns
         -------
         """
-        for (v, oc) in vars:
-            instances = oc.instances
+        for target in targets:
+            v = target if isinstance(target, Variable) \
+                    else target.get_target_variable(target.reference_variable.owning_class.instances[0])
+            instances = v.owning_class.instances
             values = v.get_values(instances)
             for i, item in enumerate(instances):
-                value = np.array([values[i]])
                 try:
-                    self.trajectory_dict[v][item] = np.concatenate((
-                        self.trajectory_dict[v][item], value))
+                    self.trajectory_dict[v][item].append(values[i])
                 except KeyError:
-                    self.trajectory_dict[v][item] = value
+                    self.trajectory_dict[v][item] = [values[i]]
 
     def terminate(self):
         """Determine if the runner should stop.
