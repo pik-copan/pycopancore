@@ -8,13 +8,12 @@ Created on Mar 20, 2017
 
 import random
 import numpy as np
-
-from sympy import Symbol, Add, Mul, Pow
+import sympy as sp
 
 from .. import data_model
 
 
-class _AttributeReference (Symbol):
+class _AttributeReference (sp.Symbol):
     """An AttributeReference represents a syntactical construct with dots, e.g.
     I.Cell.world.nature.atmospheric_carbon"""
 
@@ -22,7 +21,7 @@ class _AttributeReference (Symbol):
     """the ReferenceVariable at the start of the attribute reference, 
     e.g. I.Cell.world"""
     name_sequence = None
-    """the sequence of further attribute names, 
+    """the sequence of further attribute names,
     e.g. ["nature","atmospheric_carbon"]"""
 
     # inheritance from Symbol is a little tricky since Symbol has a custom
@@ -31,7 +30,7 @@ class _AttributeReference (Symbol):
     # can multiple copies of a Variable having the same name, to be attached
     # to different entity types:
     @staticmethod
-    def __new__(cls, *args, **assumptions):
+    def __new__(cls, reference_variable, name_sequence, *args, **assumptions):
         return super().__new__(cls,
                                str(random.random()),
                                **assumptions)
@@ -45,16 +44,24 @@ class _AttributeReference (Symbol):
         return _AttributeReference(self.reference_variable,
                                    self.name_sequence + [name])
 
-    def get_target_class(self, instance):
+    _target_class = None
+    def get_target_class(self):
         """return the class owning the referenced attribute"""
-        instance = self.reference_variable.get_value(instance)
-        for name in self.name_sequence[:-1]:
-            instance = getattr(instance, name)
-        return instance.__class__
+        if self._target_class is None:
+            instance = self.reference_variable.get_value(
+                            self.reference_variable.owning_class.instances[0])
+            if type(instance) == set:
+                instance = next(iter(instance))
+            for name in self.name_sequence[:-1]:
+                instance = getattr(instance, name)
+                if type(instance) == set:
+                    instance = next(iter(instance))
+            self._target_class = instance.__class__
+        return self._target_class
 
-    def get_target_variable(self, instance):
+    def get_target_variable(self):
         """return the Variable object of the referenced attribute"""
-        return getattr(self.get_target_class(instance), self.name_sequence[-1])
+        return getattr(self.get_target_class(), self.name_sequence[-1])
 
     def get_target_instances(self, instances):
         """gets the instances owning the referenced attributes"""
@@ -88,18 +95,66 @@ class _AttributeReference (Symbol):
         for pos, i in enumerate(items):
             setattr(i, dname, getattr(i, dname) + values[pos])
 
+    def __str__(self):
+        return self.__repr__()
 
-def eval(expr, instances):
-    if isinstance(expr, data_model.Variable):
-        return np.array(expr.get_values(instances))
+    def __repr__(self):
+        return str(self.reference_variable.owning_class) + str(self.reference_variable) + str(self.name_sequence)
+
+
+_cached_values = {}
+_cached_iteration = None
+sympy2numpy = {
+               sp.acos: np.arccos,
+               sp.acosh: np.arccosh,
+               sp.asin: np.arcsin,
+               sp.asinh: np.arcsinh,
+               sp.atan: np.arctan,
+               sp.atan2: np.arctan2,
+               sp.atanh: np.arctanh,
+               sp.cos: np.cos,
+               sp.cosh: np.cosh,
+               sp.exp: np.exp,
+               sp.log: np.log,
+               sp.sin: np.sin,
+               sp.sinh: np.sin,
+               sp.sqrt: np.sqrt,
+               sp.tan: np.tan,
+               sp.tanh: np.tanh,
+               }
+
+#@profile
+def eval(expr, instances, iteration=None):
+    try:
+        # if still up to date, return vals from cache:
+        if iteration is not None and _cached_iteration == iteration:
+            print("(used the cache)")
+            return _cached_values[expr]
+    except:
+        pass
     t = type(expr)
-    if t == Add:
-        return np.sum([eval(a, instances) for a in expr.args], axis=0)
-    if t == Mul:
-        return np.prod([eval(a, instances) for a in expr.args], axis=0)
-    if t == Pow:
-        return expr.args[0] ** expr.args[1]
-    if t == _AttributeReference:
-        return expr.get_values(instances)
-    # simple scalar for broadcasting:
-    return np.array([float(expr)])
+    # else compute them anew:
+    if t == data_model.Variable:
+        vals = np.array(expr.get_values(instances))
+    elif t == _AttributeReference:
+        vals = expr.get_values(instances)
+    elif t == sp.Add:
+        vals = np.sum([eval(a, instances) for a in expr.args], axis=0)
+    elif t == sp.Mul:
+        vals = np.prod([eval(a, instances) for a in expr.args], axis=0)
+    elif t == sp.Pow:
+        vals = eval(expr.args[0], instances) ** eval(expr.args[1], instances)
+    elif type(t) == sp.FunctionClass and t.nargs == {1}:
+        # it is a unary sympy function
+        vals = sympy2numpy[t](expr.args[0])
+    # TODO: other types of expressions, including function evaluations!
+    else:
+        # simple scalar for broadcasting:
+        vals = np.array([float(expr)])
+    try:
+        # store vals in cache:
+        _cached_values[expr] = vals
+        _cached_iteration = iteration
+    except:
+        pass
+    return vals

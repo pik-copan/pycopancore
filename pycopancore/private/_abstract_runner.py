@@ -21,12 +21,4 @@ It sets the basic structure of runner modules (for integration).
 
 class _AbstractRunner(object):
     """Abstract class that every runner class needs to implement."""
-
-    def __init__(self):
-        pass
-
-    def __repr__(self):
-        pass
-
-    def __str__(self):
-        pass
+    pass

@@ -1,16 +1,28 @@
-from ._abstract_entity_mixin import _AbstractEntityMixin
-from .variable import Variable
+from . import Variable
+from ..private import _AttributeReference
 
-class SetVariable(Variable):
+# TODO: complete logics, set other Variable attributes, validate etc.
+
+
+class SetVariable (Variable):
     """
-    set of other entities
+    reference to a set of entities
     """
 
-    entity_type = None
-    """required entity type of referred entities"""
+    type = None
+    """required type of referred entities
+    (will be adjusted by model.configure to point to composite class
+    instead of mixin class)"""
 
-    def __init__(self, 
-                 entity_type=_AbstractEntityMixin,
+    def __init__(self,
+                 name,
+                 desc,
+                 *,
+                 type=object,
                  **kwargs):
-        super().__init__(**kwargs)
-        self.entity_type = entity_type
+        super().__init__(name, desc, **kwargs)
+        self.type = type
+
+    def __getattr__(self, name):
+        """return an object representing a class attribute of the referenced class"""
+        return _AttributeReference(self, [name])

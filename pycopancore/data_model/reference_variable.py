@@ -11,7 +11,7 @@ class ReferenceVariable (Variable):
 
     type = None
     """required type of referred entity or taxon
-    (will be adjusted by model.configure to point to composite class 
+    (will be adjusted by model.configure to point to composite class
     instead of mixin class)"""
 
     def __init__(self,

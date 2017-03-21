@@ -18,14 +18,11 @@ variables in special list to be accessed by the runner.
 # License: MIT license
 
 from .model_logics import ModelLogics  # only in base component
-from pycopancore.model_components import abstract
+
+from .. import abstract
 from . import interface as I
 from . import World, Cell, Nature, Individual, Culture, Society, \
     Metabolism
-
-#
-#  Define class Model
-#
 
 
 class Model (I.Model, abstract.Model, ModelLogics):
@@ -41,59 +38,5 @@ class Model (I.Model, abstract.Model, ModelLogics):
     listed there and collect all variables and processes of said components.
     """
 
-    #
-    # Definitions of class attributes
-    #
-
     entity_types = [World, Cell, Individual, Society]
     process_taxa = [Nature, Culture, Metabolism]
-
-    #
-    #  Definitions of internal methods
-    #
-
-    def __init__(self,
-                 **kwargs
-                 ):
-        """Initialize an instance of Model.
-
-        Parameters
-        ----------
-        kwargs: Not in Use right now
-        """
-        super().__init__(**kwargs)
-
-        self._process_taxon_objects = {pt: pt() for pt in self.process_taxa}
-        self.entities_dict = {}
-        for c in self.entity_types:
-            self.entities_dict[c] = c.instances
-
-        # TODO:
-        # is it necessary to make all items in self.entities_dict known
-        # to the object itself?
-
-        # TODO:
-        # Is this really what owning_classes is about???
-        # Tell all variables and proceses which entities they have,
-        # so set v/p.owning_classes:
-        # for (p, oc) in self.processes:
-        #     p.owning_classes = self.entities_dict[oc]
-        # for (v, oc) in self.variables:
-        #     v.owning_classes = self.entities_dict[oc]
-
-        print('     model instantiated')
-
-    def __repr__(self):
-        """Return a string representation of the base.Model."""
-        # Is it necessary to list all objects? Or are classes sufficient?
-        keys_entities = []
-        keys_process_taxa = []
-        for key, item in self.entities_dict:
-            keys_entities.append(key)
-        for key, item in self._process_taxon_objects:
-            keys_process_taxa.append(key)
-        return (super().__repr__() +
-                ('base.model object with entities {} /'
-                 'and process taxa {}'.format(keys_entities, keys_process_taxa)
-                 )
-                )

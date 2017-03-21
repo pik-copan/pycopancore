@@ -13,7 +13,7 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from ... import Variable, ReferenceVariable
+from ... import Variable, ReferenceVariable, SetVariable
 from ... import master_data_model as D
 from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
 
@@ -91,14 +91,14 @@ class World (object):
     fossil_carbon = W.fossil_carbon
 
     # attributes storing redundant information (backward references):
-    societies = None
-    """set of all Societies on this world"""
-    top_level_societies = None
-    """set of top-level Societies on this world"""
-    cells = None
-    """set of Cells on this world"""
-    individuals = None
-    """set of Individuals residing on this world"""
+    societies = SetVariable("societies",
+                            "set of all Societies on this world")
+    top_level_societies = SetVariable(
+                            "top level societies",
+                            "set of top-level Societies on this world")
+    cells = SetVariable("cells", "set of Cells on this world")
+    individuals = SetVariable("individuals",
+                              "set of Individuals residing on this world")
 
 
 class Society (object):
@@ -121,27 +121,33 @@ class Society (object):
     # aggregate next_lower_level societies'
 
     # read-only attributes storing redundant information:
-    nature = None
-    metabolism = None
-    culture = None
-    higher_societies = None
-    """upward list of (in)direct super-Societies"""
-    next_lower_societies = None
-    """set of sub-Societies of next lower level"""
-    lower_societies = None
-    """set of all direct and indirect sub-Societies"""
-    direct_cells = None
-    """set of direct territory Cells"""
-    cells = None
-    """set of direct and indirect territory Cells"""
-    direct_individuals = None
-    """set of resident Individuals not in subsocieties"""
-    individuals = None
-    """set of direct or indirect resident Individuals"""
-
+    nature = ReferenceVariable("nature", "", type=Nature)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
+    culture = ReferenceVariable("culture", "", type=Culture)
+    higher_societies = SetVariable(
+                                "higher societies",
+                                "upward list of (in)direct super-Societies")
+    next_lower_societies = SetVariable(
+                                "next lower societies",
+                                "set of sub-Societies of next lower level")
+    lower_societies = SetVariable(
+                                "lower societies",
+                                "set of all direct and indirect sub-Societies")
+    direct_cells = SetVariable("direct cells", "set of direct territory Cells")
+    cells = SetVariable("cells", "set of direct and indirect territory Cells")
+    direct_individuals = SetVariable(
+                            "direct individuals",
+                            "set of resident Individuals not in subsocieties")
+    individuals = SetVariable("individuals",
+                              "set of direct or indirect resident Individuals")
 
 # specified only now to avoid recursion:
 Society.next_higher_society.type = Society
+Society.higher_societies.type = Society
+Society.next_lower_societies.type = Society
+Society.lower_societies.type = Society
+World.societies.type = Society
+World.top_level_societies.type = Society
 
 
 class Cell (object):
@@ -159,19 +165,26 @@ class Cell (object):
     # other variables:
     location = Variable("location", "pair of coordinates?")
     land_area = Variable("land area", "", unit=D.square_kilometers,
-                    strict_lower_bound=0)
+                         strict_lower_bound=0)
 
     terrestrial_carbon = C.terrestrial_carbon
     fossil_carbon = C.fossil_carbon
 
     # attributes storing redundant information:
-    nature = None
-    metabolism = None
-    culture = None
-    societies = None
-    """upward list of Societies it belongs to (in)directly"""
-    individuals = None
-    """set of resident Individuals"""
+    nature = ReferenceVariable("nature", "", type=Nature)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
+    culture = ReferenceVariable("culture", "", type=Culture)
+    societies = SetVariable(
+                    "societies",
+                    "upward list of Societies it belongs to (in)directly",
+                    type=Society)
+    individuals = SetVariable("individuals",
+                              "set of resident Individuals")
+
+# specified only now to avoid recursion:
+World.cells.type = Cell
+Society.direct_cells.type = Cell
+Society.cells.type = Cell
 
 
 class Individual (object):
@@ -190,20 +203,29 @@ class Individual (object):
                  unit=D.unity, lower_bound=0, default=1)
 
     # attributes storing redundant information:
-    world = None
-    nature = None
-    metabolism = None
-    culture = None
-    society = None
-    """lowest level Society this individual is resident of"""
-    societies = None
-    """upward list of all Societies it is resident of"""
+    world = ReferenceVariable("world", "", type=World)
+    nature = ReferenceVariable("nature", "", type=Nature)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
+    culture = ReferenceVariable("culture", "", type=Culture)
+    society = ReferenceVariable(
+                        "society", 
+                        "lowest level Society this individual is resident of", 
+                        type=Society)
+    societies = SetVariable(
+                    "societies",
+                    "upward list of all Societies it is resident of",
+                    type=Society)
+    acquaintances = SetVariable("acquaintances",
+                                "set of Individuals this is acquainted with")
 
     population_share = None
     """share of society's direct population represented by this individual"""
     represented_population = None
     """absolute population represented by this individual"""
 
-    acquaintances = None
-    """Individuals this is acquainted with"""
-
+# specified only now to avoid recursion:
+World.individuals.type = Individual
+Society.direct_individuals.type = Individual
+Society.individuals.type = Individual
+Cell.individuals.type = Individual
+Individual.acquaintances.type = Individual

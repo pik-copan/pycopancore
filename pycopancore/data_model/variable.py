@@ -17,7 +17,6 @@ from sympy import Symbol
 
 from . import DimensionalQuantity
 from .. import private
-# , _AbstractProcessTaxon  # would cause circular import
 
 
 EPS = 1e-10
@@ -214,8 +213,10 @@ class Variable (Symbol):
         return object.__hash__(self)
 
     def __str__(self):
-        return self.codename + " (" + self.name + ")" \
-            if self.codename is not None else self.name
+        return (self.codename + " (" + self.name + ")"
+                if self.codename is not None else self.name) \
+                + ("" if self.owning_class is None 
+                   else " @ " + str(self.owning_class))
 
     def __repr__(self):
         return str(self)  # dirty fix for lengthy output 
@@ -416,6 +417,12 @@ class Variable (Symbol):
             # TODO: deal with possible interferences between bounds and quantum
             self.set_value(i, v)
 
+    def fast_set_values(self, instances, values):
+        """fast-track method to set values without checks and conversions"""
+        cn = self.codename
+        for i, inst in enumerate(instances):
+            setattr(inst, cn, values[i])
+
     def set_values(self,
                    instances=None,
                    values=None,
@@ -455,17 +462,7 @@ class Variable (Symbol):
 
                 self.set_value(e, v)
 
-        for i in range(len(instances)):
-            inst = instances[i]
-
-            #
-            # as above...
-            # assert isinstance(e, _AbstractEntityMixin). /
-            # "key is not a model entity"
-            # assert hastattr(e, self.codename), /
-            # "variable is not contained in entity"
-            #
-
+        for i, inst in enumerate(instances):
             self.set_value(inst, values[i])
 
     def clear_derivatives(self,
@@ -527,4 +524,9 @@ class Variable (Symbol):
         -------
         List of variable value of each entity
         """
-        return [self.get_value(i, unit=unit) for i in instances]
+#        return [self.get_value(inst, unit=unit) for inst in instances]  # too slow...
+        if unit is None:
+            cn = self.codename
+            return [getattr(inst, cn) for inst in instances]
+        else:
+            return [self.get_value(inst, unit=unit) for inst in instances]

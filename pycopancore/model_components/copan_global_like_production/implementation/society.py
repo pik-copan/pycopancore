@@ -13,6 +13,7 @@ then remove these instructions
 
 from pycopancore import Explicit, ODE
 from .. import interface as I
+from ...base import interface as B
 import numpy as np
 
 
@@ -94,8 +95,8 @@ class Society (I.Society):
 
     processes = [
                  Explicit("economic production",
-                          [I.Cell.biomass_harvest_flow,
-                           I.Cell.fossil_extraction_flow,
+                          [B.Society.cells.biomass_harvest_flow,
+                           B.Society.cells.fossil_extraction_flow,
                            I.Society.biomass_input_flow,
                            I.Society.fossil_fuel_input_flow,
                            I.Society.renewable_energy_input_flow,
@@ -103,8 +104,8 @@ class Society (I.Society):
                            I.Society.total_output_flow],
                           do_economic_production),
                  ODE("harvest, extraction, emissions",
-                     [I.Cell.terrestrial_carbon,
-                      I.Cell.fossil_carbon,
-                      I.World.atmospheric_carbon],
+                     [B.Society.cells.terrestrial_carbon,
+                      B.Society.cells.fossil_carbon,
+                      B.Society.world.atmospheric_carbon],
                      do_harvest_extraction_emissions)
                  ]

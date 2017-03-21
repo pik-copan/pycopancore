@@ -1,5 +1,10 @@
-import numpy as np
+# first thing: set seed so that each execution must return same thing:
+import random
+random.seed(1)
 from numpy import random
+random.seed(1)
+
+import numpy as np
 
 import pycopancore.models.jobsts_prototype_1 as M
 from pycopancore import master_data_model as D
@@ -51,12 +56,12 @@ M.Society.population.set_values(societies, P0)
 
 r = random.uniform(size=nsocs)
 S0 = 1e13 * D.gigajoules * r / sum(r) # in AWS paper: 1e12 (alternatively: 1e13)
-#M.Society.renewable_energy_knowledge.set_values(societies, S0)
+M.Society.renewable_energy_knowledge.set_values(societies, S0)
 #print(M.Society.renewable_energy_knowledge.get_values(societies))
 
 r = random.uniform(size=nsocs)
 K0 = sum(P0) * 1e4 * D.dollars/D.people * r / sum(r) # ?
-#M.Society.physical_capital.set_values(societies, K0)
+M.Society.physical_capital.set_values(societies, K0)
 #print(M.Society.physical_capital.get_values(societies))
 
 # TODO: add noise to parameters
@@ -65,26 +70,23 @@ runner = Runner(model=model)
 
 from time import time
 start = time()
-traj = runner.run(t_1=1, dt=.01)
+traj = runner.run(t_1=1, dt=.1)
 print(time()-start, " seconds")
 
-print(traj)
-
-t = traj['t'][:-1]
-print(len(t), len(traj[M.World.atmospheric_carbon][worlds[0]][:-1]))
-plot(t, traj[M.World.atmospheric_carbon][worlds[0]][:-1],"b",lw=3)
-plot(t, traj[M.World.ocean_carbon][worlds[0]][:-1],"b--",lw=3)
-plot(t, traj[M.World.terrestrial_carbon][worlds[0]][:-1],"g",lw=3)
-plot(t, traj[M.World.fossil_carbon][worlds[0]][:-1],"gray",lw=3)
+t = traj['t']
+plot(t, traj[M.World.atmospheric_carbon][worlds[0]],"b",lw=3)
+plot(t, traj[M.World.ocean_carbon][worlds[0]],"b--",lw=3)
+plot(t, traj[M.World.terrestrial_carbon][worlds[0]],"g",lw=3)
+plot(t, traj[M.World.fossil_carbon][worlds[0]],"gray",lw=3)
 for s in societies:
-    plot(t, traj[M.Society.population][s][:-1],"yellow",lw=2)
-#    plot(t, traj[M.Society.physical_capital][s][:-1],"k",lw=2)
-#    plot(t, traj[M.Society.renewable_energy_knowledge][s][:-1],color="darkorange",lw=2)
-#    plot(t, traj[M.Society.biomass_input_flow][s][:-1],"g--",lw=2)
-#    plot(t, traj[M.Society.fossil_fuel_input_flow][s][:-1],"--",color="gray",lw=2)
-#    plot(t, traj[M.Society.renewable_energy_input_flow][s][:-1],"--",color="darkorange",lw=2)
+#    plot(t, traj[M.Society.population][s],"yellow",lw=2)
+    plot(t, traj[M.Society.physical_capital][s],"k",lw=2)
+    plot(t, traj[M.Society.renewable_energy_knowledge][s],color="darkorange",lw=2)
+    plot(t, traj[M.Society.biomass_input_flow][s],"g--",lw=2)
+    plot(t, traj[M.Society.fossil_fuel_input_flow][s],"--",color="gray",lw=2)
+    plot(t, traj[M.Society.renewable_energy_input_flow][s],"--",color="darkorange",lw=2)
 for c in cells:
-    plot(t, traj[M.Cell.terrestrial_carbon][c][:-1],"g")
-    plot(t, traj[M.Cell.fossil_carbon][c][:-1],"gray")
+    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
+    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
-show()
+#show()

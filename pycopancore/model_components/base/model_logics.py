@@ -19,7 +19,8 @@ variables in special list to be accessed by the runner.
 
 # only used in this component, not in others:
 from .. import abstract
-from ... import Variable, ODE, Explicit, Step, Event, OrderedSet
+from ... import Variable, ReferenceVariable, SetVariable, \
+                ODE, Explicit, Step, Event, OrderedSet
 from ...private import _AbstractEntityMixin, _AbstractProcessTaxonMixin
 
 import inspect
@@ -64,9 +65,13 @@ class ModelLogics (object):
     event_processes = None
     """ordered set of processes of type Event"""
 
+    mixin2composite = None
+    """dict mapping mixins to derived composite classes"""
+
     def __init__(self):
         if not self.__class__._configured:
             self.configure()
+
 
     @classmethod
     def configure(cls, reconfigure=False, **kwargs):
@@ -98,6 +103,8 @@ class ModelLogics (object):
         cls.explicit_processes = OrderedSet()
         cls.step_processes = OrderedSet()
         cls.event_processes = OrderedSet()
+        
+        cls.mixin2composite = {}
 
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
         print("Analysing model structure...")
@@ -144,8 +151,10 @@ class ModelLogics (object):
                 print("Entity-type ", composed_class)
             else:
                 print("Process taxon ", composed_class)
-            # find all parent classes:
+            # find all parent classes and register in mixin2composite:
             parents = OrderedSet(list(inspect.getmro(composed_class)))
+            for mixin in parents:
+                cls.mixin2composite[mixin] = composed_class
             # iterate through all Variables and set their owning_class:
             vars = OrderedSet([(k, v) for c in parents
                                for (k, v) in c.__dict__.items()
@@ -174,6 +183,7 @@ class ModelLogics (object):
                                     assert target.owning_class == composed_class, \
                                         "ODE target Variable owned by different entity-type/taxon! (maybe try accessing it via a ReferenceVariable)"
                                 else:  # it's an _AttributeReference
+                                    print(target,target.reference_variable,target.reference_variable.owning_class,composed_class)
                                     assert target.reference_variable.owning_class == composed_class, \
                                         "ODE target attribute reference starts at a wrong entity-type/taxon"
                             cls.ODE_targets += p.targets
@@ -193,7 +203,15 @@ class ModelLogics (object):
                         else:
                             raise Exception("unsupported process type")
 
+        # replace refs to mixins by refs to composite classes
+        # in all Reference/SetVariables where possible:
+        for v in variable_pool:
+            if isinstance(v, (ReferenceVariable, SetVariable)):
+                v.type = cls.mixin2composite.get(v.type, v.type)
+
         cls._configured = True
+
+        print("Variables affected by some process:", cls.process_targets)
         print("...done")
 
     def convert_to_standard_units(self):
