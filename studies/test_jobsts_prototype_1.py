@@ -89,4 +89,4 @@ for c in cells:
     plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
     plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
-#show()
+show()

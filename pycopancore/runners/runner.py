@@ -299,7 +299,7 @@ class Runner(_AbstractRunner):
 
 # NEW VERSION WITH ODE IS MUCH FASTER:
                 solver = integrate.ode(self.get_rhs_array)
-                solver.set_integrator("vode", max_step=dt, method="bdf")
+                solver.set_integrator("vode", max_step=dt, method="adams")
                 solver.set_initial_value(initial_array_ode, t)
                 solver.set_f_params(froms, tos, targetclasses, targetvars)
                 times = []

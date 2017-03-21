@@ -77,3 +77,7 @@ target/
 /.project
 /.pydevproject
 
+/kernprof.py
+/last.prof
+/prof.txt
+/test_jobsts_prototype_1.py.lprof
