@@ -1,5 +1,5 @@
 from . import Variable
-from ..private import _AttributeReference
+from ..private import _DotConstruct
 
 # TODO: complete logics, set other Variable attributes, validate etc.
 
@@ -25,4 +25,4 @@ class SetVariable (Variable):
 
     def __getattr__(self, name):
         """return an object representing a class attribute of the referenced class"""
-        return _AttributeReference(self, [name])
+        return _DotConstruct(self, [self.codename, name])

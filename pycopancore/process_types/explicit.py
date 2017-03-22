@@ -32,7 +32,7 @@ class Explicit(_AbstractProcess):
 
     def __init__(self,
                  name,
-                 variables,
+                 targets,
                  specification,
                  smoothness=0
                  ):
@@ -41,13 +41,13 @@ class Explicit(_AbstractProcess):
         Parameters
         ----------
         name :
-        variables :
+        targets :
         specification : func
             function(self,t)
         smoothness :
         """
         super().__init__(name)
 
-        self.variables = variables
+        self.targets = targets
         self.specification = specification
         self.smoothness = smoothness

@@ -43,7 +43,7 @@ class ModelLogics (object):
 
     variables = None
     """ordered set of Variables"""
-    explicit_variables = None
+    explicit_targets = None
     """ordered set of Variables controlled by processes of type Explicit"""
     step_variables = None
     """ordered set of Variables changed by processes of type Step"""
@@ -92,18 +92,19 @@ class ModelLogics (object):
                                  "Use optional argument 'reconfigure'")
 
         cls.variables = OrderedSet()  # set of Variables (no longer of pairs!)
-        cls.explicit_variables = OrderedSet()
+        
+        cls.ODE_targets = OrderedSet()   # targets are Variables or _DottedReferences
+        cls.explicit_targets = OrderedSet()
         cls.step_variables = OrderedSet()
         cls.event_variables = OrderedSet()
-        cls.ODE_targets = OrderedSet()
-        cls.process_targets = OrderedSet()  # Variables or _AttributeReferences
+        cls.process_targets = OrderedSet()
 
         cls.processes = OrderedSet()  # set of Processes (no longer of pairs!)
         cls.ODE_processes = OrderedSet()
         cls.explicit_processes = OrderedSet()
         cls.step_processes = OrderedSet()
         cls.event_processes = OrderedSet()
-        
+
         cls.mixin2composite = {}
 
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
@@ -156,10 +157,10 @@ class ModelLogics (object):
             for mixin in parents:
                 cls.mixin2composite[mixin] = composed_class
             # iterate through all Variables and set their owning_class:
-            vars = OrderedSet([(k, v) for c in parents
-                               for (k, v) in c.__dict__.items()
-                               if isinstance(v, Variable)])
-            for (k, v) in vars:
+            variables = OrderedSet([(k, v) for c in parents
+                                    for (k, v) in c.__dict__.items()
+                                    if isinstance(v, Variable)])
+            for (k, v) in variables:
                 if isinstance(v, Variable):
                     print("    Variable ", v)
                     assert v in variable_pool, \
@@ -169,6 +170,15 @@ class ModelLogics (object):
                     assert v.owning_class is None
                     cls.variables.add(v)
                     v.owning_class = composed_class
+
+        # iterate again through all composed entity-types and process taxa
+        # to check process targets:
+        for composed_class in cls.entity_types + cls.process_taxa:
+            if composed_class in cls.entity_types:
+                print("Entity-type ", composed_class)
+            else:
+                print("Process taxon ", composed_class)
+            parents = OrderedSet(list(inspect.getmro(composed_class)))
             for c in parents:
                 if "processes" in c.__dict__ and c.processes is not None:
                     for p in c.processes:
@@ -182,16 +192,23 @@ class ModelLogics (object):
                                 if isinstance(target, Variable):
                                     assert target.owning_class == composed_class, \
                                         "ODE target Variable owned by different entity-type/taxon! (maybe try accessing it via a ReferenceVariable)"
-                                else:  # it's an _AttributeReference
-                                    print(target,target.reference_variable,target.reference_variable.owning_class,composed_class)
-                                    assert target.reference_variable.owning_class == composed_class, \
-                                        "ODE target attribute reference starts at a wrong entity-type/taxon"
+                                else:  # it's a _DotConstruct
+                                    assert target.owning_class == composed_class, \
+                                        "ODE target attribute reference starts at a wrong entity-type/taxon" \
+                                        + str(target) + str(target.owning_class) + str(composed_class)
                             cls.ODE_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Explicit):
                             cls.explicit_processes.add(p)
-                            cls.explicit_variables += p.variables
-                            cls.process_targets += p.variables
+                            for target in p.targets:
+                                if isinstance(target, Variable):
+                                    assert target.owning_class == composed_class, \
+                                        "Explicit target Variable owned by different entity-type/taxon! (maybe try accessing it via a ReferenceVariable)"
+                                else:  # it's a _DotConstruct
+                                    assert target.owning_class == composed_class, \
+                                        "Explicit target attribute reference starts at a wrong entity-type/taxon:"
+                            cls.explicit_targets += p.targets
+                            cls.process_targets += p.targets
                         elif isinstance(p, Step):
                             cls.step_processes.add(p)
                             cls.step_variables += p.variables

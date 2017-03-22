@@ -15,8 +15,8 @@ from pylab import plot, gca, show
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 2  # no. societies
-ncells = 4  # no. cells
+nsocs = 10  # no. societies
+ncells = 10  # no. cells
 
 model = M.Model()
 
@@ -70,10 +70,12 @@ runner = Runner(model=model)
 
 from time import time
 start = time()
-traj = runner.run(t_1=1, dt=.1)
+traj = runner.run(t_1=10, dt=1)
 print(time()-start, " seconds")
 
-t = traj['t']
+t = np.array(traj['t'])
+print("max. time step",(t[1:]-t[:-1]).max())
+
 plot(t, traj[M.World.atmospheric_carbon][worlds[0]],"b",lw=3)
 plot(t, traj[M.World.ocean_carbon][worlds[0]],"b--",lw=3)
 plot(t, traj[M.World.terrestrial_carbon][worlds[0]],"g",lw=3)
@@ -85,8 +87,8 @@ for s in societies:
     plot(t, traj[M.Society.biomass_input_flow][s],"g--",lw=2)
     plot(t, traj[M.Society.fossil_fuel_input_flow][s],"--",color="gray",lw=2)
     plot(t, traj[M.Society.renewable_energy_input_flow][s],"--",color="darkorange",lw=2)
-for c in cells:
-    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
-    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
+#for c in cells:
+#    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
+#    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
-show()
+#show()

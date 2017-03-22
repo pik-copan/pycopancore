@@ -213,10 +213,8 @@ class Variable (Symbol):
         return object.__hash__(self)
 
     def __str__(self):
-        return (self.codename + " (" + self.name + ")"
-                if self.codename is not None else self.name) \
-                + ("" if self.owning_class is None 
-                   else " @ " + str(self.owning_class))
+        return (self.owning_class.__name__ \
+                + "." + self.codename) if self.owning_class else self.name
 
     def __repr__(self):
         return str(self)  # dirty fix for lengthy output 
@@ -342,9 +340,7 @@ class Variable (Symbol):
         """converts argument into a set of instances
         (entities or process taxa)"""
         if instances is None: # use all that have this variable
-            instances = set()
-            for c in self.owning_classes:
-                instances.update(c.instances)
+            instances = self.owning_class.instances
         elif isinstance(instances, dict): # use all that appear in keys or values
             instances = set()
             for k,i in instances.keys():
@@ -417,10 +413,10 @@ class Variable (Symbol):
             # TODO: deal with possible interferences between bounds and quantum
             self.set_value(i, v)
 
-    def fast_set_values(self, instances, values):
+    def fast_set_values(self, values):
         """fast-track method to set values without checks and conversions"""
         cn = self.codename
-        for i, inst in enumerate(instances):
+        for i, inst in enumerate(self.owning_class.instances):
             setattr(inst, cn, values[i])
 
     def set_values(self,
@@ -507,7 +503,7 @@ class Variable (Symbol):
             + str(instance)
         return v if unit is None else self._unit.convert(v, unit)
 
-    def get_values(self,
+    def eval(self,
                    instances=None,
                    *,
                    unit=None
@@ -530,3 +526,15 @@ class Variable (Symbol):
             return [getattr(inst, cn) for inst in instances]
         else:
             return [self.get_value(inst, unit=unit) for inst in instances]
+
+    @property  # read-only
+    def target_class(self):
+        return self.owning_class
+
+    @property  # read-only
+    def target_variable(self):
+        return self
+
+    @property  # read-only
+    def target_instances(self):
+        return self.owning_class.instances

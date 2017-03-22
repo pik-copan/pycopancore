@@ -12,13 +12,13 @@
 # TODO: rename to ScipyODERunner
 
 from .. import Event, Step, Variable
-from ..private import _AbstractRunner, eval
+from ..private import _AbstractRunner, _DotConstruct, eval, unknown
 
 from scipy import integrate
 import numpy as np
 
 from time import time
-
+import sys
 
 from profilehooks import coverage, profile
 
@@ -50,6 +50,7 @@ class Runner(_AbstractRunner):
         kwargs
         """
         super(Runner, self).__init__()
+
         self.model = model
         self.processes = model.processes
         self.explicit_processes = model.explicit_processes
@@ -58,6 +59,7 @@ class Runner(_AbstractRunner):
         self.ode_processes = model.ODE_processes
         self.trajectory_dict = {}
         self.termination_calls = termination_calls
+
         self._current_iteration = 0
 
 #    @profile  # generates time profiling information
@@ -73,30 +75,29 @@ class Runner(_AbstractRunner):
         -------
 
         """
-        # Iterate through explicit_processes:
         for p in self.explicit_processes:
-            if self._current_iteration == 0:
-                print("    ",p,p.variables)
-            instances = p.owning_class.instances
             spec = p.specification
             if isinstance(spec, list):
-                # evaluate symbolic expression and store result in
-                # instances' attributes:
-                for pos in range(len(spec)):
-                    p.variables[pos].fast_set_values(instances,
-                                                eval(spec[pos], instances,
-                                                     self._current_iteration))
+                # evaluate symbolic expressions and store result:
+                for i, target in enumerate(p.targets):
+                    values = eval(spec[i],
+                                  p.owning_class.instances,
+                                  self._current_iteration)
+                    # note that values may have different length than
+                    # p.owning_class.instances due to broadcasting effects
+                    target.fast_set_values(values)
             else:
-                # call process' implementation method which writes
-                # to instances' attributes:
-                for inst in instances:
+                # call process' implementation method for each of it's
+                # owning class' (!) instances. This will store values in
+                # the target (!) instances' attributes:
+                for inst in p.owning_class.instances:
                     spec(inst, t)
 
 #    @profile  # generates time profiling information
-    def get_rhs_array(self, 
-                      t, value_array,
-#                      value_array, t,  # this was the version needed for odeint instead of ode
-                      froms, tos, targetclasses, targetvars):
+    def get_rhs_array(self,
+                      t, value_array
+#                      value_array, t  # this was the version needed for odeint instead of ode
+                      ):
         """Return RHS of composite ODE system as an array.
 
         Will be passed to scipy.odeint"""
@@ -106,42 +107,48 @@ class Runner(_AbstractRunner):
         # Call complete explicit functions, 3.1.2 in runner scheme
         self.apply_explicits(t)
 
-        # copy values from input array into instance attributes
-        # and clear instances' derivative attributes:
-        for i in range(len(froms)):
-            inst = targetclasses[i].instances
-            targetvars[i].fast_set_values(instances=inst,
-                                     values=value_array[froms[i]:tos[i]])
-            targetvars[i].clear_derivatives(instances=inst)
+        # copy values from input array into instance attributes,
+        # clear target instances' derivative attributes:
+        for target in self.model.ODE_targets:
+            var = target.target_variable
+            var.fast_set_values(values=value_array[target._from:target._to])
+            var.clear_derivatives()
 
         # let all processes calculate their derivative terms:
         derivative_array = np.zeros(value_array.size)
         for p in self.ode_processes:
             spec = p.specification
             if isinstance(spec, list):
-                # evaluate symbolic expression:
-                for pos in range(len(spec)):
-                    target = p.targets[pos]
-                    summands = eval(spec[pos], p.owning_class.instances,
+                # evaluate symbolic expressions:
+                for i, target in enumerate(p.targets):
+                    summands = eval(spec[i],
+                                    p.owning_class.instances,
                                     self._current_iteration)
                     if isinstance(target, Variable):
                         # add result directly to
                         # output array (rather than in instances' derivative attrs.):
                         derivative_array[target._from:target._to] += summands
                     else:
-                        # adds terms to instances' derivative attributes:
-                        target.add_derivatives(p.owning_class.instances, 
-                                               summands)
+                        # summands may have different length than 
+                        # p.owning_class.instances due to broadcasting effects,
+                        # hence we cannot simply copy it into the 
+                        # derivative_array array chunk at target._from:target._to.
+                        # instead, we add terms directly to target instances' 
+                        # derivative attributes where they will be read from
+                        # later:
+                        target.add_derivatives(summands)
             else:
-                # call process' implementation method which adds terms
-                # to instances' derivative attributes:
+                # call process' implementation method for each of it's
+                # owning class' (!) instances. This will add terms to
+                # the target (!) instances' derivative attributes:
                 for inst in p.owning_class.instances:
                     spec(inst, t)
 
         # add derivative terms from derivative attributes to output array:
-        for i in range(len(froms)):
-            derivative_array[froms[i]:tos[i]] += \
-                targetvars[i].get_derivatives(instances=targetclasses[i].instances)
+        for target in self.model.ODE_targets:
+            derivative_array[target._from:target._to] += \
+                target.target_variable.get_derivatives(
+                            instances=target.target_class.instances)
 
         return derivative_array
 
@@ -168,7 +175,7 @@ class Runner(_AbstractRunner):
 
         """
 
-        print("\nRunning from",t_0,"to",t_1,"at resolution",dt,"...")
+        print("\nRunning from",t_0,"to",t_1,"at resolution at least",dt,"...")
 
         # Define time:
         t = t_0
@@ -254,17 +261,16 @@ class Runner(_AbstractRunner):
 
                 print("  Running from",t,"to",next_time,"...")
 
+                # clear all targets _DotConstructs' caches of target instances
+                # since events and steps may have changed instance references:
+                for target in self.model.ODE_targets + self.model.explicit_targets:
+                    target._target_instances = unknown
+
                 # determine array layouts
                 # and compose initial value-array:
                 print("    Composing initial value array...")
-                targetclasses = [(target.owning_class
-                                  if isinstance(target, Variable)
-                                  else target.get_target_class()
-                                  ) for target in self.model.ODE_targets]
-                targetvars = [(target if isinstance(target, Variable)
-                               else target.get_target_variable()
-                               ) for target in self.model.ODE_targets]
-                lens = [len(c.instances) for c in targetclasses]
+                lens = [len(target.target_class.instances)
+                        for target in self.model.ODE_targets]
                 tos = np.cumsum(lens)
                 froms = np.concatenate(([0], tos[:-1]))
                 arraylen = sum(lens)
@@ -273,7 +279,8 @@ class Runner(_AbstractRunner):
                     target._from = froms[i]
                     target._to = tos[i]
                     initial_array_ode[froms[i]:tos[i]] = \
-                        targetvars[i].get_values(instances=targetclasses[i].instances)
+                        target.target_variable.eval(
+                                instances=target.target_class.instances)
 
                 # In Odeint, call get_rhs_array to get the RHS of the ODE system
                 # as an array, step 3.1 in runner scheme, then return
@@ -291,23 +298,33 @@ class Runner(_AbstractRunner):
 #                                                  self.get_rhs_array,
 #                                                  initial_array_ode,
 #                                                  ts,
-#                                                  args=(froms, tos,
-#                                                        targetclasses,
-#                                                        targetvars),
 #                                                  mxstep=10000  # FIXME: ??
 #                                                  )
 
 # NEW VERSION WITH ODE IS MUCH FASTER:
                 solver = integrate.ode(self.get_rhs_array)
-                solver.set_integrator("vode", max_step=dt, method="adams")
-                solver.set_initial_value(initial_array_ode, t)
-                solver.set_f_params(froms, tos, targetclasses, targetvars)
                 times = []
                 sol = []
-                while solver.t < next_time:
-                    solver.integrate(next_time, step=True)
-                    times.append(solver.t)
-                    sol.append(solver.y)
+                if False:  # apparently dopri5 is faster than vode...
+                    solver.set_integrator("vode", max_step=dt, method="bdf")  # bdf or adams doesn't seem to make any difference...
+                    solver.set_initial_value(initial_array_ode, t)
+                    while solver.t < next_time:
+                        solver.integrate(next_time, step=True)
+                        times.append(solver.t)
+                        sol.append(solver.y)
+                        print("        ", solver.t, end='\r')
+                else:
+                    solver.set_integrator("dopri5", max_step=dt,
+                                          verbosity=1,
+                                          nsteps=1000
+                                          )
+                    def solout(thet, y):
+                        times.append(thet)
+                        sol.append(y.copy())
+                        print("        ", thet, end='\r')
+                    solver.set_solout(solout)
+                    solver.set_initial_value(initial_array_ode, t)
+                    solver.integrate(next_time)
                 ts = np.array(times)
                 ode_trajectory = np.array(sol)
 
@@ -319,19 +336,15 @@ class Runner(_AbstractRunner):
                 print("    Saving returned matrix to output dict...")
                 # save trajectory of ODE variables to output dict:
                 tlen = len(self.trajectory_dict['t'])
-                for i in range(len(self.model.ODE_targets)):
-#                    print("      ",targetvars[i])
-                    for pos, inst in enumerate(targetclasses[i].instances):
-                        values = list(ode_trajectory[:, froms[i] + pos])
-#                        print("        ",len(values),inst)
+                for i, target in enumerate(self.model.ODE_targets):
+                    for pos, inst in enumerate(target.target_class.instances):
+                        values = list(
+                                ode_trajectory[:, target._from + pos])
                         try:
-#                            print("          lens:",len(self.trajectory_dict[targetvars[i]][inst]), tlen)
-                            if len(self.trajectory_dict[targetvars[i]][inst]) < tlen:
-#                                print("            old:",self.trajectory_dict[targetvars[i]][inst])
-                                self.trajectory_dict[targetvars[i]][inst] += values
+                            if len(self.trajectory_dict[target.target_variable][inst]) < tlen:
+                                self.trajectory_dict[target.target_variable][inst] += values
                         except KeyError:
-                            self.trajectory_dict[targetvars[i]][inst] = values
-#                        print("            ",self.trajectory_dict[targetvars[i]][inst])
+                            self.trajectory_dict[target.target_variable][inst] = values
 
                 # Take the time steps used in odeint and calculate explicit
                 # functions in retrospect, step 3.3 in runner scheme
@@ -344,10 +357,9 @@ class Runner(_AbstractRunner):
                         # copy values from returned matrix to instances' attributes:
                         ode_values = ode_trajectory[pos, :]
                         # read values from result vector in same order as written into it:
-                        for i in range(len(lens)):
-                            targetvars[i].fast_set_values(
-                                    instances=targetclasses[i].instances,
-                                    values=ode_values[froms[i]:tos[i]])
+                        for i, target in enumerate(self.model.ODE_targets):
+                            target.target_variable.fast_set_values(
+                                ode_values[target._from:target._to])
                         self.apply_explicits(t)
                         # complete the output dictionary:
     #                    print("    Completing output dict for time",t)
@@ -441,21 +453,15 @@ class Runner(_AbstractRunner):
         """
         tlen = len(self.trajectory_dict["t"])
         for target in targets:
-            v = target if isinstance(target, Variable) \
-                    else target.get_target_variable()
-#            print("      ",v)
-            instances = v.owning_class.instances
-            values = v.get_values(instances)
+            var = target.target_variable
+            instances = target.target_class.instances
+            values = var.eval(instances)
             for i, inst in enumerate(instances):
-#                print("        ",1,inst)
                 try:
-#                    print("          lens:",len(self.trajectory_dict[v][inst]), tlen)
-                    if len(self.trajectory_dict[v][inst]) < tlen:
-#                        print("            old:",self.trajectory_dict[v][inst])
-                        self.trajectory_dict[v][inst].append(values[i])
+                    if len(self.trajectory_dict[var][inst]) < tlen:
+                        self.trajectory_dict[var][inst].append(values[i])
                 except KeyError:
-                    self.trajectory_dict[v][inst] = [values[i]]
-#                print("            ",self.trajectory_dict[v][inst])
+                    self.trajectory_dict[var][inst] = [values[i]]
 
     def terminate(self):
         """Determine if the runner should stop.

@@ -85,6 +85,30 @@ class Cell (object):
 
     # pure output variables:
 
+    biomass_relative_productivity = \
+        Variable("biomass relative productivity",
+                 "used to determine energy input",
+                 unit=D.unity,
+                 lower_bound=0)
+
+    fossil_relative_productivity = \
+        Variable("fossil relative productivity",
+                 "used to determine energy input",
+                 unit=D.unity,
+                 lower_bound=0)
+
+    renewable_relative_productivity = \
+        Variable("renewable relative productivity",
+                 "used to determine energy input",
+                 unit=D.unity,
+                 lower_bound=0)
+
+    total_relative_productivity = \
+        Variable("total relative productivity", 
+                 "used as weights in allocation of labour and capital",
+                 unit=D.unity,
+                 lower_bound=0)
+
     biomass_harvest_flow = C.biomass_harvest_flow
     fossil_extraction_flow = C.fossil_extraction_flow
 

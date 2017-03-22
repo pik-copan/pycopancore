@@ -18,9 +18,25 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 #   values or their default values as given in Variable.
 
 from ..data_model import variable
+from ..private._expressions import _DotConstruct, aggregation_names
 
 
-class _AbstractEntityMixin (object):
+class _AbstractEntityMixinType (type):
+    """metaclass for _AbstractEntityMixin, needed for intercepting
+    class attribute calls and having nice reprs"""
+
+    def __getattr__(cls, name):
+        """return an object representing an aggregation"""
+        print("A!")
+        if name in aggregation_names:
+            return _DotConstruct(cls, [name])
+        return getattr(cls, name)
+
+#    def __str__(cls):
+#        return cls.__name__
+
+
+class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
     """Define AbstractEntityMixin.
 
     Entity-unspecific abstract class from which all entity-specific abstract
@@ -65,7 +81,6 @@ class _AbstractEntityMixin (object):
         self.__class__.idle_entities.remove(self)
         self.__class__.instances.append(self)
 
-# Jobst: I don't see why we need this:
     def __repr__(self):
         return "{}[UID={}]".format(self.__class__.__name__, self._uid)
 
@@ -89,3 +104,5 @@ class _AbstractEntityMixin (object):
         current_uid = cls.NEXTUID
         cls.NEXTUID += 1
         return current_uid
+
+

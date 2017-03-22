@@ -186,7 +186,6 @@ World.cells.type = Cell
 Society.direct_cells.type = Cell
 Society.cells.type = Cell
 
-
 class Individual (object):
     """Basic Individual interface.
 

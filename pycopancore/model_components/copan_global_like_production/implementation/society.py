@@ -11,9 +11,10 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore import Explicit, ODE
+from .... import Explicit, ODE
 from .. import interface as I
 from ...base import interface as B
+
 import numpy as np
 
 
@@ -41,17 +42,18 @@ class Society (I.Society):
         # list of cells in some fixed order, so that we can use arrays below:
         C = list(self.cells)
         # collect cellwise input for energy subsectors:
-        L = np.array([c.terrestrial_carbon for c in C]) \
-                    * (1 - self.protected_terrestrial_carbon_share)
-        G = np.array([c.fossil_carbon for c in C]) \
-                    * (1 - self.protected_fossil_carbon_share)
-        S = self.renewable_energy_knowledge
+#        L = np.array([c.terrestrial_carbon for c in C]) \
+#                    * (1 - self.protected_terrestrial_carbon_share)
+#        G = np.array([c.fossil_carbon for c in C]) \
+#                    * (1 - self.protected_fossil_carbon_share)
+#        S = self.renewable_energy_knowledge
         intensity = np.array([c.total_energy_intensity for c in C])
-        # use the copan:GLOBAL Leontieff/Cobb-Douglas nested production function
-        aB = np.array([c.biomass_sector_productivity for c in C])
-        aF = np.array([c.fossil_sector_productivity for c in C])
-        aR = np.array([c.renewable_sector_productivity for c in C])
-        relative_productivity = (aB * L**2 + aF * G**2 + aR * S**2) / intensity
+#        # use the copan:GLOBAL Leontieff/Cobb-Douglas nested production function
+#        aB = np.array([c.biomass_sector_productivity for c in C])
+#        aF = np.array([c.fossil_sector_productivity for c in C])
+#        aR = np.array([c.renewable_sector_productivity for c in C])
+#        relative_productivity = (aB * L**2 + aF * G**2 + aR * S**2) / intensity
+        relative_productivity = np.array([c.total_relative_productivity for c in C])
         """an aggregate, production-function specific indicator"""
         # distribute population and capital to cells so that wages and rents
         # are equal across cells (efficient allocation):
@@ -68,9 +70,12 @@ class Society (I.Society):
         fac = (P * K)**0.4 / denom
         eB = self.metabolism.biomass_energy_density
         eF = self.metabolism.fossil_energy_density
-        B = aB * L**2 * fac / eB
-        F = aF * G**2 * fac / eF
-        R = aR * S**2 * fac
+        B = np.array([c.biomass_relative_productivity for c in C]) * fac / eB
+        F = np.array([c.fossil_relative_productivity for c in C]) * fac / eF
+        R = np.array([c.renewable_relative_productivity for c in C]) * fac
+#        B = aB * L**2 * fac / eB
+#        F = aF * G**2 * fac / eF
+#        R = aR * S**2 * fac
         E = eB * B + eF * F + R
         Y = E / intensity
         # tell cells what their harvest and extraction is:
@@ -94,18 +99,21 @@ class Society (I.Society):
         self.world.d_atmospheric_carbon += self.carbon_emission_flow
 
     processes = [
-                 Explicit("economic production",
-                          [B.Society.cells.biomass_harvest_flow,
-                           B.Society.cells.fossil_extraction_flow,
-                           I.Society.biomass_input_flow,
-                           I.Society.fossil_fuel_input_flow,
-                           I.Society.renewable_energy_input_flow,
-                           I.Society.secondary_energy_flow,
-                           I.Society.total_output_flow],
-                          do_economic_production),
-                 ODE("harvest, extraction, emissions",
-                     [B.Society.cells.terrestrial_carbon,
-                      B.Society.cells.fossil_carbon,
-                      B.Society.world.atmospheric_carbon],
-                     do_harvest_extraction_emissions)
-                 ]
+
+        Explicit("economic production",
+                 [B.Society.cells.biomass_harvest_flow,
+                  B.Society.cells.fossil_extraction_flow,
+                  I.Society.biomass_input_flow,
+                  I.Society.fossil_fuel_input_flow,
+                  I.Society.renewable_energy_input_flow,
+                   I.Society.secondary_energy_flow,
+                  I.Society.total_output_flow],
+                 do_economic_production),
+
+        ODE("harvest, extraction, emissions",
+            [B.Society.cells.terrestrial_carbon,
+             B.Society.cells.fossil_carbon,
+             B.Society.world.atmospheric_carbon],
+            do_harvest_extraction_emissions)
+
+    ]

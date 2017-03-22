@@ -1,5 +1,5 @@
 # python recipe at https://code.activestate.com/recipes/576694/
-# plus __iadd__
+# plus __add__, __iadd__
 
 import collections
 
@@ -24,6 +24,12 @@ class OrderedSet (collections.MutableSet):
             end = self.end
             curr = end[1]
             curr[2] = end[1] = self.map[key] = [key, curr, end]
+
+    def __add__(self, other):
+        res = OrderedSet(self)
+        for key in other:
+            res.add(key)
+        return res
 
     def __iadd__(self, other):
         for key in other:
