@@ -75,6 +75,8 @@ class Runner(_AbstractRunner):
         -------
 
         """
+        # TODO: call them in an order that respects dependencies among
+        # variables! for this, determine dependency structure in modellogics.configure!
         for p in self.explicit_processes:
             spec = p.specification
             if isinstance(spec, list):
@@ -131,12 +133,17 @@ class Runner(_AbstractRunner):
                     else:
                         # summands may have different length than 
                         # p.owning_class.instances due to broadcasting effects,
-                        # hence we cannot simply copy it into the 
+                        # hence we cannot simply copy it into the
                         # derivative_array array chunk at target._from:target._to.
-                        # instead, we add terms directly to target instances' 
+                        # instead, we add terms directly to target instances'
                         # derivative attributes where they will be read from
                         # later:
                         target.add_derivatives(summands)
+                        # TODO: use an njitted function add2array(array, positions, values)
+                        # and expr._target_positions based on a new entity attribute _index
+                        # that marks the position in the ordered set entities.
+                        # when an entity is removed from this set, move the one at the
+                        # last position to the freed position.
             else:
                 # call process' implementation method for each of it's
                 # owning class' (!) instances. This will add terms to
@@ -156,7 +163,8 @@ class Runner(_AbstractRunner):
             *,
             t_0=0,
             t_1,
-            dt
+            dt  # TODO: rename to "resolution" since it is only an upper bound?
+# TODO: add some kwargs for choosing solver and setting solver params
             ):
         """Run function.
 
@@ -204,6 +212,11 @@ class Runner(_AbstractRunner):
             for inst in event.owning_class.instances:
                 if eventtype == "rate":
                     next_time = np.random.exponential(1. / rate_or_timefunc)
+                    # TODO: if rate_or_timefunc is a function,
+                    # it must be used in ode integration to integrate
+                    # its cumulative distribution function, and when the
+                    # latter crosses a threshold that we randomly draw
+                    # here, solout must terminate (see below).
                 elif eventtype == "time":
                     next_time = rate_or_timefunc(t)
                 else:
@@ -312,6 +325,7 @@ class Runner(_AbstractRunner):
                         solver.integrate(next_time, step=True)
                         times.append(solver.t)
                         sol.append(solver.y)
+                        # TODO: implement possible termination? see below...
                         print("        ", solver.t, end='\r')
                 else:
                     solver.set_integrator("dopri5", max_step=dt,
@@ -321,12 +335,18 @@ class Runner(_AbstractRunner):
                     def solout(thet, y):
                         times.append(thet)
                         sol.append(y.copy())
-                        print("        ", thet, end='\r')
+                        # TODO: this is the place to implement termination
+                        # due to events without a priori known occurrence
+                        # time! if solout returns 0 (or -1?), solver will
+                        # terminate. Similarly for vode above
+                        print("      t =", thet, "            ", end='\r')
                     solver.set_solout(solout)
                     solver.set_initial_value(initial_array_ode, t)
                     solver.integrate(next_time)
                 ts = np.array(times)
                 ode_trajectory = np.array(sol)
+
+                # TODO: capture solver failures!
 
                 print("      ...took",time()-_starttime,"seconds and",len(times),"time steps")
 

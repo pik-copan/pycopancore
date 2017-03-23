@@ -40,7 +40,7 @@ class _AbstractProcess(object):
     def __init__(self, name=""):
         """Initialize an _AbstractProcess instance."""
         self.name = name
-        self.owning_classes = []
+        self.owning_class = None
 
     def __repr__(self):
         return self.name

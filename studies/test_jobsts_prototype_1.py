@@ -16,7 +16,7 @@ from pylab import plot, gca, show
 
 nworlds = 1  # no. worlds
 nsocs = 10  # no. societies
-ncells = 10  # no. cells
+ncells = 100  # no. cells
 
 model = M.Model()
 
@@ -70,7 +70,7 @@ runner = Runner(model=model)
 
 from time import time
 start = time()
-traj = runner.run(t_1=10, dt=1)
+traj = runner.run(t_1=500, dt=10)
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
@@ -87,8 +87,8 @@ for s in societies:
     plot(t, traj[M.Society.biomass_input_flow][s],"g--",lw=2)
     plot(t, traj[M.Society.fossil_fuel_input_flow][s],"--",color="gray",lw=2)
     plot(t, traj[M.Society.renewable_energy_input_flow][s],"--",color="darkorange",lw=2)
-#for c in cells:
-#    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
-#    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
+for c in cells:
+    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
+    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
-#show()
+show()

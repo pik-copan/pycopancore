@@ -108,7 +108,7 @@ class ModelLogics (object):
         cls.mixin2composite = {}
 
         print("\nConfiguring model", cls.name, "(", cls, ") ...")
-        print("Analysing model structure...")
+        print("Analysing model structure...\n")
 
         variable_pool = OrderedSet()
         # find and iterate through model components:
@@ -146,12 +146,13 @@ class ModelLogics (object):
                             "Process was already registered by a different component"
                     cls.processes.add(p)
 
+        print("\nVariables:")
         # now iterate through all composed entity-types and process taxa:
         for composed_class in cls.entity_types + cls.process_taxa:
             if composed_class in cls.entity_types:
-                print("Entity-type ", composed_class)
+                print("  Entity-type ", composed_class)
             else:
-                print("Process taxon ", composed_class)
+                print("  Process taxon ", composed_class)
             # find all parent classes and register in mixin2composite:
             parents = OrderedSet(list(inspect.getmro(composed_class)))
             for mixin in parents:
@@ -171,13 +172,14 @@ class ModelLogics (object):
                     cls.variables.add(v)
                     v.owning_class = composed_class
 
+        print("\nProcesses:")
         # iterate again through all composed entity-types and process taxa
         # to check process targets:
         for composed_class in cls.entity_types + cls.process_taxa:
             if composed_class in cls.entity_types:
-                print("Entity-type ", composed_class)
+                print("  Entity-type ", composed_class)
             else:
-                print("Process taxon ", composed_class)
+                print("  Process taxon ", composed_class)
             parents = OrderedSet(list(inspect.getmro(composed_class)))
             for c in parents:
                 if "processes" in c.__dict__ and c.processes is not None:
@@ -199,6 +201,8 @@ class ModelLogics (object):
                             cls.ODE_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Explicit):
+                            # TODO: determine dependency structure among variable to set
+                            # the right order of execution of explicit processes!
                             cls.explicit_processes.add(p)
                             for target in p.targets:
                                 if isinstance(target, Variable):

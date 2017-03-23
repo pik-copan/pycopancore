@@ -102,6 +102,9 @@ class Variable (Symbol):
     codename = None
     """the attribute name of the Variable in its owning class"""
 
+    _uid = None
+    """unique id"""
+
     # standard methods:
 
     # inheritance from Symbol is a little tricky since Symbol has a custom
@@ -143,6 +146,9 @@ class Variable (Symbol):
                  **kwargs
                  ):
         super().__init__()
+
+        # store unique "name" given by sympy in _uid:
+        self._uid = self.name
 
         self.name = name
         self.desc = desc
@@ -213,11 +219,15 @@ class Variable (Symbol):
         return object.__hash__(self)
 
     def __str__(self):
-        return (self.owning_class.__name__ \
-                + "." + self.codename) if self.owning_class else self.name
+        return (self.owning_class.__name__ + "." + self.codename) \
+                if self.owning_class \
+                else self.name
 
     def __repr__(self):
-        return str(self)  # dirty fix for lengthy output 
+        return (self.owning_class.__name__ + "." + self.codename) \
+                if self.owning_class \
+                else self.name + " (" + self._uid + ")"
+        # dirty fix for lengthy output 
         r = "Variable " + self.name + "(" + self.desc + "), scale=" \
             + self.scale + ", datatype=" + str(self.datatype)
         if self.unit is not None:

@@ -106,9 +106,11 @@ class _DotConstruct (sp.Symbol):
                 arg=None,
                 **assumptions):
         return super().__new__(cls,
-                               str(owning_class_or_var)
+                               repr(owning_class_or_var)
                                + str(name_sequence)
                                + str(arg),
+# TODO: use a value that is unique but the same if the same _DotConstruct is constructed again!
+#                               str(random.random()),  # Dirty fix...
                                **assumptions)
 
     def __init__(self,
@@ -142,19 +144,19 @@ class _DotConstruct (sp.Symbol):
         returns a new _DotConstruct that is extended by the name of this
         attribute"""
         assert self.arg is None, "can't have a . behind a ) here"
-        return _DotConstruct(self.owning_class,
+        return _DotConstruct(self._owning_class_or_var,
                              self.name_sequence + [name])
 
     def __call__(self, *arg):
         assert self.arg is None, "can't have a ( behind a ) here"
         assert self.name_sequence[-1] in aggregation_names, \
                     self.name_sequence[-1] + " is not an aggregation keyword"
-        return _DotConstruct(self.owning_class,
+        return _DotConstruct(self._owning_class_or_var,
                              self.name_sequence,
                              arg=arg)
 
     def __repr__(self):
-        repr = str(self.owning_class) + "." + ".".join(self.name_sequence)
+        repr = self.owning_class.__name__ + "." + ".".join(self.name_sequence)
         if self.arg is not None:
             repr += "(" + str(self.arg) + ")"
         return repr
@@ -219,7 +221,7 @@ class _DotConstruct (sp.Symbol):
         return self._cardinalities
 
     def _analyse_instances(self):
-        print("(analysing instance structure of",self,")")
+        print("      (analysing instance structure of",self,")")
         items = self.owning_class.instances
         branchings = []
         cardinalities = [len(items)]  # store initial cardinality
@@ -246,6 +248,7 @@ class _DotConstruct (sp.Symbol):
 
     def eval(self, instances=None):
         """gets referenced attribute values and performs aggregations where necessary"""
+        self.owning_class  # to make sure it and name_sequence are defined...
         items = self.owning_class.instances if instances is None else instances
         for name in self.name_sequence:
             if name in aggregation_names:
@@ -261,7 +264,7 @@ class _DotConstruct (sp.Symbol):
     def _broadcast(self, values):
         """broadcast a list of values from entities at an intermediate level
         to their "offspring" entities at the final level"""
-        value_level = self._cardinalities.index(len(values))
+        value_level = self.cardinalities.index(len(values))
         if value_level < len(self.cardinalities) - 1:
             values = broadcast(values, self._branchings[value_level + 1:])
         return values
@@ -336,8 +339,21 @@ def eval(expr, instances, iteration=None):
     elif t == sp.Mul:
         vals = np.prod([eval(a, instances) for a in expr.args], axis=0)
     elif t == sp.Pow:
-        vals = eval(expr.args[0], instances) ** eval(expr.args[1], instances)
-        vals[np.where(np.isnan(vals))] = 0
+        base = np.array(eval(expr.args[0], instances))
+        exponent = eval(expr.args[1], instances)
+        # FIXME: do the following much better!
+#        EPS = 1e-10
+#        LARGE = 1e50
+#        base[np.where(np.isnan(base))] = 0
+#        # try to avoid overflows due to (small abs)**(negative):
+#        base[np.where(np.logical_and(np.abs(base) < EPS, exponent < 0))] = EPS
+#        # try to avoid overflows due to (large abs)**(positive):
+#        base[np.where(np.logical_and(np.abs(base) > LARGE, exponent > 0))] = LARGE
+#        # try to avoid invalid values due to (negative)**(non-integer):
+#        base[np.where(np.logical_and(base < 0, exponent % 1 != 0))] = EPS
+#        print(base[:10],exponent[:10])
+        vals = base ** exponent
+        vals[np.where(np.isnan(vals))] = 0  # FIXME: is this a good idea?
     elif type(t) == sp.FunctionClass and t.nargs == {1}:
         # it is a unary sympy function
         vals = sympy2numpy[t](expr.args[0])
