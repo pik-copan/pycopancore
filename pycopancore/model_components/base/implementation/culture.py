@@ -9,7 +9,7 @@
 # License: MIT license
 
 # only used in this component, not in others:
-from pycopancore.model_components import abstract
+from ... import abstract
 
 from .. import interface as I
 

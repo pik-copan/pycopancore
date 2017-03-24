@@ -92,7 +92,7 @@ class ModelLogics (object):
                                  "Use optional argument 'reconfigure'")
 
         cls.variables = OrderedSet()  # set of Variables (no longer of pairs!)
-        
+
         cls.ODE_targets = OrderedSet()   # targets are Variables or _DottedReferences
         cls.explicit_targets = OrderedSet()
         cls.step_variables = OrderedSet()
@@ -232,8 +232,8 @@ class ModelLogics (object):
 
         cls._configured = True
 
-        print("Variables affected by some process:", cls.process_targets)
-        print("...done")
+        print("\nTargets affected by some process:", cls.process_targets)
+        print("\n(End of model configuration)")
 
     def convert_to_standard_units(self):
         """Replace all variable values of type DimensionalQuantity to float.

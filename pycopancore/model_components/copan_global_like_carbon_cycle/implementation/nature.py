@@ -10,7 +10,7 @@
 # License: MIT license
 
 from .. import interface as I
-from pycopancore.data_model.master_data_model.dimensions_and_units import \
+from ....data_model.master_data_model.dimensions_and_units import \
     gigatonnes_carbon, years, square_kilometers, kelvins
 
 class Nature (I.Nature):

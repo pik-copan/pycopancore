@@ -8,7 +8,7 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.private import _AbstractProcessTaxonMixin
+from ...private import _AbstractProcessTaxonMixin
 
 
 class Culture (_AbstractProcessTaxonMixin):

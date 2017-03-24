@@ -9,8 +9,8 @@
 # License: MIT license
 
 from .. import interface as I
-from pycopancore import Explicit, ODE
-from pycopancore import master_data_model as D
+from .... import Explicit, ODE
+from .... import master_data_model as D
 
 
 class Society (I.Society):

@@ -27,6 +27,12 @@ class Cell (I.Cell):
         self.fossil_carbon = fossil_carbon
 
 
+    # abbreviations:
+
+    balance = I.Cell.photosynthesis_carbon_flow \
+            - I.Cell.terrestrial_respiration_carbon_flow
+
+
     processes = [  # using symbolic expressions for performance reasons:
 
         Explicit("photosynthesis flow",
@@ -50,12 +56,8 @@ class Cell (I.Cell):
              ]),
 
         ODE("effect of photosynthesis and respiration",
-            [I.Cell.terrestrial_carbon,
-             B.Cell.world.atmospheric_carbon],
-            [I.Cell.photosynthesis_carbon_flow
-                - I.Cell.terrestrial_respiration_carbon_flow,
-             I.Cell.terrestrial_respiration_carbon_flow
-                - I.Cell.photosynthesis_carbon_flow]),
+            [I.Cell.terrestrial_carbon, B.Cell.world.atmospheric_carbon],
+            [balance, -balance]),
 
     ]
 

@@ -8,7 +8,7 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.private import _AbstractEntityMixin
+from ...private import _AbstractEntityMixin
 
 
 class World (_AbstractEntityMixin):

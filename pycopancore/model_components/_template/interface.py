@@ -13,12 +13,12 @@ remove these instructions.
 # License: MIT license
 
 # TODO: use variables from the master data model wherever possible:
-# from pycopancore import master_data_model as MDM
+# from ... import master_data_model as D
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
-# import pycopancore.model_components.BBB.interface as BBB
+# import ..BBB.interface as BBB
 # TODO: uncomment and adjust only if you really need other variables:
-# from pycopancore import Variable
+# from ... import Variable
 
 
 class Model (object):
@@ -48,7 +48,7 @@ class World (object):
     # endogenous variables:
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    # X = MDM.X
+    # X = D.X
     # TODO: uncomment and adjust of you need further variables from another
     # model component:
     # Z = BBB.Z

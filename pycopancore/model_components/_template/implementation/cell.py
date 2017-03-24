@@ -12,7 +12,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-# from pycopancore import master_data_model as MDM
+#from .... import master_data_model as D
 
 
 class Cell (I.Cell):

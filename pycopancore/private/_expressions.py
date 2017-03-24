@@ -9,21 +9,30 @@ Created on Mar 20, 2017
 import random
 import numpy as np
 import sympy as sp
+import scipy.special
 
 from .. import data_model as D
 from .. import private
 
 from numba import jit, njit
 
+import inspect
+from profilehooks import coverage, profile
+
+
+class _Unknown(object):
+    def __str__(self):
+        return "unknown"
+unknown = _Unknown()
 
 # hierarchical aggregation functions:
 
 def aggregation(npfunc):
 
     @njit
-    def _func(values, lens):
-        values = np.array(values)
-        results = np.zeros(len(lens))
+    def func(values, lens):
+#        values = np.array(values)
+        results = np.zeros(len(lens), dtype=values.dtype)
         offset = 0
         for i in range(len(lens)):
             newoffset = offset + lens[i]
@@ -31,22 +40,23 @@ def aggregation(npfunc):
             offset = newoffset
         return list(results)
 
-    def func(values,
-             branchings  # list of list of branchings by descending level
-             ):
-        for lens in reversed(branchings):
-            values = _func(values, lens)
-        return values
-
     return func
 
-a_sum,  a_mean,  a_std,  a_var,  a_min,  a_median,  a_max \
-= map(aggregation, [ \
-np.sum, np.mean, np.std, np.var, np.min, np.median, np.max
-])
+name2numpy = {
+              "all": np.all,
+              "any": np.any,
+              "max": np.max,
+              "mean": np.mean,
+              "median": np.median,
+              "min": np.min,
+              "std": np.std,
+              "sum": np.sum,
+              "var": np.var,
+              }
+aggregation_names = set(name2numpy.keys())
+name2aggregation = {name: aggregation(func)
+                    for name, func in name2numpy.items()}
 
-aggregation_names = \
-    set(["sum", "mean", "std", "var", "min", "median", "max"])
 
 # hierarchical broadcasting:
 
@@ -54,19 +64,41 @@ aggregation_names = \
 def _broadcast(values, lens):
     result = np.zeros(np.sum(np.array(lens)))
     offset = 0
-    for i in range(len(lens)):
-        newoffset = offset + lens[i]
+    for i, l in enumerate(lens):
+        newoffset = offset + l
         result[offset:newoffset] = values[i]
         offset = newoffset
-    return list(result)
+    return result
 
-def broadcast(values, branchings):
-    for lens in branchings:
+def broadcast(values, layout):
+    for lens in layout:
         values = _broadcast(values, lens)
     return values
 
+def layout2lens(layout):
+    result = layout[-1]
+    for lens in reversed(layout[:-1]):
+        offset = 0
+        newresult = []
+        for i, l in enumerate(lens):
+            newoffset = offset + l
+            newresult.append(sum(result[offset:newoffset]))
+            offset = newoffset
+        result = newresult
+    return result
 
-class _DotConstruct (sp.Symbol):
+def get_cardinalities_and_branchings(expr):
+    try:
+        return expr.cardinalities, expr.branchings
+    except:
+        # use longest cardinalities of args:
+        cbs = [get_cardinalities_and_branchings(arg) 
+               for arg in expr.args]
+        if len(cbs) == 0:
+            return [1], []
+        return cbs[np.argmax([len(c[0]) for c in cbs])]
+
+class _DotConstruct (sp.AtomicExpr):
     """A _DotConstruct represents a syntactical construct with dots,
     starting with an entity-type or process taxon class,
     followed by zero or more ReferenceVariables or SetVariables 
@@ -90,8 +122,17 @@ class _DotConstruct (sp.Symbol):
     can_be_target = None
     """whether this can be a target (e.g. does not involve aggregation)"""
 
-    _uid = None
-    """unique id"""
+    _initialized = None
+    """whether it was initialized already"""
+
+    # needed to make sympy happy:
+    _argset = ()
+    args = ()
+    is_Add = False
+    is_float = False
+#    is_symbol = True
+#    is_Symbol = True
+    precedence = sp.printing.precedence.PRECEDENCE["Atom"]
 
     # inheritance from Symbol is a little tricky since Symbol has a custom
     # __new__ method that returns the same object everytime the name is the
@@ -105,12 +146,14 @@ class _DotConstruct (sp.Symbol):
                 *args,
                 arg=None,
                 **assumptions):
+        if isinstance(owning_class_or_var, D.Variable) or name_sequence[0] in aggregation_names:
+            uid = repr(owning_class_or_var) \
+                    + str(name_sequence) + str(arg)
+        else:
+            uid = repr(getattr(owning_class_or_var, name_sequence[0])) \
+                    + str([None] + name_sequence[1:]) + str(arg)
         return super().__new__(cls,
-                               repr(owning_class_or_var)
-                               + str(name_sequence)
-                               + str(arg),
-# TODO: use a value that is unique but the same if the same _DotConstruct is constructed again!
-#                               str(random.random()),  # Dirty fix...
+                               uid,
                                **assumptions)
 
     def __init__(self,
@@ -120,40 +163,56 @@ class _DotConstruct (sp.Symbol):
                  ):
         super().__init__()
 
-        # store unique "name" given by sympy in _uid:
-        self._uid = self.name
+        if self._initialized is None:
+            self._initialized = True
 
-        self._owning_class_or_var = owning_class_or_var
-        self.name_sequence = name_sequence
-        self.arg = arg
+            self._owning_class_or_var = owning_class_or_var
+            self.name_sequence = name_sequence
+            self.arg = arg
 
-        self.can_be_target = True
-        for name in name_sequence:
-            if name in aggregation_names:
-                self.can_be_target = False
-                break
+            self.can_be_target = True
+            for name in name_sequence:
+                if name in aggregation_names:
+                    self.can_be_target = False
+                    break
 
-        self._target_class = private.unknown
-        self._target_variable = private.unknown
-        self._target_instances = private.unknown
-        self._branchings = private.unknown
-        self._cardinalities = private.unknown
+            self._target_class = private.unknown
+            self._target_variable = private.unknown
+            self._target_instances = private.unknown
+            self._branchings = private.unknown
+            self._cardinalities = private.unknown
 
     def __getattr__(self, name):
         """accessing an attribute of a _DotConstruct simply
         returns a new _DotConstruct that is extended by the name of this
         attribute"""
-        assert self.arg is None, "can't have a . behind a ) here"
-        return _DotConstruct(self._owning_class_or_var,
-                             self.name_sequence + [name])
+        if self.arg is not None:
+            # append name to argument:
+            return _DotConstruct(self._owning_class_or_var,
+                                 self.name_sequence,
+                                 arg=getattr(self.arg, name))
+        elif self.name_sequence[-1] in aggregation_names:
+            # add an argument:
+            arg = _DotConstruct(self._owning_class_or_var,
+                                self.name_sequence[:-1] + [name])
+            return _DotConstruct(self._owning_class_or_var,
+                                 self.name_sequence,
+                                 arg=arg)
+        else:
+            # append name to name_sequence:
+            return _DotConstruct(self._owning_class_or_var,
+                                 self.name_sequence + [name])
+        # Note that this causes hasattr(...) to always return True!
+        # Hoping this causes no problem...
 
-    def __call__(self, *arg):
+    def __call__(self, *args, **kwargs):
         assert self.arg is None, "can't have a ( behind a ) here"
-        assert self.name_sequence[-1] in aggregation_names, \
-                    self.name_sequence[-1] + " is not an aggregation keyword"
-        return _DotConstruct(self._owning_class_or_var,
-                             self.name_sequence,
-                             arg=arg)
+        if self.name_sequence[-1] in aggregation_names:
+            return _DotConstruct(self._owning_class_or_var,
+                                 self.name_sequence,
+                                 arg=args[0])
+        else:
+            return sp.AtomicExpr()
 
     def __repr__(self):
         repr = self.owning_class.__name__ + "." + ".".join(self.name_sequence)
@@ -163,6 +222,29 @@ class _DotConstruct (sp.Symbol):
 
     def __str__(self):
         return self.__repr__()
+
+    # needed to make sympy happy: (may need further later)
+    def _sympystr(self, *args, **kwargs):
+        return self.__repr__()
+    def match(self, *args, **kwargs):
+        return None
+    def is_constant(self, *args, **kwargs):
+        return False
+    def _eval_expand_mul(self, *args, **kwargs):
+        return self
+    def _eval_Eq(self, *args, **kwargs):
+        return None
+
+# this does not work unfortunately:
+#    def __eq__(self, other):
+#        print("eq?")
+#        if self._target_instances is private.unknown:
+#            print("std.")
+#            return sp.AtomicExpr.__eq__(self, other)
+#        else:
+#            print("Eq")
+#            return sp.Eq(self, other)
+# so A == B cannot be used in formulas, instead sp.Eq(A,B) must be used.
 
     @property  # read-only
     def target_class(self):
@@ -184,6 +266,13 @@ class _DotConstruct (sp.Symbol):
         if isinstance(self._owning_class_or_var, D.Variable):
             self.name_sequence[0] = self._owning_class_or_var.codename
             self._owning_class_or_var = self._owning_class_or_var.owning_class
+        elif not issubclass(self._owning_class_or_var,
+                            private._AbstractEntityMixin):
+            # replace interface class by composite class, by using
+            # owning_class of any Variable attribute of interface class:
+            self._owning_class_or_var = \
+                [v for v in self._owning_class_or_var.__dict__.values()
+                 if isinstance(v, D.Variable)][0].owning_class
         return self._owning_class_or_var
 
     @property  # read-only
@@ -221,10 +310,11 @@ class _DotConstruct (sp.Symbol):
         return self._cardinalities
 
     def _analyse_instances(self):
-        print("      (analysing instance structure of",self,")")
-        items = self.owning_class.instances
-        branchings = []
-        cardinalities = [len(items)]  # store initial cardinality
+#        print("      (analysing instance structure of",self,")")
+        oc = self.owning_class
+        items = oc.instances
+        branchings = [[len(items)]]
+        cardinalities = [1,len(items)]  # store initial cardinality
         for name in self.name_sequence[:-1]:
             if name in aggregation_names:
                 break
@@ -239,9 +329,12 @@ class _DotConstruct (sp.Symbol):
                 items = [getattr(i, name) for i in items]
                 # items may now be a list of instances or a list of sets of instances...
         if hasattr(items[0], "__iter__"):
+            branchings.append([len(instance_set)
+                               for instance_set in items])
             items = [i
                      for instance_set in items
                      for i in instance_set]
+            cardinalities.append(len(items))  # store cardinality after the branching
         self._target_instances = items
         self._branchings = branchings
         self._cardinalities = cardinalities
@@ -250,9 +343,29 @@ class _DotConstruct (sp.Symbol):
         """gets referenced attribute values and performs aggregations where necessary"""
         self.owning_class  # to make sure it and name_sequence are defined...
         items = self.owning_class.instances if instances is None else instances
-        for name in self.name_sequence:
+        for pos, name in enumerate(self.name_sequence):
             if name in aggregation_names:
-                raise NotImplementedError
+                # make sure items is list of instances not list of sets:
+                if hasattr(items[0], "__iter__"):
+                    items = [i
+                             for instance_set in items
+                             for i in instance_set]
+                # TODO:
+                # construct arg from name_sequence if None
+                if self.arg is None:
+                    arg_name_sequence = self.name_sequence[:pos] \
+                                        + self.name_sequence[pos+1:]
+                    self.arg = _DotConstruct(self.owning_class,
+                                             arg_name_sequence)
+                arg_values = list(eval(self.arg, instances))  # sic! (not items!)
+                cardinalities, branchings = \
+                    get_cardinalities_and_branchings(self.arg)
+                aggregation_level = cardinalities.index(len(items))
+                layout = branchings[aggregation_level:] \
+                    if aggregation_level < len(cardinalities) - 1 \
+                    else [[1 for i in items]]
+                lens = layout2lens(layout)
+                return name2aggregation[name](arg_values, lens)
             if hasattr(items[0], "__iter__"):  # each value is a set of instances
                 items = [getattr(i, name)
                          for instance_set in items
@@ -266,7 +379,7 @@ class _DotConstruct (sp.Symbol):
         to their "offspring" entities at the final level"""
         value_level = self.cardinalities.index(len(values))
         if value_level < len(self.cardinalities) - 1:
-            values = broadcast(values, self._branchings[value_level + 1:])
+            values = broadcast(values, self.branchings[value_level:])
         return values
 
     def add_values(self, values):
@@ -296,31 +409,60 @@ class _DotConstruct (sp.Symbol):
         for pos, i in enumerate(self.target_instances):
             setattr(i, name, values[pos])
 
+#    def __iter__(self):
+#        print("AHA!")
+#        yield self
+
+    def _eval_expand_power_base(self, **kwargs):
+        return self
 
 _cached_values = {}
 _cached_iteration = None
 
-sympy2numpy = {
-               sp.acos: np.arccos,
-               sp.acosh: np.arccosh,
-               sp.asin: np.arcsin,
-               sp.asinh: np.arcsinh,
-               sp.atan: np.arctan,
-               sp.atan2: np.arctan2,
-               sp.atanh: np.arctanh,
-               sp.cos: np.cos,
-               sp.cosh: np.cosh,
-               sp.exp: np.exp,
-               sp.log: np.log,
-               sp.sin: np.sin,
-               sp.sinh: np.sin,
-               sp.sqrt: np.sqrt,
-               sp.tan: np.tan,
-               sp.tanh: np.tanh,
-               }
+func2numpy = {
+              sp.Abs: np.abs,
+              sp.acos: np.arccos,
+              sp.acosh: np.arccosh,
+              sp.asin: np.arcsin,
+              sp.asinh: np.arcsinh,
+              sp.atan: np.arctan,
+              sp.atan2: np.arctan2,
+              sp.atanh: np.arctanh,
+              sp.ceiling: np.ceil,
+              sp.cos: np.cos,
+              sp.cosh: np.cosh,
+              sp.erf: scipy.special.erf,
+              sp.erfc: scipy.special.erfc,
+              sp.erfinv: scipy.special.erfinv,
+              sp.erfcinv: scipy.special.erfcinv,
+              sp.exp: np.exp,
+              sp.floor: np.floor,
+              sp.Heaviside: lambda x : 1 - (x < 0).astype(int),
+              sp.log: np.log,
+              sp.sin: np.sin,
+              sp.sinh: np.sin,
+              sp.sqrt: np.sqrt,
+              sp.tan: np.tan,
+              sp.tanh: np.tanh,
+              }
+binary2numpy = {
+                sp.Eq: np.equal,
+                sp.Ge: np.greater_equal,
+                sp.Gt: np.greater,
+                sp.Le: np.less_equal,
+                sp.Lt: np.less,
+                sp.Ne: np.not_equal,
+                }
+nary2numpy = {
+              sp.Add: np.sum,
+              sp.And: np.logical_and,
+              sp.Mul: np.prod,
+              sp.Or: np.logical_or,
+              sp.Xor: np.logical_xor,
+              }
 
 #@profile
-def eval(expr, instances, iteration=None):
+def _eval(expr, iteration=None):
     try:
         # if still up to date, return vals from cache:
         if iteration is not None and _cached_iteration == iteration:
@@ -329,18 +471,52 @@ def eval(expr, instances, iteration=None):
     except:
         pass
     t = type(expr)
-    # else compute them anew:
-    if t == D.Variable:
-        vals = np.array(expr.eval(instances))
-    elif t == _DotConstruct:
-        vals = expr.eval(instances)
-    elif t == sp.Add:
-        vals = np.sum([eval(a, instances) for a in expr.args], axis=0)
-    elif t == sp.Mul:
-        vals = np.prod([eval(a, instances) for a in expr.args], axis=0)
+    tt = type(t)
+    if (isinstance(expr, sp.Expr) or tt == sp.FunctionClass) \
+            and len(expr.args) > 0:
+        args = expr.args
+        argvals = [None for a in args]
+        argcards = [None for a in args]
+        argbrs = [None for a in args]
+        for i, arg in enumerate(args):
+            argvals[i], argcards[i], argbrs[i] = \
+                _eval(arg, iteration=iteration)
+        # TODO: broadcast shorter args to level of longest arg!
+        longest = np.argmax([len(c) for c in argcards])
+        cardinalities = argcards[longest]
+        branchings = argbrs[longest]
+        for i, arg in enumerate(args):
+            if i != longest:
+                l = argvals[i].size
+                pos = 0 if l == 1 else cardinalities.index(l)
+                argvals[i] = broadcast(argvals[i], branchings[pos:])
+    if t in (D.Variable, _DotConstruct):
+        vals = np.array(expr.eval())
+        cardinalities = expr.cardinalities
+        branchings = expr.branchings
+    elif t == sp.Not:
+        vals = np.logical_not(argvals)
+    # binary operators:
+    elif t in binary2numpy:
+        vals = binary2numpy[t](argvals[0], argvals[1])
+    # ternary operators:
+    elif t == sp.ITE:
+        truthvals = argvals[0]
+        trues = list(np.where(truthvals == True)[0])
+        vals = argvals[2]
+        vals[trues] = argvals[1][trues]
+    # n-ary operators:
+    elif t in nary2numpy:
+        vals = nary2numpy[t](argvals, axis=0)
+    elif t == sp.Equivalent:  # = True if even no. of arguments is True = Not(Xor)
+        vals = np.logical_not(np.logical_xor(argvals, axis=0))
+    elif t == sp.Nand:
+        vals = np.logical_not(np.logical_and(argvals, axis=0))
+    elif t == sp.Nor:
+        vals = np.logical_not(np.logical_or(argvals, axis=0))
     elif t == sp.Pow:
-        base = np.array(eval(expr.args[0], instances))
-        exponent = eval(expr.args[1], instances)
+        base = argvals[0]
+        exponent = argvals[1]
         # FIXME: do the following much better!
 #        EPS = 1e-10
 #        LARGE = 1e50
@@ -354,17 +530,32 @@ def eval(expr, instances, iteration=None):
 #        print(base[:10],exponent[:10])
         vals = base ** exponent
         vals[np.where(np.isnan(vals))] = 0  # FIXME: is this a good idea?
-    elif type(t) == sp.FunctionClass and t.nargs == {1}:
-        # it is a unary sympy function
-        vals = sympy2numpy[t](expr.args[0])
     # TODO: other types of expressions, including function evaluations!
+    # other functions/unary operators:
+    elif tt == sp.FunctionClass:
+        # it is a unary (?) sympy function
+        vals = func2numpy[t](argvals[0])
     else:
         # simple scalar for broadcasting:
-        vals = np.array([float(expr)])
+        # clumsy way of converting sympy True to normal True:
+        if expr == True:
+            expr = True
+        elif expr == False:
+            expr = False
+        else:
+            expr = float(expr)
+        vals = np.array([expr])
+        cardinalities = [1]
+        branchings = []
     try:
         # store vals in cache:
-        _cached_values[expr] = vals
+        _cached_values[expr] = (vals, cardinalities, branchings)
         _cached_iteration = iteration
+#        print("(stored in cache)")
     except:
         pass
+    return vals, cardinalities, branchings
+
+def eval(expr, iteration=None):
+    vals, cardinalities, branchings = _eval(expr)
     return vals

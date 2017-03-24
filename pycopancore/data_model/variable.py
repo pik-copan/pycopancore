@@ -426,8 +426,12 @@ class Variable (Symbol):
     def fast_set_values(self, values):
         """fast-track method to set values without checks and conversions"""
         cn = self.codename
-        for i, inst in enumerate(self.owning_class.instances):
-            setattr(inst, cn, values[i])
+        if values.size > 1:
+            for i, inst in enumerate(self.owning_class.instances):
+                setattr(inst, cn, values[i])
+        else:
+            for inst in self.owning_class.instances:
+                setattr(inst, cn, values[0])
 
     def set_values(self,
                    instances=None,
@@ -531,6 +535,8 @@ class Variable (Symbol):
         List of variable value of each entity
         """
 #        return [self.get_value(inst, unit=unit) for inst in instances]  # too slow...
+        if instances is None:
+            instances = self.owning_class.instances
         if unit is None:
             cn = self.codename
             return [getattr(inst, cn) for inst in instances]
@@ -548,3 +554,13 @@ class Variable (Symbol):
     @property  # read-only
     def target_instances(self):
         return self.owning_class.instances
+
+    # stuff needed if Variable occurs as arg of _DotConstruct:
+    @property  # read-only
+    def branchings(self):
+        return [[len(self.owning_class.instances)]]
+
+    @property  # read-only
+    def cardinalities(self):
+        return [1, len(self.owning_class.instances)]
+

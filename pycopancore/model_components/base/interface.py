@@ -13,6 +13,7 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+from ...private._abstract_entity_mixin import _AbstractEntityMixinType
 from ... import Variable, ReferenceVariable, SetVariable
 from ... import master_data_model as D
 from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
@@ -64,7 +65,7 @@ class Culture (object):
 # entity types:
 
 
-class World (object):
+class World (object, metaclass=_AbstractEntityMixinType):
     """Basic World interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -101,7 +102,7 @@ class World (object):
                               "set of Individuals residing on this world")
 
 
-class Society (object):
+class Society (object, metaclass=_AbstractEntityMixinType):
     """Basic Society interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -150,7 +151,7 @@ World.societies.type = Society
 World.top_level_societies.type = Society
 
 
-class Cell (object):
+class Cell (object, metaclass=_AbstractEntityMixinType):
     """Basic Cell interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -186,7 +187,7 @@ World.cells.type = Cell
 Society.direct_cells.type = Cell
 Society.cells.type = Cell
 
-class Individual (object):
+class Individual (object, metaclass=_AbstractEntityMixinType):
     """Basic Individual interface.
 
     It contains all variables specified as mandatory ("base variables").

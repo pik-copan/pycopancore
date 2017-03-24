@@ -7,6 +7,7 @@ random.seed(1)
 import numpy as np
 
 import pycopancore.models.jobsts_prototype_1 as M
+#import pycopancore.models.only_copan_global_like_carbon_cycle as M
 from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
@@ -15,7 +16,7 @@ from pylab import plot, gca, show
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 10  # no. societies
+nsocs = 50  # no. societies
 ncells = 100  # no. cells
 
 model = M.Model()
@@ -66,11 +67,15 @@ M.Society.physical_capital.set_values(societies, K0)
 
 # TODO: add noise to parameters
 
+#from pycopancore.private._expressions import eval
+#import pycopancore.model_components.base.interface as B
+#import sympy as sp
+
 runner = Runner(model=model)
 
 from time import time
 start = time()
-traj = runner.run(t_1=500, dt=10)
+traj = runner.run(t_1=100, dt=.1)
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
@@ -81,6 +86,7 @@ plot(t, traj[M.World.ocean_carbon][worlds[0]],"b--",lw=3)
 plot(t, traj[M.World.terrestrial_carbon][worlds[0]],"g",lw=3)
 plot(t, traj[M.World.fossil_carbon][worlds[0]],"gray",lw=3)
 for s in societies:
+    pass
 #    plot(t, traj[M.Society.population][s],"yellow",lw=2)
     plot(t, traj[M.Society.physical_capital][s],"k",lw=2)
     plot(t, traj[M.Society.renewable_energy_knowledge][s],color="darkorange",lw=2)
@@ -88,7 +94,8 @@ for s in societies:
     plot(t, traj[M.Society.fossil_fuel_input_flow][s],"--",color="gray",lw=2)
     plot(t, traj[M.Society.renewable_energy_input_flow][s],"--",color="darkorange",lw=2)
 for c in cells:
-    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
-    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
+    pass
+#    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
+#    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
 show()

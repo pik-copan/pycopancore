@@ -20,17 +20,40 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 from ..data_model import variable
 from ..private._expressions import _DotConstruct, aggregation_names
 
+import inspect
+
 
 class _AbstractEntityMixinType (type):
     """metaclass for _AbstractEntityMixin, needed for intercepting
     class attribute calls and having nice reprs"""
 
-    def __getattr__(cls, name):
-        """return an object representing an aggregation"""
-        print("A!")
+#     def __getattr__(cls, name):
+#         """return an object representing an aggregation"""
+#         print("seeking",cls,name,cls.__base__)
+#         try:
+#             return object.__getattribute__(name)
+#         if name in aggregation_names:
+#             return _DotConstruct(cls, [name])
+#         res = getattr(cls.__base__, name)
+#         return res
+
+    def __getattribute__(cls, name):
         if name in aggregation_names:
             return _DotConstruct(cls, [name])
-        return getattr(cls, name)
+        res = type.__getattribute__(cls, name)
+        if type(res) == property:
+            # find first overridden attribute in method resolution
+            # order that is not a property (but a Variable object):
+            for c in inspect.getmro(cls)[1:]:
+                try:
+                    res = c.__getattribute__(c, name)
+                    if isinstance(res, variable.Variable):
+                        return res
+                except:
+                    pass
+            raise AttributeError("property " + name 
+                                 + " does not correspond to any Variable!")
+        return res
 
 #    def __str__(cls):
 #        return cls.__name__

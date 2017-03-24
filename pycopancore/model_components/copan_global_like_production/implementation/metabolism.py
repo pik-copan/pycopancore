@@ -10,7 +10,7 @@
 # License: MIT license
 
 from .. import interface as I
-from pycopancore import master_data_model as D
+from .... import master_data_model as D
 
 
 class Metabolism (I.Metabolism):

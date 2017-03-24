@@ -83,7 +83,6 @@ class Runner(_AbstractRunner):
                 # evaluate symbolic expressions and store result:
                 for i, target in enumerate(p.targets):
                     values = eval(spec[i],
-                                  p.owning_class.instances,
                                   self._current_iteration)
                     # note that values may have different length than
                     # p.owning_class.instances due to broadcasting effects
@@ -123,9 +122,7 @@ class Runner(_AbstractRunner):
             if isinstance(spec, list):
                 # evaluate symbolic expressions:
                 for i, target in enumerate(p.targets):
-                    summands = eval(spec[i],
-                                    p.owning_class.instances,
-                                    self._current_iteration)
+                    summands = eval(spec[i], self._current_iteration)
                     if isinstance(target, Variable):
                         # add result directly to
                         # output array (rather than in instances' derivative attrs.):
@@ -159,6 +156,7 @@ class Runner(_AbstractRunner):
 
         return derivative_array
 
+#    @profile
     def run(self,
             *,
             t_0=0,
@@ -255,6 +253,27 @@ class Runner(_AbstractRunner):
         # Complete/calculate explicit Functions not neccessary, since it is
         # done in get_derivatives
 
+        # prepare ODE solver:
+        solver = integrate.ode(self.get_rhs_array)
+        times = []
+        sol = []
+        if False:  # apparently dopri5 is faster than vode...
+            solver.set_integrator("vode", max_step=dt, method="bdf")  # bdf or adams doesn't seem to make any difference...
+        else:
+            solver.set_integrator("dopri5", max_step=dt,
+                                  verbosity=1,
+                                  nsteps=10000
+                                  )
+            def solout(thet, y):
+                times.append(thet)
+                sol.append(y.copy())
+                # TODO: this is the place to implement termination
+                # due to events without a priori known occurrence
+                # time! if solout returns 0 (or -1?), solver will
+                # terminate. Similarly for vode above
+                print("      t =", thet, np.mean(np.log(np.abs(y))), "            ", end='\r')
+            solver.set_solout(solout)
+
         # Enter while loop
         while t < t_1:
             # Get next discontinuity to find the next timestep where something
@@ -276,7 +295,8 @@ class Runner(_AbstractRunner):
 
                 # clear all targets _DotConstructs' caches of target instances
                 # since events and steps may have changed instance references:
-                for target in self.model.ODE_targets + self.model.explicit_targets:
+                for target in self.model.ODE_targets \
+                              + self.model.explicit_targets:
                     target._target_instances = unknown
 
                 # determine array layouts
@@ -315,11 +335,9 @@ class Runner(_AbstractRunner):
 #                                                  )
 
 # NEW VERSION WITH ODE IS MUCH FASTER:
-                solver = integrate.ode(self.get_rhs_array)
                 times = []
                 sol = []
                 if False:  # apparently dopri5 is faster than vode...
-                    solver.set_integrator("vode", max_step=dt, method="bdf")  # bdf or adams doesn't seem to make any difference...
                     solver.set_initial_value(initial_array_ode, t)
                     while solver.t < next_time:
                         solver.integrate(next_time, step=True)
@@ -328,19 +346,6 @@ class Runner(_AbstractRunner):
                         # TODO: implement possible termination? see below...
                         print("        ", solver.t, end='\r')
                 else:
-                    solver.set_integrator("dopri5", max_step=dt,
-                                          verbosity=1,
-                                          nsteps=1000
-                                          )
-                    def solout(thet, y):
-                        times.append(thet)
-                        sol.append(y.copy())
-                        # TODO: this is the place to implement termination
-                        # due to events without a priori known occurrence
-                        # time! if solout returns 0 (or -1?), solver will
-                        # terminate. Similarly for vode above
-                        print("      t =", thet, "            ", end='\r')
-                    solver.set_solout(solout)
                     solver.set_initial_value(initial_array_ode, t)
                     solver.integrate(next_time)
                 ts = np.array(times)

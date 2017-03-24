@@ -25,4 +25,4 @@ class ReferenceVariable (Variable):
 
     def __getattr__(self, name):
         """return an object representing a class attribute of the referenced class"""
-        return _DotConstruct(self, [self.codename, name])
+        return _DotConstruct(self, [None, name])

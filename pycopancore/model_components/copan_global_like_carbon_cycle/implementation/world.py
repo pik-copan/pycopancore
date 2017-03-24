@@ -1,8 +1,8 @@
 """Jobst: write docstring."""
-from pycopancore import Explicit, ODE
+from .... import Explicit, ODE
 from .. import interface as I
-import pycopancore.model_components.base.interface as base
-from pycopancore import master_data_model as D
+from ...base import interface as base
+from .... import master_data_model as D
 
 
 class World (I.World):
