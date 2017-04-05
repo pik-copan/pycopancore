@@ -16,8 +16,8 @@ from pylab import plot, gca, show
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 50  # no. societies
-ncells = 100  # no. cells
+nsocs = 10  # no. societies
+ncells = 30  # no. cells
 
 model = M.Model()
 
@@ -75,7 +75,7 @@ runner = Runner(model=model)
 
 from time import time
 start = time()
-traj = runner.run(t_1=100, dt=.1)
+traj = runner.run(t_1=10, dt=.1)
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])

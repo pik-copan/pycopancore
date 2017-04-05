@@ -48,7 +48,7 @@ class Cell(Cell_, abstract.Cell):
                  **kwargs
                  ):
         """Initialize an instance of Cell."""
-        super(Cell, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.resource = resource
         self.resource2 = resource2

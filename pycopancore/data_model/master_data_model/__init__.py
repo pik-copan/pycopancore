@@ -9,7 +9,7 @@ from . import world, society, cell, individual
 from . import world as W
 from . import society as S
 from . import cell as C
-from . import individual as I 
+from . import individual as I
 
 # what models need:
 

@@ -271,7 +271,7 @@ class Runner(_AbstractRunner):
                 # due to events without a priori known occurrence
                 # time! if solout returns 0 (or -1?), solver will
                 # terminate. Similarly for vode above
-                print("      t =", thet, np.mean(np.log(np.abs(y))), "            ", end='\r')
+                print("      t =", thet, "            ", end='\r')
             solver.set_solout(solout)
 
         # Enter while loop
@@ -284,7 +284,7 @@ class Runner(_AbstractRunner):
                 print('Break out of while-loop at time ', t)
                 break
             try:
-                next_time = min(next_discontinuities.keys())
+                next_time = min(next_discontinuities.keys())  # TODO: speed-up?
             except ValueError:
                 next_time = t_1
 
