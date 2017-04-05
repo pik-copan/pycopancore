@@ -77,6 +77,10 @@ class Runner(_AbstractRunner):
         """
         # TODO: call them in an order that respects dependencies among
         # variables! for this, determine dependency structure in modellogics.configure!
+        # TODO: use a numpy array to store values of explicitly calculated
+        # variables just as for ode variables, to avoid reading and writing
+        # entities' attributes all the time (profiling has shown that this
+        # takes a significant portion of the time).
         for p in self.explicit_processes:
             spec = p.specification
             if isinstance(spec, list):

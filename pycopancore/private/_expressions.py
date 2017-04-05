@@ -339,6 +339,8 @@ class _DotConstruct (sp.AtomicExpr):
         self._branchings = branchings
         self._cardinalities = cardinalities
 
+    # TODO add a method that differentiates w.r.t. some variable?
+
     def eval(self, instances=None):
         """gets referenced attribute values and performs aggregations where necessary"""
         self.owning_class  # to make sure it and name_sequence are defined...
@@ -461,6 +463,9 @@ nary2numpy = {
               sp.Xor: np.logical_xor,
               }
 
+# TODO: use a separate cache for expressions that do not change durint ode
+# integration and devaluate it only between integration intervals.
+# TODO: also use sympy to simplify and maybe even solve systems of equations
 #@profile
 def _eval(expr, iteration=None):
     try:
