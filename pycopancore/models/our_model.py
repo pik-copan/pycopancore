@@ -11,6 +11,8 @@
 from .. import base  # all models must use the base component
 from ..model_components import copan_global_like_carbon_cycle \
     as cc
+# from ..model_components import anderies_carbon_cycle \
+#     as cc
 
 # from ..model_components import COMPONENT1 as ABBR1
 
@@ -36,7 +38,7 @@ class Society (
     pass
 
 
-class Cell (cc.Cell
+class Cell (cc.Cell,
             base.Cell):
     """Cell entity type."""
 
@@ -75,7 +77,7 @@ class Culture (
 
 # Model class:
 
-class Model (cc.Model
+class Model (cc.Model,
              base.Model):
     """Class representing the whole model."""
 

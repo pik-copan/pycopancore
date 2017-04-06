@@ -54,7 +54,7 @@ M.Cell.fossil_carbon.set_values(cells, G0)
 # M.Society.population.set_values(societies, P0)
 # print(M.Society.population.get_values(societies))
 
-r = random.uni/form(size=nsocs)
+# r = random.uniform(size=nsocs)
 # in AWS paper: 1e12 (alternatively: 1e13):
 # S0 = 1e13 * D.gigajoules * r / sum(r)
 # M.Society.renewable_energy_knowledge.set_values(societies, S0)
