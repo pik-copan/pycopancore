@@ -27,11 +27,12 @@ unknown = _Unknown()
 
 # hierarchical aggregation functions:
 
+
 def aggregation(npfunc):
 
     @njit
     def func(values, lens):
-#        values = np.array(values)
+        # values = np.array(values)
         results = np.zeros(len(lens), dtype=values.dtype)
         offset = 0
         for i in range(len(lens)):
@@ -70,10 +71,12 @@ def _broadcast(values, lens):
         offset = newoffset
     return result
 
+
 def broadcast(values, layout):
     for lens in layout:
         values = _broadcast(values, lens)
     return values
+
 
 def layout2lens(layout):
     result = layout[-1]
@@ -87,21 +90,23 @@ def layout2lens(layout):
         result = newresult
     return result
 
+
 def get_cardinalities_and_branchings(expr):
     try:
         return expr.cardinalities, expr.branchings
     except:
         # use longest cardinalities of args:
-        cbs = [get_cardinalities_and_branchings(arg) 
+        cbs = [get_cardinalities_and_branchings(arg)
                for arg in expr.args]
         if len(cbs) == 0:
             return [1], []
         return cbs[np.argmax([len(c[0]) for c in cbs])]
 
+
 class _DotConstruct (sp.AtomicExpr):
     """A _DotConstruct represents a syntactical construct with dots,
     starting with an entity-type or process taxon class,
-    followed by zero or more ReferenceVariables or SetVariables 
+    followed by zero or more ReferenceVariables or SetVariables
     or aggregation keywords such as sum, and ending in either an attribute,
     e.g. Society.sum.cells.population
     or an aggregation keyword without evaluation,
@@ -146,7 +151,8 @@ class _DotConstruct (sp.AtomicExpr):
                 *args,
                 arg=None,
                 **assumptions):
-        if isinstance(owning_class_or_var, D.Variable) or name_sequence[0] in aggregation_names:
+        if isinstance(owning_class_or_var, D.Variable) \
+                or name_sequence[0] in aggregation_names:
             uid = repr(owning_class_or_var) \
                     + str(name_sequence) + str(arg)
         else:
@@ -226,12 +232,16 @@ class _DotConstruct (sp.AtomicExpr):
     # needed to make sympy happy: (may need further later)
     def _sympystr(self, *args, **kwargs):
         return self.__repr__()
+
     def match(self, *args, **kwargs):
         return None
+
     def is_constant(self, *args, **kwargs):
         return False
+
     def _eval_expand_mul(self, *args, **kwargs):
         return self
+
     def _eval_Eq(self, *args, **kwargs):
         return None
 
@@ -310,7 +320,7 @@ class _DotConstruct (sp.AtomicExpr):
         return self._cardinalities
 
     def _analyse_instances(self):
-#        print("      (analysing instance structure of",self,")")
+        # print("      (analysing instance structure of",self,")")
         oc = self.owning_class
         items = oc.instances
         branchings = [[len(items)]]
@@ -318,29 +328,35 @@ class _DotConstruct (sp.AtomicExpr):
         for name in self.name_sequence[:-1]:
             if name in aggregation_names:
                 break
-            if hasattr(items[0], "__iter__"):  # each item is a set of instances
+            # each item is a set of instances:
+            if hasattr(items[0], "__iter__"):
                 branchings.append([len(instance_set)
                                    for instance_set in items])
                 items = [getattr(i, name)
                          for instance_set in items
                          for i in instance_set]
-                cardinalities.append(len(items))  # store cardinality after the branching
+                # store cardinality after the branching:
+                cardinalities.append(len(items))
             else:
                 items = [getattr(i, name) for i in items]
-                # items may now be a list of instances or a list of sets of instances...
+                # items may now be a list of instances or a list of sets of
+                # instances...
         if hasattr(items[0], "__iter__"):
             branchings.append([len(instance_set)
                                for instance_set in items])
             items = [i
                      for instance_set in items
                      for i in instance_set]
-            cardinalities.append(len(items))  # store cardinality after the branching
+            # store cardinality after the branching:
+            cardinalities.append(len(items))
         self._target_instances = items
         self._branchings = branchings
         self._cardinalities = cardinalities
 
     def eval(self, instances=None):
-        """gets referenced attribute values and performs aggregations where necessary"""
+        """gets referenced attribute values and performs aggregations
+        where necessary.
+        """
         self.owning_class  # to make sure it and name_sequence are defined...
         items = self.owning_class.instances if instances is None else instances
         for pos, name in enumerate(self.name_sequence):
@@ -357,7 +373,8 @@ class _DotConstruct (sp.AtomicExpr):
                                         + self.name_sequence[pos+1:]
                     self.arg = _DotConstruct(self.owning_class,
                                              arg_name_sequence)
-                arg_values = list(eval(self.arg, instances))  # sic! (not items!)
+                # sic! (not items!):
+                arg_values = list(eval(self.arg, instances))
                 cardinalities, branchings = \
                     get_cardinalities_and_branchings(self.arg)
                 aggregation_level = cardinalities.index(len(items))
@@ -366,7 +383,8 @@ class _DotConstruct (sp.AtomicExpr):
                     else [[1 for i in items]]
                 lens = layout2lens(layout)
                 return name2aggregation[name](arg_values, lens)
-            if hasattr(items[0], "__iter__"):  # each value is a set of instances
+            # each value is a set of instances:
+            if hasattr(items[0], "__iter__"):
                 items = [getattr(i, name)
                          for instance_set in items
                          for i in instance_set]
@@ -437,7 +455,7 @@ func2numpy = {
               sp.erfcinv: scipy.special.erfcinv,
               sp.exp: np.exp,
               sp.floor: np.floor,
-              sp.Heaviside: lambda x : 1 - (x < 0).astype(int),
+              sp.Heaviside: lambda x: 1 - (x < 0).astype(int),
               sp.log: np.log,
               sp.sin: np.sin,
               sp.sinh: np.sin,
@@ -461,7 +479,7 @@ nary2numpy = {
               sp.Xor: np.logical_xor,
               }
 
-#@profile
+# @profile
 def _eval(expr, iteration=None):
     try:
         # if still up to date, return vals from cache:
@@ -508,7 +526,8 @@ def _eval(expr, iteration=None):
     # n-ary operators:
     elif t in nary2numpy:
         vals = nary2numpy[t](argvals, axis=0)
-    elif t == sp.Equivalent:  # = True if even no. of arguments is True = Not(Xor)
+    # Following: = True if even no. of arguments is True = Not(Xor):
+    elif t == sp.Equivalent:
         vals = np.logical_not(np.logical_xor(argvals, axis=0))
     elif t == sp.Nand:
         vals = np.logical_not(np.logical_and(argvals, axis=0))
@@ -524,7 +543,8 @@ def _eval(expr, iteration=None):
 #        # try to avoid overflows due to (small abs)**(negative):
 #        base[np.where(np.logical_and(np.abs(base) < EPS, exponent < 0))] = EPS
 #        # try to avoid overflows due to (large abs)**(positive):
-#        base[np.where(np.logical_and(np.abs(base) > LARGE, exponent > 0))] = LARGE
+#        base[np.where(np.logical_and(
+#             np.abs(base) > LARGE, exponent > 0))] = LARGE
 #        # try to avoid invalid values due to (negative)**(non-integer):
 #        base[np.where(np.logical_and(base < 0, exponent % 1 != 0))] = EPS
 #        print(base[:10],exponent[:10])
@@ -538,7 +558,7 @@ def _eval(expr, iteration=None):
     else:
         # simple scalar for broadcasting:
         # clumsy way of converting sympy True to normal True:
-        if expr == True:
+        if expr is True:
             expr = True
         elif expr == False:
             expr = False

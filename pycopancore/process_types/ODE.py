@@ -44,7 +44,7 @@ class ODE(_AbstractProcess):
         ----------
         name : string
         targets : list
-            list of Variables or _AttributeReferences whose time derivatives 
+            list of Variables or _AttributeReferences whose time derivatives
             are added to by specification
         specification : func, or list of Expr
             function(self,t) storing the derivatives in instance

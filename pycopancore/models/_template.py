@@ -1,9 +1,8 @@
-"""
-Model class template.
+"""Model class template.
 
 TODO:
-Copy this file, rename it to the name of your model, 
-then adjust or fill in code and documentation wherever marked by "TODO:", 
+Copy this file, rename it to the name of your model,
+then adjust or fill in code and documentation wherever marked by "TODO:",
 finally remove these instructions.
 See the model development tutorial for details.
 """
@@ -18,8 +17,8 @@ See the model development tutorial for details.
 from .. import base  # all models must use the base component
 
 # TODO: import all other needed model components:
-#from ..model_components import COMPONENT1 as ABBR1
-#from ..model_components import COMPONENT2 as ABBR2
+# from ..model_components import COMPONENT1 as ABBR1
+# from ..model_components import COMPONENT2 as ABBR2
 
 
 # entity types:
@@ -29,28 +28,35 @@ from .. import base  # all models must use the base component
 # Only compose those entity types and process taxons that the model needs,
 # delete the templates for the unneeded ones, and add those for missing ones:
 
-
-class World (ABBR1.World, ABBR2.World,  # TODO: list all mixin classes needed
+# TODO: list all mixin classes needed:
+class World (ABBR1.World, ABBR2.World,
              base.World):
-    """World entity type"""
+    """World entity type."""
+
     pass
 
 
-class Society (ABBR1.Society, ABBR2.Society,  # TODO: list all mixin classes needed
+# TODO: list all mixin classes needed:
+class Society (ABBR1.Society, ABBR2.Society,
                base.Society):
-    """Society entity type"""
+    """Society entity type."""
+
     pass
 
 
-class Cell (ABBR1.Cell, ABBR2.Cell,  # TODO: list all mixin classes needed
+# TODO: list all mixin classes needed:
+class Cell (ABBR1.Cell, ABBR2.Cell,
             base.Cell):
-    """Cell entity type"""
+    """Cell entity type."""
+
     pass
 
 
-class Individual (ABBR1.Individual, ABBR2.Individual,  # TODO: list all mixin classes needed
-             base.Individual):
-    """Individual entity type"""
+# TODO: list all mixin classes needed:
+class Individual (ABBR1.Individual, ABBR2.Individual,
+                  base.Individual):
+    """Individual entity type."""
+
     pass
 
 
@@ -59,37 +65,45 @@ class Individual (ABBR1.Individual, ABBR2.Individual,  # TODO: list all mixin cl
 # TODO: do the same for process taxa:
 
 
-class Nature (ABBR1.Nature, ABBR2.Nature,  # TODO: list all mixin classes needed
+# TODO: list all mixin classes needed:
+class Nature (ABBR1.Nature, ABBR2.Nature,
               base.Nature):
-    """Nature process taxon"""
+    """Nature process taxon."""
+
     pass
 
 
-class Metabolism (ABBR1.Metabolism, ABBR2.Metabolism,  # TODO: list all mixin classes needed
+# TODO: list all mixin classes needed:
+class Metabolism (ABBR1.Metabolism, ABBR2.Metabolism,
                   base.Metabolism):
-    """Metabolism process taxon"""
+    """Metabolism process taxon."""
+
     pass
 
 
-class Culture (ABBR1.Culture, ABBR2.Culture,  # TODO: list all mixin classes needed
+# TODO: list all mixin classes needed:
+class Culture (ABBR1.Culture, ABBR2.Culture,
                base.Culture):
-    """Culture process taxon"""
+    """Culture process taxon."""
+
     pass
 
 
 # Model class:
 
-
-class Model (ABBR1.Model, ABBR2.Model,  # TODO: list all used model components
+# TODO: list all used model components:
+class Model (ABBR1.Model, ABBR2.Model,
              base.Model):
-    """Class representing the whole model"""
+    """Class representing the whole model."""
 
     name = "..."
     """Name of the model"""
     description = "..."
     """Longer description"""
 
-    entity_types = [World, Society, Cell, Individual]  # TODO: list all entity types you composed above
+    # TODO: list all entity types you composed above:
+    entity_types = [World, Society, Cell, Individual]
     """List of entity types used in the model"""
-    process_taxa = [Nature, Metabolism, Culture]  # TODO: list all entity types you composed above
+    # TODO: list all entity types you composed above:
+    process_taxa = [Nature, Metabolism, Culture]
     """List of process taxa used in the model"""

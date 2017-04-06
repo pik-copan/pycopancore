@@ -1,6 +1,5 @@
-"""
-jobsts_prototype_1 model.
-"""
+"""jobsts_prototype_1 model."""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
@@ -17,9 +16,9 @@ from ..model_components import copan_global_like_production \
     as prod
 from ..model_components import copan_global_like_economic_growth \
     as growth
-#from ..model_components import copan_global_like_population_growth \
+# from ..model_components import copan_global_like_population_growth \
 #    as population
-#from ..model_components import ...migration \
+# from ..model_components import ...migration \
 #    as migration
 
 
@@ -30,7 +29,8 @@ class World (
              cc.World,
              prod.World,
              base.World):
-    """World entity type"""
+    """World entity type."""
+
     pass
 
 
@@ -38,7 +38,8 @@ class Society (
                prod.Society,
                growth.Society,
                base.Society):
-    """Society entity type"""
+    """Society entity type."""
+
     pass
 
 
@@ -46,13 +47,15 @@ class Cell (
             cc.Cell,
             prod.Cell,
             base.Cell):
-    """Cell entity type"""
+    """Cell entity type."""
+
     pass
 
-
-#class Individual (ABBR1.Individual, ABBR2.Individual,  # TODO: list all mixin classes needed
+# TODO: list all mixin classes needed
+# class Individual (ABBR1.Individual, ABBR2.Individual,
 #             base.Individual):
-#    """Individual entity type"""
+#    """Individual entity type."""
+
 #    pass
 
 
@@ -62,18 +65,20 @@ class Cell (
 class Nature (
               cc.Nature,
               base.Nature):
-    """Nature process taxon"""
+    """Nature process taxon."""
+
     pass
 
 
 class Metabolism (
                   prod.Metabolism,
                   base.Metabolism):
-    """Metabolism process taxon"""
+    """Metabolism process taxon."""
+
     pass
 
-
-#class Culture (ABBR1.Culture, ABBR2.Culture,  # TODO: list all mixin classes needed
+# TODO: list all mixin classes needed
+# class Culture (ABBR1.Culture, ABBR2.Culture,
 #               base.Culture):
 #    """Culture process taxon"""
 #    pass
@@ -87,7 +92,7 @@ class Model (
              prod.Model,
              growth.Model,
              base.Model):
-    """Class representing the whole model"""
+    """Class representing the whole model."""
 
     name = "Jobst's prototype 1"
     """Name of the model"""

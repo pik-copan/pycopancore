@@ -24,8 +24,11 @@ import inspect
 
 
 class _AbstractEntityMixinType (type):
-    """metaclass for _AbstractEntityMixin, needed for intercepting
-    class attribute calls and having nice reprs"""
+    """metaclass for _AbstractEntityMixin.
+
+    Needed for intercepting
+    class attribute calls and having nice reprs.
+    """
 
 #     def __getattr__(cls, name):
 #         """return an object representing an aggregation"""
@@ -51,7 +54,7 @@ class _AbstractEntityMixinType (type):
                         return res
                 except:
                     pass
-            raise AttributeError("property " + name 
+            raise AttributeError("property " + name
                                  + " does not correspond to any Variable!")
         return res
 
@@ -76,7 +79,8 @@ class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
     def __init__(self,
                  **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
-        self._uid = _AbstractEntityMixin.get_next_uid()  # Jobst: I don't see why we need this
+        # Jobst: I don't see why we need this:
+        self._uid = _AbstractEntityMixin.get_next_uid()
         try:
             self.__class__.instances.append(self)
         except AttributeError:
@@ -127,5 +131,3 @@ class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
         current_uid = cls.NEXTUID
         cls.NEXTUID += 1
         return current_uid
-
-
