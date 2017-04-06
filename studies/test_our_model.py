@@ -8,7 +8,12 @@ import pycopancore.models.our_model as M
 from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
+# import plotly.plotly as py
+import plotly.offline as py
+import plotly.graph_objs as go
 from pylab import plot, gca, show
+
+
 
 # first thing: set seed so that each execution must return same thing:
 random.seed(1)
@@ -74,18 +79,63 @@ M.Cell.fossil_carbon.set_values(cells, G0)
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=10, dt=.1)
+traj = runner.run(t_1=100, dt=.1)
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())
 
-plot(t, traj[M.World.atmospheric_carbon][worlds[0]], "b", lw=3)
-plot(t, traj[M.World.ocean_carbon][worlds[0]], "b--", lw=3)
-plot(t, traj[M.World.terrestrial_carbon][worlds[0]], "g", lw=3)
-plot(t, traj[M.World.fossil_carbon][worlds[0]], "gray", lw=3)
+data_ca = go.Scatter(
+    x=t,
+    y=traj[M.World.atmospheric_carbon][worlds[0]],
+    mode="lines",
+    name="atmospheric carbon",
+    line=dict(
+        color="lightblue",
+        width=4
+    )
+)
+data_ct = go.Scatter(
+    x=t,
+    y=traj[M.World.terrestrial_carbon][worlds[0]],
+    mode="lines",
+    name="terrestrial carbon",
+    line=dict(
+        color="green",
+        width=4
+    )
+)
+data_cm = go.Scatter(
+    x=t,
+    y=traj[M.World.ocean_carbon][worlds[0]],
+    mode="lines",
+    name="maritime carbon",
+    line=dict(
+        color="blue",
+        width=4
+    )
+)
+data_cf = go.Scatter(
+    x=t,
+    y=traj[M.World.fossil_carbon][worlds[0]],
+    mode="lines",
+    name="fossil carbon",
+    line=dict(
+        color="gray",
+        width=4
+    )
+)
+layout = dict(title = 'Our model (simple Carbon Cycle for now)',
+              xaxis = dict(title = 'time [yr]'),
+              yaxis = dict(title = 'Carbon [GtC]'),
+              )
+
+fig = dict(data=[data_ca, data_ct, data_cm, data_cf], layout=layout)
+py.plot(fig, filename="our-model-result.html")
+
 for s in societies:
     pass
+## the stuff below is still matplotlib style, needs to be converted to plotly
 #    plot(t, traj[M.Society.population][s],"yellow",lw=2)
 #     plot(t, traj[M.Society.physical_capital][s], "k", lw=2)
 #     plot(t, traj[M.Society.renewable_energy_knowledge][s],
@@ -99,5 +149,5 @@ for c in cells:
     pass
 #    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
 #    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
-gca().set_yscale('symlog')
-show()
+# gca().set_yscale('symlog')
+# show()
