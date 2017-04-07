@@ -14,9 +14,9 @@ then remove these instructions
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import World, Society, Cell, Individual  # TODO: adjust!
+from .implementation import World, Individual  # TODO: adjust!
 # import all needed process taxon implementation classes:
-from .implementation import Nature, Metabolism, Culture  # TODO: adjust!
+from .implementation import Culture  # TODO: adjust!
 
 
 class Model (I.Model):

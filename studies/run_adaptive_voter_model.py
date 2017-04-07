@@ -1,9 +1,10 @@
 """Skript to run Jobsts model."""
 
 from time import time
-from numpy import random
+# from numpy import random
+import random
 import numpy as np
-import pycopancore.models.our_model as M
+import pycopancore.models.adaptive_voter_model as M
 # import pycopancore.models.only_copan_global_like_carbon_cycle as M
 from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
@@ -11,70 +12,39 @@ from pycopancore.runners import Runner
 # import plotly.plotly as py
 import plotly.offline as py
 import plotly.graph_objs as go
-from pylab import plot, gca, show
+# from pylab import plot, gca, show
 
-assert False, "to be changed"
+# assert False, "to be changed"
 
 # first thing: set seed so that each execution must return same thing:
 random.seed(1)
 
 # parameters:
 
-nworlds = 1  # no. worlds
-nsocs = 1  # no. societies
-ncells = 1  # no. cells
+# nworlds = 1  # no. worlds
+# nsocs = 1  # no. societies
+# ncells = 1  # no. cells
+nindividuals = 100
+rewiring_probability = 0.1
+possible_opinions = list(range(2))
 
 model = M.Model()
 
 # instantiate process taxa:
-nature = M.Nature()
+# nature = M.Nature()
+culture = M.Culture(rewiring_probability=rewiring_probability)
 # metabolism = M.Metabolism()
 
 # generate entities and plug them together at random:
-worlds = [M.World(nature=nature, #metabolism=metabolism,
-                  atmospheric_carbon=830 * D.gigatonnes_carbon,
-                  ocean_carbon=(5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
-                  ) for w in range(nworlds)]
-societies = [M.Society(world=random.choice(worlds)) for s in range(nsocs)]
-cells = [M.Cell(society=random.choice(societies)) for c in range(ncells)]
+world = M.World(culture=culture)
+# worlds = [M.World(nature=nature, #metabolism=metabolism,
+#                   atmospheric_carbon=830 * D.gigatonnes_carbon,
+#                   ocean_carbon=(5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
+#                   ) for w in range(nworlds)]
+# societies = [M.Society(world=random.choice(worlds)) for s in range(nsocs)]
+# cells = [M.Cell(society=random.choice(societies)) for c in range(ncells)]
+individuals = [M.Individual(initial_opinion=random.choice(possible_opinions))]
 
-# distribute area and vegetation randomly but correlatedly:
-r = random.uniform(size=ncells)
-Sigma0 = 1.5e8 * D.square_kilometers * r / sum(r)
-M.Cell.land_area.set_values(cells, Sigma0)
-# print(M.Cell.land_area.get_values(cells))
-
-r += random.uniform(size=ncells)
-L0 = 2480 * D.gigatonnes_carbon * r / sum(r)  # 2480 is yr 2000
-M.Cell.terrestrial_carbon.set_values(cells, L0)
-# print(M.Cell.terrestrial_carbon.get_values(cells))
-
-r = np.exp(random.normal(size=ncells))
-G0 = 1125 * D.gigatonnes_carbon * r / sum(r)  # 1125 is yr 2000
-M.Cell.fossil_carbon.set_values(cells, G0)
-# print(M.Cell.fossil_carbon.get_values(cells))
-
-# r = random.uniform(size=nsocs)
-# P0 = 6e9 * D.people * r / sum(r)  # 500e9 is middle ages, 6e9 would be yr 2000
-# M.Society.population.set_values(societies, P0)
-# print(M.Society.population.get_values(societies))
-
-# r = random.uniform(size=nsocs)
-# in AWS paper: 1e12 (alternatively: 1e13):
-# S0 = 1e13 * D.gigajoules * r / sum(r)
-# M.Society.renewable_energy_knowledge.set_values(societies, S0)
-# print(M.Society.renewable_energy_knowledge.get_values(societies))
-
-# r = random.uniform(size=nsocs)
-# K0 = sum(P0) * 1e4 * D.dollars/D.people * r / sum(r)  # ?
-# M.Society.physical_capital.set_values(societies, K0)
-# print(M.Society.physical_capital.get_values(societies))
-
-# TODO: add noise to parameters
-
-# from pycopancore.private._expressions import eval
-# import pycopancore.model_components.base.interface as B
-# import sympy as sp
 
 runner = Runner(model=model)
 

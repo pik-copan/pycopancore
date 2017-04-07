@@ -38,19 +38,19 @@ class World (avof.World,
 
 
 # TODO: list all mixin classes needed:
-class Society (
-               base.Society):
-    """Society entity type."""
-
-    pass
+# class Society (
+#                base.Society):
+#     """Society entity type."""
+#
+#     pass
 
 
 # TODO: list all mixin classes needed:
-class Cell (
-            base.Cell):
-    """Cell entity type."""
-
-    pass
+# class Cell (
+#             base.Cell):
+#     """Cell entity type."""
+#
+#     pass
 
 
 # TODO: list all mixin classes needed:
@@ -67,19 +67,19 @@ class Individual (avof.Individual,
 
 
 # TODO: list all mixin classes needed:
-class Nature (
-              base.Nature):
-    """Nature process taxon."""
-
-    pass
+# class Nature (
+#               base.Nature):
+#     """Nature process taxon."""
+#
+#     pass
 
 
 # TODO: list all mixin classes needed:
-class Metabolism (
-                  base.Metabolism):
-    """Metabolism process taxon."""
-
-    pass
+# class Metabolism (
+#                   base.Metabolism):
+#     """Metabolism process taxon."""
+#
+#     pass
 
 
 # TODO: list all mixin classes needed:
@@ -93,7 +93,7 @@ class Culture (avof.Culture,
 # Model class:
 
 # TODO: list all used model components:
-class Model (avof.Model
+class Model (avof.Model,
              base.Model):
     """Class representing the whole model."""
 
