@@ -28,7 +28,7 @@ class Society (I.Society, abstract.Society):
 
     def __init__(self,
                  *,
-                 world=None,
+                 world,
                  next_higher_society=None,
                  population = 0 * D.people,
                  **kwargs
@@ -58,9 +58,8 @@ class Society (I.Society, abstract.Society):
         """Set world."""
         if self._world is not None:
             self._world._societies.remove(self)
-        if w is not None:
-            assert isinstance(w, I.World), "world must be of entity type World"
-            w._societies.add(self)
+        assert isinstance(w, I.World), "world must be of entity type World"
+        w._societies.add(self)
         self._world = w
 
     @property

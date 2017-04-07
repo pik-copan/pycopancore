@@ -28,7 +28,7 @@ class Individual (I.Individual, abstract.Individual):
 
     def __init__(self,
                  *,
-                 cell=None,
+                 cell,  # this is a mandatory keyword-only argument!
                  relative_weight=1,
                  **kwargs
                  ):

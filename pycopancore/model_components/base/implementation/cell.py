@@ -28,7 +28,7 @@ class Cell (I.Cell, abstract.Cell):
 
     def __init__(self,
                  *,
-                 world=None,
+                 world,
                  society=None,
                  location=None,
                  land_area = 1 * D.square_kilometers,
@@ -61,9 +61,8 @@ class Cell (I.Cell, abstract.Cell):
         """Set world."""
         if self._world is not None:
             self._world.cells.remove(self)
-        if w is not None:
-            assert isinstance(w, I.World), "world must be of entity type World"
-            w._cells.add(self)
+        assert isinstance(w, I.World), "world must be of entity type World"
+        w._cells.add(self)
         self._world = w
 
     @property
