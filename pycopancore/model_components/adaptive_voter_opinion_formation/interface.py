@@ -46,6 +46,16 @@ class World (object):
     """Interface for World mixin."""
 
 
+
+
+class Culture (object):
+    """Interface for Culture process taxon mixin."""
+
+    # endogenous variables:
+    acquaintance_network = D.CUL.acquaintance_network
+
+    # exogenous variables / parameters:
+
 class Individual (object):
     """Interface for Individual entity type mixin."""
 
@@ -54,17 +64,9 @@ class Individual (object):
         "opinion",
         "opinion of an individual in the sense of the adaptive voter model, can be 1"
     )
-    # TODO: maybe this should be replaced by a variable discrete_opinion in the master data model where an input is the set of possible opinions
-
-    # exogenous variables / parameters:
-
-
-class Culture (baseI.Culture):
-# class Culture (object):
     """Interface for Culture process taxon mixin."""
 
     # endogenous variables:
-    # acquaintance_network already declared in base
     rewiring_probability = Variable(
         "rewiring probability",
         "rewiring probability phi in the sense of the adaptive voter model by (Holme, Newman - 2006)"

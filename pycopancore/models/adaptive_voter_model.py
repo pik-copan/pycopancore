@@ -38,19 +38,19 @@ class World (avof.World,
 
 
 # TODO: list all mixin classes needed:
-# class Society (
-#                base.Society):
-#     """Society entity type."""
-#
-#     pass
+class Society (
+               base.Society):
+    """Society entity type."""
+
+    pass
 
 
 # TODO: list all mixin classes needed:
-# class Cell (
-#             base.Cell):
-#     """Cell entity type."""
-#
-#     pass
+class Cell (
+            base.Cell):
+    """Cell entity type."""
+
+    pass
 
 
 # TODO: list all mixin classes needed:

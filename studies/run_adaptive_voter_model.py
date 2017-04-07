@@ -37,13 +37,14 @@ culture = M.Culture(rewiring_probability=rewiring_probability)
 
 # generate entities and plug them together at random:
 world = M.World(culture=culture)
+cell = M.Cell(world=world)
 # worlds = [M.World(nature=nature, #metabolism=metabolism,
 #                   atmospheric_carbon=830 * D.gigatonnes_carbon,
 #                   ocean_carbon=(5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
 #                   ) for w in range(nworlds)]
 # societies = [M.Society(world=random.choice(worlds)) for s in range(nsocs)]
 # cells = [M.Cell(society=random.choice(societies)) for c in range(ncells)]
-individuals = [M.Individual(initial_opinion=random.choice(possible_opinions))]
+individuals = [M.Individual(cell=cell, initial_opinion=random.choice(possible_opinions))]
 
 
 runner = Runner(model=model)
