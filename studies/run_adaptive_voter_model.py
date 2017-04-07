@@ -52,6 +52,8 @@ start = time()
 traj = runner.run(t_1=100, dt=.1)
 print(time()-start, " seconds")
 
+assert False, "ignore rest for now, will make proper plots with plotly when the above is running"
+
 t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())
 
