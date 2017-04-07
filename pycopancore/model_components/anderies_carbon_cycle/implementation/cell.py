@@ -44,7 +44,7 @@ class Cell (I.Cell):
               * (1 - I.Cell.terrestrial_carbon
                  / (B.Cell.nature.terrestrial_carbon_capacity_per_area 
                     * B.Cell.land_area)))
-             * I.Cell.terrestrial_carbon
+             * I.Cell.terreal_carbon
              ]),
 
         Explicit("respiration flow",
