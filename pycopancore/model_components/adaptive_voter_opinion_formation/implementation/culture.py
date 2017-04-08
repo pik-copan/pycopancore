@@ -44,7 +44,8 @@ class Culture (I.Culture):
         #       2.1) choose neighbor such that the link is active, probably best to use filter there
         #       2.2) track number of active neighbors or always read len from the list generated in 2.1
         #   3) cluster the updates instead of making every update separately ... make sure that the rest of the model works on longer time scales if you do that
-        print("\tt = {:>4.1f}; nopinion0 = {:>3d}".format(t, len(list(filter(lambda x: x.opinion == 0, self.acquaintance_network.nodes())))))
+        nopinion0 = len(list(filter(lambda x: x.opinion == 0, self.acquaintance_network.nodes())))
+        print("\tt = {t:>4.1f}; nopinion0 = {nopinion0:>3d}".format(**locals()))
         active_individual = random.choice(self.acquaintance_network.nodes())
         active_neighbor = random.choice(self.acquaintance_network.neighbors(active_individual))
 
