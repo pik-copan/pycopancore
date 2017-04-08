@@ -15,19 +15,17 @@ from pycopancore.runners import Runner
 # import plotly.plotly as py
 import plotly.offline as py
 import plotly.graph_objs as go
-# from pylab import plot, gca, show
-
-# assert False, "to be changed"
 
 # first thing: set seed so that each execution must return same thing:
 random.seed(1)
 # TODO: figure out why it doesn't seem to work here ...
 
 # parameters:
-nindividuals = 1000
+timeinterval = 100
+timestep = 0.1
+nindividuals = 4000
 rewiring_probability = 0.1
 possible_opinions = list(range(2))
-
 
 # instantiate model
 model = M.Model()
@@ -53,13 +51,21 @@ def erdosrenyify(graph, p = 0.5):
                 graph.add_edge(n1, n2)
 
 # set the initial graph structure to be an erdos-renyi graph
+print("erdosrenyifying the graph ... ", end="", flush=True)
+start = time()
 erdosrenyify(culture.acquaintance_network, p = 0.5)
-culture.analyze_graph()
+print("done ({})".format(dt.timedelta(seconds=(time() - start))))
+
+if M.Culture.opinion_update is M.Culture.opinion_update_fast:
+    print("analyzing the graph ... ", end="", flush=True)
+    start = time()
+    culture.analyze_graph()
+    print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=100, dt=.1)
+traj = runner.run(t_1=timeinterval, dt=timestep)
 runtime = dt.timedelta(seconds=(time() - start))
 print("runtime: {runtime}".format(**locals()))
 
