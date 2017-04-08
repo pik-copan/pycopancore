@@ -62,7 +62,7 @@ class Individual (object):
     # endogenous variables:
     opinion = Variable(
         "opinion",
-        "opinion of an individual in the sense of the adaptive voter model, can be 1"
+        "opinion of an individual in the sense of the adaptive voter model, can be 0 or 1"
     )
     """Interface for Culture process taxon mixin."""
 
