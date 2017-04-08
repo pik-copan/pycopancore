@@ -43,10 +43,6 @@ class Individual (I.Individual, abstract.Individual):
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
 
-    def __lt__(self, other):
-        """make objects sortable, so big sorted lists can be used for quick look-ups"""
-        return self._uid < other._uid
-
     def deactivate(self):
         """Deactivate an individual."""
         if self.culture:

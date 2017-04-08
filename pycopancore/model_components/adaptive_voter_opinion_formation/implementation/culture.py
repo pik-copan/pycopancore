@@ -127,8 +127,8 @@ class Culture (I.Culture):
         return self.next_update_time
 
 
-    opinion_update = opinion_update_basic # set as the standard, but can be overwritten during in a different model component
-    # opinion_update = opinion_update_fast # uncomment to use, should be faster for large networks
+    # opinion_update = opinion_update_basic # set as the standard, but can be overwritten during in a different model component
+    opinion_update = opinion_update_fast # uncomment to use, should be faster for large networks
     processes = [
         Step(
             'opinion update',

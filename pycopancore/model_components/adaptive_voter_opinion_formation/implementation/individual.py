@@ -31,6 +31,10 @@ class Individual (I.Individual):
         self.opinion = initial_opinion
         pass
 
+    def __lt__(self, other):
+        """make objects sortable, so big sorted lists can be used for quick look-ups"""
+        return self._uid < other._uid
+
     def deactivate(self):
         """Deactivate an individual."""
         # TODO: add custom code here:
