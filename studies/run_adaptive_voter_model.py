@@ -1,6 +1,7 @@
 """Skript to run Jobsts model."""
 
 from time import time
+import datetime as dt
 # from numpy import random
 import random
 import networkx as nx
@@ -23,7 +24,7 @@ random.seed(1)
 # TODO: figure out why it doesn't seem to work here ...
 
 # parameters:
-nindividuals = 10
+nindividuals = 1000
 rewiring_probability = 0.1
 possible_opinions = list(range(2))
 
@@ -53,12 +54,14 @@ def erdosrenyify(graph, p = 0.5):
 
 # set the initial graph structure to be an erdos-renyi graph
 erdosrenyify(culture.acquaintance_network, p = 0.5)
+culture.analyze_graph()
 
 runner = Runner(model=model)
 
 start = time()
 traj = runner.run(t_1=100, dt=.1)
-print(time()-start, " seconds")
+runtime = dt.timedelta(seconds=(time() - start))
+print("runtime: {runtime}".format(**locals()))
 
 
 t = np.array(traj['t'])
@@ -74,7 +77,7 @@ nopinion0_list = 1 - nopinion1_list
 data_opinion0 = go.Scatter(
     x=t,
     y=nopinion0_list,
-    mode="lines+markers",
+    mode="lines",
     name="relative amount opinion 0",
     line=dict(
         color="lightblue",
@@ -84,7 +87,7 @@ data_opinion0 = go.Scatter(
 data_opinion1 = go.Scatter(
     x=t,
     y=nopinion1_list,
-    mode="lines+markers",
+    mode="lines",
     name="relative amount opinion 1",
     line=dict(
         color="orange",
