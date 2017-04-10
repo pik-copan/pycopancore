@@ -4,12 +4,12 @@ from time import time
 import datetime as dt
 # from numpy import random
 import random
-import networkx as nx
+# import networkx as nx
 import numpy as np
-import sys
+# import sys
 import pycopancore.models.adaptive_voter_model as M
 # import pycopancore.models.only_copan_global_like_carbon_cycle as M
-from pycopancore import master_data_model as D
+# from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
 # import plotly.plotly as py
@@ -38,12 +38,19 @@ culture = M.Culture(rewiring=rewiring_probability)
 # generate entities and distribute opinions uniformly randomly:
 world = M.World(culture=culture)
 cell = M.Cell(world=world)
-individuals = [M.Individual(cell=cell, initial_opinion=random.choice(possible_opinions)) for _ in range(nindividuals)]
+individuals = [M.Individual(cell=cell,
+                            initial_opinion=random.choice(possible_opinions))
+               for _ in range(nindividuals)]
 
 # TODO: ask Jobst, why are all individuals already in the network?
 
-def erdosrenyify(graph, p = 0.5):
-    """take a a networkx.Graph with nodes and distribute the edges following the erdos-renyi graph procedure"""
+
+def erdosrenyify(graph, p=0.5):
+    """Create a ErdosRenzi graph from networkx graph.
+
+    Take a a networkx.Graph with nodes and distribute the edges following the
+    erdos-renyi graph procedure.
+    """
     assert not graph.edges(), "your graph has already edges"
     nodes = graph.nodes()
     for i, n1 in enumerate(nodes[:-1]):
@@ -51,10 +58,11 @@ def erdosrenyify(graph, p = 0.5):
             if random.random() < p:
                 graph.add_edge(n1, n2)
 
+
 # set the initial graph structure to be an erdos-renyi graph
 print("erdosrenyifying the graph ... ", end="", flush=True)
 start = time()
-erdosrenyify(culture.acquaintance_network, p = expected_degree / nindividuals)
+erdosrenyify(culture.acquaintance_network, p=expected_degree / nindividuals)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 if M.Culture.opinion_update is M.Culture.opinion_update_fast:
@@ -74,7 +82,8 @@ print("runtime: {runtime}".format(**locals()))
 t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())
 
-individuals_opinions = np.array([traj[M.Individual.opinion][ind] for ind in individuals])
+individuals_opinions = np.array([traj[M.Individual.opinion][ind]
+                                 for ind in individuals])
 
 nopinion1_list = np.sum(individuals_opinions, axis=0) / nindividuals
 nopinion0_list = 1 - nopinion1_list
@@ -102,11 +111,10 @@ data_opinion1 = go.Scatter(
     )
 )
 
-layout = dict(title = 'Adaptive Voter Model',
-              xaxis = dict(title = 'time'),
-              yaxis = dict(title = 'relative opinion amounts'),
+layout = dict(title='Adaptive Voter Model',
+              xaxis=dict(title='time'),
+              yaxis=dict(title='relative opinion amounts'),
               )
 
 fig = dict(data=[data_opinion0, data_opinion1], layout=layout)
 py.plot(fig, filename="adaptive-voter-model.html")
-

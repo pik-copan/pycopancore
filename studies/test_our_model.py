@@ -11,8 +11,7 @@ from pycopancore.runners import Runner
 # import plotly.plotly as py
 import plotly.offline as py
 import plotly.graph_objs as go
-from pylab import plot, gca, show
-
+# from pylab import plot, gca, show
 
 
 # first thing: set seed so that each execution must return same thing:
@@ -31,7 +30,7 @@ nature = M.Nature()
 # metabolism = M.Metabolism()
 
 # generate entities and plug them together at random:
-worlds = [M.World(nature=nature, #metabolism=metabolism,
+worlds = [M.World(nature=nature,  # metabolism=metabolism,
                   atmospheric_carbon=830 * D.gigatonnes_carbon,
                   ocean_carbon=(5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                   ) for w in range(nworlds)]
@@ -55,7 +54,8 @@ M.Cell.fossil_carbon.set_values(cells, G0)
 # print(M.Cell.fossil_carbon.get_values(cells))
 
 # r = random.uniform(size=nsocs)
-# P0 = 6e9 * D.people * r / sum(r)  # 500e9 is middle ages, 6e9 would be yr 2000
+# P0 = 6e9 * D.people * r / sum(r)  # 500e9 is middle ages,
+# 6e9 would be yr 2000
 # M.Society.population.set_values(societies, P0)
 # print(M.Society.population.get_values(societies))
 
@@ -125,9 +125,9 @@ data_cf = go.Scatter(
         width=4
     )
 )
-layout = dict(title = 'Our model (simple Carbon Cycle for now)',
-              xaxis = dict(title = 'time [yr]'),
-              yaxis = dict(title = 'Carbon [GtC]'),
+layout = dict(title='Our model (simple Carbon Cycle for now)',
+              xaxis=dict(title='time [yr]'),
+              yaxis=dict(title='Carbon [GtC]'),
               )
 
 fig = dict(data=[data_ca, data_ct, data_cm, data_cf], layout=layout)
@@ -135,7 +135,8 @@ py.plot(fig, filename="our-model-result.html")
 
 for s in societies:
     pass
-## the stuff below is still matplotlib style, needs to be converted to plotly
+# the stuff below is still matplotlib style, needs to be converted to plotly:
+
 #    plot(t, traj[M.Society.population][s],"yellow",lw=2)
 #     plot(t, traj[M.Society.physical_capital][s], "k", lw=2)
 #     plot(t, traj[M.Society.renewable_energy_knowledge][s],

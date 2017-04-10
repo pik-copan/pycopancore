@@ -1,5 +1,4 @@
-"""copan_global_like_production model component Interface
-"""
+"""copan_global_like_production model component Interface."""
 
 # This file is part of pycopancore.
 #
@@ -10,7 +9,7 @@
 # License: MIT license
 
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+from ...data_model.master_data_model import MET, W, S, C
 from ... import Variable
 
 
@@ -104,7 +103,7 @@ class Cell (object):
                  lower_bound=0)
 
     total_relative_productivity = \
-        Variable("total relative productivity", 
+        Variable("total relative productivity",
                  "used as weights in allocation of labour and capital",
                  unit=D.unity,
                  lower_bound=0)
@@ -116,18 +115,18 @@ class Cell (object):
 
     biomass_sector_productivity = \
         Variable("biomass sector productivity", "",
-                 unit = (D.gigajoules / D.years)**5 \
-                        / (D.gigatonnes_carbon * D.dollars * D.people)**2,
+                 unit=(D.gigajoules / D.years)**5
+                 / (D.gigatonnes_carbon * D.dollars * D.people)**2,
                  lower_bound=0, is_intensive=True)
     fossil_sector_productivity = \
         Variable("fossil sector productivity", "",
-                 unit = (D.gigajoules / D.years)**5 \
-                        / (D.gigatonnes_carbon * D.dollars * D.people)**2,
+                 unit=(D.gigajoules / D.years)**5
+                 / (D.gigatonnes_carbon * D.dollars * D.people)**2,
                  lower_bound=0, is_intensive=True)
     renewable_sector_productivity = \
         Variable("renewable sector productivity", "",
-                 unit = D.gigajoules**3 / D.years**5 \
-                        / (D.dollars * D.people)**2,
+                 unit=D.gigajoules**3 / D.years**5
+                 / (D.dollars * D.people)**2,
                  lower_bound=0, is_intensive=True)
     total_energy_intensity = C.total_energy_intensity
 

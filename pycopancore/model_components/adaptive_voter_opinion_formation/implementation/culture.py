@@ -13,10 +13,10 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-#from .... import master_data_model as D
+# from .... import master_data_model as D
 from .... import Step
 
-from blist import sortedlist # more performant for large list modifications
+from blist import sortedlist  # more performant for large list modifications
 import random
 
 
@@ -39,25 +39,25 @@ class Culture (I.Culture):
                  active_neighbor_only = True,
                  **kwargs):
         """Initialize the unique instance of Culture.
-        
+
         Parameters
         ----------
         rewiring : float or function
             if float: probability of rewiring
             if function: decide whether the link between the two individuals is separated and a link to a new individual is created
                 takes: active_individual, active_individuals_neighbor
-                
+
         opinion_change: float or function, optional, default:  1
             if float: probability of opinion adaption if there was no rewiring
             if function:  decide whether the opinion of the neighbor should be adopted
                 takes: active_individual, active_individuals_neighbor
-                
+
         timestep : float, optional, default: 0.1
             interval between opinion updates
-              
+
         possible_opinions : set-like, optional, default: {0, 1}
             set of possible options the individuals can take
-            
+
         active_neighbor_only : bool, optional, default: True
             if False: any neighbor of the active individual is chosen randomly
             if True: only neighbors with different opinions are chosen randomly (if there is at least one, else nothing is done)

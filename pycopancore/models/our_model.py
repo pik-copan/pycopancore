@@ -1,5 +1,5 @@
-"""Model class template.
-"""
+"""Model class template."""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate

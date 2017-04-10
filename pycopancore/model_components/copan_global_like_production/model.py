@@ -1,5 +1,4 @@
-"""copan_global_like_economy model mixing class
-"""
+"""copan_global_like_economy model mixing class."""
 
 # This file is part of pycopancore.
 #
@@ -17,7 +16,7 @@ from .implementation import Metabolism
 
 
 class Model (I.Model):
-    """Model mixin class"""
+    """Model mixin class."""
 
     # mixins provided by this model component:
 
