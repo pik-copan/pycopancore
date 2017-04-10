@@ -31,17 +31,59 @@ class Culture (I.Culture):
     __remove_by_opinion = lambda opinion, input_list: list(filter(lambda ind: ind.opinion != opinion, input_list))
 
     def __init__(self,
-                   *,
-                 rewiring_probability,
+                 *,
+                 rewiring,
+                 opinion_change = 1.0,
                  timestep=0.1,
                  possible_opinions={0,1},
-                 # update_method=UPDATE_METHOD.basic,
+                 active_neighbor_only = True,
                  **kwargs):
-        """Initialize the unique instance of Culture."""
+        """Initialize the unique instance of Culture.
+        
+        Parameters
+        ----------
+        rewiring : float or function
+            if float: probability of rewiring
+            if function: decide whether the link between the two individuals is separated and a link to a new individual is created
+                takes: active_individual, active_individuals_neighbor
+                
+        opinion_change: float or function, optional, default:  1
+            if float: probability of opinion adaption if there was no rewiring
+            if function:  decide whether the opinion of the neighbor should be adopted
+                takes: active_individual, active_individuals_neighbor
+                
+        timestep : float, optional, default: 0.1
+            interval between opinion updates
+              
+        possible_opinions : set-like, optional, default: {0, 1}
+            set of possible options the individuals can take
+            
+        active_neighbor_only : bool, optional, default: True
+            if False: any neighbor of the active individual is chosen randomly
+            if True: only neighbors with different opinions are chosen randomly (if there is at least one, else nothing is done)
+        """
         super().__init__(**kwargs)
 
-        self.rewiring_probability = rewiring_probability
+        # TODO: ask Jobst, whether this should get the network as input so it could be applied to different networks... seems sensible too me but might contradict the frameworks idea
+
+        _rewiring = rewiring
+        if not callable(rewiring):
+            if rewiring == 1:
+                _rewiring = lambda x, y: True
+            else:
+                assert 0 < rewiring < 1, "rewiring_probability should be a float between 0 and 1 or a function"
+                _rewiring = lambda x, y: random.random() < rewiring
+        self.rewiring = _rewiring
+
+        if not callable(opinion_change):
+            if opinion_change == 1:
+                opinion_change = lambda x, y: True
+            else:
+                opinion_change = lambda x, y: random.random < opinion_change
+        self.opinion_change = opinion_change
+
         self.possible_opinions = possible_opinions
+        self.active_neighbor_only = active_neighbor_only
 
         self.next_update_time = 0
         self.timestep = timestep
@@ -62,14 +104,17 @@ class Culture (I.Culture):
         nodes = self.acquaintance_network.nodes()
 
         active_individual = random.choice(nodes)
-        active_neighbors = Culture.__remove_by_opinion(active_individual.opinion, self.acquaintance_network.neighbors(active_individual))
-        if not active_neighbors:
-            return  # nothing to be done
-        active_neighbor = random.choice(active_neighbors)
+        neighbors = self.acquaintance_network.neighbors(active_individual)
+        if self.active_neighbor_only:
+            active_neighbors = Culture.__remove_by_opinion(active_individual.opinion, neighbors)
+            if not active_neighbors:
+                return  # nothing to be done
+            active_neighbor = random.choice(active_neighbors)
+        else:
+            active_neighbor = random.choice(neighbors)
 
-        # link is active and something is to be done
-        # decide randomly whether to rewire or to adopt the opinion
-        if random.random() < self.rewiring_probability:
+        # decide whether to rewire or to adopt the opinion
+        if self.rewiring(active_individual, active_neighbor):
             # rewire
             possible_new_neighbors = Culture.__filter_by_opinion(active_individual.opinion, nodes)
             if not possible_new_neighbors:
@@ -78,7 +123,7 @@ class Culture (I.Culture):
             # new_neighbor = random.choice(list(filter(lambda x: x.opinion == active_individual.opinion, self.acquaintance_network.nodes())))
             self.acquaintance_network.remove_edge(active_individual, active_neighbor)
             self.acquaintance_network.add_edge(active_individual, new_neighbor)
-        else:
+        elif self.opinion_change(active_individual, active_neighbor):
             # adopt opinion
             # TODO: ask Jobst, whether this is okai within his framework!
             active_individual.opinion = active_neighbor.opinion
@@ -88,19 +133,23 @@ class Culture (I.Culture):
         # TODO: there are some intuitive speed-ups:
         #   1) (done) use a list with references to nodes of the differing opinions so the statement with filter can be avoided
         #   2) cluster the updates instead of making every update separately
+        #       ... this should probably be done as a separate function calling one of the opinion_update_basic/fast functions
         #       ... make sure that the rest of the model works on longer time scales if you do that
         #       ... introduce a time scale for that
 
         # choose only between the active nodes, which are the keys of this sortedset
         active_individual = random.choice(self.__nodes)
-        active_neighbors = Culture.__remove_by_opinion(active_individual.opinion, self.acquaintance_network.neighbors(active_individual))
-        if not active_neighbors:
-            return # nothing to be done
-        active_neighbor = random.choice(active_neighbors)
+        neighbors = self.acquaintance_network.neighbors(active_individual)
+        if self.active_neighbor_only:
+            active_neighbors = Culture.__remove_by_opinion(active_individual.opinion, neighbors)
+            if not active_neighbors:
+                return  # nothing to be done
+            active_neighbor = random.choice(active_neighbors)
+        else:
+            active_neighbor = random.choice(neighbors)
 
-        # link is active and something is to be done
-        # decide randomly whether to rewire or to adopt the opinion
-        if random.random() < self.rewiring_probability:
+        # decide whether to rewire or to adopt the opinion
+        if self.rewiring(active_individual, active_neighbor):
             # rewire
 
             # find new neighbor with same opinion
@@ -111,7 +160,7 @@ class Culture (I.Culture):
             self.acquaintance_network.remove_edge(active_individual, active_neighbor)
             # add new link
             self.acquaintance_network.add_edge(active_individual, new_neighbor)
-        else:
+        elif self.opinion_change(active_individual, active_neighbor):
             # adopt opinion
 
             # move the active individual to the new opinion list

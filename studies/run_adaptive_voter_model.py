@@ -23,6 +23,7 @@ random.seed(1)
 # parameters:
 timeinterval = 100
 timestep = 0.1
+expected_degree = 10
 nindividuals = 4000
 rewiring_probability = 0.1
 possible_opinions = list(range(2))
@@ -32,7 +33,7 @@ model = M.Model()
 
 
 # instantiate process taxa:
-culture = M.Culture(rewiring_probability=rewiring_probability)
+culture = M.Culture(rewiring=rewiring_probability)
 
 # generate entities and distribute opinions uniformly randomly:
 world = M.World(culture=culture)
@@ -53,7 +54,7 @@ def erdosrenyify(graph, p = 0.5):
 # set the initial graph structure to be an erdos-renyi graph
 print("erdosrenyifying the graph ... ", end="", flush=True)
 start = time()
-erdosrenyify(culture.acquaintance_network, p = 0.5)
+erdosrenyify(culture.acquaintance_network, p = expected_degree / nindividuals)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 if M.Culture.opinion_update is M.Culture.opinion_update_fast:

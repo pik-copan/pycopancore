@@ -20,7 +20,7 @@ import numpy as np
 from time import time
 import sys
 
-# from profilehooks import coverage, profile
+from profilehooks import coverage, profile
 
 
 class Runner(_AbstractRunner):
@@ -160,7 +160,7 @@ class Runner(_AbstractRunner):
 
         return derivative_array
 
-#    @profile
+    # @profile
     def run(self,
             *,
             t_0=0,
