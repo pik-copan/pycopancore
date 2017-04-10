@@ -1,5 +1,4 @@
-"""copan_global_like_carbon_cycle model component Interface
-"""
+"""copan_global_like_carbon_cycle model component Interface."""
 
 # This file is part of pycopancore.
 #
@@ -10,17 +9,18 @@
 # License: MIT license
 
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+from ...data_model.master_data_model import NAT, W, C
 from ... import Variable
 
 
 class Model (object):
-    """Interface for Model mixin"""
+    """Interface for Model mixin."""
 
     # metadata:
     name = "copan:GLOBAL-like carbon cycle"
     """a unique name for the model component"""
-    description = "Simple carbon cycle as in copan:GLOBAL, but with cell-based terrestrial and fossil carbon"
+    description = "Simple carbon cycle as in copan:GLOBAL, " \
+                  "but with cell-based terrestrial and fossil carbon"
     """some longer description"""
     requires = []
     """list of other model components required for this model component to
@@ -31,7 +31,7 @@ class Model (object):
 
 
 class World (object):
-    """Interface for World mixin"""
+    """Interface for World mixin."""
 
     # variables:
     atmospheric_carbon = W.atmospheric_carbon
@@ -40,7 +40,7 @@ class World (object):
 
 
 class Cell (object):
-    """Interface for Cell mixin"""
+    """Interface for Cell mixin."""
 
     # variables:
     terrestrial_carbon = C.terrestrial_carbon
@@ -53,7 +53,7 @@ class Cell (object):
 
 
 class Nature (object):
-    """Interface for Nature mixin"""
+    """Interface for Nature mixin."""
 
     # parameters / exogenous veriables:
     ocean_atmosphere_diffusion_coefficient = \
@@ -62,14 +62,15 @@ class Nature (object):
 
     basic_photosynthesis_productivity = \
         Variable("basic photosynthesis productivity", "",
-                 unit = D.years**-1
-                        / (D.gigatonnes_carbon/D.square_kilometers)**.5,
+                 unit=D.years**-1
+                 / (D.gigatonnes_carbon/D.square_kilometers)**.5,
                  lower_bound=0)
     photosynthesis_sensitivity_on_atmospheric_carbon = \
-        Variable("sensitivity of photosynthesis productivity on atmospheric carbon", "",
-                 unit = D.years**-1
-                        / (D.gigatonnes_carbon/D.square_kilometers)**.5
-                        / D.kelvins)
+        Variable("sensitivity of photosynthesis productivity on atmospheric "
+                 "carbon", "",
+                 unit=D.years**-1
+                 / (D.gigatonnes_carbon/D.square_kilometers)**.5
+                 / D.kelvins)
     terrestrial_carbon_capacity_per_area = \
         Variable("per-area capacity of terrestrial carbon", "",
                  unit=D.gigatonnes_carbon/D.square_kilometers,
@@ -79,8 +80,8 @@ class Nature (object):
                                       unit=D.years**-1)
     respiration_sensitivity_on_atmospheric_carbon = \
         Variable("sensitivity of respiration rate on atmospheric carbon", "",
-                 unit = D.years**-1 \
-                        / (D.gigatonnes_carbon/D.square_kilometers))
+                 unit=D.years**-1
+                 / (D.gigatonnes_carbon/D.square_kilometers))
 
     temperature_offset = \
         Variable("offset of temperature for zero atmospheric carbon", "",

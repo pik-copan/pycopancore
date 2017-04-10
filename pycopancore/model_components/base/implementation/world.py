@@ -33,7 +33,7 @@ class World (I.World, abstract.World):
                  nature=None,
                  metabolism=None,
                  culture=None,
-                 population = 0 * D.people,
+                 population=0 * D.people,
                  **kwargs
                  ):
         """Initialize an (typically the only) instance of World."""
@@ -88,10 +88,15 @@ class World (I.World, abstract.World):
         # reset dependent caches:
         pass
 
-
     # process-related methods:
 
     def aggregate_cell_carbon_stocks(self, unused_t):
+        """Sum up all carbon stocks of cells.
+
+        Parameters
+        ----------
+        unused_t
+        """
         cs = self.cells
         self.terrestrial_carbon = sum([c.terrestrial_carbon for c in cs])
         self.fossil_carbon = sum([c.fossil_carbon for c in cs])

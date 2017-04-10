@@ -16,7 +16,7 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 from ...private._abstract_entity_mixin import _AbstractEntityMixinType
 from ... import Variable, ReferenceVariable, SetVariable
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+from ...data_model.master_data_model import NAT, CUL, W, S, C
 
 
 # model component:
@@ -27,8 +27,8 @@ class Model (object):
 
     # metadata:
     name = "copan:CORE Base"
-    description = "Basic model component only providing basic relationships between " \
-                  "entity types."
+    description = "Basic model component only providing basic relationships " \
+                  "between entity types."
     requires = []
 
 
@@ -142,6 +142,7 @@ class Society (object, metaclass=_AbstractEntityMixinType):
     individuals = SetVariable("individuals",
                               "set of direct or indirect resident Individuals")
 
+
 # specified only now to avoid recursion:
 Society.next_higher_society.type = Society
 Society.higher_societies.type = Society
@@ -182,10 +183,12 @@ class Cell (object, metaclass=_AbstractEntityMixinType):
     individuals = SetVariable("individuals",
                               "set of resident Individuals")
 
+
 # specified only now to avoid recursion:
 World.cells.type = Cell
 Society.direct_cells.type = Cell
 Society.cells.type = Cell
+
 
 class Individual (object, metaclass=_AbstractEntityMixinType):
     """Basic Individual interface.
@@ -208,8 +211,8 @@ class Individual (object, metaclass=_AbstractEntityMixinType):
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
     culture = ReferenceVariable("culture", "", type=Culture)
     society = ReferenceVariable(
-                        "society", 
-                        "lowest level Society this individual is resident of", 
+                        "society",
+                        "lowest level Society this individual is resident of",
                         type=Society)
     societies = SetVariable(
                     "societies",
@@ -222,6 +225,7 @@ class Individual (object, metaclass=_AbstractEntityMixinType):
     """share of society's direct population represented by this individual"""
     represented_population = None
     """absolute population represented by this individual"""
+
 
 # specified only now to avoid recursion:
 World.individuals.type = Individual

@@ -1,5 +1,4 @@
-"""model component Interface.
-"""
+"""model component Interface."""
 
 # This file is part of pycopancore.
 #
@@ -9,8 +8,8 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+# from ... import master_data_model as D
+from ...data_model.master_data_model import S
 
 
 class Model (object):

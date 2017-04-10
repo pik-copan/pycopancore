@@ -1,5 +1,4 @@
-"""copan_global_like_carbon_cycle model mixing class
-"""
+"""copan_global_like_carbon_cycle model mixing class."""
 
 # This file is part of pycopancore.
 #
@@ -17,7 +16,7 @@ from .implementation import Nature
 
 
 class Model (I.Model):
-    """Model component mixin class"""
+    """Model component mixin class."""
 
     # mixins provided by this model component:
 
