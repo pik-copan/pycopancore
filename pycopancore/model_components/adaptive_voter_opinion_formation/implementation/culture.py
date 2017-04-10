@@ -16,6 +16,8 @@ from .. import interface as I
 #from .... import master_data_model as D
 from .... import Step
 
+from ....runners.hooks import Hooks
+
 from blist import sortedlist # more performant for large list modifications
 import random
 
@@ -179,6 +181,7 @@ class Culture (I.Culture):
 
     # opinion_update = opinion_update_basic # set as the standard, but can be overwritten during in a different model component
     opinion_update = opinion_update_fast # uncomment to use, should be faster for large networks
+    Hooks.register_hook(Hooks.HookTypes.pre, analyze_graph)
     processes = [
         Step(
             'opinion update',
