@@ -91,6 +91,7 @@ class Culture (I.Culture):
     # process-related methods:
 
     def analyze_graph(self):
+        # TODO: test whether sortedlist or sets are faster for large numbers of entries
         self.__nodes = sortedlist(self.acquaintance_network.nodes())
         self.__nodes_by_opinion = {opinion : sortedlist() for opinion in self.possible_opinions}
         for node in self.acquaintance_network:
