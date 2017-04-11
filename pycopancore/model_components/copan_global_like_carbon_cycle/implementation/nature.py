@@ -1,5 +1,4 @@
-"""Nature process taxon mixing class.
-"""
+"""Nature process taxon mixing class."""
 
 # This file is part of pycopancore.
 #
@@ -13,32 +12,35 @@ from .. import interface as I
 from ....data_model.master_data_model.dimensions_and_units import \
     gigatonnes_carbon, years, square_kilometers, kelvins
 
+
 class Nature (I.Nature):
     """Nature process taxon mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 *,  # TODO: uncomment when adding named args behind here
-                 ocean_atmosphere_diffusion_coefficient = 0.016 / years, # see Nitzbon 2016
-                 carbon_solubility_in_sea_water = 1 / 1.43, # see Nitzbon 2016
-                 basic_photosynthesis_productivity =
-                    26.4 / years / (gigatonnes_carbon/square_kilometers)**.5, # see Nitzbon 2016
-                 photosynthesis_sensitivity_on_atmospheric_carbon =
-                    0 \
-#                    1.1e6 \
-                        / years / (gigatonnes_carbon/square_kilometers)**.5
-                        / kelvins, # see Nitzbon 2016
-                 terrestrial_carbon_capacity_per_area =
-                    5000/1.5e8 * gigatonnes_carbon/square_kilometers, # ca. 2 times current value
-                 basic_respiration_rate = 0.0298 / years, # see Nitzbon 2016
-                 respiration_sensitivity_on_atmospheric_carbon =
-                    0 \
-#                    3200 \
-                        / years / (gigatonnes_carbon/square_kilometers), # see Nitzbon 2016
-                 temperature_offset = 0 * kelvins, # TODO!
-                 temperature_sensitivity_on_atmospheric_carbon = \
-                    1 * kelvins/gigatonnes_carbon, # TODO!
+                 *,
+                 # see Nitzbon 2016:
+                 ocean_atmosphere_diffusion_coefficient=0.016 / years,
+                 carbon_solubility_in_sea_water=1 / 1.43,  # see Nitzbon 2016
+                 # see Nitzbon 2016:
+                 basic_photosynthesis_productivity=26.4 / years / (
+                    gigatonnes_carbon/square_kilometers)**.5,
+                 photosynthesis_sensitivity_on_atmospheric_carbon=0 \
+                 # 1.1e6 \
+                 / years / (gigatonnes_carbon/square_kilometers)**.5
+                 / kelvins,  # see Nitzbon 2016
+                 # ca. 2 times current value:
+                 terrestrial_carbon_capacity_per_area=5000/1.5e8 *
+                 gigatonnes_carbon/square_kilometers,
+                 basic_respiration_rate=0.0298 / years,  # see Nitzbon 2016
+                 # see Nitzbon 2016:
+                 respiration_sensitivity_on_atmospheric_carbon=0 \
+                 # 3200 \
+                 / years / (gigatonnes_carbon/square_kilometers),
+                 temperature_offset=0 * kelvins,  # TODO!
+                 temperature_sensitivity_on_atmospheric_carbon=1
+                 * kelvins/gigatonnes_carbon,  # TODO!
                  **kwargs):
         """Initialize the unique instance of Nature."""
         super().__init__(**kwargs)  # must be the first line

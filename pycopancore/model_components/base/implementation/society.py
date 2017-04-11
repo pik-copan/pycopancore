@@ -30,7 +30,7 @@ class Society (I.Society, abstract.Society):
                  *,
                  world=None,
                  next_higher_society=None,
-                 population = 0 * D.people,
+                 population=0 * D.people,
                  **kwargs
                  ):
         """Initialize an instance of Society."""
@@ -103,7 +103,7 @@ class Society (I.Society, abstract.Society):
         return self._world.culture
 
     _higher_societies = unknown
-    """cache, depends on self.next_higher_society 
+    """cache, depends on self.next_higher_society
     and self.next_higher_society.higher_societies"""
     @property  # read-only
     def higher_societies(self):
@@ -111,8 +111,8 @@ class Society (I.Society, abstract.Society):
         if self._higher_societies is unknown:
             # find recursively:
             self._higher_societies = [] if self.next_higher_society is None \
-                else [self.next_higher_society] \
-                        + self.next_higher_society.higher_societies
+                else ([self.next_higher_society]
+                      + self.next_higher_society.higher_societies)
         return self._higher_societies
 
     @higher_societies.setter

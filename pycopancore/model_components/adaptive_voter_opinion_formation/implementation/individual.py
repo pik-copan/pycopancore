@@ -1,8 +1,9 @@
-"""World entity type mixing class template.
+"""Individual entity type class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
@@ -12,30 +13,36 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-# from .... import master_data_model as D
+#from .... import master_data_model as D
 
+import random
 
-class World (I.World):
-    """World entity type mixin implementation class."""
+class Individual (I.Individual):
+    """Individual entity type mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                  *,
+                 initial_opinion,
                  **kwargs):
-        """Initialize an instance of World."""
+        """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
+        self.opinion = initial_opinion
         pass
 
+    def __lt__(self, other):
+        """make objects sortable, so big sorted lists can be used for quick look-ups"""
+        return self._uid < other._uid
+
     def deactivate(self):
-        """Deactivate a world."""
+        """Deactivate an individual."""
         # TODO: add custom code here:
         pass
         super().deactivate()  # must be the last line
 
     def reactivate(self):
-        """Reactivate a world."""
+        """Reactivate an individual."""
         super().reactivate()  # must be the first line
         # TODO: add custom code here:
         pass

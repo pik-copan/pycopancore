@@ -1,5 +1,4 @@
-"""Model mixing class.
-"""
+"""Model mixing class."""
 
 # This file is part of pycopancore.
 #
@@ -14,9 +13,8 @@ from . import interface as I
 from .implementation import Society
 
 
-
 class Model (I.Model):
-    """Model mixin class"""
+    """Model mixin class."""
 
     # mixins provided by this model component:
 

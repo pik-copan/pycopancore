@@ -10,7 +10,7 @@
 
 # only used in this component, not in others
 from ... import abstract
-from .... import master_data_model as D
+# from .... import master_data_model as D
 from ....private import unknown
 
 from .. import interface as I
@@ -28,7 +28,7 @@ class Individual (I.Individual, abstract.Individual):
 
     def __init__(self,
                  *,
-                 cell=None,
+                 cell,
                  relative_weight=1,
                  **kwargs
                  ):
