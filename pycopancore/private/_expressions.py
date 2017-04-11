@@ -1,8 +1,7 @@
-'''
-Created on Mar 20, 2017
+"""Created on Mar 20, 2017.
 
 @author: heitzig
-'''
+"""
 
 # defines logics to deal with symbolic expressions and their evaluation
 

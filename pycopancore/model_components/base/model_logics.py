@@ -21,7 +21,7 @@ variables in special list to be accessed by the runner.
 from .. import abstract
 from ... import Variable, ReferenceVariable, SetVariable, \
                 ODE, Explicit, Step, Event, OrderedSet
-from ...private import _AbstractEntityMixin, _AbstractProcessTaxonMixin
+# from ...private import _AbstractEntityMixin, _AbstractProcessTaxonMixin
 
 import inspect
 
@@ -50,9 +50,11 @@ class ModelLogics (object):
     event_variables = None
     """ordered set of Variables changed by processes of type Event"""
     ODE_targets = None
-    """ordered set of Variables or _AttributeReferences changed by processes of type ODE"""
+    """ordered set of Variables or _AttributeReferences changed by processes
+    of type ODE"""
     process_targets = None
-    """ordered set of Variables or _AttributeReferences changed by any process"""
+    """ordered set of Variables or _AttributeReferences changed by any
+    process"""
 
     processes = None
     """ordered set of processes"""
@@ -69,9 +71,9 @@ class ModelLogics (object):
     """dict mapping mixins to derived composite classes"""
 
     def __init__(self):
+        """Initialize Logics."""
         if not self.__class__._configured:
             self.configure()
-
 
     @classmethod
     def configure(cls, reconfigure=False, **kwargs):
@@ -93,7 +95,8 @@ class ModelLogics (object):
 
         cls.variables = OrderedSet()  # set of Variables (no longer of pairs!)
 
-        cls.ODE_targets = OrderedSet()   # targets are Variables or _DottedReferences
+        # targets are Variables or _DottedReferences:
+        cls.ODE_targets = OrderedSet()
         cls.explicit_targets = OrderedSet()
         cls.step_variables = OrderedSet()
         cls.event_variables = OrderedSet()
@@ -115,19 +118,23 @@ class ModelLogics (object):
         cls.components = OrderedSet(
                 [c for c in list(inspect.getmro(cls))  # exclude self
                  if c not in (object, abstract.Model, ModelLogics)
-                 and not "name" in c.__dict__  # exclude interface classes (which have an attribute "name")
+                 # exclude interface classes (which have an attribute "name"):
+                 and not "name" in c.__dict__
                  ])
         for component in cls.components:
             component_interface = component.__bases__[0]
-            print("Model component ", component_interface.name, "(", component, ")...")
-            # iterate through all entity-type and process taxon mixins this model components defines:
+            print("Model component ", component_interface.name, "(", component,
+                  ")...")
+            # iterate through all entity-type and process taxon mixins this
+            # model components defines:
             for mixin in component.entity_types + component.process_taxa:
                 mixin_interface = mixin.__bases__[0]
                 if mixin in component.entity_types:
                     print("    Entity-type ", mixin)
                 else:
                     print("    Process taxon ", mixin)
-                # find and register all Variables defined directly in this mixin's interface:
+                # find and register all Variables defined directly in this
+                # mixin's interface:
                 for (k, v) in mixin_interface.__dict__.items():
                     if isinstance(v, Variable):
                         if v not in variable_pool:
@@ -138,12 +145,16 @@ class ModelLogics (object):
                         else:
                             print("        Variable ", v)
                             assert v.codename == k, \
-                                "Variable was already registered by a different component using a different codename"
-                # find and register all processes defined directly in this mixin:
+                                "Variable was already registered by a " \
+                                "different component using a different " \
+                                "codename"
+                # find and register all processes defined directly in this
+                # mixin:
                 for p in mixin.processes:
                     print("        Process ", p)
                     assert p not in cls.processes, \
-                            "Process was already registered by a different component"
+                        "Process was already registered by a different " \
+                        "component"
                     cls.processes.add(p)
 
         print("\nVariables:")
@@ -186,31 +197,49 @@ class ModelLogics (object):
                     for p in c.processes:
                         print("    Process ", p)
                         assert p in cls.processes, \
-                            "Process was not listed in any implementation class!"
+                            "Process was not listed in any implementation " \
+                            "class!"
                         p.owning_class = composed_class
                         if isinstance(p, ODE):
                             cls.ODE_processes.add(p)
                             for target in p.targets:
                                 if isinstance(target, Variable):
-                                    assert target.owning_class == composed_class, \
-                                        "ODE target Variable owned by different entity-type/taxon! (maybe try accessing it via a ReferenceVariable)"
+                                    assert target.owning_class == \
+                                           composed_class, \
+                                           "ODE target Variable owned by " \
+                                           "different entity-type/taxon! " \
+                                           "(maybe try accessing it via a " \
+                                           "ReferenceVariable)"
                                 else:  # it's a _DotConstruct
-                                    assert target.owning_class == composed_class, \
-                                        "ODE target attribute reference starts at a wrong entity-type/taxon" \
-                                        + str(target) + str(target.owning_class) + str(composed_class)
+                                    assert target.owning_class == \
+                                           composed_class, \
+                                           "ODE target attribute reference " \
+                                           "starts at a wrong " \
+                                           "entity-type/taxon" \
+                                           + str(target) \
+                                           + str(target.owning_class) \
+                                           + str(composed_class)
                             cls.ODE_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Explicit):
-                            # TODO: determine dependency structure among variable to set
-                            # the right order of execution of explicit processes!
+                            # TODO: determine dependency structure among
+                            # variable to set the right order of execution
+                            # of explicit processes!
                             cls.explicit_processes.add(p)
                             for target in p.targets:
                                 if isinstance(target, Variable):
-                                    assert target.owning_class == composed_class, \
-                                        "Explicit target Variable owned by different entity-type/taxon! (maybe try accessing it via a ReferenceVariable)"
+                                    assert target.owning_class == \
+                                           composed_class, \
+                                           "Explicit target Variable owned " \
+                                           "by different entity-type/taxon! " \
+                                           "(maybe try accessing it via a " \
+                                           "ReferenceVariable)"
                                 else:  # it's a _DotConstruct
-                                    assert target.owning_class == composed_class, \
-                                        "Explicit target attribute reference starts at a wrong entity-type/taxon:"
+                                    assert target.owning_class == \
+                                           composed_class, \
+                                           "Explicit target attribute " \
+                                           "reference starts at a wrong " \
+                                           "entity-type/taxon:"
                             cls.explicit_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Step):

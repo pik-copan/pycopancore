@@ -13,7 +13,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-#from .... import master_data_model as D
+# from .... import master_data_model as D
 
 
 class Nature (I.Nature):

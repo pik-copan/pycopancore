@@ -31,7 +31,7 @@ class Cell (I.Cell, abstract.Cell):
                  world=None,
                  society=None,
                  location=None,
-                 land_area = 1 * D.square_kilometers,
+                 land_area=1 * D.square_kilometers,
                  geometry=None,
                  **kwargs
                  ):

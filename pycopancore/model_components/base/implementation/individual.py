@@ -10,7 +10,7 @@
 
 # only used in this component, not in others
 from ... import abstract
-from .... import master_data_model as D
+# from .... import master_data_model as D
 from ....private import unknown
 
 from .. import interface as I

@@ -19,9 +19,9 @@ from scipy import integrate
 import numpy as np
 
 from time import time
-import sys
+# import sys
 
-from profilehooks import coverage, profile
+# from profilehooks import coverage, profile
 
 
 class Runner(_AbstractRunner):
