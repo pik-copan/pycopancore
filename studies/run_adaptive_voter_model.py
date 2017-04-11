@@ -57,12 +57,6 @@ start = time()
 erdosrenyify(culture.acquaintance_network, p = expected_degree / nindividuals)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
-if M.Culture.opinion_update is M.Culture.opinion_update_fast:
-    print("analyzing the graph ... ", end="", flush=True)
-    start = time()
-    culture.analyze_graph()
-    print("done ({})".format(dt.timedelta(seconds=(time() - start))))
-
 runner = Runner(model=model)
 
 start = time()

@@ -16,10 +16,12 @@ from .. import interface as I
 #from .... import master_data_model as D
 from .... import Step
 
-from ....runners.hooks import Hooks
+from ....runners import Hooks
 
 from blist import sortedlist # more performant for large list modifications
+import datetime as dt
 import random
+from time import time
 
 
 class Culture (I.Culture):
@@ -92,12 +94,25 @@ class Culture (I.Culture):
 
     # process-related methods:
 
-    def analyze_graph(self):
+    def analyze_graph(self, t):
+        """analyze the graph so speed-ups can be used later"""
         # TODO: test whether sortedlist or sets are faster for large numbers of entries
+        assert t == 0, "This function should be run as a pre-hook of the runner!"
+        print("    analyzing the graph ... ", end="", flush=True)
+        start = time()
+
         self.__nodes = sortedlist(self.acquaintance_network.nodes())
         self.__nodes_by_opinion = {opinion : sortedlist() for opinion in self.possible_opinions}
         for node in self.acquaintance_network:
             self.__nodes_by_opinion[node.opinion].add(node)
+
+        print("done ({})".format(dt.timedelta(seconds=(time() - start))))
+
+    def clear_graph_analysis(self, t):
+        """clear everything that was created during analyze_graph"""
+        print("    deleting lists from graph analysis")
+        del self.__nodes
+        del self.__nodes_by_opinion
 
     def opinion_update_basic(self, t):
         """update the aquaintance network following the adaptive voter model prescription by (Holme, Newman - 2006)"""
@@ -128,7 +143,6 @@ class Culture (I.Culture):
             self.acquaintance_network.add_edge(active_individual, new_neighbor)
         elif self.opinion_change(active_individual, active_neighbor):
             # adopt opinion
-            # TODO: ask Jobst, whether this is okai within his framework!
             active_individual.opinion = active_neighbor.opinion
 
     def opinion_update_fast(self, t):
@@ -181,7 +195,8 @@ class Culture (I.Culture):
 
     # opinion_update = opinion_update_basic # set as the standard, but can be overwritten during in a different model component
     opinion_update = opinion_update_fast # uncomment to use, should be faster for large networks
-    Hooks.register_hook(Hooks.HookTypes.pre, analyze_graph)
+    Hooks.register_hook(Hooks.Types.pre, analyze_graph, I.Culture)
+    Hooks.register_hook(Hooks.Types.post, clear_graph_analysis, I.Culture)
     processes = [
         Step(
             'opinion update',

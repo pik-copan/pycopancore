@@ -13,6 +13,7 @@
 
 from .. import Event, Step, Variable
 from ..private import _AbstractRunner, _DotConstruct, eval, unknown
+from .hooks import Hooks
 
 from scipy import integrate
 import numpy as np
@@ -204,6 +205,12 @@ class Runner(_AbstractRunner):
         # Complete/calculate explicit Functions, 2.2 in runner scheme
         print("  Initial application of Explicit processes...")
         self.apply_explicits(t_0)
+
+        # TODO: add hooks to runner scheme
+        # apply all pre-hooks
+        if Hooks._pre_hooks:
+            print("  Executing pre-hooks ...")
+            Hooks.execute_hooks(Hooks.Types.pre, self.model, t_0)
 
         # Find first occurrence times of events, 2.3 in runner schmeme:
         print("  Finding times of first occurrence of Events...")
@@ -473,6 +480,17 @@ class Runner(_AbstractRunner):
                 # iterate through all process variables!
                 print("    Completing output dict...")
                 self.save_to_traj(self.model.process_targets)
+
+            # TODO: add hooks to runner scheme
+            # apply all mid-hooks
+            if Hooks._mid_hooks:
+                print("  Executing mid-hooks ...")
+                Hooks.execute_hooks(Hooks.Types.mid, self.model, t_0)
+        # TODO: add hooks to runner scheme
+        # apply all post-hooks
+        if Hooks._post_hooks:
+            print("  Executing post-hooks ...")
+            Hooks.execute_hooks(Hooks.Types.post, self.model, t_0)
 
         return self.trajectory_dict
 
