@@ -486,6 +486,7 @@ class Runner(_AbstractRunner):
             if Hooks._mid_hooks:
                 print("  Executing mid-hooks ...")
                 Hooks.execute_hooks(Hooks.Types.mid, self.model, t_0)
+
         # TODO: add hooks to runner scheme
         # apply all post-hooks
         if Hooks._post_hooks:
