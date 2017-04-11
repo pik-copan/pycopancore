@@ -12,5 +12,6 @@ This is the copan_global_like_carbon_cycle model-component implementation subpac
 
 from .world import World
 from .cell import Cell
+from .society import Society
 
 from .nature import Nature

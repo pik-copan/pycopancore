@@ -37,6 +37,9 @@ class World (object):
     atmospheric_carbon = W.atmospheric_carbon
     ocean_carbon = W.ocean_carbon
     surface_air_temperature = W.surface_air_temperature
+    respiration_rate = Variable("respiration rate", "", unit = 1)#unit ändern
+    fertilization = Variable("fertilization", "", unit = 1)
+    photosynthesis_rate = Variable("photosynthesis rate", "", unit = 1)
 
 
 class Cell (object):
@@ -47,6 +50,13 @@ class Cell (object):
     photosynthesis_carbon_flow = C.photosynthesis_carbon_flow
     terrestrial_respiration_carbon_flow = \
         C.terrestrial_respiration_carbon_flow
+    human_offtake = Variable("human offtake", "", unit=1) #unit
+    net_ecosystem_production = Variable("net ecosystem production", "", unit = 1)#unit
+
+class Society (object):
+
+    # variables:
+    harvest_rate = Variable("harvest rate", "", unit = 1) #unit
 
 
 # process taxa:

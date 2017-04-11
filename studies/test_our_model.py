@@ -20,10 +20,6 @@ random.seed(1)
 
 # parameters:
 
-nworlds = 1  # no. worlds
-nsocs = 1  # no. societies
-ncells = 1  # no. cells
-
 model = M.Model()
 
 # instantiate process taxa:
@@ -31,27 +27,24 @@ nature = M.Nature()
 # metabolism = M.Metabolism()
 
 # generate entities and plug them together at random:
-worlds = [M.World(nature=nature, #metabolism=metabolism,
-                  atmospheric_carbon=830 * D.gigatonnes_carbon,
-                  ocean_carbon=(5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
-                  ) for w in range(nworlds)]
-societies = [M.Society(world=random.choice(worlds)) for s in range(nsocs)]
-cells = [M.Cell(society=random.choice(societies)) for c in range(ncells)]
+world = M.World(nature=nature, #metabolism=metabolism,
+                  atmospheric_carbon = 0.2 * D.gigatonnes_carbon,
+                  ocean_carbon = 0.6 * D.gigatonnes_carbon
+                  )
+society = M.Society(world=world)
+cell = M.Cell(society=society)
 
-# distribute area and vegetation randomly but correlatedly:
-r = random.uniform(size=ncells)
-Sigma0 = 1.5e8 * D.square_kilometers * r / sum(r)
-M.Cell.land_area.set_values(cells, Sigma0)
+# set initial values
+Sigma0 = 1.5e8 * D.square_kilometers
+cell.land_area = Sigma0
 # print(M.Cell.land_area.get_values(cells))
 
-r += random.uniform(size=ncells)
-L0 = 2480 * D.gigatonnes_carbon * r / sum(r)  # 2480 is yr 2000
-M.Cell.terrestrial_carbon.set_values(cells, L0)
+L0 = 0.2 * D.gigatonnes_carbon # 2480 is yr 2000
+cell.terrestrial_carbon = L0
 # print(M.Cell.terrestrial_carbon.get_values(cells))
 
-r = np.exp(random.normal(size=ncells))
-G0 = 1125 * D.gigatonnes_carbon * r / sum(r)  # 1125 is yr 2000
-M.Cell.fossil_carbon.set_values(cells, G0)
+G0 = 0.5 * D.gigatonnes_carbon   # 1125 is yr 2000
+cell.fossil_carbon = G0
 # print(M.Cell.fossil_carbon.get_values(cells))
 
 # r = random.uniform(size=nsocs)
@@ -87,7 +80,7 @@ print("max. time step", (t[1:]-t[:-1]).max())
 
 data_ca = go.Scatter(
     x=t,
-    y=traj[M.World.atmospheric_carbon][worlds[0]],
+    y=traj[M.World.atmospheric_carbon][world],
     mode="lines",
     name="atmospheric carbon",
     line=dict(
@@ -97,7 +90,7 @@ data_ca = go.Scatter(
 )
 data_ct = go.Scatter(
     x=t,
-    y=traj[M.World.terrestrial_carbon][worlds[0]],
+    y=traj[M.World.terrestrial_carbon][world],
     mode="lines",
     name="terrestrial carbon",
     line=dict(
@@ -107,7 +100,7 @@ data_ct = go.Scatter(
 )
 data_cm = go.Scatter(
     x=t,
-    y=traj[M.World.ocean_carbon][worlds[0]],
+    y=traj[M.World.ocean_carbon][world],
     mode="lines",
     name="maritime carbon",
     line=dict(
@@ -117,7 +110,7 @@ data_cm = go.Scatter(
 )
 data_cf = go.Scatter(
     x=t,
-    y=traj[M.World.fossil_carbon][worlds[0]],
+    y=traj[M.World.fossil_carbon][world],
     mode="lines",
     name="fossil carbon",
     line=dict(
@@ -133,21 +126,3 @@ layout = dict(title = 'Our model (simple Carbon Cycle for now)',
 fig = dict(data=[data_ca, data_ct, data_cm, data_cf], layout=layout)
 py.plot(fig, filename="our-model-result.html")
 
-for s in societies:
-    pass
-## the stuff below is still matplotlib style, needs to be converted to plotly
-#    plot(t, traj[M.Society.population][s],"yellow",lw=2)
-#     plot(t, traj[M.Society.physical_capital][s], "k", lw=2)
-#     plot(t, traj[M.Society.renewable_energy_knowledge][s],
-#          color="darkorange", lw=2)
-#     plot(t, traj[M.Society.biomass_input_flow][s], "g--", lw=2)
-#     plot(t, traj[M.Society.fossil_fuel_input_flow][s],
-#          "--", color="gray", lw=2)
-#     plot(t, traj[M.Society.renewable_energy_input_flow][s],
-#          "--", color="darkorange", lw=2)
-for c in cells:
-    pass
-#    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
-#    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
-# gca().set_yscale('symlog')
-# show()

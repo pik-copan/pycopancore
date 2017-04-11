@@ -9,10 +9,10 @@
 # License: MIT license
 
 from .. import base  # all models must use the base component
-from ..model_components import copan_global_like_carbon_cycle \
-    as cc
-# from ..model_components import anderies_carbon_cycle \
+# from ..model_components import copan_global_like_carbon_cycle \
 #     as cc
+from ..model_components import anderies_carbon_cycle \
+    as cc
 
 # from ..model_components import COMPONENT1 as ABBR1
 
@@ -31,7 +31,7 @@ class World (cc.World,
     pass
 
 
-class Society (
+class Society (cc.Society,
                base.Society):
     """Society entity type."""
 
@@ -89,7 +89,7 @@ class Model (cc.Model,
 
     entity_types = [
         World,
-        # Society,
+        Society,
         Cell,
         # Individual,
     ]

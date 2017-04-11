@@ -29,31 +29,34 @@ class Cell (I.Cell):
 
     # abbreviations:
 
-    balance = I.Cell.photosynthesis_carbon_flow \
-            - I.Cell.terrestrial_respiration_carbon_flow
+    balance = I.Cell.net_ecosystem_production - I.Cell.human_offtake
 
 
     processes = [  # using symbolic expressions for performance reasons:
 
-        Explicit("photosynthesis flow",
-            [I.Cell.photosynthesis_carbon_flow],
-            [((B.Cell.nature.basic_photosynthesis_productivity
-               - B.Cell.nature.photosynthesis_sensitivity_on_atmospheric_carbon
-                 * B.Cell.world.atmospheric_carbon)
-              * sp.sqrt(B.Cell.world.atmospheric_carbon / B.Cell.land_area)
-              * (1 - I.Cell.terrestrial_carbon
-                 / (B.Cell.nature.terrestrial_carbon_capacity_per_area 
-                    * B.Cell.land_area)))
-             * I.Cell.terrestrial_carbon
-             ]),
+        Explicit("net ecosystem production",
+                 [I.Cell.net_ecosystem_production],
+                 [B.Cell.nature.ecosystem_dependent_conversion_factor
+                   * I.Cell.terrestrial_carbon * (1 - (I.Cell.terrestrial_carbon
+                      / B.Cell.nature.terrestrial_carbon_carrying_capacity))
+                        * (I.World.photosynthesis_rate - I.World.respiration_rate)
+                  ]),
 
-        Explicit("respiration flow",
-            [I.Cell.terrestrial_respiration_carbon_flow],
-            [(B.Cell.world.nature.basic_respiration_rate
-              + B.Cell.world.nature.respiration_sensitivity_on_atmospheric_carbon
-                * B.Cell.world.atmospheric_carbon)
-             * I.Cell.terrestrial_carbon
-             ]),
+
+           # capacity per area?
+        # Explicit("net ecosystem production",
+        #          [I.Cell.net_ecosystem_production],
+        #          [B.Cell.nature.ecosystem_dependent_conversion_factor
+        #           * I.Cell.terrestrial_carbon * (1 - (I.Cell.terrestrial_carbon
+        #                                               / (B.Cell.nature.terrestrial_carbon_capacity_per_area
+        #             * B.Cell.land_area)))
+        #           * (I.World.photosynthesis_rate - I.World.respiration_rate)
+        #           ]),
+
+        Explicit("human offtake",  # Interface
+                 [I.Cell.human_offtake],
+                 [I.Society.harvest_rate * I.Cell.terrestrial_carbon
+                  ]),
 
         ODE("effect of photosynthesis and respiration",
             [I.Cell.terrestrial_carbon, B.Cell.world.atmospheric_carbon],

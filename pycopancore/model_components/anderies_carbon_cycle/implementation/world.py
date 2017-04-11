@@ -1,8 +1,10 @@
 """Jobst: write docstring."""
 from .... import Explicit, ODE
 from .. import interface as I
-from ...base import interface as base
+from ...base import interface as B
 from .... import master_data_model as D
+
+import sympy as sp
 
 
 class World (I.World):
@@ -46,5 +48,25 @@ class World (I.World):
                           convert_temperature),
                  ODE("ocean-atmosphere diffusion",
                      [I.World.ocean_carbon, I.World.atmospheric_carbon],
-                     ocean_atmosphere_diffusion)
+                     ocean_atmosphere_diffusion),
+
+                 Explicit("respiration rate",
+                          [I.World.respiration_rate],
+                          [(B.World.nature.scaling_factor_temperature_respiration
+                     * I.World.surface_air_temperature ** B.World.nature.exponent_for_increase_in_respiration_low_T
+                         * sp.exp(-B.World.nature.exponent_for_increase_in_respiration_high_T
+                          * B.Cell.world.surface_air_temperature))]),
+
+                 Explicit("fertilization",
+                          [I.World.fertilization],
+                          [B.World.nature.strength_of_fertilization_effect * I.World.atmospheric_carbon
+                     ** B.World.nature.rapidity_of_fertilization_saturation]),
+
+                 Explicit("photosynthesis rate",
+                          [I.World.photosynthesis_rate],
+                          [I.World.fertilization
+                             * B.World.nature.scaling_factor_temperature_photosynthesis * I.World.surface_air_temperature
+                   ** B.World.nature.exponent_for_increase_in_photosynthesis_low_T
+                    * sp.exp(-B.World.nature.exponent_for_increase_in_photosynthesis_high_T
+                             * I.World.surface_air_temperature)])
                  ]
