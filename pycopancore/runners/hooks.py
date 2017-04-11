@@ -54,9 +54,10 @@ class Hooks(object):
             Specifies the type of the hook.
             
         hook: function
-            The function to be called.        
+            The function to be called.  
+            pre and post arguments: instance of the corresponding enitity or taxon
+            mid arguments: instance of the corresponding enitity or taxon, time when called
         """
-        #TODO: unregistering
         assert type in cls.HookTypes, "please give a type from {}.HookTypes".format(cls.__qualname__)
         if type is cls.HookTypes.pre:
             cls._pre_hooks.append(hook)
@@ -65,7 +66,38 @@ class Hooks(object):
         elif type is cls.HookTypes.post:
             cls._post_hooks.append(hook)
         else:
-            raise HookRegistrationError("unknown hook type")
+            # if the Code ends up here, there is an error in the implementation because
+            # cls.HookTypes has been extended but there is no registration done here
+            raise HooksError("unknown hook type")
+
+    @classmethod
+    def unregister_hook(cls, type, hook):
+        """Register a hook.
+        Parameters
+        ==========
+        
+        type: HookTypes member
+            Specifies the type of the hook.
+            
+        hook: function
+            The function to be removed.
+            
+        Errors
+        ======
+        raises HookRegistrationError when hook is not listed as registered
+        """
+        assert type in cls.HookTypes, "please give a type from {}.HookTypes".format(cls.__qualname__)
+        try:
+            if type is cls.HookTypes.pre:
+                cls._pre_hooks.remove(hook)
+            elif type is cls.HookTypes.mid:
+                cls._mid_hooks.remove(hook)
+            elif type is cls.HookTypes.post:
+                cls._post_hooks.remove(hook)
+            else:
+                raise HooksError("unknown hook type")
+        except ValueError:
+            raise HookRegistrationError("hook is not listed as registered, so it cannot be unregistered")
 
     def __new__(cls, *args, **kwargs):
         """raises an error because this class should not be instantiated"""
