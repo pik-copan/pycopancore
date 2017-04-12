@@ -41,13 +41,6 @@ class Model (object):
 
 # entity types:
 
-
-class World (object):
-    """Interface for World mixin."""
-
-
-
-
 class Culture (object):
     """Interface for Culture process taxon mixin."""
 

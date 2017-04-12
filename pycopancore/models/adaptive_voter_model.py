@@ -31,7 +31,7 @@ from ..model_components import majority_decision as md
 # delete the templates for the unneeded ones, and add those for missing ones:
 
 # TODO: list all mixin classes needed:
-class World (avof.World,
+class World (
              base.World):
     """World entity type."""
 
