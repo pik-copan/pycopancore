@@ -20,6 +20,9 @@ from .. import base  # all models must use the base component
 # from ..model_components import COMPONENT1 as ABBR1
 # from ..model_components import COMPONENT2 as ABBR2
 from ..model_components import adaptive_voter_opinion_formation as avof
+from ..model_components import majority_decision as md
+from ..model_components import anderies_carbon_cycle as cc
+from ..model_components import carbon_voters as cv
 
 
 # entity types:
@@ -30,7 +33,8 @@ from ..model_components import adaptive_voter_opinion_formation as avof
 # delete the templates for the unneeded ones, and add those for missing ones:
 
 # TODO: list all mixin classes needed:
-class World (avof.World,
+class World (cc.World,
+             cv.World,
              base.World):
     """World entity type."""
 
@@ -38,7 +42,9 @@ class World (avof.World,
 
 
 # TODO: list all mixin classes needed:
-class Society (
+class Society (md.Society,
+               cv.Society,
+               cc.Society,
                base.Society):
     """Society entity type."""
 
@@ -46,7 +52,7 @@ class Society (
 
 
 # TODO: list all mixin classes needed:
-class Cell (
+class Cell (cc.Cell,
             base.Cell):
     """Cell entity type."""
 
@@ -55,6 +61,7 @@ class Cell (
 
 # TODO: list all mixin classes needed:
 class Individual (avof.Individual,
+                  md.Individual,
                   base.Individual):
     """Individual entity type."""
 
@@ -67,7 +74,7 @@ class Individual (avof.Individual,
 
 
 # TODO: list all mixin classes needed:
-class Nature (
+class Nature (cc.Nature,
               base.Nature):
     """Nature process taxon."""
 
@@ -92,6 +99,9 @@ class Culture (avof.Culture,
 
 # TODO: list all used model components:
 class Model (avof.Model,
+             md.Model,
+             cc.Model,
+             cv.Model
              base.Model):
     """Class representing the whole model."""
 
@@ -101,8 +111,8 @@ class Model (avof.Model,
     """Longer description"""
 
     # TODO: list all entity types you composed above:
-    entity_types = [World, Individual]
+    entity_types = [World, Society, Individual, Cell]
     """List of entity types used in the model"""
     # TODO: list all entity types you composed above:
-    process_taxa = [Culture]
+    process_taxa = [Culture, Nature]
     """List of process taxa used in the model"""
