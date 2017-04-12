@@ -31,13 +31,13 @@ possible_opinions = list(range(2))
 # instantiate model
 model = M.Model()
 
-
 # instantiate process taxa:
 culture = M.Culture(rewiring=rewiring_probability)
 
 # generate entities and distribute opinions uniformly randomly:
 world = M.World(culture=culture)
-cell = M.Cell(world=world)
+society = M.Society(world=world, culture=culture)
+cell = M.Cell(world=world, society=society)
 individuals = [M.Individual(cell=cell,
                             initial_opinion=random.choice(possible_opinions))
                for _ in range(nindividuals)]
@@ -104,11 +104,24 @@ data_opinion1 = go.Scatter(
         width=2
     )
 )
+data_majority_opinion = go.Scatter(
+    x=t,
+    y=traj[M.Society.opinion][society],
+    mode="lines+markers",
+    name="majority opinion",
+    line=dict(
+        color="red",
+        width=2
+    ),
+    marker=dict(
+        color="red",
+        size=4
+    )
+)
 
 layout = dict(title='Adaptive Voter Model',
               xaxis=dict(title='time'),
-              yaxis=dict(title='relative opinion amounts'),
               )
 
-fig = dict(data=[data_opinion0, data_opinion1], layout=layout)
+fig = dict(data=[data_opinion0, data_opinion1, data_majority_opinion], layout=layout)
 py.plot(fig, filename="adaptive-voter-model.html")

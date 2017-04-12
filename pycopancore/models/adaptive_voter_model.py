@@ -20,6 +20,7 @@ from .. import base  # all models must use the base component
 # from ..model_components import COMPONENT1 as ABBR1
 # from ..model_components import COMPONENT2 as ABBR2
 from ..model_components import adaptive_voter_opinion_formation as avof
+from ..model_components import majority_decision as md
 
 
 # entity types:
@@ -38,7 +39,7 @@ class World (avof.World,
 
 
 # TODO: list all mixin classes needed:
-class Society (
+class Society (md.Society,
                base.Society):
     """Society entity type."""
 
@@ -55,6 +56,7 @@ class Cell (
 
 # TODO: list all mixin classes needed:
 class Individual (avof.Individual,
+                  md.Individual,
                   base.Individual):
     """Individual entity type."""
 
@@ -83,7 +85,7 @@ class Individual (avof.Individual,
 
 
 # TODO: list all mixin classes needed:
-class Culture (avof.Culture,
+class Culture (avof.Culture, md.Culture,
                base.Culture):
     """Culture process taxon."""
 
@@ -93,7 +95,7 @@ class Culture (avof.Culture,
 # Model class:
 
 # TODO: list all used model components:
-class Model (avof.Model,
+class Model (avof.Model, md.Model,
              base.Model):
     """Class representing the whole model."""
 
@@ -103,7 +105,7 @@ class Model (avof.Model,
     """Longer description"""
 
     # TODO: list all entity types you composed above:
-    entity_types = [World, Individual]
+    entity_types = [World, Society, Individual]
     """List of entity types used in the model"""
     # TODO: list all entity types you composed above:
     process_taxa = [Culture]

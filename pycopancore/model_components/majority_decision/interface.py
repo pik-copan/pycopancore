@@ -19,18 +19,18 @@ from ... import master_data_model as D
 # import ..BBB.interface as BBB
 from .. import adaptive_voter_opinion_formation as avof
 # TODO: uncomment and adjust only if you really need other variables:
-# from ... import Variable
+from ... import Variable
 
 
 class Model (object):
     """Interface for Model mixin."""
 
     # metadata:
-    name = "..."
+    name = "majority decision"
     """a unique name for the model component"""
-    description = "..."
+    description = "find the opinion the most represented in a society"
     """some longer description"""
-    requires = []
+    requires = [avof]
     """list of other model components required for this model component to
     make sense"""
 
@@ -43,21 +43,14 @@ class Model (object):
 # entity types:
 
 
-class World (object):
-    """Interface for World mixin."""
+class Society (object):
+    """Interface for Society entity type mixin."""
 
     # endogenous variables:
-    # TODO: use variables from the master data model wherever possible
-    # wherever possible!:
-    # X = D.X
-    # TODO: uncomment and adjust of you need further variables from another
-    # model component:
-    # Z = BBB.Z
-    # TODO: uncomment and adjust only if you really need other variables:
-    # W = Variable("name", "desc", unit=..., ...)
+
+    opinion = avof.Individual.opinion.copy()
 
     # exogenous variables / parameters:
-    # TODO: similarly
 
 
 class Individual (object):
@@ -70,24 +63,10 @@ class Individual (object):
     # exogenous variables / parameters:
 
 
-# process taxa:
-
-
-class Metabolism (object):
-    """Interface for Metabolism process taxon mixin."""
-
-    # endogenous variables:
-
-    opinion = avof.Individual.opinion.copy()
-
-    # exogenous variables / parameters:
-
-
 class Culture (object):
     """Interface for Culture process taxon mixin."""
 
     # endogenous variables:
-
     acquaintance_network = D.CUL.acquaintance_network
 
     # exogenous variables / parameters:

@@ -53,6 +53,11 @@ class Culture (object):
 
     # endogenous variables:
     acquaintance_network = D.CUL.acquaintance_network
+    # TODO: give possible_opinions a type, wait for Wolf's choice stuff in the master data model
+    possible_opinions = Variable(
+        "possible opinions",
+        "possible opinions of an individual in the sense of the adaptive voter model"
+    )
 
     # exogenous variables / parameters:
 
@@ -62,7 +67,7 @@ class Individual (object):
     # endogenous variables:
     opinion = Variable(
         "opinion",
-        "opinion of an individual in the sense of the adaptive voter model, can be 0 or 1"
+        "opinion of an individual in the sense of the adaptive voter model"
     )
     """Interface for Culture process taxon mixin."""
 

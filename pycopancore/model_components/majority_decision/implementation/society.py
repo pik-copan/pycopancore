@@ -14,6 +14,10 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 
+from .... import Explicit
+
+import operator
+
 
 class Society (I.Society):
     """Society entity type mixin implementation class."""
@@ -42,6 +46,19 @@ class Society (I.Society):
 
     # process-related methods:
 
-    # TODO: add some if needed...
+    def get_majority_opinion(self, t):
+        opinion_count = {}
+        for op in self.culture.possible_opinions:
+            opinion_count[op] = sum(1 for _ in filter(lambda ind: ind.opinion == op, self.individuals))
 
-    processes = []  # TODO: instantiate and list process objects here
+        self.opinion = max(opinion_count.items(), key=operator.itemgetter(1))[0]
+
+
+
+    processes = [
+        Explicit(
+            "identification of majority opinion",
+            [I.Society.opinion],
+            get_majority_opinion
+        )
+    ]
