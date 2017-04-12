@@ -176,9 +176,9 @@ class ModelLogics (object):
                 if isinstance(v, Variable):
                     print("    Variable ", v)
                     assert v in variable_pool, \
-                        "Variable was not defined in any component interface!"
+                        "Variable '{v!r}' was not defined in any component interface!".format(**locals())
                     assert v.codename == k, \
-                        "Variable was registered under a different codename"
+                        "Variable '{v!r}' was registered under a different codename".format(**locals())
                     assert v.owning_class is None
                     cls.variables.add(v)
                     v.owning_class = composed_class
