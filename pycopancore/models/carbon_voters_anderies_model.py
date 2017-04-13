@@ -101,7 +101,7 @@ class Culture (avof.Culture,
 class Model (avof.Model,
              md.Model,
              cc.Model,
-             cv.Model
+             cv.Model,
              base.Model):
     """Class representing the whole model."""
 
