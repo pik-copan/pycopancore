@@ -31,6 +31,14 @@ class _AbstractProcessTaxonMixin(object):
         else:
             self.__class__.instances = [self]
 
+    # the repr and the str methods were removed in the master/prototype_jobst1
+    # Do we really don't want them anymore?
+    def __repr__(self):
+        return ('Process taxon object')
+
+    def __str__(self):
+        return repr(self)
+
     def set_value(self, variable, value):
         assert isinstance(variable, variable.Variable), \
             "variable must be a Variable object"
