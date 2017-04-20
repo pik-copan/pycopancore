@@ -88,12 +88,14 @@ class Hooks(object):
             raise HooksError("unknown hook type")
 
         if theclass in hooks:
+            if hook in hooks[theclass]:
+                raise HookRegistrationError("already registered hook: {!r}".format(hook))
             hooks[theclass].append(hook)
         else:
             hooks[theclass] = [hook]
 
     @classmethod
-    def unregister_hook(cls, type, hook, theclass=None):
+    def unregister_hook(cls, type, hook, theclass=None, error_if_not_registered=True):
         """Register a hook.
         Parameters
         ==========
@@ -125,7 +127,9 @@ class Hooks(object):
                 raise ValueError("class has no hook registered")
             hooks[theclass].remove(hook)
         except ValueError:
-            raise HookRegistrationError("hook is not listed as registered, so it cannot be unregistered")
+            if error_if_not_registered:
+                raise HookRegistrationError("hook is not listed as registered, so it cannot be unregistered")
+            # else: ignore quietly
 
     @classmethod
     def execute_hooks(cls, type, model, t):
