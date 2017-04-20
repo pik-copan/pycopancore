@@ -83,7 +83,8 @@ class Culture (I.Culture):
             if opinion_change == 1:
                 opinion_change = lambda x, y: True
             else:
-                opinion_change = lambda x, y: random.random < opinion_change
+                _opinion_change = opinion_change
+                opinion_change = lambda x, y: random.random() < _opinion_change
         self.opinion_change = opinion_change
 
         self.possible_opinions = possible_opinions
@@ -145,7 +146,7 @@ class Culture (I.Culture):
             # adopt opinion
             active_individual.opinion = active_neighbor.opinion
 
-    def opinion_update_fast(self, t):
+    def opinion_update_fast(self):
         """update the aquaintance network following the adaptive voter model prescription by (Holme, Newman - 2006)"""
         # TODO: there are some intuitive speed-ups:
         #   1) (done) use a list with references to nodes of the differing opinions so the statement with filter can be avoided
@@ -187,6 +188,12 @@ class Culture (I.Culture):
             # TODO: ask Jobst, whether this is okai within his framework!
             active_individual.opinion = active_neighbor.opinion
 
+    # test, update opinion for n individuals at the same time
+    def opinion_update_multiple(self, t, number=10):
+        for i in range(number-1):
+            self.opinion_update_fast()
+
+
 
     def next_update_time(self, t):
         self.next_update_time += self.timestep
@@ -194,7 +201,7 @@ class Culture (I.Culture):
 
 
     # opinion_update = opinion_update_basic # set as the standard, but can be overwritten during in a different model component
-    opinion_update = opinion_update_fast # uncomment to use, should be faster for large networks
+    opinion_update = opinion_update_multiple # uncomment to use, should be faster for large networks
     Hooks.register_hook(Hooks.Types.pre, analyze_graph, I.Culture)
     Hooks.register_hook(Hooks.Types.post, clear_graph_analysis, I.Culture)
     processes = [
