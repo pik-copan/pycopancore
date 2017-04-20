@@ -37,7 +37,12 @@ class Culture (I.Culture):
 
     __update_function = None
 
-    __configuration = dict(configured=False) # keeps the configuration status, whether the updates are done basic or fast, and clusteredd or non-clustered
+    __configuration = dict( # keeps the configuration status, whether the updates are done basic or fast, and clusteredd or non-clustered
+        configured=False,
+        process_type=None,
+        update_mode=None,
+        synchronous_updates=None
+    )
     """configuration status"""
     @unique
     class update_modes(Enum):
@@ -237,23 +242,25 @@ class Culture (I.Culture):
         process_time = cls.next_update_time
         process_func = cls.opinion_update_multiple
 
+        # unregister everything
+        Hooks.unregister_hook(Hooks.Types.pre, cls.analyze_graph, I.Culture, error_if_not_registered=False)
+        Hooks.unregister_hook(Hooks.Types.post, cls.clear_graph_analysis, I.Culture, error_if_not_registered=False)
+
         if update_mode is Culture.update_modes.basic:
             cls.__update_function = cls.opinion_update_basic
-            # TODO: unregister other Hooks if registered
         elif update_mode is Culture.update_modes.fast:
             cls.__update_function = cls.opinion_update_fast
-            # TODO: take care of something being registered twice
+            # register necessary hooks
             Hooks.register_hook(Hooks.Types.pre, cls.analyze_graph, I.Culture)
             Hooks.register_hook(Hooks.Types.post, cls.clear_graph_analysis, I.Culture)
         else:
             raise ValueError("unknown update_mode '{}'".format(update_mode))
 
-        cls.__configuration = dict(
-            configured=True,
-            process_type=process_type,
-            update_mode=update_mode,
-            synchronous_updates=synchronous_updates
-        )
+        # set the configuration dictionary
+        cls.__configuration["configured"] = True
+        cls.__configuration["process_type"] = process_type
+        cls.__configuration["update_mode"] = update_mode
+        cls.__configuration["synchronous_updates"] = synchronous_updates
 
         cls.processes = [
             process_type(

@@ -32,11 +32,10 @@ no_impact_opinion_change=0.5
 no_impact_atmospheric_carbon_level=0.2
 
 # use fast method and with multple updates
-# M.avof.Culture.configure(
-#     update_mode=M.avof.Culture.update_modes.fast,
-#     synchronous_updates=100
-# )
-M.avof.Culture.multiple_updates = 100
+M.avof.Culture.configure(
+    update_mode=M.avof.Culture.update_modes.fast,
+    synchronous_updates=100
+)
 
 # instantiate model
 model = M.Model()
