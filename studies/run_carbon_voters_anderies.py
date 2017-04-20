@@ -1,4 +1,4 @@
-"""Skript to run Jobsts model."""
+"""Skript to run Carbon Voters model."""
 
 from time import time
 import datetime as dt
@@ -7,9 +7,9 @@ import random
 # import networkx as nx
 import numpy as np
 # import sys
-import pycopancore.models.adaptive_voter_model as M
+import pycopancore.models.carbon_voters_anderies_model as M
 # import pycopancore.models.only_copan_global_like_carbon_cycle as M
-# from pycopancore import master_data_model as D
+from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
 # import plotly.plotly as py
@@ -21,26 +21,48 @@ random.seed(1)
 # TODO: figure out why it doesn't seem to work here ...
 
 # parameters:
-timeinterval = 100
+timeinterval = 60
 timestep = 0.1
 expected_degree = 10
 nindividuals = 4000
 rewiring_probability = 0.1
 possible_opinions = list(range(2))
+impact_scaling_factor=20
+no_impact_opinion_change=0.5
+no_impact_atmospheric_carbon_level=0.2
 
 # instantiate model
 model = M.Model()
 
 
 # instantiate process taxa:
-culture = M.Culture(rewiring=rewiring_probability)
+culture = M.Culture(rewiring=rewiring_probability, impact_scaling_factor=impact_scaling_factor,
+                    no_impact_opinion_change=no_impact_opinion_change,
+                    no_impact_atmospheric_carbon_level=no_impact_atmospheric_carbon_level)
+nature = M.Nature()
 
 # generate entities and distribute opinions uniformly randomly:
-world = M.World(culture=culture)
-cell = M.Cell(world=world)
+world = M.World(culture=culture, nature=nature,
+                atmospheric_carbon=0.2 * D.gigatonnes_carbon,
+                ocean_carbon=0.6 * D.gigatonnes_carbon
+                )
+society = M.Society(world=world)
+cell = M.Cell(world=world, society=society)
 individuals = [M.Individual(cell=cell,
-                            initial_opinion=random.choice(possible_opinions))
-               for _ in range(nindividuals)]
+                            initial_opinion=float(np.random.choice(possible_opinions, 1, p=[0.6,0.4])))
+               for _ in range(nindividuals)] # individual opinion 0 with prob. p1, 1(aware) with prob. p2
+
+# set initial values
+Sigma0 = 1.5e8 * D.square_kilometers
+cell.land_area = Sigma0
+# print(M.Cell.land_area.get_values(cells))
+
+L0 = 0.2 * D.gigatonnes_carbon # 2480 is yr 2000
+cell.terrestrial_carbon = L0
+# print(M.Cell.terrestrial_carbon.get_values(cells))
+
+G0 = 0.5 * D.gigatonnes_carbon   # 1125 is yr 2000
+cell.fossil_carbon = G0
 
 # TODO: ask Jobst, why are all individuals already in the network?
 
@@ -104,11 +126,68 @@ data_opinion1 = go.Scatter(
         width=2
     )
 )
+# majority opinion
+data_majority_opinion = go.Scatter(
+    x=t,
+    y=traj[M.Society.opinion][society],
+    mode="lines+markers",
+    name="majority opinion",
+    line=dict(
+        color="red",
+        width=2
+    ),
+    marker=dict(
+        color="red",
+        size=4
+    )
+)
+# carbon
+data_ca = go.Scatter(
+    x=t,
+    y=traj[M.World.atmospheric_carbon][world],
+    mode="lines",
+    name="atmospheric carbon",
+    line=dict(
+        color="lightblue",
+        width=4
+    )
+)
+data_ct = go.Scatter(
+    x=t,
+    y=traj[M.World.terrestrial_carbon][world],
+    mode="lines",
+    name="terrestrial carbon",
+    line=dict(
+        color="green",
+        width=4
+    )
+)
+data_cm = go.Scatter(
+    x=t,
+    y=traj[M.World.ocean_carbon][world],
+    mode="lines",
+    name="maritime carbon",
+    line=dict(
+        color="blue",
+        width=4
+    )
+)
+data_cf = go.Scatter(
+    x=t,
+    y=traj[M.World.fossil_carbon][world],
+    mode="lines",
+    name="fossil carbon",
+    line=dict(
+        color="gray",
+        width=4
+    )
+)
 
-layout = dict(title='Adaptive Voter Model',
+layout = dict(title='Adaptive Voter Model and Anderies Carbon Cycle',
               xaxis=dict(title='time'),
-              yaxis=dict(title='relative opinion amounts'),
+              yaxis=dict(title='relative opinion and carbon amounts'),
               )
 
-fig = dict(data=[data_opinion0, data_opinion1], layout=layout)
+fig = dict(data=[data_opinion0, data_opinion1, data_majority_opinion,
+                 data_ca, data_cf, data_cm, data_ct], layout=layout)
 py.plot(fig, filename="adaptive-voter-model.html")

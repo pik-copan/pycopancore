@@ -17,22 +17,23 @@ from ... import master_data_model as D
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
 # import ..BBB.interface as BBB
-from .. import adaptive_voter_opinion_formation  as avof
+from .. import adaptive_voter_opinion_formation as avof
 from .. import majority_decision as md
 from .. import anderies_carbon_cycle as cc
 # TODO: uncomment and adjust only if you really need other variables:
-# from ... import Variable
+from ... import Variable
 
 
 class Model (object):
     """Interface for Model mixin."""
 
     # metadata:
-    name = "..."
+    name = "carbon voters"
     """a unique name for the model component"""
-    description = "..."
+    description = "sets the harvest rate by majority decision and " \
+                  "the probability of awareness opinion adoption is dependent on atmospheric carbon"
     """some longer description"""
-    requires = []
+    requires = [avof, md, cc]
     """list of other model components required for this model component to
     make sense"""
 
@@ -52,8 +53,7 @@ class World (object):
     # wherever possible!:
     # X = D.X
     # TODO: uncomment and adjust of you need further variables from another
-    # model component:
-    # Z = BBB.Z
+    atmospheric_carbon = cc.World.atmospheric_carbon
     # TODO: uncomment and adjust only if you really need other variables:
     # W = Variable("name", "desc", unit=..., ...)
 
@@ -72,6 +72,8 @@ class Society (object):
     opinion = md.Society.opinion
 
     harvest_rate = cc.Society.harvest_rate
+
+
 
 
 
@@ -110,9 +112,22 @@ class Society (object):
 #     # exogenous variables / parameters:
 
 
-# class Culture (object):
-#     """Interface for Culture process taxon mixin."""
-#
-#     # endogenous variables:
-#
-#     # exogenous variables / parameters:
+class Culture (object):
+   """Interface for Culture process taxon mixin."""
+
+   # endogenous variables:
+
+   # exogenous variables / parameters:
+   #
+   opinion_change = avof.Culture.opinion_change
+
+   impact_scaling_factor = Variable("scaling factor", "") #
+
+   no_impact_atmospheric_carbon_level = Variable("", "level of atmospheric carbon that doesn't change peoples "
+                                                     "probability of opinion change to awareness")
+
+   no_impact_opinion_change = Variable("", "basic probability of opinion change to awareness in "
+                                           "avof without climate impact effects") # take adaptive voter model opinion_change?
+
+   impact = Variable("impact of atmospheric carbon / temperature on society",
+                     "based on atmospheric carbon level")

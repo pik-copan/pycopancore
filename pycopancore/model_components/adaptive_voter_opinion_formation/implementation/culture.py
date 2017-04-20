@@ -92,7 +92,8 @@ class Culture (I.Culture):
             if opinion_change == 1:
                 opinion_change = lambda x, y: True
             else:
-                opinion_change = lambda x, y: random.random < opinion_change
+                _opinion_change = opinion_change
+                opinion_change = lambda x, y: random.random() < _opinion_change
         self.opinion_change = opinion_change
 
         self.possible_opinions = possible_opinions
@@ -195,6 +196,13 @@ class Culture (I.Culture):
             # set the new opinion
             # TODO: ask Jobst, whether this is okai within his framework!
             active_individual.opinion = active_neighbor.opinion
+
+    # test, update opinion for n individuals at the same time
+    def opinion_update_multiple(self, t):
+        number = 10
+        for i in range(number):
+            self.opinion_update_fast(t)
+
 
 
     def next_update_time(self, t):
