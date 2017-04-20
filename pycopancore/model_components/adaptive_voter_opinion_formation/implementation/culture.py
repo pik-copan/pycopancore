@@ -20,6 +20,7 @@ from ....runners import Hooks
 
 from blist import sortedlist # more performant for large list modifications
 import datetime as dt
+from enum import Enum, unique
 import random
 from time import time
 
@@ -33,6 +34,14 @@ class Culture (I.Culture):
     __nodes = None
     __filter_by_opinion = lambda opinion, input_list: list(filter(lambda ind: ind.opinion == opinion, input_list))
     __remove_by_opinion = lambda opinion, input_list: list(filter(lambda ind: ind.opinion != opinion, input_list))
+
+    __configuration = dict(configured=False) # keeps the configuration status, whether the updates are done basic or fast, and clusteredd or non-clustered
+    """configuration status"""
+    @unique
+    class update_modes(Enum):
+        """update modes for the adaptive voter model: basic or fast"""
+        basic = 0
+        fast = 1
 
     def __init__(self,
                  *,
@@ -192,15 +201,56 @@ class Culture (I.Culture):
         self.next_update_time += self.timestep
         return self.next_update_time
 
+    @classmethod
+    def configure(cls, *, update_mode, synchronous_updates=1):
+        """configure the adaptive voter opinion formation model component
+        
+        Parameters
+        ----------
+        
+        update_mode : element of Enum Cultur.update_modes
+            chooses between the basic and the fast update mode. The fast update mode is preferred but needs the nodes of the acquaintance_network to stay the same
+        
+        synchronous_updates : (optional) positive int
+            how many opinion updates should be done at once
+        """
 
-    # opinion_update = opinion_update_basic # set as the standard, but can be overwritten during in a different model component
-    opinion_update = opinion_update_fast # uncomment to use, should be faster for large networks
-    Hooks.register_hook(Hooks.Types.pre, analyze_graph, I.Culture)
-    Hooks.register_hook(Hooks.Types.post, clear_graph_analysis, I.Culture)
-    processes = [
-        Step(
-            'opinion update',
-            [I.Culture.acquaintance_network, I.Individual.opinion],
-            [next_update_time, opinion_update]
+        synchronous_updates = int(synchronous_updates)
+        assert synchronous_updates >= 1, "can't do a non-positive number of synchronous updates"
+
+        assert update_mode in Culture.update_modes, "choose an update mode from Culture.update_modes Enum"
+
+        if synchronous_updates > 1:
+            raise NotImplementedError("synchronous updates are not yet implemented")
+
+        process_type = Step
+        process_name = "opinion update"
+        process_variables = [I.Culture.acquaintance_network, I.Individual.opinion]
+        process_time = cls.next_update_time
+
+        if update_mode is Culture.update_modes.basic:
+            process_func = cls.opinion_update_basic
+        elif update_mode is Culture.update_modes.fast:
+            process_func = cls.opinion_update_fast
+            Hooks.register_hook(Hooks.Types.pre, cls.analyze_graph, I.Culture)
+            Hooks.register_hook(Hooks.Types.post, cls.clear_graph_analysis, I.Culture)
+        else:
+            raise ValueError("unknown update_mode '{}'".format(update_mode))
+
+        cls.__configuration = dict(
+            configured=True,
+            process_type=process_type,
+            update_mode=update_mode,
+            synchronous_updates=synchronous_updates
         )
-    ]
+
+        cls.processes = [
+            process_type(
+                process_name,
+                process_variables,
+                [process_time, process_func]
+            )
+        ]
+
+# set the default configuration of the model component
+Culture.configure(update_mode=Culture.update_modes.fast)
