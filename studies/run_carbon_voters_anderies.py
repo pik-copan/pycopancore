@@ -22,7 +22,7 @@ random.seed(1)
 
 # parameters:
 timeinterval = 60
-timestep = 0.1
+timestep = 1
 expected_degree = 10
 nindividuals = 4000
 rewiring_probability = 0.1
@@ -31,14 +31,24 @@ impact_scaling_factor=20
 no_impact_opinion_change=0.5
 no_impact_atmospheric_carbon_level=0.2
 
+# use fast method and with multple updates
+# M.avof.Culture.configure(
+#     update_mode=M.avof.Culture.update_modes.fast,
+#     synchronous_updates=100
+# )
+M.avof.Culture.multiple_updates = 100
+
 # instantiate model
 model = M.Model()
 
 
 # instantiate process taxa:
-culture = M.Culture(rewiring=rewiring_probability, impact_scaling_factor=impact_scaling_factor,
-                    no_impact_opinion_change=no_impact_opinion_change,
-                    no_impact_atmospheric_carbon_level=no_impact_atmospheric_carbon_level)
+culture = M.Culture(
+    timestep=timestep,
+    rewiring=rewiring_probability, impact_scaling_factor=impact_scaling_factor,
+    no_impact_opinion_change=no_impact_opinion_change,
+    no_impact_atmospheric_carbon_level=no_impact_atmospheric_carbon_level
+)
 nature = M.Nature()
 
 # generate entities and distribute opinions uniformly randomly:

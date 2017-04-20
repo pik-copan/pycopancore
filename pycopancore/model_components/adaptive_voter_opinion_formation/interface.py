@@ -54,6 +54,8 @@ class Culture (object):
 
     opinion_change = Variable("probability to adopt another opinion", "")
 
+    multiple_updates = Variable("number of updates", "number of updates that are done at the same time")
+
     # exogenous variables / parameters:
 
 class Individual (object):

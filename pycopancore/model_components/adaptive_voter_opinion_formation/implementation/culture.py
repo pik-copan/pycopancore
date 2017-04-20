@@ -35,6 +35,8 @@ class Culture (I.Culture):
     __filter_by_opinion = lambda opinion, input_list: list(filter(lambda ind: ind.opinion == opinion, input_list))
     __remove_by_opinion = lambda opinion, input_list: list(filter(lambda ind: ind.opinion != opinion, input_list))
 
+    __update_function = None
+
     __configuration = dict(configured=False) # keeps the configuration status, whether the updates are done basic or fast, and clusteredd or non-clustered
     """configuration status"""
     @unique
@@ -199,9 +201,8 @@ class Culture (I.Culture):
 
     # test, update opinion for n individuals at the same time
     def opinion_update_multiple(self, t):
-        number = 10
-        for i in range(number):
-            self.opinion_update_fast(t)
+        for i in range(self.multiple_updates):
+            self.__update_function(t)
 
 
 
@@ -228,18 +229,20 @@ class Culture (I.Culture):
 
         assert update_mode in Culture.update_modes, "choose an update mode from Culture.update_modes Enum"
 
-        if synchronous_updates > 1:
-            raise NotImplementedError("synchronous updates are not yet implemented")
+        cls.multiple_updates = synchronous_updates
 
         process_type = Step
         process_name = "opinion update"
         process_variables = [I.Culture.acquaintance_network, I.Individual.opinion]
         process_time = cls.next_update_time
+        process_func = cls.opinion_update_multiple
 
         if update_mode is Culture.update_modes.basic:
-            process_func = cls.opinion_update_basic
+            cls.__update_function = cls.opinion_update_basic
+            # TODO: unregister other Hooks if registered
         elif update_mode is Culture.update_modes.fast:
-            process_func = cls.opinion_update_fast
+            cls.__update_function = cls.opinion_update_fast
+            # TODO: take care of something being registered twice
             Hooks.register_hook(Hooks.Types.pre, cls.analyze_graph, I.Culture)
             Hooks.register_hook(Hooks.Types.post, cls.clear_graph_analysis, I.Culture)
         else:
