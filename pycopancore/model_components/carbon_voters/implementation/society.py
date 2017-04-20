@@ -12,8 +12,10 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from ...base import interface as B
 # from .... import master_data_model as D
 from .... import Explicit
+import sympy as sp
 
 
 class Society (I.Society):
@@ -49,10 +51,12 @@ class Society (I.Society):
         else: # opinion == 1
             self.harvest_rate = 0.25
 
+
     processes = [
         Explicit(
             "harvest rate decision",
             [I.Society.harvest_rate],
             set_harvest_rate
-        )
+        ),
+
     ]  # TODO: instantiate and list process objects here

@@ -89,6 +89,7 @@ class Metabolism (
 
 # TODO: list all mixin classes needed:
 class Culture (avof.Culture,
+               cv.Culture,
                base.Culture):
     """Culture process taxon."""
 

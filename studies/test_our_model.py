@@ -1,4 +1,4 @@
-"""Skript to run Jobsts model."""
+"""Skript to run Anderies carbon cycle."""
 
 from time import time
 from numpy import random
@@ -28,13 +28,13 @@ nature = M.Nature()
 
 # generate entities and plug them together at random:
 world = M.World(nature=nature, #metabolism=metabolism,
-                  atmospheric_carbon = 0.2 * D.gigatonnes_carbon,
+                  atmospheric_carbon = 0.2 * D.gigatonnes_carbon, #relative values
                   ocean_carbon = 0.6 * D.gigatonnes_carbon
                   )
 society = M.Society(world=world)
 cell = M.Cell(society=society)
 
-# set initial values
+# set initial values # only one cell so far
 Sigma0 = 1.5e8 * D.square_kilometers
 cell.land_area = Sigma0
 # print(M.Cell.land_area.get_values(cells))
@@ -118,7 +118,7 @@ data_cf = go.Scatter(
         width=4
     )
 )
-layout = dict(title = 'Our model (simple Carbon Cycle for now)',
+layout = dict(title = 'Our model (Anderies Carbon Cycle)',
               xaxis = dict(title = 'time [yr]'),
               yaxis = dict(title = 'Carbon [GtC]'),
               )

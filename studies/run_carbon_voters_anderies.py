@@ -1,4 +1,4 @@
-"""Skript to run Jobsts model."""
+"""Skript to run Carbon Voters model."""
 
 from time import time
 import datetime as dt
@@ -21,19 +21,24 @@ random.seed(1)
 # TODO: figure out why it doesn't seem to work here ...
 
 # parameters:
-timeinterval = 100
+timeinterval = 60
 timestep = 0.1
 expected_degree = 10
 nindividuals = 4000
 rewiring_probability = 0.1
 possible_opinions = list(range(2))
+impact_scaling_factor=20
+no_impact_opinion_change=0.5
+no_impact_atmospheric_carbon_level=0.2
 
 # instantiate model
 model = M.Model()
 
 
 # instantiate process taxa:
-culture = M.Culture(rewiring=rewiring_probability)
+culture = M.Culture(rewiring=rewiring_probability, impact_scaling_factor=impact_scaling_factor,
+                    no_impact_opinion_change=no_impact_opinion_change,
+                    no_impact_atmospheric_carbon_level=no_impact_atmospheric_carbon_level)
 nature = M.Nature()
 
 # generate entities and distribute opinions uniformly randomly:
@@ -44,8 +49,8 @@ world = M.World(culture=culture, nature=nature,
 society = M.Society(world=world)
 cell = M.Cell(world=world, society=society)
 individuals = [M.Individual(cell=cell,
-                            initial_opinion=random.choice(possible_opinions))
-               for _ in range(nindividuals)]
+                            initial_opinion=float(np.random.choice(possible_opinions, 1, p=[0.6,0.4])))
+               for _ in range(nindividuals)] # individual opinion 0 with prob. p1, 1(aware) with prob. p2
 
 # set initial values
 Sigma0 = 1.5e8 * D.square_kilometers
@@ -178,7 +183,7 @@ data_cf = go.Scatter(
     )
 )
 
-layout = dict(title='Adaptive Voter Model',
+layout = dict(title='Adaptive Voter Model and Anderies Carbon Cycle',
               xaxis=dict(title='time'),
               yaxis=dict(title='relative opinion and carbon amounts'),
               )

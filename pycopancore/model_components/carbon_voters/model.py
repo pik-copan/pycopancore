@@ -14,7 +14,7 @@ then remove these instructions
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import World, Society
+from .implementation import World, Society, Culture
 # import all needed process taxon implementation classes:
 # from .implementation import Nature, Metabolism, Culture
 
@@ -26,5 +26,5 @@ class Model (I.Model):
 
     entity_types = [World, Society]
     """list of entity types augmented by this component"""
-    process_taxa = []
+    process_taxa = [Culture]
     """list of process taxa augmented by this component"""

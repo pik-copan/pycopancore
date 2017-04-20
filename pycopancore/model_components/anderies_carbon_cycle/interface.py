@@ -18,9 +18,9 @@ class Model (object):
     """Interface for Model mixin"""
 
     # metadata:
-    name = "copan:GLOBAL-like carbon cycle"
+    name = "Anderies carbon cycle"
     """a unique name for the model component"""
-    description = "Simple carbon cycle as in copan:GLOBAL, but with cell-based terrestrial and fossil carbon"
+    description = "see Anderies 2013"
     """some longer description"""
     requires = []
     """list of other model components required for this model component to
