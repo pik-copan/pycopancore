@@ -52,6 +52,8 @@ class Culture (object):
         "possible opinions of an individual in the sense of the adaptive voter model"
     )
 
+    opinion_change = Variable("probability to adopt another opinion", "")
+
     # exogenous variables / parameters:
 
 class Individual (object):
