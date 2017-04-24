@@ -1,22 +1,17 @@
+"""Model component package most_simple_vegetation."""
+
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate Impact
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate Impact
 # Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-"""
-This is the most_simple_vegetation model-component package.
-"""
+from . import interface
 
-# Import of all interface modules
-from . import interface as I
+# export all implementation classes:
+from .implementation import *
 
-# Import entities
-from .cell import Cell
-
-# Import the dynamics
-
-# Import Model
+# export model component mixin class:
 from .model import Model

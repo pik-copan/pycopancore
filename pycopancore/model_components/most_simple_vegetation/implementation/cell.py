@@ -1,4 +1,4 @@
-"""The most_simple_vegetation cell module has some dynamics of its resource."""
+"""Cell entity type mixing of class most_simple_vegetation."""
 
 # This file is part of pycopancore.
 #
@@ -8,19 +8,14 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-
 from pycopancore import ODE
-# from pycopancore import Step, Explicit, Event
-from pycopancore.model_components import abstract
-from . import interface as I
+from pycopancore.model_components.simple_extraction import interface as I
 
 
-class Cell(I.Cell, abstract.Cell):
-    """Define properties of most_simple_vegetation cell.
+class Cell(I.Cell):
+    """Cell entity type mixin implementation class."""
 
-    Inherits from Cell_ as the interface
-    with all necessary variables and parameters.
-    """
+    # standard methods:
 
     def __init__(self,
                  *,
@@ -30,11 +25,27 @@ class Cell(I.Cell, abstract.Cell):
                  **kwargs
                  ):
         """Initialize an instance of Cell."""
-        super(Cell, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.stock = stock
         self.capacity = capacity
         self.growth_rate = growth_rate
+
+        pass
+
+    def deactivate(self):
+        """Deactivate a cell."""
+        # TODO: add custom code here:
+        pass
+        super().deactivate()  # must be the last line
+
+    def reactivate(self):
+        """Reactivate a cell."""
+        super().reactivate()  # must be the first line
+        # TODO: add custom code here:
+        pass
+
+    # process-related methods:
 
     def logistic_growth(self, t):
         """Compute the biophysical logistic growth function of cell's stock.
@@ -52,6 +63,8 @@ class Cell(I.Cell, abstract.Cell):
         s = self.stock
         smax = self.capacity
         self.d_stock += g * (1 - s / smax) * s
+
+    # processes:
 
     processes = [
         ODE('logistic_growth_function',

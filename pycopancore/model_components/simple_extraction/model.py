@@ -1,45 +1,26 @@
-"""The simple_extraction model is a very simple model extraction."""
+"""Model mixing class simple_extraction."""
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
 from . import interface as I
-from . import Cell, Individual
-from pycopancore.model_components import abstract
+# import all needed entity type implementation classes:
+from .implementation import Cell, Individual
+# import all needed process taxon implementation classes:
+# none needed
 
 
-class Model(I.Model, abstract.Model):
-    """Define properties of the simple_extraction model.
+class Model (I.Model):
+    """Model mixin class."""
 
-    Inherits from I.Model via the
-    interface with all necessary variables and parameters.
-    """
-
-    # Use Mixins as wanted
+    # mixins provided by this model component:
 
     entity_types = [Cell, Individual]
+    """list of entity types augmented by this component"""
     process_taxa = []
-
-    def __init__(self,
-                 **kwargs
-                 ):
-        """Initialize your model.
-
-        Parameters
-        ----------
-        kwargs
-        """
-        super().__init__(**kwargs)
-
-        print('     Simple extraction model component instantiated')
-
-    def __repr__(self):
-        """Return a string representation of the object of the class."""
-        return (super().__repr__() +
-                ('simple_extraction.model object')
-                )
+    """list of process taxa augmented by this component"""

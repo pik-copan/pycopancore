@@ -1,4 +1,4 @@
-"""The simple_extraction cell module."""
+"""Cell entity type mixing of class simple_extraction."""
 
 # This file is part of pycopancore.
 #
@@ -9,16 +9,13 @@
 # License: MIT license
 
 from pycopancore import ODE
-from pycopancore.model_components import abstract
-from . import interface as I
+from pycopancore.model_components.simple_extraction import interface as I
 
 
-class Cell(I.Cell, abstract.Cell):
-    """Define properties of simple_extraction cell.
+class Cell(I.Cell):
+    """Cell entity type mixin implementation class."""
 
-    Inherits from I.Cell as the interface
-    with all necessary variables and parameters.
-    """
+    # standard methods:
 
     def __init__(self,
                  *,
@@ -27,12 +24,26 @@ class Cell(I.Cell, abstract.Cell):
                  **kwargs
                  ):
         """Initialize an instance of Cell."""
-        super(Cell, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.stock = stock
         self.growth_rate = growth_rate
 
-        self.individual = None
+        pass
+
+    def deactivate(self):
+        """Deactivate a cell."""
+        # TODO: add custom code here:
+        pass
+        super().deactivate()  # must be the last line
+
+    def reactivate(self):
+        """Reactivate a cell."""
+        super().reactivate()  # must be the first line
+        # TODO: add custom code here:
+        pass
+
+    # process-related methods:
 
     def harvest(self, t):
         """Compute the harvesting dynamics.
@@ -46,9 +57,6 @@ class Cell(I.Cell, abstract.Cell):
         -------
 
         """
-        # strat = self.individual.strategy
-        # effort = 0.5 * self.growth_rate * (3 - 2 * strat)
-        # self.d_stock -= effort * self.stock
         self.d_stock -= self.individual.get_harvest_rate()
 
     processes = [ODE('harvesting function', [I.Cell.stock], harvest)]
