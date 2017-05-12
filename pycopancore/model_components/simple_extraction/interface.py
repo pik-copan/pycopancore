@@ -12,7 +12,7 @@
 # from ... import master_data_model as D
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
-# import ..BBB.interface as BBB
+from ..exploit_social_learning import Individual as ESLIndividual
 # TODO: uncomment and adjust only if you really need other variables:
 from ... import Variable
 
@@ -35,7 +35,7 @@ class Model(object):
 class Individual(object):
     """Interface for Individual."""
 
-    strategy = Variable('harvesting strategy', 'harvesting strategy indiv.')
+    strategy = ESLIndividual.strategy
 
 
 class Cell(object):
