@@ -5,6 +5,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PYREVERSE = pyreverse
+APIDOC = sphinx-apidoc
 DOT = dot
 PAPER         =
 BUILDDIR      = _build
@@ -57,9 +58,21 @@ clean:
 
 .PHONY: html
 html:
+	mkdir $(BUILDDIR)/html
+	mkdir $(BUILDDIR)/html/api
+	@echo "Creating auto-generaed documentation from source"
+	cd ..; $(APIDOC) -f -o ./docs/_build/html/api ./pycopancore/
+	@echo
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+.PHONY: api
+api:
+	mkdir $(BUILDDIR)/html
+	mkdir $(BUILDDIR)/html/api
+	@echo
+	cd ..; $(APIDOC) -f -o ./docs/_build/html/api ./pycopancore/
 
 .PHONY : uml
 uml:

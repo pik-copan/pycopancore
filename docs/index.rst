@@ -21,9 +21,9 @@ Contents:
    introduction
    license
    tutorials/index
-   api_reference
    framework_documentation/index
 
+.. include:: ./_build/html/api/*.rst
 
 Indices and tables
 ------------------
