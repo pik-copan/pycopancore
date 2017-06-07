@@ -58,10 +58,8 @@ clean:
 
 .PHONY: html
 html:
-	mkdir $(BUILDDIR)/html
-	mkdir $(BUILDDIR)/html/api
-	@echo "Creating auto-generaed documentation from source"
-	cd ..; $(APIDOC) -f -o ./docs/_build/html/api ./pycopancore/
+	@echo "Creating auto-generated documentation from source"
+	cd ..; $(APIDOC) -f -o ./docs/_build/html/api ./pycopancore
 	@echo
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
@@ -69,8 +67,6 @@ html:
 
 .PHONY: api
 api:
-	mkdir $(BUILDDIR)/html
-	mkdir $(BUILDDIR)/html/api
 	@echo
 	cd ..; $(APIDOC) -f -o ./docs/_build/html/api ./pycopancore/
 
