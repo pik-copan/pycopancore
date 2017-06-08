@@ -23,8 +23,10 @@ class Culture (I.Culture):
 
     # standard methods:
 
-    __background_proximity_network = None
+    # NEEDED?
+    __background_proximity = None
     __interaction_network = None
+
 
     def __init__(self,
                  # *,  # TODO: uncomment when adding named args behind here
@@ -48,10 +50,30 @@ class Culture (I.Culture):
         # self.aquaintance_network = igraph.GraphBase.Erdos_Renyi(model_parametersn_individual, model_parameters.mean_degree_pref, directed=False)
         # WRONG! model component should provide structure, not detailed simulation
 
+        # What does this do?
         self.__nodes = sortedlist(self.friendship_network.nodes())
 
         # initialise background proximity network
-        __background_proximity_network = igraph.GraphBase.
+        proximity_network = igraph.GraphBase.Lattice([self.n_individual], nei=int(float(self.mean_degree_pref)/2.0),
+                                                     directed=False, mutual=True, circular=True)
+        proximity_network.rewire(int(self.p_rew * self.n_individual * self.mean_degree_pref))
+        small_world_distance_matrix = np.asarray(proximity_network.shortest_paths())
+
+        # Generate random noise
+        random_prox_noise = np.random.random((n_individual,n_individual))
+        random_prox_noise = (random_prox_noise + random_prox_noise.transpose()) * .5
+
+        # Derive the background proximity matrix with added noise to generate a continuum
+        __background_proximity = (1 - .1 * (small_world_distance_matrix-1) - 0.1 *
+                             random_prox_noise)
+
+        # Introduce a proximity offset
+        # For high degrees of separation there is no proximity difference anymore
+        __background_proximity[np.where(__background_proximity <= 0.2)] = 0.2
+
+        # make sure there are no self-loops
+        for k in range(__background_proximity.shape[0]):
+            __background_proximity[k,k] = 0
 
 
         pass
@@ -61,10 +83,15 @@ class Culture (I.Culture):
 
     def set_initial_conditions(self):
 
-        # create background proximity
+        # set initial contact network
         #
 
         pass
+
+    def get_proximity_matrix(self):
+        pass
+
+
 
     def generate_interaction_network(self):
         pass
