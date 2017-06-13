@@ -60,7 +60,8 @@ clean:
 .PHONY: html
 html:
 	@echo "Creating auto-generated documentation from source"
-	cd ..; $(APIDOC) -f -o ./docs/_api ./pycopancore
+	mkdir _api
+	cd ..; $(APIDOC) -f -o ./docs/_api ./pycopancore ./pycopancore/model_components/base/*
 	@echo
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
