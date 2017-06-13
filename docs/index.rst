@@ -20,10 +20,9 @@ Contents:
 
    introduction
    license
-   tutorials/index
    api_reference
+   tutorials/index
    framework_documentation/index
-
 
 Indices and tables
 ------------------
