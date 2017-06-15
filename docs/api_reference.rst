@@ -1,4 +1,4 @@
 API reference
 =============
 
-.. include:: _build/html/api/modules.rst
+.. include:: _api/modules.rst

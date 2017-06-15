@@ -55,11 +55,12 @@ help:
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/*
+	rm -rf _api/*
 
 .PHONY: html
 html:
 	@echo "Creating auto-generated documentation from source"
-	cd ..; $(APIDOC) -f -o ./docs/_build/html/api ./pycopancore
+	cd ..; $(APIDOC) -f -o ./docs/_api ./pycopancore ./pycopancore/model_components/base/__init__.py
 	@echo
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
@@ -68,7 +69,7 @@ html:
 .PHONY: api
 api:
 	@echo
-	cd ..; $(APIDOC) -f -o ./docs/_build/html/api ./pycopancore/
+	cd ..; $(APIDOC) -f -o ./docs/_api ./pycopancore/
 
 .PHONY : uml
 uml:
