@@ -46,6 +46,12 @@ Later:
 * Use [NetCDF, the CF conventions](http://cfconventions.org/) and [PIK's Typed Data Transfer](https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt) to store (input and) output data and share it with other models.
 * Read and follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
 
+## Installation
+
+for developers: recommended way of installing is to run in the package main directory (where the setup.py is located):
+$ pip install -e .
+This creates a link insteaed of copying the files, so modifications in this directory are modifications in the installed package.
+
 
 
 to be extended ...
