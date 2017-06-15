@@ -49,7 +49,9 @@ Later:
 ## Installation
 
 for developers: recommended way of installing is to run in the package main directory (where the setup.py is located):
+
 $ pip install -e .
+
 This creates a link insteaed of copying the files, so modifications in this directory are modifications in the installed package.
 
 
