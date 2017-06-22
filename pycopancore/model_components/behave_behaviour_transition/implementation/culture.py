@@ -15,8 +15,8 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 # sure that's right?
-from igraph import Graph
 import numpy as np
+import igraph
 
 
 class Culture (I.Culture):
@@ -35,7 +35,9 @@ class Culture (I.Culture):
 
     def __init__(self,
                  # *,  # TODO: uncomment when adding named args behind here
-                 # degree_preference=None, agent_characteristics, social_influence, model_parameters (including number of individuals), social_distance_function
+                 # degree_preference=None, social_influence,
+                 # model_parameters (including number of individuals, might not be necessary),
+                 # social_distance_function, initial_contact_network
                  **kwargs):
         """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)  # must be the first line
@@ -51,13 +53,16 @@ class Culture (I.Culture):
         self.std_degree_pref = model_parameters.std_degree_pref
         self.p_rew = model_parameters.p_rew
         self.social_distance = social_distance_function
+        self.char_weight = model_parameters.char_weight
 
-        # initiate contact network using degree preference
-        # self.aquaintance_network = igraph.GraphBase.Erdos_Renyi(model_parametersn_individual, model_parameters.mean_degree_pref, directed=False)
-        # WRONG! model component should provide structure, not detailed simulation
+        # Is this reasonable? Seems more appropriate than changing network in run_*.py file
+        self.friendship_network = initial_contact_network
 
-        # What does this do?
-        self.__nodes = sortedlist(self.friendship_network.nodes())
+
+
+
+        # Wrong! acquaintance network is networkx graph...
+        self.__nodes = igraph.drawing.graph.VertexSeq(self.friendship_network)
 
         # initialise background proximity network
         proximity_network = igraph.GraphBase.Lattice([self.n_individual], nei=int(float(self.mean_degree_pref)/2.0),
@@ -82,7 +87,6 @@ class Culture (I.Culture):
             __background_proximity[k,k] = 0
 
 
-        # set agents characteristics
 
 
         pass
@@ -119,11 +123,11 @@ class Culture (I.Culture):
 
         for i in range(self.n_individual):
             for j in range(self.n_individual):
-                distances[i][j] = char_weight[0] * np.abs(np.abs(
+                distances[i][j] = self.char_weight[0] * np.abs(np.abs(
                     self.social_distance(self.__nodes[i],self.__nodes[j])) - 1)
 
         # char_weight not yet defined!
-        return distances + char_weight[1] * self.__background_proximity
+        return distances + self.char_weight[1] * self.__background_proximity
 
 
 
