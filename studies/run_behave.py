@@ -33,6 +33,7 @@ p_initial = 0.7 # probability of initial opinion 0 (over opinion 1)
 # instantiate model
 model = M.Model()
 
+# TO BE CHANGED!
 # instantiate process taxa:
 culture = M.Culture(rewiring=rewiring_probability)
 
@@ -40,11 +41,10 @@ culture = M.Culture(rewiring=rewiring_probability)
 world = M.World(culture=culture)
 society = M.Society(world=world, culture=culture)
 cell = M.Cell(world=world, society=society)
+# TO BE CHANGED!
 individuals = [M.Individual(cell=cell,
                             initial_opinion=int(random.random() < p_initial))
                for _ in range(nindividuals)]
-
-# TODO: ask Jobst, why are all individuals already in the network?
 
 
 def erdosrenyify(graph, p=0.5):

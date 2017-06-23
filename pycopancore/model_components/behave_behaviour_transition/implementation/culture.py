@@ -17,6 +17,7 @@ from .. import interface as I
 # sure that's right?
 import numpy as np
 import igraph
+import networkx as nx
 
 
 class Culture (I.Culture):
@@ -37,7 +38,7 @@ class Culture (I.Culture):
                  # *,  # TODO: uncomment when adding named args behind here
                  # degree_preference=None, social_influence,
                  # model_parameters (including number of individuals, might not be necessary),
-                 # social_distance_function, initial_contact_network
+                 # social_distance_function
                  **kwargs):
         """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)  # must be the first line
@@ -55,14 +56,9 @@ class Culture (I.Culture):
         self.social_distance = social_distance_function
         self.char_weight = model_parameters.char_weight
 
-        # Is this reasonable? Seems more appropriate than changing network in run_*.py file
-        self.friendship_network = initial_contact_network
 
-
-
-
-        # Wrong! acquaintance network is networkx graph...
-        self.__nodes = igraph.drawing.graph.VertexSeq(self.friendship_network)
+        # create nodes list from acquaintance network
+        self.__nodes = self.acquaintance_network.nodes()
 
         # initialise background proximity network
         proximity_network = igraph.GraphBase.Lattice([self.n_individual], nei=int(float(self.mean_degree_pref)/2.0),
@@ -92,14 +88,6 @@ class Culture (I.Culture):
         pass
 
     # process-related methods:
-
-
-    def set_initial_conditions(self):
-
-        # set initial contact network
-        #
-
-        pass
 
 
     # NEED TO IMPLEMENT GET CHARACTERISTICS FUNCTION IN INDIVIDUAL!
@@ -132,7 +120,29 @@ class Culture (I.Culture):
 
 
     def generate_interaction_network(self):
-        pass
+
+        # correct this line!
+        distance_metric_matrix = nx.to_numpy_matrix(self.acquaintance_network.path_lengths())
+
+        #define p_ai and interaction_offset
+        exp_dec = (self.p_ai - self.interaction_offset) * \
+                  np.exp(-(distance_metric_matrix - 1) / 2.)
+
+        distmax = distance_metric_matrix[np.isfinite(distance_metric_matrix)].max()
+
+        histo_bins = np.arange(1, distmax)
+
+        histo_range = [histo_bins.min(), histo_bins.max()]
+        distribution = np.histogram(distance_metric_matrix.flatten(), histo_bins, range=histo_range)
+
+        for i in distribution[1][:-1]:
+            exp_dec[distance_metric_matrix == i] *= (float(distribution[0][0]) / distribution[0][i - 1])
+
+
+        exp_dec += L.interaction_offset
+
+        return exp_dec
+
 
     def update_social_influence(self):
         pass
