@@ -9,8 +9,6 @@ Model component implementation subpackage template.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# TODO: adjust the following lists to your needs:
-
 # export all provided entity type implementation mixin classes:
 from .world import World
 from .cell import Cell

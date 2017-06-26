@@ -19,6 +19,7 @@ remove these instructions.
 # import ..BBB.interface as BBB
 # TODO: uncomment and adjust only if you really need other variables:
 from ... import Variable
+from ... import ReferenceVariable
 
 
 class Model (object):
@@ -55,19 +56,11 @@ class World (object):
     # exogenous variables / parameters:
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
-
-    # endogenous variables:
-
-    # exogenous variables / parameters:
-
-
 class Cell (object):
     """Interface for Cell entity type mixin."""
 
     # endogenous variables:
-    stock = Variable("stock", "dwarf's eating supply")
+    stock = ReferenceVariable("stock", "dwarf's eating supply")
     # exogenous variables / parameters:
 
 

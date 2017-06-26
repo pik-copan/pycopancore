@@ -64,9 +64,7 @@ class Model (sd.Model,
     description = "..."
     """Tutorial model"""
 
-    # TODO: list all entity types you composed above:
     entity_types = [World, Cell, Individual]
     """List of entity types used in the model"""
-    # TODO: list all entity types you composed above:
     process_taxa = [Culture]
     """List of process taxa used in the model"""

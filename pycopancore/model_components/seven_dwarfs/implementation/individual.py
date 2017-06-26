@@ -29,8 +29,8 @@ class Individual (I.Individual):
                  beard_growth_parameter = 0.1,
                  eating_parameter = 1,
                  **kwargs):
-        """Initialize an instance of Individual."""
-        super().__init__(**kwargs)  # must be the first line
+        """Initialize an instance of dwarf."""
+        super().__init__(**kwargs)
 
         self.age = age
         self.beard_length = beard_length
@@ -61,14 +61,18 @@ class Individual (I.Individual):
         """Let one year pass."""
         return t + 1
 
-    def eating(self):
+    ' TODO: Check if interface attribute should be changed or self.cell.stock' \
+    ' variable! Since the latter uses the base class, is a reference variable needed?'
+    def eating(self, t):
         """Let dwarf eat from stock."""
-        if I.Cell.stock < self.eating_parameter:
+        print("Hello Dwarf!")
+        if self.cell.stock < self.eating_parameter:
             print("Dwarf starved.")
-            I.Cell.stock = 0
+            self.cell.stock = 0
             self.deactivate()
-            I.Cell.d_stock -= 0
-        else: I.Cell.d_stock -= self.eating_parameter
+            #I.Cell.d_stock -= 0
+        # else:  I.Cell.d_stock -= self.eating_parameter
+        self.cell.d_stock -= self.eating_parameter
 
     def beard_growing(self):
         """Grow beard of dwarf in explicit manner."""

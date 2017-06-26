@@ -30,14 +30,15 @@ culture = M.Culture()
 
 # generate entitites:
 world = M.World(culture=culture)
-cells = [M.Cell(stock=100, world=world)
+cell = [M.Cell(stock=100, world=world)
          for c in range(nc)]
-individuals = [M.Individual(age=0,
+
+individuals = [M.Individual(cell,age=0,
                  beard_length=0,
                  beard_growth_parameter=0.1,
                  eating_parameter=1) for i in range(dwarfs)]
 
-for (i, c) in enumerate(cells):
+for (i, c) in enumerate(cell):
     c.individual = individuals[i]
 
 
