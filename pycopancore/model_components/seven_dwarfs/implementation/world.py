@@ -1,0 +1,53 @@
+"""World entity type mixing class template.
+
+TODO: adjust or fill in code and documentation wherever marked by "TODO:",
+then remove these instructions
+"""
+# This file is part of pycopancore.
+#
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# License: MIT license
+
+from .. import interface as I
+# from .... import master_data_model as D
+from pycopancore import Event
+import numpy as np
+
+
+class World (I.World):
+    """World entity type mixin implementation class."""
+
+    # standard methods:
+
+    def __init__(self,
+                 **kwargs):
+        """Initialize an instance of World."""
+        super().__init__(**kwargs)
+
+    def deactivate(self):
+        """Deactivate a world."""
+        super().deactivate()  # must be the last line
+
+    def reactivate(self):
+        """Reactivate a world."""
+        super().reactivate()  # must be the first line
+
+    # process-related methods:
+
+    def snow_white_arrival(self):
+        """Calculate snow white's arrival."""
+        return np.random.exponential(18.)
+
+    def snow_white_eating(self):
+        """Party hard."""
+        I.Cell.stock = I.Cell.stock / 2.
+
+    processes = [
+        Event("snow_white",
+              [I.Cell.stock],
+              ["time", snow_white_arrival, snow_white_eating]
+              )
+    ]

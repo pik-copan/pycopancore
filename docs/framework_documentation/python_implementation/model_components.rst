@@ -14,14 +14,15 @@ and one implementation class module for each entity-type and process taxon that 
 ::
 
    <component name>
+      ./implementation/
+        cell.py
+        society.py
+        individual.py
+        nature.py
+        social_metabolism.py
+        culture.py
       interface.py
-      cell.py
-      society.py
-      individual.py
-      nature.py
-      social_metabolism.py
-      culture.py
-      ...
+      model.py
 
 
 Interface module
