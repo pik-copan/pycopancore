@@ -1,8 +1,10 @@
 # pycopancore
-Python World-Earth modelling framework
+Python World-Earth modelling framework CORE
 
-* responsible senior scientists: Jobst Heitzig & Jonathan F. Donges
+* Responsible senior scientists: Jobst Heitzig & Jonathan F. Donges at the Potsdam Institute for Climate Impact Research.
 * The versioning of pycopancore has been chosen to be administrated on the [github.com system](http://github.com/) as the future prospect of this model strongly encourages outside contributions. Any release version will be pushed on the inhouse versioning systems, [gitlab](http://gitlab.pik-potsdam.de/) and / or [svn](https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion).
+
+CORE is developed at the Potsdam Institute for Climate Impact Research.
 
 Candidates for speeding up Python code: cython, numba, ...
 
