@@ -60,7 +60,7 @@ class Cell (object):
     """Interface for Cell entity type mixin."""
 
     # endogenous variables:
-    stock = ReferenceVariable("stock", "dwarf's eating supply")
+    eating_stock = Variable("eating stock", "the eating stock")
     # exogenous variables / parameters:
 
 
@@ -73,5 +73,6 @@ class Individual (object):
     beard_growth_parameter = Variable("beard growth parameter",
                                       "growth speed of dwarf beard")
     eating_parameter = Variable("eating parameter", "eating speed of dwarf")
+    eating_stock = ReferenceVariable("eating stock", "the eating stock")
 
     # exogenous variables / parameters:

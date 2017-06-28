@@ -50,12 +50,13 @@ class Individual (I.Individual):
 
     # process-related methods:
 
-    def aging(self):
+    def aging(self, unused_t):
         """Make dwarf have birthday."""
         self.age = self.age + 1
         if self.age/100 >= np.random.random():
-            print("Dwarf died from age.")
-            self.deactivate()
+            if self in self.__class__.instances:
+                self.deactivate()
+                print("Dwarf died from age.")
 
     def step_timing(self, t):
         """Let one year pass."""
@@ -66,23 +67,37 @@ class Individual (I.Individual):
     def eating(self, t):
         """Let dwarf eat from stock."""
         print("Hello Dwarf!")
-        if self.cell.stock < self.eating_parameter:
-            print("Dwarf starved.")
-            self.cell.stock = 0
-            self.deactivate()
+        if self.cell.eating_stock < self.eating_parameter:
+            self.cell.eating_stock = 0
+            if self in self.__class__.instances:
+                self.deactivate()
+                print("Dwarf starved.")
             #I.Cell.d_stock -= 0
         # else:  I.Cell.d_stock -= self.eating_parameter
-        self.cell.d_stock -= self.eating_parameter
+        self.cell.d_eating_stock -= self.eating_parameter
 
-    def beard_growing(self):
+    def beard_growing(self, unused_t):
         """Grow beard of dwarf in explicit manner."""
         self.beard_length = (self.beard_length
                              + self.beard_growth_parameter
                              * self.age
                              )
 
+    def check_for_extinction(self):
+        """Check if anyone is still living.
+
+        Returns:
+        -------
+        extinction = bool
+        """
+        if self.acquaintance_network.nodes() == 0:
+            return True
+        else:
+            return False
+
+
     processes = [
         Step("aging", [I.Individual.age], [step_timing, aging]),
-        ODE("eating", [I.Cell.stock], eating),
+#        ODE("eating", [I.Individual.eating_stock], eating),
         Explicit("beard_growth", [I.Individual.beard_length], beard_growing)
     ]

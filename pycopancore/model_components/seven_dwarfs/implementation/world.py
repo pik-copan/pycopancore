@@ -13,8 +13,6 @@ then remove these instructions
 
 from .. import interface as I
 # from .... import master_data_model as D
-from pycopancore import Event
-import numpy as np
 
 
 class World (I.World):
@@ -37,17 +35,4 @@ class World (I.World):
 
     # process-related methods:
 
-    def snow_white_arrival(self):
-        """Calculate snow white's arrival."""
-        return np.random.exponential(18.)
-
-    def snow_white_eating(self):
-        """Party hard."""
-        I.Cell.stock = I.Cell.stock / 2.
-
-    processes = [
-        Event("snow_white",
-              [I.Cell.stock],
-              ["time", snow_white_arrival, snow_white_eating]
-              )
-    ]
+    processes = []

@@ -12,6 +12,9 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from pycopancore import Event
+import numpy as np
+
 # from .... import master_data_model as D
 
 
@@ -22,13 +25,26 @@ class Cell (I.Cell):
 
     def __init__(self,
                  *,
-                 stock=100,
+                 eating_stock=100,
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)
-        self.stock = stock
+        self.eating_stock = eating_stock
 
 
     # process-related methods:
 
-    processes = []
+    def snow_white_arrival(self):
+        """Calculate snow white's arrival."""
+        return np.random.exponential(18.)
+
+    def snow_white_eating(self, unused_t):
+        """Party hard."""
+        self.eating_stock = self.eating_stock / 2.
+
+    processes = [
+        Event("snow_white",
+              [I.Cell.eating_stock],
+              ["time", snow_white_arrival, snow_white_eating]
+              )
+    ]
