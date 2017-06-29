@@ -66,28 +66,29 @@ print("max. time step", (t[1:]-t[:-1]).max())
 # print('keys:', np.array(traj.keys()))
 # print('completeDict: ', traj)
 
-individuals_beard_length = np.array([traj[M.Individual.beard_length][dwarf]
-                                 for dwarf in individuals])
+#individuals_beard_length = np.array([traj[M.Individual.beard_length][dwarf]
+#                                 for dwarf in individuals])
 individuals_age = np.array([traj[M.Individual.age][dwarf]
                                  for dwarf in individuals])
-stock = np.array([traj[M.Cell.eating_stock][cave] for cave in cell])
+#stock = np.array([traj[M.Cell.eating_stock][cave] for cave in cell])
 
+#print(traj)
 
 t = np.array(traj['t'])
 
-data_beards = []
-for i in range(dwarfs):
-    data_beards.append(object)
-    data_beards[i] = go.Scatter(
-        x=t,
-        y=individuals_beard_length[i],
-        mode="lines",
-        name="beard length of dwarf no. {}".format(i),
-        line=dict(
-            color="red",
-            width=2
-        )
-    )
+#data_beards = []
+#for i in range(dwarfs):
+#    data_beards.append(object)
+#    data_beards[i] = go.Scatter(
+#        x=t,
+#        y=individuals_beard_length[i],
+#        mode="lines",
+#        name="beard length of dwarf no. {}".format(i),
+#        line=dict(
+#            color="red",
+#            width=2
+#        )
+#    )
 
 data_age = []
 print('data age', data_age)
@@ -104,24 +105,26 @@ for i in range(dwarfs):
         )
     )
 
-data_stock = go.Scatter(
-    x=t,
-    y=traj[M.Cell.eating_stock][cell[0]],
-    mode="lines",
-    name="stock",
-    line=dict(
-        color="green",
-        width=4
-    )
-)
+#data_stock = go.Scatter(
+#    x=t,
+#    y=traj[M.Cell.eating_stock][cell[0]],
+#    mode="lines",
+#    name="stock",
+#    line=dict(
+#        color="green",
+#        width=4
+#    )
+#)
 
 
 
 layout = dict(title = 'seven dwarfs',
               xaxis = dict(title = 'time [yr]'),
-              yaxis = dict(title = ''),
+              yaxis = dict(title = 'age'),
               )
 
-fig = dict(data=[data_beards[1], data_age[1]], layout=layout)
-py.plot(fig, filename="our-model-result.html")
+fig1 = dict(data=[data_age[0]], layout=layout)
+py.plot(fig1, filename="our-model-result1.html")
 
+fig2 = dict(data=[data_age[1]], layout=layout)
+py.plot(fig2, filename="our-model-result2.html")

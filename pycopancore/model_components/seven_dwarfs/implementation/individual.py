@@ -99,5 +99,5 @@ class Individual (I.Individual):
     processes = [
         Step("aging", [I.Individual.age], [step_timing, aging]),
 #        ODE("eating", [I.Individual.eating_stock], eating),
-        Explicit("beard_growth", [I.Individual.beard_length], beard_growing)
+#        Explicit("beard_growth", [I.Individual.beard_length], beard_growing)
     ]

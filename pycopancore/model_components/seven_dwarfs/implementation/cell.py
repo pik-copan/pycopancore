@@ -43,8 +43,8 @@ class Cell (I.Cell):
         self.eating_stock = self.eating_stock / 2.
 
     processes = [
-        Event("snow_white",
-              [I.Cell.eating_stock],
-              ["time", snow_white_arrival, snow_white_eating]
-              )
+#        Event("snow_white",
+#              [I.Cell.eating_stock],
+#              ["time", snow_white_arrival, snow_white_eating]
+#              )
     ]
