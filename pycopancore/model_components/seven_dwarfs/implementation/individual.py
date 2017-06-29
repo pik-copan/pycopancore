@@ -13,6 +13,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from pycopancore.model_components.base import interface as B
 # from .... import master_data_model as D
 from pycopancore import ODE, Step, Explicit
 import numpy as np
@@ -62,11 +63,8 @@ class Individual (I.Individual):
         """Let one year pass."""
         return t + 1
 
-    ' TODO: Check if interface attribute should be changed or self.cell.stock' \
-    ' variable! Since the latter uses the base class, is a reference variable needed?'
     def eating(self, t):
         """Let dwarf eat from stock."""
-        print("Hello Dwarf!")
         if self.cell.eating_stock < self.eating_parameter:
             self.cell.eating_stock = 0
             if self in self.__class__.instances:
@@ -76,15 +74,14 @@ class Individual (I.Individual):
         # else:  I.Cell.d_stock -= self.eating_parameter
         self.cell.d_eating_stock -= self.eating_parameter
 
-    def beard_growing(self, unused_t):
+    def beard_growing(self, t):
         """Grow beard of dwarf in explicit manner."""
-        self.beard_length = (self.beard_length
-                             + self.beard_growth_parameter
-                             * self.age
+        self.beard_length = (self.beard_growth_parameter
+                             * t
                              )
 
     processes = [
         Step("aging", [I.Individual.age], [step_timing, aging]),
-#        ODE("eating", [I.Individual.eating_stock], eating),
-#        Explicit("beard_growth", [I.Individual.beard_length], beard_growing)
+        ODE("eating", [B.Individual.cell.eating_stock], eating),
+        Explicit("beard_growth", [I.Individual.beard_length], beard_growing)
     ]

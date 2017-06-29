@@ -38,17 +38,17 @@ world = M.World(culture=culture)
 
 # instantiate cells (the caves)
 cell = [M.Cell(world=world,
-#                stock=100
+               stock=1
                )
-         for c in range(nc)
+        for c in range(nc)
         ]
 
 # instantiate dwarfs and assigning initial conditions
 individuals = [M.Individual(cell=cell[0],
                             age=0,
-#                            beard_length=0,
-#                            beard_growth_parameter=0.1,
-#                            eating_parameter=1
+                            beard_length=0,
+                            beard_growth_parameter=0.1,
+                            eating_parameter=1
                             ) for i in range(dwarfs)
                ]
 
@@ -93,14 +93,17 @@ print("max. time step", (t[1:]-t[:-1]).max())
 individuals_age = np.array([traj[M.Individual.age][dwarf]
                                  for dwarf in individuals])
 
+individuals_beard_length = np.array([traj[M.Individual.beard_length][dwarf]
+                                 for dwarf in individuals])
+
+cell_stock = np.array(traj[M.Cell.eating_stock][cell[0]])
 
 t = np.array(traj['t'])
 
 data_age = []
 print('data age', data_age)
 for i in range(dwarfs):
-    data_age.append(object)
-    data_age[i] = go.Scatter(
+    data_age.append(go.Scatter(
         x=t,
         y=individuals_age[i],
         mode="lines",
@@ -109,7 +112,32 @@ for i in range(dwarfs):
             color="green",
             width=4
         )
-    )
+    ))
+
+data_beard_length = []
+print('data beard', data_beard_length)
+for i in range(dwarfs):
+    data_beard_length.append(go.Scatter(
+        x=t,
+        y=individuals_beard_length[i],
+        mode="lines",
+        name="beard length of dwarf no. {}".format(i),
+        line=dict(
+            color="green",
+            width=4
+        )
+    ))
+
+data_stock = []
+data_stock.append(go.Scatter(
+    x=t,
+    y=cell_stock,
+    mode="lines",
+    name="stock of cell",
+    line=dict(color="green",
+              width=4
+              )
+      ))
 
 
 
@@ -120,8 +148,8 @@ layout = dict(title = 'seven dwarfs',
 
 
 # getting plots of two dwarfs
-fig1 = dict(data=[data_age[0]], layout=layout)
+fig1 = dict(data=[data_age[0], data_beard_length[0], data_stock[0]], layout=layout)
 py.plot(fig1, filename="our-model-result1.html")
 
-fig2 = dict(data=[data_age[1]], layout=layout)
+fig2 = dict(data=[data_age[1], data_beard_length[1], data_stock[0]], layout=layout)
 py.plot(fig2, filename="our-model-result2.html")
