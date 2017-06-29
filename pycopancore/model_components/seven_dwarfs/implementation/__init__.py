@@ -13,3 +13,4 @@ Model component implementation subpackage template.
 from .world import World
 from .cell import Cell
 from .individual import Individual
+from .culture import Culture

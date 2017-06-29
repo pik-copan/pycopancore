@@ -76,3 +76,7 @@ class Individual (object):
     eating_stock = ReferenceVariable("eating stock", "the eating stock")
 
     # exogenous variables / parameters:
+
+class Culture (object):
+    """Interface for Culture mixin"""
+    pass

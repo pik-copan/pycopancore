@@ -56,7 +56,7 @@ class Individual (I.Individual):
         if self.age/100 >= np.random.random():
             if self in self.__class__.instances:
                 self.deactivate()
-                print("Dwarf died from age.")
+                print("Dwarf with UID {} died from age.".format(self._uid))
 
     def step_timing(self, t):
         """Let one year pass."""
@@ -82,19 +82,6 @@ class Individual (I.Individual):
                              + self.beard_growth_parameter
                              * self.age
                              )
-
-    def check_for_extinction(self):
-        """Check if anyone is still living.
-
-        Returns:
-        -------
-        extinction = bool
-        """
-        if self.acquaintance_network.nodes() == 0:
-            return True
-        else:
-            return False
-
 
     processes = [
         Step("aging", [I.Individual.age], [step_timing, aging]),

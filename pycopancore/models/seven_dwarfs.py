@@ -47,7 +47,7 @@ class Individual (sd.Individual,
 
 # process taxa:
 
-class Culture (base.Culture):
+class Culture (sd.Culture, base.Culture):
     """Culture process taxon."""
 
     pass
