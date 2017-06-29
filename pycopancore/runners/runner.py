@@ -197,7 +197,10 @@ class Runner(_AbstractRunner):
 
         # First create the dictionary to fill in the trajectory:
         self.trajectory_dict = {v: {} for v in self.model.variables}
-        self.trajectory_dict['t'] = []
+        self.trajectory_dict['t'] = [t]
+
+        # fill trajectory with initial states
+        self.save_to_traj(self.model.process_targets)
 
         # Create dictionary to put in the discontinuities:
         next_discontinuities = {}
