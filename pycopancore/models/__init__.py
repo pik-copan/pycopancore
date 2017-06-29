@@ -8,3 +8,5 @@ This is the model folder (subpackage)
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
+
+from .exploit import World, Cell, Individual, Culture, Model
