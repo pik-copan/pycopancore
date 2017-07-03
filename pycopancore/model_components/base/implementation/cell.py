@@ -39,9 +39,9 @@ class Cell (I.Cell, abstract.Cell):
         Parameters
         ----------
         world: obj
-            Instance of World to that the cell obj is assigned
+            Instance of World to that the cell obj belongs to
         society: obj
-            Instance of Society to that cell obj is assigned
+            Instance of Society to that cell obj belongs to
         location: # TODO
             Location of cell object
         land_area: float
@@ -67,7 +67,7 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def world(self):
-        """Get and set the world object cell is assigned to.
+        """Get and set the world to that the cell object is assigned.
 
         # TODO: Probably a closer detailed documentation of getter and setter.
         Doc-string should only be in the getter.
@@ -86,7 +86,7 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def society(self):
-        """Get and set the society object cell is assigned to.
+        """Get and set the society to that the cell object is assigned.
 
         # TODO: Probably a closer detailed documentation of getter and setter.
         Doc-string should only be in the getter.
@@ -117,17 +117,17 @@ class Cell (I.Cell, abstract.Cell):
 
     @property  # read-only
     def nature(self):
-        """Get the nature object cell is referenced to."""
+        """Get the nature to that the cell object is referenced."""
         return self._world.nature
 
     @property  # read-only
     def metabolism(self):
-        """Get the metabolism object cell is referenced to."""
+        """Get the metabolism to that the cell object is referenced."""
         return self._world.metabolism
 
     @property  # read-only
     def culture(self):
-        """Get the culture object cell is referenced to."""
+        """Get the culture to that the cell object is referenced."""
         return self._world.culture
 
     _societies = unknown
@@ -135,7 +135,7 @@ class Cell (I.Cell, abstract.Cell):
     """cache, depends on self.society, self.society.higher_societies"""
     @property  # read-only
     def societies(self):
-        """Get and set societies the cell is assigned to.
+        """Get and set the societies to that the cell object is assigned.
 
         # TODO: Probably a closer detailed documentation of getter and setter.
         Doc-string should only be in the getter.
@@ -155,7 +155,7 @@ class Cell (I.Cell, abstract.Cell):
 
     @property  # read-only
     def individuals(self):
-        """Get individuals the cell object is referenced to
+        """Get the individuals to that the cell object is referenced.
 
         # TODO: Probably a closer detailed documentation of getter and setter.
         Doc-string should only be in the getter.
