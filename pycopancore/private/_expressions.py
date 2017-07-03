@@ -5,7 +5,6 @@
 
 # defines logics to deal with symbolic expressions and their evaluation
 
-import random
 import numpy as np
 import sympy as sp
 import scipy.special
@@ -13,10 +12,7 @@ import scipy.special
 from .. import data_model as D
 from .. import private
 
-from numba import jit, njit
-
-import inspect
-from profilehooks import coverage, profile
+from numba import njit
 
 
 class _Unknown(object):
@@ -124,8 +120,8 @@ class _DotConstruct (sp.AtomicExpr):
     """the sequence of further names,
     e.g. ["sum","cells","population"]"""
     arg = None
-    """the optional argument of the aggregation function,
-    e.g. Society.world.sum.cells.population * Society.world.sum.cells.capital"""
+    """the optional argument of the aggregation function, e.g.
+    Society.world.sum.cells.population * Society.world.sum.cells.capital"""
     can_be_target = None
     """whether this can be a target (e.g. does not involve aggregation)"""
 
@@ -482,10 +478,9 @@ nary2numpy = {
     sp.Xor: np.logical_xor,
 }
 
-# @profile
-
 
 def _eval(expr, iteration=None):
+    global _cached_iteration
     try:
         # if still up to date, return vals from cache:
         if iteration is not None and _cached_iteration == iteration:
@@ -510,8 +505,8 @@ def _eval(expr, iteration=None):
         branchings = argbrs[longest]
         for i, arg in enumerate(args):
             if i != longest:
-                l = argvals[i].size
-                pos = 0 if l == 1 else cardinalities.index(l)
+                length = argvals[i].size
+                pos = 0 if length == 1 else cardinalities.index(length)
                 argvals[i] = broadcast(argvals[i], branchings[pos:])
     if t in (D.Variable, _DotConstruct):
         vals = np.array(expr.eval())
@@ -525,7 +520,7 @@ def _eval(expr, iteration=None):
     # ternary operators:
     elif t == sp.ITE:
         truthvals = argvals[0]
-        trues = list(np.where(truthvals == True)[0])
+        trues = list(np.where(truthvals is True)[0])
         vals = argvals[2]
         vals[trues] = argvals[1][trues]
     # n-ary operators:
@@ -565,7 +560,7 @@ def _eval(expr, iteration=None):
         # clumsy way of converting sympy True to normal True:
         if expr is True:
             expr = True
-        elif expr == False:
+        elif expr is False:
             expr = False
         else:
             expr = float(expr)
