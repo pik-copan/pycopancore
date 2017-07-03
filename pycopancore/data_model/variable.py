@@ -44,7 +44,7 @@ class Variable (Symbol):
     default = None
     """default initial value"""
     uninformed_prior = None
-    """random value generator (probability distribution) 
+    """random value generator (probability distribution)
     if nothing else is known about the value"""
 
     # catalog references:
@@ -536,7 +536,8 @@ class Variable (Symbol):
         -------
         List of variable value of each entity
         """
-#        return [self.get_value(inst, unit=unit) for inst in instances]  # too slow...
+# return [self.get_value(inst, unit=unit) for inst in instances]  # too
+# slow...
         if instances is None:
             instances = self.owning_class.instances
         if unit is None:

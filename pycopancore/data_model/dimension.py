@@ -30,16 +30,19 @@ class Dimension (object):
             unit._dimension = self
 #        assert unit.dimension == self  # FIXME: fails
 
-    def __init__(self, is_base=True, name=None, desc=None, exponents=None, default_unit=None):
+    def __init__(self, is_base=True, name=None, desc=None,
+                 exponents=None, default_unit=None):
         self.is_base = is_base
         if is_base:
             self.name = name
             self.desc = name if desc is None else desc
-            # don't use self as key before name has been assigned since name is used as hash:
+            # don't use self as key before name has been assigned since name is
+            # used as hash:
             self.exponents = {self: 1}
         else:
             self.exponents = exponents
-            # TODO: use words "per", "square", "cubic" and sort be descending exponents
+            # TODO: use words "per", "square", "cubic" and sort be descending
+            # exponents
             self.name = " ".join([dim.name + ("" if ex == 1 else "^" + str(ex) if ex >= 0 else "^(" + str(ex) + ")")
                                   for dim, ex in exponents.items()]) if name is None else name
             self.desc = "\n\n".join(

@@ -57,7 +57,8 @@ class Unit (object):
             self.name = name
             self.symbol = symbol
             self.desc = name if desc is None else desc
-            # don't use self as key before name has been assigned since name is used as hash:
+            # don't use self as key before name has been assigned since name is
+            # used as hash:
             self.exponents = {self: 1}
             if dimension is not None:
                 assert dimension.is_base, \
@@ -65,7 +66,8 @@ class Unit (object):
             self._dimension = dimension
         else:
             self.exponents = exponents.copy()
-            # TODO: use words "per", "square", "cubic" and sort be descending exponents
+            # TODO: use words "per", "square", "cubic" and sort be descending
+            # exponents
             self.name = (str(self.factor) + " " if self.factor != 1 else "") \
                 + " ".join([unit.name
                             + ("" if ex == 1

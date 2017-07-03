@@ -7,14 +7,14 @@ from networkx import DiGraph, Graph
 
 acquaintance_network = \
     Variable("acquaintance network",
-             """Basic undirected social network of acquaintance between 
+             """Basic undirected social network of acquaintance between
              Individuals. Most other social networks will be subgraphs of this.""",
              ref="https://en.wikipedia.org/wiki/Interpersonal_relationship#Stages",
              datatype=Graph)
 
 friendship_network = \
     Variable("friendship/intimate/family network",
-             """Smaller (and typically slower-changing) undirected network of 
+             """Smaller (and typically slower-changing) undirected network of
              actual friendships and other intimate relationships such as close
              familiar ties etc. May have a significantly different structure,
              e.g. a qualitatively (less heavy-tailed) degree distribution
@@ -37,7 +37,7 @@ trusted_business_network = \
 
 supply_chain_network = \
     Variable("supply chain network",
-             """Directed network of actual (not potential) supplier-customer 
+             """Directed network of actual (not potential) supplier-customer
              relationships through the economic supply chain, including the
              final end customer link and potentially initial links from
              societies.""",
@@ -61,7 +61,7 @@ trusted_diplomatic_network = \
     Variable("trusted diplomatic network",
              """Undirected network of basic trust relationships between
              societies, to be used in (intersocietal) coalition formation model
-             components. Represents the prerequisites of forming a coalition, 
+             components. Represents the prerequisites of forming a coalition,
              not the actually formed coalition structure (which is rather a set
              of sets of societies).""",
              ref="https://en.wikipedia.org/wiki/Coalition#International_relations",
