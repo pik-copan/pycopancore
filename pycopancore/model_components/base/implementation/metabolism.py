@@ -1,4 +1,4 @@
-"""Base component's Metabolism process taxon mixin implementation class."""
+""" """
 
 # This file is part of pycopancore.
 #
@@ -22,7 +22,13 @@ class Metabolism (I.Metabolism, abstract.Metabolism):
     def __init__(self,
                  # *,
                  **kwargs):
-        """Initialize the unique instance of Metabolism."""
+        """
+        Initialize the unique instance of Metabolism.
+
+        Parameters
+        ----------
+        kwargs
+        """
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
         pass
