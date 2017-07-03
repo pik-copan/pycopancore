@@ -107,7 +107,7 @@ class World (I.World, abstract.World):
     # process-related methods:
 
     def aggregate_cell_carbon_stocks(self, unused_t):
-        """Sum up all carbon stocks of cells.
+        """Sum up all carbon stocks of Cells.
 
         Parameters
         ----------
