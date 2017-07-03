@@ -19,7 +19,7 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 
 from ..data_model import variable
 from ..private._expressions import _DotConstruct, aggregation_names
-from .. import OrderedSet
+from ..data_model import OrderedSet
 
 import inspect
 
