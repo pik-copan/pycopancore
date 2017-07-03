@@ -19,6 +19,7 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 
 from ..data_model import variable
 from ..private._expressions import _DotConstruct, aggregation_names
+from .. import OrderedSet
 
 import inspect
 
@@ -70,10 +71,17 @@ class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
     """
 
     # NEXTUID is variable to adress identifiers.
+
+    # class (!) attributes:
     NEXTUID = 0
+    variables = OrderedSet()
+    """All variables occurring in this entity type"""
     processes = []
+    """All processes of this entity type"""
     model = None
+    """Model containing this entity type"""
     instances = None
+    """Entities of this type"""
     idle_entities = None
 
     def __init__(self,
@@ -118,6 +126,15 @@ class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
         assert isinstance(variable, variable.Variable), \
             "variable must be a Variable object"
         variable.set_value(self, value)
+
+    def assert_valid(self):
+        """Make sure all variable values are valid.
+
+        By calling assert_valid for all Variables
+
+        """
+        for v in self.variables:
+            v.assert_valid(v.get_value(self))
 
     @classmethod
     def get_next_uid(cls):
