@@ -1,4 +1,4 @@
-"""Model class template."""
+"""Model class our_model."""
 
 # This file is part of pycopancore.
 #
@@ -7,6 +7,10 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
+
+#
+#  Imports
+#
 
 from .. import base  # all models must use the base component
 # from ..model_components import copan_global_like_carbon_cycle \
@@ -24,29 +28,28 @@ from ..model_components import anderies_carbon_cycle \
 # delete the templates for the unneeded ones, and add those for missing ones:
 
 
-class World (cc.World,
-             base.World):
+class World(cc.World,
+            base.World):
     """World entity type."""
 
     pass
 
 
-class Society (cc.Society,
-               base.Society):
+class Society(cc.Society,
+              base.Society):
     """Society entity type."""
 
     pass
 
 
-class Cell (cc.Cell,
-            base.Cell):
+class Cell(cc.Cell,
+           base.Cell):
     """Cell entity type."""
 
     pass
 
 
-class Individual (
-        base.Individual):
+class Individual(base.Individual):
     """Individual entity type."""
 
     pass
@@ -54,22 +57,20 @@ class Individual (
 
 # process taxa:
 
-class Nature (cc.Nature,
-              base.Nature):
+class Nature(cc.Nature,
+             base.Nature):
     """Nature process taxon."""
 
     pass
 
 
-class Metabolism (
-        base.Metabolism):
+class Metabolism(base.Metabolism):
     """Metabolism process taxon."""
 
     pass
 
 
-class Culture (
-        base.Culture):
+class Culture(base.Culture):
     """Culture process taxon."""
 
     pass
@@ -77,8 +78,8 @@ class Culture (
 
 # Model class:
 
-class Model (cc.Model,
-             base.Model):
+class Model(cc.Model,
+            base.Model):
     """Class representing the whole model."""
 
     name = "..."

@@ -8,6 +8,10 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+#
+#  Imports
+#
+
 from .. import base  # all models must use the base component
 
 from ..model_components import copan_global_like_carbon_cycle \
@@ -25,33 +29,29 @@ from ..model_components import copan_global_like_economic_growth \
 # entity types:
 
 
-class World (
-        cc.World,
-        prod.World,
-        base.World):
+class World(cc.World,
+            prod.World,
+            base.World):
     """World entity type."""
 
     pass
 
 
-class Society (
-        prod.Society,
-        growth.Society,
-        base.Society):
+class Society(prod.Society,
+              growth.Society,
+              base.Society):
     """Society entity type."""
 
     pass
 
 
-class Cell (
-        cc.Cell,
-        prod.Cell,
-        base.Cell):
+class Cell(cc.Cell,
+           prod.Cell,
+           base.Cell):
     """Cell entity type."""
 
     pass
 
-# TODO: list all mixin classes needed
 # class Individual (ABBR1.Individual, ABBR2.Individual,
 #             base.Individual):
 #    """Individual entity type."""
@@ -62,22 +62,19 @@ class Cell (
 # process taxa:
 
 
-class Nature (
-        cc.Nature,
-        base.Nature):
+class Nature(cc.Nature,
+             base.Nature):
     """Nature process taxon."""
 
     pass
 
 
-class Metabolism (
-        prod.Metabolism,
-        base.Metabolism):
+class Metabolism(prod.Metabolism,
+                 base.Metabolism):
     """Metabolism process taxon."""
 
     pass
 
-# TODO: list all mixin classes needed
 # class Culture (ABBR1.Culture, ABBR2.Culture,
 #               base.Culture):
 #    """Culture process taxon"""
@@ -87,11 +84,10 @@ class Metabolism (
 # Model class:
 
 
-class Model (
-        cc.Model,
-        prod.Model,
-        growth.Model,
-        base.Model):
+class Model(cc.Model,
+            prod.Model,
+            growth.Model,
+            base.Model):
     """Class representing the whole model."""
 
     name = "Jobst's prototype 1"
