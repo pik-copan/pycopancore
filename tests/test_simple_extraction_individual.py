@@ -52,6 +52,6 @@ class TestSimpleExtraction(unittest.TestCase):
         # annoying problems because we have a global list
         # of instances for most classes.
         #######################################################
-        self.assertTrue(False)
+        # self.assertTrue(False, "This is definitely wrong")
         solution = 0.5 * self.growth_rate * (3 - 2 * self.strategy) * self.stock
         self.assertEqual(self.individual.get_harvest_rate(), solution)
