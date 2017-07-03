@@ -1,4 +1,4 @@
-"""Base component's Cell entity type mixin implementation class."""
+""""""
 
 # This file is part of pycopancore.
 #
@@ -22,9 +22,8 @@ class Cell (I.Cell, abstract.Cell):
     Base component's Cell mixin that every model must use in composing their
     Cell class. Inherits from I.Cell as the interface with all necessary
     variables and parameters.
-    """
 
-    # standard methods:
+    """
 
     def __init__(self,
                  *,
@@ -35,7 +34,22 @@ class Cell (I.Cell, abstract.Cell):
                  geometry=None,
                  **kwargs
                  ):
-        """Initialize an instance of Cell."""
+        """Initialize an instance of Cell.
+
+            Parameters
+            ----------
+            world: obj
+                Instance of World to that the cell obj is assigned
+            society: obj
+                Instance of Society to that cell obj is assigned
+            location: # TODO
+                Location of cell object
+            land_area: float
+                Area of cell object
+            geometry: # TODO
+                Geometry of cell object
+
+        """
         super().__init__(**kwargs)  # must be the first line
 
         self._world = None
@@ -53,12 +67,16 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def world(self):
-        """Return world."""
+        """Get and set the world object cell is assigned to.
+
+        # TODO: Probably a closer detailed documentation of getter and setter.
+        Doc-string should only be in the getter.
+
+        """
         return self._world
 
     @world.setter
     def world(self, w):
-        """Set world."""
         if self._world is not None:
             self._world.cells.remove(self)
         if w is not None:
@@ -68,12 +86,16 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def society(self):
-        """Return society."""
+        """Get and set the society object cell is assigned to.
+
+        # TODO: Probably a closer detailed documentation of getter and setter.
+        Doc-string should only be in the getter.
+
+        """
         return self._society
 
     @society.setter
     def society(self, s):
-        """Set society."""
         if self._society is not None:
             self._society._direct_cells.remove(self)
             # reset dependent caches:
@@ -95,24 +117,30 @@ class Cell (I.Cell, abstract.Cell):
 
     @property  # read-only
     def nature(self):
-        """Return nature."""
+        """Get the nature object cell is referenced to."""
         return self._world.nature
 
     @property  # read-only
     def metabolism(self):
-        """Return metabolism."""
+        """Get the metabolism object cell is referenced to."""
         return self._world.metabolism
 
     @property  # read-only
     def culture(self):
-        """Return culture."""
+        """Get the culture object cell is referenced to."""
         return self._world.culture
 
     _societies = unknown
+    # TODO: should the following comment be a doc-string comment?
     """cache, depends on self.society, self.society.higher_societies"""
     @property  # read-only
     def societies(self):
-        """Return societies."""
+        """Get and set societies the cell is assigned to.
+
+        # TODO: Probably a closer detailed documentation of getter and setter.
+        Doc-string should only be in the getter.
+
+        """
         if self._societies is unknown:
             self._societies = [] if self.society is None \
                 else [self.society] + self.society.higher_societies
@@ -127,7 +155,12 @@ class Cell (I.Cell, abstract.Cell):
 
     @property  # read-only
     def individuals(self):
-        """Return individuals."""
+        """Get individuals the cell object is referenced to
+
+        # TODO: Probably a closer detailed documentation of getter and setter.
+        Doc-string should only be in the getter.
+
+        """
         return self._individuals
 
     # no process-related methods
