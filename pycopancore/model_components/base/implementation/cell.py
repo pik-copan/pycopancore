@@ -125,7 +125,6 @@ class Cell (I.Cell, abstract.Cell):
         return self._world.culture
 
     _societies = unknown
-    # TODO: should the following comment be a doc-string comment?
     """cache, depends on self.society, self.society.higher_societies"""
     @property  # read-only
     def societies(self):
