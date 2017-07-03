@@ -23,7 +23,7 @@ EPS = 1e-10
 """infinitesimal value for ensuring strict bounds"""
 
 
-class Variable (Symbol):
+class Variable(Symbol):
     """Metadata object representing a model variable or parameter."""
 
     # standard metadata:
@@ -117,33 +117,33 @@ class Variable (Symbol):
                                str(random.random()),
                                **assumptions)
 
-    def __init__(self,
-                 name,
-                 desc,
-                 *,
-                 symbol=None,
-                 ref=None,
-                 scale="ratio",
-                 default=None,
-                 uninformed_prior=None,
-                 CF=None,
-                 AMIP=None,
-                 IAMC=None,
-                 CETS=None,
-                 datatype=(float, int),
-                 array_shape=None,
-                 allow_none=True,  # by default, var may be none
-                 lower_bound=None,
-                 strict_lower_bound=None,
-                 upper_bound=None,
-                 strict_upper_bound=None,
-                 quantum=None,
-                 unit=None,
-                 is_extensive=False,
-                 is_intensive=False,
-                 levels=None,
-                 **kwargs
-                 ):
+    def __init__(
+            self,
+            name,
+            desc,
+            *,
+            symbol=None,
+            ref=None,
+            scale="ratio",
+            default=None,
+            uninformed_prior=None,
+            CF=None,
+            AMIP=None,
+            IAMC=None,
+            CETS=None,
+            datatype=(float, int),
+            array_shape=None,
+            allow_none=True,  # by default, var may be none
+            lower_bound=None,
+            strict_lower_bound=None,
+            upper_bound=None,
+            strict_upper_bound=None,
+            quantum=None,
+            unit=None,
+            is_extensive=False,
+            is_intensive=False,
+            levels=None,
+            **kwargs):
         super().__init__()
 
         # store unique "name" given by sympy in _uid:
@@ -188,30 +188,30 @@ class Variable (Symbol):
 
     def copy(self):
         # TODO: do this more elegantly??
-        c = Variable(self.name,
-                     self.desc,
-                     symbol=self.symbol,
-                     ref=self.ref,
-                     scale=self.scale,
-                     default=self.default,
-                     uninformed_prior=self.uninformed_prior,
-                     CF=self.CF,
-                     AMIP=self.AMIP,
-                     IAMC=self.IAMC,
-                     CETS=self.CETS,
-                     datatype=self.datatype,
-                     array_shape=self.array_shape,
-                     allow_none=self.allow_none,
-                     lower_bound=self.lower_bound,
-                     strict_lower_bound=self.strict_lower_bound,
-                     upper_bound=self.upper_bound,
-                     strict_upper_bound=self.strict_upper_bound,
-                     quantum=self.quantum,
-                     unit=self.unit,
-                     is_extensive=self.is_extensive,
-                     is_intensive=self.is_intensive,
-                     levels=self.levels
-                     )
+        c = Variable(
+            self.name,
+            self.desc,
+            symbol=self.symbol,
+            ref=self.ref,
+            scale=self.scale,
+            default=self.default,
+            uninformed_prior=self.uninformed_prior,
+            CF=self.CF,
+            AMIP=self.AMIP,
+            IAMC=self.IAMC,
+            CETS=self.CETS,
+            datatype=self.datatype,
+            array_shape=self.array_shape,
+            allow_none=self.allow_none,
+            lower_bound=self.lower_bound,
+            strict_lower_bound=self.strict_lower_bound,
+            upper_bound=self.upper_bound,
+            strict_upper_bound=self.strict_upper_bound,
+            quantum=self.quantum,
+            unit=self.unit,
+            is_extensive=self.is_extensive,
+            is_intensive=self.is_intensive,
+            levels=self.levels)
         return c
 
     def __hash__(self):
@@ -310,7 +310,9 @@ class Variable (Symbol):
 
         return True
 
+    # TODO: improve docstring
     def is_valid(self, value):
+        """Is valid."""
         if isinstance(value, DimensionalQuantity):
             value = value.number(unit=self.unit)
         return self._check_valid(value) == True
@@ -332,11 +334,15 @@ class Variable (Symbol):
 #        self.assert_valid(value)
         setattr(instance, self.codename, value)
 
-    def convert_to_standard_units(self,
-                                  instances=None,  # if None: all entities/taxa
-                                  ):
-        """replace all variable values of type DimensionalQuantity
-        to float using the standard unit"""
+    def convert_to_standard_units(
+            self,
+            instances=None):  # if None: all entities/taxa
+        """
+        Convert to standart units.
+
+        Replace all variable values of type DimensionalQuantity
+        to float using the standard unit
+        """
         if instances is not None:
             for i in instances:
                 v = getattr(i, self.codename)
@@ -366,20 +372,20 @@ class Variable (Symbol):
             instances = set(instances)
         return instances
 
-    def set_to_default(self,
-                       instances=None,  # if None: all entities/taxa
-                       ):
+    def set_to_default(
+            self,
+            instances=None):  # if None: all entities/taxa
         """Set values in selected entities to default"""
         instances = self._get_instances(instances)
         for e in instances:
             self.set_value(e, self.default)
 
-    def set_to_random(self,
-                      instances=None,  # if None: all entities/taxa
-                      distribution=None,  # if None: self.uninformed_prior
-                      *,
-                      p=1
-                      ):
+    def set_to_random(
+            self,
+            instances=None,  # if None: all entities/taxa
+            distribution=None,  # if None: self.uninformed_prior
+            *,
+            p=1):
         """Set values in selected entities to random value.
         If distribution=None, use uninformed_prior.
         If optional p is given, replace current value only with probability p."""
@@ -390,14 +396,14 @@ class Variable (Symbol):
             if random.random() < p:
                 self.set_value(i, distribution())
 
-    def add_noise(self,
-                  instances=None,  # if None: all entities/taxa
-                  distribution=random.gauss,  # basic noise distribution
-                  *,
-                  factor=1,  # scale factor
-                  offset=0,  # location offset
-                  multiplicative=False
-                  ):
+    def add_noise(
+            self,
+            instances=None,  # if None: all entities/taxa
+            distribution=random.gauss,  # basic noise distribution
+            *,
+            factor=1,  # scale factor
+            offset=0,  # location offset
+            multiplicative=False):
         """Set values in selected entities to random value.
         If distribution=None, use uninformed_prior.
         If optional p is given, replace current value only with probability p."""
@@ -435,12 +441,12 @@ class Variable (Symbol):
             for inst in self.owning_class.instances:
                 setattr(inst, cn, values[0])
 
-    def set_values(self,
-                   instances=None,
-                   values=None,
-                   *,
-                   dictionary=None
-                   ):
+    def set_values(
+            self,
+            instances=None,
+            values=None,
+            *,
+            dictionary=None):
         """Set values for the variable.
 
         This function set values for the variable. If given a list of entities,
@@ -477,10 +483,10 @@ class Variable (Symbol):
         for i, inst in enumerate(instances):
             self.set_value(inst, values[i])
 
-    def clear_derivatives(self,
-                          *,
-                          instances=None
-                          ):
+    def clear_derivatives(
+            self,
+            *,
+            instances=None):
         """Set all derivatives to zero.
 
         Parameters
@@ -496,9 +502,9 @@ class Variable (Symbol):
         for i in instances:
             setattr(i, 'd_' + self.codename, 0)
 
-    def get_derivatives(self,
-                        instances=None
-                        ):
+    def get_derivatives(
+            self,
+            instances=None):
         """Return a list of derivatives saved in entities.
 
         Parameters
@@ -512,18 +518,20 @@ class Variable (Symbol):
         """
         return [getattr(i, 'd_' + self.codename) for i in instances]
 
+    # TODO: improve docstring
     def get_value(self, instance, unit=None):
+        """Get value."""
         v = getattr(instance, self.codename)
         assert not isinstance(v, Variable), \
             "Variable " + str(self) + " uninitialized at instance " \
             + str(instance)
         return v if unit is None else self._unit.convert(v, unit)
 
-    def eval(self,
-             instances=None,
-             *,
-             unit=None
-             ):
+    def eval(
+            self,
+            instances=None,
+            *,
+            unit=None):
         """Return values for given entities,
         optionally in a different unit.
 
@@ -546,23 +554,29 @@ class Variable (Symbol):
         else:
             return [self.get_value(inst, unit=unit) for inst in instances]
 
+    # TODO: improve subsequent doctstrings
     @property  # read-only
     def target_class(self):
+        """Target class."""
         return self.owning_class
 
     @property  # read-only
     def target_variable(self):
+        """Target variable."""
         return self
 
     @property  # read-only
     def target_instances(self):
+        """Target instances."""
         return self.owning_class.instances
 
     # stuff needed if Variable occurs as arg of _DotConstruct:
     @property  # read-only
     def branchings(self):
+        """Branchings."""
         return [[len(self.owning_class.instances)]]
 
     @property  # read-only
     def cardinalities(self):
+        """Cardinalities."""
         return [1, len(self.owning_class.instances)]

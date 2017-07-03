@@ -1,7 +1,10 @@
-from .. import Variable
-from . import unity, gigatonnes_carbon, kelvins, years
+"""Master data model for nature."""
 
-from networkx import DiGraph, Graph
+from .. import Variable
+from . import gigatonnes_carbon, kelvins, years
+from .. import unity
+
+from networkx import Graph
 
 # TODO: complete desc strings!
 

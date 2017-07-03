@@ -1,8 +1,10 @@
+"""Module for DimensionalQuantity class."""
+
 from . import dimension
 from . import unit as U
 
 
-class DimensionalQuantity (object):
+class DimensionalQuantity(object):
     """Physical or other dimensional quantity given by
     a number of some unit"""
 
@@ -23,12 +25,16 @@ class DimensionalQuantity (object):
         else:
             return self._unit.convert(self._number, unit)
 
+    # TODO: improve docstring
     @property  # read-only
     def unit(self):
+        """Unit."""
         return self._unit
 
+    # TODO: improve docstring
     @property  # read-only
     def dimension(self):
+        """Dimension."""
         return self._dimension
 
     def __init__(self, number, unit):

@@ -1,10 +1,12 @@
+"""Module for SetVariable class."""
+
 from . import Variable
 from ..private import _DotConstruct
 
 # TODO: complete logics, set other Variable attributes, validate etc.
 
 
-class SetVariable (Variable):
+class SetVariable(Variable):
     """
     reference to a set of entities
     """

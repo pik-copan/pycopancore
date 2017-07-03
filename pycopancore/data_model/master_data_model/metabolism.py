@@ -1,7 +1,8 @@
+"""Master data model for metabolism."""
+
 from .. import Variable
-from . import unity, gigajoules, dollars, gigatonnes_carbon, years, utils, \
-    people
-from . import gigatonnes_carbon
+from . import gigajoules, dollars, gigatonnes_carbon, years, utils, people
+from .. import unity
 
 # Population, demographics:
 

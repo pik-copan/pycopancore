@@ -1,10 +1,12 @@
+"""Module for ReferenceVariable class."""
+
 from . import Variable
 from ..private import _DotConstruct
 
 # TODO: complete logics, set other Variable attributes, validate etc.
 
 
-class ReferenceVariable (Variable):
+class ReferenceVariable(Variable):
     """
     reference to another entity or process taxon
     """
