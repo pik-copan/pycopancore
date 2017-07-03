@@ -1,4 +1,4 @@
-""""""
+""" """
 
 # This file is part of pycopancore.
 #
@@ -36,18 +36,18 @@ class Cell (I.Cell, abstract.Cell):
                  ):
         """Initialize an instance of Cell.
 
-            Parameters
-            ----------
-            world: obj
-                Instance of World to that the cell obj is assigned
-            society: obj
-                Instance of Society to that cell obj is assigned
-            location: # TODO
-                Location of cell object
-            land_area: float
-                Area of cell object
-            geometry: # TODO
-                Geometry of cell object
+        Parameters
+        ----------
+        world: obj
+            Instance of World to that the cell obj is assigned
+        society: obj
+            Instance of Society to that cell obj is assigned
+        location: # TODO
+            Location of cell object
+        land_area: float
+            Area of cell object
+        geometry: # TODO
+            Geometry of cell object
 
         """
         super().__init__(**kwargs)  # must be the first line
