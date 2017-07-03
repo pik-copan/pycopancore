@@ -36,9 +36,11 @@ class Individual (I.Individual, abstract.Individual):
         Parameters
         ----------
         cell: obj
-            Cell the Individual belongs to
+            Cell the Individual belongs to.
         relative_weight: # TODO
             # TODO: description of 'relative_weight'
+        **kwargs
+            Arbitrary keyword arguments.
 
         """
         super().__init__(**kwargs)  # must be the first line
