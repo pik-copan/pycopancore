@@ -95,8 +95,8 @@ class World (object, metaclass=_AbstractEntityMixinType):
     societies = SetVariable("societies",
                             "set of all Societies on this world")
     top_level_societies = SetVariable(
-                            "top level societies",
-                            "set of top-level Societies on this world")
+        "top level societies",
+        "set of top-level Societies on this world")
     cells = SetVariable("cells", "set of Cells on this world")
     individuals = SetVariable("individuals",
                               "set of Individuals residing on this world")
@@ -126,19 +126,19 @@ class Society (object, metaclass=_AbstractEntityMixinType):
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
     culture = ReferenceVariable("culture", "", type=Culture)
     higher_societies = SetVariable(
-                                "higher societies",
-                                "upward list of (in)direct super-Societies")
+        "higher societies",
+        "upward list of (in)direct super-Societies")
     next_lower_societies = SetVariable(
-                                "next lower societies",
-                                "set of sub-Societies of next lower level")
+        "next lower societies",
+        "set of sub-Societies of next lower level")
     lower_societies = SetVariable(
-                                "lower societies",
-                                "set of all direct and indirect sub-Societies")
+        "lower societies",
+        "set of all direct and indirect sub-Societies")
     direct_cells = SetVariable("direct cells", "set of direct territory Cells")
     cells = SetVariable("cells", "set of direct and indirect territory Cells")
     direct_individuals = SetVariable(
-                            "direct individuals",
-                            "set of resident Individuals not in subsocieties")
+        "direct individuals",
+        "set of resident Individuals not in subsocieties")
     individuals = SetVariable("individuals",
                               "set of direct or indirect resident Individuals")
 
@@ -177,9 +177,9 @@ class Cell (object, metaclass=_AbstractEntityMixinType):
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
     culture = ReferenceVariable("culture", "", type=Culture)
     societies = SetVariable(
-                    "societies",
-                    "upward list of Societies it belongs to (in)directly",
-                    type=Society)
+        "societies",
+        "upward list of Societies it belongs to (in)directly",
+        type=Society)
     individuals = SetVariable("individuals",
                               "set of resident Individuals")
 
@@ -211,13 +211,13 @@ class Individual (object, metaclass=_AbstractEntityMixinType):
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
     culture = ReferenceVariable("culture", "", type=Culture)
     society = ReferenceVariable(
-                        "society",
-                        "lowest level Society this individual is resident of",
-                        type=Society)
+        "society",
+        "lowest level Society this individual is resident of",
+        type=Society)
     societies = SetVariable(
-                    "societies",
-                    "upward list of all Societies it is resident of",
-                    type=Society)
+        "societies",
+        "upward list of all Societies it is resident of",
+        type=Society)
     acquaintances = SetVariable("acquaintances",
                                 "set of Individuals this is acquainted with")
 

@@ -31,7 +31,6 @@ class Cell (I.Cell):
         super().__init__(**kwargs)
         self.eating_stock = eating_stock
 
-
     # process-related methods:
 
     def snow_white_arrival(self):

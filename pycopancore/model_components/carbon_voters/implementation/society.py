@@ -46,11 +46,10 @@ class Society (I.Society):
     # process-related methods:
 
     def set_harvest_rate(self, t):
-        if self.opinion == 0: # indifferent
+        if self.opinion == 0:  # indifferent
             self.harvest_rate = 0.5
-        else: # opinion == 1
+        else:  # opinion == 1
             self.harvest_rate = 0.25
-
 
     processes = [
         Explicit(

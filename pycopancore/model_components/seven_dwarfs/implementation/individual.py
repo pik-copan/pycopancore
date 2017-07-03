@@ -18,6 +18,7 @@ from pycopancore.model_components.base import interface as B
 from pycopancore import ODE, Step, Explicit
 import numpy as np
 
+
 class Individual (I.Individual):
     """Individual entity type mixin implementation class."""
 
@@ -25,10 +26,10 @@ class Individual (I.Individual):
 
     def __init__(self,
                  *,
-                 age = 0,
-                 beard_length = 0,
-                 beard_growth_parameter = 0.1,
-                 eating_parameter = 1,
+                 age=0,
+                 beard_length=0,
+                 beard_growth_parameter=0.1,
+                 eating_parameter=1,
                  **kwargs):
         """Initialize an instance of dwarf."""
         super().__init__(**kwargs)
@@ -39,7 +40,6 @@ class Individual (I.Individual):
         self.eating_parameter = eating_parameter
 
         pass
-
 
     def deactivate(self):
         """Deactivate a dwarf."""
@@ -54,7 +54,7 @@ class Individual (I.Individual):
     def aging(self, unused_t):
         """Make dwarf have birthday."""
         self.age = self.age + 1
-        if self.age/100 >= np.random.random():
+        if self.age / 100 >= np.random.random():
             if self in self.__class__.instances:
                 self.deactivate()
                 print("Dwarf with UID {} died from age.".format(self._uid))

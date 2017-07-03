@@ -25,27 +25,27 @@ from ..model_components import copan_global_like_carbon_cycle \
 
 
 class World (
-             cc.World,
-             # prod.World,
-             base.World):
+    cc.World,
+    # prod.World,
+        base.World):
     """World entity type."""
 
     pass
 
 
 class Society (
-               # prod.Society,
-               # growth.Society,
-               base.Society):
+    # prod.Society,
+    # growth.Society,
+        base.Society):
     """Society entity type."""
 
     pass
 
 
 class Cell (
-            cc.Cell,
-            # prod.Cell,
-            base.Cell):
+    cc.Cell,
+    # prod.Cell,
+        base.Cell):
     """Cell entity type."""
 
     pass
@@ -61,16 +61,16 @@ class Cell (
 
 
 class Nature (
-              cc.Nature,
-              base.Nature):
+        cc.Nature,
+        base.Nature):
     """Nature process taxon."""
 
     pass
 
 
 class Metabolism (
-                  # prod.Metabolism,
-                  base.Metabolism):
+    # prod.Metabolism,
+        base.Metabolism):
     """Metabolism process taxon."""
 
     pass
@@ -87,10 +87,10 @@ class Metabolism (
 
 
 class Model (
-             cc.Model,
-             # prod.Model,
-             # growth.Model,
-             base.Model):
+    cc.Model,
+    # prod.Model,
+    # growth.Model,
+        base.Model):
     """Class representing the whole model."""
 
     name = "Jobst's prototype 1, only CC"

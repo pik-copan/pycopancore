@@ -20,7 +20,7 @@ variables in special list to be accessed by the runner.
 # only used in this component, not in others:
 from .. import abstract
 from ... import Variable, ReferenceVariable, SetVariable, \
-                ODE, Explicit, Step, Event, OrderedSet
+    ODE, Explicit, Step, Event, OrderedSet
 # from ...private import _AbstractEntityMixin, _AbstractProcessTaxonMixin
 
 import inspect
@@ -116,11 +116,11 @@ class ModelLogics (object):
         variable_pool = OrderedSet()
         # find and iterate through model components:
         cls.components = OrderedSet(
-                [c for c in list(inspect.getmro(cls))  # exclude self
-                 if c not in (object, abstract.Model, ModelLogics)
-                 # exclude interface classes (which have an attribute "name"):
-                 and not "name" in c.__dict__
-                 ])
+            [c for c in list(inspect.getmro(cls))  # exclude self
+             if c not in (object, abstract.Model, ModelLogics)
+             # exclude interface classes (which have an attribute "name"):
+             and not "name" in c.__dict__
+             ])
         for component in cls.components:
             component_interface = component.__bases__[0]
             print("Model component ", component_interface.name, "(", component,
@@ -176,9 +176,11 @@ class ModelLogics (object):
                 if isinstance(v, Variable):
                     print("    Variable ", v)
                     assert v in variable_pool, \
-                        "Variable '{v!r}' was not defined in any component interface!".format(**locals())
+                        "Variable '{v!r}' was not defined in any component interface!".format(
+                            **locals())
                     assert v.codename == k, \
-                        "Variable '{v!r}' was registered under a different codename".format(**locals())
+                        "Variable '{v!r}' was registered under a different codename".format(
+                            **locals())
                     assert v.owning_class is None
                     cls.variables.add(v)
                     v.owning_class = composed_class
@@ -205,20 +207,20 @@ class ModelLogics (object):
                             for target in p.targets:
                                 if isinstance(target, Variable):
                                     assert target.owning_class == \
-                                           composed_class, \
-                                           "ODE target Variable owned by " \
-                                           "different entity-type/taxon! " \
-                                           "(maybe try accessing it via a " \
-                                           "ReferenceVariable)"
+                                        composed_class, \
+                                        "ODE target Variable owned by " \
+                                        "different entity-type/taxon! " \
+                                        "(maybe try accessing it via a " \
+                                        "ReferenceVariable)"
                                 else:  # it's a _DotConstruct
                                     assert target.owning_class == \
-                                           composed_class, \
-                                           "ODE target attribute reference " \
-                                           "starts at a wrong " \
-                                           "entity-type/taxon" \
-                                           + str(target) \
-                                           + str(target.owning_class) \
-                                           + str(composed_class)
+                                        composed_class, \
+                                        "ODE target attribute reference " \
+                                        "starts at a wrong " \
+                                        "entity-type/taxon" \
+                                        + str(target) \
+                                        + str(target.owning_class) \
+                                        + str(composed_class)
                             cls.ODE_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Explicit):
@@ -229,17 +231,17 @@ class ModelLogics (object):
                             for target in p.targets:
                                 if isinstance(target, Variable):
                                     assert target.owning_class == \
-                                           composed_class, \
-                                           "Explicit target Variable owned " \
-                                           "by different entity-type/taxon! " \
-                                           "(maybe try accessing it via a " \
-                                           "ReferenceVariable)"
+                                        composed_class, \
+                                        "Explicit target Variable owned " \
+                                        "by different entity-type/taxon! " \
+                                        "(maybe try accessing it via a " \
+                                        "ReferenceVariable)"
                                 else:  # it's a _DotConstruct
                                     assert target.owning_class == \
-                                           composed_class, \
-                                           "Explicit target attribute " \
-                                           "reference starts at a wrong " \
-                                           "entity-type/taxon:"
+                                        composed_class, \
+                                        "Explicit target attribute " \
+                                        "reference starts at a wrong " \
+                                        "entity-type/taxon:"
                             cls.explicit_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Step):

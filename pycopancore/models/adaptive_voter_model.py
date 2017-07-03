@@ -32,7 +32,7 @@ from ..model_components import majority_decision as md
 
 # TODO: list all mixin classes needed:
 class World (
-             base.World):
+        base.World):
     """World entity type."""
 
     pass
@@ -48,7 +48,7 @@ class Society (md.Society,
 
 # TODO: list all mixin classes needed:
 class Cell (
-            base.Cell):
+        base.Cell):
     """Cell entity type."""
 
     pass

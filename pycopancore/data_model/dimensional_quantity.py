@@ -35,7 +35,8 @@ class DimensionalQuantity (object):
         assert not isinstance(number, DimensionalQuantity), \
             "number must be a non-dimensional number or vector"
         self._number = number
-        assert isinstance(unit, U.Unit), "unit must be a Unit object" # would require circular import...
+        # would require circular import...
+        assert isinstance(unit, U.Unit), "unit must be a Unit object"
         self._unit = unit
         self._dimension = unit.dimension
 
@@ -65,8 +66,8 @@ class DimensionalQuantity (object):
         assert other._dimension == self._dimension, \
             "different dimensions cannot be added"
         return DimensionalQuantity(self._number
-                + other._number*other._unit.factor/self._unit.factor,
-                self._unit).reduce()
+                                   + other._number * other._unit.factor / self._unit.factor,
+                                   self._unit).reduce()
 
     def __sub__(self, other):
         if other == 0:
@@ -78,25 +79,25 @@ class DimensionalQuantity (object):
             other = DimensionalQuantity(other, U.unity)
         assert other._dimension == self._dimension, \
             "different dimensions cannot be subtracted"
-        return DimensionalQuantity(self._number 
-                - other._number*other._unit.factor/self._unit.factor,
-                self._unit).reduce()
+        return DimensionalQuantity(self._number
+                                   - other._number * other._unit.factor / self._unit.factor,
+                                   self._unit).reduce()
 
     def __mul__(self, other):
         # TODO: improve the following dirty fix:
-        if hasattr(other, 'exponents'): # then it is probably a Unit
+        if hasattr(other, 'exponents'):  # then it is probably a Unit
             return DimensionalQuantity(self._number,
                                        self._unit * other).reduce()
         elif isinstance(other, DimensionalQuantity):
-            return DimensionalQuantity(self._number * other._number, 
+            return DimensionalQuantity(self._number * other._number,
                                        self._unit * other._unit).reduce()
         else:
             return DimensionalQuantity(self._number * other, self._unit)\
-                        .reduce()
+                .reduce()
 
     def __truediv__(self, other):
         # TODO: improve the following dirty fix:
-        if hasattr(other, 'exponents'): # then it is probably a Unit
+        if hasattr(other, 'exponents'):  # then it is probably a Unit
             return DimensionalQuantity(self._number,
                                        self._unit / other).reduce()
         elif isinstance(other, DimensionalQuantity):
@@ -104,7 +105,7 @@ class DimensionalQuantity (object):
                                        self._unit / other._unit).reduce()
         else:
             return DimensionalQuantity(self._number / other, self._unit)\
-                        .reduce()
+                .reduce()
 
     def __radd__(self, other):
         return self + other

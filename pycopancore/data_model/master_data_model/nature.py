@@ -119,11 +119,11 @@ carbon_solubility_in_sea_water = \
 photosynthesis_carbon_flow = \
     Variable("photosynthesis carbon flow", "",
              ref="https://en.wikipedia.org/wiki/Photosynthesis",
-             unit=gigatonnes_carbon/years,
+             unit=gigatonnes_carbon / years,
              is_extensive=True, lower_bound=0)
 terrestrial_respiration_carbon_flow = \
     Variable("plant and soil respiration carbon flow", "",
-             unit=gigatonnes_carbon/years,
+             unit=gigatonnes_carbon / years,
              is_extensive=True, lower_bound=0)
 
 # Note: when using the following, include
@@ -132,12 +132,12 @@ terrestrial_respiration_carbon_flow = \
 plant_respiration_carbon_flow = \
     Variable("plant respiration carbon flow", "",
              ref="https://en.wikipedia.org/wiki/Cellular_respiration",
-             unit=gigatonnes_carbon/years,
+             unit=gigatonnes_carbon / years,
              is_extensive=True, lower_bound=0)
 soil_respiration_carbon_flow = \
     Variable("soil respiration carbon flow", "",
              ref="https://en.wikipedia.org/wiki/Soil_respiration",
-             unit=gigatonnes_carbon/years,
+             unit=gigatonnes_carbon / years,
              is_extensive=True, lower_bound=0)
 
 # Note: there are no corresponding CF vars. yet

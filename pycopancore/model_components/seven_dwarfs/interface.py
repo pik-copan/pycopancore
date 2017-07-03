@@ -76,6 +76,7 @@ class Individual (object):
 
     # exogenous variables / parameters:
 
+
 class Culture (object):
     """Interface for Culture mixin"""
     pass

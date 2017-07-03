@@ -102,9 +102,9 @@ class World (I.World, abstract.World):
         self.fossil_carbon = sum([c.fossil_carbon for c in cs])
 
     processes = [
-                 # TODO: convert this into an Implicit equation once supported:
-                 Explicit("aggregate cell carbon stocks",
-                          [I.World.terrestrial_carbon,
-                           I.World.fossil_carbon],
-                          aggregate_cell_carbon_stocks)
-                 ]
+        # TODO: convert this into an Implicit equation once supported:
+        Explicit("aggregate cell carbon stocks",
+                 [I.World.terrestrial_carbon,
+                  I.World.fossil_carbon],
+                 aggregate_cell_carbon_stocks)
+    ]

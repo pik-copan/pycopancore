@@ -16,4 +16,3 @@ from .society import Society
 from .individual import Individual
 
 from .culture import Culture
-

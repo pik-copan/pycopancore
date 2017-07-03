@@ -33,7 +33,7 @@ class Unit (object):
     @property
     def dimension(self):
         """corresponding Dimension"""
-        if self.is_base: 
+        if self.is_base:
             return self._dimension
         else:
             return reduce(operator.mul,
@@ -58,28 +58,28 @@ class Unit (object):
             self.symbol = symbol
             self.desc = name if desc is None else desc
             # don't use self as key before name has been assigned since name is used as hash:
-            self.exponents = { self: 1 }
+            self.exponents = {self: 1}
             if dimension is not None:
                 assert dimension.is_base, \
-                        "dimension of base unit must be base dimension"
+                    "dimension of base unit must be base dimension"
             self._dimension = dimension
         else:
             self.exponents = exponents.copy()
             # TODO: use words "per", "square", "cubic" and sort be descending exponents
             self.name = (str(self.factor) + " " if self.factor != 1 else "") \
-                        + " ".join([unit.name
-                                    + ("" if ex == 1
-                                       else "^" + str(ex) if ex >= 0
-                                       else "^(" + str(ex) + ")")
-                                    for unit, ex in exponents.items()]) \
-                        if name is None else name
+                + " ".join([unit.name
+                            + ("" if ex == 1
+                               else "^" + str(ex) if ex >= 0
+                               else "^(" + str(ex) + ")")
+                            for unit, ex in exponents.items()]) \
+                if name is None else name
             self.symbol = (str(self.factor) + " " if self.factor != 1 else "") \
-                        + " ".join([unit.symbol
-                                    + ("" if ex == 1
-                                       else "^" + str(ex) if ex >= 0
-                                       else "^(" + str(ex) + ")")
-                                    for unit, ex in exponents.items()]) \
-                        if symbol is None else symbol
+                + " ".join([unit.symbol
+                            + ("" if ex == 1
+                               else "^" + str(ex) if ex >= 0
+                               else "^(" + str(ex) + ")")
+                            for unit, ex in exponents.items()]) \
+                if symbol is None else symbol
             self.desc = "\n\n".join([unit.name + ": " + unit.desc
                                      for unit in exponents.keys()]) \
                         if desc is None else desc
@@ -113,17 +113,17 @@ class Unit (object):
     def __eq__(self, other):
         if self.is_base:
             return other.is_base and other.dimension == self.dimension \
-                    and other.name == self.name
+                and other.name == self.name
         else:
             return self.factor == other.factor \
-                    and self.exponents == other.exponents
+                and self.exponents == other.exponents
 
     def __pow__(self, power):
         """exponentiation **"""
-        return Unit(is_base = False,
-                    factor = self.factor**power,
-                    exponents = { unit: ex*power
-                                  for unit, ex in self.exponents.items() })
+        return Unit(is_base=False,
+                    factor=self.factor**power,
+                    exponents={unit: ex * power
+                               for unit, ex in self.exponents.items()})
 
     def __mul__(self, other):
         """unit * other returns a unit
@@ -138,11 +138,11 @@ class Unit (object):
                         pex.pop(unit)
                 else:
                     pex[unit] = ex
-            return Unit(is_base = False,
-                        factor = self.factor * other.factor, exponents = pex)
+            return Unit(is_base=False,
+                        factor=self.factor * other.factor, exponents=pex)
         else:
-            return Unit(is_base = False, factor = self.factor * other,
-                        exponents = pex)
+            return Unit(is_base=False, factor=self.factor * other,
+                        exponents=pex)
 
     def __truediv__(self, other):
         """unit / other returns a unit
@@ -157,20 +157,21 @@ class Unit (object):
                         qex.pop(unit)
                 else:
                     qex[unit] = -ex
-            return Unit(is_base = False, factor = self.factor / other.factor,
-                        exponents = qex)
+            return Unit(is_base=False, factor=self.factor / other.factor,
+                        exponents=qex)
         else:
-            return Unit(is_base = False, factor = self.factor / other,
-                        exponents = qex)
+            return Unit(is_base=False, factor=self.factor / other,
+                        exponents=qex)
 
     def __rtruediv__(self, other):
         """non-unit / unit returns a DimensionalQuantity"""
-        return dimensional_quantity.DimensionalQuantity(number=other, 
+        return dimensional_quantity.DimensionalQuantity(number=other,
                                                         unit=self**(-1))
 
     def __rmul__(self, other):
         """non-unit * unit returns a DimensionalQuantity"""
-        return dimensional_quantity.DimensionalQuantity(number=other, 
+        return dimensional_quantity.DimensionalQuantity(number=other,
                                                         unit=self)
+
 
 unity = Unit(name="unity", symbol="", desc="number of unity", exponents={})

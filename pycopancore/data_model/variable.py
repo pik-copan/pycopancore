@@ -62,7 +62,6 @@ class Variable (Symbol):
     """corresponding World Bank CETS code
     (https://databank.worldbank.org/data/download/site-content/WDI_CETS.xls)"""
 
-
     # data type and constraints:
 
     datatype = None
@@ -131,7 +130,7 @@ class Variable (Symbol):
                  AMIP=None,
                  IAMC=None,
                  CETS=None,
-                 datatype=(float,int),
+                 datatype=(float, int),
                  array_shape=None,
                  allow_none=True,  # by default, var may be none
                  lower_bound=None,
@@ -178,7 +177,7 @@ class Variable (Symbol):
         self.unit = unit
 
         assert not (is_extensive is True and is_intensive is True), \
-                        "cannot be both extensive and intensive"
+            "cannot be both extensive and intensive"
         self.is_extensive = is_extensive
         self.is_intensive = is_intensive
 
@@ -220,14 +219,14 @@ class Variable (Symbol):
 
     def __str__(self):
         return (self.owning_class.__name__ + "." + self.codename) \
-                if self.owning_class \
-                else self.name
+            if self.owning_class \
+            else self.name
 
     def __repr__(self):
         return (self.owning_class.__name__ + "." + self.codename) \
-                if self.owning_class \
-                else self.name + " (" + self._uid + ")"
-        # dirty fix for lengthy output 
+            if self.owning_class \
+            else self.name + " (" + self._uid + ")"
+        # dirty fix for lengthy output
         r = "Variable " + self.name + "(" + self.desc + "), scale=" \
             + self.scale + ", datatype=" + str(self.datatype)
         if self.unit is not None:
@@ -273,7 +272,8 @@ class Variable (Symbol):
             if self.datatype is not None:
                 if not isinstance(v, self.datatype):
                     return False, \
-                        str(self) + " must be instance of " + str(self.datatype)
+                        str(self) + " must be instance of " + \
+                        str(self.datatype)
 
             if self.lower_bound is not None:
                 if not v >= self.lower_bound:
@@ -283,7 +283,8 @@ class Variable (Symbol):
             if self.strict_lower_bound is not None:
                 if not v > self.strict_lower_bound:
                     return False, \
-                        str(self) + " must be > " + str(self.strict_lower_bound)
+                        str(self) + " must be > " + \
+                        str(self.strict_lower_bound)
 
             if self.upper_bound is not None:
                 if not v <= self.upper_bound:
@@ -293,7 +294,8 @@ class Variable (Symbol):
             if self.strict_upper_bound is not None:
                 if not v < self.strict_upper_bound:
                     return False, \
-                        str(self) + " must be < " + str(self.strict_upper_bound)
+                        str(self) + " must be < " + \
+                        str(self.strict_upper_bound)
 
             if self.quantum is not None:
                 if not v % self.quantum == 0:
@@ -349,11 +351,11 @@ class Variable (Symbol):
     def _get_instances(self, instances):
         """converts argument into a set of instances
         (entities or process taxa)"""
-        if instances is None: # use all that have this variable
+        if instances is None:  # use all that have this variable
             instances = self.owning_class.instances
-        elif isinstance(instances, dict): # use all that appear in keys or values
+        elif isinstance(instances, dict):  # use all that appear in keys or values
             instances = set()
-            for k,i in instances.keys():
+            for k, i in instances.keys():
                 instances.update(self._get_instances(k))
                 instances.update(self._get_instances(i))
         elif isinstance(instances,
@@ -390,17 +392,17 @@ class Variable (Symbol):
 
     def add_noise(self,
                   instances=None,  # if None: all entities/taxa
-                  distribution=random.gauss, # basic noise distribution
+                  distribution=random.gauss,  # basic noise distribution
                   *,
-                  factor=1, # scale factor
-                  offset=0, # location offset
+                  factor=1,  # scale factor
+                  offset=0,  # location offset
                   multiplicative=False
                   ):
         """Set values in selected entities to random value.
         If distribution=None, use uninformed_prior.
         If optional p is given, replace current value only with probability p."""
         assert self.scale in ("ratio", "interval"), \
-                "can only add noise to ratio or interval scaled variables"
+            "can only add noise to ratio or interval scaled variables"
         instances = self._get_instances(instances)
         for i in instances:
             v = self.get_value(i)
@@ -492,7 +494,7 @@ class Variable (Symbol):
         """
         instances = self._get_instances(instances)
         for i in instances:
-            setattr(i, 'd_'+self.codename, 0)
+            setattr(i, 'd_' + self.codename, 0)
 
     def get_derivatives(self,
                         instances=None
@@ -508,7 +510,7 @@ class Variable (Symbol):
         -------
 
         """
-        return [getattr(i, 'd_'+self.codename) for i in instances]
+        return [getattr(i, 'd_' + self.codename) for i in instances]
 
     def get_value(self, instance, unit=None):
         v = getattr(instance, self.codename)
@@ -518,10 +520,10 @@ class Variable (Symbol):
         return v if unit is None else self._unit.convert(v, unit)
 
     def eval(self,
-                   instances=None,
-                   *,
-                   unit=None
-                   ):
+             instances=None,
+             *,
+             unit=None
+             ):
         """Return values for given entities,
         optionally in a different unit.
 
@@ -563,4 +565,3 @@ class Variable (Symbol):
     @property  # read-only
     def cardinalities(self):
         return [1, len(self.owning_class.instances)]
-

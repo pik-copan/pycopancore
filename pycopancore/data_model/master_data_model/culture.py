@@ -71,4 +71,3 @@ intersocietal_coalition_structure = \
     Variable("intersocietal coalition structure",
              """(a set of sets of societies)""",
              datatype=set)
-

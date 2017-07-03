@@ -22,6 +22,8 @@ from profilehooks import coverage, profile
 class _Unknown(object):
     def __str__(self):
         return "unknown"
+
+
 unknown = _Unknown()
 
 # hierarchical aggregation functions:
@@ -42,17 +44,18 @@ def aggregation(npfunc):
 
     return func
 
+
 name2numpy = {
-              "all": np.all,
-              "any": np.any,
-              "max": np.max,
-              "mean": np.mean,
-              "median": np.median,
-              "min": np.min,
-              "std": np.std,
-              "sum": np.sum,
-              "var": np.var,
-              }
+    "all": np.all,
+    "any": np.any,
+    "max": np.max,
+    "mean": np.mean,
+    "median": np.median,
+    "min": np.min,
+    "std": np.std,
+    "sum": np.sum,
+    "var": np.var,
+}
 aggregation_names = set(name2numpy.keys())
 name2aggregation = {name: aggregation(func)
                     for name, func in name2numpy.items()}
@@ -153,10 +156,10 @@ class _DotConstruct (sp.AtomicExpr):
         if isinstance(owning_class_or_var, D.Variable) \
                 or name_sequence[0] in aggregation_names:
             uid = repr(owning_class_or_var) \
-                    + str(name_sequence) + str(arg)
+                + str(name_sequence) + str(arg)
         else:
             uid = repr(getattr(owning_class_or_var, name_sequence[0])) \
-                    + str([None] + name_sequence[1:]) + str(arg)
+                + str([None] + name_sequence[1:]) + str(arg)
         return super().__new__(cls,
                                uid,
                                **assumptions)
@@ -323,7 +326,7 @@ class _DotConstruct (sp.AtomicExpr):
         oc = self.owning_class
         items = oc.instances
         branchings = [[len(items)]]
-        cardinalities = [1,len(items)]  # store initial cardinality
+        cardinalities = [1, len(items)]  # store initial cardinality
         for name in self.name_sequence[:-1]:
             if name in aggregation_names:
                 break
@@ -369,7 +372,7 @@ class _DotConstruct (sp.AtomicExpr):
                 # construct arg from name_sequence if None
                 if self.arg is None:
                     arg_name_sequence = self.name_sequence[:pos] \
-                                        + self.name_sequence[pos+1:]
+                        + self.name_sequence[pos + 1:]
                     self.arg = _DotConstruct(self.owning_class,
                                              arg_name_sequence)
                 # sic! (not items!):
@@ -433,52 +436,55 @@ class _DotConstruct (sp.AtomicExpr):
     def _eval_expand_power_base(self, **kwargs):
         return self
 
+
 _cached_values = {}
 _cached_iteration = None
 
 func2numpy = {
-              sp.Abs: np.abs,
-              sp.acos: np.arccos,
-              sp.acosh: np.arccosh,
-              sp.asin: np.arcsin,
-              sp.asinh: np.arcsinh,
-              sp.atan: np.arctan,
-              sp.atan2: np.arctan2,
-              sp.atanh: np.arctanh,
-              sp.ceiling: np.ceil,
-              sp.cos: np.cos,
-              sp.cosh: np.cosh,
-              sp.erf: scipy.special.erf,
-              sp.erfc: scipy.special.erfc,
-              sp.erfinv: scipy.special.erfinv,
-              sp.erfcinv: scipy.special.erfcinv,
-              sp.exp: np.exp,
-              sp.floor: np.floor,
-              sp.Heaviside: lambda x: 1 - (x < 0).astype(int),
-              sp.log: np.log,
-              sp.sin: np.sin,
-              sp.sinh: np.sin,
-              sp.sqrt: np.sqrt,
-              sp.tan: np.tan,
-              sp.tanh: np.tanh,
-              }
+    sp.Abs: np.abs,
+    sp.acos: np.arccos,
+    sp.acosh: np.arccosh,
+    sp.asin: np.arcsin,
+    sp.asinh: np.arcsinh,
+    sp.atan: np.arctan,
+    sp.atan2: np.arctan2,
+    sp.atanh: np.arctanh,
+    sp.ceiling: np.ceil,
+    sp.cos: np.cos,
+    sp.cosh: np.cosh,
+    sp.erf: scipy.special.erf,
+    sp.erfc: scipy.special.erfc,
+    sp.erfinv: scipy.special.erfinv,
+    sp.erfcinv: scipy.special.erfcinv,
+    sp.exp: np.exp,
+    sp.floor: np.floor,
+    sp.Heaviside: lambda x: 1 - (x < 0).astype(int),
+    sp.log: np.log,
+    sp.sin: np.sin,
+    sp.sinh: np.sin,
+    sp.sqrt: np.sqrt,
+    sp.tan: np.tan,
+    sp.tanh: np.tanh,
+}
 binary2numpy = {
-                sp.Eq: np.equal,
-                sp.Ge: np.greater_equal,
-                sp.Gt: np.greater,
-                sp.Le: np.less_equal,
-                sp.Lt: np.less,
-                sp.Ne: np.not_equal,
-                }
+    sp.Eq: np.equal,
+    sp.Ge: np.greater_equal,
+    sp.Gt: np.greater,
+    sp.Le: np.less_equal,
+    sp.Lt: np.less,
+    sp.Ne: np.not_equal,
+}
 nary2numpy = {
-              sp.Add: np.sum,
-              sp.And: np.logical_and,
-              sp.Mul: np.prod,
-              sp.Or: np.logical_or,
-              sp.Xor: np.logical_xor,
-              }
+    sp.Add: np.sum,
+    sp.And: np.logical_and,
+    sp.Mul: np.prod,
+    sp.Or: np.logical_or,
+    sp.Xor: np.logical_xor,
+}
 
 # @profile
+
+
 def _eval(expr, iteration=None):
     try:
         # if still up to date, return vals from cache:
@@ -574,6 +580,7 @@ def _eval(expr, iteration=None):
     except:
         pass
     return vals, cardinalities, branchings
+
 
 def eval(expr, iteration=None):
     vals, cardinalities, branchings = _eval(expr)

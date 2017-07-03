@@ -81,7 +81,7 @@ class Nature (cc.Nature,
 
 # TODO: list all mixin classes needed:
 class Metabolism (
-                  base.Metabolism):
+        base.Metabolism):
     """Metabolism process taxon."""
 
     pass

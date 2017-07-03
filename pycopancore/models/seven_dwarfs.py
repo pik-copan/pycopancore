@@ -24,6 +24,7 @@ from ..model_components import seven_dwarfs as sd
 # Only compose those entity types and process taxons that the model needs,
 # delete the templates for the unneeded ones, and add those for missing ones:
 
+
 class World (sd.World,
              base.World):
     """World entity type."""

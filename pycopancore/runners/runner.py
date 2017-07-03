@@ -157,7 +157,7 @@ class Runner(_AbstractRunner):
         for target in self.model.ODE_targets:
             derivative_array[target._from:target._to] += \
                 target.target_variable.get_derivatives(
-                            instances=target.target_class.instances)
+                instances=target.target_class.instances)
 
         return derivative_array
 
@@ -332,7 +332,7 @@ class Runner(_AbstractRunner):
                     target._to = tos[i]
                     initial_array_ode[froms[i]:tos[i]] = \
                         target.target_variable.eval(
-                                instances=target.target_class.instances)
+                        instances=target.target_class.instances)
 
                 # In Odeint, call get_rhs_array to get the RHS of the ODE
                 # system as an array, step 3.1 in runner scheme, then return
@@ -372,7 +372,7 @@ class Runner(_AbstractRunner):
 
                 # TODO: capture solver failures!
 
-                print("      ...took", time()-_starttime, "seconds and",
+                print("      ...took", time() - _starttime, "seconds and",
                       len(times), "time steps")
 
                 # Save t values to output dict:
@@ -384,10 +384,10 @@ class Runner(_AbstractRunner):
                 for i, target in enumerate(self.model.ODE_targets):
                     for pos, inst in enumerate(target.target_class.instances):
                         values = list(
-                                ode_trajectory[:, target._from + pos])
+                            ode_trajectory[:, target._from + pos])
                         try:
                             if len(self.trajectory_dict[
-                                       target.target_variable][inst]) < tlen:
+                                    target.target_variable][inst]) < tlen:
                                 self.trajectory_dict[
                                     target.target_variable][inst] += values
                         except KeyError:
@@ -443,8 +443,8 @@ class Runner(_AbstractRunner):
                         # Add its next discontinuity:
                         if eventtype == "rate":
                             next_time = t + \
-                                        np.random.exponential(1. /
-                                                              rate_or_timefunc)
+                                np.random.exponential(1. /
+                                                      rate_or_timefunc)
                         elif eventtype == "time":
                             next_time = rate_or_timefunc(t)
                         else:

@@ -16,4 +16,3 @@ from .individual import Individual
 
 # export all provided process taxon implementation mixin classes:
 from .culture import Culture
-

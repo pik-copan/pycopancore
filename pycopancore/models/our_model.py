@@ -46,7 +46,7 @@ class Cell (cc.Cell,
 
 
 class Individual (
-                  base.Individual):
+        base.Individual):
     """Individual entity type."""
 
     pass
@@ -62,14 +62,14 @@ class Nature (cc.Nature,
 
 
 class Metabolism (
-                  base.Metabolism):
+        base.Metabolism):
     """Metabolism process taxon."""
 
     pass
 
 
 class Culture (
-               base.Culture):
+        base.Culture):
     """Culture process taxon."""
 
     pass

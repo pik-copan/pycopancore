@@ -20,9 +20,9 @@ class Metabolism (I.Metabolism):
     def __init__(self,
                  *,
                  # see Nitzbon 2016:
-                 biomass_energy_density=40e9*D.gigajoules/D.gigatonnes_carbon,
+                 biomass_energy_density=40e9 * D.gigajoules / D.gigatonnes_carbon,
                  # see Nitzbon 2016:
-                 fossil_energy_density=47e9*D.gigajoules/D.gigatonnes_carbon,
+                 fossil_energy_density=47e9 * D.gigajoules / D.gigatonnes_carbon,
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line

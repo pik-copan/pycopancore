@@ -75,4 +75,4 @@ class Society (I.Society):
         ODE("growth and depreciation",
             [I.Society.physical_capital, I.Society.renewable_energy_knowledge],
             do_growth_and_depreciation)
-        ]
+    ]

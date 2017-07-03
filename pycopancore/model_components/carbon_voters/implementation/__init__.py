@@ -17,4 +17,3 @@ from .society import Society
 from .culture import Culture
 
 # export all provided process taxon implementation mixin classes:
-
