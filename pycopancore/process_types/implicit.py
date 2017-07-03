@@ -33,7 +33,7 @@ class Implicit(_AbstractProcess):
                  name,
                  variables,
                  specification
-                 ):
+                ):
         """Instantiate an instance of an implicit process.
 
         Parameters

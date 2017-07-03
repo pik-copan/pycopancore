@@ -19,12 +19,12 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 
 from ..data_model import variable
 from ..private._expressions import _DotConstruct, aggregation_names
-from .. import OrderedSet
+from ..data_model import OrderedSet
 
 import inspect
 
 
-class _AbstractEntityMixinType (type):
+class _AbstractEntityMixinType(type):
     """metaclass for _AbstractEntityMixin.
 
     Needed for intercepting
@@ -42,6 +42,8 @@ class _AbstractEntityMixinType (type):
 #         return res
 
     def __getattribute__(cls, name):
+        """Dummy docstring"""
+        # TODO: add docstring to function
         if name in aggregation_names:
             return _DotConstruct(cls, [name])
         res = type.__getattribute__(cls, name)
@@ -63,7 +65,7 @@ class _AbstractEntityMixinType (type):
 #        return cls.__name__
 
 
-class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
+class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
     """Define AbstractEntityMixin.
 
     Entity-unspecific abstract class from which all entity-specific abstract
@@ -122,10 +124,12 @@ class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
     def __str__(self):
         return repr(self)
 
-    def set_value(self, variable, value):
-        assert isinstance(variable, variable.Variable), \
+    def set_value(self, var, value):
+        """Dummy docstring"""
+        # TODO: add docstring to method
+        assert isinstance(var, variable.Variable), \
             "variable must be a Variable object"
-        variable.set_value(self, value)
+        var.set_value(self, value)
 
     def assert_valid(self):
         """Make sure all variable values are valid.

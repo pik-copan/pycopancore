@@ -37,7 +37,7 @@ class ODE(_AbstractProcess):
                  specification,
                  *,
                  smoothness=1
-                 ):
+                ):
         """Instantiate an instance of an ODE process.
 
         Parameters

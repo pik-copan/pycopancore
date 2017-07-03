@@ -26,14 +26,20 @@ unknown = _Unknown()
 
 
 def aggregation(npfunc):
+    """Dummy docstring"""
+
+    # TODO: add docstring to function
 
     @njit
     def func(values, lens):
+        """Dummy docstring"""
+
+        # TODO: add docstring to function
         # values = np.array(values)
         results = np.zeros(len(lens), dtype=values.dtype)
         offset = 0
-        for i in range(len(lens)):
-            newoffset = offset + lens[i]
+        for i, le in enumerate(lens):
+            newoffset = offset + le
             results[i] = npfunc(values[offset:newoffset])
             offset = newoffset
         return list(results)
@@ -61,28 +67,34 @@ name2aggregation = {name: aggregation(func)
 
 @njit
 def _broadcast(values, lens):
+    """Dummy docstring"""
+    # TODO: add docstring to function
     result = np.zeros(np.sum(np.array(lens)))
     offset = 0
-    for i, l in enumerate(lens):
-        newoffset = offset + l
+    for i, le in enumerate(lens):
+        newoffset = offset + le
         result[offset:newoffset] = values[i]
         offset = newoffset
     return result
 
 
 def broadcast(values, layout):
+    """Dummy docstring"""
+    # TODO: add docstring to function
     for lens in layout:
         values = _broadcast(values, lens)
     return values
 
 
 def layout2lens(layout):
+    """Dummy docstring"""
+    # TODO: add docstring to function
     result = layout[-1]
     for lens in reversed(layout[:-1]):
         offset = 0
         newresult = []
-        for i, l in enumerate(lens):
-            newoffset = offset + l
+        for le in lens:
+            newoffset = offset + le
             newresult.append(sum(result[offset:newoffset]))
             offset = newoffset
         result = newresult
@@ -90,6 +102,8 @@ def layout2lens(layout):
 
 
 def get_cardinalities_and_branchings(expr):
+    """Dummy docstring"""
+    # TODO: add docstring to function
     try:
         return expr.cardinalities, expr.branchings
     except BaseException:
@@ -101,7 +115,7 @@ def get_cardinalities_and_branchings(expr):
         return cbs[np.argmax([len(c[0]) for c in cbs])]
 
 
-class _DotConstruct (sp.AtomicExpr):
+class _DotConstruct(sp.AtomicExpr):
     """A _DotConstruct represents a syntactical construct with dots,
     starting with an entity-type or process taxon class,
     followed by zero or more ReferenceVariables or SetVariables
@@ -164,7 +178,7 @@ class _DotConstruct (sp.AtomicExpr):
                  owning_class_or_var,
                  name_sequence,
                  arg=None
-                 ):
+                ):
         super().__init__()
 
         if self._initialized is None:
@@ -240,7 +254,8 @@ class _DotConstruct (sp.AtomicExpr):
     def _eval_expand_mul(self, *args, **kwargs):
         return self
 
-    def _eval_Eq(self, *args, **kwargs):
+    @staticmethod
+    def _eval_Eq(*args, **kwargs):
         return None
 
 # this does not work unfortunately:
@@ -271,6 +286,8 @@ class _DotConstruct (sp.AtomicExpr):
 
     @property  # read-only
     def owning_class(self):
+        """Dummy docstring"""
+        # TODO: add docstring to method
         if isinstance(self._owning_class_or_var, D.Variable):
             self.name_sequence[0] = self._owning_class_or_var.codename
             self._owning_class_or_var = self._owning_class_or_var.owning_class
@@ -578,5 +595,7 @@ def _eval(expr, iteration=None):
 
 
 def eval(expr, iteration=None):
+    """Dummy docstring - wrap private _eval function?"""
+    # TODO: add docstring to function
     vals, cardinalities, branchings = _eval(expr)
     return vals

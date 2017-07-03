@@ -35,7 +35,7 @@ class Event(_AbstractProcess):
                  variables,
                  specification,
                  smoothness=0
-                 ):
+                ):
         """Instantiate an instance of an Event process.
 
         Parameters
