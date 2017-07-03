@@ -53,9 +53,6 @@ class World (I.World, abstract.World):
         """
         super().__init__(**kwargs)  # must be the first line
 
-        if len(self.__class__.instances) > 1:
-            raise ValueError('Only one world allowed!')
-
         self.nature = nature
         self.metabolism = metabolism
         self.culture = culture
