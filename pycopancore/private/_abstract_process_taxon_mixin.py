@@ -20,8 +20,6 @@ class _AbstractProcessTaxonMixin(object):
     From this class all entity-specific abstract mixin classes are derived.
     """
 
-    variables = OrderedSet()
-    """All variables occurring in this taxon"""
     processes = []
     """All processes of this taxon"""
     model = None

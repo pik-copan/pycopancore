@@ -120,3 +120,15 @@ class DimensionalQuantity (object):
 
     def __getitem__(self, items):
         return DimensionalQuantity(self._number[items], self._unit)
+
+    def __ge__(self, other):
+        return (self - other)._number >= 0
+
+    def __gt__(self, other):
+        return (self - other)._number > 0
+
+    def __le__(self, other):
+        return (self - other)._number <= 0
+
+    def __lt__(self, other):
+        return (self - other)._number < 0

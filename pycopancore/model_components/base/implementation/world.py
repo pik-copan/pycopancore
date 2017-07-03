@@ -16,6 +16,7 @@ from ....private import unknown
 from .. import interface as I
 
 from .... import Explicit
+from pycopancore.data_model.master_data_model.cell import ocean_carbon
 
 
 class World (I.World, abstract.World):
@@ -33,20 +34,35 @@ class World (I.World, abstract.World):
                  metabolism=None,
                  culture=None,
                  population = 0 * D.people,
+                 terrestrial_carbon = 0 * D.gigatonnes_carbon,
+                 fossil_carbon = 0 * D.gigatonnes_carbon,
+                 atmospheric_carbon = 0 * D.gigatonnes_carbon,
+                 ocean_carbon = 0 * D.gigatonnes_carbon,
+                 surface_air_temperature = 0 * D.kelvins,
                  **kwargs
                  ):
         """Instantiate (typically the only) instance of World.
 
         Parameters
         ----------
-        nature: obj
+        nature : obj
             Nature acting on this World.
-        metabolism: obj
+        metabolism : obj
             Metabolism acting on this World.
-        culture: obj
+        culture : obj
             Culture acting on this World.
-        population: quantity
+        population : quantity
             Human population (default is 0).
+        terrestrial_carbon : quantity
+            Terrestrial carbon
+        fossil_carbon : quantity
+            Fossil carbon
+        atmospheric_carbon : quantity
+            Atmospheric carbon
+        ocean_carbon : quantity
+            Ocean carbon
+        surface_air_temperature : quantity
+            Surface air temperature
         **kwargs
             keyword arguments passed to super()
 
@@ -57,12 +73,16 @@ class World (I.World, abstract.World):
         self.metabolism = metabolism
         self.culture = culture
         self.population = population
+        self.terrestrial_carbon = terrestrial_carbon
+        self.fossil_carbon = fossil_carbon
+        self.atmospheric_carbon = atmospheric_carbon
+        self.ocean_carbon = ocean_carbon
+        self.surface_air_temperature = surface_air_temperature
+        self._societies = set()
+        self._cells = set()
 
         # make sure all variable values are valid:
         self.assert_valid()
-
-        self._societies = set()
-        self._cells = set()
 
     # getters and setters:
 
