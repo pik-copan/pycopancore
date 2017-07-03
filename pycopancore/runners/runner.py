@@ -39,7 +39,7 @@ class Runner(_AbstractRunner):
                  model,  # TODO: allow this to be given without name!
                  termination_calls=False
                  ):
-        """Initiate an Instance of Runner.
+        """Instantiate an Instance of Runner.
 
         Parameters
         ----------
