@@ -300,10 +300,12 @@ class Runner(_AbstractRunner):
                     method(inst, t)
                     # ask process when it steps next:
                     next_time = next_time_func(inst, t)
+                    assert next_time > t, "next time must be > t"
                 # TODO: Same time for all instances? self. necessary?
                 else:
                     # ask process when it steps next:
                     next_time = next_time_func(inst, t)
+                    assert next_time > t, "next time must be > t"
                 # register next stepping time in dict:
                 try:
                     next_discontinuities[next_time].append((step, inst))
@@ -520,6 +522,7 @@ class Runner(_AbstractRunner):
                         elif eventtype == "time":
                             # ask event when it next happens:
                             next_time = rate_or_timefunc(t)
+                            assert next_time > t, "next time must be > t"
                         # register it:
                         try:
                             next_discontinuities[next_time].append((process,
@@ -536,6 +539,7 @@ class Runner(_AbstractRunner):
                         method(inst, t)
                         # determine this event's next occurrence:
                         next_time = timefunc(inst, t)
+                        assert next_time > t, "next time must be > t"
                         # register it:
                         try:
                             next_discontinuities[next_time].append((process,
