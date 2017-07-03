@@ -1,7 +1,8 @@
 """Master data model for nature."""
 
 from .. import Variable
-from . import unity, gigatonnes_carbon, kelvins, years
+from . import gigatonnes_carbon, kelvins, years
+from .. import unity
 
 from networkx import DiGraph, Graph
 
