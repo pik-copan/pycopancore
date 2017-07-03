@@ -39,15 +39,17 @@ class Cell (I.Cell, abstract.Cell):
         Parameters
         ----------
         world: obj
-            Instance of World to that the cell obj belongs to
+            Instance of World to that the cell obj belongs to (the default is
+            None)
         society: obj
-            Instance of Society to that cell obj belongs to
+            Instance of Society to that cell obj belongs to (the default is
+            None)
         location: # TODO
-            Location of cell object
-        land_area: float
-            Area of cell object
+            Location of cell object (the default is None)
+        land_area: # TODO
+            Area of cell object, (default 1 * km^2)
         geometry: # TODO
-            Geometry of cell object
+            Geometry of cell object (the default is None)
 
         """
         super().__init__(**kwargs)  # must be the first line
