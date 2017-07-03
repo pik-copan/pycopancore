@@ -153,6 +153,3 @@ py.plot(fig1, filename="our-model-result1.html")
 
 fig2 = dict(data=[data_age[1], data_beard_length[1], data_stock[0]], layout=layout)
 py.plot(fig2, filename="our-model-result2.html")
-
-print(traj['t'])
-print(traj[M.Cell.eating_stock][cell[0]])
