@@ -40,11 +40,7 @@ class Runner(_AbstractRunner):
                  *,
                  termination_calls=None
                  ):
-<<<<<<< HEAD
-        """Instantiate an Instance of Runner.
-=======
         """Instantiate a Runner.
->>>>>>> master
 
         Parameters
         ----------
@@ -58,7 +54,7 @@ class Runner(_AbstractRunner):
         """
         super(Runner, self).__init__()
 
-        # register model and for performance reasons also some of its 
+        # register model and for performance reasons also some of its
         # properties as runner attributes:
         self.model = model
         self.processes = model.processes
@@ -442,18 +438,14 @@ class Runner(_AbstractRunner):
                     # read results column by column and store in corresponding
                     # target instances:
                     for pos, inst in enumerate(target.target_class.instances):
-                        # get this instance's value column as a list, 
+                        # get this instance's value column as a list,
                         # containing the values for all time points:
                         values = list(
                             ode_trajectory[:, target._from + pos])
                         try:
                             if len(self.trajectory_dict[
-<<<<<<< HEAD
-                                    target.target_variable][inst]) < tlen:
-=======
                                        target.target_variable][inst]) < tlen:
                                 # append to existing list:
->>>>>>> master
                                 self.trajectory_dict[
                                     target.target_variable][inst] += values
                         except KeyError:

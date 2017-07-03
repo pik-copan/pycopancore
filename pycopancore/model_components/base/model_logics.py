@@ -16,13 +16,8 @@ variables in special list to be accessed by the runner.
 
 from .. import abstract
 from ... import Variable, ReferenceVariable, SetVariable, \
-<<<<<<< HEAD
-    ODE, Explicit, Step, Event, OrderedSet
-# from ...private import _AbstractEntityMixin, _AbstractProcessTaxonMixin
-=======
                 ODE, Explicit, Step, Event, OrderedSet
 from ...private import _AbstractProcess
->>>>>>> master
 
 import inspect
 
@@ -84,7 +79,7 @@ class ModelLogics (object):
         This classmethod configures the model by analysing the model's and all
         its entity types' and process taxa's class inheritance structure to
         find all mixin classes (implementation and interface), analyse them
-        to compile and output lists (actually OrderedSets) of variables and 
+        to compile and output lists (actually OrderedSets) of variables and
         processes.
 
         Parameter
@@ -130,13 +125,6 @@ class ModelLogics (object):
         # (typically both are named "Model" since they are the mixin classes
         # for the composite class of the name "Model")
         cls.components = OrderedSet(
-<<<<<<< HEAD
-            [c for c in list(inspect.getmro(cls))  # exclude self
-             if c not in (object, abstract.Model, ModelLogics)
-             # exclude interface classes (which have an attribute "name"):
-             and not "name" in c.__dict__
-             ])
-=======
                 [c for c in list(inspect.getmro(cls))
                  # exclude things that are definitely not model components:
                  if c not in (object, abstract.Model, ModelLogics)
@@ -144,7 +132,6 @@ class ModelLogics (object):
                  and not "name" in c.__dict__  # TODO: use a cleaner method than this to distinguish interfaces from implementation?
                  ])
         # iterate through all model components:
->>>>>>> master
         for component in cls.components:
             component_interface = component.__bases__[0]  # the first base class of an impl. cl. is its interface
             print("Model component ", component_interface.name, "(", component,
@@ -213,14 +200,8 @@ class ModelLogics (object):
                         "Variable '{v!r}' was not defined in any component interface!".format(
                             **locals())
                     assert v.codename == k, \
-<<<<<<< HEAD
-                        "Variable '{v!r}' was registered under a different codename".format(
-                            **locals())
-                    assert v.owning_class is None
-=======
                         "Variable '{v!r}' was registered under a different codename".format(**locals())
                     assert v.owning_class is None  # since it is only set here!
->>>>>>> master
                     cls.variables.add(v)
                     v.owning_class = composed_class
 
@@ -237,7 +218,7 @@ class ModelLogics (object):
                 if "processes" in c.__dict__ and c.processes is not None:  # since some implementation classes may not define any processes
                     for p in c.processes:
                         print("    Process ", p)
-                        # all processes found here should have been seen 
+                        # all processes found here should have been seen
                         # already above, so we verify this:
                         assert p in cls.processes, \
                             "Process was not listed in any implementation " \
@@ -254,25 +235,16 @@ class ModelLogics (object):
                                     # actually belongs to the same entity type
                                     # or taxon as the process:
                                     assert target.owning_class == \
-<<<<<<< HEAD
-                                        composed_class, \
-                                        "ODE target Variable owned by " \
-                                        "different entity-type/taxon! " \
-                                        "(maybe try accessing it via a " \
-                                        "ReferenceVariable)"
-                                else:  # it's a _DotConstruct
-=======
                                            composed_class, \
                                            "ODE target Variable owned by " \
                                            "different entity-type/taxon! " \
                                            "(maybe try accessing it via a " \
                                            "ReferenceVariable)"
                                 else:  # target is a _DotConstruct
-                                    # make sure the possibly lengthy attribute 
-                                    # reference named as the process target 
+                                    # make sure the possibly lengthy attribute
+                                    # reference named as the process target
                                     # actually starts at the entity type
                                     # or taxon the process belongs to:
->>>>>>> master
                                     assert target.owning_class == \
                                         composed_class, \
                                         "ODE target attribute reference " \
