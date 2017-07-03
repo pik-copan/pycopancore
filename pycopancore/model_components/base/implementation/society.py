@@ -34,7 +34,7 @@ class Society (I.Society, abstract.Society):
                  **kwargs
                  ):
         """Initialize an instance of Society.
-        
+
         Parameters
         ----------
         world: obj
@@ -43,19 +43,27 @@ class Society (I.Society, abstract.Society):
             Optional Society the Society belongs to (default is None)
         population: int
             Number of people residing in the Society's territory
-        kwargs
+        **kwargs
+            keyword arguments passed to super()
+
         """
         super().__init__(**kwargs)  # must be the first line
 
+        # init caches:
         self._next_lower_societies = set()
         self._direct_cells = set()
 
+        # init and set variables implemented via properties:
         self._world = None
-        self._next_higher_society = None
-
         self.world = world
+        self._next_higher_society = None
         self.next_higher_society = next_higher_society
+
+        # set other variables:
         self.population = population
+
+        # make sure all variable values are valid:
+        self.assert_valid()
 
     # getters and setters for references:
 
@@ -222,4 +230,4 @@ class Society (I.Society, abstract.Society):
 
     # no process-related methods
 
-    processes = []
+    processes = []  # no processes in base

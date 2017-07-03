@@ -9,6 +9,7 @@ This is the base model-component implementation subpackage
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+# export all used entity types and process taxa from their respective modules:
 
 from .world import World
 from .society import Society

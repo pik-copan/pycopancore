@@ -9,6 +9,7 @@
 # License: MIT license
 
 from ...private import _AbstractProcessTaxonMixin
+from ...data_model import OrderedSet
 
 
 class Culture (_AbstractProcessTaxonMixin):
@@ -17,4 +18,5 @@ class Culture (_AbstractProcessTaxonMixin):
     Inherited by base model component.
     """
 
-    pass
+    variables = OrderedSet()
+    """All variables occurring in this entity type"""

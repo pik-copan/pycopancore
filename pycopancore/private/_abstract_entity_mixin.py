@@ -76,8 +76,6 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
 
     # class (!) attributes:
     NEXTUID = 0
-    variables = OrderedSet()
-    """All variables occurring in this entity type"""
     processes = []
     """All processes of this entity type"""
     model = None
@@ -138,7 +136,11 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
 
         """
         for v in self.variables:
-            v.assert_valid(v.get_value(self))
+            try:
+                val = v.get_value(self)
+            except:
+                return
+            v.assert_valid(val)
 
     @classmethod
     def get_next_uid(cls):
