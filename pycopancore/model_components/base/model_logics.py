@@ -202,6 +202,7 @@ class ModelLogics (object):
                         "Variable '{v!r}' was registered under a different codename".format(**locals())
                     assert v.owning_class is None  # since it is only set here!
                     cls.variables.add(v)
+                    composed_class.variables.add(v)
                     v.owning_class = composed_class
 
         print("\nProcesses:")
