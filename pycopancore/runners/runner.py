@@ -265,7 +265,7 @@ class Runner(_AbstractRunner):
                 if eventtype == "rate":
                     assert rate_or_timefunc > 0, \
                         "zero, negative, or varying rates not supported yet."
-                    next_time = np.random.exponential(1. / rate_or_timefunc)
+                    next_time = t_0 + np.random.exponential(1. / rate_or_timefunc)
                     # TODO: if rate_or_timefunc is a function in this case,
                     # it returns a time-varying rate that depends on state,
                     # hence it must be used in ode integration to integrate
@@ -275,6 +275,7 @@ class Runner(_AbstractRunner):
                 elif eventtype == "time":
                     # in this case, rate_or_timefunc directly returns a time:
                     next_time = rate_or_timefunc(t)
+                    assert next_time > t_0, "next time must be > t"
                 try:
                     next_discontinuities[next_time].append((event, inst))
                 except KeyError:
@@ -300,12 +301,12 @@ class Runner(_AbstractRunner):
                     method(inst, t)
                     # ask process when it steps next:
                     next_time = next_time_func(inst, t)
-                    assert next_time > t, "next time must be > t"
+                    assert next_time > t_0, "next time must be > t"
                 # TODO: Same time for all instances? self. necessary?
                 else:
                     # ask process when it steps next:
                     next_time = next_time_func(inst, t)
-                    assert next_time > t, "next time must be > t"
+                    assert next_time > t_0, "next time must be > t"
                 # register next stepping time in dict:
                 try:
                     next_discontinuities[next_time].append((step, inst))
