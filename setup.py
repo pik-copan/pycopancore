@@ -21,9 +21,10 @@ setup(name="pycopancore",
           "pytest",
           "pylama",
           "pylint",
-          "pylama>=7.0.0",
+          "pylama>=7.4.1",
           "pytest-cov>=2.5.1",
-          "profilehooks"
+          "profilehooks",
+          "pylama_pylint"
 
       ],
       zip_safe=False # see http://stackoverflow.com/questions/15869473/what-is-the-advantage-of-setting-zip-safe-to-true-when-packaging-a-python-projec
