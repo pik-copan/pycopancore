@@ -88,7 +88,9 @@ class Culture (I.Culture):
         """
         super().__init__(**kwargs)
 
-        # TODO: ask Jobst, whether this should get the network as input so it could be applied to different networks... seems sensible too me but might contradict the frameworks idea
+        # TODO: ask Jobst, whether this should get the network as input so it
+        # could be applied to different networks... seems sensible too me but
+        # might contradict the frameworks idea
 
         _rewiring = rewiring
         if not callable(rewiring):
@@ -120,7 +122,8 @@ class Culture (I.Culture):
 
     def analyze_graph(self, t):
         """analyze the graph so speed-ups can be used later"""
-        # TODO: test whether sortedlist or sets are faster for large numbers of entries
+        # TODO: test whether sortedlist or sets are faster for large numbers of
+        # entries
         assert t == 0, "This function should be run as a pre-hook of the runner!"
         print("    analyzing the graph ... ", end="", flush=True)
         start = time()
@@ -182,7 +185,8 @@ class Culture (I.Culture):
         #       ... make sure that the rest of the model works on longer time scales if you do that
         #       ... introduce a time scale for that
 
-        # choose only between the active nodes, which are the keys of this sortedset
+        # choose only between the active nodes, which are the keys of this
+        # sortedset
         active_individual = random.choice(self.__nodes)
         neighbors = self.acquaintance_network.neighbors(active_individual)
         if self.active_neighbor_only:

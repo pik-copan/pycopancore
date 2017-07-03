@@ -44,7 +44,7 @@ class _AbstractEntityMixinType (type):
         if name in aggregation_names:
             return _DotConstruct(cls, [name])
         res = type.__getattribute__(cls, name)
-        if type(res) == property:
+        if isinstance(res, property):
             # find first overridden attribute in method resolution
             # order that is not a property (but a Variable object):
             for c in inspect.getmro(cls)[1:]:
@@ -52,7 +52,7 @@ class _AbstractEntityMixinType (type):
                     res = c.__getattribute__(c, name)
                     if isinstance(res, variable.Variable):
                         return res
-                except:
+                except BaseException:
                     pass
             raise AttributeError("property " + name
                                  + " does not correspond to any Variable!")

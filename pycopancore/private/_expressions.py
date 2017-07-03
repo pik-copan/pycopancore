@@ -96,7 +96,7 @@ def layout2lens(layout):
 def get_cardinalities_and_branchings(expr):
     try:
         return expr.cardinalities, expr.branchings
-    except:
+    except BaseException:
         # use longest cardinalities of args:
         cbs = [get_cardinalities_and_branchings(arg)
                for arg in expr.args]
@@ -268,7 +268,7 @@ class _DotConstruct (sp.AtomicExpr):
                 value = getattr(value, name)
                 try:  # use first element if iterable:
                     value = next(iter(value))
-                except:
+                except BaseException:
                     pass
             self._target_class = value.__class__
         return self._target_class
@@ -491,7 +491,7 @@ def _eval(expr, iteration=None):
         if iteration is not None and _cached_iteration == iteration:
             print("(used the cache)")
             return _cached_values[expr]
-    except:
+    except BaseException:
         pass
     t = type(expr)
     tt = type(t)
@@ -577,7 +577,7 @@ def _eval(expr, iteration=None):
         _cached_values[expr] = (vals, cardinalities, branchings)
         _cached_iteration = iteration
 #        print("(stored in cache)")
-    except:
+    except BaseException:
         pass
     return vals, cardinalities, branchings
 

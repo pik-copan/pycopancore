@@ -35,23 +35,23 @@ class Hooks(object):
     # class variables
     _pre_hooks = {}
     """dict of hooks that are executed before the run
-    
+
     keys: None or Entity class or Taxon class
-    
+
     values: list of functions
     """
     _mid_hooks = {}
     """dict of hooks that are executed every time the run is halted for a step or an event
-    
+
     keys: None or Entity class or Taxon class
-    
+
     values: list of functions
     """
     _post_hooks = {}
     """dict of hooks that are executed after the run
-    
+
     keys: None or Entity class or Taxon class
-    
+
     values: list of functions
     """
 
@@ -74,7 +74,7 @@ class Hooks(object):
             Specifies the type of the hook.
 
         hook: function
-            The function to be called.  
+            The function to be called.
             arguments: instance of the corresponding enitity or taxon, time when called
         """
         assert type in cls.Types, "please give a type from {}.HookTypes".format(
@@ -88,7 +88,8 @@ class Hooks(object):
             hooks = cls._post_hooks
         else:
             # if the Code ends up here, there is an error in the implementation because
-            # cls.HookTypes has been extended but there is no registration done here
+            # cls.HookTypes has been extended but there is no registration done
+            # here
             raise HooksError("unknown hook type")
 
         if theclass in hooks:
@@ -100,7 +101,8 @@ class Hooks(object):
             hooks[theclass] = [hook]
 
     @classmethod
-    def unregister_hook(cls, type, hook, theclass=None, error_if_not_registered=True):
+    def unregister_hook(cls, type, hook, theclass=None,
+                        error_if_not_registered=True):
         """Register a hook.
         Parameters
         ==========
@@ -126,7 +128,8 @@ class Hooks(object):
             hooks = cls._post_hooks
         else:
             # if the Code ends up here, there is an error in the implementation because
-            # cls.HookTypes has been extended but there is no registration done here
+            # cls.HookTypes has been extended but there is no registration done
+            # here
             raise HooksError("unknown hook type")
         try:
             if theclass not in hooks:
@@ -150,12 +153,14 @@ class Hooks(object):
             hooks = cls._post_hooks
         else:
             # if the Code ends up here, there is an error in the implementation because
-            # cls.HookTypes has been extended but there is no registration done here
+            # cls.HookTypes has been extended but there is no registration done
+            # here
             raise HooksError("unknown hook type")
 
         if hooks:
             if None in hooks:
-                # go throught all hooks that don't have an entity or taxon associated with it
+                # go throught all hooks that don't have an entity or taxon
+                # associated with it
                 for hook in hooks[None]:
                     hook(t)
             # look for the correct components fitting to each hook_class

@@ -24,7 +24,8 @@ class Nature (I.Nature):
                  ocean_atmosphere_diffusion_coefficient=0.05 / years,  # Anderies
                  carbon_solubility_in_sea_water=1,  # Anderies
                  basic_photosynthesis_productivity=26.4 / years / \
-                     (gigatonnes_carbon / square_kilometers)**.5,  # see Nitzbon 2016
+                     (gigatonnes_carbon /
+                      square_kilometers)**.5,  # see Nitzbon 2016
                  photosynthesis_sensitivity_on_atmospheric_carbon=0 \
                  #                    1.1e6 \
                  / years / (gigatonnes_carbon / square_kilometers)**.5
