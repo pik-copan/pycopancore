@@ -1,4 +1,4 @@
-"""Base component's World entity type mixin implementation class."""
+""" """
 
 # This file is part of pycopancore.
 #
@@ -24,9 +24,8 @@ class World (I.World, abstract.World):
     Base component's World mixin that every model must use in composing their
     World class. Inherits from I.World as the interface with all necessary
     variables and parameters.
-    """
 
-    # standard methods:
+    """
 
     def __init__(self,
                  *,
@@ -36,7 +35,22 @@ class World (I.World, abstract.World):
                  population=0 * D.people,
                  **kwargs
                  ):
-        """Initialize an (typically the only) instance of World."""
+        """Instantiate (typically the only) instance of World.
+
+        Parameters
+        ----------
+        nature: obj
+            Nature the World is part of.
+        metabolism: obj
+            Metabolism the World is part of.
+        culture: obj
+            Culture the Wold is part of.
+        population: int
+            Population of the World (default is 0).
+        **kwargs
+            Arbitrary keyword arguments
+
+        """
         super().__init__(**kwargs)  # must be the first line
 
         if len(self.__class__.instances) > 1:
@@ -48,32 +62,34 @@ class World (I.World, abstract.World):
         self.population = population
 
         self._societies = set()
+        """ # TODO: docstring """
         self._cells = set()
+        """ # TODO: docstring """
 
     # getters and setters:
 
     @property  # read-only
     def societies(self):
-        """Return societies of world."""
+        """Get the set of all Societies on this World."""
         return self._societies
 
     @property  # read-only
     def top_level_societies(self):
-        """Return top level society of world."""
+        """Get the set of top-level Societies on this World."""
         # find by filtering:
         return set([s for s in self._societies
                     if s.next_higher_society is None])
 
     @property  # read-only
     def cells(self):
-        """Return cells of world."""
+        """Get the set of Cells on this World."""
         return self._cells
 
     _individuals = unknown
     """cache, depends on self.cells, cell.individuals"""
     @property  # read-only
     def individuals(self):
-        """Return individuals."""
+        """Get and set the set of Individuals residing on this World."""
         if self._individuals is unknown:
             # aggregate from cells:
             self._individuals = set()
@@ -91,11 +107,14 @@ class World (I.World, abstract.World):
     # process-related methods:
 
     def aggregate_cell_carbon_stocks(self, unused_t):
-        """Sum up all carbon stocks of cells.
+        """Sum up all carbon stocks of Cells.
 
         Parameters
         ----------
         unused_t
+            A parameter that is not used in the method but necessary for the
+            runner.
+
         """
         cs = self.cells
         self.terrestrial_carbon = sum([c.terrestrial_carbon for c in cs])
