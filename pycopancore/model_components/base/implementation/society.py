@@ -1,4 +1,4 @@
-"""Base component's Society entity type mixin implementation class."""
+""" """
 
 # This file is part of pycopancore.
 #
@@ -33,7 +33,18 @@ class Society (I.Society, abstract.Society):
                  population=0 * D.people,
                  **kwargs
                  ):
-        """Initialize an instance of Society."""
+        """Initialize an instance of Society.
+        
+        Parameters
+        ----------
+        world: obj
+            World the Society belongs to (default is None)
+        next_higher_society: obj
+            Optional Society the Society belongs to (default is None)
+        population: int
+            Number of people residing in the Society's territory
+        kwargs
+        """
         super().__init__(**kwargs)  # must be the first line
 
         self._next_lower_societies = set()
