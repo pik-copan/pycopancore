@@ -32,7 +32,7 @@ class World (I.World, abstract.World):
                  nature=None,
                  metabolism=None,
                  culture=None,
-                 population=0 * D.people,
+                 population = 0 * D.people,
                  **kwargs
                  ):
         """Instantiate (typically the only) instance of World.
@@ -40,31 +40,29 @@ class World (I.World, abstract.World):
         Parameters
         ----------
         nature: obj
-            Nature the World is part of.
+            Nature acting on this World.
         metabolism: obj
-            Metabolism the World is part of.
+            Metabolism acting on this World.
         culture: obj
-            Culture the Wold is part of.
-        population: int
-            Population of the World (default is 0).
+            Culture acting on this World.
+        population: quantity
+            Human population (default is 0).
         **kwargs
-            Arbitrary keyword arguments
+            keyword arguments passed to super()
 
         """
         super().__init__(**kwargs)  # must be the first line
-
-        if len(self.__class__.instances) > 1:
-            raise ValueError('Only one world allowed!')
 
         self.nature = nature
         self.metabolism = metabolism
         self.culture = culture
         self.population = population
 
+        # make sure all variable values are valid:
+        self.assert_valid()
+
         self._societies = set()
-        """ # TODO: docstring """
         self._cells = set()
-        """ # TODO: docstring """
 
     # getters and setters:
 

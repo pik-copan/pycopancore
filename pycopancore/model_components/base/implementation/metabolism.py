@@ -27,7 +27,9 @@ class Metabolism (I.Metabolism, abstract.Metabolism):
 
         Parameters
         ----------
-        kwargs
+        **kwargs
+            keyword arguments passed to super()
+
         """
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
@@ -37,4 +39,4 @@ class Metabolism (I.Metabolism, abstract.Metabolism):
 
     # TODO: add some if needed...
 
-    processes = []  # TODO: instantiate and list process objects here
+    processes = []  # no processes in base

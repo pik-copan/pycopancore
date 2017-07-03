@@ -37,29 +37,35 @@ class Individual (I.Individual, abstract.Individual):
         ----------
         cell: obj
             Cell the Individual belongs to.
-        relative_weight: # TODO
-            # TODO: description of 'relative_weight'
+        relative_weight: float
+            relative representation weight
         **kwargs
-            Arbitrary keyword arguments.
+            keyword arguments passed to super()
 
         """
         super().__init__(**kwargs)  # must be the first line
 
+        # init and set variables implemented via properties:
         self._cell = None
-
         self.cell = cell
+
+        # set other variables:
         self.relative_weight = relative_weight
 
+        # make sure all variable values are valid:
+        self.assert_valid()
+
+        # register with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
 
     def deactivate(self):
         """Deactivate an individual.
 
-        The acquaintance_network object of Culture is updated by removing a
-        node.
+        In particular, deregister from all networks.
 
         """
+        # deregister from all networks:
         if self.culture:
             self.culture.acquaintance_network.remove_node(self)
         super().deactivate()  # must be the last line
@@ -67,10 +73,11 @@ class Individual (I.Individual, abstract.Individual):
     def reactivate(self):
         """Reactivate an individual.
 
-        The acquaintance_network object of Culture is updated by adding a node.
+        In particular, deregister with all mandatory networks.
 
         """
         super().reactivate()  # must be the first line
+        # reregister with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
 
@@ -84,6 +91,7 @@ class Individual (I.Individual, abstract.Individual):
     @cell.setter
     def cell(self, c):
         if self._cell:
+            # first deregister from previous cell's list of individuals:
             self._cell._individuals.remove(self)
             # reset dependent caches:
             if self._cell.society is not None:
@@ -153,4 +161,4 @@ class Individual (I.Individual, abstract.Individual):
 
     # no process-related methods
 
-    processes = []
+    processes = []  # no processes in base
