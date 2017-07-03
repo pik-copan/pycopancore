@@ -21,5 +21,3 @@ Contents:
    model_component_developers
    modeling_board_members
    framework_developers
-   step_by_step
-
