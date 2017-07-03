@@ -11,6 +11,8 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 # License: MIT license
 
 
+# TODO: why don't we need a _AbstractProcessTaxonMixinType as for entities?
+
 class _AbstractProcessTaxonMixin(object):
     """Define Entity-unspecific abstract class.
 
