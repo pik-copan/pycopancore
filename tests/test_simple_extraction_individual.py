@@ -20,9 +20,9 @@ individual = M.Individual(strategy=random3, imitation_tendency=0,
 
 def test_get_harvest():
     """Check the get_harvest_rate function.
-    
-    The effort shall be 0.5 * self.cell.growth_rate * 
-    (3 - 2 * self.strategy) = 
+
+    The effort shall be 0.5 * self.cell.growth_rate *
+    (3 - 2 * self.strategy) =
     0.5 * random2 * (3 - 2 * random3)
     Then the harvest is  random1 * 0.5 * random2 * (3 - 2 * random3)
     """
