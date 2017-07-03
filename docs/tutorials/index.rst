@@ -11,7 +11,7 @@ We have tutorials for each of the different types of people that can be involved
 
 Contents:
 
-.. The following structure follows http://docs.python-guide.org/en/latest/writing/documentation/: 
+.. The following structure follows http://docs.python-guide.org/en/latest/writing/documentation/:
 
 .. toctree::
    :maxdepth: 2
@@ -21,3 +21,5 @@ Contents:
    model_component_developers
    modeling_board_members
    framework_developers
+   step_by_step
+
