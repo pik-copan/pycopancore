@@ -1,4 +1,4 @@
-"""Base component's Cell entity type mixin implementation class."""
+""" """
 
 # This file is part of pycopancore.
 #
@@ -22,9 +22,8 @@ class Cell (I.Cell, abstract.Cell):
     Base component's Cell mixin that every model must use in composing their
     Cell class. Inherits from I.Cell as the interface with all necessary
     variables and parameters.
-    """
 
-    # standard methods:
+    """
 
     def __init__(self,
                  *,
@@ -35,7 +34,24 @@ class Cell (I.Cell, abstract.Cell):
                  geometry=None,
                  **kwargs
                  ):
-        """Initialize an instance of Cell."""
+        """Initialize an instance of Cell.
+
+        Parameters
+        ----------
+        world: obj
+            World the Cell belongs to (the default is None)
+        society: obj
+            Society the Cell belongs to (the default is None)
+        location: float
+            Location of Cell (the default is None)
+        land_area: # TODO
+            Area of Cell, (the default is 1 * km^2)
+        geometry: # TODO
+            Geometry of Cell (the default is None)
+        **kwargs
+            Arbitrary keyword arguments.
+
+        """
         super().__init__(**kwargs)  # must be the first line
 
         self._world = None
@@ -53,12 +69,12 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def world(self):
-        """Return world."""
+        """Get the World the Cell is part of."""
         return self._world
 
     @world.setter
     def world(self, w):
-        """Set world."""
+        """Set the World the Cell is part of."""
         if self._world is not None:
             self._world.cells.remove(self)
         if w is not None:
@@ -68,12 +84,12 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def society(self):
-        """Return society."""
+        """Get the lowest-level Society whose territory the Cell is part of."""
         return self._society
 
     @society.setter
     def society(self, s):
-        """Set society."""
+        """Set the lowest-level Society whose territory the Cell is part of."""
         if self._society is not None:
             self._society._direct_cells.remove(self)
             # reset dependent caches:
@@ -95,24 +111,24 @@ class Cell (I.Cell, abstract.Cell):
 
     @property  # read-only
     def nature(self):
-        """Return nature."""
+        """Get the Nature of which the Cell is a part."""
         return self._world.nature
 
     @property  # read-only
     def metabolism(self):
-        """Return metabolism."""
+        """Get the Metabolism of which the Cell is a part."""
         return self._world.metabolism
 
     @property  # read-only
     def culture(self):
-        """Return culture."""
+        """Get the Culture of which the Cell is a part."""
         return self._world.culture
 
     _societies = unknown
     """cache, depends on self.society, self.society.higher_societies"""
     @property  # read-only
     def societies(self):
-        """Return societies."""
+        """Get upward list of Societies the Cell belongs to (in)directly."""
         if self._societies is unknown:
             self._societies = [] if self.society is None \
                 else [self.society] + self.society.higher_societies
@@ -120,6 +136,7 @@ class Cell (I.Cell, abstract.Cell):
 
     @societies.setter
     def societies(self, u):
+        """Set upward list of Societies the Cell belongs to (in)directly."""
         assert u == unknown, "setter can only be used to reset cache"
         self._societies = unknown
         # reset dependent caches:
@@ -127,7 +144,7 @@ class Cell (I.Cell, abstract.Cell):
 
     @property  # read-only
     def individuals(self):
-        """Return individuals."""
+        """Get the Individuals which reside in the Cell."""
         return self._individuals
 
     # no process-related methods

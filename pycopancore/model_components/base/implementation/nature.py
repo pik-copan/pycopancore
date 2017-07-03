@@ -1,4 +1,4 @@
-"""Base component's Nature process taxon mixin implementation class."""
+""" """
 
 # This file is part of pycopancore.
 #
@@ -19,13 +19,19 @@ from networkx import Graph
 class Nature (I.Nature, abstract.Nature):
     """Nature process taxon mixin implementation class."""
 
-    # standard methods:
-
     def __init__(self,
                  *,
                  geographic_network=None,
                  **kwargs):
-        """Initialize the unique instance of Nature."""
+        """Instantiate the unique instance of Nature.
+
+        Parameters
+        ----------
+        geographic_network: obj
+            # TODO: description
+        **kwargs
+            Arbitrary keyword arguments.
+        """
         super().__init__(**kwargs)  # must be the first line
 
         if geographic_network is None:
