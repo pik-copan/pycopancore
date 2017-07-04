@@ -12,12 +12,15 @@ class DimensionalQuantity (object):
 
     # basic data:
     _number = None
+    """The number of units this quantity equals"""
     _unit = None
+    """The unit in which this quantity is given"""
 
     _dimension = None
+    """The corresponding dimension"""
 
     def number(self, unit=None):
-        """return number in some (or the default) unit"""
+        """Get quantity as a dimensionless number of some (or the default) unit"""
         if unit is None:
             return self._number
         else:
@@ -25,17 +28,29 @@ class DimensionalQuantity (object):
 
     @property  # read-only
     def unit(self):
+        """Get the unit this quantity is given in"""
         return self._unit
 
     @property  # read-only
     def dimension(self):
+        """Get the dimension of this quantity"""
         return self._dimension
 
     def __init__(self, number, unit):
+        """Construct a dimensional quantity from a number and a unit.
+
+        Parameters
+        ----------
+        number : float or array
+            The number of units this quantity equals
+        unit : Unit
+            The unit in which this quantity is given
+
+        """
         assert not isinstance(number, DimensionalQuantity), \
-            "number must be a non-dimensional number or vector"
+            "number must be a non-dimensional number or array"
         self._number = number
-        assert isinstance(unit, U.Unit), "unit must be a Unit object" # would require circular import...
+        assert isinstance(unit, U.Unit), "unit must be a Unit object"
         self._unit = unit
         self._dimension = unit.dimension
 
@@ -46,7 +61,7 @@ class DimensionalQuantity (object):
         return hash((self._number, self._unit))
 
     def reduce(self):
-        """return simple number if nondimensional"""
+        """return unit as dimensionless if it is nondimensional, else return self"""
         return self._number * self._unit.factor \
             if self._dimension == dimension.nondim else self
 
