@@ -55,4 +55,8 @@ class _AbstractProcessTaxonMixin(object):
 
         """
         for v in self.variables:
-            v.assert_valid(v.get_value(self))
+            try:
+                val = v.get_value(self)
+            except:
+                return
+            v.assert_valid(val)
