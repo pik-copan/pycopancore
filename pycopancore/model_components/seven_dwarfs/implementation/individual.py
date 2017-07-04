@@ -38,7 +38,9 @@ class Individual (I.Individual):
         self.beard_growth_parameter = beard_growth_parameter
         self.eating_parameter = eating_parameter
 
-        pass
+        # Following method is defined in abstract_entity_mixin which is
+        # inherited only by mixing in the model:
+        self.assert_valid()
 
 
     def deactivate(self):
