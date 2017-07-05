@@ -39,7 +39,9 @@ class Individual (I.Individual):
         self.beard_growth_parameter = beard_growth_parameter
         self.eating_parameter = eating_parameter
 
-        pass
+        # Following method is defined in abstract_entity_mixin which is
+        # inherited only by mixing in the model:
+        self.assert_valid()
 
     def deactivate(self):
         """Deactivate a dwarf."""
@@ -77,7 +79,7 @@ class Individual (I.Individual):
     def beard_growing(self, t):
         """Grow beard of dwarf in explicit manner."""
         self.beard_length = (self.beard_growth_parameter
-                             * t
+                             * t * np.sin(t)**2
                              )
 
     processes = [

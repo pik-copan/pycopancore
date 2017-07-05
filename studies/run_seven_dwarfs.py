@@ -47,7 +47,7 @@ cell = [M.Cell(world=world,
 individuals = [M.Individual(cell=cell[0],
                             age=0,
                             beard_length=0,
-                            beard_growth_parameter=0.1,
+                            beard_growth_parameter=0.5,
                             eating_parameter=1
                             ) for i in range(dwarfs)
                ]

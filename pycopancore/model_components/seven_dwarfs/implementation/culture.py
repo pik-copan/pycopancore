@@ -28,6 +28,10 @@ class Culture (I.Culture):
         super().__init__(**kwargs)  # must be the first line
         self.extinction = False
 
+        # Following method is defined in abstract_process_taxon_mixin which is
+        # inherited only by mixing in the model:
+        self.assert_valid()
+
     # process-related methods:
 
     def check_for_extinction(self):
