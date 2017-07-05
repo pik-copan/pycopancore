@@ -15,7 +15,7 @@ then remove these instructions
 from .. import interface as I
 from pycopancore.model_components.base import interface as B
 # from .... import master_data_model as D
-from pycopancore import ODE, Step, Explicit
+from pycopancore import ODE, Step, Explicit, Event
 import numpy as np
 
 
@@ -55,11 +55,13 @@ class Individual (I.Individual):
 
     def aging(self, unused_t):
         """Make dwarf have birthday."""
-        self.age = self.age + 1
         if self.age / 100 >= np.random.random():
             if self in self.__class__.instances:
                 self.deactivate()
                 print("Dwarf with UID {} died from age.".format(self._uid))
+
+        else:
+            self.age = self.age + 1
 
     def step_timing(self, t):
         """Let one year pass."""
@@ -67,14 +69,16 @@ class Individual (I.Individual):
 
     def eating(self, t):
         """Let dwarf eat from stock."""
-        if self.cell.eating_stock < self.eating_parameter:
+
+        # else:  I.Cell.d_stock -= self.eating_parameter
+        if self.cell.eating_stock >= self.eating_parameter:
+            self.cell.d_eating_stock -= self.eating_parameter
+        else:
             self.cell.eating_stock = 0
             if self in self.__class__.instances:
                 self.deactivate()
-                print("Dwarf starved.")
-            #I.Cell.d_stock -= 0
-        # else:  I.Cell.d_stock -= self.eating_parameter
-        self.cell.d_eating_stock -= self.eating_parameter
+                print("Dwarf with UID {} starved.".format(self._uid))
+            self.cell.d_eating_stock -= 0
 
     def beard_growing(self, t):
         """Grow beard of dwarf in explicit manner."""
@@ -82,8 +86,23 @@ class Individual (I.Individual):
                              * t * np.sin(t)**2
                              )
 
+    def reproduction(self, unused_t):
+        """Reproduce."""
+        if self in self.__class__.instances and self.cell.eating_stock > 10:
+            child = self.__class__(cell=self.cell,
+                                   age=1,
+                                   beard_length=0,
+                                   beard_growth_parameter=2,
+                                   eating_parameter=1)
+            print('a new dwarf is born', child._uid)
+
+    def birthdate(self, t):
+        """Determine Birthday"""
+        return t + 3
+
     processes = [
         Step("aging", [I.Individual.age], [step_timing, aging]),
         ODE("eating", [B.Individual.cell.eating_stock], eating),
-        Explicit("beard_growth", [I.Individual.beard_length], beard_growing)
+        Explicit("beard_growth", [I.Individual.beard_length], beard_growing),
+        Step("reproduction", [], [birthdate, reproduction])
     ]

@@ -12,7 +12,8 @@
 # TODO: rename to ScipyODERunner
 
 from .. import Event, Step, Variable
-from ..private import _AbstractRunner, _DotConstruct, eval, unknown
+from ..private import _AbstractRunner, _DotConstruct, eval, unknown, \
+    _AbstractEntityMixin
 # TODO: discuss whether this makes sense or leads to problems:
 from .hooks import Hooks
 
@@ -592,6 +593,9 @@ class Runner(_AbstractRunner):
             # target is a variable or a dotconstruct
             var = target.target_variable
             instances = target.target_class.instances
+            if issubclass(target.target_class,
+                          _AbstractEntityMixin):
+                idle_instances = target.target_class.idle_entities
             # get values to store from instance attributes:
             values = var.eval(instances)
             for i, inst in enumerate(instances):
@@ -602,8 +606,32 @@ class Runner(_AbstractRunner):
                         self.trajectory_dict[var][inst].append(values[i])
                     # else do nothing since value was already stored.
                 except KeyError:
-                    # create new list:
-                    self.trajectory_dict[var][inst] = [values[i]]
+                    # create new list with Nones for time that has passed:
+                    time_passed = [None] * (tlen - 1)
+                    time_passed.append(values[i])
+                    self.trajectory_dict[var][inst] = time_passed
+                    assert len(self.trajectory_dict[var][inst]) == tlen
+
+            # check if there are any idle instances:
+            if idle_instances:
+                print('there are idles!')
+                for i, inst in enumerate(idle_instances):
+                    try:  # already in trajectory_dict
+                        # Check for length of list:
+                        if len(self.trajectory_dict[var][inst]) < tlen:
+                            len_of_none = (
+                                tlen - len(self.trajectory_dict[var][inst]))
+                            none_list = [None]*len_of_none
+                            # Make list as long as 't' in trajectory_dict:
+                            for j in none_list:
+                                self.trajectory_dict[var][inst].append(j)
+                            # And make shure it has the length of 't'
+                            assert len(self.trajectory_dict[var][inst]) == tlen
+                    except KeyError:  # Not yet in trajectory_dict
+                        # create new list:
+                        none_list = [None]*tlen
+                        self.trajectory_dict[var][inst] = [none_list]
+                        assert len(self.trajectory_dict[var][inst]) == tlen
 
     def terminate(self):
         """Determine if the runner should stop.

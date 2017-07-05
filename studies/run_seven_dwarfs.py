@@ -48,7 +48,7 @@ individuals = [M.Individual(cell=cell[0],
                             age=0,
                             beard_length=0,
                             beard_growth_parameter=0.5,
-                            eating_parameter=1
+                            eating_parameter=.1
                             ) for i in range(dwarfs)
                ]
 
@@ -88,7 +88,6 @@ print("max. time step", (t[1:]-t[:-1]).max())
 
 
 # proceeding for plotting
-
 
 individuals_age = np.array([traj[M.Individual.age][dwarf]
                                  for dwarf in individuals])
@@ -151,5 +150,5 @@ layout = dict(title = 'seven dwarfs',
 fig1 = dict(data=[data_age[0], data_beard_length[0], data_stock[0]], layout=layout)
 py.plot(fig1, filename="our-model-result1.html")
 
-fig2 = dict(data=[data_age[1], data_beard_length[1], data_stock[0]], layout=layout)
+fig2 = dict(data=[data_age[4], data_beard_length[4], data_stock[0]], layout=layout)
 py.plot(fig2, filename="our-model-result2.html")

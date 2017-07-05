@@ -35,7 +35,7 @@ class Step(_AbstractProcess):
                  name,
                  variables,
                  specification
-                ):
+                 ):
         """Instantiate a process of type step.
 
         Parameters
