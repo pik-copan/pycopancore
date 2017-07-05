@@ -9,9 +9,11 @@
 # License: MIT license
 
 from ...private import _AbstractEntityMixin
+from ...data_model import OrderedSet
 
 
 class Cell (_AbstractEntityMixin):
     """Abstract Cell entity type class, inherited by base model component."""
 
-    pass
+    variables = OrderedSet()
+    """All variables occurring in this entity type"""

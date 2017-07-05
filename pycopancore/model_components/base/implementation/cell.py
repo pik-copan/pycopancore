@@ -10,10 +10,11 @@
 
 # only used in this component, not in others:
 from ... import abstract
-from .... import master_data_model as D
 from ....private import unknown
 
+# typical imports for implementation classes:
 from .. import interface as I
+from .... import master_data_model as D
 
 
 class Cell (I.Cell, abstract.Cell):
@@ -30,7 +31,7 @@ class Cell (I.Cell, abstract.Cell):
                  world=None,
                  society=None,
                  location=None,
-                 land_area=1 * D.square_kilometers,
+                 land_area = 1 * D.square_kilometers,
                  geometry=None,
                  **kwargs
                  ):
@@ -38,32 +39,43 @@ class Cell (I.Cell, abstract.Cell):
 
         Parameters
         ----------
-        world: obj
+        world : obj
             World the Cell belongs to (the default is None)
-        society: obj
+        society : obj
             Society the Cell belongs to (the default is None)
-        location: float
+        location : obj
             Location of Cell (the default is None)
-        land_area: # TODO
+        land_area : quantity
             Area of Cell, (the default is 1 * km^2)
-        geometry: # TODO
+        geometry : obj
             Geometry of Cell (the default is None)
         **kwargs
-            Arbitrary keyword arguments.
+            keyword arguments passed to super()
 
         """
         super().__init__(**kwargs)  # must be the first line
 
+        # init and set variables implemented via properties
         self._world = None
         self._society = None
-
         self.world = world
-        self.society = society  # must be after setting world!
+        self.society = society  # this line must occur after setting world!
+
+        # set other variables:
         self.location = location
         self.land_area = land_area
         self.geometry = geometry
 
+        # make sure all variable values are valid:
+        self.assert_valid()
+
+        # init other caches:
         self._individuals = set()
+
+        # register with all mandatory networks:
+        if self.nature:
+            self.nature.geographic_network.add_node(self)
+
 
     # getters and setters for references:
 
@@ -76,6 +88,7 @@ class Cell (I.Cell, abstract.Cell):
     def world(self, w):
         """Set the World the Cell is part of."""
         if self._world is not None:
+            # first deregister from previous world's list of cells:
             self._world.cells.remove(self)
         if w is not None:
             assert isinstance(w, I.World), "world must be of entity type World"
@@ -91,6 +104,7 @@ class Cell (I.Cell, abstract.Cell):
     def society(self, s):
         """Set the lowest-level Society whose territory the Cell is part of."""
         if self._society is not None:
+            # first deregister from previous society's list of cells:
             self._society._direct_cells.remove(self)
             # reset dependent caches:
             self._society.cells = unknown
@@ -149,4 +163,4 @@ class Cell (I.Cell, abstract.Cell):
 
     # no process-related methods
 
-    processes = []
+    processes = []  # no processes in base

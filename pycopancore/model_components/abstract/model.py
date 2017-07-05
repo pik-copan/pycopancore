@@ -8,7 +8,6 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-
 class Model (object):
     """Abstract Model component class, inherited by base component."""
 

@@ -11,6 +11,8 @@ from . import society as S
 from . import cell as C
 from . import individual as I
 
+from .. import unity
+
 # what models need:
 
 

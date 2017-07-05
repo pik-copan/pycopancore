@@ -1,5 +1,6 @@
 """
-This is the base model-component package
+This is the base model-component package, 
+also including internal framework logics (module model_logics)
 """
 # This file is part of pycopancore.
 #
@@ -9,6 +10,7 @@ This is the base model-component package
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+# export the interface:
 from . import interface
 
 # export all implementation classes:

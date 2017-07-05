@@ -1,7 +1,10 @@
+"""Module for Dimension class."""
+
 # TODO: doc strings
 
 
-class Dimension (object):
+class Dimension(object):
+    """Dimension class."""
 
     # TODO: make read-only:
 
@@ -50,6 +53,7 @@ class Dimension (object):
         self._default_unit = default_unit
 
     def named(self, name, desc=None):
+        """Named."""
         return Dimension(is_base=self.is_base, name=name, desc=self.desc if desc is None else desc,
                          exponents=self.exponents, default_unit=self.default_unit)
 

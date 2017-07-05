@@ -1,3 +1,5 @@
+"""Master data model for culture."""
+
 from .. import Variable
 
 from networkx import DiGraph, Graph

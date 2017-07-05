@@ -16,6 +16,7 @@ from ....private import unknown
 from .. import interface as I
 
 from .... import Explicit
+from pycopancore.data_model.master_data_model.cell import ocean_carbon
 
 
 class World (I.World, abstract.World):
@@ -32,39 +33,56 @@ class World (I.World, abstract.World):
                  nature=None,
                  metabolism=None,
                  culture=None,
-                 population=0 * D.people,
+                 population = 0 * D.people,
+                 terrestrial_carbon = 0 * D.gigatonnes_carbon,
+                 fossil_carbon = 0 * D.gigatonnes_carbon,
+                 atmospheric_carbon = 0 * D.gigatonnes_carbon,
+                 ocean_carbon = 0 * D.gigatonnes_carbon,
+                 surface_air_temperature = 0 * D.kelvins,
                  **kwargs
                  ):
         """Instantiate (typically the only) instance of World.
 
         Parameters
         ----------
-        nature: obj
-            Nature the World is part of.
-        metabolism: obj
-            Metabolism the World is part of.
-        culture: obj
-            Culture the Wold is part of.
-        population: int
-            Population of the World (default is 0).
+        nature : obj
+            Nature acting on this World.
+        metabolism : obj
+            Metabolism acting on this World.
+        culture : obj
+            Culture acting on this World.
+        population : quantity
+            Human population (default is 0).
+        terrestrial_carbon : quantity
+            Terrestrial carbon
+        fossil_carbon : quantity
+            Fossil carbon
+        atmospheric_carbon : quantity
+            Atmospheric carbon
+        ocean_carbon : quantity
+            Ocean carbon
+        surface_air_temperature : quantity
+            Surface air temperature
         **kwargs
-            Arbitrary keyword arguments
+            keyword arguments passed to super()
 
         """
         super().__init__(**kwargs)  # must be the first line
-
-        if len(self.__class__.instances) > 1:
-            raise ValueError('Only one world allowed!')
 
         self.nature = nature
         self.metabolism = metabolism
         self.culture = culture
         self.population = population
-
+        self.terrestrial_carbon = terrestrial_carbon
+        self.fossil_carbon = fossil_carbon
+        self.atmospheric_carbon = atmospheric_carbon
+        self.ocean_carbon = ocean_carbon
+        self.surface_air_temperature = surface_air_temperature
         self._societies = set()
-        """ # TODO: docstring """
         self._cells = set()
-        """ # TODO: docstring """
+
+        # make sure all variable values are valid:
+        self.assert_valid()
 
     # getters and setters:
 

@@ -23,7 +23,7 @@ EPS = 1e-10
 """infinitesimal value for ensuring strict bounds"""
 
 
-class Variable (Symbol):
+class Variable(Symbol):
     """Metadata object representing a model variable or parameter."""
 
     # standard metadata:
@@ -130,7 +130,7 @@ class Variable (Symbol):
                  AMIP=None,
                  IAMC=None,
                  CETS=None,
-                 datatype=(float, int),
+                 datatype=None,
                  array_shape=None,
                  allow_none=True,  # by default, var may be none
                  lower_bound=None,
@@ -219,8 +219,8 @@ class Variable (Symbol):
 
     def __str__(self):
         return (self.owning_class.__name__ + "." + self.codename) \
-            if self.owning_class \
-            else self.name
+                if self.owning_class \
+                else self.name
 
     def __repr__(self):
         return (self.owning_class.__name__ + "." + self.codename) \
@@ -310,7 +310,9 @@ class Variable (Symbol):
 
         return True
 
+    # TODO: improve docstring
     def is_valid(self, value):
+        """Is valid."""
         if isinstance(value, DimensionalQuantity):
             value = value.number(unit=self.unit)
         return self._check_valid(value) == True
@@ -332,11 +334,15 @@ class Variable (Symbol):
 #        self.assert_valid(value)
         setattr(instance, self.codename, value)
 
-    def convert_to_standard_units(self,
-                                  instances=None,  # if None: all entities/taxa
-                                  ):
-        """replace all variable values of type DimensionalQuantity
-        to float using the standard unit"""
+    def convert_to_standard_units(
+            self,
+            instances=None):  # if None: all entities/taxa
+        """
+        Convert to standart units.
+
+        Replace all variable values of type DimensionalQuantity
+        to float using the standard unit
+        """
         if instances is not None:
             for i in instances:
                 v = getattr(i, self.codename)
@@ -366,9 +372,9 @@ class Variable (Symbol):
             instances = set(instances)
         return instances
 
-    def set_to_default(self,
-                       instances=None,  # if None: all entities/taxa
-                       ):
+    def set_to_default(
+            self,
+            instances=None):  # if None: all entities/taxa
         """Set values in selected entities to default"""
         instances = self._get_instances(instances)
         for e in instances:
@@ -392,10 +398,10 @@ class Variable (Symbol):
 
     def add_noise(self,
                   instances=None,  # if None: all entities/taxa
-                  distribution=random.gauss,  # basic noise distribution
+                  distribution=random.gauss, # basic noise distribution
                   *,
-                  factor=1,  # scale factor
-                  offset=0,  # location offset
+                  factor=1, # scale factor
+                  offset=0, # location offset
                   multiplicative=False
                   ):
         """Set values in selected entities to random value.
@@ -512,7 +518,9 @@ class Variable (Symbol):
         """
         return [getattr(i, 'd_' + self.codename) for i in instances]
 
+    # TODO: improve docstring
     def get_value(self, instance, unit=None):
+        """Get value."""
         v = getattr(instance, self.codename)
         assert not isinstance(v, Variable), \
             "Variable " + str(self) + " uninitialized at instance " \
@@ -520,10 +528,10 @@ class Variable (Symbol):
         return v if unit is None else self._unit.convert(v, unit)
 
     def eval(self,
-             instances=None,
-             *,
-             unit=None
-             ):
+                   instances=None,
+                   *,
+                   unit=None
+                   ):
         """Return values for given entities,
         optionally in a different unit.
 
@@ -536,8 +544,7 @@ class Variable (Symbol):
         -------
         List of variable value of each entity
         """
-# return [self.get_value(inst, unit=unit) for inst in instances]  # too
-# slow...
+#        return [self.get_value(inst, unit=unit) for inst in instances]  # too slow...
         if instances is None:
             instances = self.owning_class.instances
         if unit is None:
@@ -546,23 +553,29 @@ class Variable (Symbol):
         else:
             return [self.get_value(inst, unit=unit) for inst in instances]
 
+    # TODO: improve subsequent doctstrings
     @property  # read-only
     def target_class(self):
+        """Target class."""
         return self.owning_class
 
     @property  # read-only
     def target_variable(self):
+        """Target variable."""
         return self
 
     @property  # read-only
     def target_instances(self):
+        """Target instances."""
         return self.owning_class.instances
 
     # stuff needed if Variable occurs as arg of _DotConstruct:
     @property  # read-only
     def branchings(self):
+        """Branchings."""
         return [[len(self.owning_class.instances)]]
 
     @property  # read-only
     def cardinalities(self):
+        """Cardinalities."""
         return [1, len(self.owning_class.instances)]

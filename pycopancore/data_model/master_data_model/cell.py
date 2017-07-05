@@ -1,3 +1,5 @@
+"""Master data model for cell."""
+
 from . import nature as NAT
 from . import metabolism as MET
 

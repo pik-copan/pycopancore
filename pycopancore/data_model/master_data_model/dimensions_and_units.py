@@ -1,5 +1,7 @@
-from .. import Dimension, nondim
-from .. import Unit, unity
+"""Master data model for dimensions and units."""
+
+from .. import Dimension
+from .. import Unit
 
 # fundamental physical dimensions and units:
 

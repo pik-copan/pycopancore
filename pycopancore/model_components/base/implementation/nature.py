@@ -27,19 +27,24 @@ class Nature (I.Nature, abstract.Nature):
 
         Parameters
         ----------
-        geographic_network: obj
-            # TODO: description
+        geographic_network: Graph
+            network of geographic neighbourhood
         **kwargs
-            Arbitrary keyword arguments.
+            keyword arguments passed to super()
+
         """
         super().__init__(**kwargs)  # must be the first line
 
         if geographic_network is None:
             geographic_network = Graph()
+        assert isinstance(geographic_network, Graph)
         self.geographic_network = geographic_network
+
+        # make sure all variable values are valid:
+        self.assert_valid()
 
     # process-related methods:
 
     # TODO: add some if needed...
 
-    processes = []  # TODO: instantiate and list process objects here
+    processes = []  # no processes in base
