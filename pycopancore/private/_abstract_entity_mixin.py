@@ -95,12 +95,12 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
         try:
             # if a composite class been registered with the invoking mixin
             # class, we generate an instance of that:
-            print("instantiating a",cls._composed_class,args,kwargs)
+            print("instantiating a", cls._composed_class, args, kwargs)
             obj = super().__new__(cls._composed_class, *args, **kwargs)
         except:
-            # otherwise, we do what __new__ normally does, namely generate an 
+            # otherwise, we do what __new__ normally does, namely generate an
             # instance of the class invoking it, i.e., of cls:
-            print("instantiating a",cls,args,kwargs)
+            print("instantiating a", cls, args, kwargs)
             obj = super().__new__(cls)
         return obj
 

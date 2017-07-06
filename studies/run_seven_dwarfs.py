@@ -19,7 +19,7 @@ from pycopancore.runners.runner import Runner
 # setting timeinterval for run method 'Runner.run()'
 timeinterval = 100
 # setting time step to hand to 'Runner.run()'
-timestep = 1
+timestep = .1
 nc = 1  # number of caves
 dwarfs = 7  # number of dwarfs
 
@@ -89,11 +89,18 @@ print("max. time step", (t[1:]-t[:-1]).max())
 
 # proceeding for plotting
 
+# Create List of all dwarfes, not only the ones instantiated before the run,
+# but also the one created during the run.
+all_dwarfs = []
+for (key, values) in traj[M.Individual.age].items():
+    all_dwarfs.append(key)
+
 individuals_age = np.array([traj[M.Individual.age][dwarf]
-                                 for dwarf in individuals])
+                                 for dwarf in all_dwarfs])
+
 
 individuals_beard_length = np.array([traj[M.Individual.beard_length][dwarf]
-                                 for dwarf in individuals])
+                                 for dwarf in all_dwarfs])
 
 cell_stock = np.array(traj[M.Cell.eating_stock][cell[0]])
 
@@ -101,7 +108,7 @@ t = np.array(traj['t'])
 
 data_age = []
 print('data age', data_age)
-for i in range(dwarfs):
+for i, dwarf in enumerate(all_dwarfs):
     data_age.append(go.Scatter(
         x=t,
         y=individuals_age[i],
@@ -115,7 +122,7 @@ for i in range(dwarfs):
 
 data_beard_length = []
 print('data beard', data_beard_length)
-for i in range(dwarfs):
+for i, dwarf in enumerate(all_dwarfs):
     data_beard_length.append(go.Scatter(
         x=t,
         y=individuals_beard_length[i],
@@ -139,16 +146,17 @@ data_stock.append(go.Scatter(
       ))
 
 
-
-layout = dict(title = 'seven dwarfs',
-              xaxis = dict(title = 'time [yr]'),
-              yaxis = dict(title = 'value'),
+layout = dict(title='seven dwarfs',
+              xaxis=dict(title='time [yr]'),
+              yaxis=dict(title='value'),
               )
 
 
 # getting plots of two dwarfs
-fig1 = dict(data=[data_age[0], data_beard_length[0], data_stock[0]], layout=layout)
+fig1 = dict(data=[data_age[0], data_beard_length[0], data_stock[0]],
+            layout=layout)
 py.plot(fig1, filename="our-model-result1.html")
 
-fig2 = dict(data=[data_age[4], data_beard_length[4], data_stock[0]], layout=layout)
+fig2 = dict(data=[data_age[-1], data_beard_length[-1], data_stock[0]],
+            layout=layout)
 py.plot(fig2, filename="our-model-result2.html")

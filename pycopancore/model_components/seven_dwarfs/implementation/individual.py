@@ -75,11 +75,14 @@ class Individual (I.Individual):
     def beard_growing(self, t):
         """Grow beard of dwarf in explicit manner."""
         self.beard_length = (self.beard_growth_parameter
-                             * t * np.sin(t)**2
+                             * self.age * np.sin(t)**2
                              )
 
     def reproduction(self, unused_t):
-        """Reproduce."""
+        """Reproduce. 
+        
+        Done if dwarf is older than 5, not dead and has enough to eat.
+        """
         if self in self.__class__.instances \
                 and self.cell.eating_stock > 10\
                 and self.age > 5:
@@ -91,7 +94,7 @@ class Individual (I.Individual):
             print('a new dwarf is born', child._uid)
 
     def birthdate(self, t):
-        """Determine Birthday"""
+        """Determine Birthday."""
         return t + 1
 
     processes = [
