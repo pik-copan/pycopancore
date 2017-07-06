@@ -84,10 +84,29 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
     """Entities of this type"""
     idle_entities = None
 
+    def __new__(cls, *args, **kwargs):
+        """Internal method called when instantiating a new entity.
+
+        Don't call this directly, always generate entities by instantiating
+        the a composite or mixin entity type class. This implementation makes
+        sure that a composite entity is generated even when only a mixin is
+        instantiated.
+        """
+        try:
+            # if a composite class been registered with the invoking mixin
+            # class, we generate an instance of that:
+            print("instantiating a",cls._composed_class,args,kwargs)
+            obj = super().__new__(cls._composed_class, *args, **kwargs)
+        except:
+            # otherwise, we do what __new__ normally does, namely generate an 
+            # instance of the class invoking it, i.e., of cls:
+            print("instantiating a",cls,args,kwargs)
+            obj = super().__new__(cls)
+        return obj
+
     def __init__(self,
                  **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
-        # Jobst: I don't see why we need this:
         self._uid = _AbstractEntityMixin.get_next_uid()
         try:
             self.__class__.instances.append(self)

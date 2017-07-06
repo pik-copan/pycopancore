@@ -185,9 +185,9 @@ class ModelLogics (object):
             else:
                 print("  Process taxon ", composed_class)
             # find all parent classes and register in dict mixin2composite:
-            parents = OrderedSet(list(inspect.getmro(composed_class)))
+            parents = OrderedSet(list(inspect.getmro(composed_class))) - [object]
             for mixin in parents:
-                cls.mixin2composite[mixin] = composed_class
+                cls.mixin2composite[mixin] = mixin._composed_class = composed_class
             # iterate through all Variables and set their owning_class
             # to the correct composite class (rather than to the mixin class):
             variables = OrderedSet([(k, v) for c in parents
