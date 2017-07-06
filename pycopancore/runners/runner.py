@@ -593,11 +593,15 @@ class Runner(_AbstractRunner):
             # target is a variable or a dotconstruct
             var = target.target_variable
             instances = target.target_class.instances
+            # Check for deactivated instances. The following check is
+            # necessary, since Process Taxa cannot be inactive:
             if issubclass(target.target_class,
                           _AbstractEntityMixin):
                 idle_instances = target.target_class.idle_entities
             # get values to store from instance attributes:
             values = var.eval(instances)
+
+            # write values into all active Instances:
             for i, inst in enumerate(instances):
                 try:
                     # check whether value needs to be stored by comparing
@@ -606,15 +610,17 @@ class Runner(_AbstractRunner):
                         self.trajectory_dict[var][inst].append(values[i])
                     # else do nothing since value was already stored.
                 except KeyError:
+                    # This branch is active if the entity has not been
+                    # activated before.
                     # create new list with Nones for time that has passed:
                     time_passed = [None] * (tlen - 1)
                     time_passed.append(values[i])
                     self.trajectory_dict[var][inst] = time_passed
                     assert len(self.trajectory_dict[var][inst]) == tlen
 
-            # check if there are any idle instances:
+            # check if there are any idle instances and fill their trajectory
+            # with None to fit he lenght of 't':
             if idle_instances:
-                print('there are idles!')
                 for i, inst in enumerate(idle_instances):
                     try:  # already in trajectory_dict
                         # Check for length of list:
