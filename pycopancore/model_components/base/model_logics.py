@@ -197,8 +197,7 @@ class ModelLogics (object):
                 if isinstance(v, Variable):
                     print("    Variable ", v)
                     assert v in variable_pool, \
-                        "Variable '{v!r}' was not defined in any component interface!".format(
-                            **locals())
+                        "Variable '{v!r}' was not defined in any component interface!".format(**locals())
                     assert v.codename == k, \
                         "Variable '{v!r}' was registered under a different codename".format(**locals())
                     assert v.owning_class is None  # since it is only set here!
@@ -247,13 +246,13 @@ class ModelLogics (object):
                                     # actually starts at the entity type
                                     # or taxon the process belongs to:
                                     assert target.owning_class == \
-                                        composed_class, \
-                                        "ODE target attribute reference " \
-                                        "starts at a wrong " \
-                                        "entity-type/taxon" \
-                                        + str(target) \
-                                        + str(target.owning_class) \
-                                        + str(composed_class)
+                                           composed_class, \
+                                           "ODE target attribute reference " \
+                                           "starts at a wrong " \
+                                           "entity-type/taxon" \
+                                           + str(target) \
+                                           + str(target.owning_class) \
+                                           + str(composed_class)
                             cls.ODE_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Explicit):
@@ -264,17 +263,17 @@ class ModelLogics (object):
                             for target in p.targets:
                                 if isinstance(target, Variable):
                                     assert target.owning_class == \
-                                        composed_class, \
-                                        "Explicit target Variable owned " \
-                                        "by different entity-type/taxon! " \
-                                        "(maybe try accessing it via a " \
-                                        "ReferenceVariable)"
+                                           composed_class, \
+                                           "Explicit target Variable owned " \
+                                           "by different entity-type/taxon! " \
+                                           "(maybe try accessing it via a " \
+                                           "ReferenceVariable)"
                                 else:  # it's a _DotConstruct
                                     assert target.owning_class == \
-                                        composed_class, \
-                                        "Explicit target attribute " \
-                                        "reference starts at a wrong " \
-                                        "entity-type/taxon:"
+                                           composed_class, \
+                                           "Explicit target attribute " \
+                                           "reference starts at a wrong " \
+                                           "entity-type/taxon:"
                             cls.explicit_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Step):
