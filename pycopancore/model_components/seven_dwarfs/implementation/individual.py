@@ -19,7 +19,7 @@ from pycopancore import ODE, Step, Explicit, Event
 import numpy as np
 
 
-class Individual (I.Individual):
+class Individual(I.Individual):
     """Individual entity type mixin implementation class."""
 
     # standard methods:
