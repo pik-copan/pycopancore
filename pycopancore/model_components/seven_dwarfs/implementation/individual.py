@@ -48,7 +48,7 @@ class Individual (I.Individual):
     def aging(self, unused_t):
         """Make dwarf have birthday."""
         if self.age / 100 >= np.random.random():
-            if self in self.__class__.instances:
+            if self.is_active:
                 self.deactivate()
                 print("Dwarf with UID {} died from age.".format(self._uid))
 
@@ -67,7 +67,7 @@ class Individual (I.Individual):
             self.cell.d_eating_stock -= self.eating_parameter
         else:
             self.cell.eating_stock = 0
-            if self in self.__class__.instances:
+            if self.is_active:
                 self.deactivate()
                 print("Dwarf with UID {} starved.".format(self._uid))
             self.cell.d_eating_stock -= 0
@@ -83,15 +83,15 @@ class Individual (I.Individual):
         
         Done if dwarf is older than 5, not dead and has enough to eat.
         """
-        if self in self.__class__.instances \
-                and self.cell.eating_stock > 10\
-                and self.age > 5:
-            child = self.__class__(cell=self.cell,
-                                   age=1,
-                                   beard_length=0,
-                                   beard_growth_parameter=2,
-                                   eating_parameter=1)
-            print('a new dwarf is born', child._uid)
+        if self.is_active \
+            and self.cell.eating_stock > 10\
+            and self.age > 5:
+                child = self.__class__(cell=self.cell,
+                                       age=1,
+                                       beard_length=0,
+                                       beard_growth_parameter=2,
+                                       eating_parameter=1)
+                print('a new dwarf is born', child._uid)
 
     def birthdate(self, t):
         """Determine Birthday."""

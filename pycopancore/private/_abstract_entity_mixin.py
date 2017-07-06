@@ -173,3 +173,23 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
         current_uid = cls.NEXTUID
         cls.NEXTUID += 1
         return current_uid
+
+    @property
+    def is_active(self):
+        """Check if entity is active.
+        
+        In other words, check if entity is in self.__class__.instances"""
+        if self in self.__class__.instances:
+            return True
+        if self in self.__class__.idle_entities:
+            return False
+        else:
+            raise StatusError("Entity not active nor idle.")
+
+
+class StatusError(Exception):
+    """Define Error.
+    
+    This Error is states, that an entity is neither active nor deactivated"""
+
+    pass
