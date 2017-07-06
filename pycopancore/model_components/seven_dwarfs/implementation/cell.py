@@ -31,6 +31,10 @@ class Cell (I.Cell):
         super().__init__(**kwargs)
         self.eating_stock = eating_stock
 
+        # Following method is defined in abstract_entity_mixin which is
+        # inherited only by mixing in the model:
+        self.assert_valid()
+
     # process-related methods:
 
     def snow_white_arrival(t):

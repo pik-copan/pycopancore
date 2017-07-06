@@ -43,14 +43,6 @@ class Individual (I.Individual):
         # inherited only by mixing in the model:
         self.assert_valid()
 
-    def deactivate(self):
-        """Deactivate a dwarf."""
-        super().deactivate()
-
-    def reactivate(self):
-        """Reactivate a dwarf."""
-        super().reactivate()
-
     # process-related methods:
 
     def aging(self, unused_t):
@@ -88,7 +80,9 @@ class Individual (I.Individual):
 
     def reproduction(self, unused_t):
         """Reproduce."""
-        if self in self.__class__.instances and self.cell.eating_stock > 10:
+        if self in self.__class__.instances \
+                and self.cell.eating_stock > 10\
+                and self.age > 5:
             child = self.__class__(cell=self.cell,
                                    age=1,
                                    beard_length=0,
@@ -98,7 +92,7 @@ class Individual (I.Individual):
 
     def birthdate(self, t):
         """Determine Birthday"""
-        return t + 3
+        return t + 1
 
     processes = [
         Step("aging", [I.Individual.age], [step_timing, aging]),
