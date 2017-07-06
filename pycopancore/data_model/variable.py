@@ -330,6 +330,10 @@ class Variable (Symbol):
 #        self.assert_valid(value)
         setattr(instance, self.codename, value)
 
+    def __setitem__(self, instance, value):
+        """magic method allowing access to instance values via var[instance]"""
+        return self.set_value(instance, value)
+
     def convert_to_standard_units(self,
                                   instances=None,  # if None: all entities/taxa
                                   ):
@@ -516,6 +520,10 @@ class Variable (Symbol):
             "Variable " + str(self) + " uninitialized at instance " \
             + str(instance)
         return v if unit is None else self._unit.convert(v, unit)
+
+    def __getitem__(self, instance):
+        """magic method allowing access to instance values via var[instance]"""
+        return self.get_value(instance)
 
     def eval(self,
                    instances=None,
