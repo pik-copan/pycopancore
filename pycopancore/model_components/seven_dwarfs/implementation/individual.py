@@ -77,7 +77,7 @@ class Individual (I.Individual):
     def beard_growing(self, t):
         """Grow beard of dwarf in explicit manner."""
         self.beard_length = (self.beard_growth_parameter
-                             * t
+                             * t * np.sin(t)**2
                              )
 
     processes = [

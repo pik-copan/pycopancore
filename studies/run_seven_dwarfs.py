@@ -38,7 +38,7 @@ world = M.World(culture=culture)
 
 # instantiate cells (the caves)
 cell = [M.Cell(world=world,
-               stock=1
+               eating_stock=100
                )
         for c in range(nc)
         ]
@@ -47,7 +47,7 @@ cell = [M.Cell(world=world,
 individuals = [M.Individual(cell=cell[0],
                             age=0,
                             beard_length=0,
-                            beard_growth_parameter=0.1,
+                            beard_growth_parameter=0.5,
                             eating_parameter=1
                             ) for i in range(dwarfs)
                ]
@@ -123,7 +123,7 @@ for i in range(dwarfs):
         mode="lines",
         name="beard length of dwarf no. {}".format(i),
         line=dict(
-            color="green",
+            color="red",
             width=4
         )
     ))
@@ -134,7 +134,7 @@ data_stock.append(go.Scatter(
     y=cell_stock,
     mode="lines",
     name="stock of cell",
-    line=dict(color="green",
+    line=dict(color="blue",
               width=4
               )
       ))
@@ -143,7 +143,7 @@ data_stock.append(go.Scatter(
 
 layout = dict(title = 'seven dwarfs',
               xaxis = dict(title = 'time [yr]'),
-              yaxis = dict(title = 'age'),
+              yaxis = dict(title = 'value'),
               )
 
 
