@@ -16,8 +16,8 @@ class Cell (I.Cell):
 
     def __init__(self,
                  *,
-                 terrestrial_carbon = 1 * D.gigatonnes_carbon,
-                 fossil_carbon = 1 * D.gigatonnes_carbon,
+                 terrestrial_carbon=1 * D.gigatonnes_carbon,
+                 fossil_carbon=1 * D.gigatonnes_carbon,
                  **kwargs
                  ):
         """Initialize a cell"""
@@ -26,24 +26,22 @@ class Cell (I.Cell):
         self.terrestrial_carbon = terrestrial_carbon
         self.fossil_carbon = fossil_carbon
 
-
     # abbreviations:
 
     balance = I.Cell.net_ecosystem_production - I.Cell.human_offtake
-
 
     processes = [  # using symbolic expressions for performance reasons:
 
         Explicit("net ecosystem production",
                  [I.Cell.net_ecosystem_production],
                  [B.Cell.nature.ecosystem_dependent_conversion_factor
-                   * I.Cell.terrestrial_carbon * (1 - (I.Cell.terrestrial_carbon
-                      / B.Cell.nature.terrestrial_carbon_carrying_capacity))
-                        * (I.World.photosynthesis_rate - I.World.respiration_rate)
+                  * I.Cell.terrestrial_carbon * (1 - (I.Cell.terrestrial_carbon
+                                                      / B.Cell.nature.terrestrial_carbon_carrying_capacity))
+                  * (I.World.photosynthesis_rate - I.World.respiration_rate)
                   ]),
 
 
-           # capacity per area?
+        # capacity per area?
         # Explicit("net ecosystem production",
         #          [I.Cell.net_ecosystem_production],
         #          [B.Cell.nature.ecosystem_dependent_conversion_factor
@@ -78,7 +76,7 @@ class Cell (I.Cell):
 #              - self.nature.photosynthesis_sensitivity_on_atmospheric_carbon
 #                * self.world.atmospheric_carbon)
 #             * np.sqrt(self.world.atmospheric_carbon / Sigma)
-#             * (1 - L / (self.nature.terrestrial_carbon_capacity_per_area 
+#             * (1 - L / (self.nature.terrestrial_carbon_capacity_per_area
 #                         * Sigma))) \
 #            * L
 #
@@ -98,7 +96,7 @@ class Cell (I.Cell):
 #        self.world.d_atmospheric_carbon += self.terrestrial_respiration_carbon_flow
 #
 #    processes = [
-#                 ODE("photosynthesis", [I.Cell.terrestrial_carbon, 
+#                 ODE("photosynthesis", [I.Cell.terrestrial_carbon,
 #                                        B.Cell.world.atmospheric_carbon],
 #                     do_photosynthesis),
 #                 ODE("respiration", [I.Cell.terrestrial_carbon, I.World.atmospheric_carbon],

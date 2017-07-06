@@ -17,13 +17,14 @@ from .. import interface as I
 
 import random
 
+
 class Individual (I.Individual):
     """Individual entity type mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                  *,
+                 *,
                  initial_opinion,
                  **kwargs):
         """Initialize an instance of Individual."""

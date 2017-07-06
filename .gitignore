@@ -85,3 +85,4 @@ target/
 
 # Autodoc
 docs/_api/*
+/.Rhistory

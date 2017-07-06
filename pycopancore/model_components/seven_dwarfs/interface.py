@@ -19,7 +19,7 @@ remove these instructions.
 # import ..BBB.interface as BBB
 # TODO: uncomment and adjust only if you really need other variables:
 from ... import Variable
-from ... import ReferenceVariable
+from ... import master_data_model as D
 
 
 class Model (object):
@@ -60,7 +60,10 @@ class Cell (object):
     """Interface for Cell entity type mixin."""
 
     # endogenous variables:
-    eating_stock = Variable("eating stock", "the eating stock")
+    eating_stock = Variable("eating stock",
+                            "the eating stock",
+                            unit=D.kilograms,
+                            lower_bound=0)
     # exogenous variables / parameters:
 
 
@@ -68,13 +71,14 @@ class Individual (object):
     """Interface for Individual entity type mixin."""
 
     # endogenous variables:
-    age = Variable("age", "dwarf's age")
-    beard_length = Variable("beard length", "length of beard")
+    age = Variable("age", "dwarf's age", unit=D.years)
+    beard_length = Variable("beard length", "length of beard", unit=D.meters)
     beard_growth_parameter = Variable("beard growth parameter",
                                       "growth speed of dwarf beard")
     eating_parameter = Variable("eating parameter", "eating speed of dwarf")
 
     # exogenous variables / parameters:
+
 
 class Culture (object):
     """Interface for Culture mixin"""

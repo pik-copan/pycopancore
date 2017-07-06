@@ -22,7 +22,7 @@ class Society (I.Society):
 
     def __init__(self,
                  *,
-                 harvest_rate = 0.5,
+                 harvest_rate=0.5,
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line

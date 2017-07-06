@@ -26,6 +26,13 @@ class Society (I.Society):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
+
+        # At last, check for validity of all variables that have been
+        # initialized and given a value:
+
+        # Following method is defined in abstract_entity_mixin which is
+        # inherited only by mixing in the model:
+        self.assert_valid()
         pass
 
     def deactivate(self):

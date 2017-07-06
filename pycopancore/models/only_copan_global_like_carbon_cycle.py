@@ -1,4 +1,5 @@
-"""jobsts_prototype_1 model."""
+"""jobsts_prototype_1 model, reduced to carbon cycle only."""
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
@@ -6,6 +7,10 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
+
+#
+#  Imports
+#
 
 from .. import base  # all models must use the base component
 
@@ -24,35 +29,31 @@ from ..model_components import copan_global_like_carbon_cycle \
 # entity types:
 
 
-class World (
-             cc.World,
-             # prod.World,
-             base.World):
+class World(cc.World,
+            # prod.World,
+            base.World):
     """World entity type."""
 
     pass
 
 
-class Society (
-               # prod.Society,
-               # growth.Society,
-               base.Society):
+class Society(base.Society):
+              # prod.Society,
+              # growth.Society):
     """Society entity type."""
 
     pass
 
 
-class Cell (
-            cc.Cell,
-            # prod.Cell,
-            base.Cell):
+class Cell(cc.Cell,
+           # prod.Cell,
+           base.Cell):
     """Cell entity type."""
 
     pass
 
-# TODO: list all mixin classes needed
 # class Individual (ABBR1.Individual, ABBR2.Individual,
-#             base.Individual):
+#                   base.Individual):
 #    """Individual entity type."""
 #    pass
 
@@ -60,22 +61,19 @@ class Cell (
 # process taxa:
 
 
-class Nature (
-              cc.Nature,
-              base.Nature):
+class Nature(cc.Nature,
+             base.Nature):
     """Nature process taxon."""
 
     pass
 
 
-class Metabolism (
-                  # prod.Metabolism,
-                  base.Metabolism):
+class Metabolism(base.Metabolism):
+                # , prod.Metabolism):
     """Metabolism process taxon."""
 
     pass
 
-# TODO: list all mixin classes needed
 # class Culture (ABBR1.Culture, ABBR2.Culture,
 #               base.Culture):
 #    """Culture process taxon."""
@@ -86,11 +84,10 @@ class Metabolism (
 # Model class:
 
 
-class Model (
-             cc.Model,
-             # prod.Model,
-             # growth.Model,
-             base.Model):
+class Model(cc.Model,
+            # prod.Model,
+            # growth.Model,
+            base.Model):
     """Class representing the whole model."""
 
     name = "Jobst's prototype 1, only CC"

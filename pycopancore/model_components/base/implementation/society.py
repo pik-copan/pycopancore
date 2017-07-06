@@ -1,4 +1,4 @@
-"""Base component's Society entity type mixin implementation class."""
+""" """
 
 # This file is part of pycopancore.
 #
@@ -33,29 +33,48 @@ class Society (I.Society, abstract.Society):
                  population=0 * D.people,
                  **kwargs
                  ):
-        """Initialize an instance of Society."""
+        """Initialize an instance of Society.
+
+        Parameters
+        ----------
+        world: obj
+            World the Society belongs to (default is None)
+        next_higher_society: obj
+            Optional Society the Society belongs to (default is None)
+        population: int
+            Number of people residing in the Society's territory
+        **kwargs
+            keyword arguments passed to super()
+
+        """
         super().__init__(**kwargs)  # must be the first line
 
+        # init caches:
         self._next_lower_societies = set()
         self._direct_cells = set()
 
+        # init and set variables implemented via properties:
         self._world = None
-        self._next_higher_society = None
-
         self.world = world
+        self._next_higher_society = None
         self.next_higher_society = next_higher_society
+
+        # set other variables:
         self.population = population
+
+        # make sure all variable values are valid:
+        self.assert_valid()
 
     # getters and setters for references:
 
     @property
     def world(self):
-        """Return world."""
+        """Get the World the Society is part of."""
         return self._world
 
     @world.setter
     def world(self, w):
-        """Set world."""
+        """Set the World the Society is part of."""
         if self._world is not None:
             self._world._societies.remove(self)
         if w is not None:
@@ -65,7 +84,7 @@ class Society (I.Society, abstract.Society):
 
     @property
     def next_higher_society(self):
-        """Return next higher society."""
+        """Get next higher society."""
         return self._next_higher_society
 
     @next_higher_society.setter
@@ -89,17 +108,17 @@ class Society (I.Society, abstract.Society):
 
     @property  # read-only
     def nature(self):
-        """Return nature."""
+        """Get the Nature of which the Society is a part."""
         return self._world.nature
 
     @property  # read-only
     def metabolism(self):
-        """Return metabolism."""
+        """Get the Metabolism of which the Society is a part."""
         return self._world.metabolism
 
     @property  # read-only
     def culture(self):
-        """Return culture."""
+        """Get the Culture of which the Society is a part."""
         return self._world.culture
 
     _higher_societies = unknown
@@ -107,7 +126,7 @@ class Society (I.Society, abstract.Society):
     and self.next_higher_society.higher_societies"""
     @property  # read-only
     def higher_societies(self):
-        """Return higher societies."""
+        """Get higher societies."""
         if self._higher_societies is unknown:
             # find recursively:
             self._higher_societies = [] if self.next_higher_society is None \
@@ -117,6 +136,7 @@ class Society (I.Society, abstract.Society):
 
     @higher_societies.setter
     def higher_societies(self, u):
+        """Set higher societies."""
         assert u == unknown, "setter can only be used to reset cache"
         self._higher_societies = unknown
         # reset dependent caches:
@@ -127,12 +147,12 @@ class Society (I.Society, abstract.Society):
 
     @property  # read-only
     def next_lower_societies(self):
-        """Read next lower societies."""
+        """Get next lower societies."""
         return self._next_lower_societies
 
     @property  # read-only
     def lower_societies(self):
-        """Return lower societies."""
+        """Get lower societies."""
         # aggregate recursively:
         l = self._next_lower_societies
         for s in self._next_lower_societies:
@@ -141,7 +161,7 @@ class Society (I.Society, abstract.Society):
 
     @property  # read-only
     def direct_cells(self):
-        """Return direct cells."""
+        """Get cells that directly belong to the Society."""
         return self._direct_cells
 
     _cells = unknown
@@ -149,7 +169,7 @@ class Society (I.Society, abstract.Society):
     and lowersociety.cells"""
     @property  # read-only
     def cells(self):
-        """Return cells."""
+        """Get cells that directly abd indirectly belong to the Society."""
         if self._cells is unknown:
             # aggregate recursively:
             self._cells = self.direct_cells
@@ -159,6 +179,7 @@ class Society (I.Society, abstract.Society):
 
     @cells.setter
     def cells(self, u):
+        """Set cells that directly and indirectly belong to the Society."""
         assert u == unknown, "setter can only be used to reset cache"
         self._cells = unknown
         # reset dependent caches:
@@ -169,7 +190,7 @@ class Society (I.Society, abstract.Society):
     """cache, depends on _direct_cells, directcell.individuals"""
     @property  # read-only
     def direct_individuals(self):
-        """Return direct individuals."""
+        """Get resident Individuals not in subsocieties."""
         if self._direct_individuals is unknown:
             # aggregate from direct_cells:
             self._direct_individuals = set()
@@ -179,6 +200,7 @@ class Society (I.Society, abstract.Society):
 
     @direct_individuals.setter
     def direct_individuals(self, u):
+        """Set resident Individuals not in subsocieties."""
         assert u == unknown, "setter can only be used to reset cache"
         self._direct_individuals = unknown
         # reset dependent caches:
@@ -188,7 +210,7 @@ class Society (I.Society, abstract.Society):
     """cache, depends on self.cells, cell.individuals"""
     @property  # read-only
     def individuals(self):
-        """Return individuals."""
+        """Get direct abd indirect resident Individuals."""
         if self._individuals is unknown:
             # aggregate from cells:
             self._individuals = set()
@@ -198,6 +220,7 @@ class Society (I.Society, abstract.Society):
 
     @individuals.setter
     def individuals(self, u):
+        """Set direct abd indirect resident Individuals."""
         assert u == unknown, "setter can only be used to reset cache"
         self._individuals = unknown
         # reset dependent caches:
@@ -207,4 +230,4 @@ class Society (I.Society, abstract.Society):
 
     # no process-related methods
 
-    processes = []
+    processes = []  # no processes in base

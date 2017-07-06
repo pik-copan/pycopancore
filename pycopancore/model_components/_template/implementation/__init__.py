@@ -21,4 +21,3 @@ from .individual import Individual
 from .nature import Nature
 from .metabolism import Metabolism
 from .culture import Culture
-

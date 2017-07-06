@@ -1,5 +1,7 @@
-from .. import Dimension, nondim
-from .. import Unit, unity
+"""Master data model for dimensions and units."""
+
+from .. import Dimension
+from .. import Unit
 
 # fundamental physical dimensions and units:
 
@@ -50,7 +52,7 @@ carbon.default_unit = tC = tonnes_carbon = \
          "tonnes of carbon, whether atomic or in some chemical compound",
          symbol="tC")
 GtC = gigatonnes_carbon = (tonnes_carbon * 1e9).named("gigatonnes carbon",
-                                                symbol="GtC")
+                                                      symbol="GtC")
 
 humans = Dimension("humans", "cardinality of a set of human beings")
 humans.default_unit = H = people = \
@@ -61,7 +63,8 @@ humans.default_unit = H = people = \
 #joules = kilograms * meters**2 / seconds**2
 # but:
 energy = Dimension("energy", "(not convertible to mass velocity²)")
-J = joules = Unit("joules", "(not convertible to kg m²/s²)", symbol="J", dimension=energy)
+J = joules = Unit("joules", "(not convertible to kg m²/s²)",
+                  symbol="J", dimension=energy)
 energy.default_unit = GJ = gigajoules = \
     (joules * 1e9).named("gigajoules", symbol="GJ")
 # TODO: provide other common units: Btu, kcal., MWh, etc.
@@ -85,4 +88,3 @@ volume = (length**3).named("volume", "3D spatial dimension")
 velocity = (length / time).named("velocity")
 
 acceleration = (velocity / time).named("acceleration")
-

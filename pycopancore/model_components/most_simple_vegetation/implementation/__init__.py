@@ -15,5 +15,3 @@ Model component implementation subpackage most_simple_vegetation.
 from .cell import Cell
 
 # export all provided process taxon implementation mixin classes:
-
-

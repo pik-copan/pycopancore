@@ -5,7 +5,6 @@
 
 # defines logics to deal with symbolic expressions and their evaluation
 
-import random
 import numpy as np
 import sympy as sp
 import scipy.special
@@ -13,46 +12,52 @@ import scipy.special
 from .. import data_model as D
 from .. import private
 
-from numba import jit, njit
-
-import inspect
-from profilehooks import coverage, profile
+from numba import njit
 
 
 class _Unknown(object):
     def __str__(self):
         return "unknown"
+
+
 unknown = _Unknown()
 
 # hierarchical aggregation functions:
 
 
 def aggregation(npfunc):
+    """Dummy docstring"""
+
+    # TODO: add docstring to function
 
     @njit
     def func(values, lens):
+        """Dummy docstring"""
+
+        # TODO: add docstring to function
         # values = np.array(values)
         results = np.zeros(len(lens), dtype=values.dtype)
         offset = 0
-        for i in range(len(lens)):
-            newoffset = offset + lens[i]
+        for i, le in enumerate(lens):
+            newoffset = offset + le
             results[i] = npfunc(values[offset:newoffset])
             offset = newoffset
         return list(results)
 
     return func
 
+
 name2numpy = {
-              "all": np.all,
-              "any": np.any,
-              "max": np.max,
-              "mean": np.mean,
-              "median": np.median,
-              "min": np.min,
-              "std": np.std,
-              "sum": np.sum,
-              "var": np.var,
-              }
+    "all": np.all,
+    "any": np.any,
+    "max": np.max,
+    "mean": np.mean,
+    "median": np.median,
+    "min": np.min,
+    "std": np.std,
+    "sum": np.sum,
+    "var": np.var,
+}
 aggregation_names = set(name2numpy.keys())
 name2aggregation = {name: aggregation(func)
                     for name, func in name2numpy.items()}
@@ -62,28 +67,34 @@ name2aggregation = {name: aggregation(func)
 
 @njit
 def _broadcast(values, lens):
+    """Dummy docstring"""
+    # TODO: add docstring to function
     result = np.zeros(np.sum(np.array(lens)))
     offset = 0
-    for i, l in enumerate(lens):
-        newoffset = offset + l
+    for i, le in enumerate(lens):
+        newoffset = offset + le
         result[offset:newoffset] = values[i]
         offset = newoffset
     return result
 
 
 def broadcast(values, layout):
+    """Dummy docstring"""
+    # TODO: add docstring to function
     for lens in layout:
         values = _broadcast(values, lens)
     return values
 
 
 def layout2lens(layout):
+    """Dummy docstring"""
+    # TODO: add docstring to function
     result = layout[-1]
     for lens in reversed(layout[:-1]):
         offset = 0
         newresult = []
-        for i, l in enumerate(lens):
-            newoffset = offset + l
+        for le in lens:
+            newoffset = offset + le
             newresult.append(sum(result[offset:newoffset]))
             offset = newoffset
         result = newresult
@@ -91,9 +102,11 @@ def layout2lens(layout):
 
 
 def get_cardinalities_and_branchings(expr):
+    """Dummy docstring"""
+    # TODO: add docstring to function
     try:
         return expr.cardinalities, expr.branchings
-    except:
+    except BaseException:
         # use longest cardinalities of args:
         cbs = [get_cardinalities_and_branchings(arg)
                for arg in expr.args]
@@ -102,7 +115,7 @@ def get_cardinalities_and_branchings(expr):
         return cbs[np.argmax([len(c[0]) for c in cbs])]
 
 
-class _DotConstruct (sp.AtomicExpr):
+class _DotConstruct(sp.AtomicExpr):
     """A _DotConstruct represents a syntactical construct with dots,
     starting with an entity-type or process taxon class,
     followed by zero or more ReferenceVariables or SetVariables
@@ -121,8 +134,8 @@ class _DotConstruct (sp.AtomicExpr):
     """the sequence of further names,
     e.g. ["sum","cells","population"]"""
     arg = None
-    """the optional argument of the aggregation function,
-    e.g. Society.world.sum.cells.population * Society.world.sum.cells.capital"""
+    """the optional argument of the aggregation function, e.g.
+    Society.world.sum.cells.population * Society.world.sum.cells.capital"""
     can_be_target = None
     """whether this can be a target (e.g. does not involve aggregation)"""
 
@@ -153,10 +166,10 @@ class _DotConstruct (sp.AtomicExpr):
         if isinstance(owning_class_or_var, D.Variable) \
                 or name_sequence[0] in aggregation_names:
             uid = repr(owning_class_or_var) \
-                    + str(name_sequence) + str(arg)
+                + str(name_sequence) + str(arg)
         else:
             uid = repr(getattr(owning_class_or_var, name_sequence[0])) \
-                    + str([None] + name_sequence[1:]) + str(arg)
+                + str([None] + name_sequence[1:]) + str(arg)
         return super().__new__(cls,
                                uid,
                                **assumptions)
@@ -165,7 +178,7 @@ class _DotConstruct (sp.AtomicExpr):
                  owning_class_or_var,
                  name_sequence,
                  arg=None
-                 ):
+                ):
         super().__init__()
 
         if self._initialized is None:
@@ -241,7 +254,8 @@ class _DotConstruct (sp.AtomicExpr):
     def _eval_expand_mul(self, *args, **kwargs):
         return self
 
-    def _eval_Eq(self, *args, **kwargs):
+    @staticmethod
+    def _eval_Eq(*args, **kwargs):
         return None
 
 # this does not work unfortunately:
@@ -265,13 +279,15 @@ class _DotConstruct (sp.AtomicExpr):
                 value = getattr(value, name)
                 try:  # use first element if iterable:
                     value = next(iter(value))
-                except:
+                except BaseException:
                     pass
             self._target_class = value.__class__
         return self._target_class
 
     @property  # read-only
     def owning_class(self):
+        """Dummy docstring"""
+        # TODO: add docstring to method
         if isinstance(self._owning_class_or_var, D.Variable):
             self.name_sequence[0] = self._owning_class_or_var.codename
             self._owning_class_or_var = self._owning_class_or_var.owning_class
@@ -323,7 +339,7 @@ class _DotConstruct (sp.AtomicExpr):
         oc = self.owning_class
         items = oc.instances
         branchings = [[len(items)]]
-        cardinalities = [1,len(items)]  # store initial cardinality
+        cardinalities = [1, len(items)]  # store initial cardinality
         for name in self.name_sequence[:-1]:
             if name in aggregation_names:
                 break
@@ -369,7 +385,7 @@ class _DotConstruct (sp.AtomicExpr):
                 # construct arg from name_sequence if None
                 if self.arg is None:
                     arg_name_sequence = self.name_sequence[:pos] \
-                                        + self.name_sequence[pos+1:]
+                        + self.name_sequence[pos + 1:]
                     self.arg = _DotConstruct(self.owning_class,
                                              arg_name_sequence)
                 # sic! (not items!):
@@ -433,59 +449,61 @@ class _DotConstruct (sp.AtomicExpr):
     def _eval_expand_power_base(self, **kwargs):
         return self
 
+
 _cached_values = {}
 _cached_iteration = None
 
 func2numpy = {
-              sp.Abs: np.abs,
-              sp.acos: np.arccos,
-              sp.acosh: np.arccosh,
-              sp.asin: np.arcsin,
-              sp.asinh: np.arcsinh,
-              sp.atan: np.arctan,
-              sp.atan2: np.arctan2,
-              sp.atanh: np.arctanh,
-              sp.ceiling: np.ceil,
-              sp.cos: np.cos,
-              sp.cosh: np.cosh,
-              sp.erf: scipy.special.erf,
-              sp.erfc: scipy.special.erfc,
-              sp.erfinv: scipy.special.erfinv,
-              sp.erfcinv: scipy.special.erfcinv,
-              sp.exp: np.exp,
-              sp.floor: np.floor,
-              sp.Heaviside: lambda x: 1 - (x < 0).astype(int),
-              sp.log: np.log,
-              sp.sin: np.sin,
-              sp.sinh: np.sin,
-              sp.sqrt: np.sqrt,
-              sp.tan: np.tan,
-              sp.tanh: np.tanh,
-              }
+    sp.Abs: np.abs,
+    sp.acos: np.arccos,
+    sp.acosh: np.arccosh,
+    sp.asin: np.arcsin,
+    sp.asinh: np.arcsinh,
+    sp.atan: np.arctan,
+    sp.atan2: np.arctan2,
+    sp.atanh: np.arctanh,
+    sp.ceiling: np.ceil,
+    sp.cos: np.cos,
+    sp.cosh: np.cosh,
+    sp.erf: scipy.special.erf,
+    sp.erfc: scipy.special.erfc,
+    sp.erfinv: scipy.special.erfinv,
+    sp.erfcinv: scipy.special.erfcinv,
+    sp.exp: np.exp,
+    sp.floor: np.floor,
+    sp.Heaviside: lambda x: 1 - (x < 0).astype(int),
+    sp.log: np.log,
+    sp.sin: np.sin,
+    sp.sinh: np.sin,
+    sp.sqrt: np.sqrt,
+    sp.tan: np.tan,
+    sp.tanh: np.tanh,
+}
 binary2numpy = {
-                sp.Eq: np.equal,
-                sp.Ge: np.greater_equal,
-                sp.Gt: np.greater,
-                sp.Le: np.less_equal,
-                sp.Lt: np.less,
-                sp.Ne: np.not_equal,
-                }
+    sp.Eq: np.equal,
+    sp.Ge: np.greater_equal,
+    sp.Gt: np.greater,
+    sp.Le: np.less_equal,
+    sp.Lt: np.less,
+    sp.Ne: np.not_equal,
+}
 nary2numpy = {
-              sp.Add: np.sum,
-              sp.And: np.logical_and,
-              sp.Mul: np.prod,
-              sp.Or: np.logical_or,
-              sp.Xor: np.logical_xor,
-              }
+    sp.Add: np.sum,
+    sp.And: np.logical_and,
+    sp.Mul: np.prod,
+    sp.Or: np.logical_or,
+    sp.Xor: np.logical_xor,
+}
 
-# @profile
+
 def _eval(expr, iteration=None):
+    global _cached_iteration
     try:
         # if still up to date, return vals from cache:
         if iteration is not None and _cached_iteration == iteration:
             print("(used the cache)")
             return _cached_values[expr]
-    except:
+    except BaseException:
         pass
     t = type(expr)
     tt = type(t)
@@ -504,8 +522,8 @@ def _eval(expr, iteration=None):
         branchings = argbrs[longest]
         for i, arg in enumerate(args):
             if i != longest:
-                l = argvals[i].size
-                pos = 0 if l == 1 else cardinalities.index(l)
+                length = argvals[i].size
+                pos = 0 if length == 1 else cardinalities.index(length)
                 argvals[i] = broadcast(argvals[i], branchings[pos:])
     if t in (D.Variable, _DotConstruct):
         vals = np.array(expr.eval())
@@ -519,7 +537,7 @@ def _eval(expr, iteration=None):
     # ternary operators:
     elif t == sp.ITE:
         truthvals = argvals[0]
-        trues = list(np.where(truthvals == True)[0])
+        trues = list(np.where(truthvals is True)[0])
         vals = argvals[2]
         vals[trues] = argvals[1][trues]
     # n-ary operators:
@@ -559,7 +577,7 @@ def _eval(expr, iteration=None):
         # clumsy way of converting sympy True to normal True:
         if expr is True:
             expr = True
-        elif expr == False:
+        elif expr is False:
             expr = False
         else:
             expr = float(expr)
@@ -571,10 +589,13 @@ def _eval(expr, iteration=None):
         _cached_values[expr] = (vals, cardinalities, branchings)
         _cached_iteration = iteration
 #        print("(stored in cache)")
-    except:
+    except BaseException:
         pass
     return vals, cardinalities, branchings
 
+
 def eval(expr, iteration=None):
+    """Dummy docstring - wrap private _eval function?"""
+    # TODO: add docstring to function
     vals, cardinalities, branchings = _eval(expr)
     return vals

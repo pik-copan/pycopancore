@@ -23,7 +23,7 @@ EPS = 1e-10
 """infinitesimal value for ensuring strict bounds"""
 
 
-class Variable (Symbol):
+class Variable(Symbol):
     """Metadata object representing a model variable or parameter."""
 
     # standard metadata:
@@ -44,7 +44,7 @@ class Variable (Symbol):
     default = None
     """default initial value"""
     uninformed_prior = None
-    """random value generator (probability distribution) 
+    """random value generator (probability distribution)
     if nothing else is known about the value"""
 
     # catalog references:
@@ -61,7 +61,6 @@ class Variable (Symbol):
     CETS = None
     """corresponding World Bank CETS code
     (https://databank.worldbank.org/data/download/site-content/WDI_CETS.xls)"""
-
 
     # data type and constraints:
 
@@ -131,7 +130,7 @@ class Variable (Symbol):
                  AMIP=None,
                  IAMC=None,
                  CETS=None,
-                 datatype=(float,int),
+                 datatype=None,
                  array_shape=None,
                  allow_none=True,  # by default, var may be none
                  lower_bound=None,
@@ -178,7 +177,7 @@ class Variable (Symbol):
         self.unit = unit
 
         assert not (is_extensive is True and is_intensive is True), \
-                        "cannot be both extensive and intensive"
+            "cannot be both extensive and intensive"
         self.is_extensive = is_extensive
         self.is_intensive = is_intensive
 
@@ -225,9 +224,9 @@ class Variable (Symbol):
 
     def __repr__(self):
         return (self.owning_class.__name__ + "." + self.codename) \
-                if self.owning_class \
-                else self.name + " (" + self._uid + ")"
-        # dirty fix for lengthy output 
+            if self.owning_class \
+            else self.name + " (" + self._uid + ")"
+        # dirty fix for lengthy output
         r = "Variable " + self.name + "(" + self.desc + "), scale=" \
             + self.scale + ", datatype=" + str(self.datatype)
         if self.unit is not None:
@@ -273,7 +272,8 @@ class Variable (Symbol):
             if self.datatype is not None:
                 if not isinstance(v, self.datatype):
                     return False, \
-                        str(self) + " must be instance of " + str(self.datatype)
+                        str(self) + " must be instance of " + \
+                        str(self.datatype)
 
             if self.lower_bound is not None:
                 if not v >= self.lower_bound:
@@ -283,7 +283,8 @@ class Variable (Symbol):
             if self.strict_lower_bound is not None:
                 if not v > self.strict_lower_bound:
                     return False, \
-                        str(self) + " must be > " + str(self.strict_lower_bound)
+                        str(self) + " must be > " + \
+                        str(self.strict_lower_bound)
 
             if self.upper_bound is not None:
                 if not v <= self.upper_bound:
@@ -293,7 +294,8 @@ class Variable (Symbol):
             if self.strict_upper_bound is not None:
                 if not v < self.strict_upper_bound:
                     return False, \
-                        str(self) + " must be < " + str(self.strict_upper_bound)
+                        str(self) + " must be < " + \
+                        str(self.strict_upper_bound)
 
             if self.quantum is not None:
                 if not v % self.quantum == 0:
@@ -308,7 +310,9 @@ class Variable (Symbol):
 
         return True
 
+    # TODO: improve docstring
     def is_valid(self, value):
+        """Is valid."""
         if isinstance(value, DimensionalQuantity):
             value = value.number(unit=self.unit)
         return self._check_valid(value) == True
@@ -334,11 +338,15 @@ class Variable (Symbol):
         """magic method allowing access to instance values via var[instance]"""
         return self.set_value(instance, value)
 
-    def convert_to_standard_units(self,
-                                  instances=None,  # if None: all entities/taxa
-                                  ):
-        """replace all variable values of type DimensionalQuantity
-        to float using the standard unit"""
+    def convert_to_standard_units(
+            self,
+            instances=None):  # if None: all entities/taxa
+        """
+        Convert to standart units.
+
+        Replace all variable values of type DimensionalQuantity
+        to float using the standard unit
+        """
         if instances is not None:
             for i in instances:
                 v = getattr(i, self.codename)
@@ -353,11 +361,11 @@ class Variable (Symbol):
     def _get_instances(self, instances):
         """converts argument into a set of instances
         (entities or process taxa)"""
-        if instances is None: # use all that have this variable
+        if instances is None:  # use all that have this variable
             instances = self.owning_class.instances
-        elif isinstance(instances, dict): # use all that appear in keys or values
+        elif isinstance(instances, dict):  # use all that appear in keys or values
             instances = set()
-            for k,i in instances.keys():
+            for k, i in instances.keys():
                 instances.update(self._get_instances(k))
                 instances.update(self._get_instances(i))
         elif isinstance(instances,
@@ -368,9 +376,9 @@ class Variable (Symbol):
             instances = set(instances)
         return instances
 
-    def set_to_default(self,
-                       instances=None,  # if None: all entities/taxa
-                       ):
+    def set_to_default(
+            self,
+            instances=None):  # if None: all entities/taxa
         """Set values in selected entities to default"""
         instances = self._get_instances(instances)
         for e in instances:
@@ -404,7 +412,7 @@ class Variable (Symbol):
         If distribution=None, use uninformed_prior.
         If optional p is given, replace current value only with probability p."""
         assert self.scale in ("ratio", "interval"), \
-                "can only add noise to ratio or interval scaled variables"
+            "can only add noise to ratio or interval scaled variables"
         instances = self._get_instances(instances)
         for i in instances:
             v = self.get_value(i)
@@ -496,7 +504,7 @@ class Variable (Symbol):
         """
         instances = self._get_instances(instances)
         for i in instances:
-            setattr(i, 'd_'+self.codename, 0)
+            setattr(i, 'd_' + self.codename, 0)
 
     def get_derivatives(self,
                         instances=None
@@ -512,9 +520,11 @@ class Variable (Symbol):
         -------
 
         """
-        return [getattr(i, 'd_'+self.codename) for i in instances]
+        return [getattr(i, 'd_' + self.codename) for i in instances]
 
+    # TODO: improve docstring
     def get_value(self, instance, unit=None):
+        """Get value."""
         v = getattr(instance, self.codename)
         assert not isinstance(v, Variable), \
             "Variable " + str(self) + " uninitialized at instance " \
@@ -551,24 +561,29 @@ class Variable (Symbol):
         else:
             return [self.get_value(inst, unit=unit) for inst in instances]
 
+    # TODO: improve subsequent doctstrings
     @property  # read-only
     def target_class(self):
+        """Target class."""
         return self.owning_class
 
     @property  # read-only
     def target_variable(self):
+        """Target variable."""
         return self
 
     @property  # read-only
     def target_instances(self):
+        """Target instances."""
         return self.owning_class.instances
 
     # stuff needed if Variable occurs as arg of _DotConstruct:
     @property  # read-only
     def branchings(self):
+        """Branchings."""
         return [[len(self.owning_class.instances)]]
 
     @property  # read-only
     def cardinalities(self):
+        """Cardinalities."""
         return [1, len(self.owning_class.instances)]
-
