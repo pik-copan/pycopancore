@@ -35,7 +35,7 @@ class Explicit(_AbstractProcess):
                  targets,
                  specification,
                  smoothness=0
-                ):
+                 ):
         """Instantiate an instance of an explicit process.
 
         Parameters

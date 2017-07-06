@@ -18,10 +18,14 @@ from enum import Enum, unique
 
 
 class HookRegistrationError(BaseException):
+    """Dummy docstring"""
+    # TODO: missing class docstring
     pass
 
 
 class HooksError(BaseException):
+    """Dummy docstring"""
+    # TODO: missing class docstring
     pass
 
 #
@@ -143,6 +147,8 @@ class Hooks(object):
 
     @classmethod
     def execute_hooks(cls, type, model, t):
+        """Dummy docstring"""
+        # TODO: Missing method docstring
         assert type in cls.Types, "please give a type from {}.HookTypes".format(
             cls.__qualname__)
         if type is cls.Types.pre:

@@ -15,7 +15,7 @@ from .implementation import Cell, Individual
 # none needed
 
 
-class Model (I.Model):
+class Model(I.Model):
     """Model mixin class."""
 
     # mixins provided by this model component:

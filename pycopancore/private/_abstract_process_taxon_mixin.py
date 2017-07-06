@@ -38,15 +38,17 @@ class _AbstractProcessTaxonMixin(object):
     # the repr and the str methods were removed in the master/prototype_jobst1
     # Do we really don't want them anymore?
     def __repr__(self):
-        return ('Process taxon object')
+        return 'Process taxon object'
 
     def __str__(self):
         return repr(self)
 
-    def set_value(self, variable, value):
-        assert isinstance(variable, variable.Variable), \
+    def set_value(self, var, value):
+        """Dummy docstring"""
+        # TODO: missing method docstring
+        assert isinstance(var, variable.Variable), \
             "variable must be a Variable object"
-        variable.set_value(self, value)
+        var.set_value(self, value)
 
     def assert_valid(self):
         """Make sure all variable values are valid.

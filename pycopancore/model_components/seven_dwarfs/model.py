@@ -18,7 +18,7 @@ from .implementation import World, Cell, Individual, Culture
 # import all needed process taxon implementation classes:
 
 
-class Model (I.Model):
+class Model(I.Model):
     """Model mixin class."""
 
     # mixins provided by this model component:

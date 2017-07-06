@@ -19,7 +19,7 @@ from pycopancore import ODE, Step, Explicit, Event
 import numpy as np
 
 
-class Individual (I.Individual):
+class Individual(I.Individual):
     """Individual entity type mixin implementation class."""
 
     # standard methods:
@@ -79,13 +79,12 @@ class Individual (I.Individual):
                              )
 
     def reproduction(self, unused_t):
-        """Reproduce. 
-        
+        """Reproduce.
+
         Done if dwarf is older than 5, not dead and has enough to eat.
         """
-        if self.is_active \
-            and self.cell.eating_stock > 10\
-            and self.age > 5:
+        if (self.is_active
+            and self.cell.eating_stock > 10 and self.age > 5):
                 child = self.__class__(cell=self.cell,
                                        age=1,
                                        beard_length=0,
