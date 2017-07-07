@@ -1,8 +1,10 @@
 # pycopancore
-Python World-Earth modelling framework
+Python World-Earth modelling framework CORE
 
-* responsible senior scientists: Jobst Heitzig & Jonathan F. Donges
+* Responsible senior scientists: Jobst Heitzig & Jonathan F. Donges at the Potsdam Institute for Climate Impact Research.
 * The versioning of pycopancore has been chosen to be administrated on the [github.com system](http://github.com/) as the future prospect of this model strongly encourages outside contributions. Any release version will be pushed on the inhouse versioning systems, [gitlab](http://gitlab.pik-potsdam.de/) and / or [svn](https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion).
+
+CORE is developed at the Potsdam Institute for Climate Impact Research.
 
 Candidates for speeding up Python code: cython, numba, ...
 
@@ -45,6 +47,14 @@ When Developing the Code, please follow the guidelines below:
 Later:
 * Use [NetCDF, the CF conventions](http://cfconventions.org/) and [PIK's Typed Data Transfer](https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt) to store (input and) output data and share it with other models.
 * Read and follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
+
+## Installation
+
+for developers: recommended way of installing is to run in the package main directory (where the setup.py is located):
+
+$ pip install -e .
+
+This creates a link insteaed of copying the files, so modifications in this directory are modifications in the installed package.
 
 
 

@@ -20,25 +20,25 @@ import pycopancore.model_components.dummy as dummy
 #
 
 
-class World (base.World):
+class World(base.World):
     """Class to mix all World_mixins to create World clas."""
 
     pass
 
 
-class Cell (dummy.Cell, base.Cell):
+class Cell(dummy.Cell, base.Cell):
     """Class to mix all Cell_mixins to create Cell class."""
 
     pass
 
 
-class Individual (base.Individual):
+class Individual(base.Individual):
     """Class to mix all Individual_mixins to create Individual class."""
 
     pass
 
 
-class Society (base.Society):
+class Society(base.Society):
     """Class to mix all Society_mixins to create Society class."""
 
     pass

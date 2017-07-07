@@ -16,5 +16,3 @@ from .cell import Cell
 from .individual import Individual
 
 # export all provided process taxon implementation mixin classes:
-
-

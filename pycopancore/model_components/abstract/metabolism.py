@@ -12,6 +12,7 @@ Inherited by base model component.
 # License: MIT license
 
 from ...private import _AbstractProcessTaxonMixin
+from ...data_model import OrderedSet
 
 
 class Metabolism (_AbstractProcessTaxonMixin):
@@ -20,4 +21,5 @@ class Metabolism (_AbstractProcessTaxonMixin):
     Inherited by base model component.
     """
 
-    pass
+    variables = OrderedSet()
+    """All variables occurring in this entity type"""

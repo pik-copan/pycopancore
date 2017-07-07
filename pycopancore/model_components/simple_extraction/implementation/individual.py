@@ -25,7 +25,6 @@ class Individual(I.Individual):
         super().__init__(**kwargs)  # must be the first line
         self.strategy = strategy
 
-        pass
 
     def __lt__(self, other):
         """Make objects sortable."""
@@ -34,14 +33,14 @@ class Individual(I.Individual):
     def deactivate(self):
         """Deactivate an individual."""
         # TODO: add custom code here:
-        pass
+
         super().deactivate()  # must be the last line
 
     def reactivate(self):
         """Reactivate an individual."""
         super().reactivate()  # must be the first line
         # TODO: add custom code here:
-        pass
+
 
     # process-related methods:
 

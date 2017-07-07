@@ -1,4 +1,4 @@
-"""Base component's Culture process taxon mixin implementation class."""
+""" """
 
 # This file is part of pycopancore.
 #
@@ -25,13 +25,27 @@ class Culture (I.Culture, abstract.Culture):
                  *,
                  acquaintance_network=None,
                  **kwargs):
-        """Initialize the unique instance of Culture."""
+        """Initialize the unique instance of Culture.
+
+        Parameters
+        ----------
+        acquaintance_network: Graph
+            The Network of acquaintances which is managed by Culture
+            (default is None)
+        **kwargs
+            keyword arguments passed to super()
+
+        """
         super().__init__(**kwargs)  # must be the first line
 
         if acquaintance_network is None:
             acquaintance_network = Graph()
+        assert isinstance(acquaintance_network, Graph)
         self.acquaintance_network = acquaintance_network
+
+        # make sure all variable values are valid:
+        self.assert_valid()
 
     # no process-related methods
 
-    processes = []  # TODO: instantiate and list process objects here
+    processes = []  # no processes in base

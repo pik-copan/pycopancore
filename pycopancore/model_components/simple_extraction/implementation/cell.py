@@ -29,19 +29,17 @@ class Cell(I.Cell):
         self.stock = stock
         self.growth_rate = growth_rate
 
-        pass
 
     def deactivate(self):
         """Deactivate a cell."""
         # TODO: add custom code here:
-        pass
+
         super().deactivate()  # must be the last line
 
     def reactivate(self):
         """Reactivate a cell."""
         super().reactivate()  # must be the first line
         # TODO: add custom code here:
-        pass
 
     # process-related methods:
 

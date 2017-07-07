@@ -49,11 +49,11 @@ class Society (I.Society):
     def get_majority_opinion(self, t):
         opinion_count = {}
         for op in self.culture.possible_opinions:
-            opinion_count[op] = sum(1 for _ in filter(lambda ind: ind.opinion == op, self.individuals))
+            opinion_count[op] = sum(1 for _ in filter(
+                lambda ind: ind.opinion == op, self.individuals))
 
-        self.opinion = max(opinion_count.items(), key=operator.itemgetter(1))[0]
-
-
+        self.opinion = max(opinion_count.items(),
+                           key=operator.itemgetter(1))[0]
 
     processes = [
         Explicit(

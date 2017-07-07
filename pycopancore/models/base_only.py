@@ -2,6 +2,7 @@
 
 It only import components of the base mixins
 """
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
@@ -15,30 +16,31 @@ It only import components of the base mixins
 #
 
 import pycopancore.model_components.base as base
+
 #
 # Entity Types
 #
 
 
-class World (base.World):
+class World(base.World):
     """Class to mix all World_mixins to create World clas."""
 
     pass
 
 
-class Cell (base.Cell):
+class Cell(base.Cell):
     """Class to mix all Cell_mixins to create Cell class."""
 
     pass
 
 
-class Individual (base.Individual):
+class Individual(base.Individual):
     """Class to mix all Individual_mixins to create Individual class."""
 
     pass
 
 
-class Society (base.Society):
+class Society(base.Society):
     """Class to mix all Society_mixins to create Society class."""
 
     pass

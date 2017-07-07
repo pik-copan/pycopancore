@@ -61,7 +61,6 @@ class World (object):
     # surface_air_temperature = D.world.surface_air_temperature
 
 
-
 class Society (object):
     """Interface for Society entity type mixin."""
 
@@ -72,9 +71,6 @@ class Society (object):
     opinion = md.Society.opinion
 
     harvest_rate = cc.Society.harvest_rate
-
-
-
 
 
 # class Cell (object):
@@ -113,21 +109,21 @@ class Society (object):
 
 
 class Culture (object):
-   """Interface for Culture process taxon mixin."""
+    """Interface for Culture process taxon mixin."""
 
-   # endogenous variables:
+    # endogenous variables:
 
-   # exogenous variables / parameters:
-   #
-   opinion_change = avof.Culture.opinion_change
+    # exogenous variables / parameters:
+    #
+    opinion_change = avof.Culture.opinion_change
 
-   impact_scaling_factor = Variable("scaling factor", "") #
+    impact_scaling_factor = Variable("scaling factor", "")
 
-   no_impact_atmospheric_carbon_level = Variable("", "level of atmospheric carbon that doesn't change peoples "
-                                                     "probability of opinion change to awareness")
+    no_impact_atmospheric_carbon_level = Variable("", "level of atmospheric carbon that doesn't change peoples "
+                                                      "probability of opinion change to awareness")
 
-   no_impact_opinion_change = Variable("", "basic probability of opinion change to awareness in "
-                                           "avof without climate impact effects") # take adaptive voter model opinion_change?
+    no_impact_opinion_change = Variable("", "basic probability of opinion change to awareness in "
+                                            "avof without climate impact effects")  # take adaptive voter model opinion_change?
 
-   impact = Variable("impact of atmospheric carbon / temperature on society",
-                     "based on atmospheric carbon level")
+    impact = Variable("impact of atmospheric carbon / temperature on society",
+                      "based on atmospheric carbon level")

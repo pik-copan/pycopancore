@@ -14,7 +14,7 @@ then remove these instructions
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import Society,  Individual
+from .implementation import Society, Individual
 # import all needed process taxon implementation classes:
 from .implementation import Culture
 

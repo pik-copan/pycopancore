@@ -18,8 +18,9 @@ from ... import master_data_model as D
 # model component:
 # import ..BBB.interface as BBB
 # TODO: uncomment and adjust only if you really need other variables:
-from ... import Variable # used for opinion here, maybe that should be included in the master data model? But I wouldn't know how? something like discrete opinion
+from ... import Variable  # used for opinion here, maybe that should be included in the master data model? But I wouldn't know how? something like discrete opinion
 from ..base import interface as baseI
+
 
 class Model (object):
     """Interface for Model mixin."""
@@ -46,7 +47,8 @@ class Culture (object):
 
     # endogenous variables:
     acquaintance_network = D.CUL.acquaintance_network
-    # TODO: give possible_opinions a type, wait for Wolf's choice stuff in the master data model
+    # TODO: give possible_opinions a type, wait for Wolf's choice stuff in the
+    # master data model
     possible_opinions = Variable(
         "possible opinions",
         "possible opinions of an individual in the sense of the adaptive voter model"
@@ -54,9 +56,11 @@ class Culture (object):
 
     opinion_change = Variable("probability to adopt another opinion", "")
 
-    multiple_updates = Variable("number of updates", "number of updates that are done at the same time")
+    multiple_updates = Variable(
+        "number of updates", "number of updates that are done at the same time")
 
     # exogenous variables / parameters:
+
 
 class Individual (object):
     """Interface for Individual entity type mixin."""

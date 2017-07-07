@@ -36,16 +36,16 @@ class World (I.World):
     def ocean_atmosphere_diffusion(self, unused_t):
         """(See Anderies et al. 2013)."""
         flow = self.nature.ocean_atmosphere_diffusion_coefficient * (
-                self.nature.carbon_solubility_in_sea_water * self.ocean_carbon
-                - self.atmospheric_carbon)
+            self.nature.carbon_solubility_in_sea_water * self.ocean_carbon
+            - self.atmospheric_carbon)
         self.d_ocean_carbon -= flow
         self.d_atmospheric_carbon += flow
 
     processes = [
-                 Explicit("convert temperature",
-                          [I.World.surface_air_temperature],
-                          convert_temperature),
-                 ODE("ocean-atmosphere diffusion",
-                     [I.World.ocean_carbon, I.World.atmospheric_carbon],
-                     ocean_atmosphere_diffusion)
-                 ]
+        Explicit("convert temperature",
+                 [I.World.surface_air_temperature],
+                 convert_temperature),
+        ODE("ocean-atmosphere diffusion",
+            [I.World.ocean_carbon, I.World.atmospheric_carbon],
+            ocean_atmosphere_diffusion)
+    ]

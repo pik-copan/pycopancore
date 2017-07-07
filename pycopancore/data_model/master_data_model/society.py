@@ -1,3 +1,5 @@
+"""Master data model for society."""
+
 from . import metabolism as MET
 
 # metabolic:

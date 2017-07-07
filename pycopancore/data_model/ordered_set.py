@@ -1,10 +1,14 @@
+"""Module for OrderedSet class."""
+
 # python recipe at https://code.activestate.com/recipes/576694/
 # plus __add__, __iadd__
 
 import collections
 
+# TODO: docstrings
 
-class OrderedSet (collections.MutableSet):
+class OrderedSet(collections.MutableSet):
+    """Ordered Set."""
 
     def __init__(self, iterable=None):
         self.end = end = []

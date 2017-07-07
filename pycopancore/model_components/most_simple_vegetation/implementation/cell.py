@@ -70,4 +70,4 @@ class Cell(I.Cell):
         ODE('logistic_growth_function',
             [I.Cell.stock],
             logistic_growth)
-        ]
+    ]

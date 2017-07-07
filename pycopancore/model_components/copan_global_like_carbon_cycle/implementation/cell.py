@@ -40,12 +40,12 @@ class Cell (I.Cell):
                     - (B.Cell.nature
                        .photosynthesis_sensitivity_on_atmospheric_carbon)
                     * B.Cell.world.atmospheric_carbon)
-                  * sp.sqrt(B.Cell.world.atmospheric_carbon
-                            / B.Cell.land_area)
-                  * (1 - I.Cell.terrestrial_carbon
-                     / (B.Cell.nature.terrestrial_carbon_capacity_per_area
-                        * B.Cell.land_area)
-                     )
+                   * sp.sqrt(B.Cell.world.atmospheric_carbon
+                             / B.Cell.land_area)
+                   * (1 - I.Cell.terrestrial_carbon
+                      / (B.Cell.nature.terrestrial_carbon_capacity_per_area
+                         * B.Cell.land_area)
+                      )
                    )
                   * I.Cell.terrestrial_carbon
                   ]),

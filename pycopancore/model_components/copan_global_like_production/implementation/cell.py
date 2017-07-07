@@ -27,14 +27,14 @@ class Cell (I.Cell):
 
     def __init__(self,
                  *,
-                 biomass_sector_productivity=1e5*(D.gigajoules / D.years)**5
+                 biomass_sector_productivity=1e5 * (D.gigajoules / D.years)**5
                  / (D.gigatonnes_carbon * D.dollars * D.people)**2,
-                 fossil_sector_productivity=1e6*(D.gigajoules / D.years)**5
+                 fossil_sector_productivity=1e6 * (D.gigajoules / D.years)**5
                  / (D.gigatonnes_carbon * D.dollars * D.people)**2,
                  renewable_sector_productivity=1e-18 * D.gigajoules**3
                  / D.years**5 / (D.dollars * D.people)**2,  # TODO!
                  # see Nitzbon 2016:
-                 total_energy_intensity=1/147 * D.gigajoules/D.dollars,
+                 total_energy_intensity=1 / 147 * D.gigajoules / D.dollars,
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
@@ -55,26 +55,26 @@ class Cell (I.Cell):
                   I.Cell.fossil_relative_productivity,
                   I.Cell.renewable_relative_productivity],
                  [
-                  I.Cell.biomass_sector_productivity
-                  * (I.Cell.terrestrial_carbon
-                     * (1 - B.Cell.society.protected_terrestrial_carbon_share)
-                     )**2,
-                  I.Cell.fossil_sector_productivity
-                  * (I.Cell.fossil_carbon
-                     * (1 - B.Cell.society.protected_fossil_carbon_share)
-                     )**2,
-                  I.Cell.renewable_sector_productivity
-                  * (B.Cell.society.renewable_energy_knowledge
-                     )**2
-                   ]),
+                     I.Cell.biomass_sector_productivity
+                     * (I.Cell.terrestrial_carbon
+                        * (1 - B.Cell.society.protected_terrestrial_carbon_share)
+                        )**2,
+                     I.Cell.fossil_sector_productivity
+                     * (I.Cell.fossil_carbon
+                         * (1 - B.Cell.society.protected_fossil_carbon_share)
+                        )**2,
+                     I.Cell.renewable_sector_productivity
+                     * (B.Cell.society.renewable_energy_knowledge
+                        )**2
+                 ]),
 
         Explicit("total relative productivity",
                  [I.Cell.total_relative_productivity],
                  [
-                  (I.Cell.biomass_relative_productivity
-                   + I.Cell.fossil_relative_productivity
-                   + I.Cell.renewable_relative_productivity)
-                  / I.Cell.total_energy_intensity
-                  ])
+                     (I.Cell.biomass_relative_productivity
+                      + I.Cell.fossil_relative_productivity
+                      + I.Cell.renewable_relative_productivity)
+                     / I.Cell.total_energy_intensity
+                 ])
 
     ]

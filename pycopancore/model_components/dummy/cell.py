@@ -164,4 +164,4 @@ class Cell(Cell_, abstract.Cell):
               ['rate', 0.1, a_event_function]),
         Explicit('explicit_function', [Cell_.explicit_value],
                  a_explicit_function)
-                 ]
+    ]

@@ -14,4 +14,3 @@ from ._abstract_process_taxon_mixin import _AbstractProcessTaxonMixin
 from ._abstract_entity_mixin import _AbstractEntityMixin
 from ._abstract_runner import _AbstractRunner
 from ._expressions import _DotConstruct, eval, unknown
-

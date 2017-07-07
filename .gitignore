@@ -82,3 +82,7 @@ target/
 /prof.txt
 /test_jobsts_prototype_1.py.lprof
 *.output
+
+# Autodoc
+docs/_api/*
+/.Rhistory
