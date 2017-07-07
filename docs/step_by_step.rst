@@ -31,16 +31,18 @@ We model the cave as a ``Cell``. In our model component, we neither need the
 ``Culture`` nor the ``Social Metabolism`` nor the ``Nature`` taxon. This also
 applies to the ``Society`` entity.
 
-TODO: NEXT LINE NEEDS TO BE CHANGED!
-We will continue by tailoring the ``Individual`` entity such that is satisfies
-the needs of a dwarf in our story.
+The CORE:framework is modular in the sense that various model components can be
+combined. Hence, we can use classes of the ``base`` package, as we will later
+do when using the ``Culture`` class of the ``base`` package.
+
+We will continue by investigating the processes that determine our model.
 
 Processes
 ---------
-There are various ways to start implementing our model. In this tutorial we
-start by considering the processes involved in our story. There are four of
-them (which for the instructiveness of this tutorial are the
-:doc:`four processes <../framework_documentation/process_types_index>`
+There are various ways to start conceptualizing and implementing our model.
+In this tutorial we start by considering the processes involved in our fairy
+tale . There are four of them (which for the instructiveness of this tutorial
+are the :doc:`four processes <../framework_documentation/process_types_index>`
 provided by the CORE:framework):
 
 - Aging, a ``Step`` process
@@ -50,22 +52,26 @@ provided by the CORE:framework):
 
 These four processes completely determine the dynamics of the model for our
 story. It makes sense to assign the first three processes (aging, eating and
-beard growing) to each dwarf (``Individual``). The arrival of Snow White is
-modeled as an event process, because she does not have any attributes in our
-story and solely changes attribues of other entities.
+beard growing) to each dwarf (``Individual``).
+
+Although aging is a continuous process in the actual world, we think of it as
+as a ``STEP`` process which changes the variable age(year). Because eating
+happens more often than having birthday, we model eating as an ``ODE`` process.
+Beard growing is modeled as an ...
+The arrival of Snow White is modeled as an event process, because she does not
+have any attributes in our story and solely changes attributes of other entities.
 
 
-Dwarf's attributes and methods
-------------------------------
 
-Following the processes specified above, each dwarf needs the following
+The aging process
+-----------------
+Each dwarf needs
+.. Following the processes specified above, each dwarf needs the following
 variables:
-
 - age
 - beard length
 
-For reasons which will become clear later, each dwarf also needs:
-
+.. For reasons which will become clear later, each dwarf also needs:
 - beard growth parameter and
 - eating parameter
 
@@ -76,27 +82,24 @@ Thus, the instantiation method of ``Individual`` looks like this:
     def __init__(self,
                  *,
                  age = 0,
-                 beard_length = 0,
-                 beard_growth_parameter = 0.1,
-                 eating_parameter = 1,
                  **kwargs):
         """Initialize an instance of dwarf."""
         super().__init__(**kwargs)
 
         self.age = age
-        self.beard_length = beard_length
-        self.beard_growth_parameter = beard_growth_parameter
-        self.eating_parameter = eating_parameter
 
 
 
-The dwarf's age is set to zero unless specified differently. A new dwarf has a
-beard length of zero unless specified differently. The beard growth parameter
+The dwarf's age is set to zero unless specified differently.
+.. A new dwarf has a beard length of zero unless specified differently. The beard growth parameter
 determines how fast the beard of the instantiated dwarf grows. The eating
 parameter determines how much the dwarf eats.
 
-methods of dwarf:
+Methods of dwarf:
 
+The class ``Individual`` needs a function which will determine the aging
+process. We also include dying from age, which is a Bernoulli process with
+probability p = age/100.
 ::
 
     def aging(self):
@@ -106,34 +109,44 @@ methods of dwarf:
             print("Dwarf died from age.")
             self.deactivate()
 
-blabla
 
-::
 
-    def beard_growing(self):
+.. ::
+
+..    def beard_growing(self):
         """Grow beard of dwarf in explicit manner."""
         self.beard_length = (self.beard_length
                              + self.beard_growth_parameter
                              * self.age
                              )
 
+For a ``Step`` process, we need a timing function which returns the point of
+time when the process shoulf be executed the next time:
 
-Definition of processes:
+::
+
+    def step_timing(self, t):
+        """Let one year pass."""
+        return t + 1
+
+
+Now, we can define the ageing process:
 
 ::
 
     processes = [
-        Step("aging", [I.Individual.age], [step_timing, aging]),
-        ODE("eating", [I.Cell.stock], eating),
-        Explicit("beard_growth", [I.Individual.beard_length], beard_growing)
+        Step("aging", [I.Individual.age], [step_timing, aging])
     ]
+
+
+
 
 Cell's attributes and methods
 -----------------------------
 
-::
+.. ::
 
-    def __init__(self,
+..    def __init__(self,
                  *,
                  stock=100,
                  **kwargs):
@@ -142,23 +155,23 @@ Cell's attributes and methods
         self.stock = stock
 
 
-methods:
+.. methods:
 
-::
+.. ::
 
-    def snow_white_arrival(self):
+..    def snow_white_arrival(self):
         """Calculate snow white's arrival."""
         return np.random.exponential(18.)
 
-    def snow_white_eating(self):
+..    def snow_white_eating(self):
         """Party hard."""
         I.Cell.stock = I.Cell.stock / 2.
 
-process:
+.. process:
 
-::
+.. ::
 
-    processes = [
+..    processes = [
         Event("snow_white",
               [I.Cell.stock],
               ["time", snow_white_arrival, snow_white_eating]

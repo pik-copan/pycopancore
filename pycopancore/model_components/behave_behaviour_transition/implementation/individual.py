@@ -57,4 +57,8 @@ class Individual (I.Individual):
 
     # TODO: add some if needed...
 
+    def get_characteristics(self):
+
+        pass
+
     processes = []  # TODO: instantiate and list process objects here

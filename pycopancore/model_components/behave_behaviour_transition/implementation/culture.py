@@ -14,7 +14,6 @@ then remove these instructions
 
 from .. import interface as I
 # from .... import master_data_model as D
-# sure that's right?
 import numpy as np
 import igraph
 import networkx as nx
@@ -29,23 +28,27 @@ class Culture (I.Culture):
     __background_proximity = None
     __interaction_network = None
 
-    def __kolmogorov_smirnov_test(self):
+    def __kolmogorov_smirnov_test(self, , new_distribution):
+
 
         pass
 
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
-                 # degree_preference=None, social_influence,
-                 # model_parameters (including number of individuals, might not be necessary),
-                 # social_distance_function
+                 *,
+                 degree_preference=None,
+                 social_influence,
+                 model_parameters,
+                 social_distance_function,
                  **kwargs):
         """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
 
         # exception
         #if not callable()
+
+        # TODO: insert assert statements
+
 
         # set intern variables
 
@@ -55,10 +58,12 @@ class Culture (I.Culture):
         self.p_rew = model_parameters.p_rew
         self.social_distance = social_distance_function
         self.char_weight = model_parameters.char_weight
+        self.interaction_offset = model_parameters.interaction_offset
+        self.p_ai = model_parameters.p_ai
 
 
-        # create nodes list from acquaintance network
-        self.__nodes = self.acquaintance_network.nodes()
+        # create nodes list from friendship network
+        self.__nodes = self.friendship_network.nodes()
 
         # initialise background proximity network
         proximity_network = igraph.GraphBase.Lattice([self.n_individual], nei=int(float(self.mean_degree_pref)/2.0),
@@ -90,14 +95,16 @@ class Culture (I.Culture):
     # process-related methods:
 
 
-    # NEED TO IMPLEMENT GET CHARACTERISTICS FUNCTION IN INDIVIDUAL!
-    # IS NUMPY ARRAY APPROPRIATE DATA TYPE?
+    #TODO: NEED TO IMPLEMENT GET CHARACTERISTICS FUNCTION IN INDIVIDUAL!
+    #TODO: IS NUMPY ARRAY APPROPRIATE DATA TYPE?
+    #TODO: Should this be a private method?
     def get_agents_characteristics(self):
 
         agent_characteristics = np.array([self.n_individual])
 
         for i in range(self.n_individual):
-            agent_characteristics[i] = self.__nodes[i].get_characteristics()
+            #TODO: What is faster? Implementing via getter or direct access to attribute?
+            agent_characteristics[i] = self.__nodes[i].behavior
 
         return agent_characteristics
 
@@ -106,6 +113,15 @@ class Culture (I.Culture):
     # IS THERE A FASTER WAY FOR THIS?
     # char_weight not yet defined
     def get_proximity_matrix(self):
+        '''
+        
+        Parameters:
+        -----------
+            
+        Returns:
+        --------
+            
+        '''
 
         distances = np.zeros(self.n_individual, self.n_individual)
 
@@ -121,15 +137,23 @@ class Culture (I.Culture):
 
     def generate_interaction_network(self):
 
-        # correct this line!
-        distance_metric_matrix = nx.to_numpy_matrix(self.acquaintance_network.path_lengths())
+        # Create a numpy array containing all path lengths from the friendship network
+        # Convert networkx graph to igraph graph via edge list (fastest way)
+        transformed_network = igraph.Graph(n=len(self.n_individual),
+                                           edges=list(zip(*list(zip(*nx.to_edgelist(self.friendship_network)))[:2])))
+        #  Perform Dijkstra algorithm that is much faster in igraph
+        distance_metric_matrix = np.array(transformed_network.shortest_paths(), dtype=float)
 
-        #define p_ai and interaction_offset
+        #TODO: define p_ai and interaction_offset
+
         exp_dec = (self.p_ai - self.interaction_offset) * \
                   np.exp(-(distance_metric_matrix - 1) / 2.)
 
+        # Find longest path
         distmax = distance_metric_matrix[np.isfinite(distance_metric_matrix)].max()
 
+        # TODO: Proper inline comments...
+        # Create histogram using shortest and longest path
         histo_bins = np.arange(1, distmax)
 
         histo_range = [histo_bins.min(), histo_bins.max()]
@@ -138,8 +162,7 @@ class Culture (I.Culture):
         for i in distribution[1][:-1]:
             exp_dec[distance_metric_matrix == i] *= (float(distribution[0][0]) / distribution[0][i - 1])
 
-
-        exp_dec += L.interaction_offset
+        exp_dec += self.interaction_offset
 
         return exp_dec
 

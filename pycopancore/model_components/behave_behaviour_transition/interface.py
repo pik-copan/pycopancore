@@ -13,12 +13,12 @@ remove these instructions.
 # License: MIT license
 
 # TODO: use variables from the master data model wherever possible:
-# from ... import master_data_model as D
+from ... import master_data_model as D
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
 # import ..BBB.interface as BBB
 # TODO: uncomment and adjust only if you really need other variables:
-# from ... import Variable
+from ... import Variable
 
 
 class Model (object):
@@ -59,52 +59,25 @@ class World (object):
     # TODO: similarly
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
-
-    # endogenous variables:
-
-    # exogenous variables / parameters:
-
-
-class Cell (object):
-    """Interface for Cell entity type mixin."""
-
-    # endogenous variables:
-
-    # exogenous variables / parameters:
-
 
 class Individual (object):
     """Interface for Individual entity type mixin."""
 
     # endogenous variables:
+    behavior = Variable("behavior", "Publicly observable behavior of this individual")
 
     # exogenous variables / parameters:
-
+    degree_preference = Variable("degree preference", "Maximal number of links for this individual")
+    disposition = Variable("disposition", "Disposition for a certain behavior")
 
 # process taxa:
-
-
-class Nature (object):
-    """Interface for Nature process taxon mixin."""
-
-    # endogenous variables:
-
-    # exogenous variables / parameters:
-
-
-class Metabolism (object):
-    """Interface for Metabolism process taxon mixin."""
-
-    # endogenous variables:
-
-    # exogenous variables / parameters:
-
 
 class Culture (object):
     """Interface for Culture process taxon mixin."""
 
     # endogenous variables:
+    friendship_network = D.CUL.friendship_network
+
 
     # exogenous variables / parameters:
+    n_individual = Variable("number of individuals", "static number of individuals in the network")
