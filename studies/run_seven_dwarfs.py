@@ -91,9 +91,8 @@ print("max. time step", (t[1:]-t[:-1]).max())
 
 # Create List of all dwarfes, not only the ones instantiated before the run,
 # but also the one created during the run.
-all_dwarfs = []
-for (key, values) in traj[M.Individual.age].items():
-    all_dwarfs.append(key)
+
+all_dwarfs = M.Individual.instances + M.Individual.idle_entities
 
 individuals_age = np.array([traj[M.Individual.age][dwarf]
                                  for dwarf in all_dwarfs])
@@ -152,11 +151,11 @@ layout = dict(title='seven dwarfs',
               )
 
 
-# getting plots of two dwarfs
-fig1 = dict(data=[data_age[0], data_beard_length[0], data_stock[0]],
+# getting plots of two dwarfs:
+fig = dict(data=[data_age[0], data_beard_length[0], data_stock[0]],
             layout=layout)
-py.plot(fig1, filename="our-model-result1.html")
+py.plot(fig, filename="our-model-result{}.html".format(0))
 
-fig2 = dict(data=[data_age[-1], data_beard_length[-1], data_stock[0]],
+fig = dict(data=[data_age[5], data_beard_length[5], data_stock[0]],
             layout=layout)
-py.plot(fig2, filename="our-model-result2.html")
+py.plot(fig, filename="our-model-result{}.html".format(5))
