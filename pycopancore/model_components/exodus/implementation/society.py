@@ -21,11 +21,15 @@ class Society (I.Society):
     # standard methods:
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                 *,
+                 municipality_like=False,
+                 pareto_distribution_type=False,
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
+
+        self.municipality_like = municipality_like
+        self.pareto_distribution_type = pareto_distribution_type
 
         # At last, check for validity of all variables that have been
         # initialized and given a value:
@@ -33,19 +37,31 @@ class Society (I.Society):
         # Following method is defined in abstract_entity_mixin which is
         # inherited only by mixing in the model:
         self.assert_valid()
-        pass
 
-    def deactivate(self):
-        """Deactivate a society."""
-        # TODO: add custom code here:
-        pass
-        super().deactivate()  # must be the last line
+    @property
+    def income_pdf(self):
+        "Get probability density funtion of income and farm size."
+        if self.pareto_distribution_type is False:
+            # Use log-normal
+            return
+        if self.pareto_distribution_type is True:
+            # Use pareto:
+            return "not implemented yet"
 
-    def reactivate(self):
-        """Reactivate a society."""
-        super().reactivate()  # must be the first line
-        # TODO: add custom code here:
-        pass
+    @property
+    def pdf_mu(self):
+        """Get mu of the log-normal distribution"""
+        return
+
+    @property
+    def pdf_sigma(self):
+        """Get the sigma of the log-normal distribution"""
+        return
+
+    @property
+    def pdf_y_min(self):
+        """get the y_min of the Pareo distribution"""
+        return
 
     # process-related methods:
 

@@ -61,9 +61,32 @@ class Society (object):
     """Interface for Society entity type mixin."""
 
     # endogenous variables:
-    district_type = Variable("district type",
-                             "type of the society, e.g. County or "
-                             "Municipality")
+    municipality_like = Variable("municipality like",
+                                 "If true, society is a Municipality, "
+                                 "otherwise a county",
+                                 datatype=bool)
+    pareto_distribution_type = Variable("income distribution type",
+                                        "type of probability density function"
+                                        "for distributing income and farm size"
+                                        "if false, log-normal",
+                                        datatype=bool)
+    income_pdf = Variable("income probability density function",
+                          "function which distributes income and farm size")
+    income_cdf = Variable("income cumulative distribution function",
+                          "cumulative distribution function of income "
+                          "and farm size")
+    pdf_mu = Variable("log normal parameter mu",
+                      "parameter mu of the log-normal distribution",
+                      lower_bound=0)
+    pdf_sigma = Variable("log normal parameter sigma",
+                         "parameter sigma of the log-normal distribution",
+                         lower_bound=0)
+    pdf_k = Variable("Pareto parameter k",
+                     "Parameter k of the pareto distribution",
+                     strict_lower_bound=1)
+    pdf_y_min = Variable("Pareto parameter y_min",
+                         "Lower end of the pareto distribution",
+                         lower_bound=0)
 
     # exogenous variables / parameters:
 
@@ -79,7 +102,8 @@ class Cell (object):
                                      "average precipitation per square meter "
                                      "of cell's area",
                                      lower_bound=0,
-                                     dimension=D.volume/D.area)
+                                     dimension=D.volume/D.area,
+                                     unit=D.meters)
 
     # exogenous variables / parameters:
 
@@ -105,20 +129,26 @@ class Individual (object):
                            "society is a municipality",
                            lower_bound=0,
                            unit=D.dollars)
-    base_water = Variable("base water",
-                          "Water before trade, calculated by farm size and "
-                          "average farmland precipitation",
-                          lower_bound=0,
-                          dimension=D.volume)
+    harvest = Variable("harvest",
+                       "Water harvested before trade, calculated by farm size "
+                       "and average farmland precipitation",
+                       lower_bound=0,
+                       dimension=D.volume,
+                       unit=D.meters**3)
     liquidity = Variable("liquidity",
                          "income after trade",
                          lower_bound=0,
                          unit=D.dollars)
-    food = Variable("food",
-                    "water after trade. Since it is virtual water, it can be "
-                    "subsumed into food.",
-                    lower_bound=0,
-                    dimension=D.volume)
+    nutrition = Variable("nutrition",
+                         "water after trade. Since it is virtual water, "
+                         "it can be subsumed into nutrition.",
+                         lower_bound=0,
+                         dimension=D.volume)
+    utility = Variable("utility",
+                       "Utility of an agent, calculated by any useful "
+                       "function",
+                       lower_bound=0,
+                       upper_bound=1)
 
     # exogenous variables / parameters:
 

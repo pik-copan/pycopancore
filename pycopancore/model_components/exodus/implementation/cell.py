@@ -22,28 +22,14 @@ class Cell (I.Cell):
 
     def __init__(self,
                  *,
-                 profession=None,
-                 subjective_income_rank=None,
-                 farm_size=None,
-                 base_income=None,
-                 liquidity=None,
-                 food=None,
+                 characteristic=None,
+                 average_precipitation=None,
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
-        self.profession = profession
-        self.subjective_income_rank = subjective_income_rank
-        self.farm_size = farm_size
-        self.base_income = base_income
-        self.base_water = self.farm_size * self.cell.average_precipitation
-        self.liquidity = liquidity
-        self.food = food
+        self.characteristic = characteristic
+        self.average_precipitation = average_precipitation
 
-        # At last, check for validity of all variables that have been
-        # initialized and given a value:
-
-        # Following method is defined in abstract_entity_mixin which is
-        # inherited only by mixing in the model:
         self.assert_valid()
 
     # process-related methods:

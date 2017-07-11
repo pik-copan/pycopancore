@@ -14,6 +14,7 @@ then remove these instructions
 
 from .. import interface as I
 # from .... import master_data_model as D
+import math
 
 
 class Individual (I.Individual):
@@ -22,11 +23,22 @@ class Individual (I.Individual):
     # standard methods:
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                 *,
+                 profession=None,
+                 subjective_income_rank=None,
+                 farm_size=None,
+                 base_income=None,
+                 liquidity=None,
+                 nutrtiton=None,
                  **kwargs):
-        """Initialize an instance of Individual."""
+        """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
+        self.profession = profession
+        self.subjective_income_rank = subjective_income_rank
+        self.farm_size = farm_size
+        self.base_income = base_income
+        self.liquidity = liquidity
+        self.nutrition = nutrtiton
 
         # At last, check for validity of all variables that have been
         # initialized and given a value:
@@ -34,19 +46,17 @@ class Individual (I.Individual):
         # Following method is defined in abstract_entity_mixin which is
         # inherited only by mixing in the model:
         self.assert_valid()
-        pass
 
-    def deactivate(self):
-        """Deactivate an individual."""
-        # TODO: add custom code here:
-        pass
-        super().deactivate()  # must be the last line
+    @property
+    def base_water(self):
+        """Get the amount of water a farmer is harvesting"""
+        return self.farm_size * self.cell.average_precipitation
 
-    def reactivate(self):
-        """Reactivate an individual."""
-        super().reactivate()  # must be the first line
-        # TODO: add custom code here:
-        pass
+    @property
+    def utility(self):
+        """Get the Cobb-Douglas utility of an individual"""
+        return math.sqrt(self.subjective_income_rank * self.nutrition)
+
 
     # process-related methods:
 
