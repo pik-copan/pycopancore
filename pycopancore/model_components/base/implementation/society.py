@@ -30,7 +30,7 @@ class Society (I.Society, abstract.Society):
                  *,
                  world=None,
                  next_higher_society=None,
-                 population=0 * D.people,
+                 population=0 * D.people, # FIXME: Is the 0 correct?
                  **kwargs
                  ):
         """Initialize an instance of Society.

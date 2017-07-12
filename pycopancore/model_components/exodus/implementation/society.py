@@ -14,6 +14,9 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 
+from scipy import stats
+import math, random
+
 
 class Society (I.Society):
     """Society entity type mixin implementation class."""
@@ -24,12 +27,16 @@ class Society (I.Society):
                  *,
                  municipality_like=False,
                  pareto_distribution_type=False,
+                 base_mean_income=None,
+                 pdf_sigma=0.34,  # 0.34 taken from Clementi, Gallegati 2005 for income distribution
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
 
         self.municipality_like = municipality_like
         self.pareto_distribution_type = pareto_distribution_type
+        self.base_mean_income = base_mean_income
+        self.pdf_sigma = pdf_sigma
 
         # At last, check for validity of all variables that have been
         # initialized and given a value:
@@ -39,11 +46,15 @@ class Society (I.Society):
         self.assert_valid()
 
     @property
-    def income_pdf(self):
-        "Get probability density funtion of income and farm size."
+    def brutto_income_or_farmsize(self):
+        "Get random income or farm size distributed log-normal."
         if self.pareto_distribution_type is False:
             # Use log-normal
-            return
+            number=random.random()
+            sigma = self.pdf_sigma
+            mean = self.mean_income_or_farmsize
+            lognormal = stats.lognorm.ppf(number, s=sigma, scale=mean)
+            return lognormal
         if self.pareto_distribution_type is True:
             # Use pareto:
             return "not implemented yet"
@@ -51,16 +62,32 @@ class Society (I.Society):
     @property
     def pdf_mu(self):
         """Get mu of the log-normal distribution"""
-        return
-
-    @property
-    def pdf_sigma(self):
-        """Get the sigma of the log-normal distribution"""
-        return
+        # from mean = exp(mu + sigma**2 / 2) in the log-normal distribution:
+        return math.log(self.mean_income_or_farmsize) - (self.pdf_sigma**2) / 2
 
     @property
     def pdf_y_min(self):
-        """get the y_min of the Pareo distribution"""
+        """Get the y_min of the Pareo distribution"""
+        return
+
+    @property
+    def mean_income_or_farmsize(self):
+        "Get mean income or mean farmsize."
+        if self.municipality_like is True:
+            # mean income:
+            return self.base_mean_income_or_farmsize * (self.population ** 1.12)
+        if self.municipality_like is False:
+            # mean farm size:
+            return self.direct_cells[0].land_area / self.population
+
+    @property
+    def liquidity_pdf(self):
+        """Get the PDF of the liquidity of the society."""
+        return
+
+    @property
+    def liquidity_cdf(self):
+        """Get the PDF of the liquidity of the society."""
         return
 
     # process-related methods:

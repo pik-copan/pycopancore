@@ -26,8 +26,9 @@ class Individual (I.Individual):
                  *,
                  profession=None,
                  subjective_income_rank=None,
+                 nutrition_need=1240,
                  farm_size=None,
-                 base_income=None,
+                 brutto_income=None,
                  liquidity=None,
                  nutrtiton=None,
                  **kwargs):
@@ -35,10 +36,15 @@ class Individual (I.Individual):
         super().__init__(**kwargs)  # must be the first line
         self.profession = profession
         self.subjective_income_rank = subjective_income_rank
+        self.nutrition_need = nutrition_need
+
+        self._farm_size = None
         self.farm_size = farm_size
-        self.base_income = base_income
+        self._brutto_income = None
+        self.brutto_income = brutto_income
         self.liquidity = liquidity
         self.nutrition = nutrtiton
+
 
         # At last, check for validity of all variables that have been
         # initialized and given a value:
@@ -48,15 +54,50 @@ class Individual (I.Individual):
         self.assert_valid()
 
     @property
-    def base_water(self):
+    def harvest(self):
         """Get the amount of water a farmer is harvesting"""
         return self.farm_size * self.cell.average_precipitation
 
     @property
     def utility(self):
         """Get the Cobb-Douglas utility of an individual"""
-        return math.sqrt(self.subjective_income_rank * self.nutrition)
+        # Have a measure to limit nutrition to 1:
+        effective_nutrition = 1 - 1 / (self.nutrition / self.nutrition_need + 1)
+        return math.sqrt(self.subjective_income_rank * effective_nutrition)
+        # TODO: Add parameter to compensate for frequency of market clearing!
+        # 1240 m^3 is the annual need!
 
+    @farm_size.setter
+    def farm_size(self, society):
+        """Set the farm size.
+
+        Done accordingly to the distribution and population of the society.
+        """
+        if society.municipality_like is True:
+            self._farm_size = 0
+        if society.municipality_like is False:
+            self._farm_size = society.brutto_income_or_farmsize
+
+    @property
+    def farm_size(self):
+        """Get the farm size."""
+        return self._farm_size
+
+    @brutto_income.setter
+    def brutto_income(self, society):
+        """Set the brutto income.
+
+        Done accordingly to the distribution and population of the society.
+        """
+        if society.municipality_like is True:
+            self._brutto_income = society.brutto_income_or_farmsize
+        if society.municipality_like is False:
+            self._brutto_income = 0
+
+    @property
+    def brutto_income(self):
+        """Get the brutto income."""
+        return self._brutto_income
 
     # process-related methods:
 

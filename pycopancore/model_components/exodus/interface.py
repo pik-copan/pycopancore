@@ -70,11 +70,26 @@ class Society (object):
                                         "for distributing income and farm size"
                                         "if false, log-normal",
                                         datatype=bool)
-    income_pdf = Variable("income probability density function",
-                          "function which distributes income and farm size")
-    income_cdf = Variable("income cumulative distribution function",
-                          "cumulative distribution function of income "
-                          "and farm size")
+    base_mean_income = Variable("base income",
+                                "Base of scaling mean income dependend on "
+                                "population, only important for municipality")
+    mean_income_or_farmsize = Variable("Mean income or farmsize",
+                                       "Mean income or farm size dependend on "
+                                       "population and base_mean_income")
+    income_or_farm_size_pdf = Variable("income or farm size probability "
+                                       "density function",
+                                       "function which distributes income and "
+                                       "farm size")
+    income_or_farm_size_cdf = Variable("income or farm size cumulative "
+                                       "distribution function",
+                                       "cumulative distribution function of "
+                                       "income and farm size")
+    liquidity_pdf = Variable("probability density function of liquidity",
+                             "pdf of liquidity, fitted to values of liquidity "
+                             "of agents in a society")
+    liquidity_cdf = Variable("cumulative distribution function of liquidity",
+                             "cdf of liquidity, calculated by integrating "
+                             "over pdf")
     pdf_mu = Variable("log normal parameter mu",
                       "parameter mu of the log-normal distribution",
                       lower_bound=0)
@@ -114,7 +129,7 @@ class Individual (object):
     # endogenous variables:
     profession = Variable("profession",
                           "profession of an Individual, eg. farmer or townsman")
-    subjective_income_ranke = Variable("subjective income rank",
+    subjective_income_rank = Variable("subjective income rank",
                                        "ranking of an individual by income"
                                        "in its cell",
                                        lower_bound=0,
@@ -124,11 +139,11 @@ class Individual (object):
                          "profession is farmer",
                          lower_bound=0,
                          unit=D.square_kilometers)
-    base_income = Variable("base income",
-                           "Income before trade, distributed by society if "
-                           "society is a municipality",
-                           lower_bound=0,
-                           unit=D.dollars)
+    brutto_income = Variable("brutto income",
+                             "Income before trade, distributed by society if "
+                             "society is a municipality",
+                             lower_bound=0,
+                             unit=D.dollars)
     harvest = Variable("harvest",
                        "Water harvested before trade, calculated by farm size "
                        "and average farmland precipitation",
@@ -144,6 +159,10 @@ class Individual (object):
                          "it can be subsumed into nutrition.",
                          lower_bound=0,
                          dimension=D.volume)
+    nutrition_need = Variable("nutrition need",
+                              "need of nutrition per time",
+                              dimension=D.volume / D.time,
+                              unit=D.meters**3 / D.years)
     utility = Variable("utility",
                        "Utility of an agent, calculated by any useful "
                        "function",
