@@ -13,8 +13,10 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from pycopancore import Step
 
-from scipy import stats
+from scipy import stats, optimize
+import numpy as np
 
 
 class Metabolism (I.Metabolism):
@@ -38,32 +40,78 @@ class Metabolism (I.Metabolism):
         # inherited only by mixing in the model:
         self.assert_valid()
 
+    @property
+    def total_gross_income(self):
+        """Get the total gross income."""
+        tgi = 0
+        for individual in self.world.individuals:
+            tgi += individual.gross_income
+        return tgi
+
     # process-related methods:
 
-    def market_clearing(self, individual):
+    def market_clearing_rhs(p_and_ys, met):
         """Do the market clearing for all individuals in the world.
-        
+
+        Return right hand side of equation to optimize all agents' utility.
+        Parameters
+        ----------
+        p_and_ys: list
+            list with current price of water and all individuals' liquidity.
+        met: entity object
+            Metabolism of the world in which the market clearing is calculated
+
         Returns
         -------
-
+        errors: numpy.array
+            1 D array with equations to be solved by fsolve 
         """
-        # Calculate pdf of liquidities in society of individual:
-        sigma = individual.society.liquidity_sigma,
-        loc = individual.society.liquidity_loc,
-        mean = individual.society.liquidity_mean
-        liquidity = individual.liquidity
-        individual_liquidity_pdf = stats.lognorm.pdf(liquidity,
-                                                     s=sigma,
-                                                     loc=loc,
-                                                     scale=mean)
-        # Return rhs of equation
-        return (individual.subjective_income_rank
-                - (individual.harvest * self.water_price
-                   - individual.liquidity + individual.brutto_income)
-                * individual_liquidity_pdf
-                )
+        price = p_and_ys[0]
+        ys = p_and_ys[1:]
+        errors = np.zeros(shape=len(p_and_ys))
+        for i, e in enumerate(met.world.individuals):
+            # Get the individual's society's pdf of liquidity:
+            sigma = e.society.liquidity_sigma
+            loc = e.society.liquidity_loc
+            mean = e.society.liquidity_mean
+            # Calculate the individual's subjective income rank:
+            sri = stats.lognorm.cdf(ys[i],
+                                    s=sigma,
+                                    loc=loc,
+                                    scale=mean)
+            # Get the rhs of the equation for the individual
+            errors[1 + i] = (sri - (e.harvest * price
+                                    - ys[i] + e.gross_income
+                                    )
+                             * stats.lognorm.pdf(ys[i],
+                                                 s=sigma,
+                                                 loc=loc,
+                                                 scale=mean
+                                                 )
+                             )
+        # Sum over liquidity must be equal to sum over gross income:
+        errors[0] = sum(ys) - met.total_gross_income
+        # return rhs of the system of equations:
+        return errors
 
+    def do_market_clearing(self, unused_t):
+        """Calculate water price and market movements."""
+        p_and_ys = [self.water_price, self.world.individuals.liquidity]
+        solution = optimize.fsolve(func=self.market_clearing_rhs(p_and_ys),
+                                   x0=self.water_price,
+                                   args=(self))
+        self.water_price = solution[0]
+        for i, e in enumerate(self.world.individuals):
+            # Account for shift, since price of water is at first position of
+            # list, write solution of market clearing into entities:
+            e.liquidity = solution[i+1]
 
-    # TODO: add some if needed...
+    def market_timing(self, t):
+        """Define how often market clearing takes place."""
+        return t + 1
 
-    processes = []  # TODO: instantiate and list process objects here
+    processes = [
+        Step("market clearing", [I.Individual.liquidity,
+                                 I.Metabolism.water_price],
+             [market_timing, do_market_clearing])
+    ]  # TODO: instantiate and list process objects here

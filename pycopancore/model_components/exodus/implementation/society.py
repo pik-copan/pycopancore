@@ -50,7 +50,7 @@ class Society (I.Society):
         self.assert_valid()
 
     @property
-    def brutto_income_or_farmsize(self):
+    def gross_income_or_farmsize(self):
         "Get random income or farm size distributed log-normal."
         if self.pareto_distribution_type is False:
             # Use log-normal

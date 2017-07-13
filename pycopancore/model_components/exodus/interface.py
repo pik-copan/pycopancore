@@ -136,11 +136,11 @@ class Individual (object):
                          "profession is farmer",
                          lower_bound=0,
                          unit=D.square_kilometers)
-    brutto_income = Variable("brutto income",
-                             "Income before trade, distributed by society if "
-                             "society is a municipality",
-                             lower_bound=0,
-                             unit=D.dollars)
+    gross_income = Variable("gross income",
+                            "Income before trade, distributed by society if "
+                            "society is a municipality",
+                            lower_bound=0,
+                            unit=D.dollars)
     harvest = Variable("harvest",
                        "Water harvested before trade, calculated by farm size "
                        "and average farmland precipitation",
@@ -176,10 +176,14 @@ class Metabolism (object):
     """Interface for Metabolism process taxon mixin."""
 
     # endogenous variables:
-    water_price = Variable("waer price",
+    water_price = Variable("water price",
                            "price of water that is calculated by market "
                            "clearing",
                            lower_bound=0,
                            unit=D.dollars)
+    total_gross_income = Variable("total gross income",
+                                  "Total income generated in the world.",
+                                  lower_bound=0,
+                                  unit=D.dollars)
 
     # exogenous variables / parameters:

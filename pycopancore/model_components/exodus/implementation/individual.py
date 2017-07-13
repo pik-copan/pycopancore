@@ -13,8 +13,8 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-# from .... import master_data_model as D
-import math
+from pycopancore import Event
+import math, random
 from scipy import stats
 
 
@@ -37,7 +37,7 @@ class Individual (I.Individual):
 
         self._subjective_income_rank = None
         self._farm_size = None
-        self._brutto_income = None
+        self._gross_income = None
         self.liquidity = liquidity
         self.nutrition = nutrtiton
 
@@ -73,22 +73,22 @@ class Individual (I.Individual):
             # If farmer, distribute farm size:
             if self.society.municipality_like is False:
                 # Let society distribute farm size
-                self._farm_size = self.society.brutto_income_or_farmsize
+                self._farm_size = self.society.gross_income_or_farmsize
         return self._farm_size
 
     @property
-    def brutto_income(self):
-        """Get the brutto income."""
+    def gross_income(self):
+        """Get the gross income."""
         # Check if not already been calculated:
-        if self._brutto_income is None:
+        if self._gross_income is None:
             # Check if farmer or townsman:
             if self.society.municipality_like is True:
                 # Let society distribute income:
-                self._brutto_income = self.society.brutto_income_or_farmsize
+                self._gross_income = self.society.gross_income_or_farmsize
             # If not townsman, income = 0
             if self.society.municipality_like is False:
-                self._brutto_income = 0
-        return self._brutto_income
+                self._gross_income = 0
+        return self._gross_income
 
     @property
     def subjective_income_rank(self):
@@ -97,7 +97,7 @@ class Individual (I.Individual):
         sigma, loc, mean = self.society.liquidity_pdf[0], \
                            self.society.liquidity_pdf[1], \
                            self.society.liquidity_pdf[2]
-        # Calculae place in liquidity cdf:
+        # Calculate place in liquidity cdf:
         sri = stats.lognorm.cdf(self.liquidity,
                                 s=self.society.liquidity_sigma,
                                 loc=self.society.liquidity_loc,
@@ -106,7 +106,26 @@ class Individual (I.Individual):
         return self._subjective_income_rank
 
     # process-related methods:
+    def social_update_timer(t):
+        """Calculate when a social update takes place"""
 
-    # TODO: add some if needed...
+    def migrate_or_befriend(self, unused_t):
+        """Do social update.
+        
+        Either migration or de- and re-friending takes place"""
+        # List friends with different profession:
+        distant_friends = []
+        for friend in self.acquaintances:
+            if self.profession is not friend.profession:
+                distant_friends.append(friend)
+        # Pick a distant friend if possible:
+        if len(distant_friends) != 0:
+            # chose one at random:
+            chosen_one = random.choice(distant_friends)
+            # Compare utility
 
-    processes = []  # TODO: instantiate and list process objects here
+    processes = [
+        Event("social update",
+              [I.Individual.society, I.Culture.acquaintance_network],
+              "rate", social_update_timer, migrate_or_befriend)
+    ]  # TODO: instantiate and list process objects here
