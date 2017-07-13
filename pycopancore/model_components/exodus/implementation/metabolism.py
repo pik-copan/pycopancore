@@ -13,7 +13,8 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-# from .... import master_data_model as D
+
+from scipy import stats
 
 
 class Metabolism (I.Metabolism):
@@ -22,11 +23,13 @@ class Metabolism (I.Metabolism):
     # standard methods:
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                 *,
+                 water_price,
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
+
+        self.water_price = water_price
 
         # At last, check for validity of all variables that have been
         # initialized and given a value:
@@ -34,9 +37,32 @@ class Metabolism (I.Metabolism):
         # Following method is defined in abstract_process_taxon_mixin which is
         # inherited only by mixing in the model:
         self.assert_valid()
-        pass
 
     # process-related methods:
+
+    def market_clearing(self, individual):
+        """Do the market clearing for all individuals in the world.
+        
+        Returns
+        -------
+
+        """
+        # Calculate pdf of liquidities in society of individual:
+        sigma = individual.society.liquidity_sigma,
+        loc = individual.society.liquidity_loc,
+        mean = individual.society.liquidity_mean
+        liquidity = individual.liquidity
+        individual_liquidity_pdf = stats.lognorm.pdf(liquidity,
+                                                     s=sigma,
+                                                     loc=loc,
+                                                     scale=mean)
+        # Return rhs of equation
+        return (individual.subjective_income_rank
+                - (individual.harvest * self.water_price
+                   - individual.liquidity + individual.brutto_income)
+                * individual_liquidity_pdf
+                )
+
 
     # TODO: add some if needed...
 

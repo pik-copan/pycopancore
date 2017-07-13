@@ -38,6 +38,10 @@ class Society (I.Society):
         self.base_mean_income = base_mean_income
         self.pdf_sigma = pdf_sigma
 
+        self.liquidity_mean = None
+        self.liquidity_sigma = None
+        self.liquidity_loc = None
+
         # At last, check for validity of all variables that have been
         # initialized and given a value:
 
@@ -50,11 +54,11 @@ class Society (I.Society):
         "Get random income or farm size distributed log-normal."
         if self.pareto_distribution_type is False:
             # Use log-normal
-            number=random.random()
+            number = random.random()
             sigma = self.pdf_sigma
             mean = self.mean_income_or_farmsize
-            lognormal = stats.lognorm.ppf(number, s=sigma, scale=mean)
-            return lognormal
+            lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=mean)
+            return lognormal_random
         if self.pareto_distribution_type is True:
             # Use pareto:
             return "not implemented yet"
@@ -75,22 +79,20 @@ class Society (I.Society):
         "Get mean income or mean farmsize."
         if self.municipality_like is True:
             # mean income:
-            return self.base_mean_income_or_farmsize * (self.population ** 1.12)
+            return self.base_mean_income * (self.population ** 1.12)
         if self.municipality_like is False:
             # mean farm size:
             return self.direct_cells[0].land_area / self.population
 
-    @property
-    def liquidity_pdf(self):
-        """Get the PDF of the liquidity of the society."""
-        return
-
-    @property
-    def liquidity_cdf(self):
-        """Get the PDF of the liquidity of the society."""
-        return
-
     # process-related methods:
+
+    def liquidity_pdf(self):
+        """Calculate the PDF of the liquidity of the society."""
+        liquidities = []
+        for individual in self.population:
+            liquidities.append(individual.liquidity)
+        self.liquidity_sigma, self.liquidity_loc, self.liquidity_mean = (
+            stats.lognorm.fit(liquidities))
 
     # TODO: add some if needed...
 

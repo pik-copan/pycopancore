@@ -13,9 +13,6 @@ remove these instructions.
 # License: MIT license
 
 from ... import master_data_model as D
-# TODO: uncomment and adjust of you need further variables from another
-# model component:
-# import ..BBB.interface as BBB
 from ... import Variable
 
 
@@ -84,12 +81,6 @@ class Society (object):
                                        "distribution function",
                                        "cumulative distribution function of "
                                        "income and farm size")
-    liquidity_pdf = Variable("probability density function of liquidity",
-                             "pdf of liquidity, fitted to values of liquidity "
-                             "of agents in a society")
-    liquidity_cdf = Variable("cumulative distribution function of liquidity",
-                             "cdf of liquidity, calculated by integrating "
-                             "over pdf")
     pdf_mu = Variable("log normal parameter mu",
                       "parameter mu of the log-normal distribution",
                       lower_bound=0)
@@ -102,6 +93,12 @@ class Society (object):
     pdf_y_min = Variable("Pareto parameter y_min",
                          "Lower end of the pareto distribution",
                          lower_bound=0)
+    liquidity_sigma = Variable("Liquidity sigma",
+                               "Sigma parameter of pdf of liquidity")
+    liquidity_mean = Variable("Liquidity Mean",
+                              "Mean of pdf of liquidity")
+    liquidity_loc = Variable("Liquidity location",
+                             "Location parameter of pdf of liquidity")
 
     # exogenous variables / parameters:
 
@@ -130,10 +127,10 @@ class Individual (object):
     profession = Variable("profession",
                           "profession of an Individual, eg. farmer or townsman")
     subjective_income_rank = Variable("subjective income rank",
-                                       "ranking of an individual by income"
-                                       "in its cell",
-                                       lower_bound=0,
-                                       upper_bound=1)
+                                      "ranking of an individual by income"
+                                      "in its cell",
+                                      lower_bound=0,
+                                      upper_bound=1)
     farm_size = Variable("farm size",
                          "Size of the farm of an individual, if his "
                          "profession is farmer",

@@ -15,6 +15,7 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 import math
+from scipy import stats
 
 
 class Individual (I.Individual):
@@ -25,26 +26,20 @@ class Individual (I.Individual):
     def __init__(self,
                  *,
                  profession=None,
-                 subjective_income_rank=None,
                  nutrition_need=1240,
-                 farm_size=None,
-                 brutto_income=None,
                  liquidity=None,
                  nutrtiton=None,
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
         self.profession = profession
-        self.subjective_income_rank = subjective_income_rank
         self.nutrition_need = nutrition_need
 
+        self._subjective_income_rank = None
         self._farm_size = None
-        self.farm_size = farm_size
         self._brutto_income = None
-        self.brutto_income = brutto_income
         self.liquidity = liquidity
         self.nutrition = nutrtiton
-
 
         # At last, check for validity of all variables that have been
         # initialized and given a value:
@@ -65,39 +60,50 @@ class Individual (I.Individual):
         effective_nutrition = 1 - 1 / (self.nutrition / self.nutrition_need + 1)
         return math.sqrt(self.subjective_income_rank * effective_nutrition)
         # TODO: Add parameter to compensate for frequency of market clearing!
-        # 1240 m^3 is the annual need!
-
-    @farm_size.setter
-    def farm_size(self, society):
-        """Set the farm size.
-
-        Done accordingly to the distribution and population of the society.
-        """
-        if society.municipality_like is True:
-            self._farm_size = 0
-        if society.municipality_like is False:
-            self._farm_size = society.brutto_income_or_farmsize
+        # 1240 m^3 is the annual need
 
     @property
     def farm_size(self):
         """Get the farm size."""
+        # Check, if not already been calculated:
+        if self._farm_size is None:
+            # If townsman, individual has no farm:
+            if self.society.municipality_like is True:
+                self._farm_size = 0
+            # If farmer, distribute farm size:
+            if self.society.municipality_like is False:
+                # Let society distribute farm size
+                self._farm_size = self.society.brutto_income_or_farmsize
         return self._farm_size
-
-    @brutto_income.setter
-    def brutto_income(self, society):
-        """Set the brutto income.
-
-        Done accordingly to the distribution and population of the society.
-        """
-        if society.municipality_like is True:
-            self._brutto_income = society.brutto_income_or_farmsize
-        if society.municipality_like is False:
-            self._brutto_income = 0
 
     @property
     def brutto_income(self):
         """Get the brutto income."""
+        # Check if not already been calculated:
+        if self._brutto_income is None:
+            # Check if farmer or townsman:
+            if self.society.municipality_like is True:
+                # Let society distribute income:
+                self._brutto_income = self.society.brutto_income_or_farmsize
+            # If not townsman, income = 0
+            if self.society.municipality_like is False:
+                self._brutto_income = 0
         return self._brutto_income
+
+    @property
+    def subjective_income_rank(self):
+        """Get subjective income rank of individual."""
+        # Get parameters of the liquidity pdf:
+        sigma, loc, mean = self.society.liquidity_pdf[0], \
+                           self.society.liquidity_pdf[1], \
+                           self.society.liquidity_pdf[2]
+        # Calculae place in liquidity cdf:
+        sri = stats.lognorm.cdf(self.liquidity,
+                                s=self.society.liquidity_sigma,
+                                loc=self.society.liquidity_loc,
+                                scale=self.society.liquidity_mean)
+        self._subjective_income_rank = sri
+        return self._subjective_income_rank
 
     # process-related methods:
 
