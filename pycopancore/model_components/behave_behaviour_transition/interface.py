@@ -81,3 +81,4 @@ class Culture (object):
 
     # exogenous variables / parameters:
     n_individual = Variable("number of individuals", "static number of individuals in the network")
+

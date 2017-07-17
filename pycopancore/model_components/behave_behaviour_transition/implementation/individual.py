@@ -23,19 +23,22 @@ class Individual (I.Individual):
     # standard methods:
 
     def __init__(self,
-                 # *,  # initial_disposition = None, degree_preference = None, initial_behaviour = None
+                 *,
+                 initial_disposition = None,
+                 degree_preference = None,
+                 initial_behaviour = None,
                  **kwargs):
         """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
 
         # set degree preference
-        # self.degree_preference = degree_preference
+        self.degree_preference = degree_preference
 
         # set disposition
-        # self.disposition = initial_disposition
+        self.disposition = initial_disposition
 
         #set behaviour
-        # self.behaviour = initial_behaviour
+        self.behaviour = initial_behaviour
 
         pass
 

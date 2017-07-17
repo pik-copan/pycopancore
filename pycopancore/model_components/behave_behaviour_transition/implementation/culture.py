@@ -17,6 +17,7 @@ from .. import interface as I
 import numpy as np
 import igraph
 import networkx as nx
+import scipy
 
 
 class Culture (I.Culture):
@@ -28,8 +29,86 @@ class Culture (I.Culture):
     __background_proximity = None
     __interaction_network = None
 
-    def __kolmogorov_smirnov_test(self, , new_distribution):
+    def __kolmogorov_smirnov_test(self, current_distribution, desired_distribution):
+        """
+           This function governs the transition between two distributions.
 
+           The functions' similarity is derived via a Kolmogorov-Smirnov test
+           as a necessary criterium
+           (https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test).
+
+           The target is set to 0.1, which is equivalent to the value one gets
+           for random sampling from the given distribution.
+
+           The noise added is lognormal distributed to allow for
+           long-range jumps and scaled with the deviation of the actual distribution
+           to the ideal curve. The greater the positive deviation, the greater the
+           noise.
+           """
+
+        #  Define helper function
+        def integrate_cdf(input_array):
+            cdf = np.zeros(input_array.shape[0])
+            for i in range(input_array.shape[0]):
+                cdf[i] = integ.quad(lambda x: distribution_function(yb, x),
+                                    0, input_array[i])[0]
+            return cdf
+
+        kolm_smir_step = 2
+
+        # Kolm Smir target
+        target = 0.1
+        # noise scaling coeff
+        tr_noise_coeff = 0.1
+
+        # set counters
+        k = 1
+        n_inc = 0
+
+        # derive the ideal distribution for given yb
+        x = np.linspace(0, 1, 101)
+        target_dist = distribution_function(yb, x)
+        target_dist = target_dist * float(N) / (sum(target_dist))
+        # get deviation
+        hist_values_sample, hist_bins = np.histogram(
+            disp_distr_t, bins=100, range=(0, 1))
+        hist_values_sample = np.append(hist_values_sample, hist_values_sample[-1])
+        hist_diff = hist_values_sample - target_dist
+        # get the noise level for all N agents
+        disp_distr_round = np.asarray(100 * disp_distr_t, dtype='int')
+        distr_dev = hist_diff[disp_distr_round]
+        distr_dev = np.asarray(distr_dev, dtype='float')
+        # scale and set positive
+        distr_dev = distr_dev / 50
+        distr_dev += np.abs(distr_dev.min())
+        logn_std = 1.
+        while kolm_smir_step >= target:
+            # generate random lognormal dist and sign
+            random_noise_increase = np.random.lognormal(0, logn_std, N)
+            random_sign = np.random.randint(-1, 1, N)
+            random_sign[random_sign == 0] = 1
+            # add the noise
+            disp_distr_tp1 = (disp_distr_t + tr_noise_coeff * random_sign *
+                              random_noise_increase * distr_dev)
+            # check for boundaries
+            disp_distr_tp1[disp_distr_tp1 > 1] = disp_distr_t[disp_distr_tp1 > 1]
+            disp_distr_tp1[disp_distr_tp1 < 0] = disp_distr_t[disp_distr_tp1 < 0]
+            # Kolmogorov-Smirnov test
+            kolm_smir_step = scipy.stats.kstest(disp_distr_tp1, integrate_cdf)[0]
+            # print('kolm_smir_step',kolm_smir_step)
+            k += 1
+            # in case of non-convergence, increase the standard deviation for the
+            # lognormal dist to allow for
+            if k > 100:
+                logn_std = logn_std * 1.2
+                #print('increased noise, logn_std', logn_std)
+                k = 1
+                n_inc += 1
+                if n_inc > 10:
+                    print('DISTRIBUTION TRANSITION FAILED',
+                          'kolm_smir_step', kolm_smir_step, 'yb', yb)
+                    return disp_distr_t
+        return disp_distr_tp1
 
         pass
 
@@ -37,7 +116,9 @@ class Culture (I.Culture):
     def __init__(self,
                  *,
                  degree_preference=None,
+                 # TODO: What does social influence do again?
                  social_influence,
+                 # TODO: REALLY CLEVER TO USE ONE HUGE DICTIONARY FOR MODEL PARAMETERS?
                  model_parameters,
                  social_distance_function,
                  **kwargs):
