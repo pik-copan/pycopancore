@@ -29,7 +29,12 @@ class Culture (I.Culture):
     __background_proximity = None
     __interaction_network = None
 
-    def __kolmogorov_smirnov_test(self, current_distribution, desired_distribution):
+    # The Kolmogorov-Smirnov-Test should be done in the run file for several reasons:
+    # 1. It is a method connected to the exogenous agent characterics, namely the agent's disposition
+    # 2. An array of characteristics is produced in the run file (sure about that?), hence it should be placed there.
+    # TODO BUT: Maybe the model component should provide this test since it is essential for the BEHAVE model.
+    # TODO: Should more parameters be passed on to the function?
+    def __kolmogorov_smirnov_test(self, current_distribution, target_distribution):
         """
            This function governs the transition between two distributions.
 
@@ -46,14 +51,6 @@ class Culture (I.Culture):
            noise.
            """
 
-        #  Define helper function
-        def integrate_cdf(input_array):
-            cdf = np.zeros(input_array.shape[0])
-            for i in range(input_array.shape[0]):
-                cdf[i] = integ.quad(lambda x: distribution_function(yb, x),
-                                    0, input_array[i])[0]
-            return cdf
-
         kolm_smir_step = 2
 
         # Kolm Smir target
@@ -65,17 +62,20 @@ class Culture (I.Culture):
         k = 1
         n_inc = 0
 
+        #TODO: GO THROUGH THIS METHOD!
+
+
+
         # derive the ideal distribution for given yb
-        x = np.linspace(0, 1, 101)
-        target_dist = distribution_function(yb, x)
-        target_dist = target_dist * float(N) / (sum(target_dist))
+        hist_values_target, hist_bins_target = np.histogram(
+            target_distribution, bins=100, range=(0, 1))
         # get deviation
-        hist_values_sample, hist_bins = np.histogram(
-            disp_distr_t, bins=100, range=(0, 1))
-        hist_values_sample = np.append(hist_values_sample, hist_values_sample[-1])
-        hist_diff = hist_values_sample - target_dist
+        hist_values_current, hist_bins_current = np.histogram(
+            current_distribution, bins=100, range=(0, 1))
+        hist_values_current = np.append(hist_values_current, hist_values_current[-1])
+        hist_diff = hist_values_current - hist_values_target
         # get the noise level for all N agents
-        disp_distr_round = np.asarray(100 * disp_distr_t, dtype='int')
+        disp_distr_round = np.asarray(100 * current_distribution, dtype='int')
         distr_dev = hist_diff[disp_distr_round]
         distr_dev = np.asarray(distr_dev, dtype='float')
         # scale and set positive
@@ -115,8 +115,11 @@ class Culture (I.Culture):
 
     def __init__(self,
                  *,
+                 # TODO: Do I need the degree preference in CULTURE? Isn't that a property of the agent?
+                 # TODO: Two things to consider: 1. The degree preference does not change during the simulation,  hence it can easily be stored in an array which is an attribute of culture. 2. For the sake of clarity and to uphold the idea of the framework, the degree preference can be extracted from each agent at every step. QUESTION: Is this too slow?
                  degree_preference=None,
-                 # TODO: What does social influence do again?
+                 # For a given agent, this function executes the behavioral change
+                 # Here it is possible to implement various
                  social_influence,
                  # TODO: REALLY CLEVER TO USE ONE HUGE DICTIONARY FOR MODEL PARAMETERS?
                  model_parameters,
@@ -169,10 +172,22 @@ class Culture (I.Culture):
             __background_proximity[k,k] = 0
 
 
-
+        # provide standard social distance function
+        # TODO: TEST HOW TO TEST KEAYWORD ARGUMENT IS EMPTY!
+        if social_distance_function is None:
+            pass
 
         pass
 
+
+    def some_configure_method(self, other_argument):
+        """
+        This method should provide some configuration interface for the run file, although this might not be necessary because of the constructor
+        
+        :param other_argument: 
+        :return: 
+        """
+        pass
     # process-related methods:
 
 
@@ -248,17 +263,23 @@ class Culture (I.Culture):
         return exp_dec
 
 
-    def update_social_influence(self):
+    def perform_social_influence(self):
+        """
+            Changes agent's behavior depending on Culture's social_influence function, the agent's disposition, and (potentially, given the function) the behavior of agent's neighbors.
+        """
+
         pass
 
     def update_contact_network(self):
         pass
 
-    def one_step(self):
+    def compute_conditional_behavior_probability(self):
         pass
 
+    def compute_centrality_measures(self):
+        pass
 
-
-    # TODO: add some if needed...
+    def one_step(self, t):
+        pass
 
     processes = []  # TODO: instantiate and list process objects here
