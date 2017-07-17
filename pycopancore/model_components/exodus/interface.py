@@ -20,10 +20,9 @@ class Model (object):
     """Interface for Model mixin."""
 
     # metadata:
-    name = "..."
-    """a unique name for the model component"""
+    name = "Exodus"
     description = "..."
-    """some longer description"""
+    """A migration model in the urban rural space."""
     requires = []
     """list of other model components required for this model component to
     make sense"""
