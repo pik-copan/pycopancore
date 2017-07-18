@@ -13,6 +13,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from pycopancore.model_components.base import interface as B
 from pycopancore import Event
 import math
 import random
@@ -246,6 +247,6 @@ class Individual (I.Individual):
 
     processes = [
         Event("social update",
-              [I.Individual.society, I.Culture.acquaintance_network],
-              "time", social_update_timer, social_update)
+              [B.Individual.society, B.Culture.acquaintance_network],
+              ["time", social_update_timer, social_update])
     ]  # TODO: instantiate and list process objects here

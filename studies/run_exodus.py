@@ -31,7 +31,7 @@ model = M.Model()
 # instantiate process taxa culture:
 # In this certain case we need 'M.Culture()' for the acquaintance network.
 culture = M.Culture()
-metabolism = M.Metabolism()
+metabolism = M.Metabolism(water_price=1)
 
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism)
@@ -72,7 +72,7 @@ for f in range(nf):
     # Chose cell
     farmland = random.choice(farmland_cells)
     # determine liquidity before first market:
-    liq = np.random.lognomal(mean=500, sigma=0.34)
+    liq = np.random.lognormal(mean=500, sigma=0.34)
     farmers.append(M.Individual(cell=farmland,
                                 profession='farmer',
                                 outspokensess=1,
@@ -84,7 +84,7 @@ for t in range(nt):
     # Chose cell
     city = random.choice(city_cells)
     # determine liquidity before first market:
-    liq = np.random.lognomal(mean=500, sigma=0.34)
+    liq = np.random.lognormal(mean=500, sigma=0.34)
     townsmen.append(M.Individual(cell=city,
                                  profession='townsman',
                                  outspokensess=1,

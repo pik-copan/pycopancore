@@ -18,6 +18,4 @@ from .cell import Cell
 from .individual import Individual
 
 # export all provided process taxon implementation mixin classes:
-from .nature import Nature
 from .metabolism import Metabolism
-from .culture import Culture
