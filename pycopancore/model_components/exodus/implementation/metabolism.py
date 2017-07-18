@@ -27,11 +27,13 @@ class Metabolism (I.Metabolism):
     def __init__(self,
                  *,
                  water_price,
+                 market_frequency=0.1,
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line
 
         self.water_price = water_price
+        self.market_frequency = market_frequency
 
         # At last, check for validity of all variables that have been
         # initialized and given a value:
@@ -105,10 +107,15 @@ class Metabolism (I.Metabolism):
             # Account for shift, since price of water is at first position of
             # list, write solution of market clearing into entities:
             e.liquidity = solution[i+1]
+            # Calculate amount of water traded:
+            # traded water = - traded money / price
+            # traded money = gross_income - liquidity
+            traded_water = - (solution[i+1] - e.gross_income) / solution[0]
+            e.nutririon = e.harvest + traded_water
 
     def market_timing(self, t):
         """Define how often market clearing takes place."""
-        return t + 1
+        return t + 1 / self.market_frequency
 
     processes = [
         Step("market clearing", [I.Individual.liquidity,

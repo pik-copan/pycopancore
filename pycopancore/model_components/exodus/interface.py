@@ -108,13 +108,13 @@ class Cell (object):
     # endogenous variables:
 
     characteristic = Variable("characteristic",
-                              "sort of cell, e.g farmland or city")
+                              "sort of cell, e.g 'farmland' or 'city' ")
     average_precipitation = Variable("average precipitation",
                                      "average precipitation per square meter "
-                                     "of cell's area",
+                                     "of cell's area and year",
                                      lower_bound=0,
-                                     dimension=D.volume/D.area,
-                                     unit=D.meters)
+                                     dimension=D.volume / (D.area * D.time),
+                                     unit=D.meters/D.years)
 
     # exogenous variables / parameters:
 
@@ -124,7 +124,8 @@ class Individual (object):
 
     # endogenous variables:
     profession = Variable("profession",
-                          "profession of an Individual, eg. farmer or townsman")
+                          "profession of an Individual, eg. 'farmer' or "
+                          " 'townsman' ")
     subjective_income_rank = Variable("subjective income rank",
                                       "ranking of an individual by income"
                                       "in its cell",
@@ -144,8 +145,8 @@ class Individual (object):
                        "Water harvested before trade, calculated by farm size "
                        "and average farmland precipitation",
                        lower_bound=0,
-                       dimension=D.volume,
-                       unit=D.meters**3)
+                       dimension=D.volume*D.time,
+                       unit=D.meters**3 / D.years)
     liquidity = Variable("liquidity",
                          "income after trade",
                          lower_bound=0,
@@ -154,7 +155,7 @@ class Individual (object):
                          "water after trade. Since it is virtual water, "
                          "it can be subsumed into nutrition.",
                          lower_bound=0,
-                         dimension=D.volume)
+                         dimension=D.volume / D.time)
     nutrition_need = Variable("nutrition need",
                               "need of nutrition per time",
                               dimension=D.volume / D.time,
@@ -164,6 +165,21 @@ class Individual (object):
                        "function",
                        lower_bound=0,
                        upper_bound=1)
+    migration_threshold = Variable("migration threshold",
+                                   "Logistic function's midpoint, parameter "
+                                   "x_0 in the function:"
+                                   "https://en.wikipedia.org/wiki/Logistic_function",
+                                   lower_bound=0,
+                                   upper_bound=1)
+    migration_steepness = Variable("Steepness of cdf of migration",
+                                   "parameter k in the logistic function:"
+                                   "https://en.wikipedia.org/wiki/Logistic_function")
+    second_degree_rewire_prob = Variable("second degree rewire probability",
+                                         "Probability to rewire to a neighbour "
+                                         "of degree 2.")
+    outspokenness = Variable("outspokenness",
+                             "Describes how often per year an individual does "
+                             "social updates in average")
 
     # exogenous variables / parameters:
 
@@ -184,5 +200,8 @@ class Metabolism (object):
                                   "Total income generated in the world.",
                                   lower_bound=0,
                                   unit=D.dollars)
+    market_frequency = Variable("market frequency",
+                                "Defines how often per year the market "
+                                "clearing is calculated")
 
     # exogenous variables / parameters:

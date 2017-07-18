@@ -14,7 +14,9 @@ then remove these instructions
 
 from .. import interface as I
 from pycopancore import Event
-import math, random
+import math
+import random
+import numpy as np
 from scipy import stats
 
 
@@ -29,11 +31,19 @@ class Individual (I.Individual):
                  nutrition_need=1240,
                  liquidity=None,
                  nutrtiton=None,
+                 migration_threshold=0.7,
+                 migration_steepness=5,
+                 second_degree_rewire_prob=0.3,
+                 outspokenness=None,
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
         self.profession = profession
         self.nutrition_need = nutrition_need
+        self.migration_threshold = migration_threshold
+        self.migration_steepness = migration_steepness
+        self.second_degree_rewire_prob = second_degree_rewire_prob
+        self.outspokenness = outspokenness
 
         self._subjective_income_rank = None
         self._farm_size = None
@@ -47,6 +57,11 @@ class Individual (I.Individual):
         # Following method is defined in abstract_entity_mixin which is
         # inherited only by mixing in the model:
         self.assert_valid()
+
+        if self.profession == 'farmer':
+            assert self.cell.characteristic == 'farmland'
+        if self.profession == 'townsman':
+            assert self.cell.characteristic == 'city'
 
     @property
     def harvest(self):
@@ -106,26 +121,131 @@ class Individual (I.Individual):
         return self._subjective_income_rank
 
     # process-related methods:
-    def social_update_timer(t):
+    def social_update_timer(self, t):
         """Calculate when a social update takes place"""
+        return t + np.random.exponential(self.outspokenness)
 
-    def migrate_or_befriend(self, unused_t):
+    def social_update(self, unused_t):
         """Do social update.
         
         Either migration or de- and re-friending takes place"""
-        # List friends with different profession:
-        distant_friends = []
-        for friend in self.acquaintances:
-            if self.profession is not friend.profession:
-                distant_friends.append(friend)
-        # Pick a distant friend if possible:
-        if len(distant_friends) != 0:
-            # chose one at random:
-            chosen_one = random.choice(distant_friends)
-            # Compare utility
+        # Chose Acquaintance:
+        chosen_one = random.choice(self.acquaintances)
+        # Get the Chosen One's Profession:
+        chosen_profession = chosen_one.profession
+        # Check, whether same profession, therefore define
+        # if migration or rewiring takes place or nothing
+        if chosen_profession != self.profession:
+            # Compare utility and decide if migration takes place:
+            if self.decide_migration(chosen_one):
+                # Migrate
+                self.migrate(chosen_one.cell)
+            else:
+                self.rewire(chosen_one)
+
+    def decide_migration(self, neighbour):
+        """Decide, if rewire or migration takes place.
+        
+        Parameters
+        ----------
+        neighbour: exodus.individual
+            Object of type individual that has different profession than the 
+            self object.
+
+        Returns
+        -------
+        bool:
+            True if migration takes place
+        """
+        # Difference in utility:
+        delta_utility = neighbour.utility - self.utility
+        # Sigmoidal function, normalized so that sigmoid(1) = 1:
+        sigmoid = 1 / (1 + math.exp(- self.migration_steepness * (
+            delta_utility - self.migration_threshold))) * (1 + math.exp(
+                - self.migration_steepness * (1 - self.migration_threshold)))
+        if random.random() <= sigmoid:
+            # Migrate
+            return True
+        else:
+            # Rewire
+            return False
+
+    def rewire(self, neighbour):
+        """Do rewiring.
+        
+        Detaches from neighbour and rewires to a neighbour of degree n.
+        Parameters
+        ----------
+        neighbour: exodus.individual
+            neighbour from which to detach
+        """
+        # Remove edge:
+        self.culture.acquaintance_network.remove_edge(self, neighbour)
+        # Chose another random neighbour
+        random_neighbour = random.choice[self.acquaintances]
+        third_degree_neighbors = []
+        break_cond = False
+        # Iterate through second degree neighbours of random neighbour:
+        for n in random_neighbour.acquaintances:
+            # Attach with second_degree_rewire_prob, if not already connected
+            # or if not just detached:
+            if (random.random() < self.second_degree_rewire_prob
+                    and n != neighbour
+                    and n not in self.acquaintances):
+                self.culture.acquaintance_network.add_edge(self, n)
+                break_cond = True
+                break
+            # If rewiring did not take place, add his neighbours to third
+            # degree neighbour list:
+            if (n != neighbour
+                    and n not in self.acquaintances):
+                for nn in n.acquaintances:
+                    third_degree_neighbors.append(nn)
+        # Iterate through 3 degree neighbours, if ne neighbour was not found:
+        if break_cond is False:
+            for n in third_degree_neighbors:
+                # Attach with second_degree_rewire_prob^2, if not already
+                # connected or if not just detached:
+                if (random.random() < (self.second_degree_rewire_prob**2)
+                        and n != neighbour
+                        and n not in self.acquaintances):
+                    self.culture.acquaintance_network.add_edge(self, n)
+                    break_cond = True
+                    break
+        # if nobody has connected yet, chose any random individual:
+        if break_cond is False:
+            random_guy = random.choice(self.world.individuals)
+            if (random_guy != neighbour
+                    and random_guy not in self.acquaintances):
+                self.culture.acquaintance_network.add_edge(self, random_guy)
+            else:
+                print('this is very unlikely, nobody has been found, '
+                      'individual loses a connection.')
+
+    def migrate(self, cell):
+        """Migrate to Cell.
+        
+        Parameters
+        ----------
+        cell: exodus.cell
+            cell to migrate to.
+        """
+        # Change cell and society (done in base.individual):
+        self.cell = cell
+        # Change Profession:
+        if cell.society.municipality_like is False:
+            self.profession = 'farmer'
+        if cell.society.municipality_like is True:
+            self.profession = 'townsman'
+        else:
+            raise TypeError('Neither Municipality nor County!')
+        # Set Values to None, so they can be recalculated:
+        self._subjective_income_rank = None
+        self._farm_size = None
+        self._gross_income = None
 
     processes = [
         Event("social update",
               [I.Individual.society, I.Culture.acquaintance_network],
-              "rate", social_update_timer, migrate_or_befriend)
+              "time", social_update_timer, social_update)
     ]  # TODO: instantiate and list process objects here
