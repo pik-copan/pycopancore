@@ -232,7 +232,7 @@ class Society (I.Society, abstract.Society):
 
     @individuals.setter
     def individuals(self, u):
-        """Set direct abd indirect resident Individuals."""
+        """Set direct and indirect resident Individuals."""
         assert u == unknown, "setter can only be used to reset cache"
         self._individuals = unknown
         # reset dependent caches:
