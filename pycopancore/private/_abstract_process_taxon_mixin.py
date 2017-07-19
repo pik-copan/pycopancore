@@ -12,7 +12,7 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 
 from ..data_model import variable
 from ..data_model import OrderedSet
-# TODO: why don't we need a _AbstractProcessTaxonMixinType as for entities?
+
 
 class _AbstractProcessTaxonMixin(object):
     """Define Entity-unspecific abstract class.
@@ -34,6 +34,8 @@ class _AbstractProcessTaxonMixin(object):
             print('This Process Taxon is already initialized!')
         else:
             self.__class__.instances = [self]
+
+        self._world = None
 
     # the repr and the str methods were removed in the master/prototype_jobst1
     # Do we really don't want them anymore?
@@ -62,3 +64,8 @@ class _AbstractProcessTaxonMixin(object):
             except:
                 return
             v.assert_valid(val)
+
+    @property
+    def world(self):
+        """Get the process-taxons world."""
+        return self._world

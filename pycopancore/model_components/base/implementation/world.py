@@ -69,8 +69,11 @@ class World (I.World, abstract.World):
         """
         super().__init__(**kwargs)  # must be the first line
 
+        self._nature = None
         self.nature = nature
+        self._metabolism = None
         self.metabolism = metabolism
+        self._culture = None
         self.culture = culture
         self.population = population
         self.terrestrial_carbon = terrestrial_carbon
@@ -85,6 +88,46 @@ class World (I.World, abstract.World):
         self.assert_valid()
 
     # getters and setters:
+    @property
+    def nature(self):
+        """Get world's nature."""
+        return self._nature
+
+    @nature.setter
+    def nature(self, n):
+        """Set world's nature."""
+        if n is not None:
+            assert isinstance(n, I.Nature), "Nature must be taxon type Nature"
+            n._world = self
+            self._nature = n
+
+    @property
+    def metabolism(self):
+        """Get world's metabolism."""
+        return self._metabolism
+
+    @metabolism.setter
+    def metabolism(self, m):
+        """Set world's metabolism."""
+        if m is not None:
+            assert isinstance(m, I.Metabolism), \
+                "Metabolism must be taxon type Metabolism"
+            m._world = self
+            self._metabolism = m
+
+    @property
+    def culture(self):
+        """Get world's culture."""
+        return self._culture
+
+    @culture.setter
+    def culture(self, c):
+        """Set world's culture."""
+        if c is not None:
+            assert isinstance(c, I.Culture), \
+                "Culture must be taxon type Culture"
+            c._world = self
+            self._culture = c
 
     @property  # read-only
     def societies(self):
