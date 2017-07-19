@@ -79,21 +79,25 @@ class Society (I.Society):
         "Get mean income or mean farmsize."
         if self.municipality_like is True:
             # mean income:
-            return self.base_mean_income * (self.population ** 1.12)
+            return self.base_mean_income * (len(self.individuals) ** 1.12)
         if self.municipality_like is False:
+            # Get cell. This complicated code is necessary, since direct_cells
+            # is a set:
+            for c in self.direct_cells:
+                cell = c
+                break
             # mean farm size:
-            return self.direct_cells[0].land_area / self.population
+            return cell.land_area / len(self.individuals)
 
     # process-related methods:
 
     def liquidity_pdf(self):
         """Calculate the PDF of the liquidity of the society."""
+        print('liquidity_pdf is calculated')
         liquidities = []
-        for individual in self.population:
+        for individual in self.individuals:
             liquidities.append(individual.liquidity)
         self.liquidity_sigma, self.liquidity_loc, self.liquidity_mean = (
-            stats.lognorm.fit(liquidities))
+            stats.lognorm.fit(liquidities, floc=0))
 
-    # TODO: add some if needed...
-
-    processes = []  # TODO: instantiate and list process objects here
+    processes = []

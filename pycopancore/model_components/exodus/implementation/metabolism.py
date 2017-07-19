@@ -52,7 +52,7 @@ class Metabolism (I.Metabolism):
 
     # process-related methods:
 
-    def market_clearing_rhs(p_and_ys, met):
+    def market_clearing_rhs(met, p_and_ys):
         """Do the market clearing for all individuals in the world.
 
         Return right hand side of equation to optimize all agents' utility.
@@ -71,6 +71,9 @@ class Metabolism (I.Metabolism):
         price = p_and_ys[0]
         ys = p_and_ys[1:]
         errors = np.zeros(shape=len(p_and_ys))
+        # Calculate pdfs for all societies:
+        for s in met.world.societies:
+            s.liquidity_pdf()
         for i, e in enumerate(met.world.individuals):
             # Get the individual's society's pdf of liquidity:
             sigma = e.society.liquidity_sigma
@@ -98,10 +101,13 @@ class Metabolism (I.Metabolism):
 
     def do_market_clearing(self, unused_t):
         """Calculate water price and market movements."""
-        p_and_ys = [self.water_price, self.world.individuals.liquidity]
-        solution = optimize.fsolve(func=self.market_clearing_rhs(p_and_ys),
-                                   x0=self.water_price,
-                                   args=(self))
+        print('market cleraing takes place at time', unused_t)
+        liquidities = []
+        for i in self.world.individuals:
+            liquidities.append(i.liquidity)
+        p_and_ys = [self.water_price] + liquidities
+        solution = optimize.fsolve(func=self.market_clearing_rhs,
+                                   x0=p_and_ys)
         self.water_price = solution[0]
         for i, e in enumerate(self.world.individuals):
             # Account for shift, since price of water is at first position of
@@ -112,10 +118,12 @@ class Metabolism (I.Metabolism):
             # traded money = gross_income - liquidity
             traded_water = - (solution[i+1] - e.gross_income) / solution[0]
             e.nutririon = e.harvest + traded_water
+        print('market clearing is done at time', unused_t)
 
     def market_timing(self, t):
         """Define how often market clearing takes place."""
         return t + 1 / self.market_frequency
+
 
     processes = [
         Step("market clearing", [I.Individual.liquidity,

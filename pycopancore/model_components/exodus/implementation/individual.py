@@ -31,7 +31,7 @@ class Individual (I.Individual):
                  profession=None,
                  nutrition_need=1240,
                  liquidity=None,
-                 nutrtiton=None,
+                 nutrition=None,
                  migration_threshold=0.7,
                  migration_steepness=5,
                  second_degree_rewire_prob=0.3,
@@ -50,7 +50,7 @@ class Individual (I.Individual):
         self._farm_size = None
         self._gross_income = None
         self.liquidity = liquidity
-        self.nutrition = nutrtiton
+        self.nutrition = nutrition
 
         # At last, check for validity of all variables that have been
         # initialized and given a value:
@@ -109,10 +109,6 @@ class Individual (I.Individual):
     @property
     def subjective_income_rank(self):
         """Get subjective income rank of individual."""
-        # Get parameters of the liquidity pdf:
-        sigma, loc, mean = self.society.liquidity_pdf[0], \
-                           self.society.liquidity_pdf[1], \
-                           self.society.liquidity_pdf[2]
         # Calculate place in liquidity cdf:
         sri = stats.lognorm.cdf(self.liquidity,
                                 s=self.society.liquidity_sigma,
@@ -122,9 +118,11 @@ class Individual (I.Individual):
         return self._subjective_income_rank
 
     # process-related methods:
-    def social_update_timer(self, t):
+    def social_update_timer(t):
         """Calculate when a social update takes place"""
-        return t + np.random.exponential(self.outspokenness)
+        return t + np.random.exponential(1)
+    # TODO: this should be dependent on self.outspokenness. How do I do this?
+    # In this case: t + np.random.exponential(self.outspokenness)
 
     def social_update(self, unused_t):
         """Do social update.

@@ -6,7 +6,7 @@ and 'cell'.
 """
 
 import random
-import numpy as np
+from scipy import stats
 from time import time
 import datetime as dt
 
@@ -23,8 +23,8 @@ timeinterval = 100
 timestep = .1
 nm = 1  # number of municipalities, also cities
 nc = 1  # number of counties, also farmland_cells
-nf = 100  # number of farmers
-nt = 100  # number of townsmen
+nf = 10  # number of farmers
+nt = 10  # number of townsmen
 
 model = M.Model()
 
@@ -41,16 +41,18 @@ municipalities = [M.Society(world=world,
                             base_mean_income=1000)
                   for m in range(nm)
                   ]
+
 counties = [M.Society(world=world,
                       municipality_like=False)
             for c in range(nc)
             ]
 # Instantiate farmland cells:
 farmland_cells = []
+county_allocation = list(counties)
 for fc in range(nc):
     # chose county:
-    county = random.choice(counties)
-    counties.remove(county)
+    county = random.choice(county_allocation)
+    county_allocation.remove(county)
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
@@ -58,13 +60,16 @@ for fc in range(nc):
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []
+municipality_allocation = list(municipalities)
+
 for cc in range(nm):
     # chose county:
-    municipality = random.choice(municipalities)
-    municipalities.remove(municipality)
+    municipality = random.choice(municipality_allocation)
+    municipality_allocation.remove(municipality)
     city_cells.append(M.Cell(world=world,
                              society=municipality,
-                             characteristic='city'))
+                             characteristic='city',
+                             average_precipitation=0))
 
 # Instantiate farmers:
 farmers = []
@@ -72,7 +77,7 @@ for f in range(nf):
     # Chose cell
     farmland = random.choice(farmland_cells)
     # determine liquidity before first market:
-    liq = np.random.lognormal(mean=500, sigma=0.34)
+    liq = stats.lognorm.rvs(scale=500, s=0.34, loc=0)
     farmers.append(M.Individual(cell=farmland,
                                 profession='farmer',
                                 outspokensess=1,
@@ -84,19 +89,47 @@ for t in range(nt):
     # Chose cell
     city = random.choice(city_cells)
     # determine liquidity before first market:
-    liq = np.random.lognormal(mean=500, sigma=0.34)
+    liq = stats.lognorm.rvs(scale=500, s=0.34, loc=0)
     townsmen.append(M.Individual(cell=city,
                                  profession='townsman',
                                  outspokensess=1,
                                  liquidity=liq,
                                  nutrition=1000))
 
+# Create Network:
+expected_degree = 8
+
+# from run_adaptive_voter_model:
+
+
+def erdosrenyify(graph, p=0.5):
+    """Create a ErdosRenzi graph from networkx graph.
+
+    Take a a networkx.Graph with nodes and distribute the edges following the
+    erdos-renyi graph procedure.
+    """
+    assert not graph.edges(), "your graph has already edges"
+    nodes = graph.nodes()
+    for i, n1 in enumerate(nodes[:-1]):
+        for n2 in nodes[i+1:]:
+            if random.random() < p:
+                graph.add_edge(n1, n2)
+
+
+# set the initial graph structure to be an erdos-renyi graph
+print("erdosrenyifying the graph ... ", end="", flush=True)
+start = time()
+erdosrenyify(culture.acquaintance_network, p=expected_degree / (nf + nt))
+print("done ({})".format(dt.timedelta(seconds=(time() - start))))
+
 start = time()
 
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
-print('\n runner starting')
+# Run market clearing once:
+metabolism.do_market_clearing(0)
 
+print('\n runner starting')
 # Runner is instantiated
 r = Runner(model=model)
 
