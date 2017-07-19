@@ -58,8 +58,7 @@ class Society (I.Society, abstract.Society):
         self.world = world
         self._next_higher_society = None
         self.next_higher_society = next_higher_society
-
-        # set other variables:
+        self._population = None
         self.population = population
 
         # make sure all variable values are valid:
@@ -103,6 +102,15 @@ class Society (I.Society, abstract.Society):
         self._next_higher_society = s
         # reset dependent caches:
         self.higher_societies = unknown
+
+    @property
+    def population(self):
+        """Get the population of the society"""
+        if self.population is None:
+            self._population = len(self.individuals)
+        else:
+            self._population = self.population
+        return self._population
 
     # getters for backwards references and convenience variables:
 
@@ -210,7 +218,7 @@ class Society (I.Society, abstract.Society):
     """cache, depends on self.cells, cell.individuals"""
     @property  # read-only
     def individuals(self):
-        """Get direct abd indirect resident Individuals."""
+        """Get direct and indirect resident Individuals."""
         if self._individuals is unknown:
             # aggregate from cells:
             self._individuals = set()
