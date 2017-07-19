@@ -79,6 +79,7 @@ class Culture (object):
     friendship_network = D.CUL.friendship_network
 
 
+
     # exogenous variables / parameters:
     n_individual = Variable("number of individuals", "static number of individuals in the network")
 

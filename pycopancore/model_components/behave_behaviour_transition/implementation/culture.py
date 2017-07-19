@@ -25,9 +25,6 @@ class Culture (I.Culture):
 
     # standard methods:
 
-    # NEEDED?
-    __background_proximity = None
-    __interaction_network = None
 
     # The Kolmogorov-Smirnov-Test should be done in the run file for several reasons:
     # 1. It is a method connected to the exogenous agent characterics, namely the agent's disposition
@@ -112,6 +109,76 @@ class Culture (I.Culture):
 
         pass
 
+        @staticmethod
+        def __social_distance_smoker_function(agent_i, agent_j):
+            """
+            Returns social distance of two agents for the smoker case.
+            Cf. Schleussner et al. (2016), p. 8.
+            
+            Parameters
+            ----------
+            agent_i: Individual in the contact network
+            agent_j: Individual in the contact network
+
+            Returns
+            -------
+            Absolute value of difference of behavior variable of both agents, which is symmetric. 
+            """
+            return np.abs(agent_i.behavior - agent_j.behavior)
+
+        # TODO: Should the agent characteristics be passed or the list of
+        @staticmethod
+        def __social_influence(agent_list, interaction_network):
+            """
+            Updates behavior of one agent depending on agent's disposition and interacting agent's behavior.
+            Only for the fully coupled case.
+            
+            Parameters
+            ----------
+            agent: Individual in contact network
+            agent_characteristics = np.array[N] od dtype floar containing behavior of agents
+            interaction_network: np.array[N,N] of dtype int
+
+            Returns
+            -------
+
+            """
+            # Parameter controlling the equilibrium stochastic noise.
+            C = 0.1
+
+            # Create array of agent characteristics
+            # TODO: CHECK THE FOLLOWING LINE!
+            agent_characteristics = np.array(len(agent_list),dtype="int8")
+            for i in range(len(agent_list));
+                agent_characteristics[i] = agent_list[i].behavior
+
+
+            for agent in range(len(agent_list)):
+                number_of_interactions = np.sum(interaction_network[agent,:])
+
+                # Only change agent's behavior if interaction takes place
+                if number_of_interactions != 0:
+
+                    # create random number for potential behavior change
+                    random_number = np.random.rand()
+                    # if agent is non-smoker
+                    if agent_list[agent].behavior == 0:
+                        # Calculate probability of behavior change
+                        change_probability = C * agent_list[agent].disposition\
+                                             * np.sum(interaction_network[agent,:]* agent_characteristics / number_of_interactions)
+                        # Change behavior
+                        agent_list[agent].behavior = (random_number <= change_probability).astype("int8")
+                    # if agent is smoker
+                    else:
+                        # calculate probability of behavioral change
+                        change_probability = C * (1 - agent_list[agent].disposition)\
+                                             * (1 - np.sum(interaction_network[agent,:] * agent_characteristics / number_of_interactions))
+                        # Change behavior
+                        agent_list[agent].behavior = 1 - (random_number <= change_probability).astype("int8")
+
+            pass
+
+
 
     def __init__(self,
                  *,
@@ -123,7 +190,7 @@ class Culture (I.Culture):
                  social_influence,
                  # TODO: REALLY CLEVER TO USE ONE HUGE DICTIONARY FOR MODEL PARAMETERS?
                  model_parameters,
-                 social_distance_function,
+                 social_distance_function = None,
                  **kwargs):
         """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)  # must be the first line
@@ -134,7 +201,7 @@ class Culture (I.Culture):
         # TODO: insert assert statements
 
 
-        # set intern variables
+        # set internal variables and functions
 
         self.n_individual = model_parameters.n_individual
         self.mean_degree_pref = model_parameters.mean_degree_pref
@@ -146,36 +213,42 @@ class Culture (I.Culture):
         self.p_ai = model_parameters.p_ai
 
 
+        # provide standard social distance function
+        # TODO: TEST HOW TO TEST KEAYWORD ARGUMENT IS EMPTY!
+        if social_distance_function is None:
+            self.social_distance_function = self.__social_distance_smoker_function
+
+        if social_influence is None:
+            self.social_influence = self.__social_influence
+
+
+        # set additional variables
+
         # create nodes list from friendship network
         self.__nodes = self.friendship_network.nodes()
 
         # initialise background proximity network
-        proximity_network = igraph.GraphBase.Lattice([self.n_individual], nei=int(float(self.mean_degree_pref)/2.0),
+        proximity_network = igraph.GraphBase.Lattice([self.n_individual],
+                                                     nei=int(float(self.mean_degree_pref) / 2.0),
                                                      directed=False, mutual=True, circular=True)
         proximity_network.rewire(int(self.p_rew * self.n_individual * self.mean_degree_pref))
         small_world_distance_matrix = np.asarray(proximity_network.shortest_paths())
 
         # Generate random noise
-        random_prox_noise = np.random.random((self.n_individual,self.n_individual))
+        random_prox_noise = np.random.random((self.n_individual, self.n_individual))
         random_prox_noise = (random_prox_noise + random_prox_noise.transpose()) * .5
 
         # Derive the background proximity matrix with added noise to generate a continuum
-        __background_proximity = (1 - .1 * (small_world_distance_matrix-1) - 0.1 *
-                             random_prox_noise)
+        self.__background_proximity = (1 - .1 * (small_world_distance_matrix - 1) - 0.1 *
+                                  random_prox_noise)
 
         # Introduce a proximity offset
         # For high degrees of separation there is no proximity difference anymore
-        __background_proximity[np.where(__background_proximity <= 0.2)] = 0.2
+        self.__background_proximity[np.where(self.__background_proximity <= 0.2)] = 0.2
 
         # make sure there are no self-loops
-        for k in range(__background_proximity.shape[0]):
-            __background_proximity[k,k] = 0
-
-
-        # provide standard social distance function
-        # TODO: TEST HOW TO TEST KEAYWORD ARGUMENT IS EMPTY!
-        if social_distance_function is None:
-            pass
+        for k in range(self.__background_proximity.shape[0]):
+            self.__background_proximity[k, k] = 0
 
         pass
 
@@ -194,15 +267,15 @@ class Culture (I.Culture):
     #TODO: NEED TO IMPLEMENT GET CHARACTERISTICS FUNCTION IN INDIVIDUAL!
     #TODO: IS NUMPY ARRAY APPROPRIATE DATA TYPE?
     #TODO: Should this be a private method?
-    def get_agents_characteristics(self):
+    def get_agents_properties(self):
 
-        agent_characteristics = np.array([self.n_individual])
+        agent_properties = np.array([self.n_individual])
 
         for i in range(self.n_individual):
             #TODO: What is faster? Implementing via getter or direct access to attribute?
-            agent_characteristics[i] = self.__nodes[i].behavior
+            agent_properties[i] = self.__nodes[i].behavior
 
-        return agent_characteristics
+        return agent_properties
 
 
 
@@ -224,7 +297,7 @@ class Culture (I.Culture):
         for i in range(self.n_individual):
             for j in range(self.n_individual):
                 distances[i][j] = self.char_weight[0] * np.abs(np.abs(
-                    self.social_distance(self.__nodes[i],self.__nodes[j])) - 1)
+                    self.social_distance_function(self.__nodes[i],self.__nodes[j])) - 1)
 
         # char_weight not yet defined!
         return distances + self.char_weight[1] * self.__background_proximity
@@ -232,6 +305,12 @@ class Culture (I.Culture):
 
 
     def generate_interaction_network(self):
+        """
+        
+        Returns
+        -------
+
+        """
 
         # Create a numpy array containing all path lengths from the friendship network
         # Convert networkx graph to igraph graph via edge list (fastest way)
@@ -242,7 +321,7 @@ class Culture (I.Culture):
 
         #TODO: define p_ai and interaction_offset
 
-        exp_dec = (self.p_ai - self.interaction_offset) * \
+        interaction_probability_matrix = (self.p_ai - self.interaction_offset) * \
                   np.exp(-(distance_metric_matrix - 1) / 2.)
 
         # Find longest path
@@ -256,17 +335,31 @@ class Culture (I.Culture):
         distribution = np.histogram(distance_metric_matrix.flatten(), histo_bins, range=histo_range)
 
         for i in distribution[1][:-1]:
-            exp_dec[distance_metric_matrix == i] *= (float(distribution[0][0]) / distribution[0][i - 1])
+            interaction_probability_matrix[distance_metric_matrix == i] *= (float(distribution[0][0]) / distribution[0][i - 1])
 
-        exp_dec += self.interaction_offset
+        interaction_probability_matrix += self.interaction_offset
 
-        return exp_dec
+        # Draw uniformly distributed random numbers from the interval [9,1]
+        random_numbers = np.random.rand(self.n_individual,self.n_individual)
+        # Symmetrize
+        random_numbers = (random_numbers + random_numbers.transpose()) / 2.
+
+        # Return adjacency matrix of interaction network
+        return (random_numbers <= interaction_probability_matrix).astype("int8")
 
 
     def perform_social_influence(self):
         """
-            Changes agent's behavior depending on Culture's social_influence function, the agent's disposition, and (potentially, given the function) the behavior of agent's neighbors.
+        Changes behavior of one agent behavior depending on Culture's social_influence function, the agent's disposition, and
+        (potentially, given the function) the behavior of agent's neighbors.
+        
+        Returns
+        -------
+        
+
         """
+
+ #
 
         pass
 
@@ -276,10 +369,39 @@ class Culture (I.Culture):
     def compute_conditional_behavior_probability(self):
         pass
 
+    # MAYBE THESE MEASURES SHOULD BE VARIABLES AND BE COMPUTED AFTER EAcH STEP...
     def compute_centrality_measures(self):
         pass
+    #return something
+
+
+    def step_time(self, t):
+        """
+        Increase simulation time by one step.
+        
+        Parameters
+        ----------
+        t
+
+        Returns
+        -------
+        New simulation time that is increased by one step.
+
+        """
+        return t + 1
+
 
     def one_step(self, t):
+        """
+        
+        Parameters
+        ----------
+        t
+
+        Returns
+        -------
+
+        """
         pass
 
     processes = []  # TODO: instantiate and list process objects here
