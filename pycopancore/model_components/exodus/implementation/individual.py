@@ -128,19 +128,20 @@ class Individual (I.Individual):
         """Do social update.
         
         Either migration or de- and re-friending takes place"""
-        # Chose Acquaintance:
-        chosen_one = random.choice(self.acquaintances)
-        # Get the Chosen One's Profession:
-        chosen_profession = chosen_one.profession
-        # Check, whether same profession, therefore define
-        # if migration or rewiring takes place or nothing
-        if chosen_profession != self.profession:
-            # Compare utility and decide if migration takes place:
-            if self.decide_migration(chosen_one):
-                # Migrate
-                self.migrate(chosen_one.cell)
-            else:
-                self.rewire(chosen_one)
+        # Chose Acquaintance, if existent:
+        if self.acquaintances:
+            chosen_one = random.choice(self.acquaintances)
+            # Get the Chosen One's Profession:
+            chosen_profession = chosen_one.profession
+            # Check, whether same profession, therefore define
+            # if migration or rewiring takes place or nothing
+            if chosen_profession != self.profession:
+                # Compare utility and decide if migration takes place:
+                if self.decide_migration(chosen_one):
+                    # Migrate
+                    self.migrate(chosen_one.cell)
+                else:
+                    self.rewire(chosen_one)
 
     def decide_migration(self, neighbour):
         """Decide, if rewire or migration takes place.
@@ -184,6 +185,11 @@ class Individual (I.Individual):
         print('     Acquaintances are',
               self.acquaintances,
               type(self.acquaintances))
+        # Check if individuals has acquaintances:
+        if not self.acquaintances:
+            # If so, connect to random one in model:
+            random_one = random.choice(tuple(self.world.individuals))
+            self.culture.acquaintance_network.add_edge(self, random_one)
         random_neighbour = random.choice(self.acquaintances)
         third_degree_neighbors = []
         break_cond = False
@@ -247,6 +253,8 @@ class Individual (I.Individual):
         self._subjective_income_rank = None
         self._farm_size = None
         self._gross_income = None
+        print('individual is migrated, now society has population of',
+              len(self.society.individuals))
 
     processes = [
         Event("social update",

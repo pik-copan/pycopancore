@@ -9,6 +9,7 @@ import random
 from scipy import stats
 from time import time
 import datetime as dt
+import numpy as np
 
 import plotly.offline as py
 import plotly.graph_objs as go
@@ -136,3 +137,55 @@ start = time()
 traj = r.run(t_1=timeinterval, dt=timestep)
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
+
+# Plotting:
+t = np.array(traj['t'])
+for key, val in traj.items():
+    print('key', key,)
+
+print(traj[M.Metabolism.water_price])
+# society_individuals = np.array([traj[M.Society.individuals][soc]
+#                                for soc in M.Society.instances])
+
+# population_data = []
+# print(society_individuals)
+# for i, s in enumerate(municipalities):
+#     population_data.append(go.Scatter(
+#         x=t,
+#         y=len(traj[M.Society.individuals][s]),
+#         name='population of municipality {}'.format(i),
+#         mode='lines',
+#         line=dict(
+#             color="green",
+#             width=4)
+#     ))
+#
+# for i, s in enumerate(counties):
+#     population_data.append(go.Scatter(
+#         x=t,
+#         y=len(s.individuals),
+#         name='population of county {}'.format(i),
+#         mode='lines',
+#         line=dict(
+#             color="red",
+#             width=4)
+#     ))
+
+pdf_values = []
+for i, s in enumerate(M.Society.instances):
+    pdf_values.append(go.Scatter(
+        x=t,
+        y=traj[M.Society.liquidity_sigma][s],
+        name='sigma',
+        mode='line',
+        line=dict(color='blue', width=4)
+    ))
+
+layout = dict(title='Exodus',
+              xaxis=dict(title='time [yr]'),
+              yaxis=dict(title='value'),
+              )
+
+fig = dict(data=[pdf_values[0], pdf_values[0]],
+           layout=layout)
+py.plot(fig, filename='Exodus first results.html')
