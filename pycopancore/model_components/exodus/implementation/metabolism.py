@@ -71,9 +71,6 @@ class Metabolism (I.Metabolism):
         price = p_and_ys[0]
         ys = p_and_ys[1:]
         errors = np.zeros(shape=len(p_and_ys))
-        # Calculate pdfs for all societies:
-        for s in met.world.societies:
-            s.liquidity_pdf()
         for i, e in enumerate(met.world.individuals):
             # Get the individual's society's pdf of liquidity:
             sigma = e.society.liquidity_sigma
@@ -102,6 +99,9 @@ class Metabolism (I.Metabolism):
     def do_market_clearing(self, unused_t):
         """Calculate water price and market movements."""
         print('market cleraing takes place at time', unused_t)
+        # Calculate pdfs for all societies:
+        for s in self.world.societies:
+            s.liquidity_pdf()
         liquidities = []
         for i in self.world.individuals:
             liquidities.append(i.liquidity)

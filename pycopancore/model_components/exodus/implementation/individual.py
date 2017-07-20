@@ -181,7 +181,10 @@ class Individual (I.Individual):
         # Remove edge:
         self.culture.acquaintance_network.remove_edge(self, neighbour)
         # Chose another random neighbour
-        random_neighbour = random.choice[self.acquaintances]
+        print('     Acquaintances are',
+              self.acquaintances,
+              type(self.acquaintances))
+        random_neighbour = random.choice(self.acquaintances)
         third_degree_neighbors = []
         break_cond = False
         # Iterate through second degree neighbours of random neighbour:
@@ -213,7 +216,9 @@ class Individual (I.Individual):
                     break
         # if nobody has connected yet, chose any random individual:
         if break_cond is False:
-            random_guy = random.choice(self.world.individuals)
+            # tuple is necessary since self.world.individuals is a set,
+            # therefore random.choice alone does not work!
+            random_guy = random.choice(tuple(self.world.individuals))
             if (random_guy != neighbour
                     and random_guy not in self.acquaintances):
                 self.culture.acquaintance_network.add_edge(self, random_guy)
@@ -234,7 +239,7 @@ class Individual (I.Individual):
         # Change Profession:
         if cell.society.municipality_like is False:
             self.profession = 'farmer'
-        if cell.society.municipality_like is True:
+        elif cell.society.municipality_like is True:
             self.profession = 'townsman'
         else:
             raise TypeError('Neither Municipality nor County!')

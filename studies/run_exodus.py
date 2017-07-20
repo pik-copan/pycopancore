@@ -97,7 +97,7 @@ for t in range(nt):
                                  nutrition=1000))
 
 # Create Network:
-expected_degree = 8
+expected_degree = 5
 
 # from run_adaptive_voter_model:
 
@@ -123,11 +123,9 @@ erdosrenyify(culture.acquaintance_network, p=expected_degree / (nf + nt))
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 start = time()
-
-print("done ({})".format(dt.timedelta(seconds=(time() - start))))
-
 # Run market clearing once:
 metabolism.do_market_clearing(0)
+print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 print('\n runner starting')
 # Runner is instantiated
