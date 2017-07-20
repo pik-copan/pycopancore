@@ -15,7 +15,8 @@ from .. import interface as I
 # from .... import master_data_model as D
 
 from scipy import stats
-import math, random
+import math
+import random
 
 
 class Society (I.Society):

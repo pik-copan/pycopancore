@@ -33,19 +33,6 @@ class World (I.World):
         # Following method is defined in abstract_entity_mixin which is
         # inherited only by mixing in the model:
         self.assert_valid()
-        pass
-
-    def deactivate(self):
-        """Deactivate a world."""
-        # TODO: add custom code here:
-        pass
-        super().deactivate()  # must be the last line
-
-    def reactivate(self):
-        """Reactivate a world."""
-        super().reactivate()  # must be the first line
-        # TODO: add custom code here:
-        pass
 
     # process-related methods:
 

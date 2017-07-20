@@ -126,7 +126,7 @@ class Individual (I.Individual):
 
     def social_update(self, unused_t):
         """Do social update.
-        
+
         Either migration or de- and re-friending takes place"""
         # Chose Acquaintance, if existent:
         if self.acquaintances:
@@ -145,11 +145,11 @@ class Individual (I.Individual):
 
     def decide_migration(self, neighbour):
         """Decide, if rewire or migration takes place.
-        
+
         Parameters
         ----------
         neighbour: exodus.individual
-            Object of type individual that has different profession than the 
+            Object of type individual that has different profession than the
             self object.
 
         Returns
@@ -172,7 +172,7 @@ class Individual (I.Individual):
 
     def rewire(self, neighbour):
         """Do rewiring.
-        
+
         Detaches from neighbour and rewires to a neighbour of degree n.
         Parameters
         ----------
@@ -234,7 +234,7 @@ class Individual (I.Individual):
 
     def migrate(self, cell):
         """Migrate to Cell.
-        
+
         Parameters
         ----------
         cell: exodus.cell

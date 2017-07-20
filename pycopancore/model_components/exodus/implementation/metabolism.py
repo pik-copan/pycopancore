@@ -66,7 +66,7 @@ class Metabolism (I.Metabolism):
         Returns
         -------
         errors: numpy.array
-            1 D array with equations to be solved by fsolve 
+            1 D array with equations to be solved by fsolve
         """
         price = p_and_ys[0]
         ys = p_and_ys[1:]
