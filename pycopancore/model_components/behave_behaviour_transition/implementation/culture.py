@@ -31,7 +31,7 @@ class Culture (I.Culture):
     # 2. An array of characteristics is produced in the run file (sure about that?), hence it should be placed there.
     # TODO BUT: Maybe the model component should provide this test since it is essential for the BEHAVE model.
     # TODO: Should more parameters be passed on to the function?
-    def __kolmogorov_smirnov_test(self, current_distribution, target_distribution):
+    def __kolmogorov_smirnov_test(self, current_distribution, target_distribution, distribution_function):
         """
        This function governs the transition between two distributions.
 
@@ -64,7 +64,7 @@ class Culture (I.Culture):
         def integrate_cdf(input_array):
             cdf = np.zeros(input_array.shape[0])
             for i in range(input_array.shape[0]):
-                cdf[i] = integ.quad(lambda x: distribution_function(yb, x),
+                cdf[i] = scipy.integ.quad(lambda x: distribution_function(x),
                                     0, input_array[i])[0]
             return cdf
 
@@ -91,14 +91,14 @@ class Culture (I.Culture):
             random_sign[random_sign == 0] = 1
             # add the noise
             # TODO: WHAT IS THE ROLE OF distr_dev? Does it just provide some magnitude for the random shift?
-            disp_distr_tp1 = (current_distribution + tr_noise_coeff * random_sign *
+            new_distribution = (current_distribution + tr_noise_coeff * random_sign *
                               random_noise_increase * distr_dev)
-            # TODO: CHANGE NAME OF DISP_DISTR_TPL
-            # check for boundaries
-            disp_distr_tp1[disp_distr_tp1 > 1] = current_distribution[disp_distr_tp1 > 1]
-            disp_distr_tp1[disp_distr_tp1 < 0] = current_distribution[disp_distr_tp1 < 0]
+            # check for boundaries, keep the old values where the new values exceed boundaries
+            new_distribution[new_distribution > 1] = current_distribution[new_distribution > 1]
+            new_distribution[new_distribution < 0] = current_distribution[new_distribution < 0]
+
             # Kolmogorov-Smirnov test
-            kolm_smir_step = scipy.stats.kstest(disp_distr_tp1, integrate_cdf)[0]
+            kolm_smir_step = scipy.stats.kstest(new_distribution, integrate_cdf)[0]
             # print('kolm_smir_step',kolm_smir_step)
             k += 1
             # in case of non-convergence, increase the standard deviation for the
@@ -112,82 +112,96 @@ class Culture (I.Culture):
                     print('DISTRIBUTION TRANSITION FAILED',
                           'kolm_smir_step', kolm_smir_step, 'yb', yb)
                     return current_distribution
-        return disp_distr_tp1
+        # If transition works, return new distribution
+        return new_distribution
 
+
+    def __calculate_transition_array(self, distribution_function, parameter_array):
+
+        # produce distribution function
+        # create transition array for agent characteristics
+        # produce first distribution using rejection sampling
+        #
+        # for i in parameter_range:
+        #   create distribution function from parameter value
+        #   create new distribution using rejection sampling
+        #   array.append(self.__kolmogorov_smirnov_test(current_distribution, new_distribution, distribution_function))
+        # return transition array
         pass
 
-        @staticmethod
-        def __social_distance_smoker_function(agent_i, agent_j):
-            """
-            Returns social distance of two agents for the smoker case.
-            Cf. Schleussner et al. (2016), p. 8.
-            
-            Parameters
-            ----------
-            agent_i: Individual in the contact network
-            agent_j: Individual in the contact network
 
-            Returns
-            -------
-            Absolute value of difference of behavior variable of both agents, which is symmetric. 
-            """
-            return np.abs(agent_i.behavior - agent_j.behavior)
+    @staticmethod
+    def __social_distance_smoker_function(agent_i, agent_j):
+        """
+        Returns social distance of two agents for the smoker case.
+        Cf. Schleussner et al. (2016), p. 8.
+        
+        Parameters
+        ----------
+        agent_i: Individual in the contact network
+        agent_j: Individual in the contact network
+
+        Returns
+        -------
+        Absolute value of difference of behavior variable of both agents, which is symmetric. 
+        """
+        return np.abs(agent_i.behavior - agent_j.behavior)
 
 
-        @staticmethod
-        def __social_influence(agent_list, interaction_network):
-            """
-            Updates behavior of all agent depending on agent's disposition and behavior of interacting agents.
-            Only for the fully coupled case.
-            
-            Parameters
-            ----------
-            agent_list: list of Individual in contact network
-            interaction_network: np.array[N,N] of dtype int comprising all interactions taking place during current time step
-            """
+    @staticmethod
+    def __social_influence(agent_list, interaction_network):
+        """
+        Updates behavior of all agent depending on agent's disposition and behavior of interacting agents.
+        Only for the fully coupled case.
+        
+        Parameters
+        ----------
+        agent_list: list of Individual in contact network
+        interaction_network: np.array[N,N] of dtype int comprising all interactions taking place during current time step
+        """
 
-            # TODO: LOOK AT THE FOLLOWING PARAMETER
-            # Parameter controlling the equilibrium stochastic noise.
-            C = 0.1
-            # Create array of agent characteristics
-            agent_behavior = np.zeros((len(agent_list),1),dtype="int8")
-            # Create alike array for new, updated agent characteristics
-            agent_behavior_update = agent_behavior.copy()
+        # TODO: LOOK AT THE FOLLOWING PARAMETER
+        # Parameter controlling the equilibrium stochastic noise.
+        C = 0.1
+        # Create array of agent characteristics
+        agent_behavior = np.zeros((len(agent_list),1),dtype="int8")
+        # Create alike array for new, updated agent characteristics
+        agent_behavior_update = agent_behavior.copy()
 
-            # Get behavior of all agents of last time step
-            for i in range(len(agent_list)):
-                agent_behavior[i] = agent_list[i].behavior
+        # Get behavior of all agents of last time step
+        for i in range(len(agent_list)):
+            agent_behavior[i] = agent_list[i].behavior
 
-            # Perform social influence for all agents in the contact network
-            for agent in range(len(agent_list)):
-                number_of_interactions = np.sum(interaction_network[agent,:])
+        # Perform social influence for all agents in the contact network
+        for agent in range(len(agent_list)):
+            number_of_interactions = np.sum(interaction_network[agent,:])
 
-                # Only change agent's behavior if interaction takes place
-                if number_of_interactions != 0:
+            # Only change agent's behavior if interaction takes place
+            if number_of_interactions != 0:
 
-                    # create random number for potential behavior change
-                    random_number = np.random.rand()
-                    # if agent is non-smoker
-                    if agent_list[agent].behavior == 0:
-                        # Calculate probability of behavior change
-                        change_probability = C * agent_list[agent].disposition\
-                                             * np.sum(interaction_network[agent,:]* agent_behavior / number_of_interactions)
-                        # Change behavior
-                        agent_behavior_update[agent] = (random_number <= change_probability).astype("int8")
-                    # if agent is smoker
-                    else:
-                        # calculate probability of behavioral change
-                        change_probability = C * (1 - agent_list[agent].disposition)\
-                                             * (1 - np.sum(interaction_network[agent,:] * agent_behavior / number_of_interactions))
-                        # Change behavior
-                        agent_behavior_update[agent] = 1 - (random_number <= change_probability).astype("int8")
-
-                # If there are no interactions leave behavior unchanged
+                # create random number for potential behavior change
+                random_number = np.random.rand()
+                # if agent is non-smoker
+                if agent_list[agent].behavior == 0:
+                    # Calculate probability of behavior change
+                    change_probability = C * agent_list[agent].disposition\
+                                         * np.sum(interaction_network[agent,:]* agent_behavior / number_of_interactions)
+                    # Change behavior
+                    agent_behavior_update[agent] = (random_number <= change_probability).astype("int8")
+                # if agent is smoker
                 else:
-                    agent_behavior_update[agent] = agent_behavior[agent]
-            # Write new agent behaviors from array to Individuals in contact network
-            for i in range(len(agent_list)):
-                agent_list[i].behavior = agent_behavior_update[i]
+                    # calculate probability of behavioral change
+                    change_probability = C * (1 - agent_list[agent].disposition)\
+                                         * (1 - np.sum(interaction_network[agent,:] * agent_behavior / number_of_interactions))
+                    # Change behavior
+                    agent_behavior_update[agent] = 1 - (random_number <= change_probability).astype("int8")
+
+            # If there are no interactions leave behavior unchanged
+            else:
+                agent_behavior_update[agent] = agent_behavior[agent]
+        # Write new agent behaviors from array to Individuals in contact network
+        for i in range(len(agent_list)):
+            agent_list[i].behavior = agent_behavior_update[i]
 
 
 
@@ -354,16 +368,23 @@ class Culture (I.Culture):
 
         """
 
- #
+        #
 
         pass
 
 
-    def update_contact_network(self):
+    def update_contact_network(self, interaction_network):
 
         proximity_matrix = self.get_proximity_matrix()
         old_contact_network = nx.adjacency_matrix(self.friendship_network)
+        # how to get degree preferences
 
+        # for each agent:
+        #   create list of contacts and interactions
+        #   sort each list according to proximity between agents
+        #   cut list by degree preference
+
+        # check for bidirectionality
 
 
         pass
@@ -404,6 +425,13 @@ class Culture (I.Culture):
         -------
 
         """
+
+        # generate_interaction_network
+        # perform social influence
+        # calculate proximity matrix
+        # update contact network
+        # Optionally apply external forcing
+
         pass
 
     processes = []  # TODO: instantiate and list process objects here
