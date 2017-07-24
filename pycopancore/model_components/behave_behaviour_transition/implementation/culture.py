@@ -207,12 +207,9 @@ class Culture (I.Culture):
 
     def __init__(self,
                  *,
-                 # TODO: Do I need the degree preference in CULTURE? Isn't that a property of the agent?
-                 # TODO: Two things to consider: 1. The degree preference does not change during the simulation,  hence it can easily be stored in an array which is an attribute of culture. 2. For the sake of clarity and to uphold the idea of the framework, the degree preference can be extracted from each agent at every step. QUESTION: Is this too slow?
-                 degree_preference=None,
                  # For a given agent, this function executes the behavioral change
                  # Here it is possible to implement various
-                 social_influence,
+                 social_influence = None,
                  # TODO: REALLY CLEVER TO USE ONE HUGE DICTIONARY FOR MODEL PARAMETERS?
                  model_parameters,
                  social_distance_function = None,
@@ -228,13 +225,13 @@ class Culture (I.Culture):
 
         # set internal variables and functions
 
-        self.n_individual = model_parameters.n_individual
-        self.mean_degree_pref = model_parameters.mean_degree_pref
-        self.std_degree_pref = model_parameters.std_degree_pref
-        self.p_rew = model_parameters.p_rew
-        self.char_weight = model_parameters.char_weight
-        self.interaction_offset = model_parameters.interaction_offset
-        self.p_ai = model_parameters.p_ai
+        self.n_individual = model_parameters['n_individuals']
+        self.mean_degree_pref = model_parameters['mean_degree_pref']
+        self.std_degree_pref = model_parameters['std_degree_pref']
+        self.p_rew = model_parameters['p_rew']
+        self.char_weight = model_parameters['char_weight']
+        self.interaction_offset = model_parameters['interaction_offset']
+        self.p_ai = model_parameters['p_ai']
 
 
         # provide standard social distance function
@@ -243,16 +240,12 @@ class Culture (I.Culture):
         else:
             self.social_distance = social_distance_function
 
+        # provide standard social influence function
         if social_influence is None:
             self.social_influence = self.__social_influence
         else:
             self.social_influence = social_influence
 
-
-        # set additional variables
-
-        # create nodes list from friendship network
-        self.__nodes = self.friendship_network.nodes()
 
         # initialise background proximity network
         proximity_network = igraph.GraphBase.Lattice([self.n_individual],
@@ -287,6 +280,14 @@ class Culture (I.Culture):
         :param other_argument: 
         :return: 
         """
+
+        # create nodes list from friendship network
+        self.__nodes = self.friendship_network.nodes()
+
+        self.degree_preference = []
+        for i in range(len(self.__nodes)):
+            self.degree_preference[i] = self.__nodes[i].degree_preference
+
         pass
     # process-related methods:
 
