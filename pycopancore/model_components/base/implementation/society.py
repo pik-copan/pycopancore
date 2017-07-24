@@ -58,7 +58,6 @@ class Society (I.Society, abstract.Society):
         self.world = world
         self._next_higher_society = None
         self.next_higher_society = next_higher_society
-        self._population = None
         self.population = population
 
         # make sure all variable values are valid:
@@ -102,19 +101,6 @@ class Society (I.Society, abstract.Society):
         self._next_higher_society = s
         # reset dependent caches:
         self.higher_societies = unknown
-
-    @property
-    def population(self):
-        """Get the population of the society"""
-        return self._population
-
-    @population.setter
-    def population(self, p):
-        """Set the World the Society is part of."""
-        if p is not None:
-            self._population = p
-        if p is None:
-            self._population = len(self.individuals)
 
     # getters for backwards references and convenience variables:
 

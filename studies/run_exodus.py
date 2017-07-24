@@ -19,7 +19,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 100
+timeinterval = 1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nm = 1  # number of municipalities, also cities
@@ -78,24 +78,22 @@ for f in range(nf):
     # Chose cell
     farmland = random.choice(farmland_cells)
     # determine liquidity before first market:
-    liq = stats.lognorm.rvs(scale=500, s=0.34, loc=0)
+    liq = stats.lognorm.rvs(scale=300, s=0.34, loc=0)
     farmers.append(M.Individual(cell=farmland,
                                 profession='farmer',
                                 outspokensess=1,
-                                liquidity=liq,
-                                nutrition=1000))
+                                liquidity=liq))
 # Instantiate townsmen:
 townsmen = []
 for t in range(nt):
     # Chose cell
     city = random.choice(city_cells)
     # determine liquidity before first market:
-    liq = stats.lognorm.rvs(scale=500, s=0.34, loc=0)
+    liq = stats.lognorm.rvs(scale=700, s=0.34, loc=0)
     townsmen.append(M.Individual(cell=city,
                                  profession='townsman',
                                  outspokensess=1,
-                                 liquidity=liq,
-                                 nutrition=1000))
+                                 liquidity=liq))
 
 # Create Network:
 expected_degree = 5
@@ -143,7 +141,7 @@ t = np.array(traj['t'])
 for key, val in traj.items():
     print('key', key,)
 
-print(traj[M.Metabolism.water_price])
+# print(traj[M.Metabolism.water_price])
 # society_individuals = np.array([traj[M.Society.individuals][soc]
 #                                for soc in M.Society.instances])
 

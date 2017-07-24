@@ -94,11 +94,13 @@ class Society (I.Society):
 
     def liquidity_pdf(self):
         """Calculate the PDF of the liquidity of the society."""
-        print('liquidity_pdf is calculated')
+        print('liquidity_pdf is calculated for society', self)
         liquidities = []
         for individual in self.individuals:
             liquidities.append(individual.liquidity)
         self.liquidity_sigma, self.liquidity_loc, self.liquidity_mean = (
             stats.lognorm.fit(liquidities, floc=0))
+        print('sigma, loc, mean are',
+              self.liquidity_sigma, self.liquidity_loc, self.liquidity_mean)
 
     processes = []
