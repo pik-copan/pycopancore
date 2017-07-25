@@ -45,8 +45,12 @@ class Metabolism (I.Metabolism):
     @property
     def total_gross_income(self):
         """Get the total gross income."""
+        # Chose a world as world. When having several, this must be changed!
+        for w in self.worlds:
+            world = w
+            break
         tgi = 0
-        for individual in self.world.individuals:
+        for individual in world.individuals:
             tgi += individual.gross_income
         return tgi
 
@@ -59,7 +63,7 @@ class Metabolism (I.Metabolism):
         Parameters
         ----------
         logp_and_logys: list
-            list with log of current price of water and all individuals' log 
+            list with log of current price of water and all individuals' log
             of liquidity.
         self: entity object
             Metabolism of the world in which the market clearing is calculated
@@ -72,7 +76,11 @@ class Metabolism (I.Metabolism):
         price = np.exp(logp_and_logys[0])
         ys = np.exp(logp_and_logys[1:])
         errors = np.zeros(shape=len(logp_and_logys))
-        for i, e in enumerate(self.world.individuals):
+        # Chose a world as world. When having several, this must be changed!
+        for w in self.worlds:
+            world = w
+            break
+        for i, e in enumerate(world.individuals):
             # Get the individual's society's pdf of liquidity:
             sigma = e.society.liquidity_sigma
             loc = e.society.liquidity_loc
@@ -100,11 +108,15 @@ class Metabolism (I.Metabolism):
     def do_market_clearing(self, unused_t):
         """Calculate water price and market movements."""
         print('market cleraing takes place at time', unused_t)
+        # Chose a world as world. When having several, this must be changed!
+        for w in self.worlds:
+            world = w
+            break
         # Calculate pdfs for all societies:
-        for s in self.world.societies:
+        for s in world.societies:
             s.liquidity_pdf()
         log_liquidities = []
-        for i in self.world.individuals:
+        for i in world.individuals:
             log_liquidities.append(np.log(i.liquidity))
         logp_and_logys = [np.log(self.water_price)] + log_liquidities
         solution = optimize.root(fun=self.market_clearing_rhs,
@@ -114,7 +126,7 @@ class Metabolism (I.Metabolism):
         print(solution)
         self.water_price = np.exp(solution['x'][0])
         print('solution', solution)
-        for i, e in enumerate(self.world.individuals):
+        for i, e in enumerate(world.individuals):
             # Account for shift, since price of water is at first position of
             # list, write solution of market clearing into entities:
             e.liquidity = np.exp(solution['x'][i+1])
