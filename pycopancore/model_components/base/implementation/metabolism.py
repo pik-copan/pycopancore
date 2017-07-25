@@ -32,8 +32,13 @@ class Metabolism (I.Metabolism, abstract.Metabolism):
 
         """
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
-        pass
+
+        self._worlds = set()
+
+    @property  # read-only
+    def worlds(self):
+        """Get the set of Worlds on this Metabolism."""
+        return self._worlds
 
     # process-related methods:
 

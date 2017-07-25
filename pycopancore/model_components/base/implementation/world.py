@@ -96,24 +96,30 @@ class World (I.World, abstract.World):
     @nature.setter
     def nature(self, n):
         """Set world's nature."""
+        if self._nature is not None:
+            # first deregister from previous nature's list of worlds:
+            self._nature.worlds.remove(self)
         if n is not None:
             assert isinstance(n, I.Nature), "Nature must be taxon type Nature"
-            n._world = self
-            self._nature = n
+            n._worlds.add(self)
+        self._nature = n
 
     @property
     def metabolism(self):
-        """Get world's metabolism."""
+        """Get the World the Cell is part of."""
         return self._metabolism
 
     @metabolism.setter
     def metabolism(self, m):
-        """Set world's metabolism."""
+        """Set the Metabolism the World is part of."""
+        if self._metabolism is not None:
+            # first deregister from previous metabolism's list of worlds:
+            self._metabolism.worlds.remove(self)
         if m is not None:
             assert isinstance(m, I.Metabolism), \
-                "Metabolism must be taxon type Metabolism"
-            m._world = self
-            self._metabolism = m
+                "Metabolism must be of process taxon type Metabolism"
+            m._worlds.add(self)
+        self._metabolism = m
 
     @property
     def culture(self):
@@ -123,11 +129,14 @@ class World (I.World, abstract.World):
     @culture.setter
     def culture(self, c):
         """Set world's culture."""
+        if self._culture is not None:
+            # first deregister from previous culture's list of worlds:
+            self._culture.worlds.remove(self)
         if c is not None:
             assert isinstance(c, I.Culture), \
                 "Culture must be taxon type Culture"
-            c._world = self
-            self._culture = c
+            c._worlds.add(self)
+        self._culture = c
 
     @property  # read-only
     def societies(self):

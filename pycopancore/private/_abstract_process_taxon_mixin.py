@@ -35,7 +35,6 @@ class _AbstractProcessTaxonMixin(object):
         else:
             self.__class__.instances = [self]
 
-        self._world = None
 
     # the repr and the str methods were removed in the master/prototype_jobst1
     # Do we really don't want them anymore?
@@ -64,8 +63,3 @@ class _AbstractProcessTaxonMixin(object):
             except:
                 return
             v.assert_valid(val)
-
-    @property
-    def world(self):
-        """Get the process-taxons world."""
-        return self._world

@@ -42,9 +42,15 @@ class Culture (I.Culture, abstract.Culture):
             acquaintance_network = Graph()
         assert isinstance(acquaintance_network, Graph)
         self.acquaintance_network = acquaintance_network
+        self._worlds = set()
 
         # make sure all variable values are valid:
         self.assert_valid()
+
+    @property  # read-only
+    def worlds(self):
+        """Get the set of Worlds on this Nature."""
+        return self._worlds
 
     # no process-related methods
 

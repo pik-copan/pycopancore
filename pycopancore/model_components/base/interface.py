@@ -1,6 +1,6 @@
 """Base model component interface.
 
-Specifies the variables used by this component, 
+Specifies the variables used by this component,
 by entity type and process taxon
 """
 
@@ -41,6 +41,7 @@ class Nature (object):
     """
 
     geographic_network = NAT.geographic_network  # copies the specification from the master data model
+    worlds = SetVariable("worlds", "set of Worlds on this Nature")
 
 
 class Metabolism (object):
@@ -49,7 +50,7 @@ class Metabolism (object):
     It contains all variables specified as mandatory ("base variables").
     """
 
-    pass  # no variables so far
+    worlds = SetVariable("worlds", "set of Worlds on this Metabolism")
 
 
 class Culture (object):
@@ -59,6 +60,7 @@ class Culture (object):
     """
 
     acquaintance_network = CUL.acquaintance_network
+    worlds = SetVariable("worlds", "set of Worlds on this Culture")
 
 
 # entity types:
