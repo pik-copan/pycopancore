@@ -117,7 +117,7 @@ class Individual (I.Individual):
         sri = stats.lognorm.cdf(self.liquidity,
                                 s=self.society.liquidity_sigma,
                                 loc=self.society.liquidity_loc,
-                                scale=self.society.liquidity_mean)
+                                scale=self.society.liquidity_median)
         self._subjective_income_rank = sri
         return self._subjective_income_rank
 

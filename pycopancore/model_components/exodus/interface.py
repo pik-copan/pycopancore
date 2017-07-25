@@ -94,8 +94,8 @@ class Society (object):
                          lower_bound=0)
     liquidity_sigma = Variable("Liquidity sigma",
                                "Sigma parameter of pdf of liquidity")
-    liquidity_mean = Variable("Liquidity Mean",
-                              "Mean of pdf of liquidity")
+    liquidity_median = Variable("Liquidity Mean",
+                                "Median of pdf of liquidity")
     liquidity_loc = Variable("Liquidity location",
                              "Location parameter of pdf of liquidity")
 

@@ -15,6 +15,7 @@ from .. import interface as I
 # from .... import master_data_model as D
 
 from scipy import stats
+import numpy as np
 import math
 import random
 
@@ -39,7 +40,7 @@ class Society (I.Society):
         self.base_mean_income = base_mean_income
         self.pdf_sigma = pdf_sigma
 
-        self.liquidity_mean = None
+        self.liquidity_median = None
         self.liquidity_sigma = None
         self.liquidity_loc = None
 
@@ -57,8 +58,9 @@ class Society (I.Society):
             # Use log-normal
             number = random.random()
             sigma = self.pdf_sigma
-            mean = self.mean_income_or_farmsize
-            lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=mean)
+            # calculate ´median from mean:
+            median = (self.mean_income_or_farmsize / np.exp(sigma**2 / 2))
+            lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=median)
             return lognormal_random
         if self.pareto_distribution_type is True:
             # Use pareto:
@@ -98,9 +100,9 @@ class Society (I.Society):
         liquidities = []
         for individual in self.individuals:
             liquidities.append(individual.liquidity)
-        self.liquidity_sigma, self.liquidity_loc, self.liquidity_mean = (
+        self.liquidity_sigma, self.liquidity_loc, self.liquidity_median = (
             stats.lognorm.fit(liquidities, floc=0))
-        print('sigma, loc, mean are',
-              self.liquidity_sigma, self.liquidity_loc, self.liquidity_mean)
+        print('sigma, loc, median are',
+              self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
 
     processes = []

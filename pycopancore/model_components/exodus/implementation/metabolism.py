@@ -84,12 +84,12 @@ class Metabolism (I.Metabolism):
             # Get the individual's society's pdf of liquidity:
             sigma = e.society.liquidity_sigma
             loc = e.society.liquidity_loc
-            mean = e.society.liquidity_mean
+            median = e.society.liquidity_median
             # Calculate the individual's subjective income rank:
             sri = stats.lognorm.cdf(ys[i],
                                     s=sigma,
                                     loc=loc,
-                                    scale=mean)
+                                    scale=median)
             # Get the rhs of the equation for the individual
             errors[1 + i] = (sri - (e.harvest * price
                                     - ys[i] + e.gross_income
@@ -97,7 +97,7 @@ class Metabolism (I.Metabolism):
                              * stats.lognorm.pdf(ys[i],
                                                  s=sigma,
                                                  loc=loc,
-                                                 scale=mean
+                                                 scale=median
                                                  )
                              )
         # Sum over liquidity must be equal to sum over gross income:
