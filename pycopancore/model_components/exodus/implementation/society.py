@@ -12,6 +12,8 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from pycopancore.model_components.base import interface as B
+from pycopancore import Explicit
 # from .... import master_data_model as D
 
 from scipy import stats
@@ -105,4 +107,15 @@ class Society (I.Society):
         print('sigma, loc, median are',
               self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
 
-    processes = []
+    def calc_population(self, unused_t):
+        """Calculate the societies population explicitly.
+
+        Parameters
+        ----------
+        unused_t
+        """
+        self.population = len(self.individuals)
+
+    processes = [Explicit(
+        'calculate population', [B.Society.population], calc_population)
+    ]

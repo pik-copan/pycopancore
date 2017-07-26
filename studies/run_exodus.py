@@ -141,49 +141,41 @@ t = np.array(traj['t'])
 for key, val in traj.items():
     print('key', key,)
 
-# print(traj[M.Metabolism.water_price])
-# society_individuals = np.array([traj[M.Society.individuals][soc]
-#                                for soc in M.Society.instances])
+print(traj[M.Metabolism.water_price])
+city_population = np.array([traj[M.Society.population][soc]
+                      for soc in municipalities])
+county_population = np.array([traj[M.Society.population][soc]
+                      for soc in counties])
 
-# population_data = []
-# print(society_individuals)
-# for i, s in enumerate(municipalities):
-#     population_data.append(go.Scatter(
-#         x=t,
-#         y=len(traj[M.Society.individuals][s]),
-#         name='population of municipality {}'.format(i),
-#         mode='lines',
-#         line=dict(
-#             color="green",
-#             width=4)
-#     ))
-#
-# for i, s in enumerate(counties):
-#     population_data.append(go.Scatter(
-#         x=t,
-#         y=len(s.individuals),
-#         name='population of county {}'.format(i),
-#         mode='lines',
-#         line=dict(
-#             color="red",
-#             width=4)
-#     ))
-
-pdf_values = []
-for i, s in enumerate(M.Society.instances):
-    pdf_values.append(go.Scatter(
+population_data = []
+for i, s in enumerate(municipalities):
+    population_data.append(go.Scatter(
         x=t,
-        y=traj[M.Society.liquidity_sigma][s],
-        name='sigma',
-        mode='line',
-        line=dict(color='blue', width=4)
+        y=city_population[i],
+        name='population of municipality {}'.format(i),
+        mode='lines',
+        line=dict(
+            color="green",
+            width=4)
     ))
+
+for i, s in enumerate(counties):
+    population_data.append(go.Scatter(
+        x=t,
+        y=county_population[i],
+        name='population of county {}'.format(i),
+        mode='lines',
+        line=dict(
+            color="red",
+            width=4)
+    ))
+
 
 layout = dict(title='Exodus',
               xaxis=dict(title='time [yr]'),
               yaxis=dict(title='value'),
               )
 
-fig = dict(data=[pdf_values[0], pdf_values[0]],
+fig = dict(data=[population_data[0], population_data[1]],
            layout=layout)
 py.plot(fig, filename='Exodus first results.html')
