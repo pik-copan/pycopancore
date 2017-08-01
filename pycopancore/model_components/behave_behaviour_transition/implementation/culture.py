@@ -156,7 +156,7 @@ class Culture (I.Culture):
         
         Parameters
         ----------
-        agent_list: list of Individual in contact network
+        agent_list: list of Individuals in contact network
         interaction_network: np.array[N,N] of dtype int comprising all interactions taking place during current time step
         """
 
@@ -242,9 +242,9 @@ class Culture (I.Culture):
 
         # provide standard social influence function
         if social_influence is None:
-            self.social_influence = self.__social_influence
+            self.perform_social_influence = self.__social_influence
         else:
-            self.social_influence = social_influence
+            self.perform_social_influence = social_influence
 
 
         # initialise background proximity network
@@ -273,7 +273,13 @@ class Culture (I.Culture):
         pass
 
 
-    def some_configure_method(self, other_argument):
+    # TODO: Until I have understood Hooks, it's probably best to put all configurations into the following method,
+    # TODO: which is called before a run.
+    # TODO: CHECK if it is clever to pass te erdosrenyify function to this method. It's nicer than changing the contact
+    # TODO: network from the run file.
+    # TODO: Should the erdosrenyify method check if the degree preference is satisfied?
+
+    def configure(self, generate_initial_contact_network):
         """
         This method should provide some configuration interface for the run file, although this might not be necessary because of the constructor
         
@@ -285,24 +291,23 @@ class Culture (I.Culture):
         self.__nodes = self.friendship_network.nodes()
 
         self.degree_preference = []
-        for i in range(len(self.__nodes)):
+        for i in range(self.n_individual):
             self.degree_preference[i] = self.__nodes[i].degree_preference
+
+        generate_initial_contact_network(self.friendship_network)
 
         pass
     # process-related methods:
 
 
-    # IS THERE A FASTER WAY FOR THIS?
+    # TODO: IS THERE A FASTER WAY FOR THIS?
     def get_proximity_matrix(self):
-        '''
-        
-        Parameters:
-        -----------
-            
-        Returns:
-        --------
-            
-        '''
+        """
+        Generate proximity matrix using background proximity and current agent behavior.
+        Returns
+        -------
+        proximity matrix: ndarray[N,N]
+        """
 
         distances = np.zeros(self.n_individual, self.n_individual)
 
@@ -317,9 +322,11 @@ class Culture (I.Culture):
 
     def generate_interaction_network(self):
         """
+        Generate interaction network using current distances in friendship network.
         
         Returns
         -------
+        interaction network: ndarray[N,N]
 
         """
 
@@ -330,73 +337,118 @@ class Culture (I.Culture):
         #  Perform Dijkstra algorithm that is much faster in igraph
         distance_metric_matrix = np.array(transformed_network.shortest_paths(), dtype=float)
 
+        # Create interaction probability matrix using formula from Schleussner et al. with an exponential decay
+        # depending on distance in the network
         interaction_probability_matrix = (self.p_ai - self.interaction_offset) * \
                   np.exp(-(distance_metric_matrix - 1) / 2.)
 
         # Find longest path
         distmax = distance_metric_matrix[np.isfinite(distance_metric_matrix)].max()
 
-        # TODO: Proper inline comments...
         # Create histogram using shortest and longest path
         histo_bins = np.arange(1, distmax)
 
         histo_range = [histo_bins.min(), histo_bins.max()]
         distribution = np.histogram(distance_metric_matrix.flatten(), histo_bins, range=histo_range)
 
+        # Apply normalization factor for all path lengths in the network
         for i in distribution[1][:-1]:
             interaction_probability_matrix[distance_metric_matrix == i] *= (float(distribution[0][0]) / distribution[0][i - 1])
 
+        # Apply offset
         interaction_probability_matrix += self.interaction_offset
 
         # Draw uniformly distributed random numbers from the interval [9,1]
         random_numbers = np.random.rand(self.n_individual,self.n_individual)
-        # Symmetrize
+
+        # Make array of random numbers symmetric, because interaction probability between i and j is equal to
+        # interaction probability of j and i
         random_numbers = (random_numbers + random_numbers.transpose()) / 2.
 
         # Return adjacency matrix of interaction network
-        return (random_numbers <= interaction_probability_matrix).astype("int8")
+        return int(random_numbers <= interaction_probability_matrix)
 
 
-    # TODO: FUNCTION NEEDED?
-    def perform_social_influence(self):
-        """
-        Changes behavior of one agent behavior depending on Culture's social_influence function, the agent's disposition, and
-        (potentially, given the function) the behavior of agent's neighbors.
-        
-        Returns
-        -------
-        
 
-        """
+    def update_contact_network(self, interaction_network, proximity_matrix):
 
-        #
+        #proximity_matrix = self.get_proximity_matrix()
+        old_contact_network_adj = nx.to_numpy_matrix(self.friendship_network)
 
-        pass
+        potential_contact_indices = []
 
+        new_contact_network_adj = np.zeros((self.n_individual,self.n_individual))
 
-    def update_contact_network(self, interaction_network):
+        for i in range(self.n_individual):
+            # indices of friends in contact network
+            contact_indices = np.where(old_contact_network_adj[i:] == 1)[1]
 
-        proximity_matrix = self.get_proximity_matrix()
-        old_contact_network = nx.adjacency_matrix(self.friendship_network)
-        # how to get degree preferences
+            # indices in interaction network
+            interaction_indices = np.where(interaction_network[i,:] == 1)[1]
 
-        # for each agent:
-        #   create list of contacts and interactions
-        #   sort each list according to proximity between agents
-        #   cut list by degree preference
+            # Combine both lists and discard repeated entries
+            indices = np.unique(np.append(contact_indices, interaction_indices))
+
+            # Get proximity values for given index list
+            similarities = proximity_matrix[i, indices]
+
+            # Sort unique list of contacts by social proximity of these contacts
+            # Cut list at degree preference of agent
+            sorted_indices = indices[similarities.argsort()][-self.degree_preference[i]:]
+
+            # Append sorted indices array to potential contact indices array
+            potential_contact_indices.append(sorted_indices)
+
 
         # check for bidirectionality
+        for i in range(self.n_individual):
+            filtered_indices = []
 
+            for j in potential_contact_indices[i]:
+                if i in potential_contact_indices[j]:
+                    filtered_indices.append(j)
+            new_contact_network_adj[i, filtered_indices] = 1
 
-        pass
+        self.friendship_network = nx.from_numpy_matrix(new_contact_network_adj)
 
     def compute_conditional_behavior_probability(self):
+        # TODO: CHANGE THE FOLLOWING FUNCTION
+        def calc_cond_prob(smokers, nw_full, deg_sep_max, N):
+            """
+            Add docstring!
+            """
+            rcp = np.zeros(5)
+            for i in range(deg_sep_max):
+                deg_sep = i + 1
+                smoking_dep = []
+                for node in smokers:
+                    distance_matrix = nw_full.path_lengths()
+                    contact_one = np.where(distance_matrix[node, :] == deg_sep)
+                    if contact_one[0].size > 0:
+                        smoking_dep.append(
+                            np.sum(nw_full.node_attribute('smoker')[contact_one]) /
+                            float(contact_one[0].size) / (float(len(smokers)) / N) - 1)
+                rcp[i] = np.mean(smoking_dep)
+            return rcp
         pass
 
     # MAYBE THESE MEASURES SHOULD BE VARIABLES AND BE COMPUTED AFTER EAcH STEP...
-    def compute_centrality_measures(self):
-        pass
-    #return something
+    # TODO: Think about status of this method...
+    def compute_centrality_measures_smokers(self):
+        # get agent characteristics
+        agent_behavior = np.zeros((len(self.n_individual),1),dtype="int8")
+        for i in range(self.n_individual):
+            agent_behavior[i] = self.__nodes[i].behavior
+        # TODO: CHECK THAT!
+        smokers = np.where(agent_behavior == 1)[1]
+        non_smokers = np.where(agent_behavior == 0)[1]
+
+        transformed_network = igraph.Graph(n=len(self.n_individual),
+                                           edges=list(zip(*list(zip(*nx.to_edgelist(self.friendship_network)))[:2])))
+        self.eigenvector_centrality["smokers"] = np.mean(
+            np.asarray(transformed_network.graph.evcent(scale=False))[smokers])
+        self.eigenvector_centrality["non-smokers"] = np.mean(
+            np.asarray(transformed_network.graph.evcent(scale=False))[non_smokers])
 
 
     def step_time(self, t):
@@ -428,10 +480,17 @@ class Culture (I.Culture):
         """
 
         # generate_interaction_network
+        interaction_network = self.generate_interaction_network()
         # perform social influence
+        self.perform_social_influence(self.__nodes, interaction_network)
         # calculate proximity matrix
+        proximity_matrix = self.get_proximity_matrix()
         # update contact network
+        self.update_contact_network(interaction_network, proximity_matrix)
+
+        # TODO: MEASURE OBSERVABLES
         # Optionally apply external forcing
+        # self.apply_forcing()
 
         pass
 

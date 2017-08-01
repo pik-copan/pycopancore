@@ -78,7 +78,9 @@ class Culture (object):
     # endogenous variables:
     friendship_network = D.CUL.friendship_network
 
+    eigenvector_centrality = Variable("eigenvector centrality", "eigenvector centrality for all individuals in the network")
 
+    conditional_probability = Variable("conditional probability", "conditional probability of individual dependent on contacts")
 
     # exogenous variables / parameters:
     n_individual = Variable("number of individuals", "static number of individuals in the network")
