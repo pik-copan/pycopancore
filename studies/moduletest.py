@@ -10,11 +10,17 @@ nsocs = 3
 ncells = 7
 ni = 8
 
+print('\n instantiating model')
+m = tb.Model()
 
-worlds = [tb.World() for w in range(nworlds)]
-societies = [tb.Society(population=1) for s in range(nsocs)]
-cells = [tb.Cell(society=societies[0], world=worlds[0]) for c in range(ncells)]
-individuals = [tb.Individual(cell=cells[0]) for i in range(ni)]
+nature = tb.Nature()
+metabolism = tb.Metabolism()
+culture = tb.Culture()
+
+worlds = [tb.World(nature=nature, metabolism=metabolism, culture=culture) for w in range(nworlds)]
+societies = [tb.Society(world=worlds[0], population=1) for s in range(nsocs)]
+cells = [tb.Cell(society=societies[0]) for c in range(ncells)]
+individuals = [tb.Individual(cell=cells[0],society=societies[0]) for i in range(ni)]
 
 for cell in cells:
     cell.location = (0, 0)
@@ -24,9 +30,6 @@ for cell in cells:
     cell.event_value = np.random.rand(1)
     cell.step_resource = np.random.rand(1)
     cell.explicit_value = np.random.rand(1)
-
-print('\n instantiating model')
-m = tb.Model()
 
 print('\n runner starting')
 r = Runner(model=m)

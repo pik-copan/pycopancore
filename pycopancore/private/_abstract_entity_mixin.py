@@ -19,13 +19,17 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 
 from ..data_model import variable
 from ..private._expressions import _DotConstruct, aggregation_names
+from ..data_model import OrderedSet
 
 import inspect
 
 
-class _AbstractEntityMixinType (type):
-    """metaclass for _AbstractEntityMixin, needed for intercepting
-    class attribute calls and having nice reprs"""
+class _AbstractEntityMixinType(type):
+    """metaclass for _AbstractEntityMixin.
+
+    Needed for intercepting
+    class attribute calls and having nice reprs.
+    """
 
 #     def __getattr__(cls, name):
 #         """return an object representing an aggregation"""
@@ -38,10 +42,12 @@ class _AbstractEntityMixinType (type):
 #         return res
 
     def __getattribute__(cls, name):
+        """Dummy docstring"""
+        # TODO: add docstring to function
         if name in aggregation_names:
             return _DotConstruct(cls, [name])
         res = type.__getattribute__(cls, name)
-        if type(res) == property:
+        if isinstance(res, property):
             # find first overridden attribute in method resolution
             # order that is not a property (but a Variable object):
             for c in inspect.getmro(cls)[1:]:
@@ -49,9 +55,9 @@ class _AbstractEntityMixinType (type):
                     res = c.__getattribute__(c, name)
                     if isinstance(res, variable.Variable):
                         return res
-                except:
+                except BaseException:
                     pass
-            raise AttributeError("property " + name 
+            raise AttributeError("property " + name
                                  + " does not correspond to any Variable!")
         return res
 
@@ -59,7 +65,7 @@ class _AbstractEntityMixinType (type):
 #        return cls.__name__
 
 
-class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
+class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
     """Define AbstractEntityMixin.
 
     Entity-unspecific abstract class from which all entity-specific abstract
@@ -67,16 +73,41 @@ class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
     """
 
     # NEXTUID is variable to adress identifiers.
+
+    # class (!) attributes:
     NEXTUID = 0
     processes = []
+    """All processes of this entity type"""
     model = None
+    """Model containing this entity type"""
     instances = None
+    """Entities of this type"""
     idle_entities = None
+
+    def __new__(cls, *args, **kwargs):
+        """Internal method called when instantiating a new entity.
+
+        Don't call this directly, always generate entities by instantiating
+        the a composite or mixin entity type class. This implementation makes
+        sure that a composite entity is generated even when only a mixin is
+        instantiated.
+        """
+        try:
+            # if a composite class been registered with the invoking mixin
+            # class, we generate an instance of that:
+            print("instantiating a", cls._composed_class, args, kwargs)
+            obj = super().__new__(cls._composed_class, *args, **kwargs)
+        except:
+            # otherwise, we do what __new__ normally does, namely generate an
+            # instance of the class invoking it, i.e., of cls:
+            print("instantiating a", cls, args, kwargs)
+            obj = super().__new__(cls)
+        return obj
 
     def __init__(self,
                  **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
-        self._uid = _AbstractEntityMixin.get_next_uid()  # Jobst: I don't see why we need this
+        self._uid = _AbstractEntityMixin.get_next_uid()
         try:
             self.__class__.instances.append(self)
         except AttributeError:
@@ -110,10 +141,25 @@ class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
     def __str__(self):
         return repr(self)
 
-    def set_value(self, variable, value):
-        assert isinstance(variable, variable.Variable), \
+    def set_value(self, var, value):
+        """Dummy docstring"""
+        # TODO: add docstring to method
+        assert isinstance(var, variable.Variable), \
             "variable must be a Variable object"
-        variable.set_value(self, value)
+        var.set_value(self, value)
+
+    def assert_valid(self):
+        """Make sure all variable values are valid.
+
+        By calling assert_valid for all Variables
+
+        """
+        for v in self.variables:
+            try:
+                val = v.get_value(self)
+            except:
+                return
+            v.assert_valid(val)
 
     @classmethod
     def get_next_uid(cls):
@@ -128,4 +174,22 @@ class _AbstractEntityMixin (object, metaclass=_AbstractEntityMixinType):
         cls.NEXTUID += 1
         return current_uid
 
+    @property
+    def is_active(self):
+        """Check if entity is active.
+        
+        In other words, check if entity is in self.__class__.instances"""
+        if self in self.__class__.instances:
+            return True
+        if self in self.__class__.idle_entities:
+            return False
+        else:
+            raise StatusError("Entity not active nor idle.")
 
+
+class StatusError(Exception):
+    """Define Error.
+    
+    This Error is states, that an entity is neither active nor deactivated"""
+
+    pass

@@ -1,5 +1,5 @@
 """
-Abstract base classes for the base component's mixin implementation classes 
+Abstract base classes for the base component's mixin implementation classes
 """
 
 # This file is part of pycopancore.

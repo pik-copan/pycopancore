@@ -25,8 +25,8 @@ class Society (I.Society):
 
     def __init__(self,
                  *,
-                 protected_terrestrial_carbon_share = 0,
-                 protected_fossil_carbon_share = 0,
+                 protected_terrestrial_carbon_share=0,
+                 protected_fossil_carbon_share=0,
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
@@ -39,6 +39,13 @@ class Society (I.Society):
     # process-related methods:
 
     def do_economic_production(self, unused_t):
+        """Do something.
+
+        It needs to be described so other people want to use it.
+        Parameters
+        ----------
+        unused_t
+        """
         # list of cells in some fixed order, so that we can use arrays below:
         C = list(self.cells)
         # collect cellwise input for energy subsectors:
@@ -48,25 +55,30 @@ class Society (I.Society):
 #                    * (1 - self.protected_fossil_carbon_share)
 #        S = self.renewable_energy_knowledge
         intensity = np.array([c.total_energy_intensity for c in C])
-#        # use the copan:GLOBAL Leontieff/Cobb-Douglas nested production function
+        # use the copan:GLOBAL Leontieff/Cobb-Douglas nested production
+        # function:
 #        aB = np.array([c.biomass_sector_productivity for c in C])
 #        aF = np.array([c.fossil_sector_productivity for c in C])
 #        aR = np.array([c.renewable_sector_productivity for c in C])
-#        relative_productivity = (aB * L**2 + aF * G**2 + aR * S**2) / intensity
-        relative_productivity = np.array([c.total_relative_productivity for c in C])
+#        relative_productivity = (aB * L**2 + aF * G**2 + aR * S**2) / \
+#                                 intensity
+        relative_productivity = np.array([c.total_relative_productivity
+                                          for c in C])
         """an aggregate, production-function specific indicator"""
         # distribute population and capital to cells so that wages and rents
         # are equal across cells (efficient allocation):
         relative_weight = relative_productivity
         total_relative_weight = sum(relative_weight)
         if total_relative_weight == 0:
-            total_relative_weight = 1  # unimportant since relative_weight == 0
+            # unimportant since relative_weight == 0:
+            total_relative_weight = 1
         weight = relative_weight / total_relative_weight
         P = weight * self.population
         K = weight * self.physical_capital
         # resulting cell-wise harvest, extraction and production:
         denom = (relative_productivity * intensity)**0.8
-        denom[np.where(denom == 0)] = 1  # unimportant since numerator is then 0
+        # unimportant since numerator is then 0:
+        denom[np.where(denom == 0)] = 1
         fac = (P * K)**0.4 / denom
         eB = self.metabolism.biomass_energy_density
         eF = self.metabolism.fossil_energy_density
@@ -93,6 +105,12 @@ class Society (I.Society):
             self.biomass_input_flow + self.fossil_fuel_input_flow
 
     def do_harvest_extraction_emissions(self, unused_t):
+        """Add carbon emission flow to world's athmospheric carbon.
+
+        Parameters
+        ----------
+        unused_t
+        """
         for c in self.cells:
             c.d_terrestrial_carbon -= c.biomass_harvest_flow
             c.d_fossil_carbon -= c.fossil_extraction_flow
@@ -106,7 +124,7 @@ class Society (I.Society):
                   I.Society.biomass_input_flow,
                   I.Society.fossil_fuel_input_flow,
                   I.Society.renewable_energy_input_flow,
-                   I.Society.secondary_energy_flow,
+                  I.Society.secondary_energy_flow,
                   I.Society.total_output_flow],
                  do_economic_production),
 

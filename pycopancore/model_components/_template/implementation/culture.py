@@ -13,7 +13,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-#from .... import master_data_model as D
+# from .... import master_data_model as D
 
 
 class Culture (I.Culture):
@@ -27,6 +27,13 @@ class Culture (I.Culture):
         """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
+
+        # At last, check for validity of all variables that have been
+        # initialized and given a value:
+
+        # Following method is defined in abstract_process_taxon_mixin which is
+        # inherited only by mixing in the model:
+        self.assert_valid()
         pass
 
     # process-related methods:

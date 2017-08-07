@@ -1,8 +1,7 @@
 """Base model component interface.
 
-In this base interface module, variables for each entity are defined in
-corresponding class as sympy objects . The corresponding classes are World_,
-Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
+Specifies the variables used by this component, 
+by entity type and process taxon
 """
 
 # This file is part of pycopancore.
@@ -16,7 +15,7 @@ Cell_, Nature_, Individual_, Culture_, Society_, Metabolism_ and Model_.
 from ...private._abstract_entity_mixin import _AbstractEntityMixinType
 from ... import Variable, ReferenceVariable, SetVariable
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+from ...data_model.master_data_model import NAT, CUL, W, S, C
 
 
 # model component:
@@ -25,10 +24,10 @@ from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
 class Model (object):
     """Basic Model component interface."""
 
-    # metadata:
+    # necessary metadata:
     name = "copan:CORE Base"
-    description = "Basic model component only providing basic relationships between " \
-                  "entity types."
+    description = "Basic model component only providing basic relationships " \
+                  "between entity types."
     requires = []
 
 
@@ -41,7 +40,7 @@ class Nature (object):
     It contains all variables specified as mandatory ("base variables").
     """
 
-    geographic_network = NAT.geographic_network
+    geographic_network = NAT.geographic_network  # copies the specification from the master data model
 
 
 class Metabolism (object):
@@ -50,7 +49,7 @@ class Metabolism (object):
     It contains all variables specified as mandatory ("base variables").
     """
 
-    pass
+    pass  # no variables so far
 
 
 class Culture (object):
@@ -70,8 +69,12 @@ class World (object, metaclass=_AbstractEntityMixinType):
 
     It contains all variables specified as mandatory ("base variables").
     """
+    # the metaclass is needed to allow for intercepting class attribute calls
+    # when constructing DotConstructs like World.nature.geographic_network.
+    # similarly for the other entity types.
 
-    # references:
+
+    # references to other entities and taxa:
     nature = ReferenceVariable("nature",
                                "Nature taxon working on this world",
                                type=Nature)
@@ -82,9 +85,8 @@ class World (object, metaclass=_AbstractEntityMixinType):
                                 "Culture taxon working on this world",
                                 type=Culture)
 
-    population = W.population
-    # TODO: make sure it is no smaller than aggregate top-level societies'
-
+    # variables taken from the master data model:
+    population = W.population  # TODO: make sure it is no smaller than aggregate top-level societies'?
     atmospheric_carbon = W.atmospheric_carbon
     surface_air_temperature = W.surface_air_temperature
     ocean_carbon = W.ocean_carbon
@@ -93,10 +95,10 @@ class World (object, metaclass=_AbstractEntityMixinType):
 
     # attributes storing redundant information (backward references):
     societies = SetVariable("societies",
-                            "set of all Societies on this world")
+                            "set of all Societies on this world")  # type is Society, hence it can only be specified after class Society is defined, see below
     top_level_societies = SetVariable(
-                            "top level societies",
-                            "set of top-level Societies on this world")
+        "top level societies",
+        "set of top-level Societies on this world")
     cells = SetVariable("cells", "set of Cells on this world")
     individuals = SetVariable("individuals",
                               "set of Individuals residing on this world")
@@ -111,7 +113,7 @@ class Society (object, metaclass=_AbstractEntityMixinType):
     # references:
     world = ReferenceVariable("world", "", type=World)
     next_higher_society = ReferenceVariable("next higher society", "optional",
-                                            allow_none=True)
+                                            allow_none=True)  # type is Society, hence it can only be specified after class Society is defined, see below
 
     # other variables:
     # population is explicitly allowed to be non-integer so that we can use
@@ -126,23 +128,24 @@ class Society (object, metaclass=_AbstractEntityMixinType):
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
     culture = ReferenceVariable("culture", "", type=Culture)
     higher_societies = SetVariable(
-                                "higher societies",
-                                "upward list of (in)direct super-Societies")
+        "higher societies",
+        "upward list of (in)direct super-Societies")
     next_lower_societies = SetVariable(
-                                "next lower societies",
-                                "set of sub-Societies of next lower level")
+        "next lower societies",
+        "set of sub-Societies of next lower level")
     lower_societies = SetVariable(
-                                "lower societies",
-                                "set of all direct and indirect sub-Societies")
+        "lower societies",
+        "set of all direct and indirect sub-Societies")
     direct_cells = SetVariable("direct cells", "set of direct territory Cells")
     cells = SetVariable("cells", "set of direct and indirect territory Cells")
     direct_individuals = SetVariable(
-                            "direct individuals",
-                            "set of resident Individuals not in subsocieties")
+        "direct individuals",
+        "set of resident Individuals not in subsocieties")
     individuals = SetVariable("individuals",
                               "set of direct or indirect resident Individuals")
 
-# specified only now to avoid recursion:
+
+# specified only now to avoid recursion errors:
 Society.next_higher_society.type = Society
 Society.higher_societies.type = Society
 Society.next_lower_societies.type = Society
@@ -164,7 +167,7 @@ class Cell (object, metaclass=_AbstractEntityMixinType):
                                 type=Society, allow_none=True)
 
     # other variables:
-    location = Variable("location", "pair of coordinates?")
+    location = Variable("location", "pair of coordinates?")  # TODO: specify data type
     land_area = Variable("land area", "", unit=D.square_kilometers,
                          strict_lower_bound=0)
 
@@ -176,16 +179,18 @@ class Cell (object, metaclass=_AbstractEntityMixinType):
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
     culture = ReferenceVariable("culture", "", type=Culture)
     societies = SetVariable(
-                    "societies",
-                    "upward list of Societies it belongs to (in)directly",
-                    type=Society)
+        "societies",
+        "upward list of Societies it belongs to (in)directly",
+        type=Society)
     individuals = SetVariable("individuals",
                               "set of resident Individuals")
+
 
 # specified only now to avoid recursion:
 World.cells.type = Cell
 Society.direct_cells.type = Cell
 Society.cells.type = Cell
+
 
 class Individual (object, metaclass=_AbstractEntityMixinType):
     """Basic Individual interface.
@@ -199,7 +204,9 @@ class Individual (object, metaclass=_AbstractEntityMixinType):
     # other variables:
     relative_weight = \
         Variable("relative representation weight",
-                 "relative representation weight for society's population",
+                 "relative representation weight for society's population, "
+                 "to be used in determining how many people this individual "
+                 "represents",
                  unit=D.unity, lower_bound=0, default=1)
 
     # attributes storing redundant information:
@@ -208,20 +215,21 @@ class Individual (object, metaclass=_AbstractEntityMixinType):
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
     culture = ReferenceVariable("culture", "", type=Culture)
     society = ReferenceVariable(
-                        "society", 
-                        "lowest level Society this individual is resident of", 
-                        type=Society)
+        "society",
+        "lowest level Society this individual is resident of",
+        type=Society)
     societies = SetVariable(
-                    "societies",
-                    "upward list of all Societies it is resident of",
-                    type=Society)
+        "societies",
+        "upward list of all Societies it is resident of",
+        type=Society)
     acquaintances = SetVariable("acquaintances",
-                                "set of Individuals this is acquainted with")
+                    "set of Individuals this one is acquainted with")
 
     population_share = None
     """share of society's direct population represented by this individual"""
     represented_population = None
     """absolute population represented by this individual"""
+
 
 # specified only now to avoid recursion:
 World.individuals.type = Individual

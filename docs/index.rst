@@ -10,8 +10,8 @@ pycopancore: a Python package implementing the copan\:CORE World-Earth modeling 
 Contents:
 
 .. The following structure roughly follows http://docs.python-guide.org/en/latest/writing/documentation/,
-   but with licese added and "developer documentation" renamed to "framework documentation" due to the different roles of people involved. 
-   
+   but with license added and "developer documentation" renamed to "framework documentation" due to the different roles of people involved.
+
 .. TODO: move introduction to inside this page so that it is more immediately available for reading?
 
 .. toctree::
@@ -20,10 +20,10 @@ Contents:
 
    introduction
    license
-   tutorials/index
    api_reference
+   tutorials/index
+   step_by_step
    framework_documentation/index
-
 
 Indices and tables
 ------------------

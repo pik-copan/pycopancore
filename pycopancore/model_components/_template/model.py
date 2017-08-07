@@ -20,7 +20,7 @@ from .implementation import Nature, Metabolism, Culture  # TODO: adjust!
 
 
 class Model (I.Model):
-    """Model mixin class"""
+    """Model mixin class."""
 
     # mixins provided by this model component:
 

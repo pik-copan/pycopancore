@@ -6,7 +6,7 @@
 *.swo
 *~
 
-# pycharme project directory
+# pycharm project directory
 
 .idea/
 
@@ -81,3 +81,8 @@ target/
 /last.prof
 /prof.txt
 /test_jobsts_prototype_1.py.lprof
+*.output
+
+# Autodoc
+docs/_api/*
+/.Rhistory

@@ -37,14 +37,14 @@ class ODE(_AbstractProcess):
                  specification,
                  *,
                  smoothness=1
-                 ):
-        """Initiate an instance of an ODE process.
+                ):
+        """Instantiate an instance of an ODE process.
 
         Parameters
         ----------
         name : string
         targets : list
-            list of Variables or _AttributeReferences whose time derivatives 
+            list of Variables or _AttributeReferences whose time derivatives
             are added to by specification
         specification : func, or list of Expr
             function(self,t) storing the derivatives in instance

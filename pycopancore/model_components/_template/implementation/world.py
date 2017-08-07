@@ -12,7 +12,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-#from .... import master_data_model as D
+# from .... import master_data_model as D
 
 
 class World (I.World):
@@ -26,6 +26,13 @@ class World (I.World):
         """Initialize an instance of World."""
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
+
+        # At last, check for validity of all variables that have been
+        # initialized and given a value:
+
+        # Following method is defined in abstract_entity_mixin which is
+        # inherited only by mixing in the model:
+        self.assert_valid()
         pass
 
     def deactivate(self):

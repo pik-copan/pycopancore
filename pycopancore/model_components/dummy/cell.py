@@ -48,7 +48,7 @@ class Cell(Cell_, abstract.Cell):
                  **kwargs
                  ):
         """Initialize an instance of Cell."""
-        super(Cell, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.resource = resource
         self.resource2 = resource2
@@ -164,4 +164,4 @@ class Cell(Cell_, abstract.Cell):
               ['rate', 0.1, a_event_function]),
         Explicit('explicit_function', [Cell_.explicit_value],
                  a_explicit_function)
-                 ]
+    ]

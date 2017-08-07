@@ -35,7 +35,7 @@ class _AbstractProcess(object):
     """degree of smoothness"""
 
     owning_class = None
-    """the class (entity-type or process taxon) owning the process""" 
+    """the class (entity-type or process taxon) owning the process"""
 
     def __init__(self, name=""):
         """Initialize an _AbstractProcess instance."""
