@@ -90,16 +90,16 @@ class Metabolism (I.Metabolism):
                                     s=sigma,
                                     loc=loc,
                                     scale=median)
+            # Calculate the subjects nutrition
+            w_i = e.harvest - ((ys[i] - e.gross_income) / price)
             # Get the rhs of the equation for the individual
-            errors[1 + i] = (sri - (e.harvest * price
-                                    - ys[i] + e.gross_income
-                                    )
+            errors[1 + i] = (sri - (w_i * price)
                              * stats.lognorm.pdf(ys[i],
                                                  s=sigma,
                                                  loc=loc,
                                                  scale=median
                                                  )
-                             )
+                             ) / (2 * np.sqrt(w_i * sri))
         # Sum over liquidity must be equal to sum over gross income:
         errors[0] = sum(ys) - self.total_gross_income
         # return rhs of the system of equations:
@@ -137,11 +137,13 @@ class Metabolism (I.Metabolism):
             e.nutrition = e.harvest + traded_water
         print('market clearing is done at time', unused_t,
               'price is now at', self.water_price)
+        # Calculate liquidities again, so that sri can be calculated correctly
+        for s in world.societies:
+            s.liquidity_pdf()
 
     def market_timing(self, t):
         """Define how often market clearing takes place."""
         return t + 1 / self.market_frequency
-
 
     processes = [
         Step("market clearing", [I.Individual.liquidity,

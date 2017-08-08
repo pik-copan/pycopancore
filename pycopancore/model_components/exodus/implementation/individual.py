@@ -72,13 +72,9 @@ class Individual (I.Individual):
     @property
     def utility(self):
         """Get the Cobb-Douglas utility of an individual"""
-        # Have a measure to limit nutrition to 1:
-        effective_nutrition = 1 - 1 / ((9 / 2) * self.nutrition /
-                                       self.nutrition_need + 1)
         print('nutrition', self.nutrition)
-        print('eff nutrition', effective_nutrition)
         print('sri', self.subjective_income_rank)
-        return math.sqrt(self.subjective_income_rank * effective_nutrition)
+        return math.sqrt(self.subjective_income_rank * self.nutrition)
         # TODO: Add parameter to compensate for frequency of market clearing!
         # 1240 m^3 is the annual need
 
