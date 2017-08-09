@@ -127,17 +127,20 @@ class _DotConstruct(sp.AtomicExpr):
     e.g. Society.world.sum(some expression).
     """
 
-    _owning_class_or_var = None
-    """the entity-type of process taxon at the start of the dot construct,
-    e.g. Society"""
-    name_sequence = None
-    """the sequence of further names,
-    e.g. ["sum","cells","population"]"""
-    arg = None
-    """the optional argument of the aggregation function, e.g.
+    _start = None
+    """the entity-type, process taxon, ReferenceVariable or SetVariable 
+    at the start of the dot construct, e.g. Society or Nature.cells"""
+    _attribute_sequence = None
+    """the sequence of further names, which must be codenames of variables,
+    e.g. ["cells","population"]"""
+    _aggregation = None
+    """the optional name of an aggregation function 
+    at the end of the construct, e.g., "sum"."""
+    _argument = None
+    """the optional argument expression of the aggregation function, e.g.
     Society.world.sum.cells.population * Society.world.sum.cells.capital"""
-    can_be_target = None
-    """whether this can be a target (e.g. does not involve aggregation)"""
+    _can_be_target = None
+    """whether this can be a target (i.e., does not involve aggregation)"""
 
     _initialized = None
     """whether it was initialized already"""
@@ -158,85 +161,108 @@ class _DotConstruct(sp.AtomicExpr):
     # to different entity types:
     @staticmethod
     def __new__(cls,
-                owning_class_or_var,
-                name_sequence,
+                start,
+                attribute_sequence,
                 *args,
-                arg=None,
+                aggregation=None,
+                argument=None,
                 **assumptions):
-        if isinstance(owning_class_or_var, D.Variable) \
-                or name_sequence[0] in aggregation_names:
-            uid = repr(owning_class_or_var) \
-                + str(name_sequence) + str(arg)
-        else:
-            uid = repr(getattr(owning_class_or_var, name_sequence[0])) \
-                + str([None] + name_sequence[1:]) + str(arg)
-        return super().__new__(cls,
-                               uid,
-                               **assumptions)
+        uid = repr(start) 
+        if len(attribute_sequence) > 0:
+            uid += "." + ".".join(attribute_sequence)
+        if aggregation:
+            uid += "." + aggregation
+            if argument:
+                uid += "(" + repr(argument) + ")"
+#        print("_DotConstruct.__new__ with uid", uid)
+        return super().__new__(cls, uid, **assumptions)
 
     def __init__(self,
-                 owning_class_or_var,
-                 name_sequence,
-                 arg=None
+                 start,
+                 attribute_sequence,
+                 aggregation=None,
+                 argument=None
                 ):
         super().__init__()
 
         if self._initialized is None:
             self._initialized = True
 
-            self._owning_class_or_var = owning_class_or_var
-            self.name_sequence = name_sequence
-            self.arg = arg
+            self._start = start
+            self._attribute_sequence = attribute_sequence
+            self._aggregation = aggregation
+            self._argument = argument
 
-            self.can_be_target = True
-            for name in name_sequence:
-                if name in aggregation_names:
-                    self.can_be_target = False
-                    break
+            self._can_be_target = (aggregation is None)
 
-            self._target_class = private.unknown
-            self._target_variable = private.unknown
-            self._target_instances = private.unknown
-            self._branchings = private.unknown
-            self._cardinalities = private.unknown
+            self._target_class = unknown
+            self._target_variable = unknown
+            self._target_instances = unknown
+            self._branchings = unknown
+            self._cardinalities = unknown
+            
+#            print("_DotConstruct.__init__ of",self,"performed")
+        else:
+#            print("repeated _DotConstruct.__init__ of",self,"skipped")
+            pass
 
     def __getattr__(self, name):
-        """accessing an attribute of a _DotConstruct simply
+        """accessing an attribute of a _DotConstruct basically
         returns a new _DotConstruct that is extended by the name of this
-        attribute"""
-        if self.arg is not None:
+        attribute, giving special treatment to aggregations"""
+#        print("_DotConstruct.__getattr__(", self, ",", name, ")")
+        if self._argument is not None:  # we are an aggregation with argument
             # append name to argument:
-            return _DotConstruct(self._owning_class_or_var,
-                                 self.name_sequence,
-                                 arg=getattr(self.arg, name))
-        elif self.name_sequence[-1] in aggregation_names:
+#            print("extending argument",self._argument,"by",name)
+            newarg = getattr(self._argument, name)
+            newdc = _DotConstruct(self._start,
+                                  self._attribute_sequence,
+                                  aggregation=self._aggregation,
+                                  argument=newarg)
+        elif self._aggregation:  # we are an aggregation without argument yet
             # add an argument:
-            arg = _DotConstruct(self._owning_class_or_var,
-                                self.name_sequence[:-1] + [name])
-            return _DotConstruct(self._owning_class_or_var,
-                                 self.name_sequence,
-                                 arg=arg)
-        else:
-            # append name to name_sequence:
-            return _DotConstruct(self._owning_class_or_var,
-                                 self.name_sequence + [name])
+            argument = _DotConstruct(self._start,
+                                self._attribute_sequence + [name])
+#            print("adding argument",argument,"to aggregation of type",self._aggregation)
+            newdc = _DotConstruct(self._start,
+                                  self._attribute_sequence,
+                                  aggregation=self._aggregation,
+                                  argument=argument)
+        elif name in aggregation_names:  # we become an aggregation
+#            print("adding aggregation of type",name)
+            newdc = _DotConstruct(self._start,
+                                  self._attribute_sequence,
+                                  aggregation=name)
+        else:  # append name to attribute_sequence:
+#            print("adding variable reference named",name)
+            newdc = _DotConstruct(self._start,
+                                  self._attribute_sequence + [name])
+        return newdc
         # Note that this causes hasattr(...) to always return True!
         # Hoping this causes no problem...
 
     def __call__(self, *args, **kwargs):
-        assert self.arg is None, "can't have a ( behind a ) here"
-        if self.name_sequence[-1] in aggregation_names:
-            return _DotConstruct(self._owning_class_or_var,
-                                 self.name_sequence,
-                                 arg=args[0])
-        else:
-            return sp.AtomicExpr()
+        """calling is only allowed if we are an aggregation without argument yet,
+        and results in adding an argument"""
+        assert self._aggregation and not self._argument, "can't have brackets here"
+        assert len(args) == 1, "must have exactly one argument"
+        return _DotConstruct(self._start,
+                             self._attribute_sequence,
+                             aggregation=self._aggregation,
+                             argument=args[0])
+# TODO: understand why an earlier version had this:
+#        else:
+#            return sp.AtomicExpr()
 
     def __repr__(self):
-        repr = self.owning_class.__name__ + "." + ".".join(self.name_sequence)
-        if self.arg is not None:
-            repr += "(" + str(self.arg) + ")"
-        return repr
+        r = repr(self._start)
+        if len(self._attribute_sequence) > 0:
+            r += "." + ".".join(self._attribute_sequence)
+        if self._aggregation:
+            r += "." + self._aggregation
+            if self._argument:
+                r += "(" + repr(self._argument) + ")"
+        return r
 
     def __str__(self):
         return self.__repr__()
@@ -261,7 +287,7 @@ class _DotConstruct(sp.AtomicExpr):
 # this does not work unfortunately:
 #    def __eq__(self, other):
 #        print("eq?")
-#        if self._target_instances is private.unknown:
+#        if self._target_instances is unknown:
 #            print("std.")
 #            return sp.AtomicExpr.__eq__(self, other)
 #        else:
@@ -269,52 +295,50 @@ class _DotConstruct(sp.AtomicExpr):
 #            return sp.Eq(self, other)
 # so A == B cannot be used in formulas, instead sp.Eq(A,B) must be used.
 
-    @property  # read-only
-    def target_class(self):
-        """return the class owning the target attribute"""
-        assert self.can_be_target, "cannot serve as target"
-        if self._target_class is private.unknown:
-            value = self.owning_class.instances[0]
-            for name in self.name_sequence[:-1]:
-                value = getattr(value, name)
-                try:  # use first element if iterable:
-                    value = next(iter(value))
-                except BaseException:
-                    pass
-            self._target_class = value.__class__
-        return self._target_class
+    # TODO: put a leading underscore before as many method names as possible
+    # (only not those needed by sympy), to avoid name clashes with variables
 
     @property  # read-only
     def owning_class(self):
-        """Dummy docstring"""
-        # TODO: add docstring to method
-        if isinstance(self._owning_class_or_var, D.Variable):
-            self.name_sequence[0] = self._owning_class_or_var.codename
-            self._owning_class_or_var = self._owning_class_or_var.owning_class
-        elif not issubclass(self._owning_class_or_var,
-                            private._AbstractEntityMixin):
-            # replace interface class by composite class, by using
-            # owning_class of any Variable attribute of interface class:
-            self._owning_class_or_var = \
-                [v for v in self._owning_class_or_var.__dict__.values()
-                 if isinstance(v, D.Variable)][0].owning_class
-        return self._owning_class_or_var
+        """return the class owning the _DotConstruct"""
+        if isinstance(self._start, D.Variable):
+            return self._start.owning_class
+        elif self._start._composed_class:
+            return self._start._composed_class
+        else:
+            return self._start
+
+    @property  # read-only
+    def target_class(self):
+        """return the class owning the target attribute"""
+        assert self._can_be_target, "cannot serve as target"
+        if self._target_class is unknown:
+            assert isinstance(self._start, (D.ReferenceVariable, D.SetVariable))
+            cls = self._start.type  # referred entity type/taxon
+            for name in self._attribute_sequence[:-1]:
+                var = getattr(cls, name)
+                assert isinstance(var, (D.ReferenceVariable, D.SetVariable))
+                cls = var.type
+            self._target_class = cls
+#            print("finding target class of",self,"as",cls)
+        return self._target_class
 
     @property  # read-only
     def target_variable(self):
         """return the Variable object representing the target attribute"""
-        assert self.can_be_target, "cannot serve as target"
-        if self._target_variable is private.unknown:
+        assert self._can_be_target, "cannot serve as target"
+        if self._target_variable is unknown:
             self._target_variable = getattr(self.target_class,
-                                            self.name_sequence[-1])
+                                            self._attribute_sequence[-1])
+#            print("getting target variable of",self,"as",self._target_variable)
         return self._target_variable
 
     @property  # read-only
     def target_instances(self):
         """return the list of instances owning the referenced attributes,
         may contain instances more than once due to broadcasting"""
-        assert self.can_be_target, "cannot serve as target"
-        if self._target_instances is private.unknown:
+        assert self._can_be_target, "cannot serve as target"
+        if self._target_instances is unknown:
             self._analyse_instances()
         return self._target_instances
 
@@ -322,7 +346,7 @@ class _DotConstruct(sp.AtomicExpr):
     def branchings(self):
         """return the list of branching lens at SetReferences,
         to be used in aggregation and broadcasting"""
-        if self._target_instances is private.unknown:
+        if self._target_instances is unknown:
             self._analyse_instances()
         return self._branchings
 
@@ -330,7 +354,7 @@ class _DotConstruct(sp.AtomicExpr):
     def cardinalities(self):
         """return the list of level cardinalities at SetReferences,
         to be used in aggregation and broadcasting"""
-        if self._target_instances is private.unknown:
+        if self._target_instances is unknown:
             self._analyse_instances()
         return self._cardinalities
 
@@ -340,9 +364,9 @@ class _DotConstruct(sp.AtomicExpr):
         items = oc.instances
         branchings = [[len(items)]]
         cardinalities = [1, len(items)]  # store initial cardinality
-        for name in self.name_sequence[:-1]:
-            if name in aggregation_names:
-                break
+        if isinstance(self._start, D.Variable):
+            items = [getattr(i, self._start.codename) for i in items]
+        for name in self._attribute_sequence[:-1]:
             # each item is a set of instances:
             if hasattr(items[0], "__iter__"):
                 branchings.append([len(instance_set)
@@ -368,45 +392,44 @@ class _DotConstruct(sp.AtomicExpr):
         self._branchings = branchings
         self._cardinalities = cardinalities
 
-    # TODO add a method that differentiates w.r.t. some variable?
+    # TODO add a method that differentiates symbolically w.r.t. some variable?
 
     def eval(self, instances=None):
         """gets referenced attribute values and performs aggregations
         where necessary.
         """
-        self.owning_class  # to make sure it and name_sequence are defined...
-        items = self.owning_class.instances if instances is None else instances
-        for pos, name in enumerate(self.name_sequence):
-            if name in aggregation_names:
-                # make sure items is list of instances not list of sets:
-                if hasattr(items[0], "__iter__"):
-                    items = [i
-                             for instance_set in items
-                             for i in instance_set]
-                # TODO:
-                # construct arg from name_sequence if None
-                if self.arg is None:
-                    arg_name_sequence = self.name_sequence[:pos] \
-                        + self.name_sequence[pos + 1:]
-                    self.arg = _DotConstruct(self.owning_class,
-                                             arg_name_sequence)
-                # sic! (not items!):
-                arg_values = list(eval(self.arg, instances))
-                cardinalities, branchings = \
-                    get_cardinalities_and_branchings(self.arg)
-                aggregation_level = cardinalities.index(len(items))
-                layout = branchings[aggregation_level:] \
-                    if aggregation_level < len(cardinalities) - 1 \
-                    else [[1 for i in items]]
-                lens = layout2lens(layout)
-                return name2aggregation[name](arg_values, lens)
-            # each value is a set of instances:
+#        print("eval",self)
+        try:
+            items = self.owning_class.instances if instances is None else instances
+        except:
+            print(self)
+            raise Exception
+        if isinstance(self._start, D.Variable):
+            items = [getattr(i, self._start.codename) for i in items]
+        for pos, name in enumerate(self._attribute_sequence):
             if hasattr(items[0], "__iter__"):
                 items = [getattr(i, name)
                          for instance_set in items
                          for i in instance_set]
             else:
                 items = [getattr(i, name) for i in items]
+        if self._aggregation:
+            assert self._argument is not None, "aggregation without argument"
+            # make sure items is list of instances not list of sets:
+            if hasattr(items[0], "__iter__"):
+                items = [i
+                         for instance_set in items
+                         for i in instance_set]
+            # sic! (not items!):
+            arg_values = eval(self._argument, instances)
+            cardinalities, branchings = \
+                get_cardinalities_and_branchings(self._argument)
+            aggregation_level = cardinalities.index(len(items))
+            layout = branchings[aggregation_level:] \
+                if aggregation_level < len(cardinalities) - 1 \
+                else [[1 for i in items]]
+            lens = layout2lens(layout)
+            items = name2aggregation[self._aggregation](arg_values, lens)
         return items
 
     def _broadcast(self, values):
@@ -419,28 +442,28 @@ class _DotConstruct(sp.AtomicExpr):
 
     def add_values(self, values):
         """adds summands to referenced attribute values"""
-        assert self.can_be_target, "cannot serve as target"
+        assert self._can_be_target, "cannot serve as target"
         # broadcast values if necessary:
         values = self._broadcast(values)
-        name = self.name_sequence[-1]
+        name = self._attribute_sequence[-1]
         for pos, i in enumerate(self.target_instances):
             setattr(i, name, getattr(i, name) + values[pos])
 
     def add_derivatives(self, values):
         """adds summands to referenced attribute values"""
-        assert self.can_be_target, "cannot serve as target"
+        assert self._can_be_target, "cannot serve as target"
         # broadcast values if necessary:
         values = self._broadcast(values)
-        dname = "d_" + self.name_sequence[-1]
+        dname = "d_" + self._attribute_sequence[-1]
         for pos, i in enumerate(self.target_instances):
             setattr(i, dname, getattr(i, dname) + values[pos])
 
     def fast_set_values(self, values):
         """store values without further checks"""
-        assert self.can_be_target, "cannot serve as target"
+        assert self._can_be_target, "cannot serve as target"
         # broadcast values if necessary:
         values = self._broadcast(values)
-        name = self.name_sequence[-1]
+        name = self._attribute_sequence[-1]
         for pos, i in enumerate(self.target_instances):
             setattr(i, name, values[pos])
 
@@ -570,8 +593,16 @@ def _eval(expr, iteration=None):
 #        # try to avoid invalid values due to (negative)**(non-integer):
 #        base[np.where(np.logical_and(base < 0, exponent % 1 != 0))] = EPS
 #        print(base[:10],exponent[:10])
+        try:
+            base[np.where((base == 0)*(exponent < 0))] = 1e-10
+        except:
+            print("oops")
         vals = base ** exponent
-        vals[np.where(np.isnan(vals))] = 0  # FIXME: is this a good idea?
+#        try:
+#            vals[np.where(np.isnan(vals))] = 0  # FIXME: is this a good idea?  # FIXME: it makes trouble if entries are ints.
+#        except:
+#            print(vals,type(vals))
+#            raise Exception()
     # TODO: other types of expressions, including function evaluations!
     # other functions/unary operators:
     elif tt == sp.FunctionClass:

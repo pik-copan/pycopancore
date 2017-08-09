@@ -7,6 +7,11 @@ from . import metabolism as MET
 population = MET.population.copy()
 population_by_age = MET.population_by_age.copy()
 
+fertility = MET.fertility.copy()
+mortality = MET.mortality.copy()
+births = MET.births.copy()
+deaths = MET.deaths.copy()
+
 biomass_harvest_flow = MET.biomass_harvest_flow.copy()
 fossil_extraction_flow = MET.fossil_extraction_flow.copy()
 carbon_emission_flow = MET.carbon_emission_flow.copy()
@@ -26,6 +31,7 @@ consumption_flow = MET.consumption_flow.copy()
 investment_flow = MET.investment_flow.copy()
 
 welfare_flow_per_capita = MET.welfare_flow_per_capita.copy()
+wellbeing = MET.wellbeing.copy()
 
 biomass_energy_density = MET.biomass_energy_density.copy()
 fossil_energy_density = MET.fossil_energy_density.copy()

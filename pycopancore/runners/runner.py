@@ -159,7 +159,13 @@ class Runner(_AbstractRunner):
                     if isinstance(target, Variable):
                         # add result directly to output array
                         # (rather than in instances' derivative attributes):
-                        derivative_array[target._from:target._to] += summands
+                        try:
+                            derivative_array[target._from:target._to] += summands
+                        except:
+                            print(p,target,target._from,target._to)
+                            print((derivative_array[target._from:target._to]))
+                            print((summands))
+                            raise Exception
                     else:
                         # summands may have different length than
                         # p.owning_class.instances due to broadcasting effects

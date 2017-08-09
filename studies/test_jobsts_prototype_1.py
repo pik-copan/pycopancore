@@ -33,7 +33,6 @@ worlds = [M.World(nature=nature, metabolism=metabolism,
 societies = [M.Society(world=random.choice(worlds)) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies)) for c in range(ncells)]
 
-
 # distribute area and vegetation randomly but correlatedly:
 r = random.uniform(size=ncells)
 Sigma0 = 1.5e8 * D.square_kilometers * r / sum(r)
@@ -75,7 +74,7 @@ M.Society.physical_capital.set_values(societies, K0)
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=10, dt=.1)
+traj = runner.run(t_1=0.01, dt=.001)
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
@@ -87,7 +86,7 @@ plot(t, traj[M.World.terrestrial_carbon][worlds[0]], "g", lw=3)
 plot(t, traj[M.World.fossil_carbon][worlds[0]], "gray", lw=3)
 for s in societies:
     pass
-#    plot(t, traj[M.Society.population][s],"yellow",lw=2)
+    plot(t, traj[M.Society.population][s],"yellow",lw=2)
     plot(t, traj[M.Society.physical_capital][s], "k", lw=2)
     plot(t, traj[M.Society.renewable_energy_knowledge][s],
          color="darkorange", lw=2)

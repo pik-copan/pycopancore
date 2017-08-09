@@ -35,6 +35,13 @@ class Society (I.Society):
             protected_terrestrial_carbon_share
         self.protected_fossil_carbon_share = \
             protected_fossil_carbon_share
+            
+        self.biomass_input_flow = 0
+        self.fossil_fuel_input_flow = 0
+        self.renewable_energy_input_flow = 0
+        self.secondary_energy_flow = 0
+        self.carbon_emission_flow = 0
+        self.total_output_flow = 0
 
     # process-related methods:
 
@@ -49,19 +56,9 @@ class Society (I.Society):
         # list of cells in some fixed order, so that we can use arrays below:
         C = list(self.cells)
         # collect cellwise input for energy subsectors:
-#        L = np.array([c.terrestrial_carbon for c in C]) \
-#                    * (1 - self.protected_terrestrial_carbon_share)
-#        G = np.array([c.fossil_carbon for c in C]) \
-#                    * (1 - self.protected_fossil_carbon_share)
-#        S = self.renewable_energy_knowledge
         intensity = np.array([c.total_energy_intensity for c in C])
         # use the copan:GLOBAL Leontieff/Cobb-Douglas nested production
         # function:
-#        aB = np.array([c.biomass_sector_productivity for c in C])
-#        aF = np.array([c.fossil_sector_productivity for c in C])
-#        aR = np.array([c.renewable_sector_productivity for c in C])
-#        relative_productivity = (aB * L**2 + aF * G**2 + aR * S**2) / \
-#                                 intensity
         relative_productivity = np.array([c.total_relative_productivity
                                           for c in C])
         """an aggregate, production-function specific indicator"""
@@ -70,14 +67,14 @@ class Society (I.Society):
         relative_weight = relative_productivity
         total_relative_weight = sum(relative_weight)
         if total_relative_weight == 0:
-            # unimportant since relative_weight == 0:
+            # unimportant since relative_weight == 0, just to avoid division error:
             total_relative_weight = 1
         weight = relative_weight / total_relative_weight
         P = weight * self.population
         K = weight * self.physical_capital
         # resulting cell-wise harvest, extraction and production:
         denom = (relative_productivity * intensity)**0.8
-        # unimportant since numerator is then 0:
+        # unimportant since numerator is then 0, just to avoid division error:
         denom[np.where(denom == 0)] = 1
         fac = (P * K)**0.4 / denom
         eB = self.metabolism.biomass_energy_density
@@ -85,9 +82,6 @@ class Society (I.Society):
         B = np.array([c.biomass_relative_productivity for c in C]) * fac / eB
         F = np.array([c.fossil_relative_productivity for c in C]) * fac / eF
         R = np.array([c.renewable_relative_productivity for c in C]) * fac
-#        B = aB * L**2 * fac / eB
-#        F = aF * G**2 * fac / eF
-#        R = aR * S**2 * fac
         E = eB * B + eF * F + R
         Y = E / intensity
         # tell cells what their harvest and extraction is:
@@ -111,6 +105,8 @@ class Society (I.Society):
         ----------
         unused_t
         """
+        # this is an example of a process that is owned by Society
+        # but affects its cells and the world:
         for c in self.cells:
             c.d_terrestrial_carbon -= c.biomass_harvest_flow
             c.d_fossil_carbon -= c.fossil_extraction_flow

@@ -45,7 +45,9 @@ class _AbstractEntityMixinType(type):
         """Dummy docstring"""
         # TODO: add docstring to function
         if name in aggregation_names:
-            return _DotConstruct(cls, [name])
+            dc = _DotConstruct(cls, [], aggregation=name)
+#            print("new aggregation dot construct",dc,"at",cls,"with aggregation",name)
+            return dc
         res = type.__getattribute__(cls, name)
         if isinstance(res, property):
             # find first overridden attribute in method resolution
@@ -72,17 +74,20 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
     mixin classes are derived.
     """
 
-    # NEXTUID is variable to adress identifiers.
+    # NEXTUID is variable to address identifiers.
 
     # class (!) attributes:
     NEXTUID = 0
     processes = []
     """All processes of this entity type"""
     model = None
-    """Model containing this entity type"""
+    """Current model using this entity type"""
     instances = None
-    """Entities of this type"""
-    idle_entities = None
+    """Active entities of this type"""
+    idle_entities = None  # TODO: rename to inactive_entities
+    """Inactive entities of this type"""
+    _composite_class = None
+    """Composite class this mixin contributes to in the current model"""
 
     def __new__(cls, *args, **kwargs):
         """Internal method called when instantiating a new entity.
@@ -95,12 +100,12 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
         try:
             # if a composite class been registered with the invoking mixin
             # class, we generate an instance of that:
-            print("instantiating a", cls._composed_class, args, kwargs)
+#            print("instantiating a", cls._composed_class, args, kwargs)
             obj = super().__new__(cls._composed_class, *args, **kwargs)
         except:
             # otherwise, we do what __new__ normally does, namely generate an
             # instance of the class invoking it, i.e., of cls:
-            print("instantiating a", cls, args, kwargs)
+#            print("instantiating a", cls, args, kwargs)
             obj = super().__new__(cls)
         return obj
 
@@ -148,7 +153,7 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
             "variable must be a Variable object"
         var.set_value(self, value)
 
-    def assert_valid(self):
+    def assert_valid(self):  # TODO: rename to "validate" when adding code that sets unset vars to default?
         """Make sure all variable values are valid.
 
         By calling assert_valid for all Variables
@@ -158,6 +163,7 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
             try:
                 val = v.get_value(self)
             except:
+                # TODO: set to default if unset and default exists??
                 return
             v.assert_valid(val)
 

@@ -28,7 +28,7 @@ class Cell (I.Cell, abstract.Cell):
 
     def __init__(self,
                  *,
-                 world,
+                 world=None,
                  society=None,
                  location=None,
                  land_area = 1 * D.square_kilometers,
@@ -58,7 +58,8 @@ class Cell (I.Cell, abstract.Cell):
         # init and set variables implemented via properties
         self._world = None
         self._society = None
-        self.world = world
+        if world:
+            self.world = world
         self.society = society  # this line must occur after setting world!
 
         # set other variables:

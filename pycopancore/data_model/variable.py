@@ -174,7 +174,11 @@ class Variable(Symbol):
         self.upper_bound = upper_bound
         self.strict_upper_bound = strict_upper_bound
         self.quantum = quantum
-        self.unit = unit
+        if unit is None and default is not None \
+                and isinstance(default, DimensionalQuantity):
+            self.unit = default.unit
+        else:
+            self.unit = unit
 
         assert not (is_extensive is True and is_intensive is True), \
             "cannot be both extensive and intensive"
@@ -225,31 +229,31 @@ class Variable(Symbol):
     def __repr__(self):
         return (self.owning_class.__name__ + "." + self.codename) \
             if self.owning_class \
-            else self.name + " (" + self._uid + ")"
+            else self.name + "(uid=" + self._uid + ")"
         # dirty fix for lengthy output
-        r = "Variable " + self.name + "(" + self.desc + "), scale=" \
-            + self.scale + ", datatype=" + str(self.datatype)
-        if self.unit is not None:
-            r += ", unit=" + str(self.unit)
-        if self.default is not None:
-            r += ", default=" + str(self.default)
-        if self.allow_none is False:
-            r += ", not None"
-        if self.lower_bound is not None:
-            r += ", >=" + str(self.lower_bound)
-        if self.strict_lower_bound is not None:
-            r += ", >" + str(self.strict_lower_bound)
-        if self.upper_bound is not None:
-            r += ", <=" + str(self.upper_bound)
-        if self.strict_upper_bound is not None:
-            r += ", <" + str(self.strict_upper_bound)
-        if self.quantum is not None:
-            r += ", % " + str(self.quantum) + " == 0"
-        if self.levels is not None:
-            r += ", levels=" + str(self.levels)
-        if self.array_shape is not None:
-            r += ", shape=" + str(self.array_shape)
-        return r
+#        r = "Variable " + self.name + "(" + self.desc + "), scale=" \
+#            + self.scale + ", datatype=" + str(self.datatype)
+#        if self.unit is not None:
+#            r += ", unit=" + str(self.unit)
+#        if self.default is not None:
+#            r += ", default=" + str(self.default)
+#        if self.allow_none is False:
+#            r += ", not None"
+#        if self.lower_bound is not None:
+#            r += ", >=" + str(self.lower_bound)
+#        if self.strict_lower_bound is not None:
+#            r += ", >" + str(self.strict_lower_bound)
+#        if self.upper_bound is not None:
+#            r += ", <=" + str(self.upper_bound)
+#        if self.strict_upper_bound is not None:
+#            r += ", <" + str(self.strict_upper_bound)
+#        if self.quantum is not None:
+#            r += ", % " + str(self.quantum) + " == 0"
+#        if self.levels is not None:
+#            r += ", levels=" + str(self.levels)
+#        if self.array_shape is not None:
+#            r += ", shape=" + str(self.array_shape)
+#        return r
 
     # validation:
 

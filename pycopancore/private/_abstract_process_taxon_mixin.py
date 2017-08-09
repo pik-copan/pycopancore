@@ -11,10 +11,43 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 # License: MIT license
 
 from ..data_model import variable
+from ..private._expressions import _DotConstruct, aggregation_names
 from ..data_model import OrderedSet
-# TODO: why don't we need a _AbstractProcessTaxonMixinType as for entities?
 
-class _AbstractProcessTaxonMixin(object):
+import inspect
+
+
+class _AbstractProcessTaxonMixinType(type):
+    """metaclass for _AbstractProcessTaxonMixin.
+
+    Needed for intercepting
+    class attribute calls and having nice reprs.
+    """
+
+    def __getattribute__(cls, name):
+        """Dummy docstring"""
+        # TODO: add docstring to function
+        if name in aggregation_names:
+            dc = _DotConstruct(cls, [], aggregation=name)
+#            print("new aggregation dot construct",dc,"at",cls,"with aggregation",name)
+            return dc
+        res = type.__getattribute__(cls, name)
+        if isinstance(res, property):
+            # find first overridden attribute in method resolution
+            # order that is not a property (but a Variable object):
+            for c in inspect.getmro(cls)[1:]:
+                try:
+                    res = c.__getattribute__(c, name)
+                    if isinstance(res, variable.Variable):
+                        return res
+                except BaseException:
+                    pass
+            raise AttributeError("property " + name
+                                 + " does not correspond to any Variable!")
+        return res
+
+
+class _AbstractProcessTaxonMixin(object, metaclass=_AbstractProcessTaxonMixinType):
     """Define Entity-unspecific abstract class.
 
     From this class all entity-specific abstract mixin classes are derived.
@@ -23,9 +56,11 @@ class _AbstractProcessTaxonMixin(object):
     processes = []
     """All processes of this taxon"""
     model = None
-    """Model containing this taxon"""
+    """Current model using this taxon"""
     instances = None
-    """List containing the unique instance of this taxon"""
+    """List containing the unique (!) instance of this taxon"""
+    _composite_class = None
+    """Composite class this mixin contributes to in the current model"""
 
     def __init__(self):
         """Initialize an _AbstractProcessTaxonMixin instance."""
@@ -50,7 +85,7 @@ class _AbstractProcessTaxonMixin(object):
             "variable must be a Variable object"
         var.set_value(self, value)
 
-    def assert_valid(self):
+    def assert_valid(self):  # TODO: rename to "validate" when adding code that sets unset vars to default?
         """Make sure all variable values are valid.
 
         By calling assert_valid for all Variables
@@ -60,5 +95,6 @@ class _AbstractProcessTaxonMixin(object):
             try:
                 val = v.get_value(self)
             except:
+                # TODO: set to default if unset and default exists??
                 return
             v.assert_valid(val)

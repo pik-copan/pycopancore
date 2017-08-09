@@ -26,8 +26,8 @@ class SetVariable(Variable):
         self.type = type
 
     def __getattr__(self, name):
-        """return an object representing a class attribute of the referenced class"""
-        return _DotConstruct(self, [None, name])
+        """return a _DotConstruct representing a variable of the referenced class"""
+        return _DotConstruct(self, []).__getattr__(name)
 
     # validation:
 
