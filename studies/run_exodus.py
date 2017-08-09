@@ -57,7 +57,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
-                                 land_area=20,
+                                 land_area=20,  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []

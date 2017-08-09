@@ -56,7 +56,7 @@ class Metabolism (I.Metabolism):
 
     # process-related methods:
 
-    def market_clearing_rhs(self, logp_and_logys):
+    def market_clearing_rhs(self, logp_and_logys, tgi):
         """Do the market clearing for all individuals in the world.
 
         Return right hand side of equation to optimize all agents' utility.
@@ -76,6 +76,7 @@ class Metabolism (I.Metabolism):
         price = np.exp(logp_and_logys[0])
         ys = np.exp(logp_and_logys[1:])
         errors = np.zeros(shape=len(logp_and_logys))
+        total_gross_income = tgi
         # Chose a world as world. When having several, this must be changed!
         for w in self.worlds:
             world = w
@@ -93,15 +94,15 @@ class Metabolism (I.Metabolism):
             # Calculate the subjects nutrition
             w_i = e.harvest - ((ys[i] - e.gross_income) / price)
             # Get the rhs of the equation for the individual
-            errors[1 + i] = (sri - (w_i * price)
-                             * stats.lognorm.pdf(ys[i],
-                                                 s=sigma,
-                                                 loc=loc,
-                                                 scale=median
-                                                 )
+            errors[1 + i] = (sri - (w_i * price * stats.lognorm.pdf(ys[i],
+                                                                    s=sigma,
+                                                                    loc=loc,
+                                                                    scale=median
+                                                                    )
+                                    )
                              ) / (2 * np.sqrt(w_i * sri))
         # Sum over liquidity must be equal to sum over gross income:
-        errors[0] = sum(ys) - self.total_gross_income
+        errors[0] = sum(ys) - total_gross_income
         # return rhs of the system of equations:
         return errors
 
@@ -119,9 +120,13 @@ class Metabolism (I.Metabolism):
         for i in world.individuals:
             log_liquidities.append(np.log(i.liquidity))
         logp_and_logys = [np.log(self.water_price)] + log_liquidities
+        # Get total gross income once, so that it doesn't need to be
+        # calculated each time the function is called:
+        tgi = self.total_gross_income
         solution = optimize.root(fun=self.market_clearing_rhs,
                                  x0=logp_and_logys,
-                                 # method='lm'
+                                 args=(tgi)
+                                 # method='broyden1'
                                  )
         print(solution)
         self.water_price = np.exp(solution['x'][0])

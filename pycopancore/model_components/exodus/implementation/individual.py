@@ -67,14 +67,16 @@ class Individual (I.Individual):
     @property
     def harvest(self):
         """Get the amount of water a farmer is harvesting"""
-        return self.farm_size * self.cell.average_precipitation
+        # Return harvest in unit cubic meters per year. Since Farm size is in
+        # square kilometers, a factor of 1000*1000 is necessary:
+        return self.farm_size * self.cell.average_precipitation * 1000000
 
     @property
     def utility(self):
         """Get the Cobb-Douglas utility of an individual"""
         print('nutrition', self.nutrition)
         print('sri', self.subjective_income_rank)
-        return math.sqrt(self.subjective_income_rank * self.nutrition)
+        return math.sqrt(self.subjective_income_rank * self.nutrition / 1240)
         # TODO: Add parameter to compensate for frequency of market clearing!
         # 1240 m^3 is the annual need
 
@@ -159,6 +161,7 @@ class Individual (I.Individual):
         """
         # Difference in utility:
         delta_utility = neighbour.utility - self.utility
+        print('delta util', delta_utility)
         # Sigmoidal function, normalized so that sigmoid(1) = 1:
         sigmoid = 1 / (1 + math.exp(- self.migration_steepness * (
             delta_utility - self.migration_threshold))) * (1 + math.exp(
