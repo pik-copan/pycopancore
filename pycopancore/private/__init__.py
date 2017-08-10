@@ -9,6 +9,7 @@
 """
 """
 
+from ._mixin import _Mixin, _MixinType
 from ._abstract_process import _AbstractProcess
 from ._abstract_process_taxon_mixin import _AbstractProcessTaxonMixin
 from ._abstract_entity_mixin import _AbstractEntityMixin

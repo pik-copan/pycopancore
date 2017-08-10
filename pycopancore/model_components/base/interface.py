@@ -12,7 +12,7 @@ by entity type and process taxon
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from ...private._abstract_entity_mixin import _AbstractEntityMixinType
+from ...private import _MixinType
 from ... import Variable, ReferenceVariable, SetVariable
 from ... import master_data_model as D
 from ...data_model.master_data_model import NAT, CUL, W, S, C
@@ -64,7 +64,8 @@ class Culture (object):
 # entity types:
 
 
-class World (object, metaclass=_AbstractEntityMixinType):
+# TODO: clarify whether it is necessary to specify the metaclass here!
+class World (object, metaclass=_MixinType):
     """Basic World interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -104,7 +105,7 @@ class World (object, metaclass=_AbstractEntityMixinType):
                               "set of Individuals residing on this world")
 
 
-class Society (object, metaclass=_AbstractEntityMixinType):
+class Society (object, metaclass=_MixinType):
     """Basic Society interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -154,7 +155,7 @@ World.societies.type = Society
 World.top_level_societies.type = Society
 
 
-class Cell (object, metaclass=_AbstractEntityMixinType):
+class Cell (object, metaclass=_MixinType):
     """Basic Cell interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -192,7 +193,7 @@ Society.direct_cells.type = Cell
 Society.cells.type = Cell
 
 
-class Individual (object, metaclass=_AbstractEntityMixinType):
+class Individual (object, metaclass=_MixinType):
     """Basic Individual interface.
 
     It contains all variables specified as mandatory ("base variables").

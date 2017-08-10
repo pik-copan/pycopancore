@@ -17,58 +17,11 @@ It sets the basic structure of entity mixins (individuals, cells , societies).
 # - in __init__, add logics that sets all variables to either their specified
 #   values or their default values as given in Variable.
 
-from ..data_model import variable
-from ..private._expressions import _DotConstruct, aggregation_names
-from ..data_model import OrderedSet
-
-import inspect
+from . import _Mixin
 
 
-class _AbstractEntityMixinType(type):
-    """metaclass for _AbstractEntityMixin.
-
-    Needed for intercepting
-    class attribute calls and having nice reprs.
-    """
-
-#     def __getattr__(cls, name):
-#         """return an object representing an aggregation"""
-#         print("seeking",cls,name,cls.__base__)
-#         try:
-#             return object.__getattribute__(name)
-#         if name in aggregation_names:
-#             return _DotConstruct(cls, [name])
-#         res = getattr(cls.__base__, name)
-#         return res
-
-    def __getattribute__(cls, name):
-        """Dummy docstring"""
-        # TODO: add docstring to function
-        if name in aggregation_names:
-            dc = _DotConstruct(cls, [], aggregation=name)
-#            print("new aggregation dot construct",dc,"at",cls,"with aggregation",name)
-            return dc
-        res = type.__getattribute__(cls, name)
-        if isinstance(res, property):
-            # find first overridden attribute in method resolution
-            # order that is not a property (but a Variable object):
-            for c in inspect.getmro(cls)[1:]:
-                try:
-                    res = c.__getattribute__(c, name)
-                    if isinstance(res, variable.Variable):
-                        return res
-                except BaseException:
-                    pass
-            raise AttributeError("property " + name
-                                 + " does not correspond to any Variable!")
-        return res
-
-#    def __str__(cls):
-#        return cls.__name__
-
-
-class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
-    """Define AbstractEntityMixin.
+class _AbstractEntityMixin(_Mixin):
+    """Define _AbstractEntityMixin.
 
     Entity-unspecific abstract class from which all entity-specific abstract
     mixin classes are derived.
@@ -78,40 +31,27 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
 
     # class (!) attributes:
     NEXTUID = 0
-    processes = []
-    """All processes of this entity type"""
-    model = None
-    """Current model using this entity type"""
-    instances = None
-    """Active entities of this type"""
     idle_entities = None  # TODO: rename to inactive_entities
     """Inactive entities of this type"""
-    _composite_class = None
-    """Composite class this mixin contributes to in the current model"""
 
-    def __new__(cls, *args, **kwargs):
-        """Internal method called when instantiating a new entity.
 
-        Don't call this directly, always generate entities by instantiating
-        the a composite or mixin entity type class. This implementation makes
-        sure that a composite entity is generated even when only a mixin is
-        instantiated.
+    @classmethod
+    def get_next_uid(cls):
+        """Generate UIDs (Unique identifier).
+
+        Returns
+        -------
+        current_uid: int
+            the current uid
         """
-        try:
-            # if a composite class been registered with the invoking mixin
-            # class, we generate an instance of that:
-#            print("instantiating a", cls._composed_class, args, kwargs)
-            obj = super().__new__(cls._composed_class, *args, **kwargs)
-        except:
-            # otherwise, we do what __new__ normally does, namely generate an
-            # instance of the class invoking it, i.e., of cls:
-#            print("instantiating a", cls, args, kwargs)
-            obj = super().__new__(cls)
-        return obj
+        current_uid = cls.NEXTUID
+        cls.NEXTUID += 1
+        return current_uid
 
-    def __init__(self,
-                 **kwargs):
+
+    def __init__(self, *args, **kwargs):
         """Initialize an _AbstractEntityMixin instance."""
+        super().__init__(*args, **kwargs)
         self._uid = _AbstractEntityMixin.get_next_uid()
         try:
             self.__class__.instances.append(self)
@@ -140,46 +80,6 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
         self.__class__.idle_entities.remove(self)
         self.__class__.instances.append(self)
 
-    def __repr__(self):
-        return "{}[UID={}]".format(self.__class__.__name__, self._uid)
-
-    def __str__(self):
-        return repr(self)
-
-    def set_value(self, var, value):
-        """Dummy docstring"""
-        # TODO: add docstring to method
-        assert isinstance(var, variable.Variable), \
-            "variable must be a Variable object"
-        var.set_value(self, value)
-
-    def assert_valid(self):  # TODO: rename to "validate" when adding code that sets unset vars to default?
-        """Make sure all variable values are valid.
-
-        By calling assert_valid for all Variables
-
-        """
-        for v in self.variables:
-            try:
-                val = v.get_value(self)
-            except:
-                # TODO: set to default if unset and default exists??
-                return
-            v.assert_valid(val)
-
-    @classmethod
-    def get_next_uid(cls):
-        """Generate UIDs (Unique identifier).
-
-        Returns
-        -------
-        current_uid: int
-            the current uid
-        """
-        current_uid = cls.NEXTUID
-        cls.NEXTUID += 1
-        return current_uid
-
     @property
     def is_active(self):
         """Check if entity is active.
@@ -191,6 +91,12 @@ class _AbstractEntityMixin(object, metaclass=_AbstractEntityMixinType):
             return False
         else:
             raise StatusError("Entity not active nor idle.")
+
+    def __repr__(self):
+        return "{}[UID={}]".format(self.__class__.__name__, self._uid)
+
+    def __str__(self):
+        return repr(self)
 
 
 class StatusError(Exception):
