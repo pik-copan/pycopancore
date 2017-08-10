@@ -30,7 +30,6 @@ class Society (I.Society, abstract.Society):
                  *,
                  world,
                  next_higher_society=None,
-                 population=0 * D.people,
                  **kwargs
                  ):
         """Initialize an instance of Society.
@@ -58,12 +57,6 @@ class Society (I.Society, abstract.Society):
         self.world = world
         self._next_higher_society = None
         self.next_higher_society = next_higher_society
-
-        # set other variables:
-        self.population = population
-
-        # make sure all variable values are valid:
-        self.assert_valid()
 
     # getters and setters for references:
 

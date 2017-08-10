@@ -5,6 +5,7 @@ from . import metabolism as MET
 
 # natural:
 
+land_area = NAT.land_area.copy()
 atmospheric_carbon = NAT.atmospheric_carbon.copy()
 surface_air_temperature = NAT.surface_air_temperature.copy()
 ocean_carbon = NAT.ocean_carbon.copy()

@@ -598,11 +598,12 @@ def _eval(expr, iteration=None):
         except:
             print("oops")
         vals = base ** exponent
-#        try:
-#            vals[np.where(np.isnan(vals))] = 0  # FIXME: is this a good idea?  # FIXME: it makes trouble if entries are ints.
-#        except:
-#            print(vals,type(vals))
-#            raise Exception()
+        isn = np.isnan(vals.astype("float"))
+        if np.any(isn):
+            wh = np.where(isn)[0]
+#            print("Warning: invalid value encountered in power\nbase:",
+#                  args[0], "=", base[wh], "\nexponent:", args[1], "=", exponent[wh])
+            vals[wh] = 0  # TODO: is this a good idea?
     # TODO: other types of expressions, including function evaluations!
     # other functions/unary operators:
     elif tt == sp.FunctionClass:

@@ -1,7 +1,7 @@
 """Module for SetVariable class."""
 
 from . import Variable
-from ..private import _DotConstruct
+from ..private import _DotConstruct, unknown
 
 # TODO: complete logics, set other Variable attributes, validate etc.
 
@@ -37,7 +37,7 @@ class SetVariable(Variable):
         if v is None:
             if self.allow_none is False:
                 return False, str(self) + " may not be None"
-        else:
+        elif v is not unknown:
             # TODO: assert v is iterable!
             for i in v:
                 if self.type is not None:

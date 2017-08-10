@@ -28,7 +28,6 @@ class Individual (I.Individual, abstract.Individual):
     def __init__(self,
                  *,
                  cell,  # this is a mandatory keyword-only argument!
-                 relative_weight=1,
                  **kwargs
                  ):
         """Instantiate an instance of Individual.
@@ -48,9 +47,6 @@ class Individual (I.Individual, abstract.Individual):
         # init and set variables implemented via properties:
         self._cell = None
         self.cell = cell
-
-        # set other variables:
-        self.relative_weight = relative_weight
 
         # make sure all variable values are valid:
         self.assert_valid()

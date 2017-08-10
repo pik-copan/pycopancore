@@ -33,12 +33,6 @@ class World (I.World, abstract.World):
                  nature=None,
                  metabolism=None,
                  culture=None,
-                 population = 0 * D.people,
-                 terrestrial_carbon = 0 * D.gigatonnes_carbon,
-                 fossil_carbon = 0 * D.gigatonnes_carbon,
-                 atmospheric_carbon = 0 * D.gigatonnes_carbon,
-                 ocean_carbon = 0 * D.gigatonnes_carbon,
-                 surface_air_temperature = 0 * D.kelvins,
                  **kwargs
                  ):
         """Instantiate (typically the only) instance of World.
@@ -51,18 +45,6 @@ class World (I.World, abstract.World):
             Metabolism acting on this World.
         culture : obj
             Culture acting on this World.
-        population : quantity
-            Human population (default is 0).
-        terrestrial_carbon : quantity
-            Terrestrial carbon
-        fossil_carbon : quantity
-            Fossil carbon
-        atmospheric_carbon : quantity
-            Atmospheric carbon
-        ocean_carbon : quantity
-            Ocean carbon
-        surface_air_temperature : quantity
-            Surface air temperature
         **kwargs
             keyword arguments passed to super()
 
@@ -72,12 +54,6 @@ class World (I.World, abstract.World):
         self.nature = nature
         self.metabolism = metabolism
         self.culture = culture
-        self.population = population
-        self.terrestrial_carbon = terrestrial_carbon
-        self.fossil_carbon = fossil_carbon
-        self.atmospheric_carbon = atmospheric_carbon
-        self.ocean_carbon = ocean_carbon
-        self.surface_air_temperature = surface_air_temperature
         self._societies = set()
         self._cells = set()
 

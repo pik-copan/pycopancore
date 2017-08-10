@@ -21,28 +21,6 @@ import numpy as np
 class Society (I.Society):
     """Society entity type mixin implementation class."""
 
-    # standard methods:
-
-    def __init__(self,
-                 *,
-                 protected_terrestrial_carbon_share=0,
-                 protected_fossil_carbon_share=0,
-                 **kwargs):
-        """Initialize an instance of Society."""
-        super().__init__(**kwargs)  # must be the first line
-
-        self.protected_terrestrial_carbon_share = \
-            protected_terrestrial_carbon_share
-        self.protected_fossil_carbon_share = \
-            protected_fossil_carbon_share
-            
-        self.biomass_input_flow = 0
-        self.fossil_fuel_input_flow = 0
-        self.renewable_energy_input_flow = 0
-        self.secondary_energy_flow = 0
-        self.carbon_emission_flow = 0
-        self.total_output_flow = 0
-
     # process-related methods:
 
     def do_economic_production(self, unused_t):

@@ -176,8 +176,8 @@ class ModelLogics (object):
                         "component or mixin."
                     cls.processes.add(p)
 
-        # now iterate again through all composed entity-types and process taxa
-        # and output all found variables:
+        # now iterate again through all composed entity-types and process taxa,
+        # output all found variables and complete the composed class' logics:
         print("\nVariables:")
         for composed_class in cls.entity_types + cls.process_taxa:
             if composed_class in cls.entity_types:
@@ -204,6 +204,13 @@ class ModelLogics (object):
                     cls.variables.add(v)
                     composed_class.variables.add(v)
                     v.owning_class = composed_class
+            # add an __init__ method to the composed class:
+            def new__init__(inst, **kwargs):
+                """make sure all values have valid values"""
+                super(inst.__class__, inst).__init__(**kwargs)
+                inst.complete_values()
+                inst.assert_valid()
+            composed_class.__init__ = new__init__
 
         print("\nProcesses:")
         # iterate again through all composed entity-types and process taxa

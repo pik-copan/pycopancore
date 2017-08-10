@@ -16,8 +16,8 @@ random.seed(1)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 10  # no. societies
-ncells = 30  # no. cells
+nsocs = 2  # no. societies
+ncells = 3  # no. cells
 
 model = M.Model()
 
@@ -27,11 +27,12 @@ metabolism = M.Metabolism()
 
 # generate entities and plug them together at random:
 worlds = [M.World(nature=nature, metabolism=metabolism,
-                  atmospheric_carbon=830 * D.gigatonnes_carbon,
-                  ocean_carbon=(5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
+                  atmospheric_carbon = 830 * D.gigatonnes_carbon,
+                  ocean_carbon = (5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                   ) for w in range(nworlds)]
 societies = [M.Society(world=random.choice(worlds)) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies)) for c in range(ncells)]
+
 
 # distribute area and vegetation randomly but correlatedly:
 r = random.uniform(size=ncells)
@@ -100,4 +101,4 @@ for c in cells:
 #    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
 #    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
-show()
+#show()

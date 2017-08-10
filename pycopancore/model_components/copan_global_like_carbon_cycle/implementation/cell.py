@@ -1,38 +1,32 @@
-"""Jobst: write docstring."""
+"""provides this model component's Cell mixin class"""
+
+# This file is part of pycopancore.
+#
+# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# License: MIT license
+
 
 from .... import Explicit, ODE
-from .... import master_data_model as D
 from ...base import interface as B
 
 from .. import interface as I
 
-# import numpy as np
-import sympy as sp
+import sympy as sp  # to be able to use sp.sqrt
 
 
 class Cell (I.Cell):
     """Jobst: write docstring."""
 
-    # standard methods:
-
-    def __init__(self,
-                 *,
-                 terrestrial_carbon=1 * D.gigatonnes_carbon,
-                 fossil_carbon=1 * D.gigatonnes_carbon,
-                 **kwargs
-                 ):
-        """Initialize a cell."""
-        super().__init__(**kwargs)
-        # initial values:
-        self.terrestrial_carbon = terrestrial_carbon
-        self.fossil_carbon = fossil_carbon
-
-    # abbreviations:
+    # abbreviation:
 
     balance = (I.Cell.photosynthesis_carbon_flow
                - I.Cell.terrestrial_respiration_carbon_flow)
+    world_land_area = B.Cell.world.sum.cells.land_area
 
-    processes = [  # using symbolic expressions for performance reasons:
+    processes = [  # using symbolic expressions for performance and legibility:
 
         Explicit("photosynthesis flow",
                  [I.Cell.photosynthesis_carbon_flow],
@@ -41,7 +35,7 @@ class Cell (I.Cell):
                        .photosynthesis_sensitivity_on_atmospheric_carbon)
                     * B.Cell.world.atmospheric_carbon)
                    * sp.sqrt(B.Cell.world.atmospheric_carbon
-                             / B.Cell.land_area)
+                             / world_land_area)
                    * (1 - I.Cell.terrestrial_carbon
                       / (B.Cell.nature.terrestrial_carbon_capacity_per_area
                          * B.Cell.land_area)

@@ -8,7 +8,7 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# from ... import master_data_model as D
+from ... import master_data_model as D
 from ...data_model.master_data_model import S
 
 
@@ -40,7 +40,10 @@ class Society (object):
     # endogenous variables:
 
     physical_capital = S.physical_capital
+    physical_capital.default = 1 * D.dollars
+    
     renewable_energy_knowledge = S.renewable_energy_knowledge
+    renewable_energy_knowledge.default = 1 * D.gigajoules
 
     # output-only variables:
 

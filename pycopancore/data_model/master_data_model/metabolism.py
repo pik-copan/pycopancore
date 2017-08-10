@@ -10,7 +10,7 @@ population = Variable("human population", "",
                       IAMC="Population",
                       CETS="SP.POP",
                       unit=people,
-                      is_extensive=True, lower_bound = 0 * people)
+                      is_extensive=True, lower_bound=0, default=0)
 
 # Note: when using the following, include
 # Implicit(population == sum(population_by_age))
@@ -19,19 +19,21 @@ population_by_age = Variable("human population by age",
                              IAMC="Population",
                              CETS="SP.POP",
                              unit=people,
-                             is_extensive=True, lower_bound = 0 * people,
+                             is_extensive=True, lower_bound=0,
                              array_shape=(100,))  # 1d-array
 
 fertility = Variable("current human fertility rate", "",
                      unit=years**-1,
-                     lower_bound=0, is_intensive=True)
+                     lower_bound=0, is_intensive=True, 
+                     default=0.02)
 max_fertility = Variable("maximum human fertility rate", "",
                          unit=years**-1,
                          lower_bound=0, is_intensive=True,
-                         default = 0.04 / years)
+                         default=0.04)
 mortality = Variable("current human mortility rate", "",
                      unit=years**-1,
-                     lower_bound=0, is_intensive=True)
+                     lower_bound=0, is_intensive=True,
+                     default=0.01)
 
 births = Variable("births per time", "",
                   unit = people / years,
@@ -44,16 +46,16 @@ deaths = Variable("deaths per time", "",
 
 biomass_harvest_flow = Variable("biomass harvest flow", "",
                                 unit = gigatonnes_carbon / years, # leave whitespace as it is, for g*ds sake!!!!
-                                lower_bound=0, is_extensive=True)
+                                lower_bound=0, is_extensive=True, default=0)
 
 fossil_extraction_flow = Variable("fossil extraction flow", "",
                                   unit = gigatonnes_carbon / years,
-                                  lower_bound=0, is_extensive=True)
+                                  lower_bound=0, is_extensive=True, default=0)
 
 carbon_emission_flow = Variable("carbon emission flow", "",
                                 unit = gigatonnes_carbon / years,
                                 IAMC="Emissions|CO2",
-                                lower_bound=0, is_extensive=True)
+                                lower_bound=0, is_extensive=True, default=0)
 
 # Economy:
 
@@ -109,14 +111,14 @@ secondary_energy_flow = \
 total_energy_intensity = \
     Variable("total energy intensity", "",
              unit = gigajoules / dollars,
-             lower_bound=0, is_intensive=True)
+             lower_bound=0, is_intensive=True, default=0)
 
 total_output_flow = \
     Variable("total economic output flow",
              "(in value units)",
              IAMC="GDP|PPP",  # or GDP|MER?
              unit = dollars / years,
-             lower_bound=0, is_extensive=True, default=1e-10)
+             lower_bound=0, is_extensive=True, default=0)
 
 consumption_flow = \
     Variable("consumption flow", """(in value units)""",
@@ -142,36 +144,41 @@ welfare_flow_per_capita = \
 wellbeing = \
     Variable("well-being", "(in utility flow units)",
              unit = utils / people / years,
-             is_intensive=True, default=1e-1)
+             is_intensive=True, default=0)
 
 # productivities, efficiencies etc.
 
 biomass_energy_density = Variable("biomass energy density", "",
                                   unit = gigajoules / gigatonnes_carbon,
-                                  lower_bound=0, is_intensive=True)
+                                  lower_bound=0, is_intensive=True,
+                                  default=0)
 
 fossil_energy_density = Variable("fossil energy density", "",
                                  unit = gigajoules / gigatonnes_carbon,
-                                 lower_bound=0, is_intensive=True)
+                                 lower_bound=0, is_intensive=True,
+                                 default=0)
 
 # depreciation, learning, discounting, interest etc. rates
 
 physical_capital_depreciation_rate = \
     Variable("physical capital depreciation rate", "",
              unit = years**-1,
-             lower_bound=0, is_intensive=True)
+             lower_bound=0, is_intensive=True,
+             default=0.1)
 
 renewable_energy_knowledge_depreciation_rate = \
     Variable("renewable energy production knowledge depreciation rate", "",
              unit = years**-1,
-             lower_bound=0, is_intensive=True)
+             lower_bound=0, is_intensive=True,
+             default=0.02)
 
 # other non-time rates:
 
 savings_rate = \
     Variable("savings (investment) rate", "(as a fraction of income)",
              unit=unity,
-             lower_bound=0, upper_bound=1, is_intensive=True)
+             lower_bound=0, upper_bound=1, is_intensive=True,
+             default=0.244)
 
 
 # financial capital?

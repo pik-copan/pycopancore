@@ -88,25 +88,25 @@ class Cell (object):
         Variable("biomass relative productivity",
                  "used to determine energy input",
                  unit=D.unity,
-                 lower_bound=0)
+                 lower_bound=0, default=1)
 
     fossil_relative_productivity = \
         Variable("fossil relative productivity",
                  "used to determine energy input",
                  unit=D.unity,
-                 lower_bound=0)
+                 lower_bound=0, default=1)
 
     renewable_relative_productivity = \
         Variable("renewable relative productivity",
                  "used to determine energy input",
                  unit=D.unity,
-                 lower_bound=0)
+                 lower_bound=0, default=1)
 
     total_relative_productivity = \
         Variable("total relative productivity",
                  "used as weights in allocation of labour and capital",
                  unit=D.unity,
-                 lower_bound=0)
+                 lower_bound=0, default=3)
 
     biomass_harvest_flow = C.biomass_harvest_flow
     fossil_extraction_flow = C.fossil_extraction_flow
@@ -117,17 +117,17 @@ class Cell (object):
         Variable("biomass sector productivity", "",
                  unit=(D.gigajoules / D.years)**5
                  / (D.gigatonnes_carbon * D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True)
+                 lower_bound=0, is_intensive=True, default=0)
     fossil_sector_productivity = \
         Variable("fossil sector productivity", "",
                  unit=(D.gigajoules / D.years)**5
                  / (D.gigatonnes_carbon * D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True)
+                 lower_bound=0, is_intensive=True, default=0)
     renewable_sector_productivity = \
         Variable("renewable sector productivity", "",
                  unit=D.gigajoules**3 / D.years**5
                  / (D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True)
+                 lower_bound=0, is_intensive=True, default=0)
     total_energy_intensity = C.total_energy_intensity
 
 

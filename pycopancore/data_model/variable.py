@@ -41,6 +41,8 @@ class Variable(Symbol):
     """level of measurement: "ratio" (default), "interval", "ordinal",
     or "nominal" (see https://en.wikipedia.org/wiki/Level_of_measurement)"""
 
+    readonly = None
+    """whether variable is read-only, e.g. holding redundant information"""
     default = None
     """default initial value"""
     uninformed_prior = None
@@ -124,6 +126,7 @@ class Variable(Symbol):
                  symbol=None,
                  ref=None,
                  scale="ratio",
+                 readonly=False,
                  default=None,
                  uninformed_prior=None,
                  CF=None,
@@ -132,7 +135,7 @@ class Variable(Symbol):
                  CETS=None,
                  datatype=None,
                  array_shape=None,
-                 allow_none=True,  # by default, var may be none
+                 allow_none=False,
                  lower_bound=None,
                  strict_lower_bound=None,
                  upper_bound=None,
@@ -158,8 +161,7 @@ class Variable(Symbol):
             "scale must be ratio, interval, ordinal, or nominal"
         self.scale = scale
 
-        self.default = default
-        self.uninformed_prior = uninformed_prior
+        self.readonly = readonly
 
         self.CF = CF
         self.AMIP = AMIP
@@ -168,17 +170,16 @@ class Variable(Symbol):
 
         self.datatype = datatype
         self.array_shape = array_shape
-        self.allow_none = allow_none
-        self.lower_bound = lower_bound
-        self.strict_lower_bound = strict_lower_bound
-        self.upper_bound = upper_bound
-        self.strict_upper_bound = strict_upper_bound
-        self.quantum = quantum
         if unit is None and default is not None \
                 and isinstance(default, DimensionalQuantity):
             self.unit = default.unit
         else:
             self.unit = unit
+        self.lower_bound = lower_bound
+        self.strict_lower_bound = strict_lower_bound
+        self.upper_bound = upper_bound
+        self.strict_upper_bound = strict_upper_bound
+        self.quantum = quantum
 
         assert not (is_extensive is True and is_intensive is True), \
             "cannot be both extensive and intensive"
@@ -187,36 +188,56 @@ class Variable(Symbol):
 
         self.levels = levels
 
+        if readonly:
+            assert default is None
+            assert uninformed_prior is None
+            self.allow_none = True
+            self.default = private.unknown
+        else:
+            self.allow_none = allow_none
+            self.default = default
+        self.uninformed_prior = uninformed_prior
+
+    def copy(self, **kwargs):
+        newkwargs = {
+                "symbol": self.symbol,
+                "ref": self.ref,
+                "scale": self.scale,
+                "readonly": self.readonly,
+                "default": self.default,
+                "uninformed_prior": self.uninformed_prior,
+                "CF": self.CF,
+                "AMIP": self.AMIP,
+                "IAMC": self.IAMC,
+                "CETS": self.CETS,
+                "datatype": self.datatype,
+                "array_shape": self.array_shape,
+                "allow_none": self.allow_none,
+                "lower_bound": self.lower_bound,
+                "strict_lower_bound": self.strict_lower_bound,
+                "upper_bound": self.upper_bound,
+                "strict_upper_bound": self.strict_upper_bound,
+                "quantum": self.quantum,
+                "unit": self.unit,
+                "is_extensive": self.is_extensive,
+                "is_intensive": self.is_intensive,
+                "levels": self.levels
+            }
+        newkwargs.update(kwargs)
+        return Variable(self.name, self.desc, **newkwargs)
+
+    @property
+    def default(self):
+        return self._default
+        
+    @default.setter
+    def default(self, value):
+        if value is not None:
+            self.assert_valid(value)
+        self._default = value
+
     def __eq__(self, other):
         return object.__eq__(self, other)
-
-    def copy(self):
-        # TODO: do this more elegantly??
-        c = Variable(self.name,
-                     self.desc,
-                     symbol=self.symbol,
-                     ref=self.ref,
-                     scale=self.scale,
-                     default=self.default,
-                     uninformed_prior=self.uninformed_prior,
-                     CF=self.CF,
-                     AMIP=self.AMIP,
-                     IAMC=self.IAMC,
-                     CETS=self.CETS,
-                     datatype=self.datatype,
-                     array_shape=self.array_shape,
-                     allow_none=self.allow_none,
-                     lower_bound=self.lower_bound,
-                     strict_lower_bound=self.strict_lower_bound,
-                     upper_bound=self.upper_bound,
-                     strict_upper_bound=self.strict_upper_bound,
-                     quantum=self.quantum,
-                     unit=self.unit,
-                     is_extensive=self.is_extensive,
-                     is_intensive=self.is_intensive,
-                     levels=self.levels
-                     )
-        return c
 
     def __hash__(self):
         return object.__hash__(self)

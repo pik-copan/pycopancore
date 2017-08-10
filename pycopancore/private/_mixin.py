@@ -106,13 +106,37 @@ class _Mixin(object, metaclass=_MixinType):
             obj = super().__new__(cls)
         return obj
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         """Initialize a _Mixin instance by assigning specified values to
         all variables."""
-        # TODO: remove kwargs that correspond to Variables
-        super().__init__(*args, **kwargs)
-        # TODO: assign values!
-        pass
+        # extract kwargs that correspond to Variables:
+        varvals = {}
+        nonvarkwargs = {}
+        for key, val in kwargs.items():
+            if hasattr(self.__class__, key):
+                clsattr = getattr(self.__class__, key)
+                if isinstance(clsattr, variable.Variable):
+                    varvals[clsattr] = val
+                    continue
+            print("unexpected (misspelled?) keyword argument",key,"=",val)
+            nonvarkwargs[key] = val
+        # pass other kwargs to super:
+        super().__init__(**nonvarkwargs)
+        # assign Variable values:
+        for var, val in varvals.items():
+            var.set_value(self, val)
+            
+    def complete_values(self):
+        """assign default values to all unset Variables"""
+        for var in self.variables:
+            if (not hasattr(self, var.codename)  # this happens for unset properties
+                or isinstance(getattr(self, var.codename), variable.Variable)):
+                # class attribute was returned by getattr,
+                # hence object attribute has not been assigned a value yet. 
+                try:
+                    var.set_to_default(self)
+                except AttributeError:
+                    pass
 
     # Jobst: object provides a sufficient __str__ I guess
 #    def __str__(self):
