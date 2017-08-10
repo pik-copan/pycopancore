@@ -2,10 +2,12 @@
 
 from . import nature as NAT
 from . import metabolism as MET
+from . import square_kilometers
 
 # natural:
 
 land_area = NAT.land_area.copy()
+land_area.default = 1 * square_kilometers
 atmospheric_carbon = NAT.atmospheric_carbon.copy()
 surface_air_temperature = NAT.surface_air_temperature.copy()
 ocean_carbon = NAT.ocean_carbon.copy()
