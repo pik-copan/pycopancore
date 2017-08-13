@@ -42,6 +42,13 @@ deaths = Variable("deaths per time", "",
                   unit = people / years,
                   lower_bound=0, is_extensive=True, default=0)
 
+immigration = Variable("immigrants per time", "",
+                       unit = people / years,
+                       lower_bound=0, is_extensive=True, default=0)
+emigration = Variable("emigrants per time", "",
+                      unit = people / years,
+                      lower_bound=0, is_extensive=True, default=0)
+
 # Resource extraction and waste:
 
 biomass_harvest_flow = Variable("biomass harvest flow", "",

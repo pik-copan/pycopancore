@@ -11,6 +11,8 @@ fertility = MET.fertility.copy()
 mortality = MET.mortality.copy()
 births = MET.births.copy()
 deaths = MET.deaths.copy()
+immigration = MET.immigration.copy()
+emigration = MET.emigration.copy()
 
 biomass_harvest_flow = MET.biomass_harvest_flow.copy()
 fossil_extraction_flow = MET.fossil_extraction_flow.copy()

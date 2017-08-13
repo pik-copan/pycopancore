@@ -22,8 +22,8 @@ from ..model_components import copan_global_like_economic_growth \
     as growth
 from ..model_components import copan_global_like_population_growth \
     as pop
-# from ..model_components import ...migration \
-#    as migration
+from ..model_components import wellbeing_driven_migration \
+    as mig
 
 
 # entity types:
@@ -41,6 +41,7 @@ class Society(
               prod.Society,
               growth.Society,
               pop.Society,
+              mig.Society,
               base.Society):
     """Society entity type."""
 
@@ -74,6 +75,7 @@ class Nature(cc.Nature,
 class Metabolism(
                  prod.Metabolism,
                  pop.Metabolism,
+                 mig.Metabolism,
                  base.Metabolism):
     """Metabolism process taxon."""
 
@@ -92,6 +94,7 @@ class Model(cc.Model,
             prod.Model,
             growth.Model,
             pop.Model,
+            mig.Model,
             base.Model):
     """Class representing the whole model."""
 
