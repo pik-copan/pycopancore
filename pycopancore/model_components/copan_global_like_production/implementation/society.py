@@ -42,11 +42,19 @@ class Society (I.Society):
         """an aggregate, production-function specific indicator"""
         # distribute population and capital to cells so that wages and rents
         # are equal across cells (efficient allocation):
-        relative_weight = relative_productivity
-        total_relative_weight = sum(relative_weight)
-        if total_relative_weight == 0:
-            # unimportant since relative_weight == 0, just to avoid division error:
-            total_relative_weight = 1
+        if np.any(relative_productivity == np.inf):
+            # give equal prod. to those with inf relative prod.:
+            wh = np.where(relative_productivity < np.inf)[0]
+            relative_productivity[:] = 1
+            relative_productivity[wh] = 0
+            relative_weight = relative_productivity
+            total_relative_weight = sum(relative_weight)
+        else:
+            relative_weight = relative_productivity
+            total_relative_weight = sum(relative_weight)
+            if total_relative_weight == 0:
+                # unimportant since relative_weight == 0, just to avoid division error:
+                total_relative_weight = 1
         weight = relative_weight / total_relative_weight
         P = weight * self.population
         K = weight * self.physical_capital
@@ -99,7 +107,8 @@ class Society (I.Society):
                   I.Society.fossil_fuel_input_flow,
                   I.Society.renewable_energy_input_flow,
                   I.Society.secondary_energy_flow,
-                  I.Society.total_output_flow],
+                  I.Society.total_output_flow,
+                  I.Society.carbon_emission_flow],
                  do_economic_production),
 
         ODE("harvest, extraction, emissions",

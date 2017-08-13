@@ -96,15 +96,25 @@ class Variable(Symbol):
     # if "ordinal" or "nominal":
     levels = None  # values must be element of this
 
-    # attributes needed for internal framework logics:
+    # attributes needed for internal framework logics, 
+    # set by Model.configure():
 
     owning_class = None
     """the class owning the Variable as its attribute"""
     codename = None
     """the attribute name of the Variable in its owning class"""
+    explicit_dependencies = None
+    """set of Vars. in the RHS of the explicit equation setting this Var."""
+    ODE_dependencies = None
+    """set of Vars. in the RHS of any ODE changing this Var."""
+    # TODO: similar for Step, Event. How to deal with Implicit?
 
     _uid = None
     """unique id"""
+
+    # needed to make sympy and expressions happy:
+    _iterable = False
+    _can_be_target = True
 
     # standard methods:
 
@@ -546,6 +556,12 @@ class Variable(Symbol):
 
         """
         return [getattr(i, 'd_' + self.codename) for i in instances]
+
+    def add_derivatives(self, values):
+        """adds summands to referenced attribute values"""
+        dname = "d_" + self.codename
+        for pos, i in enumerate(self.target_instances):
+            setattr(i, dname, getattr(i, dname) + values[pos])
 
     # TODO: improve docstring
     def get_value(self, instance, unit=None):

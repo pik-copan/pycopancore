@@ -87,16 +87,19 @@ class Runner(_AbstractRunner):
         # entities' attributes all the time (profiling has shown that this
         # takes a significant portion of the time).
         for p in self.explicit_processes:
+#            print(t,"Process",p)
             spec = p.specification  # either a list of symbolic expressions or a method
             if isinstance(spec, list):
                 # it's a list of symbolic expressions, one for each target in
                 # the same order as in "targets". hence we loop over those:
                 for i, target in enumerate(p.targets):
+#                    print("Process",p,"target",target)
                     # evaluate corresponding expression,
                     # giving a list of values, one for each instance,
                     # in an order determined by the target:
                     values = eval(spec[i],
                                   self._current_iteration)
+#                    print(values)
                     # note that values may have different length than
                     # p.owning_class.instances due to broadcasting effects
                     # if the target is a dotconstruct.
@@ -147,7 +150,7 @@ class Runner(_AbstractRunner):
             var.clear_derivatives()
 
         # let all processes calculate their derivative terms:
-        derivative_array = np.zeros(value_array.size)
+        summands_array = np.zeros(value_array.size)
         for p in self.ode_processes:
             spec = p.specification
             if isinstance(spec, list):
@@ -159,13 +162,7 @@ class Runner(_AbstractRunner):
                     if isinstance(target, Variable):
                         # add result directly to output array
                         # (rather than in instances' derivative attributes):
-                        try:
-                            derivative_array[target._from:target._to] += summands
-                        except:
-                            print(p,target,target._from,target._to)
-                            print((derivative_array[target._from:target._to]))
-                            print((summands))
-                            raise Exception
+                        summands_array[target._from:target._to] += summands
                     else:
                         # summands may have different length than
                         # p.owning_class.instances due to broadcasting effects
@@ -189,9 +186,13 @@ class Runner(_AbstractRunner):
                 for inst in p.owning_class.instances:
                     spec(inst, t)
 
-        # add derivative terms from derivative attributes to output array
-        # at same positions:
+        # compose complete derivative array:
+        derivative_array = np.zeros(value_array.size)
         for target in self.model.ODE_targets:
+            if isinstance(target, Variable):
+                # add terms from summands_array to derivative attributes:
+                target.add_derivatives(summands_array[target._from:target._to])
+            # extract complete derivative terms from derivative attributes:
             derivative_array[target._from:target._to] += \
                 target.target_variable.get_derivatives(
                             instances=target.target_class.instances)
@@ -243,17 +244,17 @@ class Runner(_AbstractRunner):
         # Create output dictionary:
         self.trajectory_dict = {v: {} for v in self.model.variables}
 
-        # Save initial state to output dict:
-        self.trajectory_dict['t'] = [t]
-        self.save_to_traj(self.model.process_targets)
-        # TODO: have save_to_traj() save t as well to have this cleaner.
-
         # Create dictionary containing discontinuities:
         next_discontinuities = {}
 
         # Apply all Explicit processes (2.2 in runner scheme)
         print("  Initial application of Explicit processes...")
         self.apply_explicits(t_0)
+
+        # Only now save initial state to output dict:
+        self.trajectory_dict['t'] = [t]
+        self.save_to_traj(self.model.process_targets)
+        # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # TODO: discuss whether hooks make sense, then maybe:
         # TODO: add hooks to runner scheme
@@ -484,6 +485,7 @@ class Runner(_AbstractRunner):
                     print("    Applying Explicit processes to simulated "
                           "time points...")
                     for pos, t in enumerate(ts):
+                        self._current_iteration += 1  # marks current evaluation caches as outdated
                         # copy values from returned matrix to instances'
                         # attributes:
                         ode_values = ode_trajectory[pos, :]
@@ -623,13 +625,13 @@ class Runner(_AbstractRunner):
                     # This branch is active if the entity has not been
                     # activated before.
                     # create new list with Nones for time that has passed:
-                    time_passed = [None] * (tlen - 1)
-                    time_passed.append(values[i])
-                    self.trajectory_dict[var][inst] = time_passed
+                    value_strip = [None] * (tlen - 1)
+                    value_strip.append(values[i])
+                    self.trajectory_dict[var][inst] = value_strip
                     assert len(self.trajectory_dict[var][inst]) == tlen
 
             # check if there are any idle instances and fill their trajectory
-            # with None to fit he lenght of 't':
+            # with None to fit he length of 't':
             if idle_instances:
                 for i, inst in enumerate(idle_instances):
                     try:  # already in trajectory_dict

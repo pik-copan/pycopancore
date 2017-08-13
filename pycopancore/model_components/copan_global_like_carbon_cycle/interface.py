@@ -35,7 +35,7 @@ class World (object):
 
     # variables:
     atmospheric_carbon = W.atmospheric_carbon
-    ocean_carbon = W.ocean_carbon
+    upper_ocean_carbon = W.upper_ocean_carbon
     surface_air_temperature = W.surface_air_temperature
 
 
@@ -75,7 +75,7 @@ class Nature (object):
                  default=26.4)
     photosynthesis_sensitivity_on_atmospheric_carbon = \
         Variable("sensitivity of photosynthesis productivity on atmospheric "
-                 "carbon", "",
+                 "carbon density", "",
                  unit = D.years**-1
                         / (D.gigatonnes_carbon / D.square_kilometers)**0.5
                         / (D.gigatonnes_carbon / D.square_kilometers),
@@ -83,7 +83,7 @@ class Nature (object):
     terrestrial_carbon_capacity_per_area = \
         Variable("per-area capacity of terrestrial carbon", "",
                  unit = D.gigatonnes_carbon / D.square_kilometers,
-                 lower_bound=0, default = 5000 / 1.5e8)  # TODO: improve default
+                 lower_bound=0, default = 1e10 * 5000 / 1.5e8)  # TODO: improve default
 
     basic_respiration_rate = Variable("basic respiration rate", "",
                                       unit=D.years**-1, default=.0298)

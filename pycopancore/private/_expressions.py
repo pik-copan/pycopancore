@@ -18,6 +18,8 @@ from numba import njit
 class _Unknown(object):
     def __str__(self):
         return "unknown"
+    def update(self, *args):
+        return self
 
 
 unknown = _Unknown()
@@ -153,6 +155,7 @@ class _DotConstruct(sp.AtomicExpr):
 #    is_symbol = True
 #    is_Symbol = True
     precedence = sp.printing.precedence.PRECEDENCE["Atom"]
+    _iterable = False
 
     # inheritance from Symbol is a little tricky since Symbol has a custom
     # __new__ method that returns the same object everytime the name is the
@@ -313,8 +316,10 @@ class _DotConstruct(sp.AtomicExpr):
         """return the class owning the target attribute"""
         assert self._can_be_target, "cannot serve as target"
         if self._target_class is unknown:
-            assert isinstance(self._start, (D.ReferenceVariable, D.SetVariable))
-            cls = self._start.type  # referred entity type/taxon
+            if isinstance(self._start, (D.ReferenceVariable, D.SetVariable)):
+                cls = self._start.type  # referred entity type/taxon
+            else:
+                cls = self._start
             for name in self._attribute_sequence[:-1]:
                 var = getattr(cls, name)
                 assert isinstance(var, (D.ReferenceVariable, D.SetVariable))
@@ -475,10 +480,8 @@ class _DotConstruct(sp.AtomicExpr):
         return self
 
 
-_cached_values = {}
-_cached_iteration = None
-
 func2numpy = {
+    # unary:
     sp.Abs: np.abs,
     sp.acos: np.arccos,
     sp.acosh: np.arccosh,
@@ -503,6 +506,9 @@ func2numpy = {
     sp.sqrt: np.sqrt,
     sp.tan: np.tan,
     sp.tanh: np.tanh,
+    # n-ary:
+    sp.Max: np.maximum,
+    sp.Min: np.minimum,
 }
 binary2numpy = {
     sp.Eq: np.equal,
@@ -520,19 +526,29 @@ nary2numpy = {
     sp.Xor: np.logical_xor,
 }
 
+_cached_values = {}
+_cached_iteration = None
 
-# TODO: use a separate cache for expressions that do not change durint ode
+have_warned = False
+
+# TODO: use a separate cache for expressions that do not change during ode
 # integration and devaluate it only between integration intervals.
 # TODO: also use sympy to simplify and maybe even solve systems of equations
 def _eval(expr, iteration=None):
-    global _cached_iteration
-    try:
-        # if still up to date, return vals from cache:
-        if iteration is not None and _cached_iteration == iteration:
-            print("(used the cache)")
-            return _cached_values[expr]
-    except BaseException:
-        pass
+    if iteration is not None:
+        global _cached_iteration, _cached_values
+        if _cached_iteration == iteration:
+            # still up to date, so try returning vals from cache:
+            try:
+                res = _cached_values[expr]
+#                print("read from cache:",expr)
+                return res
+            except KeyError:
+                pass
+        else:
+            # clear cache:
+            _cached_values = {}
+            _cached_iteration = iteration
     t = type(expr)
     tt = type(t)
     if (isinstance(expr, sp.Expr) or tt == sp.FunctionClass) \
@@ -594,21 +610,25 @@ def _eval(expr, iteration=None):
 #        base[np.where(np.logical_and(base < 0, exponent % 1 != 0))] = EPS
 #        print(base[:10],exponent[:10])
         try:
-            base[np.where((base == 0)*(exponent < 0))] = 1e-10
+            pass
+#            base[np.where((base == 0)*(exponent < 0))] = 1e-10
         except:
-            print("oops")
+            print("oops! couldn't set values")
         vals = base ** exponent
         isn = np.isnan(vals.astype("float"))
         if np.any(isn):
             wh = np.where(isn)[0]
-#            print("Warning: invalid value encountered in power\nbase:",
-#                  args[0], "=", base[wh], "\nexponent:", args[1], "=", exponent[wh])
+            global have_warned
+            if not have_warned:
+                have_warned = True
+                print("Warning: invalid value encountered in power\nbase:",
+                      args[0], "=", base[wh], "\nexponent:", args[1], "=", exponent[wh])
             vals[wh] = 0  # TODO: is this a good idea?
     # TODO: other types of expressions, including function evaluations!
     # other functions/unary operators:
     elif tt == sp.FunctionClass:
-        # it is a unary (?) sympy function
-        vals = func2numpy[t](argvals[0])
+        # it is a sympy function
+        vals = func2numpy[t](*argvals)
     else:
         # simple scalar for broadcasting:
         # clumsy way of converting sympy True to normal True:
@@ -621,18 +641,27 @@ def _eval(expr, iteration=None):
         vals = np.array([expr])
         cardinalities = [1]
         branchings = []
-    try:
+    if iteration is not None:
         # store vals in cache:
         _cached_values[expr] = (vals, cardinalities, branchings)
-        _cached_iteration = iteration
-#        print("(stored in cache)")
-    except BaseException:
-        pass
+#        print("stored in cache:",expr)
     return vals, cardinalities, branchings
 
 
 def eval(expr, iteration=None):
     """Dummy docstring - wrap private _eval function?"""
     # TODO: add docstring to function
-    vals, cardinalities, branchings = _eval(expr)
+    vals, cardinalities, branchings = _eval(expr, iteration=iteration)
     return vals
+
+
+def get_vars(expr):
+    """find all variables occurring in Expression"""
+    if isinstance(expr, (D.Variable, _DotConstruct)):
+        if expr._can_be_target:
+            return set([expr.target_variable])
+        return get_vars(expr._argument)
+    varset = set()
+    for a in expr.args:
+        varset.update(get_vars(a))
+    return varset

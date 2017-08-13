@@ -24,22 +24,22 @@ class Cell (I.Cell):
 
     balance = (I.Cell.photosynthesis_carbon_flow
                - I.Cell.terrestrial_respiration_carbon_flow)
-    world_land_area = B.Cell.world.sum.cells.land_area
+    carbon_density = sp.Max(0, B.Cell.world.atmospheric_carbon 
+                               / B.Cell.world.sum.cells.land_area)
 
     processes = [  # using symbolic expressions for performance and legibility:
 
         Explicit("photosynthesis flow",
                  [I.Cell.photosynthesis_carbon_flow],
                  [((B.Cell.nature.basic_photosynthesis_productivity
-                    - (B.Cell.nature
-                       .photosynthesis_sensitivity_on_atmospheric_carbon)
-                    * B.Cell.world.atmospheric_carbon)
-                   * sp.sqrt(B.Cell.world.atmospheric_carbon
-                             / world_land_area)
+                    # WARNING: IF SOMEONE AGAIN MESSES AROUND WITH THE
+                    # FORMATTING HERE, I WILL DISALLOW THEM TO FURTHER USE MY CODE.
+                    - B.Cell.nature.photosynthesis_sensitivity_on_atmospheric_carbon
+                      * carbon_density)
+                   * sp.sqrt(carbon_density)
                    * (1 - I.Cell.terrestrial_carbon
-                      / (B.Cell.nature.terrestrial_carbon_capacity_per_area
-                         * B.Cell.land_area)
-                      )
+                          / (B.Cell.nature.terrestrial_carbon_capacity_per_area
+                             * B.Cell.land_area))
                    )
                   * I.Cell.terrestrial_carbon
                   ]),
@@ -47,9 +47,8 @@ class Cell (I.Cell):
         Explicit("respiration flow",
                  [I.Cell.terrestrial_respiration_carbon_flow],
                  [(B.Cell.world.nature.basic_respiration_rate
-                   + (B.Cell.world.nature
-                      .respiration_sensitivity_on_atmospheric_carbon)
-                   * B.Cell.world.atmospheric_carbon)
+                   + B.Cell.world.nature.respiration_sensitivity_on_atmospheric_carbon
+                     * carbon_density)
                   * I.Cell.terrestrial_carbon
                   ]),
 

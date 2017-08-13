@@ -111,7 +111,7 @@ secondary_energy_flow = \
 total_energy_intensity = \
     Variable("total energy intensity", "",
              unit = gigajoules / dollars,
-             lower_bound=0, is_intensive=True, default=0)
+             lower_bound=0, is_intensive=True, default = 1/147)
 
 total_output_flow = \
     Variable("total economic output flow",
@@ -148,15 +148,17 @@ wellbeing = \
 
 # productivities, efficiencies etc.
 
-biomass_energy_density = Variable("biomass energy density", "",
+biomass_energy_density = Variable("biomass energy density", 
+                                  "(default from Nitzbon 2016)",
                                   unit = gigajoules / gigatonnes_carbon,
                                   lower_bound=0, is_intensive=True,
-                                  default=0)
+                                  default=40e9)
 
-fossil_energy_density = Variable("fossil energy density", "",
+fossil_energy_density = Variable("fossil energy density", 
+                                 "(default from Nitzbon 2016)",
                                  unit = gigajoules / gigatonnes_carbon,
                                  lower_bound=0, is_intensive=True,
-                                 default=0)
+                                 default=47e9)
 
 # depreciation, learning, discounting, interest etc. rates
 

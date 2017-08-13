@@ -121,8 +121,8 @@ ocean_atmosphere_diffusion_coefficient = \
              unit=years**-1, lower_bound=0, default=0.016)
 carbon_solubility_in_sea_water = \
     Variable("carbon solubility in sea water",
-             "(in the sense of Anderies et al. 2013)",
-             unit=unity, lower_bound=0, default=1/1.43)
+             "(in the sense of Nitzbon et al. 2017, not in g/L but unitless!)",
+             unit=unity, lower_bound=0, default=1.5)
 
 # For land-atmosphere interactions:
 

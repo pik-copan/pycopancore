@@ -37,7 +37,8 @@ class World(cc.World,
     pass
 
 
-class Society(prod.Society,
+class Society(
+              prod.Society,
               growth.Society,
               pop.Society,
               base.Society):
@@ -70,7 +71,8 @@ class Nature(cc.Nature,
     pass
 
 
-class Metabolism(prod.Metabolism,
+class Metabolism(
+                 prod.Metabolism,
                  pop.Metabolism,
                  base.Metabolism):
     """Metabolism process taxon."""

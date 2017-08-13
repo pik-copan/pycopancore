@@ -33,8 +33,9 @@ class Society (I.Society):
                + B.Society.metabolism.fertility_maximizing_wellbeing**2))
     
     mort = (B.Society.metabolism.characteristic_mortality
-            / sp.sqrt(I.Society.wellbeing
-               / B.Society.metabolism.fertility_maximizing_wellbeing)
+            / sp.sqrt(sp.Max(0,
+                             I.Society.wellbeing
+                             / B.Society.metabolism.fertility_maximizing_wellbeing))
             + B.Society.metabolism.population_spatial_competition_coefficient
             * (I.Society.population / land_area)
             / sp.sqrt(I.Society.physical_capital))
@@ -48,9 +49,9 @@ class Society (I.Society):
              I.Society.births,
              I.Society.deaths],
             [B.Society.metabolism.wellbeing_sensitivity_to_consumption 
-               * I.Society.consumption_flow / I.Society.population 
+               * I.Society.consumption_flow / (1e-10 + I.Society.population) 
              + B.Society.metabolism.wellbeing_sensitivity_to_terrestrial_carbon 
-               * terrestrial_carbon / land_area,
+               * terrestrial_carbon / (1e-10 + land_area),
              fert,
              mort,
              I.Society.population * fert,

@@ -20,11 +20,11 @@ class World (I.World):
     """
 
     # abbreviation:
-    flow = (B.World.nature.ocean_atmosphere_diffusion_coefficient 
-            * (B.World.nature.carbon_solubility_in_sea_water 
-               * I.World.ocean_carbon
-               - I.World.atmospheric_carbon))
-    """(See Anderies et al. 2013)."""
+    diffusion_flow = (B.World.nature.ocean_atmosphere_diffusion_coefficient 
+                      * (I.World.upper_ocean_carbon
+                         - B.World.nature.carbon_solubility_in_sea_water 
+                           * I.World.atmospheric_carbon))
+    """(See Nitzbon et al. 2017)."""
 
     processes = [
 
@@ -36,7 +36,7 @@ class World (I.World):
                      - B.World.nature.reference_atmospheric_carbon)]),
 
         ODE("ocean-atmosphere diffusion",
-            [I.World.ocean_carbon, I.World.atmospheric_carbon],
-            [-flow, flow])
+            [I.World.upper_ocean_carbon, I.World.atmospheric_carbon],
+            [-diffusion_flow, diffusion_flow])
 
     ]

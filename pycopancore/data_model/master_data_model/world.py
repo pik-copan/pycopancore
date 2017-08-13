@@ -2,22 +2,23 @@
 
 from . import nature as NAT
 from . import metabolism as MET
-from . import gigatonnes_carbon, square_kilometers
+from . import gigatonnes_carbon as GtC
+from . import square_kilometers as km2
 
 # natural:
 
-land_area = NAT.land_area.copy(default=1.5e8*square_kilometers)
-atmospheric_carbon = NAT.atmospheric_carbon.copy(default=589*gigatonnes_carbon)
+land_area = NAT.land_area.copy(default=1.5e8*km2)
+atmospheric_carbon = NAT.atmospheric_carbon.copy(default=589*GtC)
 surface_air_temperature = NAT.surface_air_temperature.copy()
-ocean_carbon = NAT.ocean_carbon.copy(default=38000*gigatonnes_carbon)
-upper_ocean_carbon = NAT.upper_ocean_carbon.copy(default=900*gigatonnes_carbon)
-deep_ocean_carbon = NAT.deep_ocean_carbon.copy(default=37100*gigatonnes_carbon)
-terrestrial_carbon = NAT.terrestrial_carbon.copy(default=2550*gigatonnes_carbon)
-soil_carbon = NAT.soil_carbon.copy(default=2000*gigatonnes_carbon)
-biomass_carbon = NAT.biomass_carbon.copy(default=550*gigatonnes_carbon)
+ocean_carbon = NAT.ocean_carbon.copy(default=38000*GtC)
+upper_ocean_carbon = NAT.upper_ocean_carbon.copy(default=900*GtC)
+deep_ocean_carbon = NAT.deep_ocean_carbon.copy(default=37100*GtC)
+terrestrial_carbon = NAT.terrestrial_carbon.copy(default=2550*GtC)
+soil_carbon = NAT.soil_carbon.copy(default=2000*GtC)
+biomass_carbon = NAT.biomass_carbon.copy(default=550*GtC)
 harvestable_biomass_carbon = NAT.harvestable_biomass_carbon.copy()
 other_biomass_carbon = NAT.other_biomass_carbon.copy()
-fossil_carbon = NAT.fossil_carbon.copy(default=1500*gigatonnes_carbon)
+fossil_carbon = NAT.fossil_carbon.copy(default=1500*GtC)
 discovered_fossil_reserves = NAT.discovered_fossil_reserves.copy()
 undiscovered_fossil_reserves = NAT.undiscovered_fossil_reserves.copy()
 
