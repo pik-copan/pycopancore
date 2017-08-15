@@ -16,8 +16,8 @@ random.seed(1)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 3 # no. societies #10
-ncells = 9  # no. cells #100
+nsocs = 5 # no. societies #10
+ncells = 50  # no. cells #100
 
 model = M.Model()
 
@@ -89,7 +89,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=10000, dt=1)
+traj = runner.run(t_1=10000, dt=100)
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
