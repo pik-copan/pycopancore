@@ -39,18 +39,20 @@ class Model (object):
 class World (object):
     """Interface for World mixin."""
 
-    # endogenous variables:
-    # TODO: use variables from the master data model wherever possible
-    # wherever possible!:
-    # X = D.X
-    # TODO: uncomment and adjust of you need further variables from another
-    # model component:
-    # Z = BBB.Z
-    # TODO: uncomment and adjust only if you really need other variables:
-    # W = Variable("name", "desc", unit=..., ...)
-
-    # exogenous variables / parameters:
-    # TODO: similarly
+    total_gross_income = Variable("total gross income",
+                                  "Total income generated in the world.",
+                                  lower_bound=0,
+                                  unit=D.dollars)
+    total_harvest = Variable("total harvest",
+                             "All water that has been harvested in the world",
+                             lower_bound=0,
+                             dimension=D.volume * D.time,
+                             unit=D.meters ** 3 / D.years)
+    water_price = Variable("water price",
+                           "price of water that is calculated by market "
+                           "clearing",
+                           lower_bound=0,
+                           unit=D.dollars)
 
 
 class Society (object):
@@ -191,15 +193,6 @@ class Metabolism (object):
     """Interface for Metabolism process taxon mixin."""
 
     # endogenous variables:
-    water_price = Variable("water price",
-                           "price of water that is calculated by market "
-                           "clearing",
-                           lower_bound=0,
-                           unit=D.dollars)
-    total_gross_income = Variable("total gross income",
-                                  "Total income generated in the world.",
-                                  lower_bound=0,
-                                  unit=D.dollars)
     market_frequency = Variable("market frequency",
                                 "Defines how often per year the market "
                                 "clearing is calculated")

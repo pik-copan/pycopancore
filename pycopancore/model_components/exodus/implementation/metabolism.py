@@ -26,13 +26,11 @@ class Metabolism (I.Metabolism):
 
     def __init__(self,
                  *,
-                 water_price,
                  market_frequency=0.1,
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line
 
-        self.water_price = water_price
         self.market_frequency = market_frequency
 
         # At last, check for validity of all variables that have been
@@ -56,15 +54,19 @@ class Metabolism (I.Metabolism):
 
     # process-related methods:
 
-    def market_clearing_rhs(self, logp_and_logys, tgi):
+    def market_clearing_rhs(self, logp_and_logws, th, world):
         """Do the market clearing for all individuals in the world.
 
         Return right hand side of equation to optimize all agents' utility.
         Parameters
         ----------
-        logp_and_logys: list
+        logp_and_logws: list
             list with log of current price of water and all individuals' log
-            of liquidity.
+            of nutrition.
+        th: float
+            total harvest of water in a world
+        world: object
+            world object in which market takes place
         self: entity object
             Metabolism of the world in which the market clearing is calculated
 
@@ -73,38 +75,36 @@ class Metabolism (I.Metabolism):
         errors: numpy.array
             1 D array with equations to be solved by fsolve
         """
-        price = np.exp(logp_and_logys[0])
-        ys = np.exp(logp_and_logys[1:])
-        errors = np.zeros(shape=len(logp_and_logys))
-        total_gross_income = tgi
-        # Iterate through worlds
-        for w in self.worlds:
-            world = w
-            for i, e in enumerate(world.individuals):
-                # Get the individual's society's pdf of liquidity:
-                sigma = e.society.liquidity_sigma
-                loc = e.society.liquidity_loc
-                median = e.society.liquidity_median
-                # Calculate the individual's subjective income rank:
-                sri = stats.lognorm.cdf(ys[i],
-                                        s=sigma,
-                                        loc=loc,
-                                        scale=median)
-                # Calculate the subjects nutrition
-                w_i = e.harvest - ((ys[i] - e.gross_income) / price)
-                # Get the rhs of the equation for the individual
-                errors[1 + i] = (sri - (w_i * price * stats.lognorm.pdf(ys[i],
-                                                                        s=sigma,
-                                                                        loc=loc,
-                                                                        scale=median
-                                                                        )
-                                        )
-                                 ) / (2 * np.sqrt(w_i * sri))
-            # Sum over liquidity must be equal to sum over gross income:
-            errors[0] = sum(ys) - total_gross_income
-            # return rhs of the system of equations:
-            print('errors during solve', errors)
-            return errors
+        price = np.exp(logp_and_logws[0])
+        ws = np.exp(logp_and_logws[1:])
+        errors = np.zeros(shape=len(logp_and_logws))
+        for i, e in enumerate(world.individuals):
+            # Get the individual's society's pdf of liquidity:
+            sigma = e.society.liquidity_sigma
+            loc = e.society.liquidity_loc
+            median = e.society.liquidity_median
+            # Calculate the subjects nutrition
+            w_i = ws[i]
+            # Calculate liquidity to get sri and f_y:
+            y_i = (e.harvest - w_i) * price + e.gross_income
+            # Calculate the individual's subjective income rank:
+            sri = stats.lognorm.cdf(y_i,
+                                    s=sigma,
+                                    loc=loc,
+                                    scale=median)
+            # Get the rhs of the equation for the individual
+            errors[1 + i] = (sri - (w_i * price * stats.lognorm.pdf(y_i,
+                                                                    s=sigma,
+                                                                    loc=loc,
+                                                                    scale=median
+                                                                    )
+                                    )
+                             ) / (2 * np.sqrt(w_i * sri))
+        # Sum over liquidity must be equal to sum over gross income:
+        errors[0] = sum(ws) - th
+        # return rhs of the system of equations:
+        # print('errors during solve', errors)
+        return errors
 
     def do_market_clearing(self, unused_t):
         """Calculate water price and market movements."""
@@ -115,32 +115,34 @@ class Metabolism (I.Metabolism):
             # Calculate pdfs for all societies:
             for s in world.societies:
                 s.liquidity_pdf()
-            log_liquidities = []
+            log_nutritions = []
             for i in world.individuals:
-                log_liquidities.append(np.log(i.liquidity))
-            logp_and_logys = [np.log(self.water_price)] + log_liquidities
+                nutrition = i.harvest - (i.liquidity - i.gross_income) / world.water_price
+                log_nutritions.append(np.log(nutrition))
+            logp_and_logws = [np.log(world.water_price)] + log_nutritions
             # Get total gross income once, so that it doesn't need to be
             # calculated each time the function is called:
-            tgi = self.total_gross_income
+            tgi = world.total_gross_income
+            th = world.total_harvest
             solution = optimize.root(fun=self.market_clearing_rhs,
-                                     x0=logp_and_logys,
-                                     args=(tgi),
-                                     method='lm'
+                                     x0=logp_and_logws,
+                                     args=(th, world),
+                                     method='lm',
+                                     options={'ftol': 0.01}
                                      )
-            print(solution)
-            self.water_price = np.exp(solution['x'][0])
-            print('solution', solution)
+            if solution['success'] is not True:
+                print('solution', solution)
+            world.water_price = np.exp(solution['x'][0])
             for i, e in enumerate(world.individuals):
                 # Account for shift, since price of water is at first position
                 # of list, write solution of market clearing into entities:
-                e.liquidity = np.exp(solution['x'][i+1])
-                # Calculate amount of water traded:
-                # traded water = - traded money / price
-                # traded money = liquidity - gross_income
-                traded_water = - (e.liquidity - e.gross_income) / self.water_price
-                e.nutrition = e.harvest + traded_water
+                e.nutrition = np.exp(solution['x'][i+1])
+                # Calculate liquidity:
+                # nutrition = harvest-(liquidity-gross_income)/water_price
+                # liquidity = (harvest-nutrition)*water_price + gross_income
+                e.liquidity = (e.harvest - e.nutrition) * world.water_price + e.gross_income
             print('market clearing is done at time', unused_t,
-                  'price is now at', self.water_price)
+                  'price is now at', world.water_price)
             # Calculate liquidities again, so that sri can be calculated
             # correctly
             for s in world.societies:
@@ -152,6 +154,6 @@ class Metabolism (I.Metabolism):
 
     processes = [
         Step("market clearing", [I.Individual.liquidity,
-                                 I.Metabolism.water_price],
+                                 I.World.water_price],
              [market_timing, do_market_clearing])
     ]  # TODO: instantiate and list process objects here

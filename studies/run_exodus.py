@@ -24,18 +24,18 @@ timeinterval = 1
 timestep = .1
 nm = 1  # number of municipalities, also cities
 nc = 1  # number of counties, also farmland_cells
-nf = 10  # number of farmers
-nt = 10  # number of townsmen
+nf = 5  # number of farmers
+nt = 5  # number of townsmen
 
 model = M.Model()
 
 # instantiate process taxa culture:
 # In this certain case we need 'M.Culture()' for the acquaintance network.
 culture = M.Culture()
-metabolism = M.Metabolism(water_price=1)
+metabolism = M.Metabolism()
 
 # instantiate world:
-world = M.World(culture=culture, metabolism=metabolism)
+world = M.World(culture=culture, metabolism=metabolism, water_price=1)
 # Instantiate Societies:
 municipalities = [M.Society(world=world,
                             municipality_like=True,
@@ -57,7 +57,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
-                                 land_area=20,  # in square kilometers
+                                 land_area=0.01,  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []
@@ -82,7 +82,8 @@ for f in range(nf):
     farmers.append(M.Individual(cell=farmland,
                                 profession='farmer',
                                 outspokensess=1,
-                                liquidity=liq))
+                                liquidity=liq,
+                                nutrition=1000))
 # Instantiate townsmen:
 townsmen = []
 for t in range(nt):
@@ -93,7 +94,8 @@ for t in range(nt):
     townsmen.append(M.Individual(cell=city,
                                  profession='townsman',
                                  outspokensess=1,
-                                 liquidity=liq))
+                                 liquidity=liq,
+                                 nutrition=100))
 
 # Create Network:
 expected_degree = 5
@@ -138,10 +140,9 @@ print('runtime: {runtime}'.format(**locals()))
 
 # Plotting:
 t = np.array(traj['t'])
-for key, val in traj.items():
-    print('key', key,)
+# for key, val in traj.items():
+#     print('key', key,)
 
-print(traj[M.Metabolism.water_price])
 city_population = np.array([traj[M.Society.population][soc]
                       for soc in municipalities])
 county_population = np.array([traj[M.Society.population][soc]
@@ -154,9 +155,7 @@ for i, s in enumerate(municipalities):
         y=city_population[i],
         name='population of municipality {}'.format(i),
         mode='lines',
-        line=dict(
-            color="green",
-            width=4)
+        line=dict(color="green", width=4)
     ))
 
 for i, s in enumerate(counties):
@@ -165,10 +164,17 @@ for i, s in enumerate(counties):
         y=county_population[i],
         name='population of county {}'.format(i),
         mode='lines',
-        line=dict(
-            color="red",
-            width=4)
+        line=dict(color="red", width=4)
     ))
+price = traj[M.World.water_price][world]
+price_data = []
+price_data.append(go.Scatter(
+    x=t,
+    y=price,
+    name='price of water',
+    mode='lines',
+    line=dict(color="blue", width=4)
+))
 
 
 layout = dict(title='Exodus',

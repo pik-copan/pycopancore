@@ -21,12 +21,13 @@ class World (I.World):
     # standard methods:
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                 *,
+                 water_price,
                  **kwargs):
         """Initialize an instance of World."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
 
+        self.water_price = water_price
         # At last, check for validity of all variables that have been
         # initialized and given a value:
 
@@ -34,8 +35,22 @@ class World (I.World):
         # inherited only by mixing in the model:
         self.assert_valid()
 
-    # process-related methods:
+    @property
+    def total_gross_income(self):
+        """Get the total gross income."""
+        tgi = 0
+        for individual in self.individuals:
+            tgi += individual.gross_income
+        return tgi
 
-    # TODO: add some if needed...
+    @property
+    def total_harvest(self):
+        """Get the total gross income."""
+        th = 0
+        for individual in self.individuals:
+            th += individual.harvest
+        return th
+
+    # process-related methods:
 
     processes = []  # TODO: instantiate and list process objects here
