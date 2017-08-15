@@ -182,7 +182,8 @@ class Cell (object, metaclass=_MixinType):
                                 type=Society, allow_none=True)
 
     # other variables:
-    location = Variable("location", "pair of coordinates?", allow_none=True)  # TODO: specify data type
+    location = Variable("location", "pair of coordinates?", 
+                        allow_none=True, default=None)  # TODO: specify data type
     land_area = C.land_area
 
     terrestrial_carbon = C.terrestrial_carbon

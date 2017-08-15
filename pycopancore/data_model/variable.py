@@ -199,7 +199,7 @@ class Variable(Symbol):
         self.levels = levels
 
         if readonly:
-            assert default is None
+            assert default is private.unset
             assert uninformed_prior is None
             self.allow_none = True
             self.default = private.unknown
@@ -242,7 +242,7 @@ class Variable(Symbol):
         
     @default.setter
     def default(self, value):
-        if value is not None:
+        if value is not private.unset:
             self.assert_valid(value)
         self._default = value
 
@@ -290,6 +290,8 @@ class Variable(Symbol):
 
     def _check_valid(self, v):
         """check validity of candidate value"""
+
+        assert v is not private.unset, str(self) + " has no value set"
 
         if self.array_shape is not None:
             if not v.shape == self.array_shape:
@@ -579,10 +581,10 @@ class Variable(Symbol):
         return self.get_value(instance)
 
     def eval(self,
-                   instances=None,
-                   *,
-                   unit=None
-                   ):
+             instances=None,
+             *,
+             unit=None
+             ):
         """Return values for given entities,
         optionally in a different unit.
 
