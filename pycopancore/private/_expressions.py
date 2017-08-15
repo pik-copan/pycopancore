@@ -254,7 +254,6 @@ class _DotConstruct(sp.AtomicExpr):
     def __call__(self, *args, **kwargs):
         """calling is only allowed if we are an aggregation without argument yet,
         and results in adding an argument"""
-        print(":",self,*args,**kwargs)
         assert self._aggregation and not self._argument, "can't have brackets here"
         assert len(args) == 1, "must have exactly one argument"
         return _DotConstruct(self._start,

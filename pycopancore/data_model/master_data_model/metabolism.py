@@ -22,14 +22,22 @@ population_by_age = Variable("human population by age",
                              is_extensive=True, lower_bound=0,
                              array_shape=(100,))  # 1d-array
 
+migrant_population = Variable("first-generation migrant population", "",
+                              unit=people,
+                              is_extensive=True, lower_bound=0, default=0)
+
 fertility = Variable("current human fertility rate", "",
                      unit=years**-1,
                      lower_bound=0, is_intensive=True, 
                      default=0.02)
+min_fertility = Variable("minimum human fertility rate", "",
+                         unit=years**-1,
+                         lower_bound=0, is_intensive=True,
+                         default=0.008)
 max_fertility = Variable("maximum human fertility rate", "",
                          unit=years**-1,
                          lower_bound=0, is_intensive=True,
-                         default=0.04)
+                         default=0.05)
 mortality = Variable("current human mortility rate", "",
                      unit=years**-1,
                      lower_bound=0, is_intensive=True,
@@ -48,6 +56,7 @@ immigration = Variable("immigrants per time", "",
 emigration = Variable("emigrants per time", "",
                       unit = people / years,
                       lower_bound=0, is_extensive=True, default=0)
+
 
 # Resource extraction and waste:
 

@@ -33,15 +33,26 @@ class Society (I.Society):
     # abbreviations:
     land_area = B.Society.sum.cells.land_area
     terrestrial_carbon = B.Society.sum.cells.terrestrial_carbon
+    min_fert = B.Society.metabolism.min_fertility
+    fert_exp = B.Society.metabolism.fertility_decay_exponent
 
-    fert = (2 * B.Society.metabolism.max_fertility * I.Society.wellbeing 
-            * B.Society.metabolism.fertility_maximizing_wellbeing
-            / (I.Society.wellbeing**2
-               + B.Society.metabolism.fertility_maximizing_wellbeing**2))
+    pop = I.Society.population
+
+    fert = (min_fert
+            + 2 * (B.Society.metabolism.max_fertility - min_fert) 
+              * I.Society.wellbeing 
+              * B.Society.metabolism.fertility_maximizing_wellbeing
+                ** fert_exp
+              / (I.Society.wellbeing ** (1 + fert_exp)
+                 + B.Society.metabolism.fertility_maximizing_wellbeing
+                   ** (1 + fert_exp)
+              )
+           )
     
     mort = (B.Society.metabolism.characteristic_mortality
-            / sqrtorzero(I.Society.wellbeing
-                         / B.Society.metabolism.fertility_maximizing_wellbeing)
+            / (I.Society.wellbeing
+               / B.Society.metabolism.fertility_maximizing_wellbeing)
+              ** B.Society.metabolism.mortality_decay_exponent
             + B.Society.metabolism.population_spatial_competition_coefficient
             * (I.Society.population / land_area)
             / sp.sqrt(I.Society.physical_capital))
@@ -55,16 +66,18 @@ class Society (I.Society):
              I.Society.births,
              I.Society.deaths],
             [B.Society.metabolism.wellbeing_sensitivity_to_consumption 
-               * I.Society.consumption_flow / (1e-10 + I.Society.population) 
+               * I.Society.consumption_flow / pop 
              + B.Society.metabolism.wellbeing_sensitivity_to_terrestrial_carbon 
-               * terrestrial_carbon / (1e-10 + land_area),
+               * terrestrial_carbon / land_area,
              fert,
              mort,
-             I.Society.population * fert,
-             I.Society.population * mort]),
+             pop * fert,
+             pop * mort]),
                  
         ODE("population dynamics",
-            [I.Society.population],
-            [I.Society.births - I.Society.deaths])
+            [pop, 
+             I.Society.migrant_population],
+            [I.Society.births - I.Society.deaths,
+             - I.Society.deaths * I.Society.migrant_population / pop])
 
     ]

@@ -6,6 +6,7 @@ from . import metabolism as MET
 
 population = MET.population.copy()
 population_by_age = MET.population_by_age.copy()
+migrant_population = MET.migrant_population.copy()
 
 fertility = MET.fertility.copy()
 mortality = MET.mortality.copy()

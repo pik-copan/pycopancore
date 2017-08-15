@@ -65,7 +65,12 @@ class Society (I.Society):
             ]),
                  
         ODE("effect of migration",
-            [I.Society.population],
-            [I.Society.immigration - I.Society.emigration])
+            [I.Society.population,
+             I.Society.migrant_population],
+            [I.Society.immigration 
+             - I.Society.emigration,
+             I.Society.immigration 
+             - I.Society.emigration * I.Society.migrant_population 
+                                    / I.Society.population])
 
     ]

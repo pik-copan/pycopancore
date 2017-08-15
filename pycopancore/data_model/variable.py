@@ -15,7 +15,7 @@ taxa.
 import random
 from sympy import Symbol
 
-from . import DimensionalQuantity
+from . import DimensionalQuantity, Unit
 from .. import private
 
 
@@ -183,7 +183,8 @@ class Variable(Symbol):
         if unit is None and default is not None \
                 and isinstance(default, DimensionalQuantity):
             self.unit = default.unit
-        else:
+        elif unit is not None:
+            assert isinstance(unit, Unit)
             self.unit = unit
         self.lower_bound = lower_bound
         self.strict_lower_bound = strict_lower_bound

@@ -207,15 +207,21 @@ class ModelLogics (object):
                                     if isinstance(v, Variable)])
             for (k, v) in variables:
                 if isinstance(v, Variable):
-                    print("    Variable ", v)
                     assert v in variable_pool, \
-                        "Variable '{v!r}' was not defined in any component interface!".format(**locals())
-                    assert v.codename == k, \
-                        "Variable '{v!r}' was registered under a different codename".format(**locals())
-                    assert v.owning_class is None  # since it is only set here!
-                    cls.variables.add(v)
-                    composed_class.variables.add(v)
-                    v.owning_class = composed_class
+                        "Variable " + str(v) + " was not defined in any component interface!"
+                        # this version is shorter and easier to understand than the cryptic .format(**locals()) version,
+                        # so why the hell change it???
+#                    assert v.codename == k, \
+#                        "Variable '{v!r}' was registered under a different codename".format(**locals())
+                    # the previous lines were disabled to allow introducing 
+                    # local abbreviations for lengthy variable names in
+                    # implementation classes. therefore also the following:
+                    if v.codename == k:
+                        print("    Variable ", v)              
+                        cls.variables.add(v)
+                        composed_class.variables.add(v)
+                        assert v.owning_class is None  # since it is only set here!
+                        v.owning_class = composed_class
             # add an __init__ method to the composed class:
             def new__init__(inst, **kwargs):
                 """make sure all values have valid values"""
@@ -308,9 +314,11 @@ class ModelLogics (object):
                                 if isinstance(target, Variable):
                                     assert target.owning_class == \
                                            composed_class, \
-                                           "Explicit target Variable owned " \
-                                           "by different entity-type/taxon! " \
-                                           "(maybe try accessing it via a " \
+                                           "Explicit target Variable " \
+                                           + str(target) + " owned " \
+                                           "by different entity-type/taxon (" \
+                                           + str(target.owning_class) + \
+                                           ", maybe try accessing it via a " \
                                            "ReferenceVariable)"
                                 else:  # it's a _DotConstruct
                                     assert target.owning_class == \

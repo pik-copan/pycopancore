@@ -44,6 +44,8 @@ class Society (object):
     population = S.population
     population.default = 1 * D.people
     
+    migrant_population = S.migrant_population
+    
     wellbeing = S.wellbeing
     wellbeing.default = 1 * D.utils / D.people / D.years
 
@@ -68,6 +70,7 @@ class Metabolism (object):
     # endogenous variables:
 
     # exogenous variables / parameters:
+    min_fertility = MET.min_fertility
     max_fertility = MET.max_fertility
     fertility_maximizing_wellbeing = Variable(
         "fertility-maximizing value of well-being", 
@@ -75,12 +78,24 @@ class Metabolism (object):
         unit = D.utils / D.people / D.years,
         lower_bound=0, is_intensive=True,
         default=2000)
+    fertility_decay_exponent = Variable(
+        "exponent of power-law shaped asymptotic decay of fertility "
+        "for large wellbeing", "",
+        unit = D.unity,
+        strict_lower_bound=0, is_intensive=True,
+        default=1/2)
     characteristic_mortality = Variable(
         "characteristic mortality rate",
         "mortality rate at fertility-maximizing value of well-being",
         unit = D.years**-1,
         lower_bound=0, is_intensive=True, 
-        default=0.01)
+        default=0.02)
+    mortality_decay_exponent = Variable(
+        "exponent of power-law shaped asymptotic decay of mortality "
+        "for large wellbeing", "",
+        unit = D.unity,
+        strict_lower_bound=0, is_intensive=True,
+        default=1/12)
     population_spatial_competition_coefficient = Variable(
         "coeff. of spatial competition in population dynamics", 
         "causes a capital- and well-being-dependent per-area population limit",

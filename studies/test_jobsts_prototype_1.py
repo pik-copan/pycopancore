@@ -16,8 +16,8 @@ random.seed(1)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 10 # no. societies #10
-ncells = 100  # no. cells #100
+nsocs = 3 # no. societies #10
+ncells = 9  # no. cells #100
 
 model = M.Model()
 
@@ -89,7 +89,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=1000, dt=1)
+traj = runner.run(t_1=10000, dt=1)
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
@@ -102,6 +102,7 @@ plot(t, traj[M.World.fossil_carbon][worlds[0]], "gray", lw=3)
 for s in societies:
     pass
     plot(t, traj[M.Society.population][s],"yellow",lw=2)
+    plot(t, traj[M.Society.migrant_population][s],"-.",color="yellow",lw=2)
     plot(t, traj[M.Society.physical_capital][s], "k", lw=2)
     plot(t, traj[M.Society.renewable_energy_knowledge][s],
          color="darkorange", lw=2)
@@ -112,9 +113,8 @@ for s in societies:
 #    plot(t, traj[M.Society.renewable_energy_input_flow][s],
 #         "--", color="darkorange", lw=2)
     plot(t, traj[M.Society.wellbeing][s],"magenta",lw=2)
-    plot(t, np.array(traj[M.Society.births][s]) - traj[M.Society.births][s],"--",color="yellow",lw=2)
-    plot(t, traj[M.Society.immigration][s],":",color="yellow",lw=2)
-    plot(t, traj[M.Society.emigration][s],"-.",color="yellow",lw=2)
+#    plot(t, np.array(traj[M.Society.births][s]) - traj[M.Society.deaths][s],"--",color="yellow",lw=2)
+#    plot(t, traj[M.Society.immigration][s],":",color="yellow",lw=2)
 for c in cells:
     pass
 #    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
