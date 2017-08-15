@@ -19,13 +19,13 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 1
+timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nm = 1  # number of municipalities, also cities
 nc = 1  # number of counties, also farmland_cells
-nf = 5  # number of farmers
-nt = 5  # number of townsmen
+nf = 10  # number of farmers
+nt = 10  # number of townsmen
 
 model = M.Model()
 
