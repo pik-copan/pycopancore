@@ -10,36 +10,38 @@
 
 from .... import Explicit, ODE
 from ...base import interface as B
-from .... import master_data_model as D
 
 from .. import interface as I
 
-import sympy as sp  # to be able to use sp.sqrt
+import sympy as sp  # to be able to use symbolic constants and functions
 
 
 class Society (I.Society):
     """Society entity type mixin implementation class."""
 
     # abbreviations:
+    basic_rate = B.Society.metabolism.basic_emigration_probability_rate
+    slope = B.Society.metabolism.emigration_probability_characteristic_slope
+    offset = B.Society.metabolism.emigration_wellbeing_difference_offset
 
     # for pairwise migration formula:
     this_society = I.Society
     other_society = B.Society.world.societies  # we will sum about all those!
-
+    
     processes = [
                  
         Explicit("emigration",
             [this_society.emigration],
-            [B.Society.metabolism.basic_emigration_probability_rate
+            [basic_rate
              * this_society.population 
              * B.Society.world.sum(  # here is the summation
                 other_society.population
                 * (1/2 + 1/sp.pi * sp.atan(
                     sp.pi
-                    * B.Society.metabolism.emigration_probability_characteristic_slope
+                    * slope
                     * (other_society.wellbeing 
                        - this_society.wellbeing
-                       - B.Society.metabolism.emigration_wellbeing_difference_offset)
+                       - offset)
                     )
                   )
                 )
@@ -47,22 +49,22 @@ class Society (I.Society):
                  
         Explicit("immigration",
             [this_society.immigration],
-            [B.Society.metabolism.basic_emigration_probability_rate
+            [basic_rate
              * this_society.population 
              * B.Society.world.sum(  # here is the summation again
                 other_society.population
                 * (1/2 + 1/sp.pi * sp.atan(
                     sp.pi
-                    * B.Society.metabolism.emigration_probability_characteristic_slope
+                    * slope
                     * (this_society.wellbeing 
                        - other_society.wellbeing
-                       - B.Society.metabolism.emigration_wellbeing_difference_offset)
+                       - offset)
                     )
                   )
                 )
             ]),
                  
-        ODE("migration dynamics",
+        ODE("effect of migration",
             [I.Society.population],
             [I.Society.immigration - I.Society.emigration])
 

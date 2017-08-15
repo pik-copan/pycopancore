@@ -20,6 +20,13 @@ from .. import interface as I
 import sympy as sp  # to be able to use sp.sqrt
 
 
+# TODO: move this to a suitable place (like pycopancore.util?):
+def sqrtorzero(expr):
+    """square root if positive, zero otherwise.
+    needed since ODE solver may pass negative values in Jacobian estimation"""
+    return sp.sqrt(sp.Max(0, expr))
+
+
 class Society (I.Society):
     """Society entity type mixin implementation class."""
 
@@ -33,9 +40,8 @@ class Society (I.Society):
                + B.Society.metabolism.fertility_maximizing_wellbeing**2))
     
     mort = (B.Society.metabolism.characteristic_mortality
-            / sp.sqrt(sp.Max(0,
-                             I.Society.wellbeing
-                             / B.Society.metabolism.fertility_maximizing_wellbeing))
+            / sqrtorzero(I.Society.wellbeing
+                         / B.Society.metabolism.fertility_maximizing_wellbeing)
             + B.Society.metabolism.population_spatial_competition_coefficient
             * (I.Society.population / land_area)
             / sp.sqrt(I.Society.physical_capital))

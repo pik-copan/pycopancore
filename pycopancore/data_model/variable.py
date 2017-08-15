@@ -43,7 +43,7 @@ class Variable(Symbol):
 
     readonly = None
     """whether variable is read-only, e.g. holding redundant information"""
-    default = None
+    default = private.unset  # can't use None since None is a possible default value
     """default initial value"""
     uninformed_prior = None
     """random value generator (probability distribution)
@@ -137,7 +137,7 @@ class Variable(Symbol):
                  ref=None,
                  scale="ratio",
                  readonly=False,
-                 default=None,
+                 default=private.unset,
                  uninformed_prior=None,
                  CF=None,
                  AMIP=None,
@@ -414,7 +414,9 @@ class Variable(Symbol):
     def set_to_default(
             self,
             instances=None):  # if None: all entities/taxa
-        """Set values in selected entities to default"""
+        """Set values in selected entities to default if a default was given"""
+        if self.default is private.unset:
+            return
         instances = self._get_instances(instances)
         for e in instances:
             self.set_value(e, self.default)

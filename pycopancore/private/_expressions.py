@@ -21,8 +21,15 @@ class _Unknown(object):
     def update(self, *args):
         return self
 
-
 unknown = _Unknown()
+
+class _Unset(object):
+    def __str__(self):
+        return "unset"
+    def update(self, *args):
+        return self
+
+unset = _Unset()
 
 # hierarchical aggregation functions:
 

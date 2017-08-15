@@ -112,11 +112,12 @@ for s in societies:
 #    plot(t, traj[M.Society.renewable_energy_input_flow][s],
 #         "--", color="darkorange", lw=2)
     plot(t, traj[M.Society.wellbeing][s],"magenta",lw=2)
-    plot(t, traj[M.Society.births][s],"--",color="yellow",lw=2)
+    plot(t, np.array(traj[M.Society.births][s]) - traj[M.Society.births][s],"--",color="yellow",lw=2)
     plot(t, traj[M.Society.immigration][s],":",color="yellow",lw=2)
+    plot(t, traj[M.Society.emigration][s],"-.",color="yellow",lw=2)
 for c in cells:
     pass
-    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
+#    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
 #    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
 

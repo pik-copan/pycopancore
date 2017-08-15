@@ -67,11 +67,11 @@ class Metabolism (object):
         "slope of the normalized sigmoid function at its point of inflection", 
         unit = D.unity / (D.utils / D.people / D.years),
         is_intensive=True,
-        default=1/1000)
+        default=1e-1) # 1e-3
     basic_emigration_probability_rate = Variable(
         "basic emigration probability rate",
         "absolute value of emigration probability rate at its point of inflection",
         unit = D.years**-1 / D.people**2,
         lower_bound=0, is_intensive=True, 
-        default = 100*(0.01 / D.years) / (1e6 * D.people)**2)
+        default = (.1 / D.years) / (1e6 * D.people)**2) # 0, .01, 0.1
     
