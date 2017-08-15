@@ -9,7 +9,7 @@
 # License: MIT license
 
 from ... import master_data_model as D
-from ...data_model.master_data_model import S
+from ...data_model.master_data_model import MET, S
 
 
 class Model (object):
@@ -29,6 +29,13 @@ class Model (object):
     # - Model does NOT define variables or parameters, only entity types
     #   and process taxons do!
     # - implementation.Model lists these entity-types and process taxons
+
+
+class Metabolism (object):
+    """Interface for Metabolism process taxon mixin."""
+
+    renewable_energy_knowledge_spillover_fraction = \
+        MET.renewable_energy_knowledge_spillover_fraction
 
 
 # entity types:
@@ -59,3 +66,4 @@ class Society (object):
     physical_capital_depreciation_rate = S.physical_capital_depreciation_rate
     renewable_energy_knowledge_depreciation_rate = \
         S.renewable_energy_knowledge_depreciation_rate
+    

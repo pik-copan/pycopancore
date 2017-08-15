@@ -10,6 +10,7 @@
 
 from .. import interface as I
 from .... import Explicit, ODE
+from ...base import interface as B
 
 
 class Society (I.Society):
@@ -31,6 +32,9 @@ class Society (I.Society):
              - I.Society.physical_capital_depreciation_rate
              * I.Society.physical_capital,
              I.Society.renewable_energy_input_flow
+             + B.Society.metabolism.renewable_energy_knowledge_spillover_fraction
+               * (B.Society.world.sum.societies.renewable_energy_input_flow
+                  - I.Society.renewable_energy_input_flow)
              - I.Society.renewable_energy_knowledge_depreciation_rate
              * I.Society.renewable_energy_knowledge])
 

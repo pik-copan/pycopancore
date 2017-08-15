@@ -74,6 +74,7 @@ class Nature(cc.Nature,
 
 class Metabolism(
                  prod.Metabolism,
+                 growth.Metabolism,
                  pop.Metabolism,
                  mig.Metabolism,
                  base.Metabolism):
