@@ -56,6 +56,7 @@ try:
     r = random.uniform(size=nsocs)
     P0 = 6e9 * D.people * r / sum(r)  # 500e9 is middle ages, 6e9 would be yr 2000
     M.Society.population.set_values(societies, P0)
+    M.Society.migrant_population.set_values(societies, P0/2)
     # print(M.Society.population.get_values(societies))
     
     r = random.uniform(size=nsocs)
@@ -89,7 +90,9 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=10000, dt=100)
+traj = runner.run(t_1=1000, dt=100)
+from pickle import dump
+dump(traj,open("test.pickle","wb"))
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
