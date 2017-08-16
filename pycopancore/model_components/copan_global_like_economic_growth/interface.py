@@ -9,7 +9,7 @@
 # License: MIT license
 
 from ... import master_data_model as D
-from ...data_model.master_data_model import MET, S
+from ...data_model.master_data_model import MET, S, W
 
 
 class Model (object):
@@ -39,6 +39,12 @@ class Metabolism (object):
 
 
 # entity types:
+
+
+class World (object):
+    """Interface for World entity type mixin."""
+
+    renewable_energy_input_flow = W.renewable_energy_input_flow
 
 
 class Society (object):

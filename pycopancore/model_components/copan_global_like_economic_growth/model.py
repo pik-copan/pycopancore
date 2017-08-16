@@ -10,7 +10,7 @@
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import Metabolism, Society
+from .implementation import Metabolism, Society, World
 
 
 class Model (I.Model):
@@ -18,5 +18,5 @@ class Model (I.Model):
 
     # mixins provided by this model component:
 
-    entity_types = [Society]
+    entity_types = [Society, World]
     process_taxa = [Metabolism]

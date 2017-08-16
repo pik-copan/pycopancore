@@ -57,19 +57,19 @@ class Metabolism (object):
     # endogenous variables:
 
     # exogenous variables / parameters:
-    emigration_wellbeing_difference_offset = Variable(
+    emigration_wellbeing_quotient_offset = Variable(
         "emigration wellbeing difference offset",
         "wellbeing difference at which emigration probability has its point "
         "of inflection", 
-        unit = D.utils / D.people / D.years,
+        unit = D.unity,
         is_intensive=True,
-        default=1000)
+        default=1)
     emigration_probability_characteristic_slope = Variable(
         "emigration probability's characteristic slope",
         "slope of the normalized sigmoid function at its point of inflection", 
-        unit = D.unity / (D.utils / D.people / D.years),
+        unit = D.unity,
         is_intensive=True,
-        default=1e-3)
+        default=1)
     basic_emigration_probability_rate = Variable(
         "basic emigration probability rate",
         "absolute value of emigration probability rate at its point of inflection",

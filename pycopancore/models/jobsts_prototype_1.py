@@ -31,6 +31,7 @@ from ..model_components import wellbeing_driven_migration \
 
 class World(cc.World,
             prod.World,
+            growth.World,
             base.World):
     """World entity type."""
 

@@ -22,7 +22,7 @@ class Society (I.Society):
     # abbreviations:
     basic_rate = B.Society.metabolism.basic_emigration_probability_rate
     slope = B.Society.metabolism.emigration_probability_characteristic_slope
-    offset = B.Society.metabolism.emigration_wellbeing_difference_offset
+    offset = B.Society.metabolism.emigration_wellbeing_quotient_offset
 
     # for pairwise migration formula:
     this_society = I.Society
@@ -40,7 +40,7 @@ class Society (I.Society):
                     sp.pi
                     * slope
                     * (other_society.wellbeing 
-                       - this_society.wellbeing
+                       / this_society.wellbeing
                        - offset)
                     )
                   )
@@ -57,7 +57,7 @@ class Society (I.Society):
                     sp.pi
                     * slope
                     * (this_society.wellbeing 
-                       - other_society.wellbeing
+                       / other_society.wellbeing
                        - offset)
                     )
                   )

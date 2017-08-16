@@ -13,3 +13,4 @@ from .metabolism import Metabolism
 
 # export all provided entity type implementation mixin classes:
 from .society import Society
+from .world import World

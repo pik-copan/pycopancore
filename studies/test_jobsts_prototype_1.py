@@ -16,14 +16,15 @@ random.seed(1)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 5 # no. societies #10
-ncells = 50  # no. cells #100
+nsocs = 20 # no. societies #20
+ncells = 200  # no. cells #200
 
 model = M.Model()
 
 # instantiate process taxa:
 nature = M.Nature()
-metabolism = M.Metabolism()
+metabolism = M.Metabolism(
+    renewable_energy_knowledge_spillover_fraction = 1e-7) # 1e-7: oscillations
 
 # generate entities and plug them together at random:
 worlds = [M.World(nature=nature, metabolism=metabolism,
@@ -90,7 +91,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=1000, dt=100)
+traj = runner.run(t_1=10000, dt=100)
 from pickle import dump
 dump(traj,open("test.pickle","wb"))
 print(time()-start, " seconds")
@@ -115,7 +116,7 @@ for s in societies:
          "--", color="gray", lw=2)
 #    plot(t, traj[M.Society.renewable_energy_input_flow][s],
 #         "--", color="darkorange", lw=2)
-    plot(t, traj[M.Society.wellbeing][s],"magenta",lw=2)
+    plot(t[3:], traj[M.Society.wellbeing][s][3:],"magenta",lw=2)
 #    plot(t, np.array(traj[M.Society.births][s]) - traj[M.Society.deaths][s],"--",color="yellow",lw=2)
 #    plot(t, traj[M.Society.immigration][s],":",color="yellow",lw=2)
 for c in cells:

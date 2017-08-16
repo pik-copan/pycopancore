@@ -360,6 +360,9 @@ class Runner(_AbstractRunner):
             # save solution to lists:
             times.append(sol_t)
             sol.append(sol_valuearray.copy())
+            # TODO: ALSO output values of non-dynamical variables, like those
+            # from Explicit processes, so that they don't need to be
+            # calculated again after ode finished! 
             # TODO: this is the place to implement termination
             # due to events without a priori known occurrence
             # time! if solout returns 0 (or -1?), solver will
@@ -479,7 +482,7 @@ class Runner(_AbstractRunner):
                 # ding on the solver method, we might not be sure that when
                 # solout is called, the previous call to apply_explicits was
                 # for the same time point and state, so we cannot simply use
-                # its result...
+                # its result... (is this really true?)
 
                 if len(self.explicit_processes) > 0:
                     print("    Applying Explicit processes to simulated "

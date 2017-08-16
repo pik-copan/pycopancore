@@ -25,7 +25,7 @@ class Society (I.Society):
                   (1 - I.Society.savings_rate) * I.Society.total_output_flow]
                  ),
 
-        ODE("growth and depreciation",
+        ODE("growth, spillovers, depreciation",
             [I.Society.physical_capital, 
              I.Society.renewable_energy_knowledge],
             [I.Society.investment_flow
@@ -33,7 +33,7 @@ class Society (I.Society):
              * I.Society.physical_capital,
              I.Society.renewable_energy_input_flow
              + B.Society.metabolism.renewable_energy_knowledge_spillover_fraction
-               * (B.Society.world.sum.societies.renewable_energy_input_flow
+               * (B.Society.world.renewable_energy_input_flow
                   - I.Society.renewable_energy_input_flow)
              - I.Society.renewable_energy_knowledge_depreciation_rate
              * I.Society.renewable_energy_knowledge])
