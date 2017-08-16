@@ -15,8 +15,9 @@ then remove these instructions
 from .. import interface as I
 from pycopancore import Step
 
-from scipy import stats, optimize, special
+from scipy import optimize
 import numpy as np
+import math
 
 
 class Metabolism (I.Metabolism):
@@ -155,15 +156,15 @@ class Metabolism (I.Metabolism):
 
 def lognorm_pdf(x, sigma, median):
     """Own lognorm pdf function."""
-    mu = np.log(median)
+    mu = math.log(median)
     output = 1 / (
-        x * sigma * np.sqrt(2 * np.pi)
-                  ) * np.exp(-(np.log(x) - mu) ** 2 / (2 * sigma ** 2))
+        x * sigma * math.sqrt(2 * math.pi)
+                  ) * math.exp(-(np.log(x) - mu) ** 2 / (2 * sigma ** 2))
     return output
 
 
 def lognorm_cdf(x, sigma, median):
     """Own lognorm cdf function."""
-    mu = np.log(median)
-    output = 1/2 + 1/2 * special.erf((np.log(x)-mu)/(np.sqrt(2)*sigma))
+    mu = math.log(median)
+    output = 1/2 + math.erf((np.log(x)-mu)/(math.sqrt(2)*sigma)) / 2
     return output
