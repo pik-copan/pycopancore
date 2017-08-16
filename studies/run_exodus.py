@@ -19,13 +19,13 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 100
+timeinterval = 30
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nm = 1  # number of municipalities, also cities
 nc = 1  # number of counties, also farmland_cells
-nf = 10  # number of farmers
-nt = 10  # number of townsmen
+nf = 100  # number of farmers
+nt = 100  # number of townsmen
 
 model = M.Model()
 
@@ -57,7 +57,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
-                                 land_area=0.01,  # in square kilometers
+                                 land_area=1,  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []

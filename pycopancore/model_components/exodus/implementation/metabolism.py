@@ -15,7 +15,7 @@ then remove these instructions
 from .. import interface as I
 from pycopancore import Step
 
-from scipy import stats, optimize
+from scipy import stats, optimize, special
 import numpy as np
 
 
@@ -88,16 +88,10 @@ class Metabolism (I.Metabolism):
             # Calculate liquidity to get sri and f_y:
             y_i = (e.harvest - w_i) * price + e.gross_income
             # Calculate the individual's subjective income rank:
-            sri = stats.lognorm.cdf(y_i,
-                                    s=sigma,
-                                    loc=loc,
-                                    scale=median)
+            sri = lognorm_cdf(x=y_i, sigma=sigma, median=median)
+            pdf = lognorm_pdf(x=y_i, sigma=sigma, median=median)
             # Get the rhs of the equation for the individual
-            errors[1 + i] = (sri - (w_i * price * stats.lognorm.pdf(y_i,
-                                                                    s=sigma,
-                                                                    loc=loc,
-                                                                    scale=median
-                                                                    )
+            errors[1 + i] = (sri - (w_i * price * pdf
                                     )
                              ) / (2 * np.sqrt(w_i * sri))
         # Sum over liquidity must be equal to sum over gross income:
@@ -157,3 +151,19 @@ class Metabolism (I.Metabolism):
                                  I.World.water_price],
              [market_timing, do_market_clearing])
     ]  # TODO: instantiate and list process objects here
+
+
+def lognorm_pdf(x, sigma, median):
+    """Own lognorm pdf function."""
+    mu = np.log(median)
+    output = 1 / (
+        x * sigma * np.sqrt(2 * np.pi)
+                  ) * np.exp(-(np.log(x) - mu) ** 2 / (2 * sigma ** 2))
+    return output
+
+
+def lognorm_cdf(x, sigma, median):
+    """Own lognorm cdf function."""
+    mu = np.log(median)
+    output = 1/2 + 1/2 * special.erf((np.log(x)-mu)/(np.sqrt(2)*sigma))
+    return output
