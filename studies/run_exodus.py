@@ -24,8 +24,8 @@ timeinterval = 30
 timestep = .1
 nm = 1  # number of municipalities, also cities
 nc = 1  # number of counties, also farmland_cells
-nf = 100  # number of farmers
-nt = 100  # number of townsmen
+nf = 10  # number of farmers
+nt = 10  # number of townsmen
 
 model = M.Model()
 
@@ -144,10 +144,11 @@ t = np.array(traj['t'])
 #     print('key', key,)
 
 city_population = np.array([traj[M.Society.population][soc]
-                      for soc in municipalities])
+                           for soc in municipalities])
 county_population = np.array([traj[M.Society.population][soc]
-                      for soc in counties])
-
+                             for soc in counties])
+utilities = np.array([traj[M.Individual.utility][ind]
+                     for ind in M.Individual.instances])
 population_data = []
 for i, s in enumerate(municipalities):
     population_data.append(go.Scatter(
@@ -158,7 +159,7 @@ for i, s in enumerate(municipalities):
         line=dict(color="green", width=4)
     ))
 
-for i, s in enumerate(counties):
+for i, c in enumerate(counties):
     population_data.append(go.Scatter(
         x=t,
         y=county_population[i],
@@ -175,7 +176,15 @@ price_data.append(go.Scatter(
     mode='lines',
     line=dict(color="blue", width=4)
 ))
-
+utilities_data = []
+for i, ind in enumerate(M.Individual.instances):
+    utilities_data.append(go.Scatter(
+        x=t,
+        y=utilities[i],
+        name='utility of citizen {}'.format(i),
+        mode='lines',
+        line=dict(color="green", width=4)
+    ))
 
 layout = dict(title='Exodus',
               xaxis=dict(title='time [yr]'),
@@ -184,4 +193,10 @@ layout = dict(title='Exodus',
 
 fig = dict(data=[population_data[0], population_data[1]],
            layout=layout)
-py.plot(fig, filename='Exodus first results.html')
+fig2 = dict(data=[price_data[0]],
+            layout=layout)
+fig3 = dict(data=[utilities_data[0], utilities_data[1], utilities_data[17]],
+            layout=layout)
+py.plot(fig, filename='Exodus populations.html')
+py.plot(fig2, filename='Exodus water price.html')
+py.plot(fig3, filename='Exodus utilities.html')

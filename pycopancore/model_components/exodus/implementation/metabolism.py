@@ -149,7 +149,8 @@ class Metabolism (I.Metabolism):
 
     processes = [
         Step("market clearing", [I.Individual.liquidity,
-                                 I.World.water_price],
+                                 I.World.water_price,
+                                 I.Individual.utility],
              [market_timing, do_market_clearing])
     ]  # TODO: instantiate and list process objects here
 

@@ -100,12 +100,16 @@ class Society (I.Society):
         """Calculate the PDF of the liquidity of the society."""
         print('liquidity_pdf is calculated for society', self)
         liquidities = []
-        for individual in self.individuals:
-            liquidities.append(individual.liquidity)
-        self.liquidity_sigma, self.liquidity_loc, self.liquidity_median = (
-            stats.lognorm.fit(liquidities, floc=0))
-        print('sigma, loc, median are',
-              self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
+        # Check if there are any individuals:
+        if self.individuals:
+            for individual in self.individuals:
+                liquidities.append(individual.liquidity)
+            self.liquidity_sigma, self.liquidity_loc, self.liquidity_median = (
+                stats.lognorm.fit(liquidities, floc=0))
+            print('sigma, loc, median are',
+                  self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
+        else:
+            print('I need to do comething here!')
 
     def calc_population(self, unused_t):
         """Calculate the societies population explicitly.

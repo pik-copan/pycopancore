@@ -183,9 +183,6 @@ class Individual (I.Individual):
         # Remove edge:
         self.culture.acquaintance_network.remove_edge(self, neighbour)
         # Chose another random neighbour
-        print('     Acquaintances are',
-              self.acquaintances,
-              type(self.acquaintances))
         # Check if individuals has acquaintances:
         if not self.acquaintances:
             # If so, connect to random one in model:
@@ -254,8 +251,7 @@ class Individual (I.Individual):
         self._subjective_income_rank = None
         self._farm_size = None
         self._gross_income = None
-        print('individual is migrated, now society has population of',
-              len(self.society.individuals))
+        # TODO: Change farmland/income of everybody else too?
 
     processes = [
         Event("social update",
