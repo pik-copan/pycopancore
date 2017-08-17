@@ -59,6 +59,12 @@ class DimensionalQuantity(object):
         self._unit = unit
         self._dimension = unit.dimension
 
+    def tostr(self, width=12, decimals=2, unit=None):
+        if unit is None:
+            unit = self._unit
+        format = str(width - len(unit.symbol) - 1) + "." + str(decimals) + "f"
+        return ("{:"+format+"}").format(self.number(unit)) + " " + unit.symbol
+
     def __repr__(self):
         return str(self._number) + " " + self._unit.symbol
 

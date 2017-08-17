@@ -16,15 +16,18 @@ random.seed(1)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 20 # no. societies #20
-ncells = 200  # no. cells #200
+nsocs = 10 # no. societies #10
+ncells = 100  # no. cells #100
 
 model = M.Model()
 
 # instantiate process taxa:
 nature = M.Nature()
 metabolism = M.Metabolism(
-    renewable_energy_knowledge_spillover_fraction = 1e-7) # 1e-7: oscillations
+    renewable_energy_knowledge_spillover_fraction = 1)
+        # ? at rand*1e-21 prod.: success
+        # ? at rand*1e-21 prod.: failure
+        # ? at ? prod.: oscillations
 
 # generate entities and plug them together at random:
 worlds = [M.World(nature=nature, metabolism=metabolism,
@@ -33,7 +36,9 @@ worlds = [M.World(nature=nature, metabolism=metabolism,
                   ) for w in range(nworlds)]
 societies = [M.Society(world=random.choice(worlds)) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies),
-                renewable_sector_productivity=random.rand()*1e-17) #1e-17
+                renewable_sector_productivity=random.rand()*1e-17)
+                    # random.rand()*1e-21 at S=1e12 leads to ca. 125 GW renewables initially 
+                    # (where ca. 100 GW would be realistic)
          for c in range(ncells)]
 
 
@@ -59,17 +64,19 @@ try:
     M.Society.population.set_values(societies, P0)
     M.Society.migrant_population.set_values(societies, P0/2)
     # print(M.Society.population.get_values(societies))
-    
-    r = random.uniform(size=nsocs)
-    # in AWS paper: 1e12 (alternatively: 1e13):
-    S0 = 5e11 * D.gigajoules * r / sum(r)
-    M.Society.renewable_energy_knowledge.set_values(societies, S0)
-    # print(M.Society.renewable_energy_knowledge.get_values(societies))
-    
+       
     r = random.uniform(size=nsocs)
     K0 = sum(P0) * 1e4 * D.dollars/D.people * r / sum(r)  # ?
     M.Society.physical_capital.set_values(societies, K0)
     # print(M.Society.physical_capital.get_values(societies))
+
+    # for renewables, do NOT divide by number of socs:    
+    r = random.uniform(size=nsocs)
+    # in AWS paper: 1e12 (alternatively: 1e13):
+    S0 = 1e10 * D.gigajoules * r / r.mean()
+    M.Society.renewable_energy_knowledge.set_values(societies, S0)
+    # print(M.Society.renewable_energy_knowledge.get_values(societies))
+
 except:
     pass
 
@@ -93,7 +100,7 @@ runner = Runner(model=model)
 start = time()
 traj = runner.run(t_1=1000, dt=100)
 from pickle import dump
-dump(traj,open("test.pickle","wb"))
+dump(traj,open("/tmp/test.pickle","wb"))
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
@@ -124,6 +131,9 @@ for c in cells:
 #    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
 #    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
+
+Rglobal = sum(traj[M.Society.renewable_energy_input_flow][s][5] for s in societies) * D.gigajoules / D.years
+print(Rglobal.tostr(unit=D.gigawatts))
 
 
 show()

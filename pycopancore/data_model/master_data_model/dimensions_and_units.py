@@ -68,15 +68,21 @@ J = joules = Unit("joules", "(not convertible to kg m²/s²)",
 energy.default_unit = GJ = gigajoules = \
     (joules * 1e9).named("gigajoules", symbol="GJ")
 # TODO: provide other common units: Btu, kcal., MWh, etc.
-Btu = british_thermal_units = GJ * 0.10550559e-5
-GWh = gigawatt_hours = GJ * 3600
-Gcalth = gigacalories_th = GJ * 4.184  # thermochemical
+Btu = british_thermal_units = (GJ * 0.10550559e-5
+                               ).named("British thermal units", symbol="Btu")
+GWh = gigawatt_hours = (GJ * 3600
+                        ).named("gigawatt_hours", symbol="GWh")
+Gcalth = gigacalories_th = (GJ * 4.184
+                            ).named("gigacalories (thermochemical)", 
+                                    symbol="Gcalth")
 
 # derived flow dimensions:
 
 value_flow = (monetary_value / time).named("monetary_value flow")
 carbon_flow = (carbon / time).named("carbon flow")
 human_flow = (humans / time).named("human flow")
+
+GW = gigawatts = (GJ / seconds).named("gigawatts", symbol="GW")
 
 # other derived dimensions and units:
 
