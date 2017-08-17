@@ -13,7 +13,7 @@ then remove these instructions
 
 from .. import interface as I
 from pycopancore.model_components.base import interface as B
-from pycopancore import Explicit
+from pycopancore import Explicit, Step
 # from .... import master_data_model as D
 
 from scipy import stats
@@ -86,13 +86,10 @@ class Society (I.Society):
             # mean income:
             return self.base_mean_income * (len(self.individuals) ** 1.12)
         if self.municipality_like is False:
-            # Get cell. This complicated code is necessary, since direct_cells
-            # is a set:
+            # Get cell.
             for c in self.direct_cells:
-                cell = c
-                break
-            # mean farm size:
-            return cell.land_area / len(self.individuals)
+                # mean farm size:
+                return c.land_area / len(self.individuals)
 
     # process-related methods:
 
@@ -120,6 +117,92 @@ class Society (I.Society):
         """
         self.population = len(self.individuals)
 
-    processes = [Explicit(
-        'calculate population', [B.Society.population], calc_population)
+    def update_incomes(self):
+        """Update incomes to adjust to population in some manner."""
+        # first: Check if really a municipaity:
+        if self.municipality_like is not True:
+            raise SocietyTypeError('Society not a municipality')
+        # Define epsilion, which functions as threshold to change incomes
+        epsilon = 10
+        # Define factor how fast adjusting takes place
+        factor = 0.5
+        sum = 0
+        for ind in self.individuals:
+            sum += ind.gross_income
+        # Now divide by number of individuals to get mean:
+        real_mean = sum / len(self.individuals)
+        # get delta:
+        delta_mean = self.mean_income_or_farmsize - real_mean
+        if delta_mean > epsilon and delta_mean > 0:
+            # mean income is smaller than it should be, need to add
+            # Define amount to add:
+            to_add = delta_mean / len(self.individuals) * factor
+            for ind in self.individuals:
+                ind.gross_income += to_add
+        if delta_mean > epsilon and delta_mean < 0:
+            # mean income is bigger than it should be, need to subtract
+            # Define amount to subtract:
+            to_subtract = delta_mean / len(self.individuals) * factor
+            for ind in self.individuals:
+                ind.gross_income -= to_subtract
+        # Else do nothing
+
+    def update_farmsizes(self):
+        """Update farmsizes to adjust to population."""
+        # first: Check if really a county:
+        if self.municipality_like is not False:
+            raise SocietyTypeError('Society not a county')
+        # Define epsilion, which functions as threshold to change farmsize
+        epsilon = 10
+        # Define factor how fast adjusting akes place
+        factor = 0.5
+        sum = 0
+        for ind in self.individuals:
+            sum += ind.farm_size
+        # Now divide by number of individuals to get mean:
+        real_mean = sum / len(self.individuals)
+        # get delta:
+        delta_mean = self.mean_income_or_farmsize - real_mean
+        if delta_mean > epsilon and delta_mean > 0:
+            # mean farmsize is smaller than it should be, need to add
+            # Define amount to add:
+            to_add = delta_mean / len(self.individuals) * factor
+            for ind in self.individuals:
+                ind.farm_size += to_add
+        if delta_mean > epsilon and delta_mean < 0:
+            # mean farmsize is bigger than it should be, need to subtract
+            # Define amount to subtract:
+            to_subtract = delta_mean / len(self.individuals) * factor
+            for ind in self.individuals:
+                ind.farm_size -= to_subtract
+        # Else do nothing
+
+    def update_timing(self, t):
+        """Decide how often income and farm size are adjusted."""
+        return t + 1
+
+    def do_update(self, unused_t):
+        """Do the adjustment of income or farmsize"""
+        if self.municipality_like is True:
+            self.update_incomes()
+            print('incomes updated of society', self)
+        elif self.municipality_like is False:
+            self.update_farmsizes()
+            print('farmsizes updated of society', self)
+        else:
+            raise SocietyTypeError('Neither County nor Municipality!')
+
+
+    processes = [
+        Explicit('calculate population',
+                 [B.Society.population],
+                 calc_population),
+        Step("Update incomes/farmsizes",
+             [I.Individual.farm_size, I.Individual.gross_income],
+             [update_timing, do_update])
     ]
+
+
+class SocietyTypeError(Exception):
+    """Error Class if wrong type of society."""
+    pass

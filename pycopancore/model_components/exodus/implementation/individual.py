@@ -92,6 +92,11 @@ class Individual (I.Individual):
                 self._farm_size = self.society.gross_income_or_farmsize
         return self._farm_size
 
+    @farm_size.setter
+    def farm_size(self, value):
+        """Set farm size."""
+        self._farm_size = value
+
     @property
     def gross_income(self):
         """Get the gross income."""
@@ -105,6 +110,11 @@ class Individual (I.Individual):
             if self.society.municipality_like is False:
                 self._gross_income = 0
         return self._gross_income
+
+    @gross_income.setter
+    def gross_income(self, value):
+        """Set gross income"""
+        self._gross_income = value
 
     @property
     def subjective_income_rank(self):
