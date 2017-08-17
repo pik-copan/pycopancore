@@ -62,7 +62,7 @@ try:
     
     r = random.uniform(size=nsocs)
     # in AWS paper: 1e12 (alternatively: 1e13):
-    S0 = 1e12 * D.gigajoules * r / sum(r)
+    S0 = 5e11 * D.gigajoules * r / sum(r)
     M.Society.renewable_energy_knowledge.set_values(societies, S0)
     # print(M.Society.renewable_energy_knowledge.get_values(societies))
     
@@ -91,7 +91,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=10000, dt=100)
+traj = runner.run(t_1=1000, dt=100)
 from pickle import dump
 dump(traj,open("test.pickle","wb"))
 print(time()-start, " seconds")

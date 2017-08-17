@@ -21,6 +21,7 @@ import numpy as np
 class Society (I.Society):
     """Society entity type mixin implementation class."""
 
+    
     # process-related methods:
 
     def do_economic_production(self, unused_t):
@@ -98,6 +99,38 @@ class Society (I.Society):
             c.d_fossil_carbon -= c.fossil_extraction_flow
         self.world.d_atmospheric_carbon += self.carbon_emission_flow
 
+
+    # abbreviations:
+    
+    this = I.Society
+    met = B.Society.metabolism
+    cs = B.Society.cells
+    # distribute population and capital to cells so that wages and rents
+    # are equal across cells (efficient allocation):
+    relative_weight = cs.total_relative_productivity
+    total_relative_weight = B.Society.sum(relative_weight)
+    weight = relative_weight / total_relative_weight
+    P = weight * this.population
+    K = weight * this.physical_capital
+    # resulting cell-wise harvest, extraction and production:
+    intensity = cs.total_energy_intensity
+    denom = (cs.total_relative_productivity * intensity)**0.8
+    fac = (P * K)**0.4 / denom
+    eB = met.biomass_energy_density
+    eF = met.fossil_energy_density
+    Bcell = cs.biomass_relative_productivity * fac / eB
+    Fcell = cs.fossil_relative_productivity * fac / eF
+    Rcell = cs.renewable_relative_productivity * fac
+    Ecell = eB * Bcell + eF * Fcell + Rcell
+    Ycell = Ecell / intensity
+    # societal aggregates:
+    Bsoc = B.Society.sum(Bcell)
+    Fsoc = B.Society.sum(Fcell)
+    Rsoc = B.Society.sum(Rcell)
+    Esoc = B.Society.sum(Ecell)
+    Ysoc = B.Society.sum(Ycell)
+    emissions = Bsoc + Fsoc
+
     processes = [
 
         Explicit("economic production",
@@ -109,12 +142,25 @@ class Society (I.Society):
                   I.Society.secondary_energy_flow,
                   I.Society.total_output_flow,
                   I.Society.carbon_emission_flow],
-                 do_economic_production),
+                 [Bcell,
+                  Fcell,
+                  Bsoc,
+                  Fsoc,
+                  Rsoc,
+                  Esoc,
+                  Ysoc,
+                  emissions
+                  ]),
+#                 do_economic_production),
 
         ODE("harvest, extraction, emissions",
             [B.Society.cells.terrestrial_carbon,
              B.Society.cells.fossil_carbon,
              B.Society.world.atmospheric_carbon],
-            do_harvest_extraction_emissions)
+            [-Bcell,
+             -Fcell,
+             emissions
+             ])
+#            do_harvest_extraction_emissions)
 
     ]

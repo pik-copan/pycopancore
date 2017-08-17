@@ -202,7 +202,7 @@ renewable_energy_knowledge_spillover_fraction = \
     Variable("renewable_energy_knowledge_spillover_fraction", "",
              unit=unity,
              lower_bound=0, upper_bound=1, is_intensive=True,
-             default=1e-5)
+             default=0)
 
 # financial capital?
 

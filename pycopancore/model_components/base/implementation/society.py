@@ -202,7 +202,7 @@ class Society (I.Society, abstract.Society):
     """cache, depends on self.cells, cell.individuals"""
     @property  # read-only
     def individuals(self):
-        """Get direct abd indirect resident Individuals."""
+        """Get direct and indirect resident Individuals."""
         if self._individuals is unknown:
             # aggregate from cells:
             self._individuals = set()
@@ -212,7 +212,7 @@ class Society (I.Society, abstract.Society):
 
     @individuals.setter
     def individuals(self, u):
-        """Set direct abd indirect resident Individuals."""
+        """Set direct and indirect resident Individuals."""
         assert u == unknown, "setter can only be used to reset cache"
         self._individuals = unknown
         # reset dependent caches:
