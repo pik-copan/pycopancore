@@ -11,7 +11,7 @@ from pycopancore.runners import Runner
 from pylab import plot, gca, show
 
 # first thing: set seed so that each execution must return same thing:
-random.seed(1)
+random.seed(10) # 10
 
 # parameters:
 
@@ -24,21 +24,25 @@ model = M.Model()
 # instantiate process taxa:
 nature = M.Nature()
 metabolism = M.Metabolism(
-    renewable_energy_knowledge_spillover_fraction = 1)
-        # ? at rand*1e-21 prod.: success
-        # ? at rand*1e-21 prod.: failure
-        # ? at ? prod.: oscillations
+    renewable_energy_knowledge_spillover_fraction = .3)
+        # 1 w/o protection: success but desertification
+        # 1 w protection: success
+        # .1 w protection: success but desertification
+        # 0 w/o protection: very slow success but desertification
+        # ?: oscillations
 
 # generate entities and plug them together at random:
 worlds = [M.World(nature=nature, metabolism=metabolism,
                   atmospheric_carbon = 830 * D.gigatonnes_carbon,
                   upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                   ) for w in range(nworlds)]
-societies = [M.Society(world=random.choice(worlds)) for s in range(nsocs)]
+societies = [M.Society(world=random.choice(worlds),
+                       protected_fossil_carbon_share=0.95, # (.95,.75) helps
+                       protected_terrestrial_carbon_share=0.75
+                       ) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies),
-                renewable_sector_productivity=random.rand()*1e-17)
-                    # random.rand()*1e-21 at S=1e12 leads to ca. 125 GW renewables initially 
-                    # (where ca. 100 GW would be realistic)
+                renewable_sector_productivity=random.rand()*3e-16)
+                    # random.rand()*3e-16 at S=1e12 leads to ca. 100 GW renewables initially 
          for c in range(ncells)]
 
 
@@ -73,7 +77,7 @@ try:
     # for renewables, do NOT divide by number of socs:    
     r = random.uniform(size=nsocs)
     # in AWS paper: 1e12 (alternatively: 1e13):
-    S0 = 1e10 * D.gigajoules * r / r.mean()
+    S0 = 1e12 * D.gigajoules * r / r.mean()
     M.Society.renewable_energy_knowledge.set_values(societies, S0)
     # print(M.Society.renewable_energy_knowledge.get_values(societies))
 
@@ -98,7 +102,16 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=1000, dt=100)
+traj = runner.run(t_1=500, dt=100)
+
+
+for v in nature.variables: print(v,v.get_value(nature))
+for v in metabolism.variables: print(v,v.get_value(metabolism))
+for v in w.variables: print(v,v.get_value(w))
+for v in s.variables: print(v,v.get_value(s))
+for v in c.variables: print(v,v.get_value(c))
+
+
 from pickle import dump
 dump(traj,open("/tmp/test.pickle","wb"))
 print(time()-start, " seconds")
@@ -118,11 +131,9 @@ for s in societies:
     plot(t, traj[M.Society.renewable_energy_knowledge][s],
          color="darkorange", lw=2)
 #    plot(t, traj[M.Society.carbon_emission_flow][s], "r--", lw=2)
-    plot(t, traj[M.Society.biomass_input_flow][s], "g--", lw=2)
-    plot(t, traj[M.Society.fossil_fuel_input_flow][s],
-         "--", color="gray", lw=2)
-#    plot(t, traj[M.Society.renewable_energy_input_flow][s],
-#         "--", color="darkorange", lw=2)
+#    plot(t, traj[M.Society.biomass_input_flow][s], "g--", lw=2)
+#    plot(t, traj[M.Society.fossil_fuel_input_flow][s], "--", color="gray", lw=2)
+#    plot(t, traj[M.Society.renewable_energy_input_flow][s], "--", color="darkorange", lw=2)
     plot(t[3:], traj[M.Society.wellbeing][s][3:],"magenta",lw=2)
 #    plot(t, np.array(traj[M.Society.births][s]) - traj[M.Society.deaths][s],"--",color="yellow",lw=2)
 #    plot(t, traj[M.Society.immigration][s],":",color="yellow",lw=2)
@@ -132,8 +143,14 @@ for c in cells:
 #    plot(t, traj[M.Cell.fossil_carbon][c],"gray")
 gca().set_yscale('symlog')
 
+Bglobal = sum(traj[M.Society.biomass_input_flow][s][5] for s in societies) * D.gigatonnes_carbon / D.years
+Fglobal = sum(traj[M.Society.fossil_fuel_input_flow][s][5] for s in societies) * D.gigatonnes_carbon / D.years
 Rglobal = sum(traj[M.Society.renewable_energy_input_flow][s][5] for s in societies) * D.gigajoules / D.years
-print(Rglobal.tostr(unit=D.gigawatts))
+print((Bglobal * metabolism.biomass_energy_density * D.gigajoules/D.gigatonnes_carbon).tostr(unit=D.gigawatts),
+      (Fglobal * metabolism.fossil_energy_density * D.gigajoules/D.gigatonnes_carbon).tostr(unit=D.gigawatts),
+      Rglobal.tostr(unit=D.gigawatts)) # last should be ca. 100
+print(Bglobal.tostr(unit=D.gigatonnes_carbon/D.years), # should be ca. 3
+      Fglobal.tostr(unit=D.gigatonnes_carbon/D.years)) # should be ca. 11
 
 
 show()

@@ -142,25 +142,25 @@ class Society (I.Society):
                   I.Society.secondary_energy_flow,
                   I.Society.total_output_flow,
                   I.Society.carbon_emission_flow],
-                 [Bcell,
-                  Fcell,
-                  Bsoc,
-                  Fsoc,
-                  Rsoc,
-                  Esoc,
-                  Ysoc,
-                  emissions
-                  ]),
-#                 do_economic_production),
+#                 [Bcell,
+#                  Fcell,
+#                  Bsoc,
+#                  Fsoc,
+#                  Rsoc,
+#                  Esoc,
+#                  Ysoc,
+#                  emissions
+#                  ]),
+                 do_economic_production),
 
         ODE("harvest, extraction, emissions",
             [B.Society.cells.terrestrial_carbon,
              B.Society.cells.fossil_carbon,
              B.Society.world.atmospheric_carbon],
-            [-Bcell,
-             -Fcell,
-             emissions
-             ])
-#            do_harvest_extraction_emissions)
+#            [-Bcell,
+#             -Fcell,
+#             emissions
+#             ])
+            do_harvest_extraction_emissions)
 
     ]

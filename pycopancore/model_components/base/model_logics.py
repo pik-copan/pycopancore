@@ -20,8 +20,21 @@ from ... import Variable, ReferenceVariable, SetVariable, \
 from ...private import _AbstractProcess, unknown, _expressions
 
 import inspect
+import re
 import numpy as np
 from networkx import DiGraph, write_graphml
+
+
+# helper function:
+def guess_deps(method, variable_pool):
+    """guess the dependencies of a process' target variable from searching
+    its' specification method for known variable codenames"""
+    source = inspect.getsource(method)
+    return set([v for v in variable_pool
+                if re.search(r'\b' + v.codename + r'\b', 
+                             source) is not None])
+    # TODO: exclude matches after a # or in string literals
+    # TODO: if the match is "self.<codename>", make sure owning_class of matched var is correct
 
 
 class ModelLogics (object):
@@ -299,10 +312,18 @@ class ModelLogics (object):
                                     except KeyError:
                                         cls.ODE_dependencies[target.target_variable] = deps
                                 else:
+                                    deps = guess_deps(p.specification, variable_pool)
                                     print("      Derivative of", 
                                           target.target_variable,
-                                          "has unknown dependencies")
-                                    cls.ODE_dependencies[target.target_variable] = unknown
+                                          "probably directly depends on", deps)
+                                    try:
+                                        cls.ODE_dependencies[target.target_variable].update(deps)
+                                    except KeyError:
+                                        cls.ODE_dependencies[target.target_variable] = deps
+#                                    print("      Derivative of", 
+#                                          target.target_variable,
+#                                          "has unknown dependencies")
+#                                    cls.ODE_dependencies[target.target_variable] = unknown
                             cls.ODE_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Explicit):
@@ -336,11 +357,19 @@ class ModelLogics (object):
                                     except KeyError:
                                         cls.explicit_dependencies[target.target_variable] = deps
                                 else:
+                                    deps = guess_deps(p.specification, variable_pool)
                                     print("      Target var.", 
                                           target.target_variable,
-                                          "has unknown dependencies")
-                                    cls.explicit_dependencies[target.target_variable] = unknown
-                                    var2process[target.target_variable] = p
+                                          "probably directly depends on", deps)
+                                    try:
+                                        cls.explicit_dependencies[target.target_variable].update(deps)
+                                    except KeyError:
+                                        cls.explicit_dependencies[target.target_variable] = deps
+#                                    print("      Target var.", 
+#                                          target.target_variable,
+#                                          "has unknown dependencies")
+#                                    cls.explicit_dependencies[target.target_variable] = unknown
+                                var2process[target.target_variable] = p
                             cls.explicit_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Step):

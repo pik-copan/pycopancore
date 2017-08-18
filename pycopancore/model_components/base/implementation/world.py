@@ -98,26 +98,12 @@ class World (I.World, abstract.World):
         # reset dependent caches:
         pass
 
-    # process-related methods:
-
-    def aggregate_cell_carbon_stocks(self, unused_t):
-        """Sum up all carbon stocks of Cells.
-
-        Parameters
-        ----------
-        unused_t
-            A parameter that is not used in the method but necessary for the
-            runner.
-
-        """
-        cs = self.cells
-        self.terrestrial_carbon = sum([c.terrestrial_carbon for c in cs])
-        self.fossil_carbon = sum([c.fossil_carbon for c in cs])
 
     processes = [
         # TODO: convert this into an Implicit equation once supported:
         Explicit("aggregate cell carbon stocks",
                  [I.World.terrestrial_carbon,
                   I.World.fossil_carbon],
-                 aggregate_cell_carbon_stocks)
+                 [I.World.sum.cells.terrestrial_carbon,
+                  I.World.sum.cells.fossil_carbon])
     ]
