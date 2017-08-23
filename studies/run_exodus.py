@@ -19,7 +19,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 1
+timeinterval = 20
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nm = 1  # number of municipalities, also cities
@@ -57,7 +57,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
-                                 land_area= 0.1 * (nf + nt),  # in square kilometers
+                                 land_area= 0.01 * (nf + nt),  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []
@@ -127,6 +127,7 @@ start = time()
 # Calculate societies liquidity pds:
 for soc in M.Society.instances:
     soc.liquidity_pdf()
+    soc.calc_population(0)
 # Calculate other stuff:
 for ind in M.Individual.instances:
     ind.calculate_harvest(0)
@@ -199,7 +200,7 @@ layout = dict(title='Exodus',
               yaxis=dict(title='value'),
               )
 
-fig = dict(data=[population_data[0], population_data[1]],
+fig = dict(data=[population_data[i] for i, soc in enumerate(M.Society.instances)],
            layout=layout)
 fig2 = dict(data=[price_data[0]],
             layout=layout)

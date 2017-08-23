@@ -105,6 +105,7 @@ class Society (I.Society):
                 stats.lognorm.fit(liquidities, floc=0))
             print('sigma, loc, median are',
                   self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
+            print('population is', self.population)
         else:
             print('I need to do comething here!')
 
@@ -179,7 +180,7 @@ class Society (I.Society):
 
     def update_timing(self, t):
         """Decide how often income and farm size are adjusted."""
-        return t + 1
+        return t + 0.2
 
     def do_update(self, unused_t):
         """Do the adjustment of income or farmsize"""

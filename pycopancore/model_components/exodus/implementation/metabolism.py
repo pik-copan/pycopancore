@@ -127,6 +127,7 @@ class Metabolism (I.Metabolism):
                                      )
             if solution['success'] is not True:
                 print('solution', solution)
+                raise BaseException('Market clearing has failed!')
             world.water_price = np.exp(solution['x'][0])
             for i, e in enumerate(world.individuals):
                 # Account for shift, since price of water is at first position
