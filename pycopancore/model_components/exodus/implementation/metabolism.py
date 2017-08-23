@@ -27,7 +27,7 @@ class Metabolism (I.Metabolism):
 
     def __init__(self,
                  *,
-                 market_frequency=0.1,
+                 market_frequency=1,
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line
@@ -150,7 +150,7 @@ class Metabolism (I.Metabolism):
     processes = [
         Step("market clearing", [I.Individual.liquidity,
                                  I.World.water_price,
-                                 I.Individual.utility],
+                                 I.Individual.nutrition],
              [market_timing, do_market_clearing])
     ]  # TODO: instantiate and list process objects here
 

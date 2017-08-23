@@ -19,7 +19,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 30
+timeinterval = 1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nm = 1  # number of municipalities, also cities
@@ -57,7 +57,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
-                                 land_area=1,  # in square kilometers
+                                 land_area= 0.1 * (nf + nt),  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []
@@ -124,6 +124,14 @@ erdosrenyify(culture.acquaintance_network, p=expected_degree / (nf + nt))
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 start = time()
+# Calculate societies liquidity pds:
+for soc in M.Society.instances:
+    soc.liquidity_pdf()
+# Calculate other stuff:
+for ind in M.Individual.instances:
+    ind.calculate_harvest(0)
+    ind.calculate_sri(0)
+    ind.calculate_utility(0)
 # Run market clearing once:
 metabolism.do_market_clearing(0)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
@@ -195,8 +203,9 @@ fig = dict(data=[population_data[0], population_data[1]],
            layout=layout)
 fig2 = dict(data=[price_data[0]],
             layout=layout)
-fig3 = dict(data=[utilities_data[0], utilities_data[1], utilities_data[17]],
+fig3 = dict(data=[utilities_data[0], utilities_data[1]],
             layout=layout)
+
 py.plot(fig, filename='Exodus populations.html')
 py.plot(fig2, filename='Exodus water price.html')
 py.plot(fig3, filename='Exodus utilities.html')

@@ -14,7 +14,7 @@ then remove these instructions
 
 from .. import interface as I
 from pycopancore.model_components.base import interface as B
-from pycopancore import Event
+from pycopancore import Event, Explicit
 import math
 import random
 import numpy as np
@@ -65,20 +65,6 @@ class Individual (I.Individual):
             assert self.cell.characteristic == 'city'
 
     @property
-    def harvest(self):
-        """Get the amount of water a farmer is harvesting"""
-        # Return harvest in unit cubic meters per year. Since Farm size is in
-        # square kilometers, a factor of 1000*1000 is necessary:
-        return self.farm_size * self.cell.average_precipitation * 1000000
-
-    @property
-    def utility(self):
-        """Get the Cobb-Douglas utility of an individual"""
-        return math.sqrt(self.subjective_income_rank * self.nutrition / 1240)
-        # TODO: Add parameter to compensate for frequency of market clearing!
-        # 1240 m^3 is the annual need
-
-    @property
     def farm_size(self):
         """Get the farm size."""
         # Check, if not already been calculated:
@@ -115,17 +101,6 @@ class Individual (I.Individual):
     def gross_income(self, value):
         """Set gross income"""
         self._gross_income = value
-
-    @property
-    def subjective_income_rank(self):
-        """Get subjective income rank of individual."""
-        # Calculate place in liquidity cdf:
-        sri = stats.lognorm.cdf(self.liquidity,
-                                s=self.society.liquidity_sigma,
-                                loc=self.society.liquidity_loc,
-                                scale=self.society.liquidity_median)
-        self._subjective_income_rank = sri
-        return self._subjective_income_rank
 
     # process-related methods:
     def social_update_timer(t):
@@ -263,8 +238,35 @@ class Individual (I.Individual):
         self._gross_income = None
         # TODO: Change farmland/income of everybody else too?
 
+    def calculate_harvest(self, unused_t):
+        """Calculate the harvest of an Individual."""
+        self.harvest = self.farm_size * self.cell.average_precipitation * 1000000
+
+    def calculate_utility(self, unused_t):
+        """Calculate utility if an Individual."""
+        self.utility = math.sqrt(self.subjective_income_rank * self.nutrition / 1240)
+        # TODO: Add parameter to compensate for frequency of market clearing!
+        # 1240 m^3 is the annual need
+
+    def calculate_sri(self, unused_t):
+        """Calculate subjective income rank of individual"""
+        sri = stats.lognorm.cdf(self.liquidity,
+                                s=self.society.liquidity_sigma,
+                                loc=self.society.liquidity_loc,
+                                scale=self.society.liquidity_median)
+        self.subjective_income_rank = sri
+
     processes = [
         Event("social update",
               [B.Individual.society, B.Culture.acquaintance_network],
-              ["time", social_update_timer, social_update])
+              ["time", social_update_timer, social_update]),
+        Explicit("Calculate harvest",
+                 [I.Individual.harvest],
+                 calculate_harvest),
+        Explicit("Calculate Utility",
+                 [I.Individual.utility],
+                 calculate_utility),
+        Explicit("Calculate Subjective Income Rank",
+                 [I.Individual.subjective_income_rank],
+                 calculate_sri)
     ]  # TODO: instantiate and list process objects here
