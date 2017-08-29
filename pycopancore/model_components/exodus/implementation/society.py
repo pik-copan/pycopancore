@@ -79,18 +79,6 @@ class Society (I.Society):
         """Get the y_min of the Pareo distribution"""
         return
 
-    @property
-    def mean_income_or_farmsize(self):
-        "Get mean income or mean farmsize."
-        if self.municipality_like is True:
-            # mean income:
-            return self.base_mean_income * (len(self.individuals) ** 1.12)
-        if self.municipality_like is False:
-            # Get cell.
-            for c in self.direct_cells:
-                # mean farm size:
-                return c.land_area / len(self.individuals)
-
     # process-related methods:
 
     def liquidity_pdf(self):
@@ -107,7 +95,7 @@ class Society (I.Society):
                   self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
             print('population is', self.population)
         else:
-            print('I need to do comething here!')
+            print('Society died out')
 
     def calc_population(self, unused_t):
         """Calculate the societies population explicitly.
@@ -123,30 +111,34 @@ class Society (I.Society):
         # first: Check if really a municipaity:
         if self.municipality_like is not True:
             raise SocietyTypeError('Society not a municipality')
-        # Define epsilion, which functions as threshold to change incomes
-        epsilon = 10
-        # Define factor how fast adjusting takes place
-        factor = 0.5
-        sum = 0
-        for ind in self.individuals:
-            sum += ind.gross_income
-        # Now divide by number of individuals to get mean:
-        real_mean = sum / len(self.individuals)
-        # get delta:
-        delta_mean = self.mean_income_or_farmsize - real_mean
-        if delta_mean > epsilon and delta_mean > 0:
-            # mean income is smaller than it should be, need to add
-            # Define amount to add:
-            to_add = delta_mean / len(self.individuals) * factor
+        elif len(self.individuals) == 0 and self.is_active:
+            # Everybody left
+            self.deactivate()
+        elif self.is_active:
+            # Define epsilion, which functions as threshold to change incomes
+            epsilon = 10
+            # Define factor how fast adjusting takes place
+            factor = 0.5
+            sum = 0
             for ind in self.individuals:
-                ind.gross_income += to_add
-        if delta_mean > epsilon and delta_mean < 0:
-            # mean income is bigger than it should be, need to subtract
-            # Define amount to subtract:
-            to_subtract = delta_mean / len(self.individuals) * factor
-            for ind in self.individuals:
-                ind.gross_income -= to_subtract
-        # Else do nothing
+                sum += ind.gross_income
+            # Now divide by number of individuals to get mean:
+            real_mean = sum / len(self.individuals)
+            # get delta:
+            delta_mean = self.mean_income_or_farmsize - real_mean
+            if delta_mean > epsilon and delta_mean > 0:
+                # mean income is smaller than it should be, need to add
+                # Define amount to add:
+                to_add = delta_mean / len(self.individuals) * factor
+                for ind in self.individuals:
+                    ind.gross_income += to_add
+            if delta_mean > epsilon and delta_mean < 0:
+                # mean income is bigger than it should be, need to subtract
+                # Define amount to subtract:
+                to_subtract = delta_mean / len(self.individuals) * factor
+                for ind in self.individuals:
+                    ind.gross_income -= to_subtract
+            # Else do nothing
 
     def update_farmsizes(self):
         """Update farmsizes to adjust to population."""
@@ -193,6 +185,16 @@ class Society (I.Society):
         else:
             raise SocietyTypeError('Neither County nor Municipality!')
 
+    def calculate_mean_income_or_farmsize(self, unused_t):
+        """Calculate mean income (if municipality) or farm size (county)."""
+        if self.municipality_like:
+            # in case of municipality
+            self.mean_income_or_farmsize = self.base_mean_income * (len(self.individuals) ** 1.12)
+        if not self.municipality_like:
+            # in case of county
+            for c in self.direct_cells:
+                # mean farm size:
+                self.mean_income_or_farmsize = c.land_area / len(self.individuals)
 
     processes = [
         Explicit('calculate population',
@@ -200,7 +202,10 @@ class Society (I.Society):
                  calc_population),
         Step("Update incomes/farmsizes",
              [I.Individual.farm_size, I.Individual.gross_income],
-             [update_timing, do_update])
+             [update_timing, do_update]),
+        Explicit('calculate mean income or farmsize',
+                 [I.Society.mean_income_or_farmsize],
+                 calculate_mean_income_or_farmsize)
     ]
 
 

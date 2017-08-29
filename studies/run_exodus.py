@@ -13,13 +13,14 @@ import numpy as np
 
 import plotly.offline as py
 import plotly.graph_objs as go
+from pylab import plot, gca, show
 
 import pycopancore.models.exodus as M
 from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 20
+timeinterval = 30
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nm = 1  # number of municipalities, also cities
@@ -124,8 +125,9 @@ erdosrenyify(culture.acquaintance_network, p=expected_degree / (nf + nt))
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 start = time()
-# Calculate societies liquidity pds:
+# Calculate societies variables before run:
 for soc in M.Society.instances:
+    soc.calculate_mean_income_or_farmsize(0)
     soc.liquidity_pdf()
     soc.calc_population(0)
 # Calculate other stuff:
@@ -151,62 +153,74 @@ print('runtime: {runtime}'.format(**locals()))
 t = np.array(traj['t'])
 # for key, val in traj.items():
 #     print('key', key,)
+plot(t, traj[M.World.water_price][world], "b", lw=3)
+for soc in municipalities:
+    plot(t, traj[M.Society.population][soc], "r", lw=3)
+for soc in counties:
+    plot(t, traj[M.Society.population][soc], "g", lw=3)
+for ind in M.Individual.instances:
+    plot(t, traj[M.Individual.utility][ind], "y", lw=1)
+gca().set_yscale('symlog')
+show()
 
-city_population = np.array([traj[M.Society.population][soc]
-                           for soc in municipalities])
-county_population = np.array([traj[M.Society.population][soc]
-                             for soc in counties])
-utilities = np.array([traj[M.Individual.utility][ind]
-                     for ind in M.Individual.instances])
-population_data = []
-for i, s in enumerate(municipalities):
-    population_data.append(go.Scatter(
-        x=t,
-        y=city_population[i],
-        name='population of municipality {}'.format(i),
-        mode='lines',
-        line=dict(color="green", width=4)
-    ))
 
-for i, c in enumerate(counties):
-    population_data.append(go.Scatter(
-        x=t,
-        y=county_population[i],
-        name='population of county {}'.format(i),
-        mode='lines',
-        line=dict(color="red", width=4)
-    ))
-price = traj[M.World.water_price][world]
-price_data = []
-price_data.append(go.Scatter(
-    x=t,
-    y=price,
-    name='price of water',
-    mode='lines',
-    line=dict(color="blue", width=4)
-))
-utilities_data = []
-for i, ind in enumerate(M.Individual.instances):
-    utilities_data.append(go.Scatter(
-        x=t,
-        y=utilities[i],
-        name='utility of citizen {}'.format(i),
-        mode='lines',
-        line=dict(color="green", width=4)
-    ))
-
-layout = dict(title='Exodus',
-              xaxis=dict(title='time [yr]'),
-              yaxis=dict(title='value'),
-              )
-
-fig = dict(data=[population_data[i] for i, soc in enumerate(M.Society.instances)],
-           layout=layout)
-fig2 = dict(data=[price_data[0]],
-            layout=layout)
-fig3 = dict(data=[utilities_data[0], utilities_data[1]],
-            layout=layout)
-
-py.plot(fig, filename='Exodus populations.html')
-py.plot(fig2, filename='Exodus water price.html')
-py.plot(fig3, filename='Exodus utilities.html')
+# alternative plotting:
+# city_population = np.array([traj[M.Society.population][soc]
+#                            for soc in municipalities])
+# county_population = np.array([traj[M.Society.population][soc]
+#                              for soc in counties])
+# utilities = np.array([traj[M.Individual.utility][ind]
+#                      for ind in M.Individual.instances])
+# population_data = []
+# for i, s in enumerate(municipalities):
+#     population_data.append(go.Scatter(
+#         x=t,
+#         y=city_population[i],
+#         name='population of municipality {}'.format(i),
+#         mode='lines',
+#         line=dict(color="green", width=4)
+#     ))
+#
+# for i, c in enumerate(counties):
+#     population_data.append(go.Scatter(
+#         x=t,
+#         y=county_population[i],
+#         name='population of county {}'.format(i),
+#         mode='lines',
+#         line=dict(color="red", width=4)
+#     ))
+# price = traj[M.World.water_price][world]
+# price_data = []
+# price_data.append(go.Scatter(
+#     x=t,
+#     y=price,
+#     name='price of water',
+#     mode='lines',
+#     line=dict(color="blue", width=4)
+# ))
+# utilities_data = []
+# for i, ind in enumerate(M.Individual.instances):
+#     utilities_data.append(go.Scatter(
+#         x=t,
+#         y=utilities[i],
+#         name='utility of citizen {}'.format(i),
+#         mode='lines',
+#         line=dict(color="green", width=4)
+#     ))
+#
+# layout = dict(title='Exodus',
+#               xaxis=dict(title='time [yr]'),
+#               yaxis=dict(title='value'),
+#               )
+#
+# fig = dict(data=[population_data[i] for i, soc in enumerate(
+#     [municipalities + counties])],
+#            layout=layout)
+# fig2 = dict(data=[price_data[0]],
+#             layout=layout)
+# fig3 = dict(data=[utilities_data[i] for i, ind in enumerate(M.Individual.instances)],
+#             layout=layout)
+#
+# py.plot(fig, filename='Exodus populations.html')
+# py.plot(fig2, filename='Exodus water price.html')
+# py.plot(fig3, filename='Exodus utilities.html')
