@@ -13,7 +13,7 @@ import numpy as np
 
 import plotly.offline as py
 import plotly.graph_objs as go
-from pylab import plot, gca, show
+from pylab import plot, gca, show, savefig
 
 import pycopancore.models.exodus as M
 from pycopancore.runners.runner import Runner
@@ -154,6 +154,10 @@ t = np.array(traj['t'])
 # for key, val in traj.items():
 #     print('key', key,)
 plot(t, traj[M.World.water_price][world], "b", lw=3)
+plot(t, traj[M.World.total_gross_income][world], "r..", lw=3)
+plot(t, traj[M.World.total_harvest][world], "r--", lw=3)
+
+
 for soc in municipalities:
     plot(t, traj[M.Society.population][soc], "r", lw=3)
 for soc in counties:
@@ -161,6 +165,8 @@ for soc in counties:
 for ind in M.Individual.instances:
     plot(t, traj[M.Individual.utility][ind], "y", lw=1)
 gca().set_yscale('symlog')
+
+#savefig('20_ag_4_soc.png', dpi=150)
 show()
 
 

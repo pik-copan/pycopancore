@@ -32,7 +32,7 @@ class Individual (I.Individual):
                  nutrition_need=1240,
                  liquidity=None,
                  nutrition=None,
-                 migration_threshold=0.7,
+                 migration_threshold=0.3,
                  migration_steepness=5,
                  second_degree_rewire_prob=0.3,
                  outspokenness=None,
@@ -244,9 +244,9 @@ class Individual (I.Individual):
 
     def calculate_utility(self, unused_t):
         """Calculate utility if an Individual."""
-        self.utility = math.sqrt(self.subjective_income_rank * self.nutrition / 1240)
-        # TODO: Add parameter to compensate for frequency of market clearing!
-        # 1240 m^3 is the annual need
+        self.utility = math.sqrt(
+            self.subjective_income_rank * self.nutrition)
+        # 1240 m^3 is the annual need, maybe need to incorporate it
 
     def calculate_sri(self, unused_t):
         """Calculate subjective income rank of individual"""

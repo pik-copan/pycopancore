@@ -12,6 +12,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from pycopancore import Explicit
 # from .... import master_data_model as D
 
 
@@ -52,5 +53,16 @@ class World (I.World):
         return th
 
     # process-related methods:
+    def normaize_utilities(self, unused_t):
+        """Calculate the maximal utility to be able to normalize utilities."""
+        max_u = 0
+        for ind in self.individuals:
+            print(ind.utility)
+            if ind.utility > max_u:
+                max_u = ind.utility
+        for ind in self.individuals:
+            ind.utility = ind.utility / max_u
 
-    processes = []  # TODO: instantiate and list process objects here
+    processes = [Explicit("normalize utilities",
+                          [I.Individual.utility],
+                          normaize_utilities)]
