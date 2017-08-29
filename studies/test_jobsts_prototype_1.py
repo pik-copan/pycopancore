@@ -24,9 +24,10 @@ model = M.Model()
 # instantiate process taxa:
 nature = M.Nature()
 metabolism = M.Metabolism(
-    renewable_energy_knowledge_spillover_fraction = .3)
+    renewable_energy_knowledge_spillover_fraction = .1,
+    basic_emigration_probability_rate = 3e-13) # 3e-13 leads to ca. 5mio. (real)
         # 1 w/o protection: success but desertification
-        # 1 w protection: success
+        # .75 w protection: success (even w/o or w much migration)
         # .1 w protection: success but desertification
         # 0 w/o protection: very slow success but desertification
         # ?: oscillations
@@ -37,8 +38,8 @@ worlds = [M.World(nature=nature, metabolism=metabolism,
                   upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                   ) for w in range(nworlds)]
 societies = [M.Society(world=random.choice(worlds),
-                       protected_fossil_carbon_share=0.95, # (.95,.75) helps
-                       protected_terrestrial_carbon_share=0.75
+#                       protected_fossil_carbon_share=0.95, # (.95,.75) helps
+#                       protected_terrestrial_carbon_share=0.75
                        ) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies),
                 renewable_sector_productivity=random.rand()*3e-16)
@@ -66,7 +67,7 @@ try:
     r = random.uniform(size=nsocs)
     P0 = 6e9 * D.people * r / sum(r)  # 500e9 is middle ages, 6e9 would be yr 2000
     M.Society.population.set_values(societies, P0)
-    M.Society.migrant_population.set_values(societies, P0/2)
+    M.Society.migrant_population.set_values(societies, P0 * 250e6/6e9)
     # print(M.Society.population.get_values(societies))
        
     r = random.uniform(size=nsocs)
@@ -151,6 +152,6 @@ print((Bglobal * metabolism.biomass_energy_density * D.gigajoules/D.gigatonnes_c
       Rglobal.tostr(unit=D.gigawatts)) # last should be ca. 100
 print(Bglobal.tostr(unit=D.gigatonnes_carbon/D.years), # should be ca. 3
       Fglobal.tostr(unit=D.gigatonnes_carbon/D.years)) # should be ca. 11
-
+print(sum(traj[M.Society.emigration][s][5] for s in societies)) # should be ca. 5e6
 
 show()
