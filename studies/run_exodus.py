@@ -33,7 +33,7 @@ model = M.Model()
 # instantiate process taxa culture:
 # In this certain case we need 'M.Culture()' for the acquaintance network.
 culture = M.Culture()
-metabolism = M.Metabolism()
+metabolism = M.Metabolism(market_frequency=1)
 
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism, water_price=1)
@@ -154,8 +154,8 @@ t = np.array(traj['t'])
 # for key, val in traj.items():
 #     print('key', key,)
 plot(t, traj[M.World.water_price][world], "b", lw=3)
-plot(t, traj[M.World.total_gross_income][world], "r..", lw=3)
-plot(t, traj[M.World.total_harvest][world], "r--", lw=3)
+plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
+plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
 
 
 for soc in municipalities:

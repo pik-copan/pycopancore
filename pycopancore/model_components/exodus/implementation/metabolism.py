@@ -95,8 +95,9 @@ class Metabolism (I.Metabolism):
             errors[1 + i] = (sri - (w_i * price * pdf
                                     )
                              ) / (2 * np.sqrt(w_i * sri))
-        # Sum over liquidity must be equal to sum over gross income:
+        # Sum over nutrition must be equal to total harvest:
         errors[0] = sum(ws) - th
+        print('sum=sum?', errors[0])
         # return rhs of the system of equations:
         # print('errors during solve', errors)
         return errors
@@ -115,7 +116,7 @@ class Metabolism (I.Metabolism):
                 nutrition = i.harvest - (i.liquidity - i.gross_income) / world.water_price
                 log_nutritions.append(np.log(nutrition))
             logp_and_logws = [np.log(world.water_price)] + log_nutritions
-            # Get total gross income once, so that it doesn't need to be
+            # Get total harvest once, so that it doesn't need to be
             # calculated each time the function is called:
             tgi = world.total_gross_income
             th = world.total_harvest
@@ -139,6 +140,11 @@ class Metabolism (I.Metabolism):
                 e.liquidity = (e.harvest - e.nutrition) * world.water_price + e.gross_income
             print('market clearing is done at time', unused_t,
                   'price is now at', world.water_price)
+            print('total supply=', th * world.water_price)
+            tn = world.total_nutrition
+            print('total demand=', tn)
+            tl = world.total_liquidity
+            print("total gross income", tgi, "total liquidity", tl)
             # Calculate liquidities again, so that sri can be calculated
             # correctly
             for s in world.societies:

@@ -48,6 +48,11 @@ class World (object):
                              lower_bound=0,
                              dimension=D.volume * D.time,
                              unit=D.meters ** 3 / D.years)
+    total_nutrition = Variable("total nutrition",
+                               "All water that is being consumed in the world",
+                               lower_bound=0,
+                               dimension=D.volume * D.time,
+                               unit=D.meters ** 3 / D.years)
     water_price = Variable("water price",
                            "price of water that is calculated by market "
                            "clearing",

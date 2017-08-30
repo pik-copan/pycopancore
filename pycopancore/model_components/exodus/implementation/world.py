@@ -12,6 +12,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+import numpy
 from pycopancore import Explicit
 # from .... import master_data_model as D
 
@@ -46,23 +47,41 @@ class World (I.World):
 
     @property
     def total_harvest(self):
-        """Get the total gross income."""
+        """Get the total harvest."""
         th = 0
         for individual in self.individuals:
             th += individual.harvest
         return th
 
+    @property
+    def total_nutrition(self):
+        """Get the total nutrition."""
+        tn = 0
+        for individual in self.individuals:
+            print(individual.nutrition)
+            tn += individual.nutrition
+            if numpy.isnan(tn):
+                raise BaseException
+        return tn
+
+    @property
+    def total_liquidity(self):
+        """Get the total liquidity."""
+        tl = 0
+        for individual in self.individuals:
+            print(individual.liquidity)
+            tl += individual.liquidity
+            if numpy.isnan(tl):
+                raise BaseException
+        return tl
+
     # process-related methods:
-    def normaize_utilities(self, unused_t):
+    def normalize_utilities(self, unused_t):
         """Calculate the maximal utility to be able to normalize utilities."""
         max_u = 0
-        for ind in self.individuals:
-            print(ind.utility)
-            if ind.utility > max_u:
-                max_u = ind.utility
+        max_u = max(self.individuals.utility)
         for ind in self.individuals:
             ind.utility = ind.utility / max_u
 
-    processes = [Explicit("normalize utilities",
-                          [I.Individual.utility],
-                          normaize_utilities)]
+    processes = [  # Explicit("normalize utilities", [I.Individual.utility], normalize_utilities)
+        ]
