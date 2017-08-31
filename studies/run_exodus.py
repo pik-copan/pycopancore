@@ -33,7 +33,7 @@ model = M.Model()
 # instantiate process taxa culture:
 # In this certain case we need 'M.Culture()' for the acquaintance network.
 culture = M.Culture()
-metabolism = M.Metabolism(market_frequency=1)
+metabolism = M.Metabolism(market_frequency=10)
 
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism, water_price=1)

@@ -12,6 +12,7 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
+from pycopancore.model_components.base import interface as B
 import numpy
 from pycopancore import Explicit
 # from .... import master_data_model as D
@@ -58,10 +59,10 @@ class World (I.World):
         """Get the total nutrition."""
         tn = 0
         for individual in self.individuals:
-            print(individual.nutrition)
+            # print(individual.nutrition)
             tn += individual.nutrition
             if numpy.isnan(tn):
-                raise BaseException
+                raise BaseException('some individuals nutrition is nan!')
         return tn
 
     @property
@@ -69,10 +70,10 @@ class World (I.World):
         """Get the total liquidity."""
         tl = 0
         for individual in self.individuals:
-            print(individual.liquidity)
+            # print(individual.liquidity)
             tl += individual.liquidity
             if numpy.isnan(tl):
-                raise BaseException
+                raise BaseException('some individuals liquidity is nan!')
         return tl
 
     # process-related methods:
@@ -83,5 +84,8 @@ class World (I.World):
         for ind in self.individuals:
             ind.utility = ind.utility / max_u
 
-    processes = [  # Explicit("normalize utilities", [I.Individual.utility], normalize_utilities)
+    processes = [
+        Explicit("normalize utilities",
+                 [B.World.individuals.utility],
+                 normalize_utilities)
         ]

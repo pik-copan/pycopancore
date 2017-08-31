@@ -13,7 +13,8 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-from pycopancore import Step
+from pycopancore.model_components.base import interface as B
+from pycopancore import Step, Explicit
 
 from scipy import optimize
 import numpy as np
@@ -113,7 +114,8 @@ class Metabolism (I.Metabolism):
                 s.liquidity_pdf()
             log_nutritions = []
             for i in world.individuals:
-                nutrition = i.harvest - (i.liquidity - i.gross_income) / world.water_price
+                # nutrition = i.harvest - (i.liquidity - i.gross_income) / world.water_price
+                nutrition = i.nutrition
                 log_nutritions.append(np.log(nutrition))
             logp_and_logws = [np.log(world.water_price)] + log_nutritions
             # Get total harvest once, so that it doesn't need to be
@@ -129,6 +131,7 @@ class Metabolism (I.Metabolism):
             if solution['success'] is not True:
                 print('solution', solution)
                 raise BaseException('Market clearing has failed!')
+            print('water price=', np.exp(solution['x'][0]))
             world.water_price = np.exp(solution['x'][0])
             for i, e in enumerate(world.individuals):
                 # Account for shift, since price of water is at first position
@@ -140,11 +143,11 @@ class Metabolism (I.Metabolism):
                 e.liquidity = (e.harvest - e.nutrition) * world.water_price + e.gross_income
             print('market clearing is done at time', unused_t,
                   'price is now at', world.water_price)
-            print('total supply=', th * world.water_price)
             tn = world.total_nutrition
-            print('total demand=', tn)
             tl = world.total_liquidity
-            print("total gross income", tgi, "total liquidity", tl)
+            print('nutrition - harvest', tn-th)
+            assert round(tn) == round(th), 'supply != demand'
+            assert round(tl) == round(tgi), 'total inc != total liq'
             # Calculate liquidities again, so that sri can be calculated
             # correctly
             for s in world.societies:
@@ -155,12 +158,15 @@ class Metabolism (I.Metabolism):
         return t + 1 / self.market_frequency
 
     processes = [
-        Step("market clearing", [I.Individual.liquidity,
-                                 I.World.water_price,
-                                 I.Individual.nutrition,
-                                 I.World.total_harvest,
-                                 I.World.total_gross_income],
-             [market_timing, do_market_clearing])
+        Explicit("market clearing", [B.Metabolism.worlds.individuals.liquidity,
+                                     B.Metabolism.worlds.water_price,
+                                     B.Metabolism.worlds.individuals.nutrition,
+                                     B.Metabolism.worlds.total_harvest,
+                                     B.Metabolism.worlds.total_gross_income
+                                     ],
+                 # [market_timing,
+                 do_market_clearing  # ]
+                 )
     ]  # TODO: instantiate and list process objects here
 
 
