@@ -262,15 +262,13 @@ class ModelLogics (object):
                             cls.explicit_processes.add(p)
                             for target in p.targets:
                                 if isinstance(target, Variable):
-                                    assert target.owning_class == \
-                                           composed_class, \
+                                    assert target.owning_class == composed_class, \
                                            "Explicit target Variable owned " \
                                            "by different entity-type/taxon! " \
                                            "(maybe try accessing it via a " \
                                            "ReferenceVariable)"
                                 else:  # it's a _DotConstruct
-                                    assert target.owning_class == \
-                                           composed_class, \
+                                    assert target.owning_class == composed_class, \
                                            "Explicit target attribute " \
                                            "reference starts at a wrong " \
                                            "entity-type/taxon:"
@@ -278,12 +276,34 @@ class ModelLogics (object):
                             cls.process_targets += p.targets
                         elif isinstance(p, Step):
                             cls.step_processes.add(p)
-                            # TODO: do similar checks as for ODE targets!
+                            for target in p.variables:
+                                if isinstance(target, Variable):
+                                    assert target.owning_class == composed_class, \
+                                           "Step target Variable owned " \
+                                           "by different entity-type/taxon! " \
+                                           "(maybe try accessing it via a " \
+                                           "ReferenceVariable)"
+                                else:  # it's a _DotConstruct
+                                    assert target.owning_class == composed_class, \
+                                           "Step target attribute " \
+                                           "reference starts at a wrong " \
+                                           "entity-type/taxon:"
                             cls.step_variables += p.variables
                             cls.process_targets += p.variables
                         elif isinstance(p, Event):
                             cls.event_processes.add(p)
-                            # TODO: do similar checks as for ODE targets!
+                            for target in p.variables:
+                                if isinstance(target, Variable):
+                                    assert target.owning_class == composed_class, \
+                                           "Event target Variable owned " \
+                                           "by different entity-type/taxon! " \
+                                           "(maybe try accessing it via a " \
+                                           "ReferenceVariable)"
+                                else:  # it's a _DotConstruct
+                                    assert target.owning_class == composed_class, \
+                                           "Event target attribute " \
+                                           "reference starts at a wrong " \
+                                           "entity-type/taxon:"
                             cls.event_variables += p.variables
                             cls.process_targets += p.variables
                         else:
