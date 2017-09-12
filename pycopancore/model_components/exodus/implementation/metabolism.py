@@ -158,11 +158,11 @@ class Metabolism (I.Metabolism):
         return t + 1 / self.market_frequency
 
     processes = [
-        Explicit("market clearing", [B.Metabolism.worlds.individuals.liquidity,
-                                     B.Metabolism.worlds.water_price,
-                                     B.Metabolism.worlds.individuals.nutrition,
-                                     B.Metabolism.worlds.total_harvest,
-                                     B.Metabolism.worlds.total_gross_income
+        Explicit("market clearing", [#B.Metabolism.worlds.individuals.liquidity,
+                                     #B.Metabolism.worlds.water_price,
+                                     #B.Metabolism.worlds.individuals.nutrition,
+                                     #B.Metabolism.worlds.total_harvest,
+                                     #B.Metabolism.worlds.total_gross_income
                                      ],
                  # [market_timing,
                  do_market_clearing  # ]
