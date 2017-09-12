@@ -80,7 +80,10 @@ class World (I.World):
     def normalize_utilities(self, unused_t):
         """Calculate the maximal utility to be able to normalize utilities."""
         max_u = 0
-        max_u = max(self.individuals.utility)
+        for ind in self.individuals:
+            if ind.utility > max_u:
+                max_u = ind.utility
+        # max_u = max(self.individuals.utility) somehow this is not yet possible
         for ind in self.individuals:
             ind.utility = ind.utility / max_u
 
