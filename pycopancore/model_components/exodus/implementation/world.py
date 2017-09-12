@@ -26,11 +26,13 @@ class World (I.World):
     def __init__(self,
                  *,
                  water_price,
+                 max_utility,
                  **kwargs):
         """Initialize an instance of World."""
         super().__init__(**kwargs)  # must be the first line
 
         self.water_price = water_price
+        self.max_utility = max_utility
         # At last, check for validity of all variables that have been
         # initialized and given a value:
 
@@ -77,18 +79,32 @@ class World (I.World):
         return tl
 
     # process-related methods:
-    def normalize_utilities(self, unused_t):
+    def calculate_max_utility(self, unused_t):
         """Calculate the maximal utility to be able to normalize utilities."""
         max_u = 0
         for ind in self.individuals:
+            print('ind.util', ind.utility)
             if ind.utility > max_u:
                 max_u = ind.utility
         # max_u = max(self.individuals.utility) somehow this is not yet possible
-        for ind in self.individuals:
-            ind.utility = ind.utility / max_u
+        self.max_utility = max_u
+
+    def fake_calc_proc(self, unused_t):
+        """Fake process to save variables of world"""
+        total_gross_income = self.total_gross_income
+        total_harvest = self.total_harvest
+        total_nutrition = self.total_nutrition
+        price = self.water_price
+
 
     processes = [
-        Explicit("normalize utilities",
-                 [B.World.individuals.utility],
-                 normalize_utilities)
+        # Explicit("find highest utility",
+        #          [I.World.max_utility],
+        #          calculate_max_utility)
+        Explicit("some fake process",
+                 [I.World.water_price,
+                  I.World.total_gross_income,
+                  I.World.total_nutrition,
+                  I.World.total_harvest],
+                 fake_calc_proc)
         ]

@@ -81,24 +81,17 @@ class Metabolism (I.Metabolism):
         ws = np.exp(logp_and_logws[1:])
         errors = np.zeros(shape=len(logp_and_logws))
         for i, e in enumerate(world.individuals):
-            # Get the individual's society's pdf of liquidity:
-            sigma = e.society.liquidity_sigma
-            loc = e.society.liquidity_loc
-            median = e.society.liquidity_median
-            # Calculate the subjects nutrition
             w_i = ws[i]
-            # Calculate liquidity to get sri and f_y:
             y_i = (e.harvest - w_i) * price + e.gross_income
-            # Calculate the individual's subjective income rank:
-            sri = lognorm_cdf(x=y_i, sigma=sigma, median=median)
-            pdf = lognorm_pdf(x=y_i, sigma=sigma, median=median)
+            av_y = e.society.average_liquidity
+            # print('water, liq, ave are', w_i, y_i, av_y)
             # Get the rhs of the equation for the individual
-            errors[1 + i] = (sri - (w_i * price * pdf
-                                    )
-                             ) / (2 * np.sqrt(w_i * sri))
+            errors[1 + i] = ((y_i - w_i * price)
+                             # / (2 * math.sqrt(w_i * y_i * av_y))
+                             )
         # Sum over nutrition must be equal to total harvest:
         errors[0] = sum(ws) - th
-        print('sum=sum?', errors[0])
+        # print('sum=sum?', errors[0])
         # return rhs of the system of equations:
         # print('errors during solve', errors)
         return errors
@@ -110,8 +103,8 @@ class Metabolism (I.Metabolism):
         for w in self.worlds:
             world = w
             # Calculate pdfs for all societies:
-            for s in world.societies:
-                s.liquidity_pdf()
+            #for s in world.societies:
+            #    s.liquidity_pdf()
             log_nutritions = []
             for i in world.individuals:
                 # nutrition = i.harvest - (i.liquidity - i.gross_income) / world.water_price
@@ -150,8 +143,8 @@ class Metabolism (I.Metabolism):
             assert round(tl) == round(tgi), 'total inc != total liq'
             # Calculate liquidities again, so that sri can be calculated
             # correctly
-            for s in world.societies:
-                s.liquidity_pdf()
+            #for s in world.societies:
+            #    s.liquidity_pdf()
 
     def market_timing(self, t):
         """Define how often market clearing takes place."""

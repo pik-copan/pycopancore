@@ -196,6 +196,14 @@ class Society (I.Society):
                 # mean farm size:
                 self.mean_income_or_farmsize = c.land_area / len(self.individuals)
 
+    def calculate_average_liquidity(self, unused_t):
+        """Calculate average liquidity of society."""
+        sum = 0
+        for ind in self.individuals:
+            sum += ind.liquidity
+        self.average_liquidity = sum / len(self.individuals)
+        print('average liquidity', self.average_liquidity)
+
     processes = [
         Explicit('calculate population',
                  [B.Society.population],
@@ -206,7 +214,10 @@ class Society (I.Society):
              [update_timing, do_update]),
         Explicit('calculate mean income or farmsize',
                  [I.Society.mean_income_or_farmsize],
-                 calculate_mean_income_or_farmsize)
+                 calculate_mean_income_or_farmsize),
+        Explicit("Calculate average liquidities",
+                 [I.Society.average_liquidity],
+                 calculate_average_liquidity)
     ]
 
 

@@ -20,13 +20,13 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 30
+timeinterval = 1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
-nm = 1  # number of municipalities, also cities
-nc = 1  # number of counties, also farmland_cells
-nf = 10  # number of farmers
-nt = 10  # number of townsmen
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
+nf = 20  # number of farmers
+nt = 20  # number of townsmen
 
 model = M.Model()
 
@@ -36,7 +36,8 @@ culture = M.Culture()
 metabolism = M.Metabolism(market_frequency=10)
 
 # instantiate world:
-world = M.World(culture=culture, metabolism=metabolism, water_price=1)
+world = M.World(culture=culture, metabolism=metabolism,
+                water_price=1, max_utility=1)
 # Instantiate Societies:
 municipalities = [M.Society(world=world,
                             municipality_like=True,
@@ -130,6 +131,7 @@ for soc in M.Society.instances:
     soc.calculate_mean_income_or_farmsize(0)
     soc.liquidity_pdf()
     soc.calc_population(0)
+    soc.calculate_average_liquidity(0)
 # Calculate other stuff:
 for ind in M.Individual.instances:
     ind.calculate_harvest(0)

@@ -245,7 +245,7 @@ class Individual (I.Individual):
     def calculate_utility(self, unused_t):
         """Calculate utility if an Individual."""
         self.utility = math.sqrt(
-            self.subjective_income_rank * self.nutrition / 1240)
+            self.liquidity * self.nutrition / self.society.average_liquidity / 1240)
         # 1240 m^3 is the annual need, maybe need to incorporate it
 
     def calculate_sri(self, unused_t):
@@ -266,7 +266,7 @@ class Individual (I.Individual):
         Explicit("Calculate Utility",
                  [I.Individual.utility],
                  calculate_utility),
-        Explicit("Calculate Subjective Income Rank",
-                 [I.Individual.subjective_income_rank],
-                 calculate_sri)
+        #Explicit("Calculate Subjective Income Rank",
+        #         [I.Individual.subjective_income_rank],
+        #         calculate_sri)
     ]  # TODO: instantiate and list process objects here

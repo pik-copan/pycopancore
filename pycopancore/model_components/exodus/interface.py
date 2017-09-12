@@ -58,6 +58,9 @@ class World (object):
                            "clearing",
                            lower_bound=0,
                            unit=D.dollars)
+    max_utility = Variable("Highest utility",
+                           "Highest utility in the world to normalize all",
+                           default=1)
 
 
 class Society (object):
@@ -93,18 +96,16 @@ class Society (object):
     pdf_sigma = Variable("log normal parameter sigma",
                          "parameter sigma of the log-normal distribution",
                          lower_bound=0)
-    pdf_k = Variable("Pareto parameter k",
-                     "Parameter k of the pareto distribution",
-                     strict_lower_bound=1)
-    pdf_y_min = Variable("Pareto parameter y_min",
-                         "Lower end of the pareto distribution",
-                         lower_bound=0)
     liquidity_sigma = Variable("Liquidity sigma",
                                "Sigma parameter of pdf of liquidity")
     liquidity_median = Variable("Liquidity Mean",
                                 "Median of pdf of liquidity")
     liquidity_loc = Variable("Liquidity location",
                              "Location parameter of pdf of liquidity")
+    average_liquidity = Variable("Average Liquidity",
+                                 "Average over all liquidities in society",
+                                 lower_bound=0,
+                                 unit=D.dollars)
 
     # exogenous variables / parameters:
 
