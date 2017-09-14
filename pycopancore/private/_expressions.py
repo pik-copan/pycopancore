@@ -288,7 +288,6 @@ class _DotConstruct(sp.AtomicExpr):
     def owning_class(self):
         """Dummy docstring"""
         # TODO: add docstring to method
-        print('here',self._owning_class_or_var)
         if isinstance(self._owning_class_or_var, D.Variable):
             self.name_sequence[0] = self._owning_class_or_var.codename
             self._owning_class_or_var = self._owning_class_or_var.owning_class

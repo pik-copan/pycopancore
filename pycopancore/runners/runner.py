@@ -193,8 +193,10 @@ class Runner(_AbstractRunner):
             *,
             t_0=0,
             t_1,
-            dt  # TODO: rename to "resolution" since it is only an upper bound?
+            dt,  # TODO: rename to "resolution" since it is only an upper bound?
+            exclusions=None
             # TODO: add some kwargs for choosing solver and setting its params
+
             ):
         """Run the model for a specified time interval.
 
@@ -209,6 +211,9 @@ class Runner(_AbstractRunner):
             End time
         dt : float
             Maximal interval between output time points
+        exclusions: list
+            List with Variables, that shan't be included into the output 
+            trajectory_dict
 
         Returns
         -------
@@ -233,9 +238,16 @@ class Runner(_AbstractRunner):
         # Create output dictionary:
         self.trajectory_dict = {v: {} for v in self.model.variables}
 
+        # Remove exclusions from being saved:
+        targets_to_save = self.model.process_targets
+        print(self.model.process_targets)
+        if exclusions is not None:
+            for var in exclusions:
+                targets_to_save.remove(var)
+
         # Save initial state to output dict:
         self.trajectory_dict['t'] = [t]
-        self.save_to_traj(self.model.process_targets)
+        self.save_to_traj(targets_to_save)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # Create dictionary containing discontinuities:
@@ -484,7 +496,7 @@ class Runner(_AbstractRunner):
                                 ode_values[target._from:target._to])
                         self.apply_explicits(t)
                         # complete the output dictionary:
-                        self.save_to_traj(self.model.process_targets)
+                        self.save_to_traj(targets_to_save)
 
             # After all that is done, determine what happens at the
             # discontinuity (step 3.4 in runner scheme)
@@ -559,7 +571,7 @@ class Runner(_AbstractRunner):
 
                 # Store all information that has been calculated at time t:
                 print("    Completing output dict...")
-                self.save_to_traj(self.model.process_targets)
+                self.save_to_traj(targets_to_save)
 
             # TODO: discuss whether hooks make sense, then maybe:
             # TODO: add hooks to runner scheme
