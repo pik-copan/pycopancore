@@ -203,4 +203,12 @@ class Metabolism (object):
                                 "Defines how often per year the market "
                                 "clearing is calculated")
 
-    # exogenous variables / parameters:
+
+class Culture (object):
+    """Interface for Culture process taxon mixin."""
+
+    # endogenous variables:
+    network_clustering = Variable("network clustering",
+                                  "Average clustering of network, values from"
+                                  "networkx.average_clustering",
+                                  default=0)

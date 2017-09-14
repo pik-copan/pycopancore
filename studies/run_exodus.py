@@ -10,6 +10,7 @@ from scipy import stats
 from time import time
 import datetime as dt
 import numpy as np
+import networkx as nx
 
 import plotly.offline as py
 import plotly.graph_objs as go
@@ -20,13 +21,13 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 10
+timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nm = 1  # number of municipalities, also cities
 nc = 1  # number of counties, also farmland_cells
-nf = 50  # number of farmers
-nt = 50  # number of townsmen
+nf = 10  # number of farmers
+nt = 10  # number of townsmen
 
 model = M.Model()
 
@@ -158,6 +159,8 @@ t = np.array(traj['t'])
 plot(t, traj[M.World.water_price][world], "b", lw=3)
 plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
 plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
+print(traj[M.Culture.network_clustering][culture])
+plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
 
 
 for soc in municipalities:
@@ -171,6 +174,19 @@ gca().set_yscale('symlog')
 #savefig('20_ag_4_soc.png', dpi=150)
 show()
 
+network_data = traj[M.Culture.acquaintance_network][culture]
+G = network_data[-1]
+
+#Make list to have colors according to profession:
+professions = {}
+for ind in M.Individual.instances:
+    if ind.profession == 'farmer':
+        professions[ind] = 'green'
+    else:
+        professions[ind] = 'black'
+colors = [professions.get(node) for node in G.nodes()]
+nx.draw(G, node_color=colors, pos=nx.spring_layout(G))
+show()
 
 # alternative plotting:
 # city_population = np.array([traj[M.Society.population][soc]
