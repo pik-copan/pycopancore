@@ -163,7 +163,7 @@ plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
 for soc in municipalities:
     plot(t, traj[M.Society.population][soc], "r", lw=3)
 for soc in counties:
-    plot(t, traj[M.Society.population][soc], "b", lw=3)
+    plot(t, traj[M.Society.population][soc], "k", lw=3)
 for ind in M.Individual.instances:
     plot(t, traj[M.Individual.utility][ind], "y", lw=1)
 gca().set_yscale('symlog')

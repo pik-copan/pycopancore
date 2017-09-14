@@ -78,33 +78,5 @@ class World (I.World):
                 raise BaseException('some individuals liquidity is nan!')
         return tl
 
-    # process-related methods:
-    def calculate_max_utility(self, unused_t):
-        """Calculate the maximal utility to be able to normalize utilities."""
-        max_u = 0
-        for ind in self.individuals:
-            print('ind.util', ind.utility)
-            if ind.utility > max_u:
-                max_u = ind.utility
-        # max_u = max(self.individuals.utility) somehow this is not yet possible
-        self.max_utility = max_u
-
-    def fake_calc_proc(self, unused_t):
-        """Fake process to save variables of world"""
-        total_gross_income = self.total_gross_income
-        total_harvest = self.total_harvest
-        total_nutrition = self.total_nutrition
-        price = self.water_price
-
-
     processes = [
-        # Explicit("find highest utility",
-        #          [I.World.max_utility],
-        #          calculate_max_utility)
-        Explicit("some fake process",
-                 [I.World.water_price,
-                  I.World.total_gross_income,
-                  I.World.total_nutrition,
-                  I.World.total_harvest],
-                 fake_calc_proc)
         ]
