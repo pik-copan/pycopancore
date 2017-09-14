@@ -20,20 +20,20 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 1
+timeinterval = 10
 # setting time step to hand to 'Runner.run()'
 timestep = .1
-nm = 2  # number of municipalities, also cities
-nc = 2  # number of counties, also farmland_cells
-nf = 20  # number of farmers
-nt = 20  # number of townsmen
+nm = 1  # number of municipalities, also cities
+nc = 1  # number of counties, also farmland_cells
+nf = 50  # number of farmers
+nt = 50  # number of townsmen
 
 model = M.Model()
 
 # instantiate process taxa culture:
 # In this certain case we need 'M.Culture()' for the acquaintance network.
 culture = M.Culture()
-metabolism = M.Metabolism(market_frequency=10)
+metabolism = M.Metabolism(market_frequency=1)
 
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism,
