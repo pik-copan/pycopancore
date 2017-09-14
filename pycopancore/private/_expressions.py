@@ -288,11 +288,13 @@ class _DotConstruct(sp.AtomicExpr):
     def owning_class(self):
         """Dummy docstring"""
         # TODO: add docstring to method
+        print('here',self._owning_class_or_var)
         if isinstance(self._owning_class_or_var, D.Variable):
             self.name_sequence[0] = self._owning_class_or_var.codename
             self._owning_class_or_var = self._owning_class_or_var.owning_class
         elif not issubclass(self._owning_class_or_var,
-                            private._AbstractEntityMixin):
+                            (private._AbstractEntityMixin,
+                             private._AbstractProcessTaxonMixin)):
             # replace interface class by composite class, by using
             # owning_class of any Variable attribute of interface class:
             self._owning_class_or_var = \
