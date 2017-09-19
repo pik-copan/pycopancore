@@ -11,6 +11,7 @@ from time import time
 import datetime as dt
 import numpy as np
 import networkx as nx
+import pickle
 
 import plotly.offline as py
 import plotly.graph_objs as go
@@ -24,10 +25,10 @@ from pycopancore.runners.runner import Runner
 timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
-nm = 1  # number of municipalities, also cities
-nc = 1  # number of counties, also farmland_cells
-nf = 10  # number of farmers
-nt = 10  # number of townsmen
+nm = 5  # number of municipalities, also cities
+nc = 5  # number of counties, also farmland_cells
+nf = 100  # number of farmers
+nt = 100  # number of townsmen
 
 model = M.Model()
 
@@ -159,7 +160,6 @@ t = np.array(traj['t'])
 plot(t, traj[M.World.water_price][world], "b", lw=3)
 plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
 plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
-print(traj[M.Culture.network_clustering][culture])
 plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
 
 
@@ -171,22 +171,32 @@ for ind in M.Individual.instances:
     plot(t, traj[M.Individual.utility][ind], "y", lw=1)
 gca().set_yscale('symlog')
 
-#savefig('20_ag_4_soc.png', dpi=150)
+# savefig('20_ag_4_soc.png', dpi=150)
 show()
 
 network_data = traj[M.Culture.acquaintance_network][culture]
 G = network_data[-1]
 
-#Make list to have colors according to profession:
+# Make list to have colors according to profession:
 professions = {}
 for ind in M.Individual.instances:
     if ind.profession == 'farmer':
-        professions[ind] = 'green'
+        professions[ind] = 'yellow'
     else:
-        professions[ind] = 'black'
+        professions[ind] = 'red'
 colors = [professions.get(node) for node in G.nodes()]
-nx.draw(G, node_color=colors, pos=nx.spring_layout(G))
+# Make second list to have labels according to society:
+societies = {}
+for ind in M.Individual.instances:
+    societies[ind] = str(ind.society._uid)
+nx.draw(G, node_color=colors,
+        labels=societies,
+        pos=nx.spring_layout(G))
 show()
+
+#
+# with open('data.pickle', 'wb') as f:
+#     pickle.dump(traj, f, pickle.HIGHEST_PROTOCOL)
 
 # alternative plotting:
 # city_population = np.array([traj[M.Society.population][soc]
