@@ -26,13 +26,11 @@ class World (I.World):
     def __init__(self,
                  *,
                  water_price,
-                 max_utility,
                  **kwargs):
         """Initialize an instance of World."""
         super().__init__(**kwargs)  # must be the first line
 
         self.water_price = water_price
-        self.max_utility = max_utility
         # At last, check for validity of all variables that have been
         # initialized and given a value:
 

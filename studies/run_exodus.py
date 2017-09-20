@@ -25,10 +25,10 @@ from pycopancore.runners.runner import Runner
 timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
-nm = 5  # number of municipalities, also cities
-nc = 5  # number of counties, also farmland_cells
-nf = 100  # number of farmers
-nt = 100  # number of townsmen
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
+nf = 50  # number of farmers
+nt = 50  # number of townsmen
 
 model = M.Model()
 
@@ -131,13 +131,11 @@ start = time()
 # Calculate societies variables before run:
 for soc in M.Society.instances:
     soc.calculate_mean_income_or_farmsize(0)
-    soc.liquidity_pdf()
     soc.calc_population(0)
     soc.calculate_average_liquidity(0)
 # Calculate other stuff:
 for ind in M.Individual.instances:
     ind.calculate_harvest(0)
-    ind.calculate_sri(0)
     ind.calculate_utility(0)
 # Run market clearing once:
 metabolism.do_market_clearing(0)
@@ -194,9 +192,9 @@ nx.draw(G, node_color=colors,
         pos=nx.spring_layout(G))
 show()
 
-#
-# with open('data.pickle', 'wb') as f:
-#     pickle.dump(traj, f, pickle.HIGHEST_PROTOCOL)
+# Save as pickle
+with open('data.pickle', 'wb') as f:
+    pickle.dump(traj, f, pickle.HIGHEST_PROTOCOL)
 
 # alternative plotting:
 # city_population = np.array([traj[M.Society.population][soc]
