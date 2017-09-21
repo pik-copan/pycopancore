@@ -11,6 +11,7 @@ from time import time
 import datetime as dt
 import numpy as np
 import networkx as nx
+import pickle
 
 import plotly.offline as py
 import plotly.graph_objs as go
@@ -24,10 +25,12 @@ from pycopancore.runners.runner import Runner
 timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
-nm = 1  # number of municipalities, also cities
-nc = 1  # number of counties, also farmland_cells
-nf = 90  # number of farmers
-nt = 10  # number of townsmen
+
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
+nf = 50  # number of farmers
+nt = 50  # number of townsmen
+
 
 model = M.Model()
 
@@ -130,13 +133,11 @@ start = time()
 # Calculate societies variables before run:
 for soc in M.Society.instances:
     soc.calculate_mean_income_or_farmsize(0)
-    soc.liquidity_pdf()
     soc.calc_population(0)
     soc.calculate_average_liquidity(0)
 # Calculate other stuff:
 for ind in M.Individual.instances:
     ind.calculate_harvest(0)
-    ind.calculate_sri(0)
     ind.calculate_utility(0)
 # Run market clearing once:
 metabolism.do_market_clearing(0)
@@ -170,22 +171,32 @@ for ind in M.Individual.instances:
     plot(t, traj[M.Individual.utility][ind], "y", lw=1)
 gca().set_yscale('symlog')
 
-#savefig('20_ag_4_soc.png', dpi=150)
+# savefig('20_ag_4_soc.png', dpi=150)
 show()
 
 network_data = traj[M.Culture.acquaintance_network][culture]
 G = network_data[-1]
 
-#Make list to have colors according to profession:
+# Make list to have colors according to profession:
 professions = {}
 for ind in M.Individual.instances:
     if ind.profession == 'farmer':
-        professions[ind] = 'green'
+        professions[ind] = 'yellow'
     else:
-        professions[ind] = 'black'
+        professions[ind] = 'red'
 colors = [professions.get(node) for node in G.nodes()]
-nx.draw(G, node_color=colors, pos=nx.spring_layout(G))
+# Make second list to have labels according to society:
+societies = {}
+for ind in M.Individual.instances:
+    societies[ind] = str(ind.society._uid)
+nx.draw(G, node_color=colors,
+        labels=societies,
+        pos=nx.spring_layout(G))
 show()
+
+# Save as pickle
+with open('data.pickle', 'wb') as f:
+    pickle.dump(traj, f, pickle.HIGHEST_PROTOCOL)
 
 # alternative plotting:
 # city_population = np.array([traj[M.Society.population][soc]
