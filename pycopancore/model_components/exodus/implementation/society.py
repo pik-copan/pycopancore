@@ -172,7 +172,7 @@ class Society (I.Society):
 
     def update_timing(self, t):
         """Decide how often income and farm size are adjusted."""
-        return t + 0.2
+        return t + 1
 
     def do_update(self, unused_t):
         """Do the adjustment of income or farmsize"""
