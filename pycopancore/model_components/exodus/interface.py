@@ -212,3 +212,7 @@ class Culture (object):
                                   "Average clustering of network, values from"
                                   "networkx.average_clustering",
                                   default=0)
+
+    modularity = Variable("Modularity",
+                          "Modularity of a partition of the network",
+                          default=0)

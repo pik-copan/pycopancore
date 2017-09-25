@@ -195,8 +195,13 @@ nx.draw(G, node_color=colors,
 show()
 
 # Save as pickle
-with open('data.pickle', 'wb') as f:
-    pickle.dump(traj, f, pickle.HIGHEST_PROTOCOL)
+# with open('data.pickle', 'wb') as f:
+#     pickle.dump(culture, f, pickle.HIGHEST_PROTOCOL)
+
+# with open('data.pickle', 'rb') as f:
+#     trajectory = pickle.load(f)
+
+# assert culture == trajectory
 
 # alternative plotting:
 # city_population = np.array([traj[M.Society.population][soc]
