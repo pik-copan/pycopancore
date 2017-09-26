@@ -211,3 +211,7 @@ class Culture (object):
     modularity = Variable("Modularity",
                           "Modularity of a partition of the network",
                           default=0)
+
+    split = Variable("Split",
+                     "Shows if network has split",
+                     default=False)

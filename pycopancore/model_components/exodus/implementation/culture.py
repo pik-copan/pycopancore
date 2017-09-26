@@ -59,6 +59,24 @@ class Culture (I.Culture):
         """Timing for step process to calculate modularity."""
         return t + 5
 
+    def check_for_split(self):
+        """Check if network has split into to groups."""
+        # Iterate through all individuals and see if they know someone from
+        # another profession:
+        connection = False
+        for ind in self.acquaintance_network:
+            for acq in ind.acquaintances:
+                if ind.profession != acq.profession:
+                    # if one has another profession, the split has not
+                    # taken place:
+                    connection = True
+                    break
+        self.split = False
+        if connection is False:
+            self.split = True
+        return self.split
+
+
     processes = [Explicit("calculate average clustering",
                           [I.Culture.network_clustering],
                           calculate_av_clustering),

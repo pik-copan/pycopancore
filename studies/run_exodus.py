@@ -22,14 +22,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = .1
+timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
 nm = 2  # number of municipalities, also cities
 nc = 2  # number of counties, also farmland_cells
-nf = 50  # number of farmers
-nt = 50  # number of townsmen
+nf = 20  # number of farmers
+nt = 20  # number of townsmen
 
 
 model = M.Model()
@@ -143,9 +143,11 @@ for ind in M.Individual.instances:
 metabolism.do_market_clearing(0)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
+termination_conditions = [[M.Culture.check_for_split, culture]]
+
 print('\n runner starting')
 # Runner is instantiated
-r = Runner(model=model)
+r = Runner(model=model, termination_calls=termination_conditions)
 
 start = time()
 # run the Runner and saving the return dict in traj
@@ -194,10 +196,10 @@ nx.draw(G, node_color=colors,
         pos=nx.spring_layout(G))
 show()
 
-traj.save(filename='data')
+# traj.save(filename='data')
 
-with open('data.pickle', 'rb') as f:
-    trajectory = pickle.load(f)
+#with open('data.pickle', 'rb') as f:
+#    trajectory = pickle.load(f)
 
 # alternative plotting:
 # city_population = np.array([traj[M.Society.population][soc]
