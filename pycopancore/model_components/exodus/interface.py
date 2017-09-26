@@ -71,11 +71,6 @@ class Society (object):
                                  "If true, society is a Municipality, "
                                  "otherwise a county",
                                  datatype=bool)
-    pareto_distribution_type = Variable("income distribution type",
-                                        "type of probability density function"
-                                        "for distributing income and farm size"
-                                        "if false, log-normal",
-                                        datatype=bool)
     base_mean_income = Variable("base income",
                                 "Base of scaling mean income dependend on "
                                 "population, only important for municipality")
@@ -203,4 +198,16 @@ class Metabolism (object):
                                 "Defines how often per year the market "
                                 "clearing is calculated")
 
-    # exogenous variables / parameters:
+
+class Culture (object):
+    """Interface for Culture process taxon mixin."""
+
+    # endogenous variables:
+    network_clustering = Variable("network clustering",
+                                  "Average clustering of network, values from"
+                                  "networkx.average_clustering",
+                                  default=0)
+
+    modularity = Variable("Modularity",
+                          "Modularity of a partition of the network",
+                          default=0)

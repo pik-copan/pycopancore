@@ -172,7 +172,7 @@ class Society (I.Society):
 
     def update_timing(self, t):
         """Decide how often income and farm size are adjusted."""
-        return t + 0.2
+        return t + 1
 
     def do_update(self, unused_t):
         """Do the adjustment of income or farmsize"""
@@ -201,7 +201,11 @@ class Society (I.Society):
         sum = 0
         for ind in self.individuals:
             sum += ind.liquidity
-        self.average_liquidity = sum / len(self.individuals)
+        if len(self.individuals) != 0:
+            self.average_liquidity = sum / len(self.individuals)
+        else:
+            # If there are no individuals left:
+            self.average_liquidity = 0
         print('average liquidity', self.average_liquidity)
 
     processes = [

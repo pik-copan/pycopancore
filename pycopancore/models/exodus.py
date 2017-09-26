@@ -47,7 +47,8 @@ class Metabolism(ex.Metabolism,
     pass
 
 
-class Culture(base.Culture):
+class Culture(ex.Culture,
+              base.Culture):
     """Culture process taxon."""
 
     pass

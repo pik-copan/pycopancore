@@ -39,7 +39,7 @@ class _AbstractProcessTaxonMixin(object):
     # the repr and the str methods were removed in the master/prototype_jobst1
     # Do we really don't want them anymore?
     def __repr__(self):
-        return 'Process taxon object'
+        return self.__class__.__name__
 
     def __str__(self):
         return repr(self)

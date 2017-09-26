@@ -10,23 +10,27 @@ from scipy import stats
 from time import time
 import datetime as dt
 import numpy as np
+import networkx as nx
+import pickle, json
 
 import plotly.offline as py
 import plotly.graph_objs as go
-from pylab import plot, gca, show, savefig
+from matplotlib.pyplot import plot, gca, show, savefig
 
 import pycopancore.models.exodus as M
 from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 10
+timeinterval = .1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
-nm = 1  # number of municipalities, also cities
-nc = 1  # number of counties, also farmland_cells
+
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
 nf = 50  # number of farmers
 nt = 50  # number of townsmen
+
 
 model = M.Model()
 
@@ -129,13 +133,11 @@ start = time()
 # Calculate societies variables before run:
 for soc in M.Society.instances:
     soc.calculate_mean_income_or_farmsize(0)
-    soc.liquidity_pdf()
     soc.calc_population(0)
     soc.calculate_average_liquidity(0)
 # Calculate other stuff:
 for ind in M.Individual.instances:
     ind.calculate_harvest(0)
-    ind.calculate_sri(0)
     ind.calculate_utility(0)
 # Run market clearing once:
 metabolism.do_market_clearing(0)
@@ -158,6 +160,7 @@ t = np.array(traj['t'])
 plot(t, traj[M.World.water_price][world], "b", lw=3)
 plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
 plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
+plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
 
 
 for soc in municipalities:
@@ -168,9 +171,33 @@ for ind in M.Individual.instances:
     plot(t, traj[M.Individual.utility][ind], "y", lw=1)
 gca().set_yscale('symlog')
 
-#savefig('20_ag_4_soc.png', dpi=150)
+# savefig('20_ag_4_soc.png', dpi=150)
 show()
 
+network_data = traj[M.Culture.acquaintance_network][culture]
+G = network_data[-1]
+
+# Make list to have colors according to profession:
+professions = {}
+for ind in M.Individual.instances:
+    if ind.profession == 'farmer':
+        professions[ind] = 'yellow'
+    else:
+        professions[ind] = 'red'
+colors = [professions.get(node) for node in G.nodes()]
+# Make second list to have labels according to society:
+societies = {}
+for ind in M.Individual.instances:
+    societies[ind] = str(ind.society._uid)
+nx.draw(G, node_color=colors,
+        labels=societies,
+        pos=nx.spring_layout(G))
+show()
+
+traj.save(filename='data')
+
+with open('data.pickle', 'rb') as f:
+    trajectory = pickle.load(f)
 
 # alternative plotting:
 # city_population = np.array([traj[M.Society.population][soc]
