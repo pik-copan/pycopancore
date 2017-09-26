@@ -13,7 +13,7 @@
 
 from .. import Event, Step, Variable
 from ..private import _AbstractRunner, _DotConstruct, eval, unknown, \
-    _AbstractEntityMixin
+    _AbstractEntityMixin, _TrajectoryDictionary
 # TODO: discuss whether this makes sense or leads to problems:
 from .hooks import Hooks
 
@@ -63,7 +63,9 @@ class Runner(_AbstractRunner):
         self.event_processes = model.event_processes
         self.step_processes = model.step_processes
         self.ode_processes = model.ODE_processes
-        self.trajectory_dict = {}
+        # trajectory_dict is of Class _TrajectoryDictionary to have a save
+        # method and otherwise inherits from dict:
+        self.trajectory_dict = _TrajectoryDictionary()
 
         self.termination_calls = termination_calls
 
@@ -212,7 +214,7 @@ class Runner(_AbstractRunner):
         dt : float
             Maximal interval between output time points
         exclusions: list
-            List with Variables, that shan't be included into the output 
+            List with Variables, that shan't be included into the output
             trajectory_dict
 
         Returns
@@ -236,7 +238,9 @@ class Runner(_AbstractRunner):
         self.model.convert_to_standard_units()
 
         # Create output dictionary:
-        self.trajectory_dict = {v: {} for v in self.model.variables}
+        self.trajectory_dict = _TrajectoryDictionary()
+        for v in self.model.variables:
+            self.trajectory_dict[v] = {}
 
         # Remove exclusions from being saved:
         targets_to_save = self.model.process_targets
