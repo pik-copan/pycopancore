@@ -17,7 +17,7 @@ from pycopancore.model_components.base import interface as B
 # from .... import master_data_model as D
 from pycopancore import Explicit, Step
 import networkx as nx
-import community
+# import community
 
 
 class Culture (I.Culture):

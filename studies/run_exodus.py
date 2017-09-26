@@ -11,7 +11,7 @@ from time import time
 import datetime as dt
 import numpy as np
 import networkx as nx
-import pickle
+import pickle, json
 
 import plotly.offline as py
 import plotly.graph_objs as go
@@ -22,7 +22,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 100
+timeinterval = .1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
@@ -194,14 +194,10 @@ nx.draw(G, node_color=colors,
         pos=nx.spring_layout(G))
 show()
 
-# Save as pickle
-# with open('data.pickle', 'wb') as f:
-#     pickle.dump(culture, f, pickle.HIGHEST_PROTOCOL)
+traj.save(filename='data')
 
-# with open('data.pickle', 'rb') as f:
-#     trajectory = pickle.load(f)
-
-# assert culture == trajectory
+with open('data.pickle', 'rb') as f:
+    trajectory = pickle.load(f)
 
 # alternative plotting:
 # city_population = np.array([traj[M.Society.population][soc]

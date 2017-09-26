@@ -71,11 +71,6 @@ class Society (object):
                                  "If true, society is a Municipality, "
                                  "otherwise a county",
                                  datatype=bool)
-    pareto_distribution_type = Variable("income distribution type",
-                                        "type of probability density function"
-                                        "for distributing income and farm size"
-                                        "if false, log-normal",
-                                        datatype=bool)
     base_mean_income = Variable("base income",
                                 "Base of scaling mean income dependend on "
                                 "population, only important for municipality")
