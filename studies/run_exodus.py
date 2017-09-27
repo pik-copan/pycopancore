@@ -22,14 +22,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 100
+timeinterval = 200
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
 nm = 2  # number of municipalities, also cities
 nc = 2  # number of counties, also farmland_cells
-nf = 20  # number of farmers
-nt = 20  # number of townsmen
+nf = 50  # number of farmers
+nt = 50  # number of townsmen
 
 
 model = M.Model()
@@ -141,6 +141,7 @@ for ind in M.Individual.instances:
     ind.calculate_utility(0)
 # Run market clearing once:
 metabolism.do_market_clearing(0)
+culture.calculate_modularity(0)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 termination_conditions = [[M.Culture.check_for_split, culture]]
@@ -162,15 +163,15 @@ t = np.array(traj['t'])
 plot(t, traj[M.World.water_price][world], "b", lw=3)
 plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
 plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
-plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
-
+# plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
+plot(t, traj[M.Culture.modularity][culture], "r:", lw=3)
 
 for soc in municipalities:
     plot(t, traj[M.Society.population][soc], "r", lw=3)
 for soc in counties:
     plot(t, traj[M.Society.population][soc], "k", lw=3)
 for ind in M.Individual.instances:
-    plot(t, traj[M.Individual.utility][ind], "y", lw=1)
+    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)
 gca().set_yscale('symlog')
 
 # savefig('20_ag_4_soc.png', dpi=150)
