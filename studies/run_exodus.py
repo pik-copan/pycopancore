@@ -22,14 +22,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 200
+timeinterval = 1000
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
 nm = 2  # number of municipalities, also cities
 nc = 2  # number of counties, also farmland_cells
-nf = 20  # number of farmers
-nt = 20  # number of townsmen
+nf = 100  # number of farmers
+nt = 100  # number of townsmen
 
 
 model = M.Model()
@@ -175,29 +175,29 @@ for ind in M.Individual.instances:
 gca().set_yscale('symlog')
 
 # savefig('20_ag_4_soc.png', dpi=150)
-# show()
+show()
 
-network_data = traj[M.Culture.acquaintance_network][culture]
-G = network_data[-1]
+# network_data = traj[M.Culture.acquaintance_network][culture]
+# G = network_data[-1]
 
 # Make list to have colors according to profession:
-professions = {}
-for ind in M.Individual.instances:
-    if ind.profession == 'farmer':
-        professions[ind] = 'yellow'
-    else:
-        professions[ind] = 'red'
-colors = [professions.get(node) for node in G.nodes()]
-# Make second list to have labels according to society:
-societies = {}
-for ind in M.Individual.instances:
-    societies[ind] = str(ind.society._uid)
-nx.draw(G, node_color=colors,
-        labels=societies,
-        pos=nx.spring_layout(G))
+# professions = {}
+# for ind in M.Individual.instances:
+#     if ind.profession == 'farmer':
+#         professions[ind] = 'yellow'
+#     else:
+#         professions[ind] = 'red'
+# colors = [professions.get(node) for node in G.nodes()]
+# # Make second list to have labels according to society:
+# societies = {}
+# for ind in M.Individual.instances:
+#     societies[ind] = str(ind.society._uid)
+# nx.draw(G, node_color=colors,
+#         labels=societies,
+#         pos=nx.spring_layout(G))
 # show()
 
-# traj.save(filename='data')
+traj.save(filename='data')
 
 #with open('data.pickle', 'rb') as f:
 #    trajectory = pickle.load(f)
