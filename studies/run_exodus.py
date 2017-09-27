@@ -28,8 +28,8 @@ timestep = .1
 
 nm = 2  # number of municipalities, also cities
 nc = 2  # number of counties, also farmland_cells
-nf = 50  # number of farmers
-nt = 50  # number of townsmen
+nf = 20  # number of farmers
+nt = 20  # number of townsmen
 
 
 model = M.Model()
@@ -172,7 +172,7 @@ for ind in M.Individual.instances:
 gca().set_yscale('symlog')
 
 # savefig('20_ag_4_soc.png', dpi=150)
-show()
+# show()
 
 network_data = traj[M.Culture.acquaintance_network][culture]
 G = network_data[-1]
@@ -192,7 +192,7 @@ for ind in M.Individual.instances:
 nx.draw(G, node_color=colors,
         labels=societies,
         pos=nx.spring_layout(G))
-show()
+# show()
 
 traj.save(filename='data')
 
