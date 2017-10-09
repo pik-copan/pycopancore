@@ -31,7 +31,7 @@ class _AbstractProcessTaxonMixin(object):
         """Initialize an _AbstractProcessTaxonMixin instance."""
         if self.__class__.instances:
             self.__class__.instances.append(self)
-            print('This Process Taxon is already initialized!')
+            print(self.__class__, 'Process Taxon is already initialized!')
         else:
             self.__class__.instances = [self]
 

@@ -67,10 +67,13 @@ class ModelLogics (object):
     mixin2composite = None
     """dict mapping mixins to derived composite classes"""
 
-    def __init__(self):
+    def __init__(self,
+                 *,
+                 reconfigure=False,
+                 **kwargs):
         """Upon initialization of model: configure if not yet configured."""
         if not self.__class__._configured:
-            self.configure()
+            self.configure(reconfigure=reconfigure)
 
     @classmethod
     def configure(cls, reconfigure=False, **kwargs):

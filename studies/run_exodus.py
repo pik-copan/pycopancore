@@ -63,7 +63,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
-                                 land_area= 0.01 * (nf + nt),  # in square kilometers
+                                 land_area=0.01 * (nf + nt),  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []
@@ -156,6 +156,11 @@ traj = r.run(t_1=timeinterval, dt=timestep)
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
+
+# Saving:
+traj.save(filename='data')
+
+
 # Plotting:
 t = np.array(traj['t'])
 # for key, val in traj.items():
@@ -196,69 +201,3 @@ show()
 #         labels=societies,
 #         pos=nx.spring_layout(G))
 # show()
-
-traj.save(filename='data')
-
-#with open('data.pickle', 'rb') as f:
-#    trajectory = pickle.load(f)
-
-# alternative plotting:
-# city_population = np.array([traj[M.Society.population][soc]
-#                            for soc in municipalities])
-# county_population = np.array([traj[M.Society.population][soc]
-#                              for soc in counties])
-# utilities = np.array([traj[M.Individual.utility][ind]
-#                      for ind in M.Individual.instances])
-# population_data = []
-# for i, s in enumerate(municipalities):
-#     population_data.append(go.Scatter(
-#         x=t,
-#         y=city_population[i],
-#         name='population of municipality {}'.format(i),
-#         mode='lines',
-#         line=dict(color="green", width=4)
-#     ))
-#
-# for i, c in enumerate(counties):
-#     population_data.append(go.Scatter(
-#         x=t,
-#         y=county_population[i],
-#         name='population of county {}'.format(i),
-#         mode='lines',
-#         line=dict(color="red", width=4)
-#     ))
-# price = traj[M.World.water_price][world]
-# price_data = []
-# price_data.append(go.Scatter(
-#     x=t,
-#     y=price,
-#     name='price of water',
-#     mode='lines',
-#     line=dict(color="blue", width=4)
-# ))
-# utilities_data = []
-# for i, ind in enumerate(M.Individual.instances):
-#     utilities_data.append(go.Scatter(
-#         x=t,
-#         y=utilities[i],
-#         name='utility of citizen {}'.format(i),
-#         mode='lines',
-#         line=dict(color="green", width=4)
-#     ))
-#
-# layout = dict(title='Exodus',
-#               xaxis=dict(title='time [yr]'),
-#               yaxis=dict(title='value'),
-#               )
-#
-# fig = dict(data=[population_data[i] for i, soc in enumerate(
-#     [municipalities + counties])],
-#            layout=layout)
-# fig2 = dict(data=[price_data[0]],
-#             layout=layout)
-# fig3 = dict(data=[utilities_data[i] for i, ind in enumerate(M.Individual.instances)],
-#             layout=layout)
-#
-# py.plot(fig, filename='Exodus populations.html')
-# py.plot(fig2, filename='Exodus water price.html')
-# py.plot(fig3, filename='Exodus utilities.html')
