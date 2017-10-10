@@ -60,18 +60,8 @@ class Society (object):
     physical_capital = S.physical_capital
     renewable_energy_knowledge = S.renewable_energy_knowledge
 
-    protected_terrestrial_carbon_share = \
-        Variable("protected share of terrestrial carbon",
-                 """what share of the current terrestrial carbon will be treated
-                 as protected and thus not harvested at each point in time""",
-                 unit=D.unity, lower_bound=0, upper_bound=1,
-                 default=0)  # may be increased by cultural components
-    protected_fossil_carbon_share = \
-        Variable("protected share of fossil carbon",
-                 """what share of the current fossil carbon will be treated
-                 as protected and thus not extracted at each point in time""",
-                 unit=D.unity, lower_bound=0, upper_bound=1,
-                 default=0)  # may be increased by cultural components
+    protected_terrestrial_carbon_share = S.protected_terrestrial_carbon_share
+    protected_fossil_carbon_share = S.protected_fossil_carbon_share
 
 
 class Cell (object):

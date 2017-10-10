@@ -39,6 +39,9 @@ wellbeing = MET.wellbeing.copy()
 biomass_energy_density = MET.biomass_energy_density.copy()
 fossil_energy_density = MET.fossil_energy_density.copy()
 
+protected_terrestrial_carbon_share = MET.protected_terrestrial_carbon_share.copy()
+protected_fossil_carbon_share = MET.protected_fossil_carbon_share.copy()
+
 physical_capital_depreciation_rate = \
     MET.physical_capital_depreciation_rate.copy()
 renewable_energy_knowledge_depreciation_rate = \

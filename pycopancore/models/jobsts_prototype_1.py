@@ -44,6 +44,7 @@ class Society(
               growth.Society,
               pop.Society,
               mig.Society,
+              aware.Society,
               base.Society):
     """Society entity type."""
 

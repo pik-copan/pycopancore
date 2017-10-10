@@ -176,6 +176,23 @@ fossil_energy_density = Variable("fossil energy density",
                                  lower_bound=0, is_intensive=True,
                                  default=47e9)
 
+
+# protected shares:
+
+protected_terrestrial_carbon_share = \
+    Variable("protected share of terrestrial carbon",
+             """what share of the current terrestrial carbon will be treated
+             as protected and thus not harvested at each point in time""",
+             unit=unity, lower_bound=0, upper_bound=1,
+             default=0)  # may be increased by cultural components
+protected_fossil_carbon_share = \
+    Variable("protected share of fossil carbon",
+             """what share of the current fossil carbon will be treated
+             as protected and thus not extracted at each point in time""",
+             unit=unity, lower_bound=0, upper_bound=1,
+             default=0)  # may be increased by cultural components
+
+
 # depreciation, learning, discounting, interest etc. rates
 
 physical_capital_depreciation_rate = \

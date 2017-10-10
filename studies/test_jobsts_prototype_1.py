@@ -142,6 +142,7 @@ for s in societies:
     plot(t[3:], traj[M.Society.wellbeing][s][3:],"magenta",lw=2)
 #    plot(t, np.array(traj[M.Society.births][s]) - traj[M.Society.deaths][s],"--",color="yellow",lw=2)
 #    plot(t, traj[M.Society.immigration][s],":",color="yellow",lw=2)
+    plot(t, traj[M.Society.protected_terrestrial_carbon_share][s],"g:",lw=2)
 for c in cells:
     pass
 #    plot(t, traj[M.Cell.terrestrial_carbon][c],"g")
