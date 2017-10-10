@@ -57,9 +57,7 @@ class World (object):
                            "price of water that is calculated by market "
                            "clearing",
                            lower_bound=0,
-                           unit=D.dollars)
-    max_utility = Variable("Highest utility",
-                           "Highest utility in the world to normalize all",
+                           unit=D.dollars,
                            default=1)
 
 
@@ -168,21 +166,14 @@ class Individual (object):
                        "function",
                        lower_bound=0,
                        upper_bound=1)
-    migration_threshold = Variable("migration threshold",
-                                   "Logistic function's midpoint, parameter "
-                                   "x_0 in the function:"
-                                   "https://en.wikipedia.org/wiki/Logistic_function",
-                                   lower_bound=0,
-                                   upper_bound=1)
-    migration_steepness = Variable("Steepness of cdf of migration",
-                                   "parameter k in the logistic function:"
-                                   "https://en.wikipedia.org/wiki/Logistic_function")
     second_degree_rewire_prob = Variable("second degree rewire probability",
                                          "Probability to rewire to a neighbour "
-                                         "of degree 2.")
+                                         "of degree 2.",
+                                         default=0.3)
     outspokenness = Variable("outspokenness",
                              "Describes how often per year an individual does "
-                             "social updates in average")
+                             "social updates in average",
+                             default=1)
 
     # exogenous variables / parameters:
 
@@ -196,7 +187,8 @@ class Metabolism (object):
     # endogenous variables:
     market_frequency = Variable("market frequency",
                                 "Defines how often per year the market "
-                                "clearing is calculated")
+                                "clearing is calculated",
+                                default=1)
 
 
 class Culture (object):

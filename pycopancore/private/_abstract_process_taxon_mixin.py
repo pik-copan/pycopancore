@@ -22,7 +22,7 @@ class _AbstractProcessTaxonMixin(object):
 
     processes = []
     """All processes of this taxon"""
-    model = None
+    model = None  # I can see why we need this, but I don't see it in use yet!
     """Model containing this taxon"""
     instances = None
     """List containing the unique instance of this taxon"""
@@ -35,6 +35,19 @@ class _AbstractProcessTaxonMixin(object):
         else:
             self.__class__.instances = [self]
 
+    def delete(self):
+        """Delete this Process Taxon from lists."""
+        # Remove from list, if list is existent:
+        if (self in self.__class__.instances
+                and self.__class__.instances):
+            self.__class__.instances.remove(self)
+        # If list then has lenght == 0, set it to None again, so everything is
+        # fresh again...
+        if (len(self.__class__.instances) == 0
+                and self.__class__.instances):
+            self.__class__.instances = None
+        # Delete for good:
+        del(self)
 
     # the repr and the str methods were removed in the master/prototype_jobst1
     # Do we really don't want them anymore?

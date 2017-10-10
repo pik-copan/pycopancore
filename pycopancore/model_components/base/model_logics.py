@@ -17,9 +17,11 @@ variables in special list to be accessed by the runner.
 from .. import abstract
 from ... import Variable, ReferenceVariable, SetVariable, \
                 ODE, Explicit, Step, Event, OrderedSet
-from ...private import _AbstractProcess
+from ...private import _AbstractProcess, \
+    _AbstractEntityMixin, _AbstractProcessTaxonMixin
 
 import inspect
+import gc
 
 
 class ModelLogics (object):
@@ -334,6 +336,17 @@ class ModelLogics (object):
         """
         for v in self.variables:
             v.convert_to_standard_units()
+
+    def reset(self):
+        """Reset all varaibles back to default values."""
+        # First set all variables to default:
+        # print("\n", 'self.variables',self.variables)
+        obj_to_delete = [obj for obj in gc.get_objects()
+                         if isinstance(obj, (_AbstractEntityMixin,
+                                             _AbstractProcessTaxonMixin))]
+        for obj in obj_to_delete:
+            # print(f'obj{obj} is going to be deleted:')
+            obj.delete()
 
 
 class ConfigureError(Exception):
