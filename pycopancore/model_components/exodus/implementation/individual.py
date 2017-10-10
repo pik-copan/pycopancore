@@ -260,8 +260,9 @@ class Individual (I.Individual):
 
     processes = [
         Event("social update",
-              [B.Individual.society,
-               B.Individual.culture.acquaintance_network],
+              [B.Individual.society  # ,
+               # B.Individual.culture.acquaintance_network TOO BIG TO SAVE!
+               ],
               ["time", social_update_timer, social_update]),
         Explicit("Calculate harvest",
                  [I.Individual.harvest],
