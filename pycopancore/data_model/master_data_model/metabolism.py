@@ -129,7 +129,7 @@ total_energy_intensity = \
              unit = gigajoules / dollars,
              lower_bound=0, is_intensive=True, default = 1/147)
 
-total_output_flow = \
+economic_output_flow = \
     Variable("total economic output flow",
              "(in value units)",
              IAMC="GDP|PPP",  # or GDP|MER?

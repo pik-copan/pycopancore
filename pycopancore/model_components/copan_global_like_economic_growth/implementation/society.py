@@ -21,8 +21,8 @@ class Society (I.Society):
         Explicit("investment", 
                  [I.Society.investment_flow, 
                   I.Society.consumption_flow],
-                 [I.Society.savings_rate * I.Society.total_output_flow,
-                  (1 - I.Society.savings_rate) * I.Society.total_output_flow]
+                 [I.Society.savings_rate * I.Society.economic_output_flow,
+                  (1 - I.Society.savings_rate) * I.Society.economic_output_flow]
                  ),
 
         ODE("growth, spillovers, depreciation",

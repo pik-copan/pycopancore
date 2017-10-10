@@ -28,7 +28,7 @@ class World (I.World):
 
     processes = [
 
-        Explicit("convert temperature",
+        Explicit("immediate greenhouse effect",
                  [I.World.surface_air_temperature],
                  [B.World.nature.reference_temperature
                   + B.World.nature.temperature_sensitivity_on_atmospheric_carbon

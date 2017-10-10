@@ -29,7 +29,7 @@ secondary_energy_flow = MET.secondary_energy_flow.copy()
 
 total_energy_intensity = MET.total_energy_intensity.copy()
 
-total_output_flow = MET.total_output_flow.copy()
+total_output_flow = MET.economic_output_flow.copy()
 consumption_flow = MET.consumption_flow.copy()
 investment_flow = MET.investment_flow.copy()
 

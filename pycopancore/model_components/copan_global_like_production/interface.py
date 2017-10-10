@@ -52,7 +52,7 @@ class Society (object):
     renewable_energy_input_flow = S.renewable_energy_input_flow
     secondary_energy_flow = S.secondary_energy_flow
     carbon_emission_flow = S.carbon_emission_flow
-    total_output_flow = S.total_output_flow
+    economic_output_flow = S.economic_output_flow
 
     # exogenous variables / parameters:
 

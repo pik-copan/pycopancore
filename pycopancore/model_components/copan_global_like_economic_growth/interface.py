@@ -65,7 +65,7 @@ class Society (object):
 
     # exogenous variables / parameters:
 
-    total_output_flow = S.total_output_flow
+    economic_output_flow = S.economic_output_flow
     renewable_energy_input_flow = S.renewable_energy_input_flow
 
     savings_rate = S.savings_rate

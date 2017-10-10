@@ -81,7 +81,7 @@ class Society (I.Society):
         self.fossil_fuel_input_flow = sum(F)
         self.renewable_energy_input_flow = sum(R)
         self.secondary_energy_flow = sum(E)
-        self.total_output_flow = sum(Y)
+        self.economic_output_flow = sum(Y)
         self.carbon_emission_flow = \
             self.biomass_input_flow + self.fossil_fuel_input_flow
 
@@ -140,7 +140,7 @@ class Society (I.Society):
                   I.Society.fossil_fuel_input_flow,
                   I.Society.renewable_energy_input_flow,
                   I.Society.secondary_energy_flow,
-                  I.Society.total_output_flow,
+                  I.Society.economic_output_flow,
                   I.Society.carbon_emission_flow],
 #                 [Bcell,
 #                  Fcell,
