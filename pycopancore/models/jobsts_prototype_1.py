@@ -24,7 +24,8 @@ from ..model_components import copan_global_like_population_growth \
     as pop
 from ..model_components import wellbeing_driven_migration \
     as mig
-
+from ..model_components import environmental_awareness \
+    as aware
 
 # entity types:
 
@@ -56,11 +57,11 @@ class Cell(cc.Cell,
 
     pass
 
-# class Individual (ABBR1.Individual, ABBR2.Individual,
-#             base.Individual):
-#    """Individual entity type."""
 
-#    pass
+class Individual(aware.Individual,
+                 base.Individual):
+    """Individual entity type."""
+    pass
 
 
 # process taxa:
@@ -83,10 +84,11 @@ class Metabolism(
 
     pass
 
-# class Culture (ABBR1.Culture, ABBR2.Culture,
-#               base.Culture):
-#    """Culture process taxon"""
-#    pass
+
+class Culture (aware.Culture,
+               base.Culture):
+    """Culture process taxon"""
+    pass
 
 
 # Model class:
@@ -97,6 +99,7 @@ class Model(cc.Model,
             growth.Model,
             pop.Model,
             mig.Model,
+            aware.Model,
             base.Model):
     """Class representing the whole model."""
 
@@ -105,7 +108,7 @@ class Model(cc.Model,
     description = "(as presented internally at PIK in fall 2016)"
     """Longer description"""
 
-    entity_types = [World, Society, Cell]
+    entity_types = [World, Society, Cell, Individual]
     """List of entity types used in the model"""
-    process_taxa = [Nature, Metabolism]
+    process_taxa = [Nature, Metabolism, Culture]
     """List of process taxa used in the model"""

@@ -18,6 +18,7 @@ random.seed(10) # 10
 nworlds = 1  # no. worlds
 nsocs = 10 # no. societies #10
 ncells = 100  # no. cells #100
+ninds = 1000 # no. individuals
 
 model = M.Model()
 
@@ -31,9 +32,10 @@ metabolism = M.Metabolism(
         # .1 w protection: success but desertification
         # 0 w/o protection: very slow success but desertification
         # ?: oscillations
+culture = M.Culture()
 
 # generate entities and plug them together at random:
-worlds = [M.World(nature=nature, metabolism=metabolism,
+worlds = [M.World(nature=nature, metabolism=metabolism, culture=culture,
                   atmospheric_carbon = 830 * D.gigatonnes_carbon,
                   upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                   ) for w in range(nworlds)]
@@ -45,6 +47,8 @@ cells = [M.Cell(society=random.choice(societies),
                 renewable_sector_productivity=random.rand()*3e-16)
                     # random.rand()*3e-16 at S=1e12 leads to ca. 100 GW renewables initially 
          for c in range(ncells)]
+individuals = [M.Individual(cell=random.choice(cells)) 
+               for i in range(ninds)]
 
 
 # distribute area and vegetation randomly but correlatedly:
@@ -103,7 +107,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=500, dt=100)
+traj = runner.run(t_1=100, dt=1)
 
 
 for v in nature.variables: print(v,v.get_value(nature))
@@ -153,5 +157,6 @@ print((Bglobal * metabolism.biomass_energy_density * D.gigajoules/D.gigatonnes_c
 print(Bglobal.tostr(unit=D.gigatonnes_carbon/D.years), # should be ca. 3
       Fglobal.tostr(unit=D.gigatonnes_carbon/D.years)) # should be ca. 11
 print(sum(traj[M.Society.emigration][s][5] for s in societies)) # should be ca. 5e6
+print(sum(traj[M.Individual.is_environmentally_friendly][i][-1] for i in individuals))
 
 show()

@@ -60,6 +60,10 @@ class Culture (object):
 
     acquaintance_network = CUL.acquaintance_network
 
+    # read-only attributes storing redundant information:
+    worlds = SetVariable("worlds",
+                         "set of Worlds this Culture acts in",
+                         readonly=True)
 
 # entity types:
 
@@ -107,6 +111,10 @@ class World (object, metaclass=_MixinType):
     individuals = SetVariable("individuals",
                               "set of Individuals residing on this world",
                               readonly=True)
+
+
+# specified only now to avoid recursion errors:
+Culture.worlds.type = World
 
 
 class Society (object, metaclass=_MixinType):

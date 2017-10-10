@@ -20,6 +20,7 @@ class Culture (I.Culture):
     """Culture process taxon mixin implementation class."""
 
     # standard methods:
+    # TODO: remove those that you don't use
 
     def __init__(self,
                  # *,  # TODO: uncomment when adding named args behind here
@@ -28,10 +29,6 @@ class Culture (I.Culture):
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
         pass
-
-        # At last, check for validity of all variables that have been
-        # initialized and given a value:
-        self.assert_valid()
 
     # process-related methods:
 

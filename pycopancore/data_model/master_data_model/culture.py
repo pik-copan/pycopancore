@@ -73,3 +73,11 @@ intersocietal_coalition_structure = \
     Variable("intersocietal coalition structure",
              """(a set of sets of societies)""",
              datatype=set)
+    
+    
+# socio-cultural traits that may occur on different levels:
+
+is_environmentally_friendly = \
+    Variable("is environmentally friendly",
+             """whether the entity is environmentally friendly or not""",
+             scale="ordinal", levels=[False, True], default=False)

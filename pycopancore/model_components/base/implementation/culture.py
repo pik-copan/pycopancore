@@ -43,8 +43,18 @@ class Culture (I.Culture, abstract.Culture):
         assert isinstance(acquaintance_network, Graph)
         self.acquaintance_network = acquaintance_network
 
+        self._worlds = set()
+
         # make sure all variable values are valid:
         self.assert_valid()
+
+    # getters and setters:
+    @property  # read-only
+    def worlds(self):
+        """Get the set of all Worlds this Culture acts in."""
+        return self._worlds
+
+
 
     # no process-related methods
 

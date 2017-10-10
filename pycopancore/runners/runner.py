@@ -286,7 +286,7 @@ class Runner(_AbstractRunner):
                     # here, solout must terminate (see below).
                 elif eventtype == "time":
                     # in this case, rate_or_timefunc directly returns a time:
-                    next_time = rate_or_timefunc(t)
+                    next_time = rate_or_timefunc(inst, t)
                     assert next_time > t_0, "next time must be > t"
                 try:
                     next_discontinuities[next_time].append((event, inst))
@@ -538,7 +538,7 @@ class Runner(_AbstractRunner):
                                                               rate_or_timefunc)
                         elif eventtype == "time":
                             # ask event when it next happens:
-                            next_time = rate_or_timefunc(t)
+                            next_time = rate_or_timefunc(inst, t)
                             assert next_time > t, "next time must be > t"
                         # register it:
                         try:

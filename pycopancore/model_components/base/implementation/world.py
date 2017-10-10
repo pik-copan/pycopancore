@@ -53,6 +53,7 @@ class World (I.World, abstract.World):
 
         self.nature = nature
         self.metabolism = metabolism
+        self._culture = None
         self.culture = culture
         self._societies = set()
         self._cells = set()
@@ -61,6 +62,20 @@ class World (I.World, abstract.World):
         self.assert_valid()
 
     # getters and setters:
+
+    @property
+    def culture(self):
+        """Get the Culture acting in this World."""
+        return self._culture
+
+    @culture.setter
+    def culture(self, c):
+        """Set the World the Society is part of."""
+        if self._culture is not None:
+            self._culture._worlds.remove(self)
+        assert isinstance(c, I.Culture), "culture must be of taxon type Culture"
+        c._worlds.add(self)
+        self._culture = c
 
     @property  # read-only
     def societies(self):
