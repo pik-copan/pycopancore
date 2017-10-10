@@ -588,7 +588,7 @@ def _eval(expr, iteration=None):
     # ternary operators:
     elif t == sp.ITE:
         truthvals = argvals[0]
-        trues = list(np.where(truthvals is True)[0])
+        trues = list(np.where(truthvals == True)[0])  # "==" is correct here, since it may be a sympy.True!! Do not replace "==" by "is"!!
         vals = argvals[2]
         vals[trues] = argvals[1][trues]
     # n-ary operators:
