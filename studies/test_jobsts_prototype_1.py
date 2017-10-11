@@ -107,7 +107,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=100, dt=1)
+traj = runner.run(t_1=1000, dt=1)
 
 
 for v in nature.variables: print(v,v.get_value(nature))

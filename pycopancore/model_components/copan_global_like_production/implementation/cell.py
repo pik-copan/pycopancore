@@ -16,6 +16,7 @@ from .... import Explicit
 from .... import master_data_model as D
 from .. import interface as I
 from ...base import interface as B
+from sympy import ITE
 
 # import numpy as np
 
@@ -32,17 +33,18 @@ class Cell (I.Cell):
                   I.Cell.fossil_relative_productivity,
                   I.Cell.renewable_relative_productivity],
                  [
-                     I.Cell.biomass_sector_productivity
-                     * (I.Cell.terrestrial_carbon
-                        * (1 - B.Cell.society.protected_terrestrial_carbon_share)
-                        )**2,
-                     I.Cell.fossil_sector_productivity
-                     * (I.Cell.fossil_carbon
+                  I.Cell.biomass_sector_productivity
+                  * (I.Cell.terrestrial_carbon
+                     * (1 - B.Cell.society.protected_terrestrial_carbon_share)
+                     )**2,
+                  ITE(B.Cell.society.has_fossil_ban, 0,
+                      I.Cell.fossil_sector_productivity
+                      * (I.Cell.fossil_carbon
                          * (1 - B.Cell.society.protected_fossil_carbon_share)
-                        )**2,
-                     I.Cell.renewable_sector_productivity
-                     * (B.Cell.society.renewable_energy_knowledge
-                        )**2
+                         )**2),
+                  I.Cell.renewable_sector_productivity
+                  * (B.Cell.society.renewable_energy_knowledge
+                     )**2
                  ]),
 
         Explicit("total relative productivity",

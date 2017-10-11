@@ -1,6 +1,8 @@
 """Master data model for society."""
 
 from . import metabolism as MET
+from .. import Variable
+from . import dollars, tonnes_carbon
 
 # metabolic:
 
@@ -48,3 +50,22 @@ renewable_energy_knowledge_depreciation_rate = \
     MET.renewable_energy_knowledge_depreciation_rate.copy()
 
 savings_rate = MET.savings_rate.copy()
+
+has_renewable_subsidy = \
+    Variable("has renewable subsidy",
+             "whether a subsidy for renewables is in force",
+             scale="ordinal", levels=[False, True], default=False)
+has_emissions_tax = \
+    Variable("has emissions tax",
+             "whether an emissions tax is in force",
+             scale="ordinal", levels=[False, True], default=False)
+has_fossil_ban = \
+    Variable("has fossil ban",
+             "whether a fossil ban is in force",
+             scale="ordinal", levels=[False, True], default=False)
+emissions_tax_level = \
+    Variable("emissions tax",
+             "level of emissions tax when introduced",
+             unit = dollars / tonnes_carbon, 
+             lower_bound=0, default=100)
+

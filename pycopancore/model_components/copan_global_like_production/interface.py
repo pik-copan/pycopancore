@@ -63,6 +63,11 @@ class Society (object):
     protected_terrestrial_carbon_share = S.protected_terrestrial_carbon_share
     protected_fossil_carbon_share = S.protected_fossil_carbon_share
 
+    has_renewable_subsidy = S.has_renewable_subsidy
+    has_emissions_tax = S.has_emissions_tax
+    has_fossil_ban = S.has_fossil_ban
+    emissions_tax_level = S.emissions_tax_level
+
 
 class Cell (object):
     """Interface for Cell entity type mixin."""

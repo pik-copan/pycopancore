@@ -31,8 +31,8 @@ class _Unset(object):
 
 unset = _Unset()
 
-# hierarchical aggregation functions:
 
+# hierarchical aggregation functions:
 
 def aggregation(npfunc):
     """Dummy docstring"""
@@ -54,7 +54,6 @@ def aggregation(npfunc):
         return list(results)
 
     return func
-
 
 name2numpy = {
     "all": np.all,

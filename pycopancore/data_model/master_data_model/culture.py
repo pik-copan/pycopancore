@@ -4,6 +4,8 @@ from .. import Variable
 
 from networkx import DiGraph, Graph
 
+from .. import unity
+
 
 # Social networks between individuals:
 
@@ -81,3 +83,4 @@ is_environmentally_friendly = \
     Variable("is environmentally friendly",
              """whether the entity is environmentally friendly or not""",
              scale="ordinal", levels=[False, True], default=False)
+
