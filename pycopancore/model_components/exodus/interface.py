@@ -209,6 +209,9 @@ class Culture (object):
                           "Modularity of a partition of the network",
                           default=0)
 
+    transitivity = Variable("Transitivity",
+                            "Transitivity of the network")
+
     split = Variable("Split",
                      "Shows if network has split",
                      default=False)

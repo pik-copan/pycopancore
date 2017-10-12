@@ -142,6 +142,7 @@ for ind in M.Individual.instances:
 # Run market clearing once:
 metabolism.do_market_clearing(0)
 culture.calculate_modularity(0)
+culture.calculate_transitivity(0)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 termination_conditions = [[M.Culture.check_for_split, culture],
@@ -181,7 +182,7 @@ for ind in M.Individual.instances:
 gca().set_yscale('symlog')
 
 # savefig('20_ag_4_soc.png', dpi=150)
-show()
+#show()
 
 # network_data = traj[M.Culture.acquaintance_network][culture]
 # G = network_data[-1]

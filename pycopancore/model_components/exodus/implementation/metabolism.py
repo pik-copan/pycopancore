@@ -140,7 +140,8 @@ class Metabolism (I.Metabolism):
             tl = world.total_liquidity
             print('nutrition - harvest', tn-th)
             # Break condition if suppy and demand are not equal:
-            if round(tn) != round(th) or round(tl) == round(tgi):
+            if round(tn) != round(th):
+                print('Market clearing failed')
                 self.non_equilibrium_checker = True
             # Calculate liquidities again, so that sri can be calculated
             # correctly

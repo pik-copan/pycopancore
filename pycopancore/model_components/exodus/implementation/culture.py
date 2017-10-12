@@ -50,11 +50,15 @@ class Culture (I.Culture):
         self.modularity = community.modularity(
             partition,
             shallow_network)
-        print('modularity: ', self.modularity)
+        # print('modularity: ', self.modularity)
 
     def modularity_timing(self, t):
         """Timing for step process to calculate modularity."""
         return t + 1
+
+    def calculate_transitivity(self, unused_t):
+        """Calculate the transitivity of the network"""
+        self.transitivity = nx.transitivity(self.acquaintance_network)
 
     def check_for_split(self):
         """Check if network has split into to groups."""
@@ -80,4 +84,7 @@ class Culture (I.Culture):
                  Step("Calculate Modularity",
                       [I.Culture.modularity],
                       [modularity_timing, calculate_modularity]),
+                 Step("Calculate Transitivity",
+                      [I.Culture.transitivity],
+                      [modularity_timing, calculate_transitivity])
                  ]  # TODO: instantiate and list process objects here
