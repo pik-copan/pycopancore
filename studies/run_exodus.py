@@ -144,7 +144,8 @@ metabolism.do_market_clearing(0)
 culture.calculate_modularity(0)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
-termination_conditions = [[M.Culture.check_for_split, culture]]
+termination_conditions = [[M.Culture.check_for_split, culture],
+                          [M.Metabolism.check_for_market_equilibrium, metabolism]]
 
 print('\n runner starting')
 # Runner is instantiated

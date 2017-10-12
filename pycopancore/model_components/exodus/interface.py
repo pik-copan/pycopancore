@@ -190,6 +190,11 @@ class Metabolism (object):
                                 "clearing is calculated",
                                 default=1)
 
+    non_equilibrium_checker = Variable("Nonequilibrium Checker",
+                                       "Is set true, if market is not in "
+                                       "equilibrium anymore",
+                                       default=False)
+
 
 class Culture (object):
     """Interface for Culture process taxon mixin."""
