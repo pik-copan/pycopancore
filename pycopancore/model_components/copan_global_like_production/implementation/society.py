@@ -60,17 +60,27 @@ class Society (I.Society):
         P = weight * self.population
         K = weight * self.physical_capital
         # resulting cell-wise harvest, extraction and production:
-        denom = (relative_productivity * intensity)**0.8
+        denom = relative_productivity**0.8
         # unimportant since numerator is then 0, just to avoid division error:
         denom[np.where(denom == 0)] = 1
         fac = (P * K)**0.4 / denom
+        if any(np.isnan(fac)):
+            w = np.where(np.isnan(fac))[0] 
+            print("fac",self.physical_capital,P[w],K[w],weight[w],relative_productivity[w],intensity[w])
+            exit()
         eB = self.metabolism.biomass_energy_density
         eF = self.metabolism.fossil_energy_density
+        # TODO: FIX occurrence of intensity:
         B = np.array([c.biomass_relative_productivity for c in C]) * fac / eB
         F = np.array([c.fossil_relative_productivity for c in C]) * fac / eF
         R = np.array([c.renewable_relative_productivity for c in C]) * fac
         E = eB * B + eF * F + R
         Y = E / intensity
+        if any(Y < 0):
+            w = np.where(np.isnan(fac))[0] 
+            print("Y",P[w],K[w],weight[w],relative_productivity[w],intensity[w],E[w])
+            exit()
+            
         # tell cells what their harvest and extraction is:
         for i in range(len(C)):
             C[i].biomass_harvest_flow = B[i]

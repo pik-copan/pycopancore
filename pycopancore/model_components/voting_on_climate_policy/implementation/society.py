@@ -34,5 +34,5 @@ class Society (I.Society):
               [I.Society.has_renewable_subsidy,
                I.Society.has_emissions_tax,
                I.Society.has_fossil_ban],
-              [next_voting_time, take_a_vote])
+              ["time", next_voting_time, take_a_vote])
     ]

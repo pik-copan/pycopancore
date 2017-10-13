@@ -14,7 +14,7 @@ remove these instructions.
 
 # TODO: use variables from the master data model wherever possible:
 from ... import master_data_model as D
-from ...master_data_model import S
+from ...data_model.master_data_model import S
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
 # import ..BBB.interface as BBB
@@ -51,6 +51,7 @@ class Society (object):
     # exogenous variables / parameters:
 
     emissions_tax_level = S.emissions_tax_level
+    renewable_subsidy_level = S.renewable_subsidy_level
 
     time_between_votes = \
         Variable("time between votes",

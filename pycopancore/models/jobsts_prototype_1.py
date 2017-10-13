@@ -26,6 +26,8 @@ from ..model_components import wellbeing_driven_migration \
     as mig
 from ..model_components import environmental_awareness \
     as aware
+from ..model_components import voting_on_climate_policy \
+    as vote
 
 # entity types:
 
@@ -45,6 +47,7 @@ class Society(
               pop.Society,
               mig.Society,
               aware.Society,
+              vote.Society,
               base.Society):
     """Society entity type."""
 
@@ -101,6 +104,7 @@ class Model(cc.Model,
             pop.Model,
             mig.Model,
             aware.Model,
+            vote.Model,
             base.Model):
     """Class representing the whole model."""
 

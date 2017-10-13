@@ -67,6 +67,7 @@ class Society (object):
     has_emissions_tax = S.has_emissions_tax
     has_fossil_ban = S.has_fossil_ban
     emissions_tax_level = S.emissions_tax_level
+    renewable_subsidy_level = S.renewable_subsidy_level
 
 
 class Cell (object):

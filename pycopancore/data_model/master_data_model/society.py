@@ -2,7 +2,7 @@
 
 from . import metabolism as MET
 from .. import Variable
-from . import dollars, tonnes_carbon
+from . import dollars, gigatonnes_carbon, gigajoules
 
 # metabolic:
 
@@ -64,8 +64,12 @@ has_fossil_ban = \
              "whether a fossil ban is in force",
              scale="ordinal", levels=[False, True], default=False)
 emissions_tax_level = \
-    Variable("emissions tax",
+    Variable("emissions tax level",
              "level of emissions tax when introduced",
-             unit = dollars / tonnes_carbon, 
-             lower_bound=0, default=100)
-
+             unit = dollars / gigatonnes_carbon, 
+             lower_bound=0, default=100e9)
+renewable_subsidy_level = \
+    Variable("renewable subsidy level",
+             "level of renewable subsidy when introduced",
+             unit = dollars / gigajoules, 
+             lower_bound=0, default=50)

@@ -26,13 +26,16 @@ model = M.Model()
 nature = M.Nature()
 metabolism = M.Metabolism(
     renewable_energy_knowledge_spillover_fraction = .1,
-    basic_emigration_probability_rate = 3e-13) # 3e-13 leads to ca. 5mio. (real)
         # 1 w/o protection: success but desertification
         # .75 w protection: success (even w/o or w much migration)
         # .1 w protection: success but desertification
         # 0 w/o protection: very slow success but desertification
         # ?: oscillations
-culture = M.Culture()
+    basic_emigration_probability_rate = 3e-13, # 3e-13 leads to ca. 5mio. (real)
+    )
+culture = M.Culture(
+    awareness_lower_carbon_density=2e-5,
+    awareness_upper_carbon_density=3e-5)
 
 # generate entities and plug them together at random:
 worlds = [M.World(nature=nature, metabolism=metabolism, culture=culture,
@@ -107,7 +110,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=1000, dt=1)
+traj = runner.run(t_1=200, dt=1)
 
 
 for v in nature.variables: print(v,v.get_value(nature))
