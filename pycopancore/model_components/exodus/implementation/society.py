@@ -68,17 +68,6 @@ class Society (I.Society):
             # Use pareto:
             return "not implemented yet"
 
-    @property
-    def pdf_mu(self):
-        """Get mu of the log-normal distribution"""
-        # from mean = exp(mu + sigma**2 / 2) in the log-normal distribution:
-        return math.log(self.mean_income_or_farmsize) - (self.pdf_sigma**2) / 2
-
-    @property
-    def pdf_y_min(self):
-        """Get the y_min of the Pareo distribution"""
-        return
-
     # process-related methods:
 
     def liquidity_pdf(self):

@@ -17,7 +17,7 @@ from pycopancore.model_components.base import interface as B
 # from .... import master_data_model as D
 from pycopancore import Explicit, Step
 import networkx as nx
-# import community
+import community
 
 
 class Culture (I.Culture):
@@ -37,27 +37,28 @@ class Culture (I.Culture):
         self.network_clustering = nx.average_clustering(
             self.acquaintance_network)
 
-    def calculate_partition(self):
+    def calculate_partition(self, graph):
         """Calculate the partition of the Graph using Louvain algo."""
-        partition_by_society = {}
-        for node in self.acquaintance_network:
-            partition_by_society[node] = node.society._uid
-        partition = community.best_partition(
-            self.acquaintance_network,
-            partition=partition_by_society
-        )
+        partition = community.best_partition(graph)
         return partition
 
     def calculate_modularity(self, unused_t):
         """Calculate modularity from partition."""
-        partition = self.calculate_partition()
+        shallow_network = nx.from_scipy_sparse_matrix(
+            nx.adjacency_matrix(self.acquaintance_network))
+        partition = self.calculate_partition(shallow_network)
         self.modularity = community.modularity(
             partition,
-            self.acquaintance_network)
+            shallow_network)
+        # print('modularity: ', self.modularity)
 
     def modularity_timing(self, t):
         """Timing for step process to calculate modularity."""
-        return t + 5
+        return t + 1
+
+    def calculate_transitivity(self, unused_t):
+        """Calculate the transitivity of the network"""
+        self.transitivity = nx.transitivity(self.acquaintance_network)
 
     def check_for_split(self):
         """Check if network has split into to groups."""
@@ -76,11 +77,14 @@ class Culture (I.Culture):
             self.split = True
         return self.split
 
-
-    processes = [Explicit("calculate average clustering",
-                          [I.Culture.network_clustering],
-                          calculate_av_clustering),
-                 #Step("Calculate Modularity",
-                 #     [I.Culture.modularity],
-                 #     [modularity_timing, calculate_modularity]),
+    processes = [
+                 # Explicit("calculate average clustering",
+                 #          [I.Culture.network_clustering],
+                 #          calculate_av_clustering),
+                 Step("Calculate Modularity",
+                      [I.Culture.modularity],
+                      [modularity_timing, calculate_modularity]),
+                 Step("Calculate Transitivity",
+                      [I.Culture.transitivity],
+                      [modularity_timing, calculate_transitivity])
                  ]  # TODO: instantiate and list process objects here

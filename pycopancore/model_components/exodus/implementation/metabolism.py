@@ -139,8 +139,10 @@ class Metabolism (I.Metabolism):
             tn = world.total_nutrition
             tl = world.total_liquidity
             print('nutrition - harvest', tn-th)
-            assert round(tn) == round(th), 'supply != demand'
-            assert round(tl) == round(tgi), 'total inc != total liq'
+            # Break condition if suppy and demand are not equal:
+            if round(tn) != round(th):
+                print('Market clearing failed')
+                self.non_equilibrium_checker = True
             # Calculate liquidities again, so that sri can be calculated
             # correctly
             #for s in world.societies:
@@ -149,6 +151,13 @@ class Metabolism (I.Metabolism):
     def market_timing(self, t):
         """Define how often market clearing takes place."""
         return t + 1 / self.market_frequency
+
+    def check_for_market_equilibrium(self):
+        """Check if the market equilibrium is still in order."""
+        if self.non_equilibrium_checker is True:
+            return self.non_equilibrium_checker
+        else:
+            return False
 
     processes = [
         Step("market clearing",

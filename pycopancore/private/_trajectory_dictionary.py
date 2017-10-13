@@ -69,9 +69,22 @@ class _TrajectoryDictionary(dict):
                         # transformed into strings, too:
                         if all(isinstance(val, (float, int)) for val in value):
                             dict_to_save[new_key][new_key_2] = value
+                        # Networks:
                         elif all(isinstance(val, nx.Graph) for val in value):
-                            # save as adjacency matrices
-                            new_value = [nx.adjacency_matrix(val) for val in value]
+                            # save as dict of dicts
+                            new_value = [nx.to_dict_of_dicts(val) for val in value]
+                            # print(new_value)
+                            # iterate through timesteps in list, where for every
+                            # timestep there is a dictionary di in the list
+                            for di in new_value:
+                                # Rewrite keys (the nodes), as they are
+                                # objects, to strings of objects:
+                                for node_key, connections in di.copy().items():
+                                    di[str(node_key)] = di.pop(node_key)
+                                    # Also, connections for all nodes need to
+                                    # be replaced by strings:
+                                    for node_key_2, connections_2 in connections.copy().items():
+                                        connections[str(node_key_2)] = connections.pop(node_key_2)
                             dict_to_save[new_key][new_key_2] = new_value
                         else:
                             new_val = [str(val) for val in value]
@@ -84,11 +97,22 @@ class _TrajectoryDictionary(dict):
                         # transformed into strings, too:
                         if all(isinstance(val, (float, int)) for val in value):
                             dict_to_save[new_key][new_key_2] = value
-                            print(key_2, 'taxon bracket, int, float')
                         # Networks:
                         elif all(isinstance(val, nx.Graph) for val in value):
-                            # save as adjacency matrices
-                            new_value = [nx.adjacency_matrix(val) for val in value]
+                            # save as dict of dicts
+                            new_value = [nx.to_dict_of_dicts(val) for val in value]
+                            # print(new_value)
+                            # iterate through timesteps in list, where for every
+                            # timestep there is a dictionary di in the list
+                            for di in new_value:
+                                # Rewrite keys (the nodes), as they are
+                                # objects, to strings of objects:
+                                for node_key, connections in di.copy().items():
+                                    di[str(node_key)] = di.pop(node_key)
+                                    # Also, connections for all nodes need to
+                                    # be replaced by strings:
+                                    for node_key_2, connections_2 in connections.copy().items():
+                                        connections[str(node_key_2)] = connections.pop(node_key_2)
                             dict_to_save[new_key][new_key_2] = new_value
                         else:
                             new_val = [str(val) for val in value]
@@ -101,6 +125,8 @@ class _TrajectoryDictionary(dict):
             else:
                 raise Exception('neither variable nor time!')
 
+        # Add a file versio:
+        dict_to_save['file-version'] = 0.1
         # Fuse Filename and path:
         # add "/" to paths if missing
         save_path = path + "/" if not path.endswith("/") else path

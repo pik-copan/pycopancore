@@ -22,14 +22,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 100
+timeinterval = 1000
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
 nm = 2  # number of municipalities, also cities
 nc = 2  # number of counties, also farmland_cells
-nf = 20  # number of farmers
-nt = 20  # number of townsmen
+nf = 100  # number of farmers
+nt = 100  # number of townsmen
 
 
 model = M.Model()
@@ -63,7 +63,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
-                                 land_area= 0.01 * (nf + nt),  # in square kilometers
+                                 land_area=0.01 * (nf + nt),  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []
@@ -141,9 +141,12 @@ for ind in M.Individual.instances:
     ind.calculate_utility(0)
 # Run market clearing once:
 metabolism.do_market_clearing(0)
+culture.calculate_modularity(0)
+culture.calculate_transitivity(0)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
-termination_conditions = [[M.Culture.check_for_split, culture]]
+termination_conditions = [[M.Culture.check_for_split, culture],
+                          [M.Metabolism.check_for_market_equilibrium, metabolism]]
 
 print('\n runner starting')
 # Runner is instantiated
@@ -155,6 +158,11 @@ traj = r.run(t_1=timeinterval, dt=timestep)
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
+
+# Saving:
+traj.save(filename='data')
+
+
 # Plotting:
 t = np.array(traj['t'])
 # for key, val in traj.items():
@@ -162,102 +170,36 @@ t = np.array(traj['t'])
 plot(t, traj[M.World.water_price][world], "b", lw=3)
 plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
 plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
-plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
-
+# plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
+plot(t, traj[M.Culture.modularity][culture], "r:", lw=3)
 
 for soc in municipalities:
     plot(t, traj[M.Society.population][soc], "r", lw=3)
 for soc in counties:
     plot(t, traj[M.Society.population][soc], "k", lw=3)
 for ind in M.Individual.instances:
-    plot(t, traj[M.Individual.utility][ind], "y", lw=1)
+    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)
 gca().set_yscale('symlog')
 
 # savefig('20_ag_4_soc.png', dpi=150)
-show()
+#show()
 
-network_data = traj[M.Culture.acquaintance_network][culture]
-G = network_data[-1]
+# network_data = traj[M.Culture.acquaintance_network][culture]
+# G = network_data[-1]
 
 # Make list to have colors according to profession:
-professions = {}
-for ind in M.Individual.instances:
-    if ind.profession == 'farmer':
-        professions[ind] = 'yellow'
-    else:
-        professions[ind] = 'red'
-colors = [professions.get(node) for node in G.nodes()]
-# Make second list to have labels according to society:
-societies = {}
-for ind in M.Individual.instances:
-    societies[ind] = str(ind.society._uid)
-nx.draw(G, node_color=colors,
-        labels=societies,
-        pos=nx.spring_layout(G))
-show()
-
-# traj.save(filename='data')
-
-#with open('data.pickle', 'rb') as f:
-#    trajectory = pickle.load(f)
-
-# alternative plotting:
-# city_population = np.array([traj[M.Society.population][soc]
-#                            for soc in municipalities])
-# county_population = np.array([traj[M.Society.population][soc]
-#                              for soc in counties])
-# utilities = np.array([traj[M.Individual.utility][ind]
-#                      for ind in M.Individual.instances])
-# population_data = []
-# for i, s in enumerate(municipalities):
-#     population_data.append(go.Scatter(
-#         x=t,
-#         y=city_population[i],
-#         name='population of municipality {}'.format(i),
-#         mode='lines',
-#         line=dict(color="green", width=4)
-#     ))
-#
-# for i, c in enumerate(counties):
-#     population_data.append(go.Scatter(
-#         x=t,
-#         y=county_population[i],
-#         name='population of county {}'.format(i),
-#         mode='lines',
-#         line=dict(color="red", width=4)
-#     ))
-# price = traj[M.World.water_price][world]
-# price_data = []
-# price_data.append(go.Scatter(
-#     x=t,
-#     y=price,
-#     name='price of water',
-#     mode='lines',
-#     line=dict(color="blue", width=4)
-# ))
-# utilities_data = []
-# for i, ind in enumerate(M.Individual.instances):
-#     utilities_data.append(go.Scatter(
-#         x=t,
-#         y=utilities[i],
-#         name='utility of citizen {}'.format(i),
-#         mode='lines',
-#         line=dict(color="green", width=4)
-#     ))
-#
-# layout = dict(title='Exodus',
-#               xaxis=dict(title='time [yr]'),
-#               yaxis=dict(title='value'),
-#               )
-#
-# fig = dict(data=[population_data[i] for i, soc in enumerate(
-#     [municipalities + counties])],
-#            layout=layout)
-# fig2 = dict(data=[price_data[0]],
-#             layout=layout)
-# fig3 = dict(data=[utilities_data[i] for i, ind in enumerate(M.Individual.instances)],
-#             layout=layout)
-#
-# py.plot(fig, filename='Exodus populations.html')
-# py.plot(fig2, filename='Exodus water price.html')
-# py.plot(fig3, filename='Exodus utilities.html')
+# professions = {}
+# for ind in M.Individual.instances:
+#     if ind.profession == 'farmer':
+#         professions[ind] = 'yellow'
+#     else:
+#         professions[ind] = 'red'
+# colors = [professions.get(node) for node in G.nodes()]
+# # Make second list to have labels according to society:
+# societies = {}
+# for ind in M.Individual.instances:
+#     societies[ind] = str(ind.society._uid)
+# nx.draw(G, node_color=colors,
+#         labels=societies,
+#         pos=nx.spring_layout(G))
+# show()

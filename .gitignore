@@ -86,3 +86,6 @@ target/
 # Autodoc
 docs/_api/*
 /.Rhistory
+
+# Data that is saved as pickle
+*.pickle
