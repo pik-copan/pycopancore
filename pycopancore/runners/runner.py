@@ -382,7 +382,7 @@ class Runner(_AbstractRunner):
             # If there are no discontinuities, the next_discontinuities
             # dict is empty, therefore try is necessary:
             try:
-                next_time = min(next_discontinuities.keys())  # TODO: speed-up by using different data type for next_discontinuities, something like OrderedDict?
+                next_time = min(t_1, min(next_discontinuities.keys()))  # TODO: speed-up by using different data type for next_discontinuities, something like OrderedDict?
             except ValueError:
                 next_time = t_1
 
@@ -505,7 +505,7 @@ class Runner(_AbstractRunner):
             # discontinuity (step 3.4 in runner scheme)
             # Delete the discontinuity from the dictionary and determine when
             # the next one happens:
-            if len(next_discontinuities) > 0:
+            if t < t_1 and len(next_discontinuities) > 0:
 
                 # set current model time to end of previous ODE integration:
                 t = next_time

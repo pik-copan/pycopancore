@@ -21,7 +21,8 @@ class Culture (I.Culture):
 
     def next_awareness_update_time(self, t):
         """time of next awareness update"""
-        return t + exponential(1. / self.awareness_update_rate)
+        res = t + exponential(1. / self.awareness_update_rate)
+        return res
 
     def update_individuals_awareness(self, t):
         """let some individuals update their awareness"""

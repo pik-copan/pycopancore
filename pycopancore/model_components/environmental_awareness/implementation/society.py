@@ -26,8 +26,8 @@ class Society (I.Society):
         Explicit("biomass protection due to awareness",
                  [I.Society.protected_terrestrial_carbon_share],
                  [B.Society.culture.max_protected_terrestrial_carbon_share
-                  * B.Society.mean(
+                  * B.Society.sum(
                         ITE(B.Society.individuals.is_environmentally_friendly,
-                            1.0, 0.0))]
+                            B.Society.individuals.population_share, 0.0))]
                  )
     ]

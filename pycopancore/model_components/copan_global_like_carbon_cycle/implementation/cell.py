@@ -24,7 +24,7 @@ class Cell (I.Cell):
 
     balance = (I.Cell.photosynthesis_carbon_flow
                - I.Cell.terrestrial_respiration_carbon_flow)
-    carbon_density = sp.Max(0, B.Cell.world.atmospheric_carbon 
+    atmospheric_carbon_density = sp.Max(0, B.Cell.world.atmospheric_carbon 
                                / B.Cell.world.sum.cells.land_area)
 
     processes = [  # using symbolic expressions for performance and legibility:
@@ -35,8 +35,8 @@ class Cell (I.Cell):
                     # WARNING: IF SOMEONE AGAIN MESSES AROUND WITH THE
                     # FORMATTING HERE, I WILL DISALLOW THEM TO FURTHER USE MY CODE.
                     - B.Cell.nature.photosynthesis_sensitivity_on_atmospheric_carbon
-                      * carbon_density)
-                   * sp.sqrt(carbon_density)
+                      * atmospheric_carbon_density)
+                   * sp.sqrt(atmospheric_carbon_density)
                    * (1 - I.Cell.terrestrial_carbon
                           / (B.Cell.nature.terrestrial_carbon_capacity_per_area
                              * B.Cell.land_area))
@@ -48,7 +48,7 @@ class Cell (I.Cell):
                  [I.Cell.terrestrial_respiration_carbon_flow],
                  [(B.Cell.world.nature.basic_respiration_rate
                    + B.Cell.world.nature.respiration_sensitivity_on_atmospheric_carbon
-                     * carbon_density)
+                     * atmospheric_carbon_density)
                   * I.Cell.terrestrial_carbon
                   ]),
 
