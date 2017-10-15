@@ -39,7 +39,9 @@ metabolism = M.Metabolism(
 culture = M.Culture(
     awareness_lower_carbon_density=1e100, # 1e-6?
     awareness_upper_carbon_density=1e100, # 2e-6?
-    awareness_update_rate=1e-10)
+    awareness_update_rate=1e-10,
+    max_protected_terrestrial_carbon_share=0.90,
+    )
 
 # generate entities and plug them together at random:
 worlds = [M.World(nature=nature, metabolism=metabolism, culture=culture,
@@ -50,8 +52,7 @@ societies = [M.Society(world=random.choice(worlds),
                        has_renewable_subsidy=True,
                        has_emissions_tax=True,
                        has_fossil_ban=True,
-#                       protected_fossil_carbon_share=0.95, # (.95,.75) helps
-#                       protected_terrestrial_carbon_share=0.75
+#                       max_protected_fossil_carbon_share=0.95, # (.95,.75) helps
                        ) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies),
                 renewable_sector_productivity=random.rand()*3e-16)
@@ -119,7 +120,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=200, dt=1)
+traj = runner.run(t_1=10000, dt=1)
 
 
 for v in nature.variables: print(v,v.get_value(nature))

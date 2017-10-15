@@ -79,7 +79,7 @@ class Nature (object):
                  unit = D.years**-1
                         / (D.gigatonnes_carbon / D.square_kilometers)**0.5
                         / (D.gigatonnes_carbon / D.square_kilometers),
-                 default=1e6) # 1.1e6!
+                 default=1.1e6) # 1.1e6!
     terrestrial_carbon_capacity_per_area = \
         Variable("per-area capacity of terrestrial carbon", "",
                  unit = D.gigatonnes_carbon / D.square_kilometers,
