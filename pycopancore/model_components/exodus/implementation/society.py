@@ -195,7 +195,17 @@ class Society (I.Society):
         else:
             # If there are no individuals left:
             self.average_liquidity = 0
-        print('average liquidity', self.average_liquidity)
+        # print('average liquidity', self.average_liquidity)
+
+    def calculate_average_utility(self, unused_t):
+        """Calculate the average utility in this society."""
+        summe = 0
+        for ind in self.inddividuals:
+            summe += ind.utility
+        if len(self.individuals) != 0:
+            self.average_utility = summe / len(self.individuals)
+        else:
+            self.average_utility = 0
 
     processes = [
         Explicit('calculate population',
@@ -210,7 +220,10 @@ class Society (I.Society):
                  calculate_mean_income_or_farmsize),
         Explicit("Calculate average liquidities",
                  [I.Society.average_liquidity],
-                 calculate_average_liquidity)
+                 calculate_average_liquidity),
+        Explicit("Calculate average utilities",
+                 [I.Society.average_utility],
+                 calculate_average_utility)
     ]
 
 

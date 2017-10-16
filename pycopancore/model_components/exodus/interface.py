@@ -99,6 +99,8 @@ class Society (object):
                                  "Average over all liquidities in society",
                                  lower_bound=0,
                                  unit=D.dollars)
+    average_utility = Variable("Average Utility",
+                               "Average Utility in a society")
 
     # exogenous variables / parameters:
 
