@@ -101,6 +101,8 @@ class Society (object):
                                  unit=D.dollars)
     average_utility = Variable("Average Utility",
                                "Average Utility in a society")
+    gini_coefficient = Variable("Gini Coefficient",
+                                "Gini coefficient of utilities")
 
     # exogenous variables / parameters:
 

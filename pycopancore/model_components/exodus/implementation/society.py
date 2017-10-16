@@ -207,6 +207,25 @@ class Society (I.Society):
         else:
             self.average_utility = 0
 
+    def calculate_gini(self, unused_t):
+        """Calculate the gini coefficient of the utility. 
+        
+        This is using the Relative mean absolute difference:
+        https://en.wikipedia.org/wiki/Mean_absolute_difference#Relative_mean_absolute_difference
+        """
+        # Mean absolute difference
+        utilities = []
+        if len(self.individuals) != 0:
+            for ind in self.individuals:
+                utilities.append(ind.utility)
+            mad = np.abs(np.subtract.outer(utilities, utilities)).mean()
+            # Relative mean absolute difference
+            rmad = mad / np.mean(utilities)
+            # Gini coefficient
+            self.gini_coefficient = 0.5 * rmad
+        else:
+            self.gini_coefficient = None
+
     processes = [
         Explicit('calculate population',
                  [B.Society.population],

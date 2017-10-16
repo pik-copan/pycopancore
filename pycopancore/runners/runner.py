@@ -635,7 +635,7 @@ class Runner(_AbstractRunner):
                     assert len(self.trajectory_dict[var][inst]) == tlen
 
             # check if there are any idle instances and fill their trajectory
-            # with None to fit he lenght of 't':
+            # with None to fit he length of 't':
             if idle_instances:
                 for i, inst in enumerate(idle_instances):
                     try:  # already in trajectory_dict
