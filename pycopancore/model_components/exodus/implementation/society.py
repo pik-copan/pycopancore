@@ -200,7 +200,7 @@ class Society (I.Society):
     def calculate_average_utility(self, unused_t):
         """Calculate the average utility in this society."""
         summe = 0
-        for ind in self.inddividuals:
+        for ind in self.individuals:
             summe += ind.utility
         if len(self.individuals) != 0:
             self.average_utility = summe / len(self.individuals)
@@ -224,7 +224,7 @@ class Society (I.Society):
             # Gini coefficient
             self.gini_coefficient = 0.5 * rmad
         else:
-            self.gini_coefficient = None
+            self.gini_coefficient = 0
 
     processes = [
         Explicit('calculate population',
@@ -242,7 +242,10 @@ class Society (I.Society):
                  calculate_average_liquidity),
         Explicit("Calculate average utilities",
                  [I.Society.average_utility],
-                 calculate_average_utility)
+                 calculate_average_utility),
+        Explicit("Calculate gini",
+                 [I.Society.gini_coefficient],
+                 calculate_gini)
     ]
 
 

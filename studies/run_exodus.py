@@ -22,7 +22,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 1000
+timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
@@ -139,6 +139,9 @@ for soc in M.Society.instances:
 for ind in M.Individual.instances:
     ind.calculate_harvest(0)
     ind.calculate_utility(0)
+for soc in M.Society.instances:
+    soc.calculate_average_utility(0)
+    soc.calculate_gini(0)
 # Run market clearing once:
 metabolism.do_market_clearing(0)
 culture.calculate_modularity(0)
@@ -160,8 +163,9 @@ print('runtime: {runtime}'.format(**locals()))
 
 
 # Saving:
+print('saving:')
 traj.save(filename='data')
-
+print('...is done')
 
 # Plotting:
 t = np.array(traj['t'])
@@ -175,14 +179,18 @@ plot(t, traj[M.Culture.modularity][culture], "r:", lw=3)
 
 for soc in municipalities:
     plot(t, traj[M.Society.population][soc], "r", lw=3)
+    plot(t, traj[M.Society.average_utility][soc], "r:", lw=3)
+    plot(t, traj[M.Society.gini_coefficient][soc], "r--", lw=3)
 for soc in counties:
     plot(t, traj[M.Society.population][soc], "k", lw=3)
-for ind in M.Individual.instances:
-    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)
+    plot(t, traj[M.Society.average_utility][soc], "k:", lw=3)
+    plot(t, traj[M.Society.gini_coefficient][soc], "k--", lw=3)
+#for ind in M.Individual.instances:
+#    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)
 gca().set_yscale('symlog')
 
 # savefig('20_ag_4_soc.png', dpi=150)
-#show()
+show()
 
 # network_data = traj[M.Culture.acquaintance_network][culture]
 # G = network_data[-1]
