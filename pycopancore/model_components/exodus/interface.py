@@ -178,6 +178,10 @@ class Individual (object):
                              "Describes how often per year an individual does "
                              "social updates in average",
                              default=1)
+    random_rewire = Variable("Random rewire",
+                             "Probability to rewire to a random individual"
+                             "and cutiing a connection with a known one.",
+                             default=0.05)
 
     # exogenous variables / parameters:
 

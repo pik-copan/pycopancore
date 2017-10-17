@@ -22,7 +22,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 100
+timeinterval = 300
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
@@ -153,7 +153,8 @@ termination_conditions = [[M.Culture.check_for_split, culture],
 
 print('\n runner starting')
 # Runner is instantiated
-r = Runner(model=model, termination_calls=termination_conditions)
+r = Runner(model=model  # , termination_calls=termination_conditions
+           )
 
 start = time()
 # run the Runner and saving the return dict in traj

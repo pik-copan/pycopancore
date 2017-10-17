@@ -36,6 +36,7 @@ class Individual (I.Individual):
                  migration_steepness=5,
                  second_degree_rewire_prob=0.3,
                  outspokenness=None,
+                 random_rewire=0.05,
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
@@ -45,6 +46,7 @@ class Individual (I.Individual):
         self.migration_steepness = migration_steepness
         self.second_degree_rewire_prob = second_degree_rewire_prob
         self.outspokenness = outspokenness
+        self.random_rewire = random_rewire
 
         self._subjective_income_rank = None
         self._farm_size = None
@@ -127,6 +129,17 @@ class Individual (I.Individual):
                     self.migrate(chosen_one.cell)
                 else:
                     self.rewire(chosen_one)
+            if (chosen_profession == self.profession
+                    and random.random() <= self.random_rewire):
+                # Noise: Rewire to a random individual
+                random_guy = random.choice(tuple(self.world.individuals))
+                if (random_guy not in self.acquaintances):
+                    # Add edge:
+                    self.culture.acquaintance_network.add_edge(self, random_guy)
+                    # remove old edge:
+                    self.culture.acquaintance_network.remove_edge(self,
+                                                                  chosen_one)
+
 
     def decide_migration(self, neighbour):
         """Decide, if rewire or migration takes place.
