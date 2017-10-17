@@ -40,6 +40,8 @@ class Individual (I.Individual):
         #set behaviour
         self.behaviour = initial_behaviour
 
+        self.culture.c =
+
         pass
 
     def deactivate(self):
@@ -63,5 +65,8 @@ class Individual (I.Individual):
     def get_characteristics(self):
 
         pass
+
+    def get_instances(self):
+        return self.__class__.instances
 
     processes = []  # TODO: instantiate and list process objects here

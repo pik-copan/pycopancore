@@ -73,7 +73,7 @@ def rejection_sampling(N, distribution_function_ini, yb):
     i = 0
     while i < N:
         random_numbers = np.random.random(2)
-        if random_numbers[0] < distribution_function_ini(yb,
+        if 3.0 * random_numbers[0] < distribution_function_ini(yb,
                                                          random_numbers[1]):
             result[0, i] = random_numbers[1]
             # if the smoking disposition is greater than a certain value,
@@ -118,6 +118,9 @@ def erdosrenyify(graph, p=0.5):
             if np.random.random() < p:
                 graph.add_edge(n1, n2)
 
+#print(len(individuals))
+#print(individuals[0].instances)
+#print(individuals[0].get_instances())
 
 # # set the initial graph structure to be an erdos-renyi graph
 # print("erdosrenyifying the graph ... ", end="", flush=True)

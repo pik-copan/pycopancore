@@ -273,6 +273,7 @@ class Culture (I.Culture):
         pass
 
 
+
     # TODO: Until I have understood Hooks, it's probably best to put all configurations into the following method,
     # TODO: which is called before a run.
     # TODO: CHECK if it is clever to pass te erdosrenyify function to this method. It's nicer than changing the contact
@@ -366,7 +367,7 @@ class Culture (I.Culture):
         random_numbers = (random_numbers + random_numbers.transpose()) / 2.
 
         # Return adjacency matrix of interaction network
-        return int(random_numbers <= interaction_probability_matrix)
+        self.interaction_network = int(random_numbers <= interaction_probability_matrix)
 
 
 
@@ -411,26 +412,44 @@ class Culture (I.Culture):
 
         self.friendship_network = nx.from_numpy_matrix(new_contact_network_adj)
 
-    def compute_conditional_behavior_probability(self):
-        # TODO: CHANGE THE FOLLOWING FUNCTION
-        def calc_cond_prob(smokers, nw_full, deg_sep_max, N):
-            """
-            Add docstring!
-            """
-            rcp = np.zeros(5)
-            for i in range(deg_sep_max):
-                deg_sep = i + 1
-                smoking_dep = []
-                for node in smokers:
-                    distance_matrix = nw_full.path_lengths()
-                    contact_one = np.where(distance_matrix[node, :] == deg_sep)
-                    if contact_one[0].size > 0:
-                        smoking_dep.append(
-                            np.sum(nw_full.node_attribute('smoker')[contact_one]) /
-                            float(contact_one[0].size) / (float(len(smokers)) / N) - 1)
-                rcp[i] = np.mean(smoking_dep)
-            return rcp
-        pass
+    # def compute_conditional_behavior_probability(self, max_deg_sep):
+    #
+    #     # Create a numpy array containing all path lengths from the friendship network
+    #     # Convert networkx graph to igraph graph via edge list (fastest way)
+    #     transformed_network = igraph.Graph(n=len(self.n_individual),
+    #                                        edges=list(zip(*list(zip(*nx.to_edgelist(self.friendship_network)))[:2])))
+    #     #  Perform Dijkstra algorithm that is much faster in igraph
+    #     distance_metric_matrix = np.array(transformed_network.shortest_paths(), dtype=float)
+    #
+    #     cond_beh_prob = np.zeros(5)
+    #     smokers = self.friendship_network[]
+    #     for i in range(self.n_individual):
+    #         if self.__nodes[i].behavior == 1:
+    #             smokers.append(i)
+    #
+    #     for i in range(max_deg_sep):
+    #         deg_sep = i + 1
+    #         smoking_dep = []
+    #         for
+    #     # TODO: CHANGE THE FOLLOWING FUNCTION
+    #     def calc_cond_prob(smokers, nw_full, deg_sep_max, N):
+    #         """
+    #         Add docstring!
+    #         """
+    #         rcp = np.zeros(5)
+    #         for i in range(deg_sep_max):
+    #             deg_sep = i + 1
+    #             smoking_dep = []
+    #             for node in smokers:
+    #                 distance_matrix = nw_full.path_lengths()
+    #                 contact_one = np.where(distance_matrix[node, :] == deg_sep)
+    #                 if contact_one[0].size > 0:
+    #                     smoking_dep.append(
+    #                         np.sum(nw_full.node_attribute('smoker')[contact_one]) /
+    #                         float(contact_one[0].size) / (float(len(smokers)) / N) - 1)
+    #             rcp[i] = np.mean(smoking_dep)
+    #         return rcp
+    #     pass
 
     # MAYBE THESE MEASURES SHOULD BE VARIABLES AND BE COMPUTED AFTER EAcH STEP...
     # TODO: Think about status of this method...
@@ -494,4 +513,6 @@ class Culture (I.Culture):
 
         pass
 
-    processes = []  # TODO: instantiate and list process objects here
+    processes = [
+        Step()
+    ]  # TODO: instantiate and list process objects here
