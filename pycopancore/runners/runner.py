@@ -13,7 +13,7 @@
 
 from .. import Event, Step, Variable
 from ..private import _AbstractRunner, _DotConstruct, eval, unknown, \
-    _AbstractEntityMixin, _TrajectoryDictionary
+    _AbstractEntityMixin, _TrajectoryDictionary, _AbstractProcessTaxonMixin
 # TODO: discuss whether this makes sense or leads to problems:
 from .hooks import Hooks
 
@@ -196,9 +196,9 @@ class Runner(_AbstractRunner):
             t_0=0,
             t_1,
             dt,  # TODO: rename to "resolution" since it is only an upper bound?
-            exclusions=None
+            exclusions=None,
             # TODO: add some kwargs for choosing solver and setting its params
-
+            max_resolution=False
             ):
         """Run the model for a specified time interval.
 
@@ -576,6 +576,32 @@ class Runner(_AbstractRunner):
                 # Store all information that has been calculated at time t:
                 print("    Completing output dict...")
                 self.save_to_traj(targets_to_save)
+
+            # if max reoslution is true, the trajectory_dict s length is
+            # reduced to time*dt
+            if max_resolution:
+                print('reducing resolution')
+                for i, val in enumerate(self.trajectory_dict['t']):
+                    # See if 3 timesteps are closer than dt:
+                    if (i > 1) and i < (len(self.trajectory_dict['t']) - 2):
+                        diff = self.trajectory_dict['t'][i+1] - self.trajectory_dict['t'][i-1]
+                        if diff < dt:
+                            del self.trajectory_dict['t'][i]
+                            print(f'deleting, diff={diff}')
+                            # delete this value from all trajectories
+                            for target in targets_to_save:
+                                var = target.target_variable
+                                instances = target.target_class.instances
+                                for inst in instances:
+                                    del self.trajectory_dict[var][inst][i]
+
+                # # Assert every list still has the same lenght:
+                # tlen = len(self.trajectory_dict['t'])
+                # for target in targets_to_save:
+                #     var = target.target_variable
+                #     instances = target.target_class.instances
+                #     for inst in instances:
+                #         assert len(self.trajectory_dict[var][inst]) == tlen
 
             # TODO: discuss whether hooks make sense, then maybe:
             # TODO: add hooks to runner scheme

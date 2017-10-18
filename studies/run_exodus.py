@@ -152,7 +152,7 @@ r = Runner(model=model, termination_calls=termination_conditions)
 
 start = time()
 # run the Runner and saving the return dict in traj
-traj = r.run(t_1=timeinterval, dt=timestep)
+traj = r.run(t_1=timeinterval, dt=timestep, max_resolution=True)
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
