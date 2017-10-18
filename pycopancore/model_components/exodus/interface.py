@@ -212,14 +212,17 @@ class Culture (object):
                                   "Average clustering of network, values from"
                                   "networkx.average_clustering",
                                   default=0)
-
     modularity = Variable("Modularity",
                           "Modularity of a partition of the network",
                           default=0)
-
     transitivity = Variable("Transitivity",
                             "Transitivity of the network")
-
     split = Variable("Split",
                      "Shows if network has split",
                      default=False)
+    fully_connected_network = Variable("Fully connected Network",
+                                       "This var is set true when the "
+                                       "acquaintance network is fully "
+                                       "connected",
+                                       default=False,
+                                       datatype=bool)

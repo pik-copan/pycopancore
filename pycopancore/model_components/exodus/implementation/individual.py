@@ -114,32 +114,41 @@ class Individual (I.Individual):
     def social_update(self, unused_t):
         """Do social update.
 
-        Either migration or de- and re-friending takes place"""
-        # Chose Acquaintance, if existent:
-        if self.acquaintances:
-            chosen_one = random.choice(self.acquaintances)
-            # Get the Chosen One's Profession:
-            chosen_profession = chosen_one.profession
-            # Check, whether same profession, therefore define
-            # if migration or rewiring takes place or nothing
-            if chosen_profession != self.profession:
-                # Compare utility and decide if migration takes place:
-                if self.decide_migration(chosen_one):
-                    # Migrate
-                    self.migrate(chosen_one.cell)
-                else:
-                    self.rewire(chosen_one)
-            if (chosen_profession == self.profession
-                    and random.random() <= self.random_rewire):
-                # Noise: Rewire to a random individual
-                random_guy = random.choice(tuple(self.world.individuals))
-                if (random_guy not in self.acquaintances):
-                    # Add edge:
-                    self.culture.acquaintance_network.add_edge(self, random_guy)
-                    # remove old edge:
-                    self.culture.acquaintance_network.remove_edge(self,
-                                                                  chosen_one)
-
+        Either migration or de- and re-friending takes place. 
+        In case of a fully connected network only migration takes place.
+        """
+        # First: determine if fully connected network:
+        if self.culture.fully_connected_network:
+            # Network is fully connected:
+            chosen_one = random.choice(self.culture.acquaintance_network.nodes())
+            if self.decide_migration(chosen_one):
+                # Migrate
+                self.migrate(chosen_one.cell)
+        else:  # Not fully connected:
+            # Chose Acquaintance, if existent:
+            if self.acquaintances:
+                chosen_one = random.choice(self.acquaintances)
+                # Get the Chosen One's Profession:
+                chosen_profession = chosen_one.profession
+                # Check, whether same profession, therefore define
+                # if migration or rewiring takes place or nothing
+                if chosen_profession != self.profession:
+                    # Compare utility and decide if migration takes place:
+                    if self.decide_migration(chosen_one):
+                        # Migrate
+                        self.migrate(chosen_one.cell)
+                    else:
+                        self.rewire(chosen_one)
+                if (chosen_profession == self.profession
+                        and random.random() <= self.random_rewire):
+                    # Noise: Rewire to a random individual
+                    random_guy = random.choice(tuple(self.world.individuals))
+                    if (random_guy not in self.acquaintances):
+                        # Add edge:
+                        self.culture.acquaintance_network.add_edge(self, random_guy)
+                        # remove old edge:
+                        self.culture.acquaintance_network.remove_edge(self,
+                                                                      chosen_one)
 
     def decide_migration(self, neighbour):
         """Decide, if rewire or migration takes place.
@@ -157,7 +166,7 @@ class Individual (I.Individual):
         """
         # Difference in utility:
         delta_utility = neighbour.utility - self.utility
-        print('delta util', delta_utility)
+        # print('delta util', delta_utility)
         # Sigmoidal function, normalized so that sigmoid(1) = 1:
         #  sigmoid = 1 / (1 + math.exp(- self.migration_steepness * (
         #     delta_utility - self.migration_threshold))) * (1 + math.exp(
@@ -251,7 +260,6 @@ class Individual (I.Individual):
         self._subjective_income_rank = None
         self._farm_size = None
         self._gross_income = None
-        # TODO: Change farmland/income of everybody else too?
 
     def calculate_harvest(self, unused_t):
         """Calculate the harvest of an Individual."""

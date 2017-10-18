@@ -22,7 +22,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 300
+timeinterval = 50
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
@@ -36,7 +36,7 @@ model = M.Model()
 
 # instantiate process taxa culture:
 # In this certain case we need 'M.Culture()' for the acquaintance network.
-culture = M.Culture()
+culture = M.Culture(fully_connected_network=True)
 metabolism = M.Metabolism(market_frequency=1)
 
 # instantiate world:
@@ -103,31 +103,31 @@ for t in range(nt):
                                  liquidity=liq,
                                  nutrition=100))
 
-# Create Network:
-expected_degree = 5
-
-# from run_adaptive_voter_model:
-
-
-def erdosrenyify(graph, p=0.5):
-    """Create a ErdosRenzi graph from networkx graph.
-
-    Take a a networkx.Graph with nodes and distribute the edges following the
-    erdos-renyi graph procedure.
-    """
-    assert not graph.edges(), "your graph has already edges"
-    nodes = graph.nodes()
-    for i, n1 in enumerate(nodes[:-1]):
-        for n2 in nodes[i+1:]:
-            if random.random() < p:
-                graph.add_edge(n1, n2)
-
-
-# set the initial graph structure to be an erdos-renyi graph
-print("erdosrenyifying the graph ... ", end="", flush=True)
-start = time()
-erdosrenyify(culture.acquaintance_network, p=expected_degree / (nf + nt))
-print("done ({})".format(dt.timedelta(seconds=(time() - start))))
+# # Create Network:
+# expected_degree = 5
+#
+# # from run_adaptive_voter_model:
+#
+#
+# def erdosrenyify(graph, p=0.5):
+#     """Create a ErdosRenyi graph from networkx graph.
+#
+#     Take a a networkx.Graph with nodes and distribute the edges following the
+#     erdos-renyi graph procedure.
+#     """
+#     assert not graph.edges(), "your graph has already edges"
+#     nodes = graph.nodes()
+#     for i, n1 in enumerate(nodes[:-1]):
+#         for n2 in nodes[i+1:]:
+#             if random.random() < p:
+#                 graph.add_edge(n1, n2)
+#
+#
+# # set the initial graph structure to be an erdos-renyi graph
+# print("erdosrenyifying the graph ... ", end="", flush=True)
+# start = time()
+# erdosrenyify(culture.acquaintance_network, p=expected_degree / (nf + nt))
+# print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 start = time()
 # Calculate societies variables before run:
@@ -176,7 +176,7 @@ plot(t, traj[M.World.water_price][world], "b", lw=3)
 plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
 plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
 # plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
-plot(t, traj[M.Culture.modularity][culture], "r:", lw=3)
+# plot(t, traj[M.Culture.modularity][culture], "r:", lw=3)
 
 for soc in municipalities:
     plot(t, traj[M.Society.population][soc], "r", lw=3)
