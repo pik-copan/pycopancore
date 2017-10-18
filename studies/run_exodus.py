@@ -22,7 +22,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 50
+timeinterval = 5
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
