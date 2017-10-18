@@ -28,7 +28,7 @@ model = M.Model()
 # instantiate process taxa:
 nature = M.Nature()
 metabolism = M.Metabolism(
-    renewable_energy_knowledge_spillover_fraction = 1, #.1,
+    renewable_energy_knowledge_spillover_fraction = 1, #.1, #.1,
         # 1 w/o protection: success but desertification
         # .75 w protection: success (even w/o or w much migration)
         # .1 w protection: success but desertification
@@ -39,7 +39,7 @@ metabolism = M.Metabolism(
 culture = M.Culture(
     awareness_lower_carbon_density=1e100, # 1e-6?
     awareness_upper_carbon_density=1e100, # 2e-6?
-    awareness_update_rate=1e-10,
+    awareness_update_rate=1e-10, #12,
     max_protected_terrestrial_carbon_share=0.90,
     )
 
@@ -49,9 +49,9 @@ worlds = [M.World(nature=nature, metabolism=metabolism, culture=culture,
                   upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                   ) for w in range(nworlds)]
 societies = [M.Society(world=random.choice(worlds),
-                       has_renewable_subsidy=True,
-                       has_emissions_tax=True,
-                       has_fossil_ban=True,
+                       has_renewable_subsidy=True, #False,
+                       has_emissions_tax=True, #False,
+                       has_fossil_ban=True, #False,
 #                       max_protected_fossil_carbon_share=0.95, # (.95,.75) helps
                        ) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies),
@@ -59,7 +59,7 @@ cells = [M.Cell(society=random.choice(societies),
                     # random.rand()*3e-16 at S=1e12 leads to ca. 100 GW renewables initially 
          for c in range(ncells)]
 individuals = [M.Individual(cell=random.choice(cells),
-                            is_environmentally_friendly = True
+                            is_environmentally_friendly = True, #False,
                             ) 
                for i in range(ninds)]
 
@@ -120,7 +120,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_1=10000, dt=1)
+traj = runner.run(t_1=50, dt=1)
 
 
 for v in nature.variables: print(v,v.get_value(nature))
@@ -151,7 +151,7 @@ for s in societies:
 #    plot(t, traj[M.Society.carbon_emission_flow][s], "r--", lw=2)
 #    plot(t, traj[M.Society.biomass_input_flow][s], "g--", lw=2)
 #    plot(t, traj[M.Society.fossil_fuel_input_flow][s], "--", color="gray", lw=2)
-#    plot(t, traj[M.Society.renewable_energy_input_flow][s], "--", color="darkorange", lw=2)
+    plot(t, traj[M.Society.renewable_energy_input_flow][s], "--", color="darkorange", lw=2)
     plot(t[3:], traj[M.Society.wellbeing][s][3:],"magenta",lw=2)
 #    plot(t, np.array(traj[M.Society.births][s]) - traj[M.Society.deaths][s],"--",color="yellow",lw=2)
 #    plot(t, traj[M.Society.immigration][s],":",color="yellow",lw=2)
