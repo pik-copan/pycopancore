@@ -30,17 +30,17 @@ class Society (I.Society):
     def __init__(self,
                  *,
                  municipality_like=False,
-                 pareto_distribution_type=False,
                  base_mean_income=None,
                  pdf_sigma=0.34,  # 0.34 taken from Clementi, Gallegati 2005 for income distribution
+                 scaling_parameter=1.12,
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
 
         self.municipality_like = municipality_like
-        self.pareto_distribution_type = pareto_distribution_type
         self.base_mean_income = base_mean_income
         self.pdf_sigma = pdf_sigma
+        self.scaling_parameter = scaling_parameter
 
         self.liquidity_median = None
         self.liquidity_sigma = None
@@ -56,19 +56,14 @@ class Society (I.Society):
     @property
     def gross_income_or_farmsize(self):
         "Get random income or farm size distributed log-normal."
-        if self.pareto_distribution_type is False:
-            # Use log-normal
-            number = random.random()
-            sigma = self.pdf_sigma
-            # calculate ´median from mean:
-            median = (self.mean_income_or_farmsize / np.exp(sigma**2 / 2))
-            lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=median)
-            return lognormal_random
-        if self.pareto_distribution_type is True:
-            # Use pareto:
-            return "not implemented yet"
 
-    # process-related methods:
+        # Use log-normal
+        number = random.random()
+        sigma = self.pdf_sigma
+        # calculate ´median from mean:
+        median = (self.mean_income_or_farmsize / np.exp(sigma**2 / 2))
+        lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=median)
+        return lognormal_random
 
     def liquidity_pdf(self):
         """Calculate the PDF of the liquidity of the society."""
@@ -178,7 +173,9 @@ class Society (I.Society):
         if self.is_active:
             if self.municipality_like:
                 # in case of municipality
-                self.mean_income_or_farmsize = self.base_mean_income * (self.population ** 1.12)
+                total_income = self.base_mean_income * (
+                    self.population**self.scaling_parameter)
+                self.mean_income_or_farmsize = total_income / self.population
             if not self.municipality_like:
                 # in case of county
                 for c in self.direct_cells:

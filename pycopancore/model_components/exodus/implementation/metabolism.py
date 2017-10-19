@@ -98,7 +98,7 @@ class Metabolism (I.Metabolism):
 
     def do_market_clearing(self, unused_t):
         """Calculate water price and market movements."""
-        print('market cleraing takes place at time', unused_t)
+        print('market clearing takes place at time', unused_t)
         # Iterate through worlds
         for w in self.worlds:
             world = w
@@ -167,8 +167,8 @@ class Metabolism (I.Metabolism):
               B.Metabolism.worlds.total_harvest,
               B.Metabolism.worlds.total_gross_income
               ],
-              [market_timing,
-               do_market_clearing]
+             [market_timing,
+              do_market_clearing]
              )
     ]  # TODO: instantiate and list process objects here
 

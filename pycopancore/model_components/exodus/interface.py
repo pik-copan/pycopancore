@@ -103,6 +103,11 @@ class Society (object):
                                "Average Utility in a society")
     gini_coefficient = Variable("Gini Coefficient",
                                 "Gini coefficient of utilities")
+    scaling_parameter = Variable("Scaling Parameter",
+                                 "Parameter that scales income as in "
+                                 "Total_income = base_inc ** parameter, "
+                                 "default from bettencourt paper",
+                                 default=1.12)
 
     # exogenous variables / parameters:
 

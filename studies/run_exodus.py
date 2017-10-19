@@ -22,14 +22,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 5
+timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 3  # number of municipalities, also cities
-nc = 3  # number of counties, also farmland_cells
-nf = 30  # number of farmers
-nt = 30  # number of townsmen
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
+nf = 100  # number of farmers
+nt = 100  # number of townsmen
 
 
 model = M.Model()
@@ -45,7 +45,8 @@ world = M.World(culture=culture, metabolism=metabolism,
 # Instantiate Societies:
 municipalities = [M.Society(world=world,
                             municipality_like=True,
-                            base_mean_income=1000)
+                            base_mean_income=1000,
+                            scaling_parameter=1.12)
                   for m in range(nm)
                   ]
 
@@ -87,7 +88,7 @@ for f in range(nf):
     liq = stats.lognorm.rvs(scale=300, s=0.34, loc=0)
     farmers.append(M.Individual(cell=farmland,
                                 profession='farmer',
-                                outspokensess=1,
+                                outspokensess=.1,
                                 liquidity=liq,
                                 nutrition=1000))
 # Instantiate townsmen:
@@ -99,7 +100,7 @@ for t in range(nt):
     liq = stats.lognorm.rvs(scale=700, s=0.34, loc=0)
     townsmen.append(M.Individual(cell=city,
                                  profession='townsman',
-                                 outspokensess=1,
+                                 outspokensess=.1,
                                  liquidity=liq,
                                  nutrition=100))
 
