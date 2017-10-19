@@ -26,10 +26,10 @@ timeinterval = 5
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 2  # number of municipalities, also cities
-nc = 2  # number of counties, also farmland_cells
-nf = 100  # number of farmers
-nt = 100  # number of townsmen
+nm = 3  # number of municipalities, also cities
+nc = 3  # number of counties, also farmland_cells
+nf = 30  # number of farmers
+nt = 30  # number of townsmen
 
 
 model = M.Model()
@@ -132,8 +132,8 @@ for t in range(nt):
 start = time()
 # Calculate societies variables before run:
 for soc in M.Society.instances:
-    soc.calculate_mean_income_or_farmsize(0)
     soc.calc_population(0)
+    soc.calculate_mean_income_or_farmsize(0)
     soc.calculate_average_liquidity(0)
 # Calculate other stuff:
 for ind in M.Individual.instances:
