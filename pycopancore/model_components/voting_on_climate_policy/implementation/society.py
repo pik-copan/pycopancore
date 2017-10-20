@@ -25,9 +25,18 @@ class Society (I.Society):
     def take_a_vote(self, unused_t):
         share = sum([i.population_share for i in self.individuals
                      if i.is_environmentally_friendly])
-        self.has_renewable_subsidy = (share > self.renewable_subsidy_threshold)
-        self.has_emissions_tax = (share > self.emissions_tax_threshold)
-        self.has_fossil_ban = (share > self.fossil_ban_threshold)
+        self.has_renewable_subsidy = (
+            (share > self.renewable_subsidy_intro_threshold)
+                if not self.has_renewable_subsidy
+            else (share > self.renewable_subsidy_keeping_threshold))
+        self.has_emissions_tax = (
+            (share > self.emissions_tax_intro_threshold)
+                if not self.has_emissions_tax
+            else (share > self.emissions_tax_keeping_threshold))
+        self.has_fossil_ban = (
+            (share > self.fossil_ban_intro_threshold)
+                if not self.has_fossil_ban
+            else (share > self.fossil_ban_keeping_threshold))
 
     processes = [
         Event("voting",

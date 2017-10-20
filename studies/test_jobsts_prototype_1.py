@@ -28,7 +28,7 @@ model = M.Model()
 # instantiate process taxa:
 nature = M.Nature()
 metabolism = M.Metabolism(
-    renewable_energy_knowledge_spillover_fraction = 1, #.1, #.1,
+    renewable_energy_knowledge_spillover_fraction = .1, #.1, #.1,
         # 1 w/o protection: success but desertification
         # .75 w protection: success (even w/o or w much migration)
         # .1 w protection: success but desertification
@@ -37,10 +37,10 @@ metabolism = M.Metabolism(
     basic_emigration_probability_rate = 3e-13, # 3e-13 leads to ca. 5mio. (real)
     )
 culture = M.Culture(
-    awareness_lower_carbon_density=1e-5, #1e100, # 1e-6?
-    awareness_upper_carbon_density=2e-5, #1e100, # 2e-6?
-    awareness_update_rate=12, #1e-10, #1e-10, #12,
-    max_protected_terrestrial_carbon_share=0.90,
+    awareness_lower_carbon_density=1e-4, #1e100, # 1e-6?
+    awareness_upper_carbon_density=2e-4, #1e100, # 2e-6?
+    awareness_update_rate=1, #1e-10, #1e-10, #12,
+    max_protected_terrestrial_carbon_share=0.75,
     )
 
 # generate entities and plug them together at random:
@@ -49,17 +49,19 @@ worlds = [M.World(nature=nature, metabolism=metabolism, culture=culture,
                   upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                   ) for w in range(nworlds)]
 societies = [M.Society(world=random.choice(worlds),
-                       has_renewable_subsidy = False, #random.choice([False, True], p=[3/4, 1/4]), #True, #False,
-                       has_emissions_tax = False, #random.choice([False, True], p=[4/5, 1/5]), #True, #False,
+                       has_renewable_subsidy = random.choice([False, True], p=[3/4, 1/4]), #True, #False,
+                       has_emissions_tax = random.choice([False, True], p=[4/5, 1/5]), #True, #False,
                        has_fossil_ban = False, #True, #False,
                        ) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies),
                 renewable_sector_productivity = 2 * random.rand()
                     * M.Cell.renewable_sector_productivity.default)
          for c in range(ncells)]
-individuals = [M.Individual(cell=random.choice(cells),
-                            is_environmentally_friendly = False, #random.choice([False, True], p=[2/3, 1/3]), #True, #False,
-                            ) 
+individuals = [M.Individual(
+                cell=random.choice(cells),
+                is_environmentally_friendly = 
+                    random.choice([False, True], p=[.7, .3]), #True, #False,
+                ) 
                for i in range(ninds)]
 
 # initialize block model acquaintance network:
@@ -131,7 +133,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_0=2000, t_1=2000+100, dt=1)
+traj = runner.run(t_0=2000, t_1=2000+200, dt=1)
 
 
 for v in nature.variables: print(v,v.get_value(nature))
@@ -187,8 +189,8 @@ ax2.legend(loc=1)
 subplot(514)  # metabolic: energy mix
 for i, s in enumerate(societies):
     Es = array(traj[M.Society.secondary_energy_flow][s][3:])
-    plot(t[3:], array(traj[M.Society.biomass_input_flow][s][3:]) / Es, color="green", lw=lws, label=None if i else "share of biomass")
-    plot(t[3:], array(traj[M.Society.fossil_fuel_input_flow][s][3:]) / Es, color="gray", lw=lws, label=None if i else "share of fossils")
+    plot(t[3:], array(traj[M.Society.biomass_input_flow][s][3:]) * metabolism.biomass_energy_density / Es, color="green", lw=lws, label=None if i else "share of biomass")
+    plot(t[3:], array(traj[M.Society.fossil_fuel_input_flow][s][3:]) * metabolism.fossil_energy_density / Es, color="gray", lw=lws, label=None if i else "share of fossils")
     plot(t[3:], array(traj[M.Society.renewable_energy_input_flow][s][3:]) / Es, color="darkorange", lw=lws, label=None if i else "share of renewables")
 legend()
 
@@ -202,8 +204,8 @@ legend()
 
 print("\nyr 200 values (real):")
 print("emigration (5e6):",sum(traj[M.Society.emigration][s][5] for s in societies)) # should be ca. 5e6
-print("photo (123):",sum(traj[M.Cell.photosynthesis_carbon_flow][c][-1] for c in cells))
-print("resp (118):",sum(traj[M.Cell.terrestrial_respiration_carbon_flow][c][-1] for c in cells))
+print("photo (123):",sum(traj[M.Cell.photosynthesis_carbon_flow][c][5] for c in cells))
+print("resp (118):",sum(traj[M.Cell.terrestrial_respiration_carbon_flow][c][5] for c in cells))
 print("GWP (4e13):",sum(traj[M.Society.economic_output_flow][s][5] for s in societies)) # should be ca. 4e13
 Bglobal = sum(traj[M.Society.biomass_input_flow][s][5] for s in societies) * D.gigatonnes_carbon / D.years
 Fglobal = sum(traj[M.Society.fossil_fuel_input_flow][s][5] for s in societies) * D.gigatonnes_carbon / D.years
@@ -217,4 +219,4 @@ print("B (3), F (11), R(100):",
 #      Rglobal.tostr(unit=D.gigawatts), "(100)") # last should be ca. 100
 print()
 
-#show()
+show()

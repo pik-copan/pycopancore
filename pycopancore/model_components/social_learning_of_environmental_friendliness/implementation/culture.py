@@ -27,6 +27,7 @@ class Culture (I.Culture):
 
     def let_individuals_learn(self, t):
         """let some individuals learn environmental (un)friendliness"""
+        print("terr.:",sum([c.terrestrial_carbon for w in self.worlds for c in w.cells]))
         for w in self.worlds:
             for i in w.individuals:
                 if uniform() < self.environmental_friendliness_learning_fraction:

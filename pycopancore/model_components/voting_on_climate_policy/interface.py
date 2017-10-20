@@ -58,20 +58,38 @@ class Society (object):
                  "every how many years votes are taken",
                  unit=D.years, strict_lower_bound=0, default=4)
     
-    renewable_subsidy_threshold = \
-        Variable("renewable subsidy threshold",
+    renewable_subsidy_intro_threshold = \
+        Variable("renewable subsidy introduction threshold",
                  "share of environmentally friendly voters needed to introduce"
                  "a subsidy for renewables",
                  unit=D.unity, lower_bound=0, upper_bound=1, default=1/2)
         
-    emissions_tax_threshold = \
-        Variable("emissions tax threshold",
+    emissions_tax_intro_threshold = \
+        Variable("emissions tax introduction threshold",
                  "share of environmentally friendly voters needed to introduce"
                  "an emissions tax",
                  unit=D.unity, lower_bound=0, upper_bound=1, default=2/3)
 
-    fossil_ban_threshold = \
-        Variable("fossil ban threshold",
+    fossil_ban_intro_threshold = \
+        Variable("fossil ban introduction threshold",
                  "share of environmentally friendly voters needed to ban"
                  "fossil fuels",
                  unit=D.unity, lower_bound=0, upper_bound=1, default=3/4)
+
+    renewable_subsidy_keeping_threshold = \
+        Variable("renewable subsidy keeping threshold",
+                 "share of environmentally friendly voters needed to keep "
+                 "a subsidy for renewables",
+                 unit=D.unity, lower_bound=0, upper_bound=1, default=1/3)
+        
+    emissions_tax_keeping_threshold = \
+        Variable("emissions tax keeping threshold",
+                 "share of environmentally friendly voters needed to keep "
+                 "an emissions tax",
+                 unit=D.unity, lower_bound=0, upper_bound=1, default=1/2)
+
+    fossil_ban_keeping_threshold = \
+        Variable("fossil ban keeping threshold",
+                 "share of environmentally friendly voters needed to keep "
+                 "a ban on fossil fuels",
+                 unit=D.unity, lower_bound=0, upper_bound=1, default=2/3)
