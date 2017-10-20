@@ -114,18 +114,18 @@ class Cell (object):
                  "(Parameter aB in Nitzbon et al. 2017)",
                  unit = (D.gigajoules / D.years)**5
                         / (D.gigatonnes_carbon * D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True, default=1e7) # 2.8??
+                 lower_bound=0, is_intensive=True, default=3e5)
     fossil_sector_productivity = \
         Variable("fossil sector productivity",
                  "(Parameter aF in Nitzbon et al. 2017)",
                  unit = (D.gigajoules / D.years)**5
                         / (D.gigatonnes_carbon * D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True, default=3e8) # 24.9??
+                 lower_bound=0, is_intensive=True, default=5e6)
     renewable_sector_productivity = \
         Variable("renewable sector productivity", "",
                  unit = D.gigajoules**3 / D.years**5
                         / (D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True, default=1e-17)
+                 lower_bound=0, is_intensive=True, default=7e-18)
     total_energy_intensity = C.total_energy_intensity
 
 

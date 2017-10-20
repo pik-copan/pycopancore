@@ -26,6 +26,8 @@ from ..model_components import wellbeing_driven_migration \
     as mig
 from ..model_components import environmental_awareness \
     as aware
+from ..model_components import social_learning_of_environmental_friendliness \
+    as learn
 from ..model_components import voting_on_climate_policy \
     as vote
 
@@ -63,6 +65,7 @@ class Cell(cc.Cell,
 
 
 class Individual(aware.Individual,
+                 learn.Individual,
                  base.Individual):
     """Individual entity type."""
     pass
@@ -90,6 +93,7 @@ class Metabolism(
 
 
 class Culture (aware.Culture,
+               learn.Culture,
                base.Culture):
     """Culture process taxon"""
     pass
@@ -104,6 +108,7 @@ class Model(cc.Model,
             pop.Model,
             mig.Model,
             aware.Model,
+            learn.Model,
             vote.Model,
             base.Model):
     """Class representing the whole model."""

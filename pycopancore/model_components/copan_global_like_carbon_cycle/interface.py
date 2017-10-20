@@ -72,7 +72,7 @@ class Nature (object):
                  unit = D.years**-1
                         / (D.gigatonnes_carbon / D.square_kilometers)**0.5,
                  lower_bound=0,
-                 default=26.4)
+                 default=34) # 26.4 with infinity capacity
     photosynthesis_sensitivity_on_atmospheric_carbon = \
         Variable("sensitivity of photosynthesis productivity on atmospheric "
                  "carbon density", "",
@@ -83,7 +83,7 @@ class Nature (object):
     terrestrial_carbon_capacity_per_area = \
         Variable("per-area capacity of terrestrial carbon", "",
                  unit = D.gigatonnes_carbon / D.square_kilometers,
-                 lower_bound=0, default = 100 * 2500 / 1.5e8)  
+                 lower_bound=0, default = 10 * 2500 / 1.5e8)  
         # P? ca. 100 times current value. TODO: improve default
 
     basic_respiration_rate = Variable("basic respiration rate", "",

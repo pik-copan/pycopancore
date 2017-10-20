@@ -39,9 +39,9 @@ class Society (I.Society):
                 * (1/2 + 1/sp.pi * sp.atan(
                     sp.pi
                     * slope
-                    * (other_society.wellbeing 
-                       / this_society.wellbeing
-                       - offset)
+                    * sp.log(other_society.wellbeing 
+                             / this_society.wellbeing 
+                             / offset)
                     )
                   )
                 )
@@ -56,9 +56,9 @@ class Society (I.Society):
                 * (1/2 + 1/sp.pi * sp.atan(
                     sp.pi
                     * slope
-                    * (this_society.wellbeing 
-                       / other_society.wellbeing
-                       - offset)
+                    * sp.log(this_society.wellbeing 
+                             / other_society.wellbeing 
+                             / offset)
                     )
                   )
                 )

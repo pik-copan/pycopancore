@@ -58,8 +58,8 @@ class Metabolism (object):
 
     # exogenous variables / parameters:
     emigration_wellbeing_quotient_offset = Variable(
-        "emigration wellbeing difference offset",
-        "wellbeing difference at which emigration probability has its point "
+        "emigration wellbeing quotient offset",
+        "wellbeing quotient at which emigration probability has its point "
         "of inflection", 
         unit = D.unity,
         is_intensive=True,
