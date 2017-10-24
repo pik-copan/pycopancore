@@ -2,9 +2,12 @@
 
 from . import nature as NAT
 from . import metabolism as MET
+from . import square_kilometers
 
 # natural:
 
+land_area = NAT.land_area.copy()
+land_area.default = 1 * square_kilometers
 atmospheric_carbon = NAT.atmospheric_carbon.copy()
 surface_air_temperature = NAT.surface_air_temperature.copy()
 ocean_carbon = NAT.ocean_carbon.copy()
@@ -44,4 +47,4 @@ fossil_energy_density = MET.fossil_energy_density.copy()
 
 secondary_energy_flow = MET.secondary_energy_flow.copy()
 total_energy_intensity = MET.total_energy_intensity.copy()
-total_output_flow = MET.total_output_flow.copy()
+total_output_flow = MET.economic_output_flow.copy()

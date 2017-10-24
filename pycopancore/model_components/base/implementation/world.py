@@ -33,12 +33,6 @@ class World (I.World, abstract.World):
                  nature=None,
                  metabolism=None,
                  culture=None,
-                 population = 0 * D.people,
-                 terrestrial_carbon = 0 * D.gigatonnes_carbon,
-                 fossil_carbon = 0 * D.gigatonnes_carbon,
-                 atmospheric_carbon = 0 * D.gigatonnes_carbon,
-                 ocean_carbon = 0 * D.gigatonnes_carbon,
-                 surface_air_temperature = 0 * D.kelvins,
                  **kwargs
                  ):
         """Instantiate (typically the only) instance of World.
@@ -51,18 +45,6 @@ class World (I.World, abstract.World):
             Metabolism acting on this World.
         culture : obj
             Culture acting on this World.
-        population : quantity
-            Human population (default is 0).
-        terrestrial_carbon : quantity
-            Terrestrial carbon
-        fossil_carbon : quantity
-            Fossil carbon
-        atmospheric_carbon : quantity
-            Atmospheric carbon
-        ocean_carbon : quantity
-            Ocean carbon
-        surface_air_temperature : quantity
-            Surface air temperature
         **kwargs
             keyword arguments passed to super()
 
@@ -75,12 +57,6 @@ class World (I.World, abstract.World):
         self.metabolism = metabolism
         self._culture = None
         self.culture = culture
-        self.population = population
-        self.terrestrial_carbon = terrestrial_carbon
-        self.fossil_carbon = fossil_carbon
-        self.atmospheric_carbon = atmospheric_carbon
-        self.ocean_carbon = ocean_carbon
-        self.surface_air_temperature = surface_air_temperature
         self._societies = set()
         self._cells = set()
 
@@ -138,6 +114,20 @@ class World (I.World, abstract.World):
             c._worlds.add(self)
         self._culture = c
 
+    @property
+    def culture(self):
+        """Get the Culture acting in this World."""
+        return self._culture
+
+    @culture.setter
+    def culture(self, c):
+        """Set the World the Society is part of."""
+        if self._culture is not None:
+            self._culture._worlds.remove(self)
+        assert isinstance(c, I.Culture), "culture must be of taxon type Culture"
+        c._worlds.add(self)
+        self._culture = c
+
     @property  # read-only
     def societies(self):
         """Get the set of all Societies on this World."""
@@ -174,26 +164,12 @@ class World (I.World, abstract.World):
         # reset dependent caches:
         pass
 
-    # process-related methods:
-
-    def aggregate_cell_carbon_stocks(self, unused_t):
-        """Sum up all carbon stocks of Cells.
-
-        Parameters
-        ----------
-        unused_t
-            A parameter that is not used in the method but necessary for the
-            runner.
-
-        """
-        cs = self.cells
-        self.terrestrial_carbon = sum([c.terrestrial_carbon for c in cs])
-        self.fossil_carbon = sum([c.fossil_carbon for c in cs])
 
     processes = [
         # TODO: convert this into an Implicit equation once supported:
         Explicit("aggregate cell carbon stocks",
                  [I.World.terrestrial_carbon,
                   I.World.fossil_carbon],
-                 aggregate_cell_carbon_stocks)
+                 [I.World.sum.cells.terrestrial_carbon,
+                  I.World.sum.cells.fossil_carbon])
     ]

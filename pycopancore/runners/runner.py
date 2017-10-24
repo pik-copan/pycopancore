@@ -84,17 +84,24 @@ class Runner(_AbstractRunner):
         # TODO: apply them in an order that respects dependencies among
         # variables! for this, determine dependency structure in
         # modellogics.configure!
+        # TODO: use a numpy array to store values of explicitly calculated
+        # variables just as for ode variables, to avoid reading and writing
+        # entities' attributes all the time (profiling has shown that this
+        # takes a significant portion of the time).
         for p in self.explicit_processes:
+#            print(t,"Process",p)
             spec = p.specification  # either a list of symbolic expressions or a method
             if isinstance(spec, list):
                 # it's a list of symbolic expressions, one for each target in
                 # the same order as in "targets". hence we loop over those:
                 for i, target in enumerate(p.targets):
+#                    print("Process",p,"target",target)
                     # evaluate corresponding expression,
                     # giving a list of values, one for each instance,
                     # in an order determined by the target:
                     values = eval(spec[i],
                                   self._current_iteration)
+#                    print(values)
                     # note that values may have different length than
                     # p.owning_class.instances due to broadcasting effects
                     # if the target is a dotconstruct.
@@ -145,7 +152,7 @@ class Runner(_AbstractRunner):
             var.clear_derivatives()
 
         # let all processes calculate their derivative terms:
-        derivative_array = np.zeros(value_array.size)
+        summands_array = np.zeros(value_array.size)
         for p in self.ode_processes:
             spec = p.specification
             if isinstance(spec, list):
@@ -157,7 +164,7 @@ class Runner(_AbstractRunner):
                     if isinstance(target, Variable):
                         # add result directly to output array
                         # (rather than in instances' derivative attributes):
-                        derivative_array[target._from:target._to] += summands
+                        summands_array[target._from:target._to] += summands
                     else:
                         # summands may have different length than
                         # p.owning_class.instances due to broadcasting effects
@@ -181,9 +188,13 @@ class Runner(_AbstractRunner):
                 for inst in p.owning_class.instances:
                     spec(inst, t)
 
-        # add derivative terms from derivative attributes to output array
-        # at same positions:
+        # compose complete derivative array:
+        derivative_array = np.zeros(value_array.size)
         for target in self.model.ODE_targets:
+            if isinstance(target, Variable):
+                # add terms from summands_array to derivative attributes:
+                target.add_derivatives(summands_array[target._from:target._to])
+            # extract complete derivative terms from derivative attributes:
             derivative_array[target._from:target._to] += \
                 target.target_variable.get_derivatives(
                             instances=target.target_class.instances)
@@ -261,6 +272,11 @@ class Runner(_AbstractRunner):
         print("  Initial application of Explicit processes...")
         self.apply_explicits(t_0)
 
+        # Only now save initial state to output dict:
+        self.trajectory_dict['t'] = [t]
+        self.save_to_traj(self.model.process_targets)
+        # TODO: have save_to_traj() save t as well to have this cleaner.
+
         # TODO: discuss whether hooks make sense, then maybe:
         # TODO: add hooks to runner scheme
         # apply all pre-hooks
@@ -291,7 +307,7 @@ class Runner(_AbstractRunner):
                     # here, solout must terminate (see below).
                 elif eventtype == "time":
                     # in this case, rate_or_timefunc directly returns a time:
-                    next_time = rate_or_timefunc(t)
+                    next_time = rate_or_timefunc(inst, t)
                     assert next_time > t_0, "next time must be > t"
                 try:
                     next_discontinuities[next_time].append((event, inst))
@@ -365,6 +381,9 @@ class Runner(_AbstractRunner):
             # save solution to lists:
             times.append(sol_t)
             sol.append(sol_valuearray.copy())
+            # TODO: ALSO output values of non-dynamical variables, like those
+            # from Explicit processes, so that they don't need to be
+            # calculated again after ode finished!
             # TODO: this is the place to implement termination
             # due to events without a priori known occurrence
             # time! if solout returns 0 (or -1?), solver will
@@ -384,7 +403,7 @@ class Runner(_AbstractRunner):
             # If there are no discontinuities, the next_discontinuities
             # dict is empty, therefore try is necessary:
             try:
-                next_time = min(next_discontinuities.keys())  # TODO: speed-up by using different data type for next_discontinuities, something like OrderedDict?
+                next_time = min(t_1, min(next_discontinuities.keys()))  # TODO: speed-up by using different data type for next_discontinuities, something like OrderedDict?
             except ValueError:
                 next_time = t_1
 
@@ -484,12 +503,13 @@ class Runner(_AbstractRunner):
                 # ding on the solver method, we might not be sure that when
                 # solout is called, the previous call to apply_explicits was
                 # for the same time point and state, so we cannot simply use
-                # its result...
+                # its result... (is this really true?)
 
                 if len(self.explicit_processes) > 0:
                     print("    Applying Explicit processes to simulated "
                           "time points...")
                     for pos, t in enumerate(ts):
+                        self._current_iteration += 1  # marks current evaluation caches as outdated
                         # copy values from returned matrix to instances'
                         # attributes:
                         ode_values = ode_trajectory[pos, :]
@@ -506,7 +526,7 @@ class Runner(_AbstractRunner):
             # discontinuity (step 3.4 in runner scheme)
             # Delete the discontinuity from the dictionary and determine when
             # the next one happens:
-            if len(next_discontinuities) > 0:
+            if t < t_1 and len(next_discontinuities) > 0:
 
                 # set current model time to end of previous ODE integration:
                 t = next_time
@@ -539,7 +559,7 @@ class Runner(_AbstractRunner):
                                                               rate_or_timefunc)
                         elif eventtype == "time":
                             # ask event when it next happens:
-                            next_time = rate_or_timefunc(t)
+                            next_time = rate_or_timefunc(inst, t)
                             assert next_time > t, "next time must be > t"
                         # register it:
                         try:
@@ -655,9 +675,9 @@ class Runner(_AbstractRunner):
                     # This branch is active if the entity has not been
                     # activated before.
                     # create new list with Nones for time that has passed:
-                    time_passed = [None] * (tlen - 1)
-                    time_passed.append(values[i])
-                    self.trajectory_dict[var][inst] = time_passed
+                    value_strip = [None] * (tlen - 1)
+                    value_strip.append(values[i])
+                    self.trajectory_dict[var][inst] = value_strip
                     assert len(self.trajectory_dict[var][inst]) == tlen
 
             # check if there are any idle instances and fill their trajectory

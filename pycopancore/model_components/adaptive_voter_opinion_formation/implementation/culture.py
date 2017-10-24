@@ -128,7 +128,7 @@ class Culture (I.Culture):
         print("    analyzing the graph ... ", end="", flush=True)
         start = time()
 
-        self.__nodes = sortedlist(self.acquaintance_network.nodes())
+        self.__nodes = sortedlist(self.acquaintance_network.nodes())  # FIXME: why do you assume entities allow sorting?
         self.__nodes_by_opinion = {opinion: sortedlist()
                                    for opinion in self.possible_opinions}
         for node in self.acquaintance_network:

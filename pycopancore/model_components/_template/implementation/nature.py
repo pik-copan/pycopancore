@@ -20,6 +20,7 @@ class Nature (I.Nature):
     """Nature process taxon mixin implementation class."""
 
     # standard methods:
+    # TODO: remove those that you don't use
 
     def __init__(self,
                  # *,  # TODO: uncomment when adding named args behind here
@@ -27,13 +28,6 @@ class Nature (I.Nature):
         """Initialize the unique instance of Nature."""
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
-
-        # At last, check for validity of all variables that have been
-        # initialized and given a value:
-
-        # Following method is defined in abstract_process_taxon_mixin which is
-        # inherited only by mixing in the model:
-        self.assert_valid()
         pass
 
     # process-related methods:

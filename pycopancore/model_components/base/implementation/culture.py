@@ -44,12 +44,15 @@ class Culture (I.Culture, abstract.Culture):
         self.acquaintance_network = acquaintance_network
         self._worlds = set()
 
+        self._worlds = set()
+
         # make sure all variable values are valid:
         self.assert_valid()
 
+    # getters and setters:
     @property  # read-only
     def worlds(self):
-        """Get the set of Worlds on this Nature."""
+        """Get the set of all Worlds this Culture acts in."""
         return self._worlds
 
     # no process-related methods

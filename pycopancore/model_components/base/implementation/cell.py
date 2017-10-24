@@ -30,9 +30,6 @@ class Cell (I.Cell, abstract.Cell):
                  *,
                  world=None,
                  society=None,
-                 location=None,
-                 land_area = 1 * D.square_kilometers,
-                 geometry=None,
                  **kwargs
                  ):
         """Initialize an instance of Cell.
@@ -43,12 +40,6 @@ class Cell (I.Cell, abstract.Cell):
             World the Cell belongs to (the default is None)
         society : obj
             Society the Cell belongs to (the default is None)
-        location : obj
-            Location of Cell (the default is None)
-        land_area : quantity
-            Area of Cell, (the default is 1 * km^2)
-        geometry : obj
-            Geometry of Cell (the default is None)
         **kwargs
             keyword arguments passed to super()
 
@@ -58,13 +49,9 @@ class Cell (I.Cell, abstract.Cell):
         # init and set variables implemented via properties
         self._world = None
         self._society = None
-        self.world = world
+        if world:
+            self.world = world
         self.society = society  # this line must occur after setting world!
-
-        # set other variables:
-        self.location = location
-        self.land_area = land_area
-        self.geometry = geometry
 
         # make sure all variable values are valid:
         self.assert_valid()
@@ -90,9 +77,8 @@ class Cell (I.Cell, abstract.Cell):
         if self._world is not None:
             # first deregister from previous world's list of cells:
             self._world.cells.remove(self)
-        if w is not None:
-            assert isinstance(w, I.World), "world must be of entity type World"
-            w._cells.add(self)
+        assert isinstance(w, I.World), "world must be of entity type World"
+        w._cells.add(self)
         self._world = w
 
     @property

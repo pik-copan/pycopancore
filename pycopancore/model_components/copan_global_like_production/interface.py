@@ -52,7 +52,7 @@ class Society (object):
     renewable_energy_input_flow = S.renewable_energy_input_flow
     secondary_energy_flow = S.secondary_energy_flow
     carbon_emission_flow = S.carbon_emission_flow
-    total_output_flow = S.total_output_flow
+    economic_output_flow = S.economic_output_flow
 
     # exogenous variables / parameters:
 
@@ -60,18 +60,16 @@ class Society (object):
     physical_capital = S.physical_capital
     renewable_energy_knowledge = S.renewable_energy_knowledge
 
-    protected_terrestrial_carbon_share = \
-        Variable("protected share of terrestrial carbon",
-                 """what share of the current terrestrial carbon will be treated
-                 as protected and thus not harvested at each point in time""",
-                 unit=D.unity, lower_bound=0, upper_bound=1,
-                 default=0)  # may be increased by cultural components
-    protected_fossil_carbon_share = \
-        Variable("protected share of fossil carbon",
-                 """what share of the current fossil carbon will be treated
-                 as protected and thus not extracted at each point in time""",
-                 unit=D.unity, lower_bound=0, upper_bound=1,
-                 default=0)  # may be increased by cultural components
+    protected_terrestrial_carbon = S.protected_terrestrial_carbon
+    protected_fossil_carbon = S.protected_fossil_carbon
+    protected_terrestrial_carbon_share = S.protected_terrestrial_carbon_share
+    protected_fossil_carbon_share = S.protected_fossil_carbon_share
+
+    has_renewable_subsidy = S.has_renewable_subsidy
+    has_emissions_tax = S.has_emissions_tax
+    has_fossil_ban = S.has_fossil_ban
+    emissions_tax_level = S.emissions_tax_level
+    renewable_subsidy_level = S.renewable_subsidy_level
 
 
 class Cell (object):
@@ -88,25 +86,25 @@ class Cell (object):
         Variable("biomass relative productivity",
                  "used to determine energy input",
                  unit=D.unity,
-                 lower_bound=0)
+                 lower_bound=0, default=1)
 
     fossil_relative_productivity = \
         Variable("fossil relative productivity",
                  "used to determine energy input",
                  unit=D.unity,
-                 lower_bound=0)
+                 lower_bound=0, default=1)
 
     renewable_relative_productivity = \
         Variable("renewable relative productivity",
                  "used to determine energy input",
                  unit=D.unity,
-                 lower_bound=0)
+                 lower_bound=0, default=1)
 
     total_relative_productivity = \
         Variable("total relative productivity",
                  "used as weights in allocation of labour and capital",
                  unit=D.unity,
-                 lower_bound=0)
+                 lower_bound=0, default=3)
 
     biomass_harvest_flow = C.biomass_harvest_flow
     fossil_extraction_flow = C.fossil_extraction_flow
@@ -114,20 +112,22 @@ class Cell (object):
     # exogenous variables / parameters:
 
     biomass_sector_productivity = \
-        Variable("biomass sector productivity", "",
-                 unit=(D.gigajoules / D.years)**5
-                 / (D.gigatonnes_carbon * D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True)
+        Variable("biomass sector productivity", 
+                 "(Parameter aB in Nitzbon et al. 2017)",
+                 unit = (D.gigajoules / D.years)**5
+                        / (D.gigatonnes_carbon * D.dollars * D.people)**2,
+                 lower_bound=0, is_intensive=True, default=3e5)
     fossil_sector_productivity = \
-        Variable("fossil sector productivity", "",
-                 unit=(D.gigajoules / D.years)**5
-                 / (D.gigatonnes_carbon * D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True)
+        Variable("fossil sector productivity",
+                 "(Parameter aF in Nitzbon et al. 2017)",
+                 unit = (D.gigajoules / D.years)**5
+                        / (D.gigatonnes_carbon * D.dollars * D.people)**2,
+                 lower_bound=0, is_intensive=True, default=5e6)
     renewable_sector_productivity = \
         Variable("renewable sector productivity", "",
-                 unit=D.gigajoules**3 / D.years**5
-                 / (D.dollars * D.people)**2,
-                 lower_bound=0, is_intensive=True)
+                 unit = D.gigajoules**3 / D.years**5
+                        / (D.dollars * D.people)**2,
+                 lower_bound=0, is_intensive=True, default=7e-18)
     total_energy_intensity = C.total_energy_intensity
 
 

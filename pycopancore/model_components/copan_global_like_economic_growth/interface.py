@@ -8,8 +8,8 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-# from ... import master_data_model as D
-from ...data_model.master_data_model import S
+from ... import master_data_model as D
+from ...data_model.master_data_model import MET, S, W
 
 
 class Model (object):
@@ -31,7 +31,20 @@ class Model (object):
     # - implementation.Model lists these entity-types and process taxons
 
 
+class Metabolism (object):
+    """Interface for Metabolism process taxon mixin."""
+
+    renewable_energy_knowledge_spillover_fraction = \
+        MET.renewable_energy_knowledge_spillover_fraction
+
+
 # entity types:
+
+
+class World (object):
+    """Interface for World entity type mixin."""
+
+    renewable_energy_input_flow = W.renewable_energy_input_flow
 
 
 class Society (object):
@@ -40,7 +53,10 @@ class Society (object):
     # endogenous variables:
 
     physical_capital = S.physical_capital
+    physical_capital.default = 1 * D.dollars
+    
     renewable_energy_knowledge = S.renewable_energy_knowledge
+    renewable_energy_knowledge.default = 1 * D.gigajoules
 
     # output-only variables:
 
@@ -49,10 +65,11 @@ class Society (object):
 
     # exogenous variables / parameters:
 
-    total_output_flow = S.total_output_flow
+    economic_output_flow = S.economic_output_flow
     renewable_energy_input_flow = S.renewable_energy_input_flow
 
     savings_rate = S.savings_rate
     physical_capital_depreciation_rate = S.physical_capital_depreciation_rate
     renewable_energy_knowledge_depreciation_rate = \
         S.renewable_energy_knowledge_depreciation_rate
+    
