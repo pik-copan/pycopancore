@@ -108,6 +108,9 @@ class Society (object):
                                  "Total_income = base_inc ** parameter, "
                                  "default from bettencourt paper",
                                  default=1.12)
+    migration_cost = Variable("Migration Cost",
+                              "Cost to migrate to this society",
+                              default=1000)
 
     # exogenous variables / parameters:
 
