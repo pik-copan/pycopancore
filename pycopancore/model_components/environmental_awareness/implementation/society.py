@@ -24,8 +24,13 @@ class Society (I.Society):
 
     processes = [
         Explicit("biomass protection due to awareness",
-                 [I.Society.protected_terrestrial_carbon_share],
-                 [B.Society.culture.max_protected_terrestrial_carbon_share
+#                 [I.Society.protected_terrestrial_carbon_share],
+#                 [B.Society.culture.max_protected_terrestrial_carbon_share
+#                  * B.Society.sum(
+#                        ITE(B.Society.individuals.is_environmentally_friendly,
+#                            B.Society.individuals.population_share, 0.0))]
+                 [I.Society.protected_terrestrial_carbon],
+                 [I.Society.max_protected_terrestrial_carbon
                   * B.Society.sum(
                         ITE(B.Society.individuals.is_environmentally_friendly,
                             B.Society.individuals.population_share, 0.0))]

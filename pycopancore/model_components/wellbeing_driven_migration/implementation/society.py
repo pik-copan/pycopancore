@@ -70,6 +70,7 @@ class Society (I.Society):
             [I.Society.immigration 
              - I.Society.emigration,
              I.Society.immigration 
+             # assuming an equal emigration probability among migrants:
              - I.Society.emigration * I.Society.migrant_population 
                                     / I.Society.population])
 

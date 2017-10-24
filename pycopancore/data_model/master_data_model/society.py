@@ -41,6 +41,8 @@ wellbeing = MET.wellbeing.copy()
 biomass_energy_density = MET.biomass_energy_density.copy()
 fossil_energy_density = MET.fossil_energy_density.copy()
 
+protected_terrestrial_carbon = MET.protected_terrestrial_carbon.copy()
+protected_fossil_carbon = MET.protected_fossil_carbon.copy()
 protected_terrestrial_carbon_share = MET.protected_terrestrial_carbon_share.copy()
 protected_fossil_carbon_share = MET.protected_fossil_carbon_share.copy()
 

@@ -34,13 +34,14 @@ metabolism = M.Metabolism(
         # .1 w protection: success but desertification
         # 0 w/o protection: very slow success but desertification
         # ?: oscillations
-    basic_emigration_probability_rate = 3e-13, # 3e-13 leads to ca. 5mio. (real)
+    basic_emigration_probability_rate = 5e-13, # 3e-13 leads to ca. 5mio. (real)
     )
 culture = M.Culture(
     awareness_lower_carbon_density=1e-4, #1e100, # 1e-6?
     awareness_upper_carbon_density=2e-4, #1e100, # 2e-6?
-    awareness_update_rate=1, #1e-10, #1e-10, #12,
-    max_protected_terrestrial_carbon_share=0.75,
+    awareness_update_rate=1e-10, #1:SUCCESS, #1e-10
+    environmental_friendliness_learning_rate=1e-10, #1:SUCCESS
+    max_protected_terrestrial_carbon_share=0,
     )
 
 # generate entities and plug them together at random:
@@ -101,6 +102,9 @@ r = random.uniform(size=nsocs)
 P0 = 6e9 * D.people * r / sum(r)  # 500e9 is middle ages, 6e9 would be yr 2000
 M.Society.population.set_values(societies, P0)
 M.Society.migrant_population.set_values(societies, P0 * 250e6/6e9)
+for s in societies:
+    s.max_protected_terrestrial_carbon = 0.90 * sum(c.terrestrial_carbon for c in s.cells)
+
 # print(M.Society.population.get_values(societies))
    
 r = random.uniform(size=nsocs)
@@ -133,7 +137,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_0=2000, t_1=2000+200, dt=1)
+traj = runner.run(t_0=2000, t_1=2000+600, dt=1)
 
 
 for v in nature.variables: print(v,v.get_value(nature))
@@ -155,7 +159,7 @@ lws = 1
 
 subplot(511)  # cultural
 for i, s in enumerate(societies):
-    plot(t[3:], traj[M.Society.protected_terrestrial_carbon_share][s][3:],color="green",lw=lws, label=None if i else "share of protected biomass")
+#    plot(t[3:], traj[M.Society.protected_terrestrial_carbon_share][s][3:],color="green",lw=lws, label=None if i else "share of protected biomass")
     plot(t[3:], traj[M.Society.has_renewable_subsidy][s][3:]*1,color="darkorange",lw=lws, label=None if i else "renewable subsidy in place?")
     plot(t[3:], traj[M.Society.has_emissions_tax][s][3:]*1,color="blue",lw=lws, label=None if i else "emissions tax in place?")
     plot(t[3:], traj[M.Society.has_fossil_ban][s][3:]*1,color="gray",lw=lws, label=None if i else "fossil ban in place?")
@@ -199,10 +203,12 @@ plot(t[3:], traj[M.World.atmospheric_carbon][worlds[0]][3:], color="cyan", lw=3,
 plot(t[3:], traj[M.World.upper_ocean_carbon][worlds[0]][3:], color="blue", lw=3, label="upper ocean carbon")
 plot(t[3:], traj[M.World.terrestrial_carbon][worlds[0]][3:], color="green", lw=3, label="terrestrial carbon")
 plot(t[3:], traj[M.World.fossil_carbon][worlds[0]][3:], color="gray", lw=3, label="fossil carbon")
+for i, s in enumerate(societies):
+    plot(t[3:], traj[M.Society.protected_terrestrial_carbon][s][3:],color="green",lw=lws, label=None if i else "protected biomass")
 gca().set_ylabel('gigatonnes carbon')
 legend()
 
-print("\nyr 200 values (real):")
+print("\nyr 2000 values (real):")
 print("emigration (5e6):",sum(traj[M.Society.emigration][s][5] for s in societies)) # should be ca. 5e6
 print("photo (123):",sum(traj[M.Cell.photosynthesis_carbon_flow][c][5] for c in cells))
 print("resp (118):",sum(traj[M.Cell.terrestrial_respiration_carbon_flow][c][5] for c in cells))
@@ -217,6 +223,7 @@ print("B (3), F (11), R(100):",
 #print((Bglobal * metabolism.biomass_energy_density * D.gigajoules/D.gigatonnes_carbon).tostr(unit=D.gigawatts),
 #      (Fglobal * metabolism.fossil_energy_density * D.gigajoules/D.gigatonnes_carbon).tostr(unit=D.gigawatts),
 #      Rglobal.tostr(unit=D.gigawatts), "(100)") # last should be ca. 100
+print("life exp. at end:",1/np.mean([traj[M.Society.mortality][s][-1] for s in societies]))
 print()
 
 show()

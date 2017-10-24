@@ -24,6 +24,10 @@ from sympy import ITE
 class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
 
+    protected_terrestrial_carbon_share = (
+        B.Cell.society.protected_terrestrial_carbon
+        / B.Cell.society.sum.cells.terrestrial_carbon)
+
     processes = [
 
         Explicit("sectoral relative productivities",
@@ -35,14 +39,14 @@ class Cell (I.Cell):
                   # TODO: verify the following:
                   * ITE(B.Cell.society.has_emissions_tax,
                         (I.Cell.terrestrial_carbon
-                         * (1 - B.Cell.society.protected_terrestrial_carbon_share)
+                         * (1 - protected_terrestrial_carbon_share)
                          )**2 * (
                             1 
                             - B.Cell.society.emissions_tax_level 
                               * I.Cell.total_energy_intensity
                               / B.Cell.metabolism.biomass_energy_density),
                         (I.Cell.terrestrial_carbon
-                         * (1 - B.Cell.society.protected_terrestrial_carbon_share)
+                         * (1 - protected_terrestrial_carbon_share)
                          )**2),
                   ITE(B.Cell.society.has_fossil_ban, 0,
                       I.Cell.fossil_sector_productivity

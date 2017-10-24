@@ -60,6 +60,8 @@ class Society (object):
     physical_capital = S.physical_capital
     renewable_energy_knowledge = S.renewable_energy_knowledge
 
+    protected_terrestrial_carbon = S.protected_terrestrial_carbon
+    protected_fossil_carbon = S.protected_fossil_carbon
     protected_terrestrial_carbon_share = S.protected_terrestrial_carbon_share
     protected_fossil_carbon_share = S.protected_fossil_carbon_share
 

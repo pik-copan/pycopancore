@@ -36,9 +36,16 @@ class Society (object):
     """Interface for Individual entity type mixin."""
 
     # endogenous variables:
+    protected_terrestrial_carbon = S.protected_terrestrial_carbon
     protected_terrestrial_carbon_share = S.protected_terrestrial_carbon_share
 
     # exogenous variables / parameters:
+    max_protected_terrestrial_carbon = \
+        Variable("maximal protected stock of terrestrial carbon",
+                 """what stock of the current terrestrial carbon would be treated
+                 as protected if population is environmentally friendly""",
+                 unit=D.gigatonnes_carbon, lower_bound=0,
+                 default=0)
 
 
 class Individual (object):

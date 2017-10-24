@@ -179,6 +179,18 @@ fossil_energy_density = Variable("fossil energy density",
 
 # protected shares:
 
+protected_terrestrial_carbon = \
+    Variable("protected stock of terrestrial carbon",
+             """what stock of the current terrestrial carbon will be treated
+             as protected and thus not harvested at each point in time""",
+             unit=gigatonnes_carbon, lower_bound=0,
+             default=0)  # may be increased by cultural components
+protected_fossil_carbon = \
+    Variable("protected stock of fossil carbon",
+             """what stock of the current fossil carbon will be treated
+             as protected and thus not extracted at each point in time""",
+             unit=gigatonnes_carbon, lower_bound=0,
+             default=0)  # may be increased by cultural components
 protected_terrestrial_carbon_share = \
     Variable("protected share of terrestrial carbon",
              """what share of the current terrestrial carbon will be treated
