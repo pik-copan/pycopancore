@@ -37,6 +37,8 @@ class Individual (I.Individual):
                  second_degree_rewire_prob=0.3,
                  outspokenness=None,
                  random_rewire=0.05,
+                 farm_size=None,
+                 gross_income=None,
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
@@ -47,62 +49,43 @@ class Individual (I.Individual):
         self.second_degree_rewire_prob = second_degree_rewire_prob
         self.outspokenness = outspokenness
         self.random_rewire = random_rewire
+        self.gross_income = gross_income
+        self.farm_size = farm_size
 
         self._subjective_income_rank = None
-        self._farm_size = None
-        self._gross_income = None
         self.liquidity = liquidity
         self.nutrition = nutrition
-
-        # At last, check for validity of all variables that have been
-        # initialized and given a value:
-
-        # Following method is defined in abstract_entity_mixin which is
-        # inherited only by mixing in the model:
-        self.assert_valid()
 
         if self.profession == 'farmer':
             assert self.cell.characteristic == 'farmland'
         if self.profession == 'townsman':
             assert self.cell.characteristic == 'city'
 
-    @property
-    def farm_size(self):
+    def calc_farm_size(self):
         """Get the farm size."""
         # Check, if not already been calculated:
-        if self._farm_size is None:
+        if self.farm_size is None:
             # If townsman, individual has no farm:
             if self.society.municipality_like is True:
-                self._farm_size = 0
+                self.farm_size = 0
             # If farmer, distribute farm size:
             if self.society.municipality_like is False:
                 # Let society distribute farm size
-                self._farm_size = self.society.gross_income_or_farmsize
-        return self._farm_size
+                self.farm_size = self.society.calc_gross_income_or_farmsize()
+        # return self.farm_size
 
-    @farm_size.setter
-    def farm_size(self, value):
-        """Set farm size."""
-        self._farm_size = value
-
-    @property
-    def gross_income(self):
+    def calc_gross_income(self):
         """Get the gross income."""
         # Check if not already been calculated:
-        if self._gross_income is None:
+        if self.gross_income is None:
             # Check if farmer or townsman:
             if self.society.municipality_like is True:
                 # Let society distribute income:
-                self._gross_income = self.society.gross_income_or_farmsize
+                self.gross_income = self.society.calc_gross_income_or_farmsize()
             # If not townsman, income = 0
             if self.society.municipality_like is False:
-                self._gross_income = 0
-        return self._gross_income
-
-    @gross_income.setter
-    def gross_income(self, value):
-        """Set gross income"""
-        self._gross_income = value
+                self.gross_income = 0
+        # return self.gross_income
 
     # process-related methods:
     def social_update_timer(t):
@@ -257,9 +240,10 @@ class Individual (I.Individual):
         else:
             raise TypeError('Neither Municipality nor County!')
         # Set Values to None, so they can be recalculated:
-        self._subjective_income_rank = None
-        self._farm_size = None
-        self._gross_income = None
+        self.farm_size = None
+        self.gross_income = None
+        self.calc_gross_income()
+        self.calc_farm_size()
 
     def calculate_harvest(self, unused_t):
         """Calculate the harvest of an Individual."""
@@ -281,8 +265,10 @@ class Individual (I.Individual):
 
     processes = [
         Event("social update",
-              [B.Individual.society  # ,
+              [B.Individual.society,
                # B.Individual.culture.acquaintance_network TOO BIG TO SAVE!
+               I.Individual.farm_size,
+               I.Individual.gross_income
                ],
               ["time", social_update_timer, social_update]),
         Explicit("Calculate harvest",

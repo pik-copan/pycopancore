@@ -41,7 +41,7 @@ metabolism = M.Metabolism(market_frequency=1)
 
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism,
-                water_price=1, max_utility=1)
+                water_price=1)
 # Instantiate Societies:
 municipalities = [M.Society(world=world,
                             municipality_like=True,
@@ -88,7 +88,7 @@ for f in range(nf):
     liq = stats.lognorm.rvs(scale=300, s=0.34, loc=0)
     farmers.append(M.Individual(cell=farmland,
                                 profession='farmer',
-                                outspokensess=.1,
+                                outspokenness=.1,
                                 liquidity=liq,
                                 nutrition=1000))
 # Instantiate townsmen:
@@ -100,7 +100,7 @@ for t in range(nt):
     liq = stats.lognorm.rvs(scale=700, s=0.34, loc=0)
     townsmen.append(M.Individual(cell=city,
                                  profession='townsman',
-                                 outspokensess=.1,
+                                 outspokenness=.1,
                                  liquidity=liq,
                                  nutrition=100))
 
@@ -132,12 +132,15 @@ for t in range(nt):
 
 start = time()
 # Calculate societies variables before run:
+print('calculating society attributes before run:')
 for soc in M.Society.instances:
     soc.calc_population(0)
     soc.calculate_mean_income_or_farmsize(0)
     soc.calculate_average_liquidity(0)
 # Calculate other stuff:
 for ind in M.Individual.instances:
+    ind.calc_farm_size()
+    ind.calc_gross_income()
     ind.calculate_harvest(0)
     ind.calculate_utility(0)
 for soc in M.Society.instances:
@@ -145,8 +148,9 @@ for soc in M.Society.instances:
     soc.calculate_gini(0)
 # Run market clearing once:
 metabolism.do_market_clearing(0)
-culture.calculate_modularity(0)
-culture.calculate_transitivity(0)
+# In case of a erdos renyi network:
+# culture.calculate_modularity(0)
+# culture.calculate_transitivity(0)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 termination_conditions = [[M.Culture.check_for_split, culture],

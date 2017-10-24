@@ -30,7 +30,7 @@ class Society (I.Society):
     def __init__(self,
                  *,
                  municipality_like=False,
-                 base_mean_income=None,
+                 base_mean_income=1000,
                  pdf_sigma=0.34,  # 0.34 taken from Clementi, Gallegati 2005 for income distribution
                  scaling_parameter=1.12,
                  **kwargs):
@@ -46,15 +46,7 @@ class Society (I.Society):
         self.liquidity_sigma = None
         self.liquidity_loc = None
 
-        # At last, check for validity of all variables that have been
-        # initialized and given a value:
-
-        # Following method is defined in abstract_entity_mixin which is
-        # inherited only by mixing in the model:
-        self.assert_valid()
-
-    @property
-    def gross_income_or_farmsize(self):
+    def calc_gross_income_or_farmsize(self):
         "Get random income or farm size distributed log-normal."
 
         # Use log-normal

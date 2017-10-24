@@ -657,6 +657,7 @@ class Runner(_AbstractRunner):
             instances = target.target_class.instances
             # Check for deactivated instances. The following check is
             # necessary, since Process Taxa cannot be inactive:
+            print(target.target_class)
             if issubclass(target.target_class,
                           _AbstractEntityMixin):
                 idle_instances = target.target_class.idle_entities
