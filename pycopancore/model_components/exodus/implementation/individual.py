@@ -157,8 +157,13 @@ class Individual (I.Individual):
         # Tanh function:
         tanh = math.tanh(delta_utility)
         if random.random() <= tanh:
-            # Migrate
-            return True
+            # Migrate if enough liquidity
+            if self.liquidity > neighbour.society.migration_cost:
+                self.liquidity -= neighbour.society.migration_cost
+                return True
+            else:
+                # Not enough money to migrate
+                return False
         else:
             # Rewire
             return False
@@ -268,7 +273,8 @@ class Individual (I.Individual):
               [B.Individual.society,
                # B.Individual.culture.acquaintance_network TOO BIG TO SAVE!
                I.Individual.farm_size,
-               I.Individual.gross_income
+               I.Individual.gross_income,
+               I.Individual.liquidity
                ],
               ["time", social_update_timer, social_update]),
         Explicit("Calculate harvest",

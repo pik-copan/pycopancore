@@ -46,12 +46,14 @@ world = M.World(culture=culture, metabolism=metabolism,
 municipalities = [M.Society(world=world,
                             municipality_like=True,
                             base_mean_income=1000,
-                            scaling_parameter=1.12)
+                            scaling_parameter=1.12,
+                            migration_cost=100)
                   for m in range(nm)
                   ]
 
 counties = [M.Society(world=world,
-                      municipality_like=False)
+                      municipality_like=False,
+                      migration_cost=100)
             for c in range(nc)
             ]
 # Instantiate farmland cells:

@@ -33,6 +33,7 @@ class Society (I.Society):
                  base_mean_income=1000,
                  pdf_sigma=0.34,  # 0.34 taken from Clementi, Gallegati 2005 for income distribution
                  scaling_parameter=1.12,
+                 migration_cost=1000,
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
@@ -41,6 +42,7 @@ class Society (I.Society):
         self.base_mean_income = base_mean_income
         self.pdf_sigma = pdf_sigma
         self.scaling_parameter = scaling_parameter
+        self.migration_cost = migration_cost
 
         self.liquidity_median = None
         self.liquidity_sigma = None
