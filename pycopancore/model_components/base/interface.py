@@ -117,6 +117,8 @@ class World (object, metaclass=_MixinType):
 
 # specified only now to avoid recursion errors:
 Culture.worlds.type = World
+Metabolism.worlds.type = World
+Nature.worlds.type = World
 
 
 class Society (object, metaclass=_MixinType):
@@ -192,7 +194,7 @@ class Cell (object, metaclass=_MixinType):
                                 type=Society, allow_none=True)
 
     # other variables:
-    location = Variable("location", "pair of coordinates?", 
+    location = Variable("location", "pair of coordinates?",
                         allow_none=True, default=None)  # TODO: specify data type
     land_area = C.land_area
 
