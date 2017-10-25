@@ -163,6 +163,10 @@ class _DotConstruct(sp.AtomicExpr):
     precedence = sp.printing.precedence.PRECEDENCE["Atom"]
     _iterable = False
 
+    # needed to make sphinx happy:
+    __qualname__ = "pycopancore.private._expressions._DotConstruct"
+
+
     # inheritance from Symbol is a little tricky since Symbol has a custom
     # __new__ method that returns the same object everytime the name is the
     # same! We break this behaviour by using random Symbol.names so that we
@@ -176,13 +180,13 @@ class _DotConstruct(sp.AtomicExpr):
                 aggregation=None,
                 argument=None,
                 **assumptions):
-        uid = repr(start) 
+        uid = str(start) # repr
         if len(attribute_sequence) > 0:
             uid += "." + ".".join(attribute_sequence)
         if aggregation:
             uid += "." + aggregation
             if argument:
-                uid += "(" + repr(argument) + ")"
+                uid += "(" + str(argument) + ")"  # repr
 #        print("_DotConstruct.__new__ with uid", uid)
         return super().__new__(cls, uid, **assumptions)
 
@@ -219,6 +223,8 @@ class _DotConstruct(sp.AtomicExpr):
         """accessing an attribute of a _DotConstruct basically
         returns a new _DotConstruct that is extended by the name of this
         attribute, giving special treatment to aggregations"""
+        if name == "__qualname__":  # needed to make sphinx happy
+            return "DUMMY"  # FIXME!
 #        print("_DotConstruct.__getattr__(", self, ",", name, ")")
         if self._argument is not None:  # we are an aggregation with argument
             # append name to argument:
@@ -275,11 +281,19 @@ class _DotConstruct(sp.AtomicExpr):
         return r
 
     def __str__(self):
-        return self.__repr__()
+#        return self.__repr__()
+        r = str(self._start)
+        if len(self._attribute_sequence) > 0:
+            r += "." + ".".join(self._attribute_sequence)
+        if self._aggregation:
+            r += "." + self._aggregation
+            if self._argument:
+                r += "(" + str(self._argument) + ")"
+        return r
 
     # needed to make sympy happy: (may need further later)
     def _sympystr(self, *args, **kwargs):
-        return self.__repr__()
+        return self.__str__()
 
     def match(self, *args, **kwargs):
         return None

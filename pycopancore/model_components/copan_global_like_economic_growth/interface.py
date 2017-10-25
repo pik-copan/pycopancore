@@ -58,6 +58,8 @@ class Society (object):
     renewable_energy_knowledge = S.renewable_energy_knowledge
     renewable_energy_knowledge.default = 1 * D.gigajoules
 
+    physical_capital_depreciation_rate = S.physical_capital_depreciation_rate
+
     # output-only variables:
 
     investment_flow = S.investment_flow
@@ -69,7 +71,12 @@ class Society (object):
     renewable_energy_input_flow = S.renewable_energy_input_flow
 
     savings_rate = S.savings_rate
-    physical_capital_depreciation_rate = S.physical_capital_depreciation_rate
+    basic_physical_capital_depreciation_rate = \
+        S.basic_physical_capital_depreciation_rate
+    physical_capital_depreciation_rate_temperature_sensitivity = \
+        S.physical_capital_depreciation_rate_temperature_sensitivity
+    physical_capital_depreciation_rate_reference_temperature = \
+        S.physical_capital_depreciation_rate_reference_temperature
     renewable_energy_knowledge_depreciation_rate = \
         S.renewable_energy_knowledge_depreciation_rate
     

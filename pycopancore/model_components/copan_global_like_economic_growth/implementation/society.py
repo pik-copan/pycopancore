@@ -24,6 +24,14 @@ class Society (I.Society):
                  [I.Society.savings_rate * I.Society.economic_output_flow,
                   (1 - I.Society.savings_rate) * I.Society.economic_output_flow]
                  ),
+                 
+        Explicit("capital depreciation rate",
+                 [I.Society.physical_capital_depreciation_rate],
+                 [I.Society.basic_physical_capital_depreciation_rate
+                  + I.Society.physical_capital_depreciation_rate_temperature_sensitivity
+                  * (B.Society.world.surface_air_temperature
+                     - I.Society.physical_capital_depreciation_rate_reference_temperature)]
+                 ),
 
         ODE("growth, spillovers, depreciation",
             [I.Society.physical_capital, 

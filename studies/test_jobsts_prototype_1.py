@@ -9,9 +9,6 @@ from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
-from pycopancore.data_model.master_data_model.culture import is_environmentally_friendly
-from pycopancore.data_model.master_data_model.society import has_renewable_subsidy,\
-    has_emissions_tax, has_fossil_ban
 
 # first thing: set seed so that each execution must return same thing:
 random.seed(10) # 10
@@ -34,7 +31,7 @@ metabolism = M.Metabolism(
         # .1 w protection: success but desertification
         # 0 w/o protection: very slow success but desertification
         # ?: oscillations
-    basic_emigration_probability_rate = 5e-13, # 3e-13 leads to ca. 5mio. (real)
+#    basic_emigration_probability_rate = 5e-13, # 3e-13 leads to ca. 5mio. (real)
     )
 culture = M.Culture(
     awareness_lower_carbon_density=1e-4, #1e100, # 1e-6?
@@ -137,7 +134,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_0=2000, t_1=2000+600, dt=1)
+traj = runner.run(t_0=2000, t_1=2000+1, dt=1)
 
 
 for v in nature.variables: print(v,v.get_value(nature))
@@ -148,7 +145,7 @@ for v in c.variables: print(v,v.get_value(c))
 
 
 from pickle import dump
-dump(traj,open("/tmp/test.pickle","wb"))
+#dump(traj,open("/tmp/test.pickle","wb"))
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
@@ -224,6 +221,11 @@ print("B (3), F (11), R(100):",
 #      (Fglobal * metabolism.fossil_energy_density * D.gigajoules/D.gigatonnes_carbon).tostr(unit=D.gigawatts),
 #      Rglobal.tostr(unit=D.gigawatts), "(100)") # last should be ca. 100
 print("life exp. at end:",1/np.mean([traj[M.Society.mortality][s][-1] for s in societies]))
+print("cap. deprec. at begin (0.1?):",np.mean([traj[M.Society.physical_capital_depreciation_rate][s][5] for s in societies]))
+print("cap. deprec. at end (0.1?):",np.mean([traj[M.Society.physical_capital_depreciation_rate][s][-1] for s in societies]))
+print("deaths at begin (>250000?):",sum(traj[M.Society.deaths][s][5] for s in societies))
+print("deaths at end (>250000?):",sum(traj[M.Society.deaths][s][-1] for s in societies))
+print("temp. at end:",traj[M.World.surface_air_temperature][worlds[0]][-1])
 print()
 
 show()
