@@ -88,7 +88,7 @@ class Individual (I.Individual):
         # return self.gross_income
 
     # process-related methods:
-    def social_update_timer(t):
+    def social_update_timer(self, t):
         """Calculate when a social update takes place"""
         return t + np.random.exponential(1)
     # TODO: this should be dependent on self.outspokenness. How do I do this?
