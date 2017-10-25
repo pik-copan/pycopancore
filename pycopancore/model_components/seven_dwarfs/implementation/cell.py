@@ -37,7 +37,7 @@ class Cell (I.Cell):
 
     # process-related methods:
 
-    def snow_white_arrival(t):
+    def snow_white_arrival(self, t):
         """Calculate snow white's arrival."""
         return t + np.random.exponential(14.)
 

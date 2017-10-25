@@ -15,7 +15,7 @@ taxa.
 import random
 from sympy import Symbol
 
-from . import DimensionalQuantity
+from . import DimensionalQuantity, Unit
 from .. import private
 
 
@@ -41,7 +41,9 @@ class Variable(Symbol):
     """level of measurement: "ratio" (default), "interval", "ordinal",
     or "nominal" (see https://en.wikipedia.org/wiki/Level_of_measurement)"""
 
-    default = None
+    readonly = None
+    """whether variable is read-only, e.g. holding redundant information"""
+    default = private.unset  # can't use None since None is a possible default value
     """default initial value"""
     uninformed_prior = None
     """random value generator (probability distribution)
@@ -94,15 +96,25 @@ class Variable(Symbol):
     # if "ordinal" or "nominal":
     levels = None  # values must be element of this
 
-    # attributes needed for internal framework logics:
+    # attributes needed for internal framework logics, 
+    # set by Model.configure():
 
     owning_class = None
     """the class owning the Variable as its attribute"""
     codename = None
     """the attribute name of the Variable in its owning class"""
+    explicit_dependencies = None
+    """set of Vars. in the RHS of the explicit equation setting this Var."""
+    ODE_dependencies = None
+    """set of Vars. in the RHS of any ODE changing this Var."""
+    # TODO: similar for Step, Event. How to deal with Implicit?
 
     _uid = None
     """unique id"""
+
+    # needed to make sympy and expressions happy:
+    _iterable = False
+    _can_be_target = True
 
     # standard methods:
 
@@ -124,7 +136,8 @@ class Variable(Symbol):
                  symbol=None,
                  ref=None,
                  scale="ratio",
-                 default=None,
+                 readonly=False,
+                 default=private.unset,
                  uninformed_prior=None,
                  CF=None,
                  AMIP=None,
@@ -132,7 +145,7 @@ class Variable(Symbol):
                  CETS=None,
                  datatype=None,
                  array_shape=None,
-                 allow_none=True,  # by default, var may be none
+                 allow_none=False,
                  lower_bound=None,
                  strict_lower_bound=None,
                  upper_bound=None,
@@ -158,8 +171,7 @@ class Variable(Symbol):
             "scale must be ratio, interval, ordinal, or nominal"
         self.scale = scale
 
-        self.default = default
-        self.uninformed_prior = uninformed_prior
+        self.readonly = readonly
 
         self.CF = CF
         self.AMIP = AMIP
@@ -168,13 +180,17 @@ class Variable(Symbol):
 
         self.datatype = datatype
         self.array_shape = array_shape
-        self.allow_none = allow_none
+        if unit is None and default is not None \
+                and isinstance(default, DimensionalQuantity):
+            self.unit = default.unit
+        elif unit is not None:
+            assert isinstance(unit, Unit)
+            self.unit = unit
         self.lower_bound = lower_bound
         self.strict_lower_bound = strict_lower_bound
         self.upper_bound = upper_bound
         self.strict_upper_bound = strict_upper_bound
         self.quantum = quantum
-        self.unit = unit
 
         assert not (is_extensive is True and is_intensive is True), \
             "cannot be both extensive and intensive"
@@ -183,36 +199,56 @@ class Variable(Symbol):
 
         self.levels = levels
 
+        if readonly:
+            assert default is private.unset
+            assert uninformed_prior is None
+            self.allow_none = True
+            self.default = private.unknown
+        else:
+            self.allow_none = allow_none
+            self.default = default
+        self.uninformed_prior = uninformed_prior
+
+    def copy(self, **kwargs):
+        newkwargs = {
+                "symbol": self.symbol,
+                "ref": self.ref,
+                "scale": self.scale,
+                "readonly": self.readonly,
+                "default": self.default,
+                "uninformed_prior": self.uninformed_prior,
+                "CF": self.CF,
+                "AMIP": self.AMIP,
+                "IAMC": self.IAMC,
+                "CETS": self.CETS,
+                "datatype": self.datatype,
+                "array_shape": self.array_shape,
+                "allow_none": self.allow_none,
+                "lower_bound": self.lower_bound,
+                "strict_lower_bound": self.strict_lower_bound,
+                "upper_bound": self.upper_bound,
+                "strict_upper_bound": self.strict_upper_bound,
+                "quantum": self.quantum,
+                "unit": self.unit,
+                "is_extensive": self.is_extensive,
+                "is_intensive": self.is_intensive,
+                "levels": self.levels
+            }
+        newkwargs.update(kwargs)
+        return Variable(self.name, self.desc, **newkwargs)
+
+    @property
+    def default(self):
+        return self._default
+        
+    @default.setter
+    def default(self, value):
+        if value is not private.unset:
+            self.assert_valid(value)
+        self._default = value
+
     def __eq__(self, other):
         return object.__eq__(self, other)
-
-    def copy(self):
-        # TODO: do this more elegantly??
-        c = Variable(self.name,
-                     self.desc,
-                     symbol=self.symbol,
-                     ref=self.ref,
-                     scale=self.scale,
-                     default=self.default,
-                     uninformed_prior=self.uninformed_prior,
-                     CF=self.CF,
-                     AMIP=self.AMIP,
-                     IAMC=self.IAMC,
-                     CETS=self.CETS,
-                     datatype=self.datatype,
-                     array_shape=self.array_shape,
-                     allow_none=self.allow_none,
-                     lower_bound=self.lower_bound,
-                     strict_lower_bound=self.strict_lower_bound,
-                     upper_bound=self.upper_bound,
-                     strict_upper_bound=self.strict_upper_bound,
-                     quantum=self.quantum,
-                     unit=self.unit,
-                     is_extensive=self.is_extensive,
-                     is_intensive=self.is_intensive,
-                     levels=self.levels
-                     )
-        return c
 
     def __hash__(self):
         return object.__hash__(self)
@@ -225,36 +261,38 @@ class Variable(Symbol):
     def __repr__(self):
         return (self.owning_class.__name__ + "." + self.codename) \
             if self.owning_class \
-            else self.name + " (" + self._uid + ")"
+            else self.name + "(uid=" + self._uid + ")"
         # dirty fix for lengthy output
-        r = "Variable " + self.name + "(" + self.desc + "), scale=" \
-            + self.scale + ", datatype=" + str(self.datatype)
-        if self.unit is not None:
-            r += ", unit=" + str(self.unit)
-        if self.default is not None:
-            r += ", default=" + str(self.default)
-        if self.allow_none is False:
-            r += ", not None"
-        if self.lower_bound is not None:
-            r += ", >=" + str(self.lower_bound)
-        if self.strict_lower_bound is not None:
-            r += ", >" + str(self.strict_lower_bound)
-        if self.upper_bound is not None:
-            r += ", <=" + str(self.upper_bound)
-        if self.strict_upper_bound is not None:
-            r += ", <" + str(self.strict_upper_bound)
-        if self.quantum is not None:
-            r += ", % " + str(self.quantum) + " == 0"
-        if self.levels is not None:
-            r += ", levels=" + str(self.levels)
-        if self.array_shape is not None:
-            r += ", shape=" + str(self.array_shape)
-        return r
+#        r = "Variable " + self.name + "(" + self.desc + "), scale=" \
+#            + self.scale + ", datatype=" + str(self.datatype)
+#        if self.unit is not None:
+#            r += ", unit=" + str(self.unit)
+#        if self.default is not None:
+#            r += ", default=" + str(self.default)
+#        if self.allow_none is False:
+#            r += ", not None"
+#        if self.lower_bound is not None:
+#            r += ", >=" + str(self.lower_bound)
+#        if self.strict_lower_bound is not None:
+#            r += ", >" + str(self.strict_lower_bound)
+#        if self.upper_bound is not None:
+#            r += ", <=" + str(self.upper_bound)
+#        if self.strict_upper_bound is not None:
+#            r += ", <" + str(self.strict_upper_bound)
+#        if self.quantum is not None:
+#            r += ", % " + str(self.quantum) + " == 0"
+#        if self.levels is not None:
+#            r += ", levels=" + str(self.levels)
+#        if self.array_shape is not None:
+#            r += ", shape=" + str(self.array_shape)
+#        return r
 
     # validation:
 
     def _check_valid(self, v):
         """check validity of candidate value"""
+
+        assert v is not private.unset, str(self) + " has no value set"
 
         if self.array_shape is not None:
             if not v.shape == self.array_shape:
@@ -382,7 +420,9 @@ class Variable(Symbol):
     def set_to_default(
             self,
             instances=None):  # if None: all entities/taxa
-        """Set values in selected entities to default"""
+        """Set values in selected entities to default if a default was given"""
+        if self.default is private.unset:
+            return
         instances = self._get_instances(instances)
         if instances:  # Maybe variables owning class has no instances!
             for e in instances:
@@ -526,6 +566,12 @@ class Variable(Symbol):
         """
         return [getattr(i, 'd_' + self.codename) for i in instances]
 
+    def add_derivatives(self, values):
+        """adds summands to referenced attribute values"""
+        dname = "d_" + self.codename
+        for pos, i in enumerate(self.target_instances):
+            setattr(i, dname, getattr(i, dname) + values[pos])
+
     # TODO: improve docstring
     def get_value(self, instance, unit=None):
         """Get value."""
@@ -540,10 +586,10 @@ class Variable(Symbol):
         return self.get_value(instance)
 
     def eval(self,
-                   instances=None,
-                   *,
-                   unit=None
-                   ):
+             instances=None,
+             *,
+             unit=None
+             ):
         """Return values for given entities,
         optionally in a different unit.
 

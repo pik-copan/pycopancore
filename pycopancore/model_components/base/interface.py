@@ -12,7 +12,7 @@ by entity type and process taxon
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from ...private._abstract_entity_mixin import _AbstractEntityMixinType
+from ...private import _MixinType, unknown
 from ... import Variable, ReferenceVariable, SetVariable
 from ... import master_data_model as D
 from ...data_model.master_data_model import NAT, CUL, W, S, C
@@ -62,11 +62,16 @@ class Culture (object):
     acquaintance_network = CUL.acquaintance_network
     worlds = SetVariable("worlds", "set of Worlds on this Culture")
 
+    # read-only attributes storing redundant information:
+    worlds = SetVariable("worlds",
+                         "set of Worlds this Culture acts in",
+                         readonly=True)
 
 # entity types:
 
 
-class World (object, metaclass=_AbstractEntityMixinType):
+# TODO: clarify whether it is necessary to specify the metaclass here!
+class World (object, metaclass=_MixinType):
     """Basic World interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -79,13 +84,13 @@ class World (object, metaclass=_AbstractEntityMixinType):
     # references to other entities and taxa:
     nature = ReferenceVariable("nature",
                                "Nature taxon working on this world",
-                               type=Nature)
+                               type=Nature, allow_none=True)
     metabolism = ReferenceVariable("metabolism",
                                    "Metabolism taxon working on this world",
-                                   type=Metabolism)
+                                   type=Metabolism, allow_none=True)
     culture = ReferenceVariable("culture",
                                 "Culture taxon working on this world",
-                                type=Culture)
+                                type=Culture, allow_none=True)
 
     # variables taken from the master data model:
     population = W.population  # TODO: make sure it is no smaller than aggregate top-level societies'?
@@ -97,16 +102,26 @@ class World (object, metaclass=_AbstractEntityMixinType):
 
     # attributes storing redundant information (backward references):
     societies = SetVariable("societies",
-                            "set of all Societies on this world")  # type is Society, hence it can only be specified after class Society is defined, see below
+                            "set of all Societies on this world",
+                            readonly=True)  # type is Society, hence it can only be specified after class Society is defined, see below
     top_level_societies = SetVariable(
         "top level societies",
-        "set of top-level Societies on this world")
-    cells = SetVariable("cells", "set of Cells on this world")
+        "set of top-level Societies on this world",
+        readonly=True)
+    cells = SetVariable("cells", "set of Cells on this world",
+                        readonly=True)
     individuals = SetVariable("individuals",
-                              "set of Individuals residing on this world")
+                              "set of Individuals residing on this world",
+                              readonly=True)
 
 
-class Society (object, metaclass=_AbstractEntityMixinType):
+# specified only now to avoid recursion errors:
+Culture.worlds.type = World
+Metabolism.worlds.type = World
+Nature.worlds.type = World
+
+
+class Society (object, metaclass=_MixinType):
     """Basic Society interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -126,25 +141,35 @@ class Society (object, metaclass=_AbstractEntityMixinType):
     # aggregate next_lower_level societies'
 
     # read-only attributes storing redundant information:
-    nature = ReferenceVariable("nature", "", type=Nature)
-    metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
-    culture = ReferenceVariable("culture", "", type=Culture)
+    nature = ReferenceVariable("nature", "", type=Nature,
+                               readonly=True)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
+                                   readonly=True)
+    culture = ReferenceVariable("culture", "", type=Culture,
+                                readonly=True)
     higher_societies = SetVariable(
         "higher societies",
-        "upward list of (in)direct super-Societies")
+        "upward list of (in)direct super-Societies",
+        readonly=True)
     next_lower_societies = SetVariable(
         "next lower societies",
-        "set of sub-Societies of next lower level")
+        "set of sub-Societies of next lower level",
+        readonly=True)
     lower_societies = SetVariable(
         "lower societies",
-        "set of all direct and indirect sub-Societies")
-    direct_cells = SetVariable("direct cells", "set of direct territory Cells")
-    cells = SetVariable("cells", "set of direct and indirect territory Cells")
+        "set of all direct and indirect sub-Societies",
+        readonly=True)
+    direct_cells = SetVariable("direct cells", "set of direct territory Cells",
+                               readonly=True)
+    cells = SetVariable("cells", "set of direct and indirect territory Cells",
+                        readonly=True)
     direct_individuals = SetVariable(
         "direct individuals",
-        "set of resident Individuals not in subsocieties")
+        "set of resident Individuals not in subsocieties",
+        readonly=True)
     individuals = SetVariable("individuals",
-                              "set of direct or indirect resident Individuals")
+                              "set of direct or indirect resident Individuals",
+                              readonly=True)
 
 
 # specified only now to avoid recursion errors:
@@ -156,7 +181,7 @@ World.societies.type = Society
 World.top_level_societies.type = Society
 
 
-class Cell (object, metaclass=_AbstractEntityMixinType):
+class Cell (object, metaclass=_MixinType):
     """Basic Cell interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -169,23 +194,28 @@ class Cell (object, metaclass=_AbstractEntityMixinType):
                                 type=Society, allow_none=True)
 
     # other variables:
-    location = Variable("location", "pair of coordinates?")  # TODO: specify data type
-    land_area = Variable("land area", "", unit=D.square_kilometers,
-                         strict_lower_bound=0)
+    location = Variable("location", "pair of coordinates?",
+                        allow_none=True, default=None)  # TODO: specify data type
+    land_area = C.land_area
 
     terrestrial_carbon = C.terrestrial_carbon
     fossil_carbon = C.fossil_carbon
 
     # attributes storing redundant information:
-    nature = ReferenceVariable("nature", "", type=Nature)
-    metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
-    culture = ReferenceVariable("culture", "", type=Culture)
+    nature = ReferenceVariable("nature", "", type=Nature,
+                               readonly=True)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
+                                   readonly=True)
+    culture = ReferenceVariable("culture", "", type=Culture,
+                                readonly=True)
     societies = SetVariable(
         "societies",
         "upward list of Societies it belongs to (in)directly",
-        type=Society)
+        type=Society,
+        readonly=True)
     individuals = SetVariable("individuals",
-                              "set of resident Individuals")
+                              "set of resident Individuals",
+                              readonly=True)
 
 
 # specified only now to avoid recursion:
@@ -194,7 +224,7 @@ Society.direct_cells.type = Cell
 Society.cells.type = Cell
 
 
-class Individual (object, metaclass=_AbstractEntityMixinType):
+class Individual (object, metaclass=_MixinType):
     """Basic Individual interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -212,21 +242,29 @@ class Individual (object, metaclass=_AbstractEntityMixinType):
                  unit=D.unity, lower_bound=0, default=1)
 
     # attributes storing redundant information:
-    world = ReferenceVariable("world", "", type=World)
-    nature = ReferenceVariable("nature", "", type=Nature)
-    metabolism = ReferenceVariable("metabolism", "", type=Metabolism)
-    culture = ReferenceVariable("culture", "", type=Culture)
+    world = ReferenceVariable("world", "", type=World,
+                              readonly=True)
+    nature = ReferenceVariable("nature", "", type=Nature,
+                               readonly=True)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
+                                   readonly=True)
+    culture = ReferenceVariable("culture", "", type=Culture,
+                                readonly=True)
     society = ReferenceVariable(
         "society",
         "lowest level Society this individual is resident of",
-        type=Society)
+        type=Society,
+        readonly=True)
     societies = SetVariable(
         "societies",
         "upward list of all Societies it is resident of",
-        type=Society)
+        type=Society,
+        readonly=True)
     acquaintances = SetVariable("acquaintances",
-                    "set of Individuals this one is acquainted with")
+                    "set of Individuals this one is acquainted with",
+                    readonly=True)
 
+    # TODO: specify Variable objects for the following:
     population_share = None
     """share of society's direct population represented by this individual"""
     represented_population = None

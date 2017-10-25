@@ -84,7 +84,6 @@ class Metabolism (I.Metabolism):
             w_i = ws[i]
             y_i = (e.harvest - w_i) * price + e.gross_income
             av_y = e.society.average_liquidity
-            # print('water, liq, ave are', w_i, y_i, av_y)
             # Get the rhs of the equation for the individual
             errors[1 + i] = ((y_i - w_i * price)
                              # / (2 * math.sqrt(w_i * y_i * av_y))
@@ -98,7 +97,7 @@ class Metabolism (I.Metabolism):
 
     def do_market_clearing(self, unused_t):
         """Calculate water price and market movements."""
-        print('market cleraing takes place at time', unused_t)
+        print('market clearing takes place at time', unused_t)
         # Iterate through worlds
         for w in self.worlds:
             world = w
@@ -107,7 +106,6 @@ class Metabolism (I.Metabolism):
             #    s.liquidity_pdf()
             log_nutritions = []
             for i in world.individuals:
-                # nutrition = i.harvest - (i.liquidity - i.gross_income) / world.water_price
                 nutrition = i.nutrition
                 log_nutritions.append(np.log(nutrition))
             logp_and_logws = [np.log(world.water_price)] + log_nutritions
@@ -167,8 +165,8 @@ class Metabolism (I.Metabolism):
               B.Metabolism.worlds.total_harvest,
               B.Metabolism.worlds.total_gross_income
               ],
-              [market_timing,
-               do_market_clearing]
+             [market_timing,
+              do_market_clearing]
              )
     ]  # TODO: instantiate and list process objects here
 

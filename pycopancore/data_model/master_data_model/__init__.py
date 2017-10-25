@@ -2,14 +2,21 @@ from .dimensions_and_units import *
 
 from . import nature, metabolism, culture
 from . import nature as NAT
+from . import nature as Nature
 from . import metabolism as MET
+from . import metabolism as Metabolism
 from . import culture as CUL
+from . import culture as Culture
 
 from . import world, society, cell, individual
 from . import world as W
+from . import world as World
 from . import society as S
+from . import society as Society
 from . import cell as C
+from . import cell as Cell
 from . import individual as I
+from . import individual as Individual
 
 from .. import unity
 

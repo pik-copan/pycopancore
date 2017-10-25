@@ -62,7 +62,8 @@ html:
 	@echo "Creating auto-generated documentation from source"
 	cd ..; $(APIDOC) -f -o ./docs/_api ./pycopancore/ ./pycopancore/model_components/base/__init__.py ./pycopancore/model_components/seven_dwarfs/__init__.py
 	@echo
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@echo "Sphinx-apidoc is done, building directories"
+	$(SPHINXBUILD) -b html -v $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 

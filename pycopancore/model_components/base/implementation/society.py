@@ -28,9 +28,8 @@ class Society (I.Society, abstract.Society):
 
     def __init__(self,
                  *,
-                 world=None,
+                 world,
                  next_higher_society=None,
-                 population=None,
                  **kwargs
                  ):
         """Initialize an instance of Society.
@@ -58,10 +57,6 @@ class Society (I.Society, abstract.Society):
         self.world = world
         self._next_higher_society = None
         self.next_higher_society = next_higher_society
-        self.population = population
-
-        # make sure all variable values are valid:
-        self.assert_valid()
 
     # getters and setters for references:
 
@@ -75,9 +70,8 @@ class Society (I.Society, abstract.Society):
         """Set the World the Society is part of."""
         if self._world is not None:
             self._world._societies.remove(self)
-        if w is not None:
-            assert isinstance(w, I.World), "world must be of entity type World"
-            w._societies.add(self)
+        assert isinstance(w, I.World), "world must be of entity type World"
+        w._societies.add(self)
         self._world = w
 
     @property

@@ -9,6 +9,8 @@ Model component implementation subpackage.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+from .metabolism import Metabolism
 
 # export all provided entity type implementation mixin classes:
 from .society import Society
+from .world import World

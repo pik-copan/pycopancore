@@ -71,24 +71,19 @@ class Society (object):
                                  datatype=bool)
     base_mean_income = Variable("base income",
                                 "Base of scaling mean income dependend on "
-                                "population, only important for municipality")
+                                "population, only important for municipality",
+                                default=1000)
     mean_income_or_farmsize = Variable("Mean income or farmsize",
                                        "Mean income or farm size dependend on "
-                                       "population and base_mean_income")
-    income_or_farm_size_pdf = Variable("income or farm size probability "
-                                       "density function",
-                                       "function which distributes income and "
-                                       "farm size")
-    income_or_farm_size_cdf = Variable("income or farm size cumulative "
-                                       "distribution function",
-                                       "cumulative distribution function of "
-                                       "income and farm size")
+                                       "population and base_mean_income",
+                                       default=0)
     pdf_mu = Variable("log normal parameter mu",
                       "parameter mu of the log-normal distribution",
                       lower_bound=0)
     pdf_sigma = Variable("log normal parameter sigma",
                          "parameter sigma of the log-normal distribution",
-                         lower_bound=0)
+                         lower_bound=0,
+                         default=0.34)
     liquidity_sigma = Variable("Liquidity sigma",
                                "Sigma parameter of pdf of liquidity")
     liquidity_median = Variable("Liquidity Mean",
@@ -103,6 +98,14 @@ class Society (object):
                                "Average Utility in a society")
     gini_coefficient = Variable("Gini Coefficient",
                                 "Gini coefficient of utilities")
+    scaling_parameter = Variable("Scaling Parameter",
+                                 "Parameter that scales income as in "
+                                 "Total_income = base_inc ** parameter, "
+                                 "default from bettencourt paper",
+                                 default=1.12)
+    migration_cost = Variable("Migration Cost",
+                              "Cost to migrate to this society",
+                              default=1000)
 
     # exogenous variables / parameters:
 
@@ -151,7 +154,8 @@ class Individual (object):
                        "and average farmland precipitation",
                        lower_bound=0,
                        dimension=D.volume*D.time,
-                       unit=D.meters**3 / D.years)
+                       unit=D.meters**3 / D.years,
+                       default=0)
     liquidity = Variable("liquidity",
                          "income after trade",
                          lower_bound=0,

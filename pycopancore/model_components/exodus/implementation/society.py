@@ -30,45 +30,34 @@ class Society (I.Society):
     def __init__(self,
                  *,
                  municipality_like=False,
-                 pareto_distribution_type=False,
-                 base_mean_income=None,
+                 base_mean_income=1000,
                  pdf_sigma=0.34,  # 0.34 taken from Clementi, Gallegati 2005 for income distribution
+                 scaling_parameter=1.12,
+                 migration_cost=1000,
                  **kwargs):
         """Initialize an instance of Society."""
         super().__init__(**kwargs)  # must be the first line
 
         self.municipality_like = municipality_like
-        self.pareto_distribution_type = pareto_distribution_type
         self.base_mean_income = base_mean_income
         self.pdf_sigma = pdf_sigma
+        self.scaling_parameter = scaling_parameter
+        self.migration_cost = migration_cost
 
         self.liquidity_median = None
         self.liquidity_sigma = None
         self.liquidity_loc = None
 
-        # At last, check for validity of all variables that have been
-        # initialized and given a value:
-
-        # Following method is defined in abstract_entity_mixin which is
-        # inherited only by mixing in the model:
-        self.assert_valid()
-
-    @property
-    def gross_income_or_farmsize(self):
+    def calc_gross_income_or_farmsize(self):
         "Get random income or farm size distributed log-normal."
-        if self.pareto_distribution_type is False:
-            # Use log-normal
-            number = random.random()
-            sigma = self.pdf_sigma
-            # calculate ´median from mean:
-            median = (self.mean_income_or_farmsize / np.exp(sigma**2 / 2))
-            lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=median)
-            return lognormal_random
-        if self.pareto_distribution_type is True:
-            # Use pareto:
-            return "not implemented yet"
 
-    # process-related methods:
+        # Use log-normal
+        number = random.random()
+        sigma = self.pdf_sigma
+        # calculate ´median from mean:
+        median = (self.mean_income_or_farmsize / np.exp(sigma**2 / 2))
+        lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=median)
+        return lognormal_random
 
     def liquidity_pdf(self):
         """Calculate the PDF of the liquidity of the society."""
@@ -93,6 +82,8 @@ class Society (I.Society):
         ----------
         unused_t
         """
+        if len(self.individuals) == 0:
+            self.deactivate()
         self.population = len(self.individuals)
 
     def update_incomes(self):
@@ -100,34 +91,30 @@ class Society (I.Society):
         # first: Check if really a municipaity:
         if self.municipality_like is not True:
             raise SocietyTypeError('Society not a municipality')
-        elif len(self.individuals) == 0 and self.is_active:
-            # Everybody left
-            self.deactivate()
-        elif self.is_active:
-            # Define epsilion, which functions as threshold to change incomes
-            epsilon = 10
-            # Define factor how fast adjusting takes place
-            factor = 0.5
-            sum = 0
+        # Define epsilion, which functions as threshold to change incomes
+        epsilon = 10
+        # Define factor how fast adjusting takes place
+        factor = 0.5
+        sum = 0
+        for ind in self.individuals:
+            sum += ind.gross_income
+        # Now divide by number of individuals to get mean:
+        real_mean = sum / self.population
+        # get delta:
+        delta_mean = self.mean_income_or_farmsize - real_mean
+        if delta_mean > epsilon and delta_mean > 0:
+            # mean income is smaller than it should be, need to add
+            # Define amount to add:
+            to_add = delta_mean / self.population * factor
             for ind in self.individuals:
-                sum += ind.gross_income
-            # Now divide by number of individuals to get mean:
-            real_mean = sum / len(self.individuals)
-            # get delta:
-            delta_mean = self.mean_income_or_farmsize - real_mean
-            if delta_mean > epsilon and delta_mean > 0:
-                # mean income is smaller than it should be, need to add
-                # Define amount to add:
-                to_add = delta_mean / len(self.individuals) * factor
-                for ind in self.individuals:
-                    ind.gross_income += to_add
-            if delta_mean > epsilon and delta_mean < 0:
-                # mean income is bigger than it should be, need to subtract
-                # Define amount to subtract:
-                to_subtract = delta_mean / len(self.individuals) * factor
-                for ind in self.individuals:
-                    ind.gross_income -= to_subtract
-            # Else do nothing
+                ind.gross_income += to_add
+        if delta_mean > epsilon and delta_mean < 0:
+            # mean income is bigger than it should be, need to subtract
+            # Define amount to subtract:
+            to_subtract = delta_mean / self.population * factor
+            for ind in self.individuals:
+                ind.gross_income -= to_subtract
+        # Else do nothing
 
     def update_farmsizes(self):
         """Update farmsizes to adjust to population."""
@@ -142,19 +129,19 @@ class Society (I.Society):
         for ind in self.individuals:
             sum += ind.farm_size
         # Now divide by number of individuals to get mean:
-        real_mean = sum / len(self.individuals)
+        real_mean = sum / self.population
         # get delta:
         delta_mean = self.mean_income_or_farmsize - real_mean
         if delta_mean > epsilon and delta_mean > 0:
             # mean farmsize is smaller than it should be, need to add
             # Define amount to add:
-            to_add = delta_mean / len(self.individuals) * factor
+            to_add = delta_mean / self.population * factor
             for ind in self.individuals:
                 ind.farm_size += to_add
         if delta_mean > epsilon and delta_mean < 0:
             # mean farmsize is bigger than it should be, need to subtract
             # Define amount to subtract:
-            to_subtract = delta_mean / len(self.individuals) * factor
+            to_subtract = delta_mean / self.population * factor
             for ind in self.individuals:
                 ind.farm_size -= to_subtract
         # Else do nothing
@@ -165,47 +152,45 @@ class Society (I.Society):
 
     def do_update(self, unused_t):
         """Do the adjustment of income or farmsize"""
-        if self.municipality_like is True:
-            self.update_incomes()
-            print('incomes updated of society', self)
-        elif self.municipality_like is False:
-            self.update_farmsizes()
-            print('farmsizes updated of society', self)
-        else:
-            raise SocietyTypeError('Neither County nor Municipality!')
+        if self.is_active:
+            if self.municipality_like is True:
+                self.update_incomes()
+                print('incomes updated of society', self)
+            elif self.municipality_like is False:
+                self.update_farmsizes()
+                print('farmsizes updated of society', self)
+            else:
+                raise SocietyTypeError('Neither County nor Municipality!')
 
     def calculate_mean_income_or_farmsize(self, unused_t):
         """Calculate mean income (if municipality) or farm size (county)."""
-        if self.municipality_like:
-            # in case of municipality
-            self.mean_income_or_farmsize = self.base_mean_income * (len(self.individuals) ** 1.12)
-        if not self.municipality_like:
-            # in case of county
-            for c in self.direct_cells:
-                # mean farm size:
-                self.mean_income_or_farmsize = c.land_area / len(self.individuals)
+        if self.is_active:
+            if self.municipality_like:
+                # in case of municipality
+                total_income = self.base_mean_income * (
+                    self.population**self.scaling_parameter)
+                self.mean_income_or_farmsize = total_income / self.population
+            if not self.municipality_like:
+                # in case of county
+                for c in self.direct_cells:
+                    # mean farm size:
+                    self.mean_income_or_farmsize = c.land_area / self.population
 
     def calculate_average_liquidity(self, unused_t):
         """Calculate average liquidity of society."""
-        sum = 0
-        for ind in self.individuals:
-            sum += ind.liquidity
-        if len(self.individuals) != 0:
-            self.average_liquidity = sum / len(self.individuals)
-        else:
-            # If there are no individuals left:
-            self.average_liquidity = 0
-        # print('average liquidity', self.average_liquidity)
+        if self.is_active:
+            sum = 0
+            for ind in self.individuals:
+                sum += ind.liquidity
+            self.average_liquidity = sum / self.population
 
     def calculate_average_utility(self, unused_t):
         """Calculate the average utility in this society."""
-        summe = 0
-        for ind in self.individuals:
-            summe += ind.utility
-        if len(self.individuals) != 0:
-            self.average_utility = summe / len(self.individuals)
-        else:
-            self.average_utility = 0
+        if self.is_active:
+            summe = 0
+            for ind in self.individuals:
+                summe += ind.utility
+            self.average_utility = summe / self.population
 
     def calculate_gini(self, unused_t):
         """Calculate the gini coefficient of the utility. 
@@ -214,8 +199,8 @@ class Society (I.Society):
         https://en.wikipedia.org/wiki/Mean_absolute_difference#Relative_mean_absolute_difference
         """
         # Mean absolute difference
-        utilities = []
-        if len(self.individuals) != 0:
+        if self.is_active:
+            utilities = []
             for ind in self.individuals:
                 utilities.append(ind.utility)
             mad = np.abs(np.subtract.outer(utilities, utilities)).mean()
@@ -223,8 +208,6 @@ class Society (I.Society):
             rmad = mad / np.mean(utilities)
             # Gini coefficient
             self.gini_coefficient = 0.5 * rmad
-        else:
-            self.gini_coefficient = 0
 
     processes = [
         Explicit('calculate population',

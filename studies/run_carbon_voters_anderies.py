@@ -24,7 +24,7 @@ random.seed(1)
 timeinterval = 60
 timestep = 1
 expected_degree = 10
-nindividuals = 4000
+nindividuals = 400
 rewiring_probability = 0.1
 possible_opinions = list(range(2))
 impact_scaling_factor=20
