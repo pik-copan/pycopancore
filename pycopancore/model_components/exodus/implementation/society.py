@@ -183,6 +183,9 @@ class Society (I.Society):
             for ind in self.individuals:
                 sum += ind.liquidity
             self.average_liquidity = sum / self.population
+        else:
+            # This shoul not happen, but apparently does nevertheless...
+            self.average_liquidity = 1
 
     def calculate_average_utility(self, unused_t):
         """Calculate the average utility in this society."""

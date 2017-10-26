@@ -150,10 +150,6 @@ class Individual (I.Individual):
         # Difference in utility:
         delta_utility = neighbour.utility - self.utility
         # print('delta util', delta_utility)
-        # Sigmoidal function, normalized so that sigmoid(1) = 1:
-        #  sigmoid = 1 / (1 + math.exp(- self.migration_steepness * (
-        #     delta_utility - self.migration_threshold))) * (1 + math.exp(
-        #         - self.migration_steepness * (1 - self.migration_threshold)))
         # Tanh function:
         tanh = math.tanh(delta_utility)
         if random.random() <= tanh:
