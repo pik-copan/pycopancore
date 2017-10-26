@@ -121,7 +121,8 @@ class Metabolism (I.Metabolism):
                                      )
             if solution['success'] is not True:
                 print('solution', solution)
-                raise BaseException('Market clearing has failed!')
+                print('Market clearing has failed!')
+                self.non_equilibrium_checker = True
             print('water price=', np.exp(solution['x'][0]))
             world.water_price = np.exp(solution['x'][0])
             for i, e in enumerate(world.individuals):

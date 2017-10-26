@@ -255,10 +255,19 @@ class Individual (I.Individual):
         """Calculate utility if an Individual."""
         try:
             self.utility = math.sqrt(
-                self.liquidity * self.nutrition / self.society.average_liquidity / 1240)
+                self.liquidity * self.nutrition
+                / self.society.average_liquidity / 1240)
             # 1240 m^3 is the annual need, maybe need to incorporate it
+        # The folloeing should not happen but do so on the cluster:
         except ValueError:
             print('liquidity could not be calculated! Setting it to 0')
+            print(self.liquidity, self.nutrition,
+                  self.society.average_liquidity)
+            self.utility = 0
+        except TypeError:
+            print('liquidity could not be calculated! Setting it to 0')
+            print(self.liquidity, self.nutrition,
+                  self.society.average_liquidity)
             self.utility = 0
 
     def calculate_sri(self, unused_t):

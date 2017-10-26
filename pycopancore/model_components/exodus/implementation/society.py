@@ -84,7 +84,11 @@ class Society (I.Society):
         """
         if len(self.individuals) == 0:
             self.deactivate()
-        self.population = len(self.individuals)
+            print(f'society {self} died out at time {unused_t}')
+            # to prevent division by zero:
+            self.population = 1
+        else:
+            self.population = len(self.individuals)
 
     def update_incomes(self):
         """Update incomes to adjust to population in some manner."""
@@ -184,7 +188,7 @@ class Society (I.Society):
                 sum += ind.liquidity
             self.average_liquidity = sum / self.population
         else:
-            # This shoul not happen, but apparently does nevertheless...
+            # This should not happen, but apparently does nevertheless...
             self.average_liquidity = 1
 
     def calculate_average_utility(self, unused_t):
