@@ -26,10 +26,12 @@ timeinterval = 100
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 2  # number of municipalities, also cities
-nc = 2  # number of counties, also farmland_cells
-nf = 100  # number of farmers
-nt = 100  # number of townsmen
+nm = 5  # number of municipalities, also cities
+nc = 5  # number of counties, also farmland_cells
+na = 200  # number of agents
+pf = .9  # percentage of farmers
+nf = int(na * pf)  # number of farmers
+nt = int(na - nf)  # number of townsmen
 
 
 model = M.Model()
@@ -47,13 +49,13 @@ municipalities = [M.Society(world=world,
                             municipality_like=True,
                             base_mean_income=1000,
                             scaling_parameter=1.12,
-                            migration_cost=100)
+                            migration_cost=0)
                   for m in range(nm)
                   ]
 
 counties = [M.Society(world=world,
                       municipality_like=False,
-                      migration_cost=100)
+                      migration_cost=0)
             for c in range(nc)
             ]
 # Instantiate farmland cells:

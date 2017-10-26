@@ -158,7 +158,8 @@ class Individual (I.Individual):
         tanh = math.tanh(delta_utility)
         if random.random() <= tanh:
             # Migrate if enough liquidity
-            if self.liquidity > neighbour.society.migration_cost:
+            if self.liquidity > (neighbour.society.migration_cost
+                                 + .5 * neighbour.society.average_liquidity):
                 self.liquidity -= neighbour.society.migration_cost
                 return True
             else:
@@ -256,6 +257,7 @@ class Individual (I.Individual):
 
     def calculate_utility(self, unused_t):
         """Calculate utility if an Individual."""
+        print(self.liquidity, self.nutrition, self.society.average_liquidity)
         self.utility = math.sqrt(
             self.liquidity * self.nutrition / self.society.average_liquidity / 1240)
         # 1240 m^3 is the annual need, maybe need to incorporate it
