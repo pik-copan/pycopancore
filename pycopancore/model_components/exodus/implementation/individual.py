@@ -158,7 +158,8 @@ class Individual (I.Individual):
         tanh = math.tanh(delta_utility)
         if random.random() <= tanh:
             # Migrate if enough liquidity
-            if self.liquidity > neighbour.society.migration_cost:
+            if self.liquidity > (neighbour.society.migration_cost
+                                 + .5 * neighbour.society.average_liquidity):
                 self.liquidity -= neighbour.society.migration_cost
                 return True
             else:
@@ -256,9 +257,13 @@ class Individual (I.Individual):
 
     def calculate_utility(self, unused_t):
         """Calculate utility if an Individual."""
-        self.utility = math.sqrt(
-            self.liquidity * self.nutrition / self.society.average_liquidity / 1240)
-        # 1240 m^3 is the annual need, maybe need to incorporate it
+        try:
+            self.utility = math.sqrt(
+                self.liquidity * self.nutrition / self.society.average_liquidity / 1240)
+            # 1240 m^3 is the annual need, maybe need to incorporate it
+        except ValueError:
+            print('liquidity could not be calculated! Setting it to 0')
+            self.utility = 0
 
     def calculate_sri(self, unused_t):
         """Calculate subjective income rank of individual"""
