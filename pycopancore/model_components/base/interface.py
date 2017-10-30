@@ -263,8 +263,12 @@ class Individual (object, metaclass=_MixinType):
     # TODO: specify Variable objects for the following:
     population_share = None
     """share of society's direct population represented by this individual"""
-    represented_population = None
-    """absolute population represented by this individual"""
+    represented_population = Variable(
+        "represented population", 
+        "absolute population represented by this individual",
+        readonly=True,
+        unit=D.people,
+        is_extensive=True)
 
 
 # specified only now to avoid recursion:

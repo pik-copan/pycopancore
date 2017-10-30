@@ -148,7 +148,7 @@ class Individual (I.Individual, abstract.Individual):
     def represented_population(self):
         """Get the absolute population this Individual represents due to
         sampling."""
-        return self.population_share * self.society.human_population
+        return self.population_share * self.society.population
 
     @property
     def acquaintances(self):
