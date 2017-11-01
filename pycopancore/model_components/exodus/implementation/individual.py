@@ -154,9 +154,10 @@ class Individual (I.Individual):
         tanh = math.tanh(delta_utility)
         if random.random() <= tanh:
             # Migrate if enough liquidity
-            if self.liquidity > (neighbour.society.migration_cost
-                                 + .5 * neighbour.society.average_liquidity):
-                self.liquidity -= neighbour.society.migration_cost
+            if self.liquidity > neighbour.society.migration_cost:
+                # Next line is causing liquidities to drop below 0 if the
+                # society update takes place:
+                # self.liquidity -= neighbour.society.migration_cost
                 return True
             else:
                 # Not enough money to migrate
