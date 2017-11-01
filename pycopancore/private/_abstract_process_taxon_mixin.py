@@ -34,8 +34,8 @@ class _AbstractProcessTaxonMixin(_Mixin):
     def delete(self):
         """Delete this Process Taxon from lists."""
         # Remove from list, if list is existent:
-        if (self in self.__class__.instances
-                and self.__class__.instances):
+        if (self.__class__.instances
+                and self in self.__class__.instances):
             self.__class__.instances.remove(self)
         # If list then has lenght == 0, set it to None again, so everything is
         # fresh again...
