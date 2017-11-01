@@ -127,7 +127,7 @@ class Society (I.Society):
             raise SocietyTypeError('Society not a county')
         # Define epsilion, which functions as threshold to change farmsize
         epsilon = 10
-        # Define factor how fast adjusting akes place
+        # Define factor how fast adjusting takes place
         factor = 0.5
         sum = 0
         for ind in self.individuals:
@@ -136,13 +136,13 @@ class Society (I.Society):
         real_mean = sum / self.population
         # get delta:
         delta_mean = self.mean_income_or_farmsize - real_mean
-        if delta_mean > epsilon and delta_mean > 0:
+        if abs(delta_mean) > epsilon and delta_mean > 0:
             # mean farmsize is smaller than it should be, need to add
             # Define amount to add:
             to_add = delta_mean / self.population * factor
             for ind in self.individuals:
                 ind.farm_size += to_add
-        if delta_mean > epsilon and delta_mean < 0:
+        if abs(delta_mean) > epsilon and delta_mean < 0:
             # mean farmsize is bigger than it should be, need to subtract
             # Define amount to subtract:
             to_subtract = delta_mean / self.population * factor
