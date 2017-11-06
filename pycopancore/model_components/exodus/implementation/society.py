@@ -218,7 +218,10 @@ class Society (I.Society):
 
     processes = [
         Explicit('calculate population',
-                 [B.Society.population],
+                 [B.Society.population,
+                  # Following is only done to determine if soc is a city or
+                  # not afterwards, since this is not saved otherwise:
+                  I.Society.municipality_like],
                  calc_population),
         Step("Update incomes/farmsizes",
              [B.Society.individuals.farm_size,
