@@ -62,7 +62,9 @@ class World (I.World):
             # print(individual.nutrition)
             tn += individual.nutrition
             if numpy.isnan(tn):
-                raise BaseException('some individuals nutrition is nan!')
+                self.exception_checker = True
+                # raise BaseException('some individuals nutrition is nan!')
+                print('some individuals nutrition is nan!')
         return tn
 
     @property
@@ -73,8 +75,17 @@ class World (I.World):
             # print(individual.liquidity)
             tl += individual.liquidity
             if numpy.isnan(tl):
-                raise BaseException('some individuals liquidity is nan!')
+                self.exception_checker = True
+                # raise BaseException('some individuals liquidity is nan!')
+                print('some individuals nutrition is nan!')
         return tl
+
+    def check_for_exceptions(self):
+        """Check if the market equilibrium is still in order."""
+        if self.exception_checker is True:
+            return self.exception_checker
+        else:
+            return False
 
     processes = [
         ]

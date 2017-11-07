@@ -59,6 +59,9 @@ class World (object):
                            lower_bound=0,
                            unit=D.dollars,
                            default=1)
+    exception_checker = Variable("Exception checker",
+                                 "Check for exceptions to terminate run",
+                                 default=False)
 
 
 class Society (object):
