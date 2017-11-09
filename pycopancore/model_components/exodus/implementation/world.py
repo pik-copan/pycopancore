@@ -38,7 +38,7 @@ class World (I.World):
         # inherited only by mixing in the model:
         self.assert_valid()
 
-    def calc_total_gros_income(self, unused_t):
+    def calc_total_gross_income(self, unused_t):
         """Calculate total gross income explicitly."""
         tgi = 0
         for individual in self.individuals:
@@ -87,7 +87,7 @@ class World (I.World):
     processes = [
         Explicit('calculate total gross income',
                  [I.World.total_gross_income],
-                 calc_total_gros_income),
+                 calc_total_gross_income),
         Explicit('calculate total harvest',
                  [I.World.total_harvest],
                  calc_total_harvest),

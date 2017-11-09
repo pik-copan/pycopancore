@@ -101,9 +101,6 @@ class Metabolism (I.Metabolism):
         # Iterate through worlds
         for w in self.worlds:
             world = w
-            # Calculate pdfs for all societies:
-            #for s in world.societies:
-            #    s.liquidity_pdf()
             log_nutritions = []
             for i in world.individuals:
                 nutrition = i.nutrition
@@ -111,7 +108,7 @@ class Metabolism (I.Metabolism):
             logp_and_logws = [np.log(world.water_price)] + log_nutritions
             # Get total harvest once, so that it doesn't need to be
             # calculated each time the function is called:
-            tgi = world.total_gross_income
+            w.calc_total_harvest(unused_t)
             th = world.total_harvest
             solution = optimize.root(fun=self.market_clearing_rhs,
                                      x0=logp_and_logws,
@@ -133,14 +130,21 @@ class Metabolism (I.Metabolism):
                 # nutrition = harvest-(liquidity-gross_income)/water_price
                 # liquidity = (harvest-nutrition)*water_price + gross_income
                 e.liquidity = (e.harvest - e.nutrition) * world.water_price + e.gross_income
-            print('market clearing is done at time', unused_t,
-                  'price is now at', world.water_price)
+            w.calc_total_gross_income(unused_t)
+            w.calc_total_harvest(unused_t)
+            w.calc_total_nutrition(unused_t)
+            w.calc_total_liquidity(unused_t)
+            tgi = world.total_gross_income
+            th = world.total_harvest
             tn = world.total_nutrition
             tl = world.total_liquidity
-            print('nutrition - harvest', tn-th)
+            print('market clearing is done at time', unused_t,
+                  'price is now at', world.water_price)
             # Break condition if suppy and demand are not equal:
             if round(tn) != round(th):
                 print('Market clearing failed')
+                print('nutrition - harvest', tn - th,
+                      'income - liquidity', tgi-tl)
                 self.non_equilibrium_checker = True
             # Calculate liquidities again, so that sri can be calculated
             # correctly
@@ -162,9 +166,7 @@ class Metabolism (I.Metabolism):
         Step("market clearing",
              [B.Metabolism.worlds.individuals.liquidity,
               B.Metabolism.worlds.water_price,
-              B.Metabolism.worlds.individuals.nutrition,
-              B.Metabolism.worlds.total_harvest,
-              B.Metabolism.worlds.total_gross_income
+              B.Metabolism.worlds.individuals.nutrition
               ],
              [market_timing,
               do_market_clearing]

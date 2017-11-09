@@ -22,13 +22,13 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 50
+timeinterval = 200
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 5  # number of municipalities, also cities
-nc = 5  # number of counties, also farmland_cells
-na = 100  # number of agents
+nm = 1  # number of municipalities, also cities
+nc = 1  # number of counties, also farmland_cells
+na = 20  # number of agents
 pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
@@ -43,7 +43,7 @@ metabolism = M.Metabolism(market_frequency=1)
 
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism,
-                water_price=1)
+                water_price=.1)
 # Instantiate Societies:
 municipalities = [M.Society(world=world,
                             municipality_like=True,
@@ -151,7 +151,7 @@ for soc in M.Society.instances:
     soc.calculate_average_utility(0)
     soc.calculate_gini(0)
 
-world.calc_total_gros_income(0)
+world.calc_total_gross_income(0)
 world.calc_total_harvest(0)
 world.calc_total_nutrition(0)
 world.calc_total_liquidity(0)
@@ -163,13 +163,12 @@ metabolism.do_market_clearing(0)
 # culture.calculate_transitivity(0)
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
-termination_conditions = [[M.Culture.check_for_split, culture],
-                          [M.Metabolism.check_for_market_equilibrium, metabolism],
+termination_conditions = [[M.Metabolism.check_for_market_equilibrium, metabolism],
                           [M.World.check_for_exceptions, world]]
 
 print('\n runner starting')
 # Runner is instantiated
-r = Runner(model=model  # , termination_calls=termination_conditions
+r = Runner(model=model, termination_calls=termination_conditions
            )
 
 start = time()

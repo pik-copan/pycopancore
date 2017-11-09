@@ -102,8 +102,8 @@ class Society (I.Society):
             sum += ind.gross_income
         # Now divide by number of individuals to get mean:
         real_mean = sum / self.population
-        # get delta:
-        adaption = self.mean_income_or_farmsize / real_mean
+        adaption_rate = self.mean_income_or_farmsize / real_mean
+        adaption = adaption_rate + (1 - adaption_rate) * factor
         for ind in self.individuals:
             ind.gross_income *= adaption
 
@@ -112,8 +112,6 @@ class Society (I.Society):
         # first: Check if really a county:
         if self.municipality_like is not False:
             raise SocietyTypeError('Society not a county')
-        # Define epsilion, which functions as threshold to change farmsize
-        epsilon = 10
         # Define factor how fast adjusting takes place
         factor = 0.5
         sum = 0
@@ -121,8 +119,8 @@ class Society (I.Society):
             sum += ind.farm_size
         # Now divide by number of individuals to get mean:
         real_mean = sum / self.population
-        # get delta:
-        adaption = self.mean_income_or_farmsize / real_mean
+        adaption_rate = self.mean_income_or_farmsize / real_mean
+        adaption = adaption_rate + (1 - adaption_rate) * factor
         for ind in self.individuals:
             ind.farm_size *= adaption
 
