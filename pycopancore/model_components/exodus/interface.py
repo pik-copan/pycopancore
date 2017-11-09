@@ -53,6 +53,11 @@ class World (object):
                                lower_bound=0,
                                dimension=D.volume * D.time,
                                unit=D.meters ** 3 / D.years)
+    total_liquidity = Variable("total liquidity",
+                               "All the liquidity in the world, shall be equal"
+                               "to the total gross income",
+                               lower_bound=0,
+                               unit=D.dollars)
     water_price = Variable("water price",
                            "price of water that is calculated by market "
                            "clearing",

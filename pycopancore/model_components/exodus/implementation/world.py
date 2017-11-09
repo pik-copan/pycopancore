@@ -38,24 +38,22 @@ class World (I.World):
         # inherited only by mixing in the model:
         self.assert_valid()
 
-    @property
-    def total_gross_income(self):
-        """Get the total gross income."""
+    def calc_total_gros_income(self, unused_t):
+        """Calculate total gross income explicitly."""
         tgi = 0
         for individual in self.individuals:
             tgi += individual.gross_income
-        return tgi
+        self.total_gross_income = tgi
 
-    @property
-    def total_harvest(self):
-        """Get the total harvest."""
+    def calc_total_harvest(self, unused_t):
+        """Calculate total harves exlicitly"""
         th = 0
         for individual in self.individuals:
             th += individual.harvest
-        return th
+        self.total_harvest = th
 
-    @property
-    def total_nutrition(self):
+    def calc_total_nutrition(self, unused_t):
+        """Calculate total nutrition explicitly."""
         """Get the total nutrition."""
         tn = 0
         for individual in self.individuals:
@@ -65,11 +63,10 @@ class World (I.World):
                 self.exception_checker = True
                 # raise BaseException('some individuals nutrition is nan!')
                 print('some individuals nutrition is nan!')
-        return tn
+        self.total_nutrition = tn
 
-    @property
-    def total_liquidity(self):
-        """Get the total liquidity."""
+    def calc_total_liquidity(self, unused_t):
+        """Calculate total liquidity explicitly."""
         tl = 0
         for individual in self.individuals:
             # print(individual.liquidity)
@@ -78,7 +75,7 @@ class World (I.World):
                 self.exception_checker = True
                 # raise BaseException('some individuals liquidity is nan!')
                 print('some individuals nutrition is nan!')
-        return tl
+        self.total_liquidity = tl
 
     def check_for_exceptions(self):
         """Check if the market equilibrium is still in order."""
@@ -88,4 +85,16 @@ class World (I.World):
             return False
 
     processes = [
+        Explicit('calculate total gross income',
+                 [I.World.total_gross_income],
+                 calc_total_gros_income),
+        Explicit('calculate total harvest',
+                 [I.World.total_harvest],
+                 calc_total_harvest),
+        Explicit('calculate total nutrition',
+                 [I.World.total_nutrition],
+                 calc_total_nutrition),
+        Explicit('calculate total liquidity',
+                 [I.World.total_liquidity],
+                 calc_total_liquidity)
         ]

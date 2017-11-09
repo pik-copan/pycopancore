@@ -95,8 +95,6 @@ class Society (I.Society):
         # first: Check if really a municipaity:
         if self.municipality_like is not True:
             raise SocietyTypeError('Society not a municipality')
-        # Define epsilion, which functions as threshold to change incomes
-        epsilon = 10
         # Define factor how fast adjusting takes place
         factor = 0.5
         sum = 0
@@ -105,20 +103,9 @@ class Society (I.Society):
         # Now divide by number of individuals to get mean:
         real_mean = sum / self.population
         # get delta:
-        delta_mean = self.mean_income_or_farmsize - real_mean
-        if delta_mean > epsilon and delta_mean > 0:
-            # mean income is smaller than it should be, need to add
-            # Define amount to add:
-            to_add = delta_mean / self.population * factor
-            for ind in self.individuals:
-                ind.gross_income += to_add
-        if delta_mean > epsilon and delta_mean < 0:
-            # mean income is bigger than it should be, need to subtract
-            # Define amount to subtract:
-            to_subtract = delta_mean / self.population * factor
-            for ind in self.individuals:
-                ind.gross_income -= to_subtract
-        # Else do nothing
+        adaption = self.mean_income_or_farmsize / real_mean
+        for ind in self.individuals:
+            ind.gross_income *= adaption
 
     def update_farmsizes(self):
         """Update farmsizes to adjust to population."""
@@ -135,20 +122,9 @@ class Society (I.Society):
         # Now divide by number of individuals to get mean:
         real_mean = sum / self.population
         # get delta:
-        delta_mean = self.mean_income_or_farmsize - real_mean
-        if abs(delta_mean) > epsilon and delta_mean > 0:
-            # mean farmsize is smaller than it should be, need to add
-            # Define amount to add:
-            to_add = delta_mean / self.population * factor
-            for ind in self.individuals:
-                ind.farm_size += to_add
-        if abs(delta_mean) > epsilon and delta_mean < 0:
-            # mean farmsize is bigger than it should be, need to subtract
-            # Define amount to subtract:
-            to_subtract = delta_mean / self.population * factor
-            for ind in self.individuals:
-                ind.farm_size -= to_subtract
-        # Else do nothing
+        adaption = self.mean_income_or_farmsize / real_mean
+        for ind in self.individuals:
+            ind.farm_size *= adaption
 
     def update_timing(self, t):
         """Decide how often income and farm size are adjusted."""

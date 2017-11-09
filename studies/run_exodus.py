@@ -28,8 +28,8 @@ timestep = .1
 
 nm = 5  # number of municipalities, also cities
 nc = 5  # number of counties, also farmland_cells
-na = 200  # number of agents
-pf = .9  # percentage of farmers
+na = 100  # number of agents
+pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
 
@@ -68,7 +68,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  society=county,
                                  characteristic='farmland',
-                                 land_area=0.01 * (nf + nt),  # in square kilometers
+                                 land_area=0.01 * (nf + nt) / nc,  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []
@@ -150,6 +150,12 @@ for ind in M.Individual.instances:
 for soc in M.Society.instances:
     soc.calculate_average_utility(0)
     soc.calculate_gini(0)
+
+world.calc_total_gros_income(0)
+world.calc_total_harvest(0)
+world.calc_total_nutrition(0)
+world.calc_total_liquidity(0)
+
 # Run market clearing once:
 metabolism.do_market_clearing(0)
 # In case of a erdos renyi network:
