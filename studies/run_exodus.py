@@ -201,7 +201,8 @@ for soc in counties:
     plot(t, traj[M.Society.population][soc], "k", lw=3)
     plot(t, traj[M.Society.average_utility][soc], "k:", lw=3)
     plot(t, traj[M.Society.gini_coefficient][soc], "k--", lw=3)
-#for ind in M.Individual.instances:
+
+# for ind in M.Individual.instances:
 #    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)
 gca().set_yscale('symlog')
 
