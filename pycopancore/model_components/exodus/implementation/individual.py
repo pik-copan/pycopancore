@@ -91,7 +91,8 @@ class Individual (I.Individual):
     def social_update_timer(self, t):
         """Calculate when a social update takes place"""
         return t + np.random.exponential(self.outspokenness)
-    # In this case: t + np.random.exponential(self.outspokenness)
+    # outspokenness = 1 means in average once a year, 0.1 = 10 times a year,
+    # 10 means once every 10 years in average.
 
     def social_update(self, unused_t):
         """Do social update.
@@ -150,7 +151,7 @@ class Individual (I.Individual):
         delta_utility = neighbour.utility - self.utility
         # print('delta util', delta_utility)
         # Tanh function:
-        tanh = math.tanh(delta_utility)
+        tanh = 0.5 * (1 + math.tanh(delta_utility / 2))
         if random.random() <= tanh:
             # Migrate if enough liquidity
             if self.liquidity > neighbour.society.migration_cost:
