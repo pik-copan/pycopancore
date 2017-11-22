@@ -84,15 +84,17 @@ class Society (I.Society):
         """
         if len(self.individuals) == 0:
             self.deactivate()
-        self.population = len(self.individuals)
+            print(f'society {self} died out at time {unused_t}')
+            # to prevent division by zero:
+            self.population = 1
+        else:
+            self.population = len(self.individuals)
 
     def update_incomes(self):
         """Update incomes to adjust to population in some manner."""
         # first: Check if really a municipaity:
         if self.municipality_like is not True:
             raise SocietyTypeError('Society not a municipality')
-        # Define epsilion, which functions as threshold to change incomes
-        epsilon = 10
         # Define factor how fast adjusting takes place
         factor = 0.5
         sum = 0
@@ -100,51 +102,27 @@ class Society (I.Society):
             sum += ind.gross_income
         # Now divide by number of individuals to get mean:
         real_mean = sum / self.population
-        # get delta:
-        delta_mean = self.mean_income_or_farmsize - real_mean
-        if delta_mean > epsilon and delta_mean > 0:
-            # mean income is smaller than it should be, need to add
-            # Define amount to add:
-            to_add = delta_mean / self.population * factor
-            for ind in self.individuals:
-                ind.gross_income += to_add
-        if delta_mean > epsilon and delta_mean < 0:
-            # mean income is bigger than it should be, need to subtract
-            # Define amount to subtract:
-            to_subtract = delta_mean / self.population * factor
-            for ind in self.individuals:
-                ind.gross_income -= to_subtract
-        # Else do nothing
+        adaption_rate = self.mean_income_or_farmsize / real_mean
+        adaption = adaption_rate + (1 - adaption_rate) * factor
+        for ind in self.individuals:
+            ind.gross_income *= adaption
 
     def update_farmsizes(self):
         """Update farmsizes to adjust to population."""
         # first: Check if really a county:
         if self.municipality_like is not False:
             raise SocietyTypeError('Society not a county')
-        # Define epsilion, which functions as threshold to change farmsize
-        epsilon = 10
-        # Define factor how fast adjusting akes place
+        # Define factor how fast adjusting takes place
         factor = 0.5
         sum = 0
         for ind in self.individuals:
             sum += ind.farm_size
         # Now divide by number of individuals to get mean:
         real_mean = sum / self.population
-        # get delta:
-        delta_mean = self.mean_income_or_farmsize - real_mean
-        if delta_mean > epsilon and delta_mean > 0:
-            # mean farmsize is smaller than it should be, need to add
-            # Define amount to add:
-            to_add = delta_mean / self.population * factor
-            for ind in self.individuals:
-                ind.farm_size += to_add
-        if delta_mean > epsilon and delta_mean < 0:
-            # mean farmsize is bigger than it should be, need to subtract
-            # Define amount to subtract:
-            to_subtract = delta_mean / self.population * factor
-            for ind in self.individuals:
-                ind.farm_size -= to_subtract
-        # Else do nothing
+        adaption_rate = self.mean_income_or_farmsize / real_mean
+        adaption = adaption_rate + (1 - adaption_rate) * factor
+        for ind in self.individuals:
+            ind.farm_size *= adaption
 
     def update_timing(self, t):
         """Decide how often income and farm size are adjusted."""
@@ -183,6 +161,9 @@ class Society (I.Society):
             for ind in self.individuals:
                 sum += ind.liquidity
             self.average_liquidity = sum / self.population
+        else:
+            # This should not happen, but apparently does nevertheless...
+            self.average_liquidity = 1
 
     def calculate_average_utility(self, unused_t):
         """Calculate the average utility in this society."""
@@ -211,7 +192,10 @@ class Society (I.Society):
 
     processes = [
         Explicit('calculate population',
-                 [B.Society.population],
+                 [B.Society.population,
+                  # Following is only done to determine if soc is a city or
+                  # not afterwards, since this is not saved otherwise:
+                  I.Society.municipality_like],
                  calc_population),
         Step("Update incomes/farmsizes",
              [B.Society.individuals.farm_size,

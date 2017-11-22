@@ -90,9 +90,9 @@ class Individual (I.Individual):
     # process-related methods:
     def social_update_timer(self, t):
         """Calculate when a social update takes place"""
-        return t + np.random.exponential(1)
-    # TODO: this should be dependent on self.outspokenness. How do I do this?
-    # In this case: t + np.random.exponential(self.outspokenness)
+        return t + np.random.exponential(self.outspokenness)
+    # outspokenness = 1 means in average once a year, 0.1 = 10 times a year,
+    # 10 means once every 10 years in average.
 
     def social_update(self, unused_t):
         """Do social update.
@@ -150,16 +150,14 @@ class Individual (I.Individual):
         # Difference in utility:
         delta_utility = neighbour.utility - self.utility
         # print('delta util', delta_utility)
-        # Sigmoidal function, normalized so that sigmoid(1) = 1:
-        #  sigmoid = 1 / (1 + math.exp(- self.migration_steepness * (
-        #     delta_utility - self.migration_threshold))) * (1 + math.exp(
-        #         - self.migration_steepness * (1 - self.migration_threshold)))
         # Tanh function:
-        tanh = math.tanh(delta_utility)
+        tanh = 0.5 * (1 + math.tanh(delta_utility / 2))
         if random.random() <= tanh:
             # Migrate if enough liquidity
             if self.liquidity > neighbour.society.migration_cost:
-                self.liquidity -= neighbour.society.migration_cost
+                # Next line is causing liquidities to drop below 0 if the
+                # society update takes place:
+                # self.liquidity -= neighbour.society.migration_cost
                 return True
             else:
                 # Not enough money to migrate
@@ -256,9 +254,22 @@ class Individual (I.Individual):
 
     def calculate_utility(self, unused_t):
         """Calculate utility if an Individual."""
-        self.utility = math.sqrt(
-            self.liquidity * self.nutrition / self.society.average_liquidity / 1240)
-        # 1240 m^3 is the annual need, maybe need to incorporate it
+        try:
+            self.utility = math.sqrt(
+                self.liquidity * self.nutrition
+                / self.society.average_liquidity / 1240)
+            # 1240 m^3 is the annual need, maybe need to incorporate it
+        # The folloeing should not happen but do so on the cluster:
+        except ValueError:
+            print('liquidity could not be calculated! Setting it to 0')
+            print(self.liquidity, self.nutrition,
+                  self.society.average_liquidity)
+            self.utility = 0
+        except TypeError:
+            print('liquidity could not be calculated! Setting it to 0')
+            print(self.liquidity, self.nutrition,
+                  self.society.average_liquidity)
+            self.utility = 0
 
     def calculate_sri(self, unused_t):
         """Calculate subjective income rank of individual"""

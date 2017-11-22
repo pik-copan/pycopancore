@@ -544,6 +544,12 @@ class Runner(_AbstractRunner):
                     # discontinuity is a tuple (event/step, entity/taxon)
                     process = discontinuity[0]
                     inst = discontinuity[1]
+                    # Test if the instance is active in case of it being an
+                    # entity:
+                    if isinstance(inst, _AbstractEntityMixin):
+                        if not inst.is_active:
+                            # If it is not active, break.
+                            continue
                     if isinstance(process, Event):
                         print("    Event", process, "@", inst, "...")
                         eventtype = process.specification[0]
