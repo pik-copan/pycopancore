@@ -108,8 +108,8 @@ class ModelLogics (object):
         to compile and output lists (actually OrderedSets) of variables and
         processes.
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         reconfigure : bool
             Flag that indicates if the model should be reconfigured even if
             it is already configured

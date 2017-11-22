@@ -1,7 +1,7 @@
 """Master data model for metabolism."""
 
 from .. import Variable
-from . import gigajoules, dollars, gigatonnes_carbon, years, utils, people
+from . import gigajoules, dollars, gigatonnes_carbon, years, utils, people, kelvins
 from .. import unity
 
 # Population, demographics:
@@ -38,10 +38,22 @@ max_fertility = Variable("maximum human fertility rate", "",
                          unit=years**-1,
                          lower_bound=0, is_intensive=True,
                          default=0.05)
+
 mortality = Variable("current human mortility rate", "",
                      unit=years**-1,
                      lower_bound=0, is_intensive=True,
                      default=0.01)
+mortality_temperature_sensitivity = \
+    Variable("mortality temperature sensitivity", "",
+             unit = years**-1 / kelvins,
+             lower_bound=0, is_intensive=True,
+             default = 5e-5/years / kelvins
+             )
+mortality_reference_temperature = \
+    Variable("reference temperature for relationship with mortality", 
+             "default: pre-industrial value",
+             unit=kelvins, lower_bound=0,
+             default=287)  # TODO: verify! 
 
 births = Variable("births per time", "",
                   unit = people / years,
@@ -212,6 +224,25 @@ physical_capital_depreciation_rate = \
              unit = years**-1,
              lower_bound=0, is_intensive=True,
              default=0.1)
+basic_physical_capital_depreciation_rate = \
+    Variable("basic physical capital depreciation rate", "",
+             unit = years**-1,
+             lower_bound=0, is_intensive=True,
+             default=0.1)
+physical_capital_depreciation_rate_temperature_sensitivity = \
+    Variable("physical capital depreciation rate temperature sensitivity", "",
+             unit = years**-1 / kelvins,
+             lower_bound=0, is_intensive=True,
+             default = 0.05/years / kelvins
+                # the following gives much too large sensitivity:
+                # (40e9 * dollars / years) / (6e13 * dollars)
+                #    / ((1.5*kelvins) / (1000*gigatonnes_carbon))
+             )
+physical_capital_depreciation_rate_reference_temperature = \
+    Variable("reference temperature for relationship with capital depreciation", 
+             "default: pre-industrial value",
+             unit=kelvins, lower_bound=0,
+             default=287)  # TODO: verify! 
 
 renewable_energy_knowledge_depreciation_rate = \
     Variable("renewable energy production knowledge depreciation rate", "",

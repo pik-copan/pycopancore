@@ -11,7 +11,13 @@ population_by_age = MET.population_by_age.copy()
 migrant_population = MET.migrant_population.copy()
 
 fertility = MET.fertility.copy()
+
 mortality = MET.mortality.copy()
+mortality_temperature_sensitivity = \
+    MET.mortality_temperature_sensitivity.copy()
+mortality_reference_temperature = \
+    MET.mortality_reference_temperature.copy()    
+
 births = MET.births.copy()
 deaths = MET.deaths.copy()
 immigration = MET.immigration.copy()
@@ -48,6 +54,13 @@ protected_fossil_carbon_share = MET.protected_fossil_carbon_share.copy()
 
 physical_capital_depreciation_rate = \
     MET.physical_capital_depreciation_rate.copy()
+basic_physical_capital_depreciation_rate = \
+    MET.basic_physical_capital_depreciation_rate.copy()
+physical_capital_depreciation_rate_temperature_sensitivity = \
+    MET.physical_capital_depreciation_rate_temperature_sensitivity.copy()
+physical_capital_depreciation_rate_reference_temperature = \
+    MET.physical_capital_depreciation_rate_reference_temperature.copy()    
+
 renewable_energy_knowledge_depreciation_rate = \
     MET.renewable_energy_knowledge_depreciation_rate.copy()
 

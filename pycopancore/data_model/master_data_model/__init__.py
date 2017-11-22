@@ -1,12 +1,16 @@
 from .dimensions_and_units import *
 
-from . import nature, metabolism, culture
+from . import nature, metabolism #, culture
 from . import nature as NAT
 from . import nature as Nature
 from . import metabolism as MET
 from . import metabolism as Metabolism
-from . import culture as CUL
-from . import culture as Culture
+
+# this way sphinx will include Variables from MDM:
+# TODO: do the same for other taxa and entity types in MDM!
+from .culture import Culture as CUL
+from .culture import Culture as culture
+from .culture import Culture
 
 from . import world, society, cell, individual
 from . import world as W

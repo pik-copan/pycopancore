@@ -116,6 +116,9 @@ class Variable(Symbol):
     _iterable = False
     _can_be_target = True
 
+    # needed to make sphinx happy:
+    __qualname__ = "pycopancore.data_model.master_data_model.variable.Variable"
+
     # standard methods:
 
     # inheritance from Symbol is a little tricky since Symbol has a custom
@@ -256,36 +259,58 @@ class Variable(Symbol):
     def __str__(self):
         return (self.owning_class.__name__ + "." + self.codename) \
                 if self.owning_class \
-                else self.name
+                else self.name + "(uid=" + self._uid + ")"
 
     def __repr__(self):
-        return (self.owning_class.__name__ + "." + self.codename) \
-            if self.owning_class \
-            else self.name + "(uid=" + self._uid + ")"
+#        return (self.owning_class.__name__ + "." + self.codename) \
+#            if self.owning_class \
+#            else self.name + "(uid=" + self._uid + ")"
         # dirty fix for lengthy output
-#        r = "Variable " + self.name + "(" + self.desc + "), scale=" \
-#            + self.scale + ", datatype=" + str(self.datatype)
-#        if self.unit is not None:
-#            r += ", unit=" + str(self.unit)
-#        if self.default is not None:
-#            r += ", default=" + str(self.default)
-#        if self.allow_none is False:
-#            r += ", not None"
-#        if self.lower_bound is not None:
-#            r += ", >=" + str(self.lower_bound)
-#        if self.strict_lower_bound is not None:
-#            r += ", >" + str(self.strict_lower_bound)
-#        if self.upper_bound is not None:
-#            r += ", <=" + str(self.upper_bound)
-#        if self.strict_upper_bound is not None:
-#            r += ", <" + str(self.strict_upper_bound)
-#        if self.quantum is not None:
-#            r += ", % " + str(self.quantum) + " == 0"
-#        if self.levels is not None:
-#            r += ", levels=" + str(self.levels)
-#        if self.array_shape is not None:
-#            r += ", shape=" + str(self.array_shape)
-#        return r
+        if self.owning_class:
+            return self.owning_class.__name__ + "." + self.codename
+        r = "read-only " if self.readonly else ""
+        r += "extensive " if self.is_extensive else ""
+        r += "intensive " if self.is_intensive else ""
+        r += "variable '" + self.name + "'"
+        if self.desc not in ("", None):
+            r += " (" + self.desc + ")"
+        if self.ref is not None:
+            r += ", ref=" + self.ref
+        if self.CF is not None:
+            r += ", CF=" + self.CF
+        if self.AMIP is not None:
+            r += ", AMIP=" + self.AMIP
+        if self.IAMC is not None:
+            r += ", IAMC=" + self.IAMC
+        if self.CETS is not None:
+            r += ", CETS=" + self.CETS
+        if self.symbol not in ("", None):
+            r += ", symbol=" + self.symbol
+        if self.allow_none is False:
+            r += ", not None"
+        if self.scale not in ("", None):
+            r += ", scale=" + self.scale
+        if self.datatype is not None:
+            r += ", datatype=" + str(self.datatype)
+        if self.unit is not None:
+            r += ", unit=" + str(self.unit)
+        if self.quantum is not None:
+            r += ", % " + str(self.quantum) + " == 0"
+        if self.lower_bound is not None:
+            r += ", >=" + str(self.lower_bound)
+        if self.strict_lower_bound is not None:
+            r += ", >" + str(self.strict_lower_bound)
+        if self.upper_bound is not None:
+            r += ", <=" + str(self.upper_bound)
+        if self.strict_upper_bound is not None:
+            r += ", <" + str(self.strict_upper_bound)
+        if self.levels is not None:
+            r += ", levels=" + str(self.levels)
+        if self.array_shape is not None:
+            r += ", shape=" + str(self.array_shape)
+        if self.default is not private.unset:
+            r += ", default=" + str(self.default)
+        return r # + " (uid=" + str(self._uid) + ")"
 
     # validation:
 

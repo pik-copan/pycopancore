@@ -2,10 +2,11 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = -E -a
 SPHINXBUILD   = sphinx-build
 PYREVERSE = pyreverse
 APIDOC = sphinx-apidoc
+SPHINX_APIDOC_OPTIONS=members,undoc-members,private-members,special-members,inherited-members,show-inheritance
 DOT = dot
 PAPER         =
 BUILDDIR      = _build
@@ -60,7 +61,7 @@ clean:
 .PHONY: html
 html:
 	@echo "Creating auto-generated documentation from source"
-	cd ..; $(APIDOC) -f -o ./docs/_api ./pycopancore/ ./pycopancore/model_components/base/__init__.py ./pycopancore/model_components/seven_dwarfs/__init__.py
+	cd ..; $(APIDOC) --implicit-namespaces -f -o ./docs/_api ./pycopancore/ ./pycopancore/model_components/base/__init__.py ./pycopancore/model_components/seven_dwarfs/__init__.py
 	@echo
 	@echo "Sphinx-apidoc is done, building directories"
 	$(SPHINXBUILD) -b html -v $(ALLSPHINXOPTS) $(BUILDDIR)/html

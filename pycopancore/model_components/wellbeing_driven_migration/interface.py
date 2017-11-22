@@ -63,7 +63,7 @@ class Metabolism (object):
         "of inflection", 
         unit = D.unity,
         is_intensive=True,
-        default=2) # 1
+        default=3) # 1
     emigration_probability_characteristic_slope = Variable(
         "emigration probability's characteristic slope",
         "slope of the normalized sigmoid function at its point of inflection", 
@@ -75,5 +75,5 @@ class Metabolism (object):
         "absolute value of emigration probability rate at its point of inflection",
         unit = D.years**-1 / D.people**2,
         lower_bound=0, is_intensive=True, 
-        default = (.01 / D.years) / (1e6 * D.people)**2) # .01
+        default = 8e-13) # 3e-13
     

@@ -209,7 +209,8 @@ class Runner(_AbstractRunner):
             dt,  # TODO: rename to "resolution" since it is only an upper bound?
             exclusions=None,
             # TODO: add some kwargs for choosing solver and setting its params
-            max_resolution=False
+            max_resolution=False,
+            add_to_output=None  # optional list of variables to include in output
             ):
         """Run the model for a specified time interval.
 
@@ -274,7 +275,7 @@ class Runner(_AbstractRunner):
 
         # Only now save initial state to output dict:
         self.trajectory_dict['t'] = [t]
-        self.save_to_traj(self.model.process_targets)
+        self.save_to_traj(self.model.process_targets, add_to_output)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # TODO: discuss whether hooks make sense, then maybe:
@@ -520,7 +521,8 @@ class Runner(_AbstractRunner):
                                 ode_values[target._from:target._to])
                         self.apply_explicits(t)
                         # complete the output dictionary:
-                        self.save_to_traj(targets_to_save)
+                        self.save_to_traj(self.model.process_targets,
+                                          add_to_output)
 
             # After all that is done, determine what happens at the
             # discontinuity (step 3.4 in runner scheme)
@@ -601,7 +603,8 @@ class Runner(_AbstractRunner):
 
                 # Store all information that has been calculated at time t:
                 print("    Completing output dict...")
-                self.save_to_traj(targets_to_save)
+
+                self.save_to_traj(self.model.process_targets, add_to_output)
 
             # if max reoslution is true, the trajectory_dict s length is
             # reduced to time*dt
@@ -645,7 +648,7 @@ class Runner(_AbstractRunner):
 
         return self.trajectory_dict
 
-    def save_to_traj(self, targets):
+    def save_to_traj(self, targets, add_to_output):
         """Save simulation results to output dictionary.
 
         Update self.trajectory_dict for some targets.
@@ -654,7 +657,11 @@ class Runner(_AbstractRunner):
         ----------
         targets : list
             list of targets (variables or dotconstructs) to save
+        add_to_output : list or None
+            optional additional list
         """
+        if add_to_output is not None:
+            targets += add_to_output
         # determine no. of simulated time points:
         tlen = len(self.trajectory_dict["t"])
         for target in targets:

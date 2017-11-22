@@ -44,6 +44,8 @@ class _MixinType(type):
     def __getattribute__(cls, name):
         """Dummy docstring"""
         # TODO: add docstring to function
+        if name == "__qualname__":  # needed to make sphinx happy
+            return "DUMMY"  # FIXME!
         if name in aggregation_names:
             dc = _DotConstruct(cls, [], aggregation=name)
 #            print("new aggregation dot construct",dc,"at",cls,"with aggregation",name)
@@ -85,6 +87,9 @@ class _Mixin(object, metaclass=_MixinType):
     """Active entities of this type"""
     _composite_class = None
     """Composite class this mixin contributes to in the current model"""
+
+    # needed to make sphinx happy:
+    __qualname__ = "pycopancore.private._mixin._Mixin"
 
     def __new__(cls, *args, **kwargs):
         """Internal method called when instantiating a new entity.

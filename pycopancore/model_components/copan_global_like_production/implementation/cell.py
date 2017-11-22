@@ -16,7 +16,7 @@ from .... import Explicit
 from .... import master_data_model as D
 from .. import interface as I
 from ...base import interface as B
-from sympy import ITE
+from sympy import ITE, Min
 
 # import numpy as np
 
@@ -24,7 +24,8 @@ from sympy import ITE
 class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
 
-    protected_terrestrial_carbon_share = (
+    # TODO: allocate protected stock more adequately than this:
+    protected_terrestrial_carbon_share = Min(1,
         B.Cell.society.protected_terrestrial_carbon
         / B.Cell.society.sum.cells.terrestrial_carbon)
 

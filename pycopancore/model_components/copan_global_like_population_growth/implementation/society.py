@@ -35,9 +35,9 @@ class Society (I.Society):
     terrestrial_carbon = B.Society.sum.cells.terrestrial_carbon
     min_fert = B.Society.metabolism.min_fertility
     fert_exp = B.Society.metabolism.fertility_decay_exponent
-
+ 
     pop = I.Society.population
-
+ 
     fert = (min_fert
             + 2 * (B.Society.metabolism.max_fertility - min_fert) 
               * I.Society.wellbeing 
@@ -48,11 +48,14 @@ class Society (I.Society):
                    ** (1 + fert_exp)
               )
            )
-    
+     
     mort = (B.Society.metabolism.characteristic_mortality
             / (I.Society.wellbeing
                / B.Society.metabolism.fertility_maximizing_wellbeing)
               ** B.Society.metabolism.mortality_decay_exponent
+            + I.Society.mortality_temperature_sensitivity
+            * (B.Society.world.surface_air_temperature
+               - I.Society.mortality_reference_temperature)
             + B.Society.metabolism.population_spatial_competition_coefficient
             * (I.Society.population / land_area)
             / sp.sqrt(I.Society.physical_capital))
