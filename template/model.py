@@ -12,7 +12,6 @@ See the model development tutorial for details.
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
 
 # all models must use the base component
 from pycopancore import base
@@ -24,8 +23,7 @@ from pycopancore import base
 from pycopancore.model_components import SOMECOMPONENT
 
 # Or you implement your own components
-from model_components import first_component
-from model_components import second_component
+from model_components import one_component
 
 # entity types:
 
@@ -36,8 +34,7 @@ from model_components import second_component
 
 # NEED TO: list all mixin classes needed:
 class World(SOMECOMPONENT.World,
-            first_component.World,
-            second_component.World,
+            one_component.World,
             base.World):
     """World entity type."""
     pass
@@ -45,8 +42,7 @@ class World(SOMECOMPONENT.World,
 
 # NEED TO: list all mixin classes needed:
 class Society(SOMECOMPONENT.Society,
-              first_component.Society,
-              second_component.Society,
+              one_component.Society,
               base.Society):
     """Society entity type."""
     pass
@@ -54,8 +50,7 @@ class Society(SOMECOMPONENT.Society,
 
 # NEED TO: list all mixin classes needed:
 class Cell(SOMECOMPONENT.Cell,
-           first_component.Cell,
-           second_component.Cell,
+           one_component.Cell,
            base.Cell):
     """Cell entity type."""
     pass
@@ -63,8 +58,7 @@ class Cell(SOMECOMPONENT.Cell,
 
 # NEED TO: list all mixin classes needed:
 class Individual(SOMECOMPONENT.Individual,
-                 first_component.Individual,
-                 second_component.Individual,
+                 one_component.Individual,
                  base.Individual):
     """Individual entity type."""
     pass
@@ -76,8 +70,7 @@ class Individual(SOMECOMPONENT.Individual,
 
 # NEED TO: list all mixin classes needed:
 class Nature(SOMECOMPONENT.Nature,
-             first_component.Nature,
-             second_component.Nature,
+             one_component.Nature,
              base.Nature):
     """Nature process taxon."""
     pass
@@ -85,8 +78,7 @@ class Nature(SOMECOMPONENT.Nature,
 
 # NEED TO: list all mixin classes needed:
 class Metabolism(SOMECOMPONENT.Metabolism,
-                 first_component.Metabolism,
-                 second_component.Metabolism,
+                 one_component.Metabolism,
                  base.Metabolism):
     """Metabolism process taxon."""
     pass
@@ -94,8 +86,7 @@ class Metabolism(SOMECOMPONENT.Metabolism,
 
 # NEED TO: list all mixin classes needed:
 class Culture(SOMECOMPONENT.Culture,
-              first_component.Culture,
-              second_component.Culture,
+              one_component.Culture,
               base.Culture):
     """Culture process taxon."""
     pass
@@ -105,8 +96,7 @@ class Culture(SOMECOMPONENT.Culture,
 
 # NEED TO: list all used model components:
 class Model(SOMECOMPONENT.Model,
-            first_component.Model,
-            second_component.Model,
+            one_component.Model,
             base.Model):
     """Class representing the whole model."""
 
