@@ -25,14 +25,12 @@ class SocialSystem(I.SocialSystem):
     # process-related methods:
     def register_dwarf(self, dwarf):
         """Connect dwarf with other individuals in network.
-        
-        When a dwarf is instantiated, this function is called and 
+
+        When a dwarf is instantiated, this function is called and
         connects the dwarf with all other ones in its social_system."""
         for ind in self.individuals:
             if (ind not in dwarf.acquaintances
                     and dwarf != ind):
                 # Add edge:
                 self.culture.acquaintance_network.add_edge(dwarf, ind)
-                # self.acquaintance_network.add_edge(dwarf, ind)
-
     processes = []

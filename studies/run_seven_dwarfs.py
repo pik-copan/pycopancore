@@ -9,6 +9,9 @@ import numpy as np
 from time import time
 import datetime as dt
 
+import networkx as nx
+import matplotlib.pyplot as plt
+
 import plotly.offline as py
 import plotly.graph_objs as go
 
@@ -17,7 +20,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 100
+timeinterval = 200
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nc = 1  # number of caves
@@ -162,3 +165,9 @@ py.plot(fig, filename="our-model-result{}.html".format(0))
 fig = dict(data=[data_age[5], data_beard_length[5], data_stock[0]],
             layout=layout)
 py.plot(fig, filename="our-model-result{}.html".format(5))
+
+
+print("....acqu", culture.acquaintance_network)
+print(".....edges", nx.edges(culture.acquaintance_network))
+nx.draw(culture.acquaintance_network)
+plt.show()
