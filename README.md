@@ -25,7 +25,7 @@ Requires
 
 
 ## Documentation
-Create local html version of the docs in the `docs` directory with
+Create local html version of the docs with [Sphinx](http://www.sphinx-doc.org/en/stable/)(version >= 1.6.3) in the `docs` directory with
 ```
 > make html
 ```
