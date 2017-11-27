@@ -14,11 +14,12 @@ remove these instructions.
 # Use variables from the master data model wherever possible
 from pycopancore import master_data_model 
 
-# TODO: uncomment and adjust to use variables from another model component:
-#import pycopancore.model_components.MODEL_COMPONENT.interface as MODEL_COMPONENT
+# TODO: uncomment and adjust to use variables from other pycopancore model
+# components:
+# import pycopancore.model_components.MODEL_COMPONENT.interface as MODEL_COMPONENT
 
 # TODO: uncomment and adjust only if you really need other variables:
-#from pycopancore import Variable
+# from pycopancore import Variable
 
 
 class Model (object):
@@ -53,10 +54,10 @@ class World (object):
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    #ANOTHERWORLDVARIABLE= MODEL_COMPONENT.World.DESIREDVARIABLE
+    # ANOTHERWORLDVARIABLE= MODEL_COMPONENT.World.DESIREDVARIABLE
 
     # TODO: uncomment and adjust only if you really need other variables:
-    #PERSONALWORLDVARIABLE = Variable("name", "desc", unit=..., ...)
+    # PERSONALWORLDVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
     # TODO: similarly
@@ -73,10 +74,10 @@ class SocialSystem (object):
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    #ANOTHERSOCIALSYSTEMVARIABLE= MODEL_COMPONENT.SocialSystem.DESIREDVARIABLE
+    # ANOTHERSOCIALSYSTEMVARIABLE= MODEL_COMPONENT.SocialSystem.DESIREDVARIABLE
 
     # TODO: uncomment and adjust only if you really need other variables:
-    #PERSONALSOCIALSYSTEMVARIABLE = Variable("name", "desc", unit=..., ...)
+    # PERSONALSOCIALSYSTEMVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
 
@@ -92,10 +93,10 @@ class Cell (object):
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    #ANOTHERCELLVARIABLE= MODEL_COMPONENT.Cell.DESIREDVARIABLE
+    # ANOTHERCELLVARIABLE= MODEL_COMPONENT.Cell.DESIREDVARIABLE
 
     # TODO: uncomment and adjust only if you really need other variables:
-    #PERSONALCELLVARIABLE = Variable("name", "desc", unit=..., ...)
+    # PERSONALCELLVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
 
@@ -111,10 +112,10 @@ class Individual (object):
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    #ANOTHERINDIVIDUALVARIABLE= MODEL_COMPONENT.Individual.DESIREDVARIABLE
+    # ANOTHERINDIVIDUALVARIABLE= MODEL_COMPONENT.Individual.DESIREDVARIABLE
 
     # TODO: uncomment and adjust only if you really need other variables:
-    #PERSONALINDIVIDUALVARIABLE = Variable("name", "desc", unit=..., ...)
+    # PERSONALINDIVIDUALVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
 
@@ -132,10 +133,10 @@ class Environment (object):
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    #ANOTHERENVIROMENTVARIABLE= MODEL_COMPONENT.Environment.DESIREDVARIABLE
+    # ANOTHERENVIROMENTVARIABLE= MODEL_COMPONENT.Environment.DESIREDVARIABLE
 
     # TODO: uncomment and adjust only if you really need other variables:
-    #PERSONALENVIROMENTVARIABLE = Variable("name", "desc", unit=..., ...)
+    # PERSONALENVIROMENTVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
 
@@ -151,10 +152,10 @@ class Metabolism (object):
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    #ANOTHERMETABOLISMVARIABLE= MODEL_COMPONENT.Metabolism.DESIREDVARIABLE
+    # ANOTHERMETABOLISMVARIABLE= MODEL_COMPONENT.Metabolism.DESIREDVARIABLE
 
     # TODO: uncomment and adjust only if you really need other variables:
-    #PERSONALMETABOLISMVARIABLE = Variable("name", "desc", unit=..., ...)
+    # PERSONALMETABOLISMVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
 
@@ -170,9 +171,9 @@ class Culture (object):
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    #ANOTHERCULTUREVARIABLE= MODEL_COMPONENT.Culture.DESIREDVARIABLE
+    # ANOTHERCULTUREVARIABLE= MODEL_COMPONENT.Culture.DESIREDVARIABLE
 
     # TODO: uncomment and adjust only if you really need other variables:
-    #PERSONALCULTUREVARIABLE = Variable("name", "desc", unit=..., ...)
+    # PERSONALCULTUREVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
