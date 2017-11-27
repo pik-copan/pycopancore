@@ -1,9 +1,9 @@
 """Model class template.
 
-TODO:
-Copy this file, rename it to the name of your model, then adjust or fill in
-code and documentation wherever marked by "TODO:", finally remove these
-instructions.  See the model development tutorial for details.
+TODO: Go through the file and adjust all parts of the code marked with the TODO
+flag. Pay attention to those variables and object written in capital letters.
+These are placeholders and must be adjusted as needed. For further details see
+also the model development tutorial.
 """
 # This file is part of pycopancore.
 #
@@ -22,7 +22,7 @@ from pycopancore import base
 from pycopancore.model_components import SOMECOMPONENT
 
 # Or you implement your own components
-from model_components import one_component
+from model_components import one_component as ONECOMPONENT
 
 # entity types:
 
@@ -33,7 +33,7 @@ from model_components import one_component
 
 # TODO: list all mixin classes needed:
 class World(SOMECOMPONENT.World,
-            one_component.World,
+            ONECOMPONENT.World,
             base.World):
     """World entity type."""
     pass
@@ -41,7 +41,7 @@ class World(SOMECOMPONENT.World,
 
 # TODO: list all mixin classes needed:
 class Society(SOMECOMPONENT.Society,
-              one_component.Society,
+              ONECOMPONENT.Society,
               base.Society):
     """Society entity type."""
     pass
@@ -49,7 +49,7 @@ class Society(SOMECOMPONENT.Society,
 
 # TODO: list all mixin classes needed:
 class Cell(SOMECOMPONENT.Cell,
-           one_component.Cell,
+           ONECOMPONENT.Cell,
            base.Cell):
     """Cell entity type."""
     pass
@@ -57,7 +57,7 @@ class Cell(SOMECOMPONENT.Cell,
 
 # TODO: list all mixin classes needed:
 class Individual(SOMECOMPONENT.Individual,
-                 one_component.Individual,
+                 ONECOMPONENT.Individual,
                  base.Individual):
     """Individual entity type."""
     pass
@@ -69,7 +69,7 @@ class Individual(SOMECOMPONENT.Individual,
 
 # TODO: list all mixin classes needed:
 class Nature(SOMECOMPONENT.Nature,
-             one_component.Nature,
+             ONECOMPONENT.Nature,
              base.Nature):
     """Nature process taxon."""
     pass
@@ -77,7 +77,7 @@ class Nature(SOMECOMPONENT.Nature,
 
 # TODO: list all mixin classes needed:
 class Metabolism(SOMECOMPONENT.Metabolism,
-                 one_component.Metabolism,
+                 ONECOMPONENT.Metabolism,
                  base.Metabolism):
     """Metabolism process taxon."""
     pass
@@ -85,7 +85,7 @@ class Metabolism(SOMECOMPONENT.Metabolism,
 
 # TODO: list all mixin classes needed:
 class Culture(SOMECOMPONENT.Culture,
-              one_component.Culture,
+              ONECOMPONENT.Culture,
               base.Culture):
     """Culture process taxon."""
     pass
@@ -95,7 +95,7 @@ class Culture(SOMECOMPONENT.Culture,
 
 # TODO: list all used model components:
 class Model(SOMECOMPONENT.Model,
-            one_component.Model,
+            ONECOMPONENT.Model,
             base.Model):
     """Class representing the whole model."""
 
