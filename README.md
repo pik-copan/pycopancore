@@ -1,14 +1,14 @@
 # pycopancore #
 
 
-Python copan:CORE World-Earth modeling framework release version ...
+Python copan:CORE World-Earth modeling framework release version [...]
 
 Table of Contents:
 
 1. [Introduction](#introduction)
 2. [Disclaimer](#disclaimer)
 3. [Quick start guide](#quick-start-guide)
-    1. Installation
+    [1. Installation](#installation)
     2. Documentation
     3. Code of good practice
     4. Tests
