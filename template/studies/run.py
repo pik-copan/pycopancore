@@ -5,7 +5,7 @@
 from pycopancore.models import MODEL as M
 
 # ... or import a model you designed yourself
-import model as M 
+import ..models.model as M 
 
 # You need a runner to run your model. Do not remove this.
 from pycopancore.runners.runner import Runner
