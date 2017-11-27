@@ -12,5 +12,5 @@ Model component implementation subpackage.
 from .metabolism import Metabolism
 
 # export all provided entity type implementation mixin classes:
-from .society import Society
+from .social_system import SocialSystem
 from .world import World

@@ -1,4 +1,4 @@
-"""Abstract Nature process taxon class, inherited by base model component."""
+"""Abstract Environment process taxon class, inherited by base model component."""
 
 # This file is part of pycopancore.
 #
@@ -12,8 +12,8 @@ from ...private import _AbstractProcessTaxonMixin
 from ...data_model import OrderedSet
 
 
-class Nature (_AbstractProcessTaxonMixin):
-    """Abstract Nature process taxon class.
+class Environment (_AbstractProcessTaxonMixin):
+    """Abstract Environment process taxon class.
 
     Inherited by base model component.
     """

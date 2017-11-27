@@ -10,6 +10,6 @@ Model component implementation subpackage template.
 # License: MIT license
 
 # export all provided entity type implementation mixin classes:
-from .society import Society
+from .social_system import SocialSystem
 
 # export all provided process taxon implementation mixin classes:

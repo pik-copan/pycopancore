@@ -34,9 +34,9 @@ class Cell (I.Cell):
 
         # assert that farmland is owned by county and city by municipality:
         if self.characteristic == 'farmland':
-            assert self.society.municipality_like is False
+            assert self.social_system.municipality_like is False
         if self.characteristic == 'city':
-            assert self.society.municipality_like is True
+            assert self.social_system.municipality_like is True
 
     # process-related methods:
 

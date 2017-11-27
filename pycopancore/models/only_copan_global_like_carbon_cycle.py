@@ -37,10 +37,10 @@ class World(cc.World,
     pass
 
 
-class Society(base.Society):
-              # prod.Society,
-              # growth.Society):
-    """Society entity type."""
+class SocialSystem(base.SocialSystem):
+              # prod.SocialSystem,
+              # growth.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -61,9 +61,9 @@ class Cell(cc.Cell,
 # process taxa:
 
 
-class Nature(cc.Nature,
-             base.Nature):
-    """Nature process taxon."""
+class Environment(cc.Environment,
+             base.Environment):
+    """Environment process taxon."""
 
     pass
 
@@ -95,7 +95,7 @@ class Model(cc.Model,
     description = "(as presented internally at PIK in fall 2016)"
     """Longer description"""
 
-    entity_types = [World, Society, Cell]
+    entity_types = [World, SocialSystem, Cell]
     """List of entity types used in the model"""
-    process_taxa = [Nature, Metabolism]
+    process_taxa = [Environment, Metabolism]
     """List of process taxa used in the model"""

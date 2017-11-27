@@ -18,9 +18,9 @@ class World(ex.World,
     pass
 
 
-class Society(ex.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(ex.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -64,7 +64,7 @@ class Model(ex.Model,
     name = "Exodus"
     description = "Model describing rural-urban migration."
 
-    entity_types = [World, Society, Cell, Individual]
+    entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""
     process_taxa = [Metabolism, Culture]
     """List of process taxa used in the model"""

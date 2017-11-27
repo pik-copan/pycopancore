@@ -13,7 +13,7 @@ Model component implementation subpackage template.
 
 # export all provided entity type implementation mixin classes:
 from .world import World
-from .society import Society
+from .social_system import SocialSystem
 from .cell import Cell
 
 # export all provided process taxon implementation mixin classes:

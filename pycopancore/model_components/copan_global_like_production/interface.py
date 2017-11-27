@@ -22,7 +22,7 @@ class Model (object):
     description = """Simple four-sector (three energy, one final) economy
         as in copan:GLOBAL, but with cell-based harvesting of terrestrial
         and extraction of fossil carbon and perfect allocation between cells.
-        Restriction: cannot deal with nested societies yet."""
+        Restriction: cannot deal with nested social_systems yet."""
     """some longer description"""
     requires = []
     """list of other model components required for this model component to
@@ -42,8 +42,8 @@ class World (object):
     # exogenous variables / parameters:
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # pure output variables:
 

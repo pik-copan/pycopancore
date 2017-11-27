@@ -47,8 +47,8 @@ class World (object):
     renewable_energy_input_flow = W.renewable_energy_input_flow
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
 

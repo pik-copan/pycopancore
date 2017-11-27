@@ -21,7 +21,7 @@ class Model (object):
     # metadata:
     name = "wellbeing-driven migration"
     """a unique name for the model component"""
-    description = "migration flow between societies is proportional to a " \
+    description = "migration flow between social_systems is proportional to a " \
         "sigmoid function of wellbeing difference and product of populations"
     """some longer description"""
     requires = []
@@ -32,8 +32,8 @@ class Model (object):
 # entity types:
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
 

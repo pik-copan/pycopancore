@@ -23,16 +23,16 @@ random.seed(1)
 model = M.Model()
 
 # instantiate process taxa:
-nature = M.Nature()
+environment = M.Environment()
 # metabolism = M.Metabolism()
 
 # generate entities and plug them together at random:
-world = M.World(nature=nature, #metabolism=metabolism,
+world = M.World(environment=environment, #metabolism=metabolism,
                   atmospheric_carbon = 0.2 * D.gigatonnes_carbon, #relative values
                   ocean_carbon = 0.6 * D.gigatonnes_carbon
                   )
-society = M.Society(world=world)
-cell = M.Cell(society=society)
+social_system = M.SocialSystem(world=world)
+cell = M.Cell(social_system=social_system)
 
 # set initial values # only one cell so far
 Sigma0 = 1.5e8 * D.square_kilometers
@@ -49,19 +49,19 @@ cell.fossil_carbon = G0
 
 # r = random.uniform(size=nsocs)
 # P0 = 6e9 * D.people * r / sum(r)  # 500e9 is middle ages, 6e9 would be yr 2000
-# M.Society.population.set_values(societies, P0)
-# print(M.Society.population.get_values(societies))
+# M.SocialSystem.population.set_values(social_systems, P0)
+# print(M.SocialSystem.population.get_values(social_systems))
 
 # r = random.uniform(size=nsocs)
 # in AWS paper: 1e12 (alternatively: 1e13):
 # S0 = 1e13 * D.gigajoules * r / sum(r)
-# M.Society.renewable_energy_knowledge.set_values(societies, S0)
-# print(M.Society.renewable_energy_knowledge.get_values(societies))
+# M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
+# print(M.SocialSystem.renewable_energy_knowledge.get_values(social_systems))
 
 # r = random.uniform(size=nsocs)
 # K0 = sum(P0) * 1e4 * D.dollars/D.people * r / sum(r)  # ?
-# M.Society.physical_capital.set_values(societies, K0)
-# print(M.Society.physical_capital.get_values(societies))
+# M.SocialSystem.physical_capital.set_values(social_systems, K0)
+# print(M.SocialSystem.physical_capital.get_values(social_systems))
 
 # TODO: add noise to parameters
 

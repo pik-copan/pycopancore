@@ -59,8 +59,8 @@ class World (object):
     # TODO: similarly
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
 
@@ -86,8 +86,8 @@ class Individual (object):
 # process taxa:
 
 
-class Nature (object):
-    """Interface for Nature process taxon mixin."""
+class Environment (object):
+    """Interface for Environment process taxon mixin."""
 
     # endogenous variables:
 
