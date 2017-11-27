@@ -46,9 +46,9 @@ class Individual(sd.Individual,
     pass
 
 
-class Society(sd.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(sd.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 

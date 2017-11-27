@@ -39,7 +39,7 @@ class Individual(I.Individual):
         self.beard_growth_parameter = beard_growth_parameter
         self.eating_parameter = eating_parameter
 
-        self.society.register_dwarf(self)
+        self.social_system.register_dwarf(self)
 
     # process-related methods:
 

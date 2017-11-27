@@ -90,8 +90,8 @@ class Individual (object):
                                 default=1)
 
 
-class Society(object):
-    """Interface for Society mixin"""
+class SocialSystem(object):
+    """Interface for SocialSystem mixin"""
     pass
 
 class Culture (object):
