@@ -15,6 +15,7 @@
 from .. import base  # all models must use the base component
 
 from ..model_components import seven_dwarfs as sd
+from ..model_components import snowwhite as sw
 
 # entity types:
 
@@ -31,6 +32,7 @@ class World(sd.World,
 
 
 class Cell(sd.Cell,
+           sw.Cell,
            base.Cell):
     """Cell entity type."""
 
@@ -40,6 +42,13 @@ class Cell(sd.Cell,
 class Individual(sd.Individual,
                  base.Individual):
     """Individual entity type."""
+
+    pass
+
+
+class Society(sd.Society,
+              base.Society):
+    """Society entity type."""
 
     pass
 
@@ -56,6 +65,7 @@ class Culture(sd.Culture,
 # Model class:
 
 class Model(sd.Model,
+            sw.Model,
             base.Model):
     """Class representing the whole model."""
 

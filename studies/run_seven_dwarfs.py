@@ -36,8 +36,11 @@ culture = M.Culture()
 # instantiate world:
 world = M.World(culture=culture)
 
+society = [M.Society(world=world)]
+
 # instantiate cells (the caves)
 cell = [M.Cell(world=world,
+               society=society[0],
                eating_stock=100
                )
         for c in range(nc)

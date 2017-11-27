@@ -271,7 +271,7 @@ class Runner(_AbstractRunner):
 
         # Save initial state to output dict:
         self.trajectory_dict['t'] = [t]
-        self.save_to_traj(targets_to_save)
+        self.save_to_traj(targets_to_save, add_to_output)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # Create dictionary containing discontinuities:
@@ -432,7 +432,7 @@ class Runner(_AbstractRunner):
                 print("    Composing initial value array...")
                 # list of target variables:
                 target_variables = list(set(
-                        [target.target_variable 
+                        [target.target_variable
                          for target in self.model.ODE_targets]))
                 # list of array slice lengths, one for each target variable,
                 # length equalling number of target instances:
