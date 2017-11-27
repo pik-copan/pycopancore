@@ -11,6 +11,20 @@ class Culture:
 
     # Social networks between individuals:
     
+    
+    intimate_relationship_network = \
+        Variable("intimate relationship network",
+                 """Basic undirected social network of intimate relationship between
+                 Individuals. Most other social networks will be subgraphs of this.""",
+                 ref="https://en.wikipedia.org/wiki/Interpersonal_relationship#Stages",
+                 scale='ordinal',
+                 datatype=Graph)
+    
+    
+    
+    
+    
+    
     acquaintance_network = \
         Variable("acquaintance network",
                  """Basic undirected social network of acquaintance between
