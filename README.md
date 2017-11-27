@@ -7,13 +7,13 @@ Table of Contents:
 
 1. [Introduction](#introduction)
 2. [Disclaimer](#disclaimer)
-3. [Quick&nbsp;start&nbsp;guide](#quick)
+3. [Quick start guide](#quick-start-guide)
     1. Installation
     2. Documentation
     3. Code of good practice
     4. Tests
-4. [Structure&nbsp;of&nbsp;the&nbsp;repository](#structure)
-5. [Licence&nbsp;and&nbsp;Development](#licence)
+4. [Structure of the repository](#structure-of-the-repository)
+5. [Licence and Development](#licence-and-development)
 
 ## Introduction
 
