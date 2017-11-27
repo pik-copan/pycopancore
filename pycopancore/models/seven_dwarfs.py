@@ -69,10 +69,10 @@ class Model(sd.Model,
             base.Model):
     """Class representing the whole model."""
 
-    name = "..."
-    """Seven dwarfs"""
-    description = "..."
-    """Tutorial model"""
+    name = "Seven dwarfs"
+    """Name of the model"""
+    description = "Tutorial model"
+    """Longer description"""
 
     entity_types = [World, Cell, Individual]
     """List of entity types used in the model"""
