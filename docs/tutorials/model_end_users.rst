@@ -1,16 +1,16 @@
 Model end users
 ===============
 
-A model end user is a person who runs a composed model, but changes neither model components nor the composition
+A *model end user* runs a composed model, but changes neither model components nor the composition
 of model components. The model end user only creates and works with the run file of the model.
 
 If you want to know how to create your own model, read the :doc:`model composers <./model_composers>` tutorial. If you
 want to know how to create new model components, read the
 :doc:`model component developers <./model_component_developers>` tutorial.
 
-Starting point for a model end user is the runfile template (reference) and the
+Starting point for a *model end user* is the runfile template (reference) and the
 :doc:`API documentation <../_api/pycopancore.models>` of the model at hand.
-Using the documentation the model end user sets parameters, instantiates the necessary entities and taxa passing the
+Using the documentation the *model end user* sets parameters, instantiates the necessary entities and taxa passing the
 appropriate arguments and iterates the model using the runner. The output trajectory of the runner is ready for data
 analysis and plotting.
 
@@ -30,7 +30,8 @@ ate half of their food supplies and left them to die.
 
 Creating a Runfile
 ------------------
-This fairy tale was already transformed into model components and a composed model. Creating a copy of the template
+This fairy tale was already transformed into the model components ``seven_dwarfs`` and ``snowwhite`` and
+the composed model ``seven dwarfs``. Creating a copy of the template
 runfile, we complete our runfile by executing the following steps.
 
 Importing packages
