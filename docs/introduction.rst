@@ -1,36 +1,50 @@
 Introduction
 ============
 
-\... one framework to rule them all!
-....................................
+... one framework to rule them all!
+...................................
 
 Python copan:CORE World-Earth modeling framework release version [...]
 
 Table of Contents:
+------------------
 
-1. [Introduction](#introduction)
-2. [Disclaimer](#disclaimer)
-3. [Quick start guide](#quick-start-guide)
-    * [Installation](#installation)
-    * [Documentation](#documentation)
-    * [Code of good practice](#code-of-good-practice)
-    * [Tests](#tests)
-4. [Licence and Development](#licence-and-development)
+1. :ref:`intro`
+2. :ref:`disclaimer`
+3. :ref:`quickstart`
+    * :ref:`installation`
+    * :ref:`running`
+    * :ref:`docu`
+    * :ref:`CoC`
+    * :ref:`test`
+4. :ref:`licence`
 
-## Introduction
+.. _intro:
+
+Introduction
+............
 
 The pycopancore package is a python implementation of the copan:CORE modeling framework as described in [include reference to framework description paper]. The framework is designed to allow an easy implementation of World-Earth (i.e., global social-ecological) models by using different model components of environmental, social-metabolic or cultural submodels and combining them with newly developed components.
 The implementation and simulation of World-Earth models within the framework can use  different types of modeling techniques such as differential equations, stochastic and deterministic events and therefore allows to compare different model and component types and implementations.
 
 pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK). Responsible senior scientists at PIK are [Jobst Heitzig](https://www.pik-potsdam.de/members/heitzig) & [Jonathan F. Donges.](https://www.pik-potsdam.de/members/donges)
 
-## Disclaimer
+.. _disclaimer:
+
+Disclaimer
+..........
 
 This software is provided for free as a beta version still under active development. It has not been completely tested and can therefore not guarantee  error-free functioning. Please help us further improving the code by reporting possible bugs via the github issue tracker!
 
-## Quick start guide
+.. _quickstart:
 
-### Installation
+Quick start guide
+.................
+
+.. _installation:
+
+Installation
+------------
 
 For running pycopancore, an installation with python > 3.6 with some additional packages is required.
 
@@ -51,14 +65,20 @@ $ pip install -e
 
 This creates a link instead of copying the files, so modifications in this directory are modifications in the installed package.
 
-### Running a model
+.. _running:
+
+Running a model
+---------------
 
 To run one of the preconfigured models, execute a python script in the `studies` folder, for example
 ```bash
 python run_seven_dwarfs.py
 ```
 
-### Documentation
+.. _docu:
+
+Documentation
+-------------
 
 The documentation can be accessed under [insert link] and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.
 
@@ -73,7 +93,10 @@ To be able to create the automatic UML-Diagrams, [pylint](https://www.pylint.org
 > make uml
 ```
 
-### Code of Good Practice
+.. _CoC:
+
+Code of Good Practice
+---------------------
 
 When contributing to the project, please follow the guidelines below:
 * For every class/function write a proper docstring before committing.
@@ -91,7 +114,11 @@ Additional guidelines:
 * Staff of the Potsdam Institute for Climate Impact research, please read and follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
 * Use [NetCDF, the CF conventions](http://cfconventions.org/) and [PIK's Typed Data Transfer](https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt) to store (input and) output data and share it with other models.
 
-### Tests
+.. _test:
+
+Tests
+-----
+
 We are using the python testing framework [pytest](http://pytest.org/latest/) with [pylama](https://github.com/klen/pylama) for style and error checking. Please write corresponding unittests while developing and make sure that all test pass by executing
 ```
 py.test
@@ -105,7 +132,10 @@ Requires
 * pylama_pylint
 * pytest-cov, to check of test coverage
 
-## Licence and Development
+.. _licence:
+
+Licence and Development
+.......................
 
 pycopancore is licenced under the BSD 2-Clause License.
 See the `LICENCE` file for further information.
