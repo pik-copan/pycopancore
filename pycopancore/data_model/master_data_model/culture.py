@@ -53,7 +53,8 @@ class Culture:
      knowledge_network = \
         Variable("knowledge network",
                  """Larger (and typically slower-changing) undirected network of
-                 knowledge and information availability, etc. May be used to predict the consuption choices and entering business relationships.""",
+                 knowledge and information availability, etc. May be used to predict 
+                 the consuption choices and entering business relationships.""",
                  ref="Hildreth and Kimble (2004). Knowledge Networks: Innovation Through Communities of Practice. London: Idea Group Publishing. https://books.google.de/books?hl=en&lr=&id=4ANHY1c6b6YC&oi=fnd&pg=PP1&dq=knowledge+networks&ots=8_8DPmfhO0&sig=t_OOtOH2vWtimzLW6S4YhKxK3iM#v=onepage&q=knowledge%20networks&f=false ",
                  scale='nominal',
                  datatype=Graph)  
@@ -61,7 +62,8 @@ class Culture:
     beliefs_network = \
         Variable("beliefs network",
                  """Larger (and typically slower-changing) undirected network of
-                 beliefs, religion, etc. May be used to predict trust or ability to accept innovation, might influence consumer and buisness relationships.""",
+                 beliefs, religion, etc. May be used to predict trust or ability to accept innovation, 
+                 might influence consumer and buisness relationships.""",
                  ref="https://doi.org/10.1177/0951692898010004005",
                  scale='nominal',
                  datatype=Graph) 
@@ -90,7 +92,7 @@ class Culture:
                  ref="https://en.wikipedia.org/wiki/Supply_chain",
                  scale='nominal',
                  datatype=DiGraph)
-# Question: what is the difference between Graph and DiGraph?   
+# Question: what is the difference between Graph and DiGraph and set as datatype? What is a different between direct and indirect network?  
 
   governance_network = \
         Variable("governance network",
@@ -100,7 +102,12 @@ class Culture:
                  scale='ordinal',
                  datatype=DiGraph)
         
-        
+   alliance_network = \
+        Variable("alliance network",
+                 """Directed network of buisness or political agreement.""",
+                 ref="https://doi.org/10.1177/0738894212443446; https://doi.org/10.1177/0022002700044002003",
+                 scale='nominal',
+                 datatype=DiGraph)     
     
         
     # Does it make sense to replace "firm" with "enterprise"? Enterprise is more general, could be either public or private.    
@@ -148,4 +155,11 @@ class Culture:
         Variable("is environmentally friendly",
                  """whether the entity is environmentally friendly or not""",
                  scale="ordinal", levels=[False, True], default=False)
+        
+        
+        
+   
+    # How to represent institutions - rules of interaction? 
+    # They could characterise network rules or entity attributes, or they could also form entities on their own
+    # The following types of instituitions could be distinbuished: informal institutions and beliefs; formal and written institutions and codes of behavior; informal practise such as routines and convenstions.
     
