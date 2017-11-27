@@ -11,7 +11,7 @@ Table of Contents:
     * [Installation](#installation)
     * [Documentation](#documentation)
     * [Code of good practice](#code-of-good-practice)
-    * [Tests]
+    * [Tests](#tests)
 4. [Structure of the repository](#structure-of-the-repository)
 5. [Licence and Development](#licence-and-development)
 
