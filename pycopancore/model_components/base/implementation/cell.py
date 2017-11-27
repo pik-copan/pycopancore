@@ -128,7 +128,7 @@ class Cell (I.Cell, abstract.Cell):
     """cache, depends on self.social_system, self.social_system.higher_social_systems"""
     @property  # read-only
     def social_systems(self):
-        """Get upward list of Societies the Cell belongs to (in)directly."""
+        """Get upward list of Social Systems the Cell belongs to (in)directly."""
         if self._social_systems is unknown:
             self._social_systems = [] if self.social_system is None \
                 else [self.social_system] + self.social_system.higher_social_systems
@@ -136,7 +136,7 @@ class Cell (I.Cell, abstract.Cell):
 
     @social_systems.setter
     def social_systems(self, u):
-        """Set upward list of Societies the Cell belongs to (in)directly."""
+        """Set upward list of Social Systems the Cell belongs to (in)directly."""
         assert u == unknown, "setter can only be used to reset cache"
         self._social_systems = unknown
         # reset dependent caches:

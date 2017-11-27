@@ -101,12 +101,12 @@ class World (object, metaclass=_MixinType):
     fossil_carbon = W.fossil_carbon
 
     # attributes storing redundant information (backward references):
-    social_systems = SetVariable("social_systems",
-                            "set of all Societies on this world",
+    social_systems = SetVariable("social systems",
+                            "set of all Social Systems on this world",
                             readonly=True)  # type is SocialSystem, hence it can only be specified after class SocialSystem is defined, see below
     top_level_social_systems = SetVariable(
         "top level social_systems",
-        "set of top-level Societies on this world",
+        "set of top-level Social Systems on this world",
         readonly=True)
     cells = SetVariable("cells", "set of Cells on this world",
                         readonly=True)
@@ -149,15 +149,15 @@ class SocialSystem (object, metaclass=_MixinType):
                                 readonly=True)
     higher_social_systems = SetVariable(
         "higher social_systems",
-        "upward list of (in)direct super-Societies",
+        "upward list of (in)direct super-Social Systems",
         readonly=True)
     next_lower_social_systems = SetVariable(
         "next lower social_systems",
-        "set of sub-Societies of next lower level",
+        "set of sub-Social Systems of next lower level",
         readonly=True)
     lower_social_systems = SetVariable(
         "lower social_systems",
-        "set of all direct and indirect sub-Societies",
+        "set of all direct and indirect sub-Social Systems",
         readonly=True)
     direct_cells = SetVariable("direct cells", "set of direct territory Cells",
                                readonly=True)
@@ -210,7 +210,7 @@ class Cell (object, metaclass=_MixinType):
                                 readonly=True)
     social_systems = SetVariable(
         "social_systems",
-        "upward list of Societies it belongs to (in)directly",
+        "upward list of Social Systems it belongs to (in)directly",
         type=SocialSystem,
         readonly=True)
     individuals = SetVariable("individuals",
@@ -257,7 +257,7 @@ class Individual (object, metaclass=_MixinType):
         readonly=True)
     social_systems = SetVariable(
         "social_systems",
-        "upward list of all Societies it is resident of",
+        "upward list of all Social Systems it is resident of",
         type=SocialSystem,
         readonly=True)
     acquaintances = SetVariable("acquaintances",

@@ -49,7 +49,7 @@ class Culture:
                  """Directed network of actual (not potential) supplier-customer
                  relationships through the economic supply chain, including the
                  final end customer link and potentially initial links from
-                 social_systems.""",
+                 social systems.""",
                  ref="https://en.wikipedia.org/wiki/Supply_chain",
                  scale='nominal',
                  datatype=DiGraph)
@@ -71,17 +71,17 @@ class Culture:
     trusted_diplomatic_network = \
         Variable("trusted diplomatic network",
                  """Undirected network of basic trust relationships between
-                 social_systems, to be used in (intersocietal) coalition formation model
+                 social systems, to be used in (intersocietal) coalition formation model
                  components. Represents the prerequisites of forming a coalition,
                  not the actually formed coalition structure (which is rather a set
-                 of sets of social_systems).""",
+                 of sets of social systems).""",
                  ref="https://en.wikipedia.org/wiki/Coalition#International_relations",
                  scale='nominal',
                  datatype=Graph)
     
     intersocietal_coalition_structure = \
         Variable("intersocietal coalition structure",
-                 """(a set of sets of social_systems)""",
+                 """(a set of sets of social systems)""",
                  scale='nominal',
                  datatype=set)
         

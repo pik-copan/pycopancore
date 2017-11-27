@@ -132,7 +132,7 @@ class Individual (I.Individual, abstract.Individual):
 
     @property  # read-only
     def social_systems(self):
-        """Get the upward list of all Societies the Individual is resident
+        """Get the upward list of all Social Systems the Individual is resident
         of."""
         return self._cell.social_systems
 

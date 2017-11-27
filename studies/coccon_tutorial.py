@@ -138,11 +138,11 @@ ax1.plot(t[3:], 100*average(array([traj[M.Individual.is_environmentally_friendly
                             axis=0), 
                             "--", color="green", lw=1, label="env. friendly individuals")
 ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_renewable_subsidy][s][3:] for s in social_systems]), axis=0),
-         color="orange", lw=2, label="social_systems with renewable subsidy")
+         color="orange", lw=2, label="social systems with renewable subsidy")
 ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_emissions_tax][s][3:] for s in social_systems]), axis=0),
-         color="blue", lw=2, label="social_systems with emissions tax")
+         color="blue", lw=2, label="social systems with emissions tax")
 ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_fossil_ban][s][3:] for s in social_systems]), axis=0),
-         color="black", lw=2, label="social_systems with fossil ban")
+         color="black", lw=2, label="social systems with fossil ban")
 ax1.set_ylabel('percent')
 ax1.legend()
 

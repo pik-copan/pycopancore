@@ -44,7 +44,7 @@ metabolism = M.Metabolism(market_frequency=1)
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism,
                 water_price=.1)
-# Instantiate Societies:
+# Instantiate Social Systems:
 municipalities = [M.SocialSystem(world=world,
                             municipality_like=True,
                             base_mean_income=1000,
