@@ -15,7 +15,7 @@ appropriate arguments and iterates the model using the runner. The output trajec
 analysis and plotting.
 
 This tutorial guides the reader through these steps using the
-:doc:`seven dwarfs model <../_api/pycopancore.models.seven_dwarfs>`.
+:doc:`seven dwarfs model <../_api/pycopancore.models~seven_dwarfs>`.
 
 Starting point of the seven dwarf model: a fairy tale
 -----------------------------------------------------
