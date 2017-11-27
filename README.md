@@ -22,6 +22,9 @@ The implementation and simulation of World-Earth models within the framework can
 
 pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK). Responsible senior scientists at PIK are [Jobst Heitzig](https://www.pik-potsdam.de/members/heitzig) & [Jonathan F. Donges.](https://www.pik-potsdam.de/members/donges)
 
+Contact: core@pik-potsdam.de
+Website: www.pik-potsdam.de/copan/software
+
 ## Disclaimer
 
 This software is provided for free as a beta version still under active development. It has not been completely tested and can therefore not guarantee  error-free functioning. Please help us further improving the code by reporting possible bugs via the github issue tracker!
