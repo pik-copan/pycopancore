@@ -2,35 +2,41 @@ Model end users
 ===============
 
 A model end user is a person who runs a composed model, but changes neither model components nor the composition
-of model components. The model end user only works with the run file of the model.
+of model components. The model end user only creates and works with the run file of the model.
 
 If you want to know how to create your own model, read the :doc:`model composers <./model_composers>` tutorial. If you
-want to know how to create new model components, read the :doc:`model component developers <./model_component_developers>`
-tutorial.
+want to know how to create new model components, read the
+:doc:`model component developers <./model_component_developers>` tutorial.
 
-Starting point of model example: a fairy tale - UPDATE NEEDED
--------------------------------------------------------------
+Starting point for a model end user is the runfile template (reference) and the
+:doc:`API documentation <../_api/pycopancore.models>`) of the model at hand.
+Using the documentation the model end user sets parameters, instantiates the necessary entities and taxa passing the
+appropriate arguments and iterates the model using the runner. The output trajectory of the runner is ready for data
+analysis and plotting.
+
+This tutorial guides the reader through these steps using the
+:doc:`seven dwarfs model <../_api/pycopancore.seven_dwarfs>`.
+
+Starting point of the seven dwarf model: a fairy tale
+-----------------------------------------------------
 Once upon a time in a place far away seven dwarfs lived together in a cave.
 Winter had come and they could not leave their cave to collect food. They grew
 older and were to die, either from age or from hunger.
 
 Their beards grew longer and the only thing giving them a glimpse of hope in
 their pitiful lives was an old story of a beautiful princess that would arrive
-some day and save them from their misery. When Snow White had finally arrived they
-discovered she tricked them, ate half of their food supplies and left them
-to die.
+some day and save them from their misery. When Snow White finally arrived she tricked them,
+ate half of their food supplies and left them to die.
 
-Runfile
--------
-A model end user only uses the run file provided by the model composer. It is not necessary to understand the model
-composition or the individual packages for being a model end user. However, understanding the run file is crucial for
-running a simulation and changing parameters.
-
-Import of packages
+Creating a Runfile
 ------------------
-At first, we import necessary packages. Besides ordinary python packages, we import the seven dwarfs model from
-``pycopancore.models`` and the runner from ``pycopancore.runners``.
+This fairy tale was already transformed into model components and a composed model. Creating a copy of the template
+runfile, we complete our runfile by executing the following steps.
 
+Importing packages
+------------------
+At first, we import the necessary packages. Besides ordinary python packages needed for data analysis and plotting,
+we import the seven dwarfs model from ``pycopancore.models`` and the runner from ``pycopancore.runners``.
 ::
 
     import numpy as np
@@ -46,8 +52,8 @@ At first, we import necessary packages. Besides ordinary python packages, we imp
 
 Setting of parameters
 ---------------------
-Secondly, we set the parameters of our model, including the time interval, the time step, the number of dwarfs,
-the eating stock ...
+Secondly, we set the parameters of our model, including the time interval of our simulation, the time step, the
+number of dwarfs, the eating stock ... We know
 ::
 
     # setting timeinterval for run method 'Runner.run()'
@@ -57,9 +63,11 @@ the eating stock ...
     nc = 1  # number of caves
     dwarfs = 7  # number of dwarfs
 
-Instantiation of Entities and Taxa
-----------------------------------
-
+Instantiating Entities and Taxa
+-------------------------------
+Afterwards, we instantiate the model as well as its entities and taxa. In the seven dwarfs example, the entities
+``World`` and ``Cell`` need arguments. We collect these information by checking the entities and taxa in the
+:doc:`API documentation <../_api/pycopancore.seven_dwarfs>`.
 ::
 
     model = M.Model()
@@ -77,10 +85,13 @@ Instantiation of Entities and Taxa
                    )
             for c in range(nc)
             ]
-wc
 
-Runner instantiation
---------------------
+
+Instantiating the Runner
+------------------------
+Upon instantiation of the runner, we need to pass the model object to the runner. It is possible to pass a list of
+termination calls which comprise constraints defining under which circumstances the model run should stop. The
+termination calls must be provided by an entity or a taxon of the model.
 ::
 
     start = time()
@@ -102,10 +113,12 @@ Runner instantiation
     r = Runner(model=model,
                termination_calls=termination_callables
                )
-wwcw
 
-Simulation
+
+Simulating
 ----------
+Now, all necessary objects required for a model run are instantiated. We set the start time and use the method ``run``
+of the runner to start the simulation. The method returns the model trajectory as a python dictionary.
 ::
 
     start = time()
@@ -114,11 +127,7 @@ Simulation
     runtime = dt.timedelta(seconds=(time() - start))
     print('runtime: {runtime}'.format(**locals()))
 
-    # saving time values to t
-    t = np.array(traj['t'])
-    print("max. time step", (t[1:]-t[:-1]).max())
-
-
-Plotting
---------
-trajectory files
+Analysing the Output and Plotting
+---------------------------------
+The structure of the trajectory is ``traj[M.Entity.Variable][Entity_number]`` and comprises a list of variable values
+for every time step. The acquired data may be analysed and plotted.
