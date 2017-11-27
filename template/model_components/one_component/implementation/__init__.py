@@ -1,5 +1,7 @@
 """
 Model component implementation subpackage template.
+
+TODO: uncomment neccessary code wherever marked by the "TODO" flag.
 """
 # This file is part of pycopancore.
 #
@@ -7,7 +9,6 @@ Model component implementation subpackage template.
 # Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
 
 # TODO: uncomment entity types and process taxa used in this model component 
 
