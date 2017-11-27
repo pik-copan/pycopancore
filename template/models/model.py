@@ -1,10 +1,9 @@
 """Model class template.
 
-NEED TO:
-Copy this file, rename it to the name of your model,
-then adjust or fill in code and documentation wherever marked by "NEED TO:",
-finally remove these instructions.
-See the model development tutorial for details.
+TODO:
+Copy this file, rename it to the name of your model, then adjust or fill in
+code and documentation wherever marked by "TODO:", finally remove these
+instructions.  See the model development tutorial for details.
 """
 # This file is part of pycopancore.
 #
@@ -17,7 +16,7 @@ See the model development tutorial for details.
 from pycopancore import base
 
 #
-# NEED TO: import all other needed model components:
+# TODO: import all other needed model components (adjust as needed):
 #
 # Model components are either provided by pycopancore
 from pycopancore.model_components import SOMECOMPONENT
@@ -27,12 +26,12 @@ from model_components import one_component
 
 # entity types:
 
-# NEED TO: compose all needed entity type implementation classes
+# TODO: compose all needed entity type implementation classes
 # by mixing the above model components' mixin classes of the same name.
 # Only compose those entity types and process taxons that the model needs,
 # delete the templates for the unneeded ones, and add those for missing ones:
 
-# NEED TO: list all mixin classes needed:
+# TODO: list all mixin classes needed:
 class World(SOMECOMPONENT.World,
             one_component.World,
             base.World):
@@ -40,7 +39,7 @@ class World(SOMECOMPONENT.World,
     pass
 
 
-# NEED TO: list all mixin classes needed:
+# TODO: list all mixin classes needed:
 class Society(SOMECOMPONENT.Society,
               one_component.Society,
               base.Society):
@@ -48,7 +47,7 @@ class Society(SOMECOMPONENT.Society,
     pass
 
 
-# NEED TO: list all mixin classes needed:
+# TODO: list all mixin classes needed:
 class Cell(SOMECOMPONENT.Cell,
            one_component.Cell,
            base.Cell):
@@ -56,7 +55,7 @@ class Cell(SOMECOMPONENT.Cell,
     pass
 
 
-# NEED TO: list all mixin classes needed:
+# TODO: list all mixin classes needed:
 class Individual(SOMECOMPONENT.Individual,
                  one_component.Individual,
                  base.Individual):
@@ -66,9 +65,9 @@ class Individual(SOMECOMPONENT.Individual,
 
 # process taxa:
 
-# NEED TO: do the same for process taxa:
+# TODO: do the same for process taxa:
 
-# NEED TO: list all mixin classes needed:
+# TODO: list all mixin classes needed:
 class Nature(SOMECOMPONENT.Nature,
              one_component.Nature,
              base.Nature):
@@ -76,7 +75,7 @@ class Nature(SOMECOMPONENT.Nature,
     pass
 
 
-# NEED TO: list all mixin classes needed:
+# TODO: list all mixin classes needed:
 class Metabolism(SOMECOMPONENT.Metabolism,
                  one_component.Metabolism,
                  base.Metabolism):
@@ -84,7 +83,7 @@ class Metabolism(SOMECOMPONENT.Metabolism,
     pass
 
 
-# NEED TO: list all mixin classes needed:
+# TODO: list all mixin classes needed:
 class Culture(SOMECOMPONENT.Culture,
               one_component.Culture,
               base.Culture):
@@ -94,7 +93,7 @@ class Culture(SOMECOMPONENT.Culture,
 
 # Model class:
 
-# NEED TO: list all used model components:
+# TODO: list all used model components:
 class Model(SOMECOMPONENT.Model,
             one_component.Model,
             base.Model):
@@ -105,10 +104,10 @@ class Model(SOMECOMPONENT.Model,
     description = "..."
     """Longer description"""
 
-    # NEED TO: list all entity types you composed above:
+    # TODO: list all entity types you composed above:
     entity_types = [World, Society, Cell, Individual]
     """List of entity types used in the model"""
 
-    # NEED TO: list all entity types you composed above:
+    # TODO: list all entity types you composed above:
     process_taxa = [Nature, Metabolism, Culture]
     """List of process taxa used in the model"""
