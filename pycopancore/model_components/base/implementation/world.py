@@ -57,7 +57,7 @@ class World (I.World, abstract.World):
         self.metabolism = metabolism
         self._culture = None
         self.culture = culture
-        self._societies = set()
+        self._social_systems = set()
         self._cells = set()
 
         # make sure all variable values are valid:
@@ -121,7 +121,7 @@ class World (I.World, abstract.World):
 
     @culture.setter
     def culture(self, c):
-        """Set the World the Society is part of."""
+        """Set the World the SocialSystem is part of."""
         if self._culture is not None:
             self._culture._worlds.remove(self)
         assert isinstance(c, I.Culture), "culture must be of taxon type Culture"
@@ -129,16 +129,16 @@ class World (I.World, abstract.World):
         self._culture = c
 
     @property  # read-only
-    def societies(self):
+    def social_systems(self):
         """Get the set of all Societies on this World."""
-        return self._societies
+        return self._social_systems
 
     @property  # read-only
-    def top_level_societies(self):
+    def top_level_social_systems(self):
         """Get the set of top-level Societies on this World."""
         # find by filtering:
-        return set([s for s in self._societies
-                    if s.next_higher_society is None])
+        return set([s for s in self._social_systems
+                    if s.next_higher_social_system is None])
 
     @property  # read-only
     def cells(self):

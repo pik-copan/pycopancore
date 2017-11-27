@@ -12,11 +12,11 @@ from .culture import Culture as CUL
 from .culture import Culture as culture
 from .culture import Culture
 
-from . import world, society, cell, individual
+from . import world, social_system, cell, individual
 from . import world as W
 from . import world as World
-from . import society as S
-from . import society as Society
+from . import social_system as S
+from . import social_system as SocialSystem
 from . import cell as C
 from . import cell as Cell
 from . import individual as I

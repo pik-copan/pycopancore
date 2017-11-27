@@ -35,9 +35,9 @@ class World(base.World):
 
 
 # NEED TO: list all mixin classes needed:
-class Society(md.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(md.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -100,7 +100,7 @@ class Model(avof.Model, md.Model,
     """Longer description"""
 
     # NEED TO: list all entity types you composed above:
-    entity_types = [World, Society, Individual]
+    entity_types = [World, SocialSystem, Individual]
     """List of entity types used in the model"""
     # NEED TO: list all entity types you composed above:
     process_taxa = [Culture]

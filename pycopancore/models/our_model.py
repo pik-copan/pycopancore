@@ -35,9 +35,9 @@ class World(cc.World,
     pass
 
 
-class Society(cc.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(cc.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -90,7 +90,7 @@ class Model(cc.Model,
 
     entity_types = [
         World,
-        Society,
+        SocialSystem,
         Cell,
         # Individual,
     ]

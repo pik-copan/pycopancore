@@ -55,7 +55,7 @@ class Cell (object):
         "net ecosystem production", "")  # unit
 
 
-class Society (object):
+class SocialSystem (object):
 
     # variables:
     harvest_rate = Variable("harvest rate", "")  # unit

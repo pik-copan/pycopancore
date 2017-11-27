@@ -12,7 +12,7 @@ This is the base model-component implementation subpackage
 # export all used entity types and process taxa from their respective modules:
 
 from .world import World
-from .society import Society
+from .social_system import SocialSystem
 from .cell import Cell
 from .individual import Individual
 

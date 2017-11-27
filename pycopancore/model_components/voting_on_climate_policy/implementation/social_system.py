@@ -1,4 +1,4 @@
-"""Society entity type mixing class template.
+"""SocialSystem entity type mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
@@ -17,8 +17,8 @@ from .... import Event
 from numpy import array
 from numpy.random import uniform
 
-class Society (I.Society):
-    """Society entity type mixin implementation class."""
+class SocialSystem (I.SocialSystem):
+    """SocialSystem entity type mixin implementation class."""
 
     voting_time_offset = None
     
@@ -48,8 +48,8 @@ class Society (I.Society):
 
     processes = [
         Event("voting",
-              [I.Society.has_renewable_subsidy,
-               I.Society.has_emissions_tax,
-               I.Society.has_fossil_ban],
+              [I.SocialSystem.has_renewable_subsidy,
+               I.SocialSystem.has_emissions_tax,
+               I.SocialSystem.has_fossil_ban],
               ["time", next_voting_time, take_a_vote])
     ]

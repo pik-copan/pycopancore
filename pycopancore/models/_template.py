@@ -36,9 +36,9 @@ class World(ABBR1.World, ABBR2.World,
 
 
 # NEED TO: list all mixin classes needed:
-class Society(ABBR1.Society, ABBR2.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(ABBR1.SocialSystem, ABBR2.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -101,7 +101,7 @@ class Model(ABBR1.Model, ABBR2.Model,
     """Longer description"""
 
     # NEED TO: list all entity types you composed above:
-    entity_types = [World, Society, Cell, Individual]
+    entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""
     # NEED TO: list all entity types you composed above:
     process_taxa = [Nature, Metabolism, Culture]

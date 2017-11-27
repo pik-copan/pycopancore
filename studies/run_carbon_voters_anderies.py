@@ -55,8 +55,8 @@ world = M.World(culture=culture, nature=nature,
                 atmospheric_carbon=0.2 * D.gigatonnes_carbon,
                 ocean_carbon=0.6 * D.gigatonnes_carbon
                 )
-society = M.Society(world=world)
-cell = M.Cell(world=world, society=society)
+social_system = M.SocialSystem(world=world)
+cell = M.Cell(world=world, social_system=social_system)
 individuals = [M.Individual(cell=cell,
                             initial_opinion=float(np.random.choice(possible_opinions, 1, p=[0.6,0.4])))
                for _ in range(nindividuals)] # individual opinion 0 with prob. p1, 1(aware) with prob. p2
@@ -138,7 +138,7 @@ data_opinion1 = go.Scatter(
 # majority opinion
 data_majority_opinion = go.Scatter(
     x=t,
-    y=traj[M.Society.opinion][society],
+    y=traj[M.SocialSystem.opinion][social_system],
     mode="lines+markers",
     name="majority opinion",
     line=dict(

@@ -37,8 +37,8 @@ culture = M.Culture(rewiring=rewiring_probability)
 
 # generate entities and distribute opinions uniformly randomly:
 world = M.World(culture=culture)
-society = M.Society(world=world, culture=culture)
-cell = M.Cell(world=world, society=society)
+social_system = M.SocialSystem(world=world, culture=culture)
+cell = M.Cell(world=world, social_system=social_system)
 individuals = [M.Individual(cell=cell,
                             initial_opinion=int(random.random() < p_initial))
                for _ in range(nindividuals)]
@@ -107,7 +107,7 @@ data_opinion1 = go.Scatter(
 )
 data_majority_opinion = go.Scatter(
     x=t,
-    y=traj[M.Society.opinion][society],
+    y=traj[M.SocialSystem.opinion][social_system],
     mode="lines+markers",
     name="majority opinion",
     line=dict(

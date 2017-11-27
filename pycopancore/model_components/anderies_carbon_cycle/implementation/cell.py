@@ -53,7 +53,7 @@ class Cell (I.Cell):
 
         Explicit("human offtake",  # Interface
                  [I.Cell.human_offtake],
-                 [I.Society.harvest_rate * I.Cell.terrestrial_carbon
+                 [I.SocialSystem.harvest_rate * I.Cell.terrestrial_carbon
                   ]),
 
         ODE("effect of photosynthesis and respiration",

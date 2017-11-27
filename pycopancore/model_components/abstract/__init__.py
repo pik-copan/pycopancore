@@ -12,7 +12,7 @@ Abstract base classes for the base component's mixin implementation classes
 
 
 from .world import World
-from .society import Society
+from .social_system import SocialSystem
 from .cell import Cell
 from .individual import Individual
 

@@ -38,8 +38,8 @@ class Individual(base.Individual):
     pass
 
 
-class Society(base.Society):
-    """Class to mix all Society_mixins to create Society class."""
+class SocialSystem(base.SocialSystem):
+    """Class to mix all SocialSystem_mixins to create SocialSystem class."""
 
     pass
 
@@ -75,5 +75,5 @@ class Model(dummy.Model, base.Model):
 
     name = "This model's name"
     description = "Description of the model"
-    entity_types = [Cell, Individual, Society, World]
+    entity_types = [Cell, Individual, SocialSystem, World]
     process_taxa = [Culture, Metabolism, Nature]

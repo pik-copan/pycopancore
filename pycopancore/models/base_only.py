@@ -40,8 +40,8 @@ class Individual(base.Individual):
     pass
 
 
-class Society(base.Society):
-    """Class to mix all Society_mixins to create Society class."""
+class SocialSystem(base.SocialSystem):
+    """Class to mix all SocialSystem_mixins to create SocialSystem class."""
 
     pass
 
