@@ -33,7 +33,7 @@ This software is provided for free as a beta version still under active developm
 
 ### Installation
 
-For running pycopancore, an installation with python < 3.6 with some additional packages is required. 
+For running pycopancore, an installation with python > 3.6 with some additional packages is required.
 
 An easy way to install python is to use the Anaconda environment ([https://www.anaconda.com/download/](https://www.anaconda.com/download/)).
 
