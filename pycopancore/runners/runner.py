@@ -99,7 +99,6 @@ class Runner(_AbstractRunner):
                     # in an order determined by the target:
                     values = eval(spec[i],
                                   self._current_iteration)
-#                    print(values)
                     # note that values may have different length than
                     # p.owning_class.instances due to broadcasting effects
                     # if the target is a dotconstruct.
@@ -162,6 +161,7 @@ class Runner(_AbstractRunner):
                     if isinstance(target, Variable):
                         # add result directly to output array
                         # (rather than in instances' derivative attributes):
+#                        print("storing into summands_array for",target,"in",p)
                         summands_array[target._from:target._to] += summands
                     else:
                         # summands may have different length than
@@ -172,6 +172,7 @@ class Runner(_AbstractRunner):
                         # instead, we add terms directly to target instances'
                         # derivative attributes where they will be read from
                         # later:
+#                        print("calling add_derivatives on",target,"in",p)
                         target.add_derivatives(summands)
                         # TODO: use an njitted function add2array(array,
                         # positions, values) and expr._target_positions based
@@ -183,6 +184,7 @@ class Runner(_AbstractRunner):
                 # call process' implementation method for each of it's
                 # owning class' (!) instances. This will add terms to
                 # the target (!) instances' derivative attributes:
+#                print("calling spec for",p,"with targets",p.targets)
                 for inst in p.owning_class.instances:
                     spec(inst, t)
 
@@ -191,7 +193,13 @@ class Runner(_AbstractRunner):
         for target in self.model.ODE_targets:
             if isinstance(target, Variable):
                 # add terms from summands_array to derivative attributes:
+#                print("adding from summands_array for",target)
+#                print(" old:",target.target_variable.get_derivatives(
+#                            instances=target.target_class.instances))
+#                print(" plus:",summands_array[target._from:target._to])
                 target.add_derivatives(summands_array[target._from:target._to])
+#                print(" new:",target.target_variable.get_derivatives(
+#                            instances=target.target_class.instances))
             # extract complete derivative terms from derivative attributes:
             derivative_array[target._from:target._to] += \
                 target.target_variable.get_derivatives(
@@ -401,10 +409,14 @@ class Runner(_AbstractRunner):
                 # determine array layouts (froms and tos of slices)
                 # and compose initial value-array:
                 print("    Composing initial value array...")
-                # list of array slice lengths, one for each target,
+                # list of target variables:
+                target_variables = list(set(
+                        [target.target_variable 
+                         for target in self.model.ODE_targets]))
+                # list of array slice lengths, one for each target variable,
                 # length equalling number of target instances:
-                lens = [len(target.target_class.instances)
-                        for target in self.model.ODE_targets]
+                lens = [len(var.owning_class.instances)
+                        for var in target_variables]
                 # upper slice index is given by cumulative sum of lens:
                 tos = np.cumsum(lens)
                 # lower slice index is previous slice's upper index:
@@ -413,14 +425,18 @@ class Runner(_AbstractRunner):
                 arraylen = sum(lens)
                 # init the array:
                 initial_array_ode = np.zeros(arraylen)
-                for i, target in enumerate(self.model.ODE_targets):
-                    # store slice indices in targets:
-                    target._from = froms[i]
-                    target._to = tos[i]
+                for i, var in enumerate(target_variables):
+                    # store slice indices in target variables:
+                    var._from = froms[i]
+                    var._to = tos[i]
                     # get initial values from instances and store in array:
                     initial_array_ode[froms[i]:tos[i]] = \
-                        target.target_variable.eval(
-                                instances=target.target_class.instances)
+                        var.eval(instances=var.owning_class.instances)
+                # store slice indices also in targets:
+                for target in self.model.ODE_targets:
+                    var = target.target_variable
+                    target._from = var._from
+                    target._to = var._to
 
                 # In Odeint, call get_rhs_array to get the RHS of the ODE
                 # system as an array (step 3.1 in runner scheme) then return
@@ -461,6 +477,7 @@ class Runner(_AbstractRunner):
                         # containing the values for all time points:
                         values = list(
                                 ode_trajectory[:, target._from + pos])
+#                        print(" storing for",target,values)
                         try:
                             if len(self.trajectory_dict[
                                        target.target_variable][inst]) < tlen:
@@ -495,21 +512,21 @@ class Runner(_AbstractRunner):
                         ode_values = ode_trajectory[pos, :]
                         # read values from result vector in same order as
                         # written into it:
-                        for i, target in enumerate(self.model.ODE_targets):
-                            target.target_variable.fast_set_values(
-                                ode_values[target._from:target._to])
+                        for i, var in enumerate(target_variables):
+                            var.fast_set_values(ode_values[var._from:var._to])
                         self.apply_explicits(t)
                         # complete the output dictionary:
                         self.save_to_traj(self.model.process_targets, add_to_output)
+
+            # set current model time to end of previous ODE integration:
+            t = next_time
 
             # After all that is done, determine what happens at the
             # discontinuity (step 3.4 in runner scheme)
             # Delete the discontinuity from the dictionary and determine when
             # the next one happens:
             if t < t_1 and len(next_discontinuities) > 0:
-
-                # set current model time to end of previous ODE integration:
-                t = next_time
+                
                 self.trajectory_dict['t'].append(t)
 
                 print("  Executing Steps and/or Events at", t, "...")

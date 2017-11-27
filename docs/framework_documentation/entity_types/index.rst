@@ -15,7 +15,7 @@ whereas things that typically occur *only once for each entity of some type* (e.
 are modeled as attributes of the latter entity-type.
 
 A notable exception is the entity type *"world"*.
-Although it has only one instance ("the world"),
+Although it will typically only have one instance ("the world"),
 it is introduced so that all other things a model considers to be *singular*
 (e.g., the global trade network or the well-mixed atmospheric carbon stock)
 can be modelled as attributes of the world entity.
@@ -26,8 +26,8 @@ that are meant to be the main subjects and objects
 of the three process taxons :doc:`"nature"<../process_taxonomy/nature>`, :doc:`"social metabolism"<../process_taxonomy/social_metabolism>`, and :doc:`"culture"<../process_taxonomy/culture>`,
 although modelers are free to attach, say, a cultural process to a society or cell, or a natural process to an indivudual, etc.
 
-In addition to these, we provide three further entity-types :doc:`"household"<household>`, :doc:`"group"<group>` and :doc:`"firm"<firm>`
-since they will likely be needed by some more detailed socio-metabolic model components.
+In addition to these, we will provide at least three further entity-types :doc:`"household"<household>`, :doc:`"group"<group>` and :doc:`"firm"<firm>`
+in the futuer since they will likely be needed by some more detailed socio-metabolic model components.
 
 During a model run, entities may come into existence (individual may be born, groups and firms may be founded, societies may merge into larger ones)
 or cease to exist (individuals may die, firms may be terminated, societies may collapse).

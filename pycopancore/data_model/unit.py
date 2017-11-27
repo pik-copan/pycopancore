@@ -75,13 +75,21 @@ class Unit (object):
                                else "^(" + str(ex) + ")")
                             for unit, ex in exponents.items()]) \
                 if name is None else name
-            self.symbol = (str(self.factor) + " " if self.factor != 1 else "") \
-                + " ".join([unit.symbol
-                            + ("" if ex == 1
-                               else "^" + str(ex) if ex >= 0
-                               else "^(" + str(ex) + ")")
-                            for unit, ex in exponents.items()]) \
-                if symbol is None else symbol
+            if symbol is not None:
+                self.symbol = symbol
+            else:
+                # TODO: sort exponents.items by alphabetical unit.symbol
+                items = sorted([(unit.symbol, ex) 
+                                for unit, ex in exponents.items()], 
+                               key=lambda i: (-i[1], i[0]))
+                self.symbol = " ".join([sym
+                                        + ("" if ex == 1
+                                           else "²" if ex == 2
+                                           else "³" if ex == 3
+                                           else "^" + str(int(ex)) if ex%1 == 0
+                                           else "^" + str(ex)
+                                           )
+                                      for sym, ex in items])
             self.desc = "\n\n".join([unit.name + ": " + unit.desc
                                      for unit in exponents.keys()]) \
                         if desc is None else desc

@@ -394,7 +394,7 @@ class _DotConstruct(sp.AtomicExpr):
             items = [getattr(i, self._start.codename) for i in items]
         for name in self._attribute_sequence[:-1]:
             # each item is a set of instances:
-            if hasattr(items[0], "__iter__"):
+            if len(items) > 0 and hasattr(items[0], "__iter__"):
                 branchings.append([len(instance_set)
                                    for instance_set in items])
                 items = [getattr(i, name)
@@ -406,7 +406,7 @@ class _DotConstruct(sp.AtomicExpr):
                 items = [getattr(i, name) for i in items]
                 # items may now be a list of instances or a list of sets of
                 # instances...
-        if hasattr(items[0], "__iter__"):
+        if len(items) > 0 and hasattr(items[0], "__iter__"):
             branchings.append([len(instance_set)
                                for instance_set in items])
             items = [i
@@ -433,7 +433,7 @@ class _DotConstruct(sp.AtomicExpr):
         if isinstance(self._start, D.Variable):
             items = [getattr(i, self._start.codename) for i in items]
         for pos, name in enumerate(self._attribute_sequence):
-            if hasattr(items[0], "__iter__"):
+            if len(items) > 0 and hasattr(items[0], "__iter__"):
                 items = [getattr(i, name)
                          for instance_set in items
                          for i in instance_set]
@@ -442,7 +442,7 @@ class _DotConstruct(sp.AtomicExpr):
         if self._aggregation:
             assert self._argument is not None, "aggregation without argument"
             # make sure items is list of instances not list of sets:
-            if hasattr(items[0], "__iter__"):
+            if len(items) > 0 and hasattr(items[0], "__iter__"):
                 items = [i
                          for instance_set in items
                          for i in instance_set]
@@ -455,7 +455,9 @@ class _DotConstruct(sp.AtomicExpr):
                 if aggregation_level < len(cardinalities) - 1 \
                 else [[1 for i in items]]
             lens = layout2lens(layout)
-            items = name2aggregation[self._aggregation](arg_values, lens)
+            items = name2aggregation[self._aggregation](arg_values, lens) \
+                        if len(arg_values) > 0 else [0 for l in lens]
+#            print("aggregation",self,items)
         return items
 
     def _broadcast(self, values):

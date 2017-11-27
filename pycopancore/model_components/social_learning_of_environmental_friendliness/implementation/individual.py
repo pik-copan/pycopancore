@@ -42,6 +42,5 @@ class Individual (I.Individual):
         if random.uniform() < (1/2 
                 + 1/pi * arctan(pi * slope * log(quotient / offset))):
             self.is_environmentally_friendly = othertrait
-            print(self,"imitates",other,":",othertrait)
 
     processes = []

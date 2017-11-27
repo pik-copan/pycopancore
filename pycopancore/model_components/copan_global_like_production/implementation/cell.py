@@ -25,9 +25,12 @@ class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
 
     # TODO: allocate protected stock more adequately than this:
-    protected_terrestrial_carbon_share = Min(1,
-        B.Cell.society.protected_terrestrial_carbon
-        / B.Cell.society.sum.cells.terrestrial_carbon)
+    quotient = (B.Cell.society.protected_terrestrial_carbon
+                / B.Cell.society.sum.cells.terrestrial_carbon)
+        
+    unprotected_terrestrial_carbon_squared = ITE(quotient < 1, 
+                                                 (I.Cell.terrestrial_carbon * (1 - quotient))**2, 
+                                                 0) #Min(1, quotient)
 
     processes = [
 
@@ -39,16 +42,14 @@ class Cell (I.Cell):
                   I.Cell.biomass_sector_productivity
                   # TODO: verify the following:
                   * ITE(B.Cell.society.has_emissions_tax,
-                        (I.Cell.terrestrial_carbon
-                         * (1 - protected_terrestrial_carbon_share)
-                         )**2 * (
-                            1 
-                            - B.Cell.society.emissions_tax_level 
-                              * I.Cell.total_energy_intensity
-                              / B.Cell.metabolism.biomass_energy_density),
-                        (I.Cell.terrestrial_carbon
-                         * (1 - protected_terrestrial_carbon_share)
-                         )**2),
+                        ITE(quotient < 1, 
+                            (I.Cell.terrestrial_carbon * (1 - quotient))**2 
+                            * (1 
+                               - B.Cell.society.emissions_tax_level 
+                               * I.Cell.total_energy_intensity
+                               / B.Cell.metabolism.biomass_energy_density), 
+                            0),
+                        unprotected_terrestrial_carbon_squared),
                   ITE(B.Cell.society.has_fossil_ban, 0,
                       I.Cell.fossil_sector_productivity
                       # TODO: verify the following:

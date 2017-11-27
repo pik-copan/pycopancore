@@ -13,7 +13,7 @@ remove these instructions.
 # License: MIT license
 
 from ... import master_data_model as D
-from ...data_model.master_data_model import CUL
+from ...data_model.master_data_model import CUL, I
 from ... import Variable
 
 
@@ -31,11 +31,6 @@ class Model (object):
     """list of other model components required for this model component to
     make sense"""
 
-    # Notes:
-    # - Model does NOT define variables or parameters, only entity types
-    #   and process taxons do!
-    # - implementation.Model lists these entity-types and process taxons
-
 
 # entity types:
 
@@ -44,8 +39,7 @@ class Individual (object):
     """Interface for Individual entity type mixin."""
 
     # endogenous variables:
-
-    # exogenous variables / parameters:
+    is_environmentally_friendly = I.is_environmentally_friendly
 
 
 # process taxa:
@@ -53,8 +47,6 @@ class Individual (object):
 
 class Culture (object):
     """Interface for Culture process taxon mixin."""
-
-    # endogenous variables:
 
     # exogenous variables / parameters:
     environmental_friendliness_learning_rate = \
@@ -71,12 +63,8 @@ class Culture (object):
         "environmental friendliness learning density quotient offset",
         "terrestrial carbon density quotient at which imitation probability "
         "has its point of inflection", 
-        unit = D.unity,
-        is_intensive=True,
-        default=1)
+        unit=D.unity, is_intensive=True, default=1)
     environmental_friendliness_learning_probability_characteristic_slope = Variable(
         "environmental friendliness imitation probability's characteristic slope",
         "slope of the normalized sigmoid function at its point of inflection", 
-        unit = D.unity,
-        is_intensive=True,
-        default=1)
+        unit=D.unity, is_intensive=True, default=1)

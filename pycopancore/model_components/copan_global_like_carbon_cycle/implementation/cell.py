@@ -32,8 +32,6 @@ class Cell (I.Cell):
         Explicit("photosynthesis flow",
                  [I.Cell.photosynthesis_carbon_flow],
                  [((B.Cell.nature.basic_photosynthesis_productivity
-                    # WARNING: IF SOMEONE AGAIN MESSES AROUND WITH THE
-                    # FORMATTING HERE, I WILL DISALLOW THEM TO FURTHER USE MY CODE.
                     - B.Cell.nature.photosynthesis_sensitivity_on_atmospheric_carbon
                       * atmospheric_carbon_density)
                    * sp.sqrt(atmospheric_carbon_density)
@@ -53,8 +51,10 @@ class Cell (I.Cell):
                   ]),
 
         ODE("effect of photosynthesis and respiration",
-            [I.Cell.terrestrial_carbon, B.Cell.world.atmospheric_carbon],
-            [balance, -balance]),
+            [I.Cell.terrestrial_carbon, 
+             B.Cell.world.atmospheric_carbon],
+            [balance, 
+             -balance]),
 
     ]
 

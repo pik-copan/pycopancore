@@ -58,8 +58,7 @@ Similarly, attributes may be modeled as "belonging to" some entity-type
 or to some process taxon
 (e.g. "diffusion coefficient" might be modeled as an attribute of the "nature" process taxon).
 We suggest to model most quantities as entity-type attributes
-and model only those quantities as process taxon attributes which represent global constants (e.g., "diffusion coefficient")
-or exogenous input (e.g., "solar activity").
+and model only those quantities as process taxon attributes which represent global constants.
 
 
 Formal process-types and data-types
@@ -68,7 +67,7 @@ Formal process-types and data-types
 Independently of where processes belong to,
 they are also distinguished by their formal **process-type**
 (continuous dynamics given by ordinary differential equations,
-immediate reactions given by algebraic equations, steps in discrete time, irregular or random events, ...,
+(quasi-)instantaneous reactions given by algebraic equations, steps in discrete time, irregular or random events, ...,
 see :doc:`../process_types/index`)
 that correspond to different modeling and simulation/solving techniques.
 

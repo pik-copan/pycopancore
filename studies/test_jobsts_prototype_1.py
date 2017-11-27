@@ -16,7 +16,7 @@ random.seed(10) # 10
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 10 # no. societies #10
+nsocs = 5 # no. societies #10
 ncells = 100  # no. cells #100
 ninds = 1000 # no. individuals
 
@@ -31,13 +31,13 @@ metabolism = M.Metabolism(
         # .1 w protection: success but desertification
         # 0 w/o protection: very slow success but desertification
         # ?: oscillations
-#    basic_emigration_probability_rate = 5e-13, # 3e-13 leads to ca. 5mio. (real)
+    basic_emigration_probability_rate = 16e-13, # 5e-13 leads to ca. 5mio. at 10 socs, (real)
     )
 culture = M.Culture(
     awareness_lower_carbon_density=1e-4, #1e100, # 1e-6?
     awareness_upper_carbon_density=2e-4, #1e100, # 2e-6?
-    awareness_update_rate=1, #1:SUCCESS, #1e-10
-    environmental_friendliness_learning_rate=1, #1:SUCCESS
+    awareness_update_rate=0, #1:SUCCESS, #1e-10
+    environmental_friendliness_learning_rate=0, #1:SUCCESS
     max_protected_terrestrial_carbon_share=0,
     )
 
@@ -50,6 +50,7 @@ societies = [M.Society(world=random.choice(worlds),
                        has_renewable_subsidy = random.choice([False, True], p=[3/4, 1/4]), #True, #False,
                        has_emissions_tax = random.choice([False, True], p=[4/5, 1/5]), #True, #False,
                        has_fossil_ban = False, #True, #False,
+                       time_between_votes = 1e100, #4, #1e100, # 4
                        ) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies),
                 renewable_sector_productivity = 2 * random.rand()
@@ -134,7 +135,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_0=2000, t_1=2000+200, dt=1, add_to_output=[M.Individual.represented_population])
+traj = runner.run(t_0=2000, t_1=2000+100, dt=1, add_to_output=[M.Individual.represented_population])
 
 
 for v in nature.variables: print(v,v.get_value(nature))
@@ -146,14 +147,14 @@ for v in c.variables: print(v,v.get_value(c))
 
 from pickle import dump
 tosave = {
-          v.codename: {str(e): traj[v][e]
-                       for e in traj[v].keys()
-                       } 
+          v.owning_class.__name__ + "."
+          + v.codename: {str(e): traj[v][e]
+                         for e in traj[v].keys()
+                         } 
           for v in traj.keys() if v is not "t"
           }
 tosave["t"] = traj["t"]
-print(tosave.keys(),traj.keys())
-dump(tosave, open("/home/jobst/work/with.pickle","wb"))
+dump(tosave, open("/home/jobst/work/without.pickle","wb"))
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
@@ -235,7 +236,8 @@ print("deaths at begin (>250000?):",sum(traj[M.Society.deaths][s][5] for s in so
 print("deaths at end (>250000?):",sum(traj[M.Society.deaths][s][-1] for s in societies))
 print("temp. at begin:",traj[M.World.surface_air_temperature][worlds[0]][5])
 print("temp. at end:",traj[M.World.surface_air_temperature][worlds[0]][-1])
-print()
+print("prot. carbon share:",[traj[M.Society.protected_terrestrial_carbon][s][-1]/sum(traj[M.Cell.terrestrial_carbon][c][-1]for c in s.cells) for s in societies])
+print(traj[M.World.terrestrial_carbon][worlds[0]][-1],sum(traj[M.Cell.terrestrial_carbon][c][-1] for c in worlds[0].cells))
 
 show()
 

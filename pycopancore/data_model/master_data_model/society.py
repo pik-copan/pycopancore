@@ -82,7 +82,7 @@ emissions_tax_level = \
     Variable("emissions tax level",
              "level of emissions tax when introduced",
              unit = dollars / gigatonnes_carbon, 
-             lower_bound=0, default=100e9)
+             lower_bound=0, default=100e9*3.5)
 renewable_subsidy_level = \
     Variable("renewable subsidy level",
              "level of renewable subsidy when introduced",

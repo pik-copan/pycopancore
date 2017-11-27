@@ -12,6 +12,7 @@
 from .... import Event
 from .. import interface as I
 from ...base import interface as B
+from numpy import inf
 from numpy.random import exponential, uniform
 
 class Culture (I.Culture):
@@ -21,8 +22,8 @@ class Culture (I.Culture):
 
     def next_awareness_update_time(self, t):
         """time of next awareness update"""
-        res = t + exponential(1. / self.awareness_update_rate)
-        return res
+        return (inf if self.awareness_update_rate == 0
+                else t + exponential(1. / self.awareness_update_rate))
 
     def update_individuals_awareness(self, t):
         """let some individuals update their awareness"""

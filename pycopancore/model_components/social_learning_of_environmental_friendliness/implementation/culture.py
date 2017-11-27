@@ -12,6 +12,7 @@
 from .... import Event
 from .. import interface as I
 from ...base import interface as B
+from numpy import inf
 from numpy.random import exponential, uniform
 
 
@@ -22,12 +23,11 @@ class Culture (I.Culture):
 
     def next_learning_time(self, t):
         """time of next awareness update"""
-        res = t + exponential(1. / self.environmental_friendliness_learning_rate)
-        return res
+        return (inf if self.environmental_friendliness_learning_rate == 0
+                else t + exponential(1. / self.environmental_friendliness_learning_rate))
 
     def let_individuals_learn(self, t):
         """let some individuals learn environmental (un)friendliness"""
-        print("terr.:",sum([c.terrestrial_carbon for w in self.worlds for c in w.cells]))
         for w in self.worlds:
             for i in w.individuals:
                 if uniform() < self.environmental_friendliness_learning_fraction:

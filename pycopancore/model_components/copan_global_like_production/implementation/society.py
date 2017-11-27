@@ -66,7 +66,7 @@ class Society (I.Society):
         fac = (P * K)**0.4 / denom
         if any(np.isnan(fac)):
             w = np.where(np.isnan(fac))[0] 
-            print("fac",self.physical_capital,P[w],K[w],weight[w],relative_productivity[w],intensity[w])
+#            print("fac",self.physical_capital,P[w],K[w],weight[w],relative_productivity[w],intensity[w])
             exit()
         eB = self.metabolism.biomass_energy_density
         eF = self.metabolism.fossil_energy_density
@@ -78,7 +78,7 @@ class Society (I.Society):
         Y = E / intensity
         if any(Y < 0):
             w = np.where(np.isnan(fac))[0] 
-            print("Y",P[w],K[w],weight[w],relative_productivity[w],intensity[w],E[w])
+#            print("Y",P[w],K[w],weight[w],relative_productivity[w],intensity[w],E[w])
             exit()
             
         # tell cells what their harvest and extraction is:

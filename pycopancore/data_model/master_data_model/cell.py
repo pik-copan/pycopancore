@@ -34,6 +34,8 @@ soil_respiration_carbon_flow = NAT.soil_respiration_carbon_flow.copy()
 
 # metabolic:
 
+population = MET.population.copy()
+
 biomass_harvest_flow = MET.biomass_harvest_flow.copy()
 fossil_extraction_flow = MET.fossil_extraction_flow.copy()
 carbon_emission_flow = MET.carbon_emission_flow.copy()

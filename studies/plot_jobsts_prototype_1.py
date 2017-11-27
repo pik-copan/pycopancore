@@ -2,74 +2,107 @@
 
 import numpy as np
 from numpy import array, average, mean
-from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
+from pylab import plot, gca, show, figure, subplots, gca, semilogy, legend, tight_layout, NullLocator
 from pickle import load
 
-traj = load(open("/home/jobst/work/with.pickle","rb"))
-worlds = list(traj["atmospheric_carbon"].keys())
-societies = list(traj["population"].keys())
-cells = list(traj["fossil_carbon"].keys())
-individuals = list(traj["is_environmentally_friendly"].keys())
-t = np.array(traj['t'])
-
-figure()
+f, ((ax11, ax12), (ax21, ax22), (ax31, ax32)) = subplots(nrows=3, ncols=2, sharex=True, sharey=False)
 lws = 1
 al = 0.5
 
-subplot(411)  # cultural
-plot(t[3:], 100*average([array(traj["is_environmentally_friendly"][i][3:]*1) for i in individuals], axis=0,
-                        weights=[array(traj["represented_population"][i][3:]*1) for i in individuals]
-                        ),color="green",lw=lws, label="environmentally friendly individuals")
-plot(t[3:], 100*mean([array(traj["has_renewable_subsidy"][s][3:]*1) for s in societies], axis=0),color="darkorange",lw=lws, label="societies with renewable subsidy")
-plot(t[3:], 100*mean([array(traj["has_emissions_tax"][s][3:]*1) for s in societies], axis=0),color="blue",lw=lws, label="societies with emissions tax")
-plot(t[3:], 100*mean([array(traj["has_fossil_ban"][s][3:]*1) for s in societies], axis=0),color="gray",lw=lws, label="societies with fossil ban")
-gca().set_ylabel('percent')
-legend()
+# LEFT: without policy
 
-subplot(412)  # metabolic, logscale: capital, knowledge, production, wellbeing
-ax1 = gca()
-ax1.set_ylabel('per-cap. dollars per year', color="magenta")
-ax1.tick_params('y', colors="magenta")
-ax2 = ax1.twinx()
-ax2.set_ylabel('petajoules', color='darkorange')
-ax2.tick_params('y', colors='darkorange')
+traj = load(open("/home/jobst/work/without.pickle","rb"))
+worlds = list(traj["World.atmospheric_carbon"].keys())
+societies = list(traj["Society.population"].keys())
+cells = list(traj["Cell.fossil_carbon"].keys())
+individuals = list(traj["Individual.is_environmentally_friendly"].keys())
+t = np.array(traj['t'])
+
+print(sum(array(traj["Society.protected_terrestrial_carbon"][s]) for s in societies)
+      / sum(array(traj["Cell.terrestrial_carbon"][c]) for c in cells))
+quit()
+
+# cultural
+ax11.plot(t[3:], 100*average([array(traj["Individual.is_environmentally_friendly"][i][3:]*1) for i in individuals], axis=0,
+#                        weights=[array(traj["Individual.represented_population"][i][3:]*1) for i in individuals]
+                        ),color="green",lw=lws, label="env. friendly individuals")
+ax11.plot(t[3:], 100*mean([array(traj["Society.has_renewable_subsidy"][s][3:]*1) for s in societies], axis=0),color="darkorange",lw=lws, label="regions w/ renewable subsidy")
+ax11.plot(t[3:], 100*mean([array(traj["Society.has_emissions_tax"][s][3:]*1) for s in societies], axis=0),color="blue",lw=lws, label="regions w/ emissions tax")
+ax11.plot(t[3:], 100*mean([array(traj["Society.has_fossil_ban"][s][3:]*1) for s in societies], axis=0),color="gray",lw=lws, label="regions w/ fossil ban")
+ax11.set_ylabel('percent')
+ax11.set_ylim(-5,105)
+
+# metabolic
 for i, s in enumerate(societies):
-    ax1.plot(t[3:], array(traj["wellbeing"][s][3:]), color="magenta", lw=lws, alpha=al, label=None if i else "regional wellbeing")
-    ax2.semilogy(t[3:], array(traj["renewable_energy_knowledge"][s][3:])/1e6, color="darkorange", lw=lws, alpha=al, 
-                 label=None if i else "regional renewable energy knowledge")
-ax1.plot(t[3:], average([array(traj["wellbeing"][s][3:]) for s in societies], axis=0,
-                        weights=[array(traj["population"][s][3:]) for s in societies]), 
-         color="magenta", lw=3, label="avg. wellbeing")
-ax2.semilogy(t[3:], sum(array(traj["renewable_energy_knowledge"][s][3:])/1e6 for s in societies), color="darkorange", lw=3,
-             label="total renewable energy knowledge")
-ax1.legend(loc=2)
-ax2.legend(loc=1)
+    Es = array(traj["Society.secondary_energy_flow"][s][3:])
+    ax21.plot(t[3:], 100*array(traj["Society.biomass_input_flow"][s][3:]) * 40e9 / Es, color="green", lw=lws, alpha=al, label=None if i else "biomass")
+    ax21.plot(t[3:], 100*array(traj["Society.fossil_fuel_input_flow"][s][3:]) * 47e9 / Es, color="gray", lw=lws, alpha=al, label=None if i else "fossils")
+    ax21.plot(t[3:], 100*array(traj["Society.renewable_energy_input_flow"][s][3:]) / Es, color="darkorange", lw=lws, alpha=al, label=None if i else "renewables")
+#plot(t[3:], 100*average([array(traj["biomass_input_flow"][s][3:]) for s in societies], axis=0,
+#                        weights=[array(traj["population"][s][3:]) for s in societies]) * 40e9 / Es, color="green", lw=3, label="global share of biomass energy")
+#plot(t[3:], 100*average([array(traj["fossil_fuel_input_flow"][s][3:]) for s in societies], axis=0,
+#                        weights=[array(traj["population"][s][3:]) for s in societies]) * 47e9 / Es, color="gray", lw=3, label="global share of fossil energy")
+#plot(t[3:], 100*average([array(traj["renewable_energy_input_flow"][s][3:]) for s in societies], axis=0,
+#                        weights=[array(traj["population"][s][3:]) for s in societies]) / Es, color="darkorange", lw=3, label="global share of renewables")
+ax21.set_ylabel('percent')
+ax21.set_ylim(-5,105)
 
-subplot(413)  # metabolic: energy mix
-for i, s in enumerate(societies):
-    Es = array(traj["secondary_energy_flow"][s][3:])
-    plot(t[3:], 100*array(traj["biomass_input_flow"][s][3:]) * 40e9 / Es, color="green", lw=lws, alpha=al, label=None if i else "regional share of biomass energy")
-    plot(t[3:], 100*array(traj["fossil_fuel_input_flow"][s][3:]) * 47e9 / Es, color="gray", lw=lws, alpha=al, label=None if i else "regional share of fossil energy")
-    plot(t[3:], 100*array(traj["renewable_energy_input_flow"][s][3:]) / Es, color="darkorange", lw=lws, alpha=al, label=None if i else "regional share of renewables")
-plot(t[3:], 100*average([array(traj["biomass_input_flow"][s][3:]) for s in societies], axis=0,
-                        weights=[array(traj["population"][s][3:]) for s in societies]) * 40e9 / Es, color="green", lw=3, label="global share of biomass energy")
-plot(t[3:], 100*average([array(traj["fossil_fuel_input_flow"][s][3:]) for s in societies], axis=0,
-                        weights=[array(traj["population"][s][3:]) for s in societies]) * 47e9 / Es, color="gray", lw=3, label="global share of fossil energy")
-plot(t[3:], 100*average([array(traj["renewable_energy_input_flow"][s][3:]) for s in societies], axis=0,
-                        weights=[array(traj["population"][s][3:]) for s in societies]) / Es, color="darkorange", lw=3, label="global share of renewables")
-gca().set_ylabel('percent')
-legend()
-
-subplot(414)  # natural
-plot(t[3:], traj["atmospheric_carbon"][worlds[0]][3:], color="cyan", lw=3, label="atmospheric carbon")
-plot(t[3:], traj["upper_ocean_carbon"][worlds[0]][3:], color="blue", lw=3, label="upper ocean carbon")
-plot(t[3:], sum(array(traj["terrestrial_carbon"][c][3:]) for c in cells), color="green", lw=3, label="terrestrial carbon")
-plot(t[3:], sum(array(traj["fossil_carbon"][c][3:]) for c in cells), color="gray", lw=3, label="fossil carbon")
+# natural
+ax31.plot(t[3:], traj["World.atmospheric_carbon"][worlds[0]][3:], color="cyan", lw=2, label="atmosphere")
+ax31.plot(t[3:], traj["World.upper_ocean_carbon"][worlds[0]][3:], color="blue", lw=2, label="upper oceans")
+ax31.plot(t[3:], sum(array(traj["Cell.terrestrial_carbon"][c][3:]) for c in cells), color="green", lw=2, label="plants & soils")
+ax31.plot(t[3:], sum(array(traj["Cell.fossil_carbon"][c][3:]) for c in cells), color="gray", lw=2, label="fossils")
 #for i, s in enumerate(societies):
 #    plot(t[3:], traj["protected_terrestrial_carbon"][s][3:],color="green",lw=lws, label=None if i else "protected biomass")
-gca().set_ylabel('gigatonnes carbon')
-legend()
+ax31.set_ylabel('gigatonnes carbon')
 
+# RIGHT: with policy
+
+traj = load(open("/home/jobst/work/with.pickle","rb"))
+worlds = list(traj["World.atmospheric_carbon"].keys())
+societies = list(traj["Society.population"].keys())
+cells = list(traj["Cell.fossil_carbon"].keys())
+individuals = list(traj["Individual.is_environmentally_friendly"].keys())
+t = np.array(traj['t'])
+
+# cultural
+ax12.plot(t[3:], 100*average([array(traj["Individual.is_environmentally_friendly"][i][3:]*1) for i in individuals], axis=0,
+                        weights=[array(traj["Individual.represented_population"][i][3:]*1) for i in individuals]
+                        ),color="green",lw=lws, label="env. friendly individuals")
+ax12.plot(t[3:], 100*mean([array(traj["Society.has_renewable_subsidy"][s][3:]*1) for s in societies], axis=0),color="darkorange",lw=lws, label="regions w/ renewable subsidy")
+ax12.plot(t[3:], 100*mean([array(traj["Society.has_emissions_tax"][s][3:]*1) for s in societies], axis=0),color="blue",lw=lws, label="regions w/ emissions tax")
+ax12.plot(t[3:], 100*mean([array(traj["Society.has_fossil_ban"][s][3:]*1) for s in societies], axis=0),color="gray",lw=lws, label="regions w/ fossil ban")
+ax12.set_ylim(-5,105)
+ax12.yaxis.set_major_locator(NullLocator())
+ax12.legend()
+
+# metabolic
+for i, s in enumerate(societies):
+    Es = array(traj["Society.secondary_energy_flow"][s][3:])
+    ax22.plot(t[3:], 100*array(traj["Society.biomass_input_flow"][s][3:]) * 40e9 / Es, color="green", lw=lws, alpha=al, label=None if i else "biomass")
+    ax22.plot(t[3:], 100*array(traj["Society.fossil_fuel_input_flow"][s][3:]) * 47e9 / Es, color="gray", lw=lws, alpha=al, label=None if i else "fossils")
+    ax22.plot(t[3:], 100*array(traj["Society.renewable_energy_input_flow"][s][3:]) / Es, color="darkorange", lw=lws, alpha=al, label=None if i else "renewables")
+#plot(t[3:], 100*average([array(traj["biomass_input_flow"][s][3:]) for s in societies], axis=0,
+#                        weights=[array(traj["population"][s][3:]) for s in societies]) * 40e9 / Es, color="green", lw=3, label="global share of biomass energy")
+#plot(t[3:], 100*average([array(traj["fossil_fuel_input_flow"][s][3:]) for s in societies], axis=0,
+#                        weights=[array(traj["population"][s][3:]) for s in societies]) * 47e9 / Es, color="gray", lw=3, label="global share of fossil energy")
+#plot(t[3:], 100*average([array(traj["renewable_energy_input_flow"][s][3:]) for s in societies], axis=0,
+#                        weights=[array(traj["population"][s][3:]) for s in societies]) / Es, color="darkorange", lw=3, label="global share of renewables")
+ax22.set_ylim(-5,105)
+ax22.yaxis.set_major_locator(NullLocator())
+ax22.legend()
+
+# natural
+ax32.plot(t[3:], traj["World.atmospheric_carbon"][worlds[0]][3:], color="cyan", lw=2, label="atmosphere")
+ax32.plot(t[3:], traj["World.upper_ocean_carbon"][worlds[0]][3:], color="blue", lw=2, label="upper oceans")
+ax32.plot(t[3:], sum(array(traj["Cell.terrestrial_carbon"][c][3:]) for c in cells), color="green", lw=2, label="plants & soils")
+ax32.plot(t[3:], sum(array(traj["Cell.fossil_carbon"][c][3:]) for c in cells), color="gray", lw=2, label="fossils")
+#for i, s in enumerate(societies):
+#    plot(t[3:], traj["protected_terrestrial_carbon"][s][3:],color="green",lw=lws, label=None if i else "protected biomass")
+#ax32.yaxis.set_major_locator(NullLocator())
+ax32.legend()
+
+f.subplots_adjust(hspace=0, wspace=0)
 show()
 
 # TODO: 

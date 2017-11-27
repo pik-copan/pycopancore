@@ -508,6 +508,7 @@ class Variable(Symbol):
                 setattr(inst, cn, values[i])
         else:
             for inst in self.owning_class.instances:
+                if len(values) == 0: print(inst,self)
                 setattr(inst, cn, values[0])
 
     def set_values(self,
@@ -600,7 +601,12 @@ class Variable(Symbol):
         assert not isinstance(v, Variable), \
             "Variable " + str(self) + " uninitialized at instance " \
             + str(instance)
-        return v if unit is None else self._unit.convert(v, unit)
+        return v if unit is None else self.unit.convert(v, unit)
+    
+    def get_quantity(self, instance, unit=None):
+        if unit is None:
+            unit = self.unit
+        return DimensionalQuantity(self.get_value(instance, unit=unit), unit)
 
     def __getitem__(self, instance):
         """magic method allowing access to instance values via var[instance]"""

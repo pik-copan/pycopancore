@@ -63,10 +63,10 @@ class DimensionalQuantity(object):
         if unit is None:
             unit = self._unit
         format = str(width - len(unit.symbol) - 1) + "." + str(decimals) + "f"
-        return ("{:"+format+"}").format(self.number(unit)) + " " + unit.symbol
+        return ("{:"+format+"}").format(self.number(unit) * unit.factor) + " " + unit.symbol
 
     def __repr__(self):
-        return str(self._number) + " " + self._unit.symbol
+        return str(self._number * self._unit.factor) + " " + self._unit.symbol
 
     def __hash__(self):
         return hash((self._number, self._unit))

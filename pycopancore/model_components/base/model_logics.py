@@ -209,6 +209,8 @@ class ModelLogics (object):
                 print("  Entity-type ", composed_class)
             else:
                 print("  Process taxon ", composed_class)
+            # initialize empty list of instances:
+            composed_class.instances = []
             # find all parent classes and register in dict mixin2composite:
             parents = OrderedSet(list(inspect.getmro(composed_class))) - [object]
             for mixin in parents:

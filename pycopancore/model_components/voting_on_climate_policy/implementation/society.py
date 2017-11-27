@@ -15,12 +15,20 @@ from .. import interface as I
 # from .... import master_data_model as D
 from .... import Event
 from numpy import array
+from numpy.random import uniform
 
 class Society (I.Society):
     """Society entity type mixin implementation class."""
 
+    voting_time_offset = None
+    
     def next_voting_time(self, t):
-        return t + self.time_between_votes
+        if not self.voting_time_offset:
+            self.voting_time_offset = uniform() * self.time_between_votes
+        return (self.voting_time_offset 
+                + self.time_between_votes
+                * ((t - self.voting_time_offset + 1e-10) // self.time_between_votes 
+                   + 1)) 
     
     def take_a_vote(self, unused_t):
         share = sum([i.population_share for i in self.individuals
