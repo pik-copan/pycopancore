@@ -21,5 +21,5 @@ class World (I.World):
 
         Explicit("aggregate flows",
                  [I.World.renewable_energy_input_flow],
-                 [B.World.sum.societies.renewable_energy_input_flow]),
+                 [B.World.sum.social_systems.renewable_energy_input_flow]),
     ]

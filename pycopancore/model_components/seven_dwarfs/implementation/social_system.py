@@ -1,4 +1,4 @@
-"""Society entity type class template.
+"""SocialSystem entity type class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
@@ -19,15 +19,15 @@ from pycopancore import ODE, Step, Explicit, Event
 import numpy as np
 
 
-class Society(I.Society):
-    """Society entity type mixin implementation class."""
+class SocialSystem(I.SocialSystem):
+    """SocialSystem entity type mixin implementation class."""
 
     # process-related methods:
     def register_dwarf(self, dwarf):
         """Connect dwarf with other individuals in network.
         
         When a dwarf is instantiated, this function is called and 
-        connects the dwarf with all other ones in its society."""
+        connects the dwarf with all other ones in its social_system."""
         for ind in self.individuals:
             if (ind not in dwarf.acquaintances
                     and dwarf != ind):

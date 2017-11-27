@@ -1,6 +1,6 @@
 # WARNING: DON'T, I REPEAT, DON'T REMOVE SPACES AROUND = !!!
 
-"""Master data model for nature."""
+"""Master data model for environment."""
 
 from .. import Variable
 from . import gigatonnes_carbon, kelvins, years, square_kilometers
