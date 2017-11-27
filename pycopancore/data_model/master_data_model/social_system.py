@@ -1,4 +1,4 @@
-"""Master data model for society."""
+"""Master data model for social_system."""
 
 from . import metabolism as MET
 from .. import Variable

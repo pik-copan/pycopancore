@@ -11,7 +11,7 @@
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import Society
+from .implementation import SocialSystem
 # import all needed process taxon implementation classes:
 from .implementation import Metabolism
 
@@ -21,7 +21,7 @@ class Model (I.Model):
 
     # mixins provided by this model component:
 
-    entity_types = [Society]
+    entity_types = [SocialSystem]
     """list of entity types augmented by this component"""
     process_taxa = [Metabolism]
     """list of process taxa augmented by this component"""

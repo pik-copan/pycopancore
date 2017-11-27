@@ -1,9 +1,8 @@
-"""Nature process taxon mixing class template.
+"""SocialSystem entity type mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
-
 # This file is part of pycopancore.
 #
 # Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
@@ -13,20 +12,32 @@ then remove these instructions
 # License: MIT license
 
 from .. import interface as I
-# from .... import master_data_model as D
+#from .... import master_data_model as D
 
 
-class Nature (I.Nature):
-    """Nature process taxon mixin implementation class."""
+class SocialSystem (I.SocialSystem):
+    """SocialSystem entity type mixin implementation class."""
 
     # standard methods:
-    # TODO: remove those that you don't use
 
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                 *,
+                 harvest_rate=0.5,
                  **kwargs):
-        """Initialize the unique instance of Nature."""
+        """Initialize an instance of SocialSystem."""
         super().__init__(**kwargs)  # must be the first line
+
+        self.harvest_rate = harvest_rate
+
+    def deactivate(self):
+        """Deactivate a social_system."""
+        # TODO: add custom code here:
+        pass
+        super().deactivate()  # must be the last line
+
+    def reactivate(self):
+        """Reactivate a social_system."""
+        super().reactivate()  # must be the first line
         # TODO: add custom code here:
         pass
 

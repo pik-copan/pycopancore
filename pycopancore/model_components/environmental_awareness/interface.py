@@ -32,7 +32,7 @@ class Model (object):
 # entity types:
 
 
-class Society (object):
+class SocialSystem (object):
     """Interface for Individual entity type mixin."""
 
     # endogenous variables:
