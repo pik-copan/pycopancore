@@ -8,10 +8,10 @@ Table of Contents:
 1. [Introduction](#introduction)
 2. [Disclaimer](#disclaimer)
 3. [Quick start guide](#quick-start-guide)
-    [1. Installation](#installation)
-    2. Documentation
-    3. Code of good practice
-    4. Tests
+    * [Installation](#installation)
+    * [Documentation](#documentation)
+    * [Code of good practice](#code-of-good-practice)
+    * [Tests]
 4. [Structure of the repository](#structure-of-the-repository)
 5. [Licence and Development](#licence-and-development)
 
