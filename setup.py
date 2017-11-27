@@ -19,6 +19,7 @@ setup(name="pycopancore",
           "scipy>=0.17.0",
           "sympy>=1.0",
           "blist>=1.3.6",
+          "python-louvain>=0.9"
           "profilehooks"
 
       ],
