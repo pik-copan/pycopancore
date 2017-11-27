@@ -1,15 +1,17 @@
-"""Society entity type mixing class template.
+"""SocialSystem entity type mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
+
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from .. import interface as I
 from pycopancore.model_components.base import interface as B
@@ -22,8 +24,8 @@ import math
 import random
 
 
-class Society (I.Society):
-    """Society entity type mixin implementation class."""
+class SocialSystem (I.SocialSystem):
+    """SocialSystem entity type mixin implementation class."""
 
     # standard methods:
 
@@ -35,7 +37,7 @@ class Society (I.Society):
                  scaling_parameter=1.12,
                  migration_cost=1000,
                  **kwargs):
-        """Initialize an instance of Society."""
+        """Initialize an instance of SocialSystem."""
         super().__init__(**kwargs)  # must be the first line
 
         self.municipality_like = municipality_like
@@ -60,8 +62,8 @@ class Society (I.Society):
         return lognormal_random
 
     def liquidity_pdf(self):
-        """Calculate the PDF of the liquidity of the society."""
-        print('liquidity_pdf is calculated for society', self)
+        """Calculate the PDF of the liquidity of the social_system."""
+        print('liquidity_pdf is calculated for social_system', self)
         liquidities = []
         # Check if there are any individuals:
         if self.individuals:
@@ -73,10 +75,10 @@ class Society (I.Society):
                   self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
             print('population is', self.population)
         else:
-            print('Society died out')
+            print('SocialSystem died out')
 
     def calc_population(self, unused_t):
-        """Calculate the societies population explicitly.
+        """Calculate the social_systems population explicitly.
 
         Parameters
         ----------
@@ -84,7 +86,7 @@ class Society (I.Society):
         """
         if len(self.individuals) == 0:
             self.deactivate()
-            print(f'society {self} died out at time {unused_t}')
+            print(f'social_system {self} died out at time {unused_t}')
             # to prevent division by zero:
             self.population = 1
         else:
@@ -94,7 +96,7 @@ class Society (I.Society):
         """Update incomes to adjust to population in some manner."""
         # first: Check if really a municipaity:
         if self.municipality_like is not True:
-            raise SocietyTypeError('Society not a municipality')
+            raise SocialSystemTypeError('SocialSystem not a municipality')
         # Define factor how fast adjusting takes place
         factor = 0.5
         sum = 0
@@ -111,7 +113,7 @@ class Society (I.Society):
         """Update farmsizes to adjust to population."""
         # first: Check if really a county:
         if self.municipality_like is not False:
-            raise SocietyTypeError('Society not a county')
+            raise SocialSystemTypeError('SocialSystem not a county')
         # Define factor how fast adjusting takes place
         factor = 0.5
         sum = 0
@@ -133,12 +135,12 @@ class Society (I.Society):
         if self.is_active:
             if self.municipality_like is True:
                 self.update_incomes()
-                print('incomes updated of society', self)
+                print('incomes updated of social_system', self)
             elif self.municipality_like is False:
                 self.update_farmsizes()
-                print('farmsizes updated of society', self)
+                print('farmsizes updated of social_system', self)
             else:
-                raise SocietyTypeError('Neither County nor Municipality!')
+                raise SocialSystemTypeError('Neither County nor Municipality!')
 
     def calculate_mean_income_or_farmsize(self, unused_t):
         """Calculate mean income (if municipality) or farm size (county)."""
@@ -155,7 +157,7 @@ class Society (I.Society):
                     self.mean_income_or_farmsize = c.land_area / self.population
 
     def calculate_average_liquidity(self, unused_t):
-        """Calculate average liquidity of society."""
+        """Calculate average liquidity of social_system."""
         if self.is_active:
             sum = 0
             for ind in self.individuals:
@@ -166,7 +168,7 @@ class Society (I.Society):
             self.average_liquidity = 1
 
     def calculate_average_utility(self, unused_t):
-        """Calculate the average utility in this society."""
+        """Calculate the average utility in this social_system."""
         if self.is_active:
             summe = 0
             for ind in self.individuals:
@@ -192,30 +194,30 @@ class Society (I.Society):
 
     processes = [
         Explicit('calculate population',
-                 [B.Society.population,
+                 [B.SocialSystem.population,
                   # Following is only done to determine if soc is a city or
                   # not afterwards, since this is not saved otherwise:
-                  I.Society.municipality_like],
+                  I.SocialSystem.municipality_like],
                  calc_population),
         Step("Update incomes/farmsizes",
-             [B.Society.individuals.farm_size,
-              B.Society.individuals.gross_income],
+             [B.SocialSystem.individuals.farm_size,
+              B.SocialSystem.individuals.gross_income],
              [update_timing, do_update]),
         Explicit('calculate mean income or farmsize',
-                 [I.Society.mean_income_or_farmsize],
+                 [I.SocialSystem.mean_income_or_farmsize],
                  calculate_mean_income_or_farmsize),
         Explicit("Calculate average liquidities",
-                 [I.Society.average_liquidity],
+                 [I.SocialSystem.average_liquidity],
                  calculate_average_liquidity),
         Explicit("Calculate average utilities",
-                 [I.Society.average_utility],
+                 [I.SocialSystem.average_utility],
                  calculate_average_utility),
         Explicit("Calculate gini",
-                 [I.Society.gini_coefficient],
+                 [I.SocialSystem.gini_coefficient],
                  calculate_gini)
     ]
 
 
-class SocietyTypeError(Exception):
-    """Error Class if wrong type of society."""
+class SocialSystemTypeError(Exception):
+    """Error Class if wrong type of social_system."""
     pass

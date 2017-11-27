@@ -5,11 +5,12 @@ It only import components of the base mixins
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 #
 #  Imports
@@ -40,8 +41,8 @@ class Individual(base.Individual):
     pass
 
 
-class Society(base.Society):
-    """Class to mix all Society_mixins to create Society class."""
+class SocialSystem(base.SocialSystem):
+    """Class to mix all SocialSystem_mixins to create SocialSystem class."""
 
     pass
 
@@ -62,8 +63,8 @@ class Metabolism(base.Metabolism):
     pass
 
 
-class Nature(base.Nature):
-    """Class to mix all Nature_mixins to create Nature class."""
+class Environment(base.Environment):
+    """Class to mix all Environment_mixins to create Environment class."""
 
     pass
 

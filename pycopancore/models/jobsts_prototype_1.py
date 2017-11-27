@@ -2,11 +2,12 @@
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 #
 #  Imports
@@ -43,15 +44,15 @@ class World(cc.World,
     pass
 
 
-class Society(
-              prod.Society,
-              growth.Society,
-              pop.Society,
-              mig.Society,
-              aware.Society,
-              vote.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(
+              prod.SocialSystem,
+              growth.SocialSystem,
+              pop.SocialSystem,
+              mig.SocialSystem,
+              aware.SocialSystem,
+              vote.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -74,9 +75,9 @@ class Individual(aware.Individual,
 # process taxa:
 
 
-class Nature(cc.Nature,
-             base.Nature):
-    """Nature process taxon."""
+class Environment(cc.Environment,
+             base.Environment):
+    """Environment process taxon."""
 
     pass
 
@@ -118,7 +119,7 @@ class Model(cc.Model,
     description = "(as presented internally at PIK in fall 2016)"
     """Longer description"""
 
-    entity_types = [World, Society, Cell, Individual]
+    entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""
-    process_taxa = [Nature, Metabolism, Culture]
+    process_taxa = [Environment, Metabolism, Culture]
     """List of process taxa used in the model"""

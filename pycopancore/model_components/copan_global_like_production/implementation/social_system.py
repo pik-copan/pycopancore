@@ -1,15 +1,16 @@
-"""Society entity type mixing class template.
+"""SocialSystem entity type mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from .... import Explicit, ODE
 from .. import interface as I
@@ -18,8 +19,8 @@ from ...base import interface as B
 import numpy as np
 
 
-class Society (I.Society):
-    """Society entity type mixin implementation class."""
+class SocialSystem (I.SocialSystem):
+    """SocialSystem entity type mixin implementation class."""
 
     
     # process-related methods:
@@ -85,7 +86,7 @@ class Society (I.Society):
         for i in range(len(C)):
             C[i].biomass_harvest_flow = B[i]
             C[i].fossil_extraction_flow = F[i]
-        # store societies' total harvest and extraction, emissions,
+        # store social_systems' total harvest and extraction, emissions,
         # and production:
         self.biomass_input_flow = sum(B)
         self.fossil_fuel_input_flow = sum(F)
@@ -102,7 +103,7 @@ class Society (I.Society):
         ----------
         unused_t
         """
-        # this is an example of a process that is owned by Society
+        # this is an example of a process that is owned by SocialSystem
         # but affects its cells and the world:
         for c in self.cells:
             c.d_terrestrial_carbon -= c.biomass_harvest_flow
@@ -112,13 +113,13 @@ class Society (I.Society):
 
     # abbreviations:
     
-    this = I.Society
-    met = B.Society.metabolism
-    cs = B.Society.cells
+    this = I.SocialSystem
+    met = B.SocialSystem.metabolism
+    cs = B.SocialSystem.cells
     # distribute population and capital to cells so that wages and rents
     # are equal across cells (efficient allocation):
     relative_weight = cs.total_relative_productivity
-    total_relative_weight = B.Society.sum(relative_weight)
+    total_relative_weight = B.SocialSystem.sum(relative_weight)
     weight = relative_weight / total_relative_weight
     P = weight * this.population
     K = weight * this.physical_capital
@@ -134,24 +135,24 @@ class Society (I.Society):
     Ecell = eB * Bcell + eF * Fcell + Rcell
     Ycell = Ecell / intensity
     # societal aggregates:
-    Bsoc = B.Society.sum(Bcell)
-    Fsoc = B.Society.sum(Fcell)
-    Rsoc = B.Society.sum(Rcell)
-    Esoc = B.Society.sum(Ecell)
-    Ysoc = B.Society.sum(Ycell)
+    Bsoc = B.SocialSystem.sum(Bcell)
+    Fsoc = B.SocialSystem.sum(Fcell)
+    Rsoc = B.SocialSystem.sum(Rcell)
+    Esoc = B.SocialSystem.sum(Ecell)
+    Ysoc = B.SocialSystem.sum(Ycell)
     emissions = Bsoc + Fsoc
 
     processes = [
 
         Explicit("economic production",
-                 [B.Society.cells.biomass_harvest_flow,
-                  B.Society.cells.fossil_extraction_flow,
-                  I.Society.biomass_input_flow,
-                  I.Society.fossil_fuel_input_flow,
-                  I.Society.renewable_energy_input_flow,
-                  I.Society.secondary_energy_flow,
-                  I.Society.economic_output_flow,
-                  I.Society.carbon_emission_flow],
+                 [B.SocialSystem.cells.biomass_harvest_flow,
+                  B.SocialSystem.cells.fossil_extraction_flow,
+                  I.SocialSystem.biomass_input_flow,
+                  I.SocialSystem.fossil_fuel_input_flow,
+                  I.SocialSystem.renewable_energy_input_flow,
+                  I.SocialSystem.secondary_energy_flow,
+                  I.SocialSystem.economic_output_flow,
+                  I.SocialSystem.carbon_emission_flow],
 #                 [Bcell,
 #                  Fcell,
 #                  Bsoc,
@@ -164,9 +165,9 @@ class Society (I.Society):
                  do_economic_production),
 
         ODE("harvest, extraction, emissions",
-            [B.Society.cells.terrestrial_carbon,
-             B.Society.cells.fossil_carbon,
-             B.Society.world.atmospheric_carbon],
+            [B.SocialSystem.cells.terrestrial_carbon,
+             B.SocialSystem.cells.fossil_carbon,
+             B.SocialSystem.world.atmospheric_carbon],
 #            [-Bcell,
 #             -Fcell,
 #             emissions

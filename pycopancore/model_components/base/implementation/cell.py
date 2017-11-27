@@ -2,11 +2,12 @@
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate Impact
-# Research
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 # only used in this component, not in others:
 from ... import abstract
@@ -29,7 +30,7 @@ class Cell (I.Cell, abstract.Cell):
     def __init__(self,
                  *,
                  world=None,
-                 society=None,
+                 social_system=None,
                  **kwargs
                  ):
         """Initialize an instance of Cell.
@@ -38,8 +39,8 @@ class Cell (I.Cell, abstract.Cell):
         ----------
         world : obj
             World the Cell belongs to (the default is None)
-        society : obj
-            Society the Cell belongs to (the default is None)
+        social_system : obj
+            SocialSystem the Cell belongs to (the default is None)
         **kwargs
             keyword arguments passed to super()
 
@@ -48,10 +49,10 @@ class Cell (I.Cell, abstract.Cell):
 
         # init and set variables implemented via properties
         self._world = None
-        self._society = None
+        self._social_system = None
         if world:
             self.world = world
-        self.society = society  # this line must occur after setting world!
+        self.social_system = social_system  # this line must occur after setting world!
 
         # make sure all variable values are valid:
         self.assert_valid()
@@ -60,8 +61,8 @@ class Cell (I.Cell, abstract.Cell):
         self._individuals = set()
 
         # register with all mandatory networks:
-        if self.nature:
-            self.nature.geographic_network.add_node(self)
+        if self.environment:
+            self.environment.geographic_network.add_node(self)
 
 
     # getters and setters for references:
@@ -82,37 +83,37 @@ class Cell (I.Cell, abstract.Cell):
         self._world = w
 
     @property
-    def society(self):
-        """Get the lowest-level Society whose territory the Cell is part of."""
-        return self._society
+    def social_system(self):
+        """Get the lowest-level SocialSystem whose territory the Cell is part of."""
+        return self._social_system
 
-    @society.setter
-    def society(self, s):
-        """Set the lowest-level Society whose territory the Cell is part of."""
-        if self._society is not None:
-            # first deregister from previous society's list of cells:
-            self._society._direct_cells.remove(self)
+    @social_system.setter
+    def social_system(self, s):
+        """Set the lowest-level SocialSystem whose territory the Cell is part of."""
+        if self._social_system is not None:
+            # first deregister from previous social_system's list of cells:
+            self._social_system._direct_cells.remove(self)
             # reset dependent caches:
-            self._society.cells = unknown
-            self._society.direct_individuals = unknown
+            self._social_system.cells = unknown
+            self._social_system.direct_individuals = unknown
         if s is not None:
-            assert isinstance(s, I.Society), \
-                "society must be of entity type Society"
+            assert isinstance(s, I.SocialSystem), \
+                "social_system must be of entity type SocialSystem"
             s._direct_cells.add(self)
             # reset dependent caches:
             s.cells = unknown
             s.direct_individuals = unknown
             self.world = s.world
-        self._society = s
+        self._social_system = s
         # reset dependent caches:
-        self.societies = unknown
+        self.social_systems = unknown
 
     # getters for backwards references and convenience variables:
 
     @property  # read-only
-    def nature(self):
-        """Get the Nature of which the Cell is a part."""
-        return self._world.nature
+    def environment(self):
+        """Get the Environment of which the Cell is a part."""
+        return self._world.environment
 
     @property  # read-only
     def metabolism(self):
@@ -124,21 +125,21 @@ class Cell (I.Cell, abstract.Cell):
         """Get the Culture of which the Cell is a part."""
         return self._world.culture
 
-    _societies = unknown
-    """cache, depends on self.society, self.society.higher_societies"""
+    _social_systems = unknown
+    """cache, depends on self.social_system, self.social_system.higher_social_systems"""
     @property  # read-only
-    def societies(self):
-        """Get upward list of Societies the Cell belongs to (in)directly."""
-        if self._societies is unknown:
-            self._societies = [] if self.society is None \
-                else [self.society] + self.society.higher_societies
-        return self._societies
+    def social_systems(self):
+        """Get upward list of Social Systems the Cell belongs to (in)directly."""
+        if self._social_systems is unknown:
+            self._social_systems = [] if self.social_system is None \
+                else [self.social_system] + self.social_system.higher_social_systems
+        return self._social_systems
 
-    @societies.setter
-    def societies(self, u):
-        """Set upward list of Societies the Cell belongs to (in)directly."""
+    @social_systems.setter
+    def social_systems(self, u):
+        """Set upward list of Social Systems the Cell belongs to (in)directly."""
         assert u == unknown, "setter can only be used to reset cache"
-        self._societies = unknown
+        self._social_systems = unknown
         # reset dependent caches:
         pass
 

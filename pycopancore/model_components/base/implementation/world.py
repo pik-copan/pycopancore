@@ -2,11 +2,12 @@
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate Impact
-# Research
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 # only used in this component, not in others:
 from ... import abstract
@@ -30,7 +31,7 @@ class World (I.World, abstract.World):
 
     def __init__(self,
                  *,
-                 nature=None,
+                 environment=None,
                  metabolism=None,
                  culture=None,
                  **kwargs
@@ -39,8 +40,8 @@ class World (I.World, abstract.World):
 
         Parameters
         ----------
-        nature : obj
-            Nature acting on this World.
+        environment : obj
+            Environment acting on this World.
         metabolism : obj
             Metabolism acting on this World.
         culture : obj
@@ -51,13 +52,13 @@ class World (I.World, abstract.World):
         """
         super().__init__(**kwargs)  # must be the first line
 
-        self._nature = None
-        self.nature = nature
+        self._environment = None
+        self.environment = environment
         self._metabolism = None
         self.metabolism = metabolism
         self._culture = None
         self.culture = culture
-        self._societies = set()
+        self._social_systems = set()
         self._cells = set()
 
         # make sure all variable values are valid:
@@ -65,20 +66,20 @@ class World (I.World, abstract.World):
 
     # getters and setters:
     @property
-    def nature(self):
-        """Get world's nature."""
-        return self._nature
+    def environment(self):
+        """Get world's environment."""
+        return self._environment
 
-    @nature.setter
-    def nature(self, n):
-        """Set world's nature."""
-        if self._nature is not None:
-            # first deregister from previous nature's list of worlds:
-            self._nature.worlds.remove(self)
+    @environment.setter
+    def environment(self, n):
+        """Set world's environment."""
+        if self._environment is not None:
+            # first deregister from previous environment's list of worlds:
+            self._environment.worlds.remove(self)
         if n is not None:
-            assert isinstance(n, I.Nature), "Nature must be taxon type Nature"
+            assert isinstance(n, I.Environment), "Environment must be taxon type Environment"
             n._worlds.add(self)
-        self._nature = n
+        self._environment = n
 
     @property
     def metabolism(self):
@@ -121,7 +122,7 @@ class World (I.World, abstract.World):
 
     @culture.setter
     def culture(self, c):
-        """Set the World the Society is part of."""
+        """Set the World the SocialSystem is part of."""
         if self._culture is not None:
             self._culture._worlds.remove(self)
         assert isinstance(c, I.Culture), "culture must be of taxon type Culture"
@@ -129,16 +130,16 @@ class World (I.World, abstract.World):
         self._culture = c
 
     @property  # read-only
-    def societies(self):
-        """Get the set of all Societies on this World."""
-        return self._societies
+    def social_systems(self):
+        """Get the set of all Social Systems on this World."""
+        return self._social_systems
 
     @property  # read-only
-    def top_level_societies(self):
-        """Get the set of top-level Societies on this World."""
+    def top_level_social_systems(self):
+        """Get the set of top-level Social Systems on this World."""
         # find by filtering:
-        return set([s for s in self._societies
-                    if s.next_higher_society is None])
+        return set([s for s in self._social_systems
+                    if s.next_higher_social_system is None])
 
     @property  # read-only
     def cells(self):

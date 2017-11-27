@@ -2,11 +2,12 @@
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate Impact
-# Research
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 # only used in this component, not in others
 from ... import abstract
@@ -90,17 +91,17 @@ class Individual (I.Individual, abstract.Individual):
             # first deregister from previous cell's list of individuals:
             self._cell._individuals.remove(self)
             # reset dependent caches:
-            if self._cell.society is not None:
-                self._cell.society.direct_individuals = unknown
-                self._cell.society.individuals = unknown
+            if self._cell.social_system is not None:
+                self._cell.social_system.direct_individuals = unknown
+                self._cell.social_system.individuals = unknown
             self.world.individuals = unknown
         assert isinstance(c, I.Cell), "cell must be of entity type Cell"
         c._individuals.add(self)
         self._cell = c
         # reset dependent caches:
-        if c.society is not None:
-            c.society.direct_individuals = unknown
-            c.society.individuals = unknown
+        if c.social_system is not None:
+            c.social_system.direct_individuals = unknown
+            c.social_system.individuals = unknown
         self.world.individuals = unknown
 
     # getters for backwards references and convenience variables:
@@ -111,9 +112,9 @@ class Individual (I.Individual, abstract.Individual):
         return self._cell.world
 
     @property  # read-only
-    def nature(self):
-        """Get the Nature the Individual is part of."""
-        return self._cell.nature
+    def environment(self):
+        """Get the Environment the Individual is part of."""
+        return self._cell.environment
 
     @property  # read-only
     def metabolism(self):
@@ -126,29 +127,29 @@ class Individual (I.Individual, abstract.Individual):
         return self._cell.culture
 
     @property  # read-only
-    def society(self):
-        """Get the lowest level Society the Individual is resident of."""
-        return self._cell.society
+    def social_system(self):
+        """Get the lowest level SocialSystem the Individual is resident of."""
+        return self._cell.social_system
 
     @property  # read-only
-    def societies(self):
-        """Get the upward list of all Societies the Individual is resident
+    def social_systems(self):
+        """Get the upward list of all Social Systems the Individual is resident
         of."""
-        return self._cell.societies
+        return self._cell.social_systems
 
     @property
     def population_share(self):
-        """Get the share of Society's direct population represented by this
+        """Get the share of SocialSystem's direct population represented by this
         individual."""
         total_relative_weight = sum([i.relative_weight
-                                     for i in self.society.individuals])
+                                     for i in self.social_system.individuals])
         return self.relative_weight / total_relative_weight
 
     @property
     def represented_population(self):
         """Get the absolute population this Individual represents due to
         sampling."""
-        return self.population_share * self.society.population
+        return self.population_share * self.social_system.population
 
     @property
     def acquaintances(self):

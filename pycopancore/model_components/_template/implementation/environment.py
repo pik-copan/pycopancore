@@ -1,4 +1,4 @@
-"""Nature process taxon mixing class template.
+"""Environment process taxon mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
@@ -6,18 +6,19 @@ then remove these instructions
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from .. import interface as I
 # from .... import master_data_model as D
 
 
-class Nature (I.Nature):
-    """Nature process taxon mixin implementation class."""
+class Environment (I.Environment):
+    """Environment process taxon mixin implementation class."""
 
     # standard methods:
     # TODO: remove those that you don't use
@@ -25,7 +26,7 @@ class Nature (I.Nature):
     def __init__(self,
                  # *,  # TODO: uncomment when adding named args behind here
                  **kwargs):
-        """Initialize the unique instance of Nature."""
+        """Initialize the unique instance of Environment."""
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here:
         pass

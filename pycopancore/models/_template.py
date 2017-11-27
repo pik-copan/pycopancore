@@ -6,13 +6,15 @@ then adjust or fill in code and documentation wherever marked by "NEED TO:",
 finally remove these instructions.
 See the model development tutorial for details.
 """
+
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from .. import base  # all models must use the base component
 
@@ -36,9 +38,9 @@ class World(ABBR1.World, ABBR2.World,
 
 
 # NEED TO: list all mixin classes needed:
-class Society(ABBR1.Society, ABBR2.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(ABBR1.SocialSystem, ABBR2.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -65,9 +67,9 @@ class Individual(ABBR1.Individual, ABBR2.Individual,
 
 
 # NEED TO: list all mixin classes needed:
-class Nature(ABBR1.Nature, ABBR2.Nature,
-             base.Nature):
-    """Nature process taxon."""
+class Environment(ABBR1.Environment, ABBR2.Environment,
+             base.Environment):
+    """Environment process taxon."""
 
     pass
 
@@ -101,8 +103,8 @@ class Model(ABBR1.Model, ABBR2.Model,
     """Longer description"""
 
     # NEED TO: list all entity types you composed above:
-    entity_types = [World, Society, Cell, Individual]
+    entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""
     # NEED TO: list all entity types you composed above:
-    process_taxa = [Nature, Metabolism, Culture]
+    process_taxa = [Environment, Metabolism, Culture]
     """List of process taxa used in the model"""

@@ -1,36 +1,45 @@
 """Master data model for world."""
 
-from . import nature as NAT
+# This file is part of pycopancore.
+#
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
+
+from . import environment as ENV
 from . import metabolism as MET
 from . import gigatonnes_carbon as GtC
 from . import square_kilometers as km2
 
 # natural:
 
-land_area = NAT.land_area.copy(default=1.5e8*km2)
-atmospheric_carbon = NAT.atmospheric_carbon.copy(default=589*GtC)
-surface_air_temperature = NAT.surface_air_temperature.copy()
-ocean_carbon = NAT.ocean_carbon.copy(default=38000*GtC)
-upper_ocean_carbon = NAT.upper_ocean_carbon.copy(default=900*GtC)
-deep_ocean_carbon = NAT.deep_ocean_carbon.copy(default=37100*GtC)
-terrestrial_carbon = NAT.terrestrial_carbon.copy(default=2550*GtC)
-soil_carbon = NAT.soil_carbon.copy(default=2000*GtC)
-biomass_carbon = NAT.biomass_carbon.copy(default=550*GtC)
-harvestable_biomass_carbon = NAT.harvestable_biomass_carbon.copy()
-other_biomass_carbon = NAT.other_biomass_carbon.copy()
-fossil_carbon = NAT.fossil_carbon.copy(default=1500*GtC)
-discovered_fossil_reserves = NAT.discovered_fossil_reserves.copy()
-undiscovered_fossil_reserves = NAT.undiscovered_fossil_reserves.copy()
+land_area = ENV.land_area.copy(default=1.5e8*km2)
+atmospheric_carbon = ENV.atmospheric_carbon.copy(default=589*GtC)
+surface_air_temperature = ENV.surface_air_temperature.copy()
+ocean_carbon = ENV.ocean_carbon.copy(default=38000*GtC)
+upper_ocean_carbon = ENV.upper_ocean_carbon.copy(default=900*GtC)
+deep_ocean_carbon = ENV.deep_ocean_carbon.copy(default=37100*GtC)
+terrestrial_carbon = ENV.terrestrial_carbon.copy(default=2550*GtC)
+soil_carbon = ENV.soil_carbon.copy(default=2000*GtC)
+biomass_carbon = ENV.biomass_carbon.copy(default=550*GtC)
+harvestable_biomass_carbon = ENV.harvestable_biomass_carbon.copy()
+other_biomass_carbon = ENV.other_biomass_carbon.copy()
+fossil_carbon = ENV.fossil_carbon.copy(default=1500*GtC)
+discovered_fossil_reserves = ENV.discovered_fossil_reserves.copy()
+undiscovered_fossil_reserves = ENV.undiscovered_fossil_reserves.copy()
 
 ocean_atmosphere_diffusion_coefficient = \
-    NAT.ocean_atmosphere_diffusion_coefficient
-carbon_solubility_in_sea_water = NAT.carbon_solubility_in_sea_water.copy()
+    ENV.ocean_atmosphere_diffusion_coefficient
+carbon_solubility_in_sea_water = ENV.carbon_solubility_in_sea_water.copy()
 
-photosynthesis_carbon_flow = NAT.photosynthesis_carbon_flow.copy()
+photosynthesis_carbon_flow = ENV.photosynthesis_carbon_flow.copy()
 terrestrial_respiration_carbon_flow = \
-    NAT.terrestrial_respiration_carbon_flow.copy()
-plant_respiration_carbon_flow = NAT.plant_respiration_carbon_flow.copy()
-soil_respiration_carbon_flow = NAT.soil_respiration_carbon_flow.copy()
+    ENV.terrestrial_respiration_carbon_flow.copy()
+plant_respiration_carbon_flow = ENV.plant_respiration_carbon_flow.copy()
+soil_respiration_carbon_flow = ENV.soil_respiration_carbon_flow.copy()
 
 # metabolic:
 

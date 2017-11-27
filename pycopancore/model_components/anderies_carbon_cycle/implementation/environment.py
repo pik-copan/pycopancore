@@ -1,21 +1,22 @@
-"""Nature process taxon mixing class.
+"""Environment process taxon mixing class.
 """
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from .. import interface as I
 from ....data_model.master_data_model.dimensions_and_units import \
     gigatonnes_carbon, years, square_kilometers, kelvins
 
 
-class Nature (I.Nature):
-    """Nature process taxon mixin implementation class."""
+class Environment (I.Environment):
+    """Environment process taxon mixin implementation class."""
 
     # standard methods:
 
@@ -50,7 +51,7 @@ class Nature (I.Nature):
                  ecosystem_dependent_conversion_factor=2.5,
                  terrestrial_carbon_carrying_capacity=0.7,
                  **kwargs):
-        """Initialize the unique instance of Nature."""
+        """Initialize the unique instance of Environment."""
         super().__init__(**kwargs)  # must be the first line
 
         self.ocean_atmosphere_diffusion_coefficient = \

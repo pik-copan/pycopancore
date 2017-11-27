@@ -6,11 +6,12 @@ remove these instructions.
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 # TODO: use variables from the master data model wherever possible:
 from ... import master_data_model as D
@@ -28,7 +29,7 @@ class Model (object):
     # metadata:
     name = "majority decision"
     """a unique name for the model component"""
-    description = "find the opinion the most represented in a society"
+    description = "find the opinion the most represented in a social_system"
     """some longer description"""
     requires = [avof]
     """list of other model components required for this model component to
@@ -43,8 +44,8 @@ class Model (object):
 # entity types:
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
 

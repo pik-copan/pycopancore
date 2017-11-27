@@ -3,13 +3,15 @@
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
+
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from .. import interface as I
 # from .... import master_data_model as D
@@ -34,9 +36,9 @@ class Cell (I.Cell):
 
         # assert that farmland is owned by county and city by municipality:
         if self.characteristic == 'farmland':
-            assert self.society.municipality_like is False
+            assert self.social_system.municipality_like is False
         if self.characteristic == 'city':
-            assert self.society.municipality_like is True
+            assert self.social_system.municipality_like is True
 
     # process-related methods:
 
