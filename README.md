@@ -20,7 +20,7 @@ Table of Contents:
 The pycopancore package is a python implementation of the copan:CORE modeling framework as described in [include reference to framework description paper]. The framework is designed to allow an easy implementation of World-Earth (i.e., global social-ecological) models by using different model components of environmental, social-metabolic or cultural submodels and combining them with newly developed components.
 The implementation and simulation of World-Earth models within the framework can use  different types of modeling techniques such as differential equations, stochastic and deterministic events and therefore allows to compare different model and component types and implementations.
 
-pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK). Responsible senior scientists at PIK are Jobst Heitzig & Jonathan F. Donges.
+pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK). Responsible senior scientists at PIK are [Jobst Heitzig](https://www.pik-potsdam.de/members/heitzig) & [Jonathan F. Donges.](https://www.pik-potsdam.de/members/donges)
 
 ## Disclaimer
 
