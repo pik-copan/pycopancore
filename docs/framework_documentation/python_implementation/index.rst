@@ -29,14 +29,18 @@ Main package structure
       data_model
          master_data_model
             cell.py
-            social system.py
-            individual.py
-            environment.py
-            social_metabolism.py
             culture.py
+            environment.py
+            individual.py
+            social_metabolism.py
+            social_system.py
+            world.py
             ...
          dimensions.py
          dimensional_quantity.py
+         reference_variable.py
+         set_variable.py
+         unit.py
          variable.py
          ...
 
@@ -44,41 +48,67 @@ Main package structure
          <component name>
             implementation
                cell.py
-               social system.py
-               individual.py
-               environment.py
-               social_metabolism.py
                culture.py
+               ...
             interface.py
             model.py
             ...
          <other component name>
             ...
          ...
-         _template
 
       models
-         <my_model>.py
+         <model_name>.py
+         ...
 
       private
+         _abstract_entity_mixin.py
          _abstract_process.py
          _abstract_runner.py
-         _abstract_entity_mixin.py
          _expressions.py
          ...
 
       process_types
-         ODE.py
-         step.py
          explicit.py
          event.py
          implicit.py
+         ODE.py
+         step.py
+         ...
 
       runners
          scipy_odeint_runner.py
          ...
-      ...
+         
+      util
+         functions.py
+         ...
+         
 
+Local workspace
+---------------
+
+Users work in a local *workspace* folder of a slighty similar but simpler structure:
+
+::
+
+   pycopancore-workspace
+
+      model_components
+         _component_template
+            ...
+         <component name>
+            ...
+
+      models
+         _model_template.py
+         <model_name>.py
+         ...
+
+      studies
+         _study_template.py
+         <some_simulation_script>.py
+         ...
 
 .. toctree::
    :maxdepth: 1
