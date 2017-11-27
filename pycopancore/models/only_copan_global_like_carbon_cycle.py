@@ -61,9 +61,9 @@ class Cell(cc.Cell,
 # process taxa:
 
 
-class Nature(cc.Nature,
-             base.Nature):
-    """Nature process taxon."""
+class Environment(cc.Environment,
+             base.Environment):
+    """Environment process taxon."""
 
     pass
 
@@ -97,5 +97,5 @@ class Model(cc.Model,
 
     entity_types = [World, SocialSystem, Cell]
     """List of entity types used in the model"""
-    process_taxa = [Nature, Metabolism]
+    process_taxa = [Environment, Metabolism]
     """List of process taxa used in the model"""

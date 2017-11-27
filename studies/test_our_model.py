@@ -23,11 +23,11 @@ random.seed(1)
 model = M.Model()
 
 # instantiate process taxa:
-nature = M.Nature()
+environment = M.Environment()
 # metabolism = M.Metabolism()
 
 # generate entities and plug them together at random:
-world = M.World(nature=nature, #metabolism=metabolism,
+world = M.World(environment=environment, #metabolism=metabolism,
                   atmospheric_carbon = 0.2 * D.gigatonnes_carbon, #relative values
                   ocean_carbon = 0.6 * D.gigatonnes_carbon
                   )

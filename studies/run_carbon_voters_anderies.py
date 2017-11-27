@@ -48,10 +48,10 @@ culture = M.Culture(
     no_impact_opinion_change=no_impact_opinion_change,
     no_impact_atmospheric_carbon_level=no_impact_atmospheric_carbon_level
 )
-nature = M.Nature()
+environment = M.Environment()
 
 # generate entities and distribute opinions uniformly randomly:
-world = M.World(culture=culture, nature=nature,
+world = M.World(culture=culture, environment=environment,
                 atmospheric_carbon=0.2 * D.gigatonnes_carbon,
                 ocean_carbon=0.6 * D.gigatonnes_carbon
                 )

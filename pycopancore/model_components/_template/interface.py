@@ -86,8 +86,8 @@ class Individual (object):
 # process taxa:
 
 
-class Nature (object):
-    """Interface for Nature process taxon mixin."""
+class Environment (object):
+    """Interface for Environment process taxon mixin."""
 
     # endogenous variables:
 

@@ -65,9 +65,9 @@ class Individual(ABBR1.Individual, ABBR2.Individual,
 
 
 # NEED TO: list all mixin classes needed:
-class Nature(ABBR1.Nature, ABBR2.Nature,
-             base.Nature):
-    """Nature process taxon."""
+class Environment(ABBR1.Environment, ABBR2.Environment,
+             base.Environment):
+    """Environment process taxon."""
 
     pass
 
@@ -104,5 +104,5 @@ class Model(ABBR1.Model, ABBR2.Model,
     entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""
     # NEED TO: list all entity types you composed above:
-    process_taxa = [Nature, Metabolism, Culture]
+    process_taxa = [Environment, Metabolism, Culture]
     """List of process taxa used in the model"""

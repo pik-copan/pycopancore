@@ -30,7 +30,7 @@ class World (I.World, abstract.World):
 
     def __init__(self,
                  *,
-                 nature=None,
+                 environment=None,
                  metabolism=None,
                  culture=None,
                  **kwargs
@@ -39,8 +39,8 @@ class World (I.World, abstract.World):
 
         Parameters
         ----------
-        nature : obj
-            Nature acting on this World.
+        environment : obj
+            Environment acting on this World.
         metabolism : obj
             Metabolism acting on this World.
         culture : obj
@@ -51,8 +51,8 @@ class World (I.World, abstract.World):
         """
         super().__init__(**kwargs)  # must be the first line
 
-        self._nature = None
-        self.nature = nature
+        self._environment = None
+        self.environment = environment
         self._metabolism = None
         self.metabolism = metabolism
         self._culture = None
@@ -65,20 +65,20 @@ class World (I.World, abstract.World):
 
     # getters and setters:
     @property
-    def nature(self):
-        """Get world's nature."""
-        return self._nature
+    def environment(self):
+        """Get world's environment."""
+        return self._environment
 
-    @nature.setter
-    def nature(self, n):
-        """Set world's nature."""
-        if self._nature is not None:
-            # first deregister from previous nature's list of worlds:
-            self._nature.worlds.remove(self)
+    @environment.setter
+    def environment(self, n):
+        """Set world's environment."""
+        if self._environment is not None:
+            # first deregister from previous environment's list of worlds:
+            self._environment.worlds.remove(self)
         if n is not None:
-            assert isinstance(n, I.Nature), "Nature must be taxon type Nature"
+            assert isinstance(n, I.Environment), "Environment must be taxon type Environment"
             n._worlds.add(self)
-        self._nature = n
+        self._environment = n
 
     @property
     def metabolism(self):

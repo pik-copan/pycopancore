@@ -111,9 +111,9 @@ class Individual (I.Individual, abstract.Individual):
         return self._cell.world
 
     @property  # read-only
-    def nature(self):
-        """Get the Nature the Individual is part of."""
-        return self._cell.nature
+    def environment(self):
+        """Get the Environment the Individual is part of."""
+        return self._cell.environment
 
     @property  # read-only
     def metabolism(self):

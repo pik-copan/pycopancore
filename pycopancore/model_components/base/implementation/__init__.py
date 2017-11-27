@@ -16,6 +16,6 @@ from .social_system import SocialSystem
 from .cell import Cell
 from .individual import Individual
 
-from .nature import Nature
+from .environment import Environment
 from .metabolism import Metabolism
 from .culture import Culture

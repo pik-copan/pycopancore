@@ -137,7 +137,7 @@ class _DotConstruct(sp.AtomicExpr):
 
     _start = None
     """the entity-type, process taxon, ReferenceVariable or SetVariable 
-    at the start of the dot construct, e.g. SocialSystem or Nature.cells"""
+    at the start of the dot construct, e.g. SocialSystem or Environment.cells"""
     _attribute_sequence = None
     """the sequence of further names, which must be codenames of variables,
     e.g. ["cells","population"]"""

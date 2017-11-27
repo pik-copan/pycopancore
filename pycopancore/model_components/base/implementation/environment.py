@@ -16,14 +16,14 @@ from .. import interface as I
 from networkx import Graph
 
 
-class Nature (I.Nature, abstract.Nature):
-    """Nature process taxon mixin implementation class."""
+class Environment (I.Environment, abstract.Environment):
+    """Environment process taxon mixin implementation class."""
 
     def __init__(self,
                  *,
                  geographic_network=None,
                  **kwargs):
-        """Instantiate the unique instance of Nature.
+        """Instantiate the unique instance of Environment.
 
         Parameters
         ----------
@@ -46,7 +46,7 @@ class Nature (I.Nature, abstract.Nature):
 
     @property  # read-only
     def worlds(self):
-        """Get the set of Worlds on this Nature."""
+        """Get the set of Worlds on this Environment."""
         return self._worlds
 
     # process-related methods:

@@ -64,9 +64,9 @@ class Individual(avof.Individual,
 
 
 # NEED TO: list all mixin classes needed:
-# class Nature (
-#               base.Nature):
-#     """Nature process taxon."""
+# class Environment (
+#               base.Environment):
+#     """Environment process taxon."""
 #
 #     pass
 

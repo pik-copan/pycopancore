@@ -15,7 +15,7 @@ by entity type and process taxon
 from ...private import _MixinType, unknown
 from ... import Variable, ReferenceVariable, SetVariable
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, CUL, W, S, C
+from ...data_model.master_data_model import ENV, CUL, W, S, C
 
 
 # model component:
@@ -34,14 +34,14 @@ class Model (object):
 # process taxa:
 
 
-class Nature (object):
-    """Basic Nature interface.
+class Environment (object):
+    """Basic Environment interface.
 
     It contains all variables specified as mandatory ("base variables").
     """
 
-    geographic_network = NAT.geographic_network  # copies the specification from the master data model
-    worlds = SetVariable("worlds", "set of Worlds on this Nature")
+    geographic_network = ENV.geographic_network  # copies the specification from the master data model
+    worlds = SetVariable("worlds", "set of Worlds on this Environment")
 
 
 class Metabolism (object):
@@ -77,14 +77,14 @@ class World (object, metaclass=_MixinType):
     It contains all variables specified as mandatory ("base variables").
     """
     # the metaclass is needed to allow for intercepting class attribute calls
-    # when constructing DotConstructs like World.nature.geographic_network.
+    # when constructing DotConstructs like World.environment.geographic_network.
     # similarly for the other entity types.
 
 
     # references to other entities and taxa:
-    nature = ReferenceVariable("nature",
-                               "Nature taxon working on this world",
-                               type=Nature, allow_none=True)
+    environment = ReferenceVariable("environment",
+                               "Environment taxon working on this world",
+                               type=Environment, allow_none=True)
     metabolism = ReferenceVariable("metabolism",
                                    "Metabolism taxon working on this world",
                                    type=Metabolism, allow_none=True)
@@ -118,7 +118,7 @@ class World (object, metaclass=_MixinType):
 # specified only now to avoid recursion errors:
 Culture.worlds.type = World
 Metabolism.worlds.type = World
-Nature.worlds.type = World
+Environment.worlds.type = World
 
 
 class SocialSystem (object, metaclass=_MixinType):
@@ -141,7 +141,7 @@ class SocialSystem (object, metaclass=_MixinType):
     # aggregate next_lower_level social_systems'
 
     # read-only attributes storing redundant information:
-    nature = ReferenceVariable("nature", "", type=Nature,
+    environment = ReferenceVariable("environment", "", type=Environment,
                                readonly=True)
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
                                    readonly=True)
@@ -202,7 +202,7 @@ class Cell (object, metaclass=_MixinType):
     fossil_carbon = C.fossil_carbon
 
     # attributes storing redundant information:
-    nature = ReferenceVariable("nature", "", type=Nature,
+    environment = ReferenceVariable("environment", "", type=Environment,
                                readonly=True)
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
                                    readonly=True)
@@ -244,7 +244,7 @@ class Individual (object, metaclass=_MixinType):
     # attributes storing redundant information:
     world = ReferenceVariable("world", "", type=World,
                               readonly=True)
-    nature = ReferenceVariable("nature", "", type=Nature,
+    environment = ReferenceVariable("environment", "", type=Environment,
                                readonly=True)
     metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
                                    readonly=True)

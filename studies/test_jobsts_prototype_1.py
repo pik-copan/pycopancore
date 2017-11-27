@@ -23,7 +23,7 @@ ninds = 1000 # no. individuals
 model = M.Model()
 
 # instantiate process taxa:
-nature = M.Nature()
+environment = M.Environment()
 metabolism = M.Metabolism(
     renewable_energy_knowledge_spillover_fraction = .1, #.1, #.1,
         # 1 w/o protection: success but desertification
@@ -42,7 +42,7 @@ culture = M.Culture(
     )
 
 # generate entities and plug them together at random:
-worlds = [M.World(nature=nature, metabolism=metabolism, culture=culture,
+worlds = [M.World(environment=environment, metabolism=metabolism, culture=culture,
                   atmospheric_carbon = 830 * D.gigatonnes_carbon,
                   upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                   ) for w in range(nworlds)]
@@ -122,7 +122,7 @@ M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
 w = worlds[0]
 s = social_systems[0]
 c = cells[0]
-for v in nature.variables: print(v,v.get_value(nature))
+for v in environment.variables: print(v,v.get_value(environment))
 for v in metabolism.variables: print(v,v.get_value(metabolism))
 for v in w.variables: print(v,v.get_value(w))
 for v in s.variables: print(v,v.get_value(s))
@@ -138,7 +138,7 @@ start = time()
 traj = runner.run(t_0=2000, t_1=2000+100, dt=1, add_to_output=[M.Individual.represented_population])
 
 
-for v in nature.variables: print(v,v.get_value(nature))
+for v in environment.variables: print(v,v.get_value(environment))
 for v in metabolism.variables: print(v,v.get_value(metabolism))
 for v in w.variables: print(v,v.get_value(w))
 for v in s.variables: print(v,v.get_value(s))

@@ -14,4 +14,4 @@ from .world import World
 from .cell import Cell
 from .social_system import SocialSystem
 
-from .nature import Nature
+from .environment import Environment

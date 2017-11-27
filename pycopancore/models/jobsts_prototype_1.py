@@ -74,9 +74,9 @@ class Individual(aware.Individual,
 # process taxa:
 
 
-class Nature(cc.Nature,
-             base.Nature):
-    """Nature process taxon."""
+class Environment(cc.Environment,
+             base.Environment):
+    """Environment process taxon."""
 
     pass
 
@@ -120,5 +120,5 @@ class Model(cc.Model,
 
     entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""
-    process_taxa = [Nature, Metabolism, Culture]
+    process_taxa = [Environment, Metabolism, Culture]
     """List of process taxa used in the model"""

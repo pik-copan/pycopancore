@@ -60,8 +60,8 @@ class Metabolism(base.Metabolism):
     pass
 
 
-class Nature(base.Nature):
-    """Class to mix all Nature_mixins to create Nature class."""
+class Environment(base.Environment):
+    """Class to mix all Environment_mixins to create Environment class."""
 
     pass
 
@@ -76,4 +76,4 @@ class Model(dummy.Model, base.Model):
     name = "This model's name"
     description = "Description of the model"
     entity_types = [Cell, Individual, SocialSystem, World]
-    process_taxa = [Culture, Metabolism, Nature]
+    process_taxa = [Culture, Metabolism, Environment]

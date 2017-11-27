@@ -13,7 +13,7 @@ from . import interface as I
 # import all needed entity type implementation classes:
 from .implementation import World, Cell, SocialSystem
 # import all needed process taxon implementation classes:
-from .implementation import Nature
+from .implementation import Environment
 
 
 class Model (I.Model):
@@ -22,4 +22,4 @@ class Model (I.Model):
     # mixins provided by this model component:
 
     entity_types = [World, Cell, SocialSystem]
-    process_taxa = [Nature]
+    process_taxa = [Environment]

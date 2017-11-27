@@ -60,8 +60,8 @@ class Cell (I.Cell, abstract.Cell):
         self._individuals = set()
 
         # register with all mandatory networks:
-        if self.nature:
-            self.nature.geographic_network.add_node(self)
+        if self.environment:
+            self.environment.geographic_network.add_node(self)
 
 
     # getters and setters for references:
@@ -110,9 +110,9 @@ class Cell (I.Cell, abstract.Cell):
     # getters for backwards references and convenience variables:
 
     @property  # read-only
-    def nature(self):
-        """Get the Nature of which the Cell is a part."""
-        return self._world.nature
+    def environment(self):
+        """Get the Environment of which the Cell is a part."""
+        return self._world.environment
 
     @property  # read-only
     def metabolism(self):

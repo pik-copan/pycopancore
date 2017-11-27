@@ -16,7 +16,7 @@ from . import interface as I
 # import all needed entity type implementation classes:
 from .implementation import World, SocialSystem, Cell, Individual  # TODO: adjust!
 # import all needed process taxon implementation classes:
-from .implementation import Nature, Metabolism, Culture  # TODO: adjust!
+from .implementation import Environment, Metabolism, Culture  # TODO: adjust!
 
 
 class Model (I.Model):
@@ -26,5 +26,5 @@ class Model (I.Model):
 
     entity_types = [World, SocialSystem, Cell, Individual]  # TODO: adjust!
     """list of entity types augmented by this component"""
-    process_taxa = [Nature, Metabolism, Culture]  # TODO: adjust!
+    process_taxa = [Environment, Metabolism, Culture]  # TODO: adjust!
     """list of process taxa augmented by this component"""

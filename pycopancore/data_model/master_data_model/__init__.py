@@ -1,8 +1,8 @@
 from .dimensions_and_units import *
 
-from . import nature, metabolism #, culture
-from . import nature as NAT
-from . import nature as Nature
+from . import environment, metabolism #, culture
+from . import environment as ENV
+from . import environment as Environment
 from . import metabolism as MET
 from . import metabolism as Metabolism
 

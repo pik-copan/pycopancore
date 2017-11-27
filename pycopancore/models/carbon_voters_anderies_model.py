@@ -69,9 +69,9 @@ class Individual(avof.Individual,
 
 
 # NEED TO: list all mixin classes needed:
-class Nature(cc.Nature,
-             base.Nature):
-    """Nature process taxon."""
+class Environment(cc.Environment,
+             base.Environment):
+    """Environment process taxon."""
 
 
 # NEED TO: list all mixin classes needed:
@@ -109,5 +109,5 @@ class Model(avof.Model,
     entity_types = [World, SocialSystem, Individual, Cell]
     """List of entity types used in the model"""
     # NEED TO: list all entity types you composed above:
-    process_taxa = [Culture, Nature]
+    process_taxa = [Culture, Environment]
     """List of process taxa used in the model"""

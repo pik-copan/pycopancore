@@ -24,7 +24,7 @@ years = 100  # time to simulate
 # instantiate model and process taxa:
 
 model = M.Model()
-nature = M.Nature()
+environment = M.Environment()
 metabolism = M.Metabolism(
     renewable_energy_knowledge_spillover_fraction = 0,
 #    renewable_energy_knowledge_spillover_fraction = .5,
@@ -42,7 +42,7 @@ culture = M.Culture(
 
 # generate entities and plug them together at random:
 
-world = M.World(nature=nature, metabolism=metabolism, culture=culture,
+world = M.World(environment=environment, metabolism=metabolism, culture=culture,
                 atmospheric_carbon = 830 * D.gigatonnes_carbon,
                 upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.gigatonnes_carbon
                 )
@@ -113,8 +113,8 @@ M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
 
 for v in culture.variables: 
     if v.unit: print(v, v.get_quantity(culture))
-for v in nature.variables: 
-    if v.unit: print(v, v.get_quantity(nature))
+for v in environment.variables:
+    if v.unit: print(v, v.get_quantity(environment))
 for v in metabolism.variables: 
     if v.unit: print(v, v.get_quantity(metabolism))
 for v in world.variables: 

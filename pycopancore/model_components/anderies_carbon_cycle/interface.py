@@ -10,7 +10,7 @@
 # License: MIT license
 
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+from ...data_model.master_data_model import ENV, MET, CUL, W, S, C, I
 from ... import Variable
 
 
@@ -64,13 +64,13 @@ class SocialSystem (object):
 # process taxa:
 
 
-class Nature (object):
-    """Interface for Nature mixin"""
+class Environment (object):
+    """Interface for Environment mixin"""
 
     # parameters / exogenous veriables:
     ocean_atmosphere_diffusion_coefficient = \
-        NAT.ocean_atmosphere_diffusion_coefficient
-    carbon_solubility_in_sea_water = NAT.carbon_solubility_in_sea_water
+        ENV.ocean_atmosphere_diffusion_coefficient
+    carbon_solubility_in_sea_water = ENV.carbon_solubility_in_sea_water
 
     basic_photosynthesis_productivity = \
         Variable("basic photosynthesis productivity", "",

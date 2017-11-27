@@ -99,9 +99,9 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
     # getters for backwards references and convenience variables:
 
     @property  # read-only
-    def nature(self):
-        """Get the Nature of which the SocialSystem is a part."""
-        return self._world.nature
+    def environment(self):
+        """Get the Environment of which the SocialSystem is a part."""
+        return self._world.environment
 
     @property  # read-only
     def metabolism(self):
