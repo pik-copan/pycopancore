@@ -33,4 +33,5 @@ class SocialSystem(I.SocialSystem):
                     and dwarf != ind):
                 # Add edge:
                 self.culture.acquaintance_network.add_edge(dwarf, ind)
+                print(self.culture.acquaintance_network.edges())
     processes = []

@@ -686,6 +686,7 @@ class Runner(_AbstractRunner):
             # target is a variable or a dotconstruct
             var = target.target_variable
             instances = target.target_class.instances
+            idle_instances = None
             # Check for deactivated instances. The following check is
             # necessary, since Process Taxa cannot be inactive:
             if issubclass(target.target_class,
@@ -724,7 +725,7 @@ class Runner(_AbstractRunner):
                             # Make list as long as 't' in trajectory_dict:
                             for j in none_list:
                                 self.trajectory_dict[var][inst].append(j)
-                            # And make shure it has the length of 't'
+                            # And make sure it has the length of 't'
                             assert len(self.trajectory_dict[var][inst]) == tlen
                     except KeyError:  # Not yet in trajectory_dict
                         # create new list:
