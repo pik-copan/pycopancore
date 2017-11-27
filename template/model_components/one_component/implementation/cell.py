@@ -1,7 +1,8 @@
-"""Cell entity type mixing class template.
+"""
+Cell entity type mixing class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
+TODO: adjust, uncomment or fill in code and documentation wherever marked by
+the "TODO" flag.
 """
 # This file is part of pycopancore.
 #
@@ -9,40 +10,35 @@ then remove these instructions
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
 
 from .. import interface as I
-# from .... import master_data_model as D
-
 
 class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
 
-    # standard methods:
-    # TODO: remove those that you don't use
-
     def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
+                 # *,  # TODO: uncomment when adding named args after this
                  **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
+        # TODO: add custom code here
         pass
 
-    def deactivate(self):
-        """Deactivate a cell."""
-        # TODO: add custom code here:
-        pass
-        super().deactivate()  # must be the last line
 
-    def reactivate(self):
-        """Reactivate a cell."""
-        super().reactivate()  # must be the first line
-        # TODO: add custom code here:
-        pass
+    # TODO: uncomment neccessary standard methods
+    # def deactivate(self):
+    #     """Deactivate a cell."""
+    #     # TODO: add custom code here
+    #     pass
+    #     super().deactivate()  # must be the last line
 
-    # process-related methods:
+    # def reactivate(self):
+    #     """Reactivate a cell."""
+    #     super().reactivate()  # must be the first line
+    #     # TODO: add custom code here
+    #     pass
 
-    # TODO: add some if needed...
-
-    processes = []  # TODO: instantiate and list process objects here
+    # TODO: add process-related methods if needed
+    
+    # TODO: instantiate and list process objects here
+    processes = []  
