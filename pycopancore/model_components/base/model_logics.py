@@ -17,8 +17,9 @@ variables in special list to be accessed by the runner.
 from .. import abstract
 from ... import Variable, ReferenceVariable, SetVariable, \
                 ODE, Explicit, Step, Event, OrderedSet
-from ...private import _AbstractProcess, unknown, _expressions
-
+from ...private import _AbstractProcess, unknown, _expressions, \
+    _AbstractEntityMixin, _AbstractProcessTaxonMixin
+import gc
 import inspect
 import re
 import numpy as np
@@ -31,7 +32,7 @@ def guess_deps(method, variable_pool):
     its' specification method for known variable codenames"""
     source = inspect.getsource(method)
     return set([v for v in variable_pool
-                if re.search(r'\b' + v.codename + r'\b', 
+                if re.search(r'\b' + v.codename + r'\b',
                              source) is not None])
     # TODO: exclude matches after a # or in string literals
     # TODO: if the match is "self.<codename>", make sure owning_class of matched var is correct
@@ -81,7 +82,7 @@ class ModelLogics (object):
 
     mixin2composite = None
     """dict mapping mixins to derived composite classes"""
-    
+
     explicit_dependencies = None
     """dict giving for each explicit target variable the set of vars occurring on RHS of equation"""
     ODE_dependencies = None
@@ -89,10 +90,13 @@ class ModelLogics (object):
     explicit_evaluation_order = None
     """list of explicit target Variables in planned order of evaluation"""
 
-    def __init__(self):
+    def __init__(self,
+                 *,
+                 reconfigure=False,
+                 **kwargs):
         """Upon initialization of model: configure if not yet configured."""
         if not self.__class__._configured:
-            self.configure()
+            self.configure(reconfigure=reconfigure)
 
     @classmethod
     def configure(cls, reconfigure=False, **kwargs):
@@ -133,7 +137,7 @@ class ModelLogics (object):
 
         # dict mapping mixin classes to corresponding composite class:
         cls.mixin2composite = {}
-        
+
         cls.explicit_dependencies = {}
         cls.ODE_dependencies = {}
 
@@ -228,11 +232,11 @@ class ModelLogics (object):
                         # so why the hell change it???
 #                    assert v.codename == k, \
 #                        "Variable '{v!r}' was registered under a different codename".format(**locals())
-                    # the previous lines were disabled to allow introducing 
+                    # the previous lines were disabled to allow introducing
                     # local abbreviations for lengthy variable names in
                     # implementation classes. therefore also the following:
                     if v.codename == k:
-                        print("    Variable ", v)              
+                        print("    Variable ", v)
                         cls.variables.add(v)
                         composed_class.variables.add(v)
                         assert v.owning_class is None  # since it is only set here!
@@ -306,8 +310,8 @@ class ModelLogics (object):
                                            + str(composed_class)
                                 if isinstance(p.specification, list):
                                     deps = _expressions.get_vars(p.specification[i])
-                                    print("      Derivative of", 
-                                          target.target_variable, 
+                                    print("      Derivative of",
+                                          target.target_variable,
                                           "directly depends on", deps)
                                     try:
                                         cls.ODE_dependencies[target.target_variable].update(deps)
@@ -315,14 +319,14 @@ class ModelLogics (object):
                                         cls.ODE_dependencies[target.target_variable] = deps
                                 else:
                                     deps = guess_deps(p.specification, variable_pool)
-                                    print("      Derivative of", 
+                                    print("      Derivative of",
                                           target.target_variable,
                                           "probably directly depends on", deps)
                                     try:
                                         cls.ODE_dependencies[target.target_variable].update(deps)
                                     except KeyError:
                                         cls.ODE_dependencies[target.target_variable] = deps
-#                                    print("      Derivative of", 
+#                                    print("      Derivative of",
 #                                          target.target_variable,
 #                                          "has unknown dependencies")
 #                                    cls.ODE_dependencies[target.target_variable] = unknown
@@ -335,8 +339,7 @@ class ModelLogics (object):
                             cls.explicit_processes.add(p)
                             for i, target in enumerate(p.targets):
                                 if isinstance(target, Variable):
-                                    assert target.owning_class == \
-                                           composed_class, \
+                                    assert target.owning_class == composed_class, \
                                            "Explicit target Variable " \
                                            + str(target) + " owned " \
                                            "by different entity-type/taxon (" \
@@ -344,14 +347,13 @@ class ModelLogics (object):
                                            ", maybe try accessing it via a " \
                                            "ReferenceVariable)"
                                 else:  # it's a _DotConstruct
-                                    assert target.owning_class == \
-                                           composed_class, \
+                                    assert target.owning_class == composed_class, \
                                            "Explicit target attribute " \
                                            "reference starts at a wrong " \
                                            "entity-type/taxon:"
                                 if isinstance(p.specification, list):
                                     deps = _expressions.get_vars(p.specification[i])
-                                    print("      Target var.", 
+                                    print("      Target var.",
                                           target.target_variable,
                                           "directly depends on", deps)
                                     try:
@@ -360,14 +362,14 @@ class ModelLogics (object):
                                         cls.explicit_dependencies[target.target_variable] = deps
                                 else:
                                     deps = guess_deps(p.specification, variable_pool)
-                                    print("      Target var.", 
+                                    print("      Target var.",
                                           target.target_variable,
                                           "probably directly depends on", deps)
                                     try:
                                         cls.explicit_dependencies[target.target_variable].update(deps)
                                     except KeyError:
                                         cls.explicit_dependencies[target.target_variable] = deps
-#                                    print("      Target var.", 
+#                                    print("      Target var.",
 #                                          target.target_variable,
 #                                          "has unknown dependencies")
 #                                    cls.explicit_dependencies[target.target_variable] = unknown
@@ -376,12 +378,34 @@ class ModelLogics (object):
                             cls.process_targets += p.targets
                         elif isinstance(p, Step):
                             cls.step_processes.add(p)
-                            # TODO: do similar checks as for ODE targets!
+                            for target in p.variables:
+                                if isinstance(target, Variable):
+                                    assert target.owning_class == composed_class, \
+                                           "Step target Variable owned " \
+                                           "by different entity-type/taxon! " \
+                                           "(maybe try accessing it via a " \
+                                           "ReferenceVariable)"
+                                else:  # it's a _DotConstruct
+                                    assert target.owning_class == composed_class, \
+                                           "Step target attribute " \
+                                           "reference starts at a wrong " \
+                                           "entity-type/taxon:"
                             cls.step_variables += p.variables
                             cls.process_targets += p.variables
                         elif isinstance(p, Event):
                             cls.event_processes.add(p)
-                            # TODO: do similar checks as for ODE targets!
+                            for target in p.variables:
+                                if isinstance(target, Variable):
+                                    assert target.owning_class == composed_class, \
+                                           "Event target Variable owned " \
+                                           "by different entity-type/taxon! " \
+                                           "(maybe try accessing it via a " \
+                                           "ReferenceVariable)"
+                                else:  # it's a _DotConstruct
+                                    assert target.owning_class == composed_class, \
+                                           "Event target attribute " \
+                                           "reference starts at a wrong " \
+                                           "entity-type/taxon:"
                             cls.event_variables += p.variables
                             cls.process_targets += p.variables
                         else:
@@ -420,8 +444,8 @@ class ModelLogics (object):
         G.remove_node(unknown)
         cls.explicit_evaluation_order = []
         while len(G.nodes()) > 0:
-            # find a "nice" node x which depends on no other remaining nice 
-            # nodes and depends on the smallest set Y no. of remaining "not 
+            # find a "nice" node x which depends on no other remaining nice
+            # nodes and depends on the smallest set Y no. of remaining "not
             # nice" nodes:
             candidates = 0
             bestcount = np.inf
@@ -453,7 +477,7 @@ class ModelLogics (object):
                     cls.explicit_evaluation_order.append(tgt.target_variable)
                     G.remove_node(tgt.target_variable)
             cls.explicit_evaluation_order.append(bestvar)
-            G.remove_node(bestvar)        
+            G.remove_node(bestvar)
         print("\nOrder of evaluation of variables set by explicit equations:")
         for target in cls.explicit_evaluation_order:
             print("  ",target)
@@ -475,6 +499,17 @@ class ModelLogics (object):
         """
         for v in self.variables:
             v.convert_to_standard_units()
+
+    def reset(self):
+        """Reset all varaibles back to default values."""
+        # First set all variables to default:
+        # print("\n", 'self.variables',self.variables)
+        obj_to_delete = [obj for obj in gc.get_objects()
+                         if isinstance(obj, (_AbstractEntityMixin,
+                                             _AbstractProcessTaxonMixin))]
+        for obj in obj_to_delete:
+            # print(f'obj{obj} is going to be deleted:')
+            obj.delete()
 
 
 class ConfigureError(Exception):

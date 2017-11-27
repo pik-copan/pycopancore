@@ -395,6 +395,9 @@ class Variable(Symbol):
         if isinstance(value, DimensionalQuantity):
             value = value.number(unit=self.unit)
 #        self.assert_valid(value)
+#         print(f'in set_value, instance {instance} '
+#               f'and value {value}'
+#               f' and codename is {self.codename}')
         setattr(instance, self.codename, value)
 
     def __setitem__(self, instance, value):
@@ -446,8 +449,9 @@ class Variable(Symbol):
         if self.default is private.unset:
             return
         instances = self._get_instances(instances)
-        for e in instances:
-            self.set_value(e, self.default)
+        if instances:  # Maybe variables owning class has no instances!
+            for e in instances:
+                self.set_value(e, self.default)
 
     def set_to_random(self,
                       instances=None,  # if None: all entities/taxa

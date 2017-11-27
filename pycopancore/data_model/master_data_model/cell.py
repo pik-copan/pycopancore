@@ -23,7 +23,7 @@ discovered_fossil_reserves = NAT.discovered_fossil_reserves.copy()
 undiscovered_fossil_reserves = NAT.undiscovered_fossil_reserves.copy()
 
 ocean_atmosphere_diffusion_coefficient = \
-    NAT.ocean_atmosphere_diffusion_coefficient
+    NAT.ocean_atmosphere_diffusion_coefficient.copy()
 carbon_solubility_in_sea_water = NAT.carbon_solubility_in_sea_water.copy()
 
 photosynthesis_carbon_flow = NAT.photosynthesis_carbon_flow.copy()

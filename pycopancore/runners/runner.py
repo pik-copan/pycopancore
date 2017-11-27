@@ -13,7 +13,7 @@
 
 from .. import Event, Step, Variable
 from ..private import _AbstractRunner, _DotConstruct, eval, unknown, \
-    _AbstractEntityMixin
+    _AbstractEntityMixin, _TrajectoryDictionary, _AbstractProcessTaxonMixin
 # TODO: discuss whether this makes sense or leads to problems:
 from .hooks import Hooks
 
@@ -63,7 +63,9 @@ class Runner(_AbstractRunner):
         self.event_processes = model.event_processes
         self.step_processes = model.step_processes
         self.ode_processes = model.ODE_processes
-        self.trajectory_dict = {}
+        # trajectory_dict is of Class _TrajectoryDictionary to have a save
+        # method and otherwise inherits from dict:
+        self.trajectory_dict = _TrajectoryDictionary()
 
         self.termination_calls = termination_calls
 
@@ -213,7 +215,9 @@ class Runner(_AbstractRunner):
             t_0=0,
             t_1,
             dt,  # TODO: rename to "resolution" since it is only an upper bound?
+            exclusions=None,
             # TODO: add some kwargs for choosing solver and setting its params
+            max_resolution=False,
             add_to_output=None  # optional list of variables to include in output
             ):
         """Run the model for a specified time interval.
@@ -229,6 +233,9 @@ class Runner(_AbstractRunner):
             End time
         dt : float
             Maximal interval between output time points
+        exclusions: list
+            List with Variables, that shan't be included into the output
+            trajectory_dict
 
         Returns
         -------
@@ -251,7 +258,21 @@ class Runner(_AbstractRunner):
         self.model.convert_to_standard_units()
 
         # Create output dictionary:
-        self.trajectory_dict = {v: {} for v in self.model.variables}
+        self.trajectory_dict = _TrajectoryDictionary()
+        for v in self.model.variables:
+            self.trajectory_dict[v] = {}
+
+        # Remove exclusions from being saved:
+        targets_to_save = self.model.process_targets
+        # print(self.model.process_targets)
+        if exclusions is not None:
+            for var in exclusions:
+                targets_to_save.remove(var)
+
+        # Save initial state to output dict:
+        self.trajectory_dict['t'] = [t]
+        self.save_to_traj(targets_to_save)
+        # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # Create dictionary containing discontinuities:
         next_discontinuities = {}
@@ -371,7 +392,7 @@ class Runner(_AbstractRunner):
             sol.append(sol_valuearray.copy())
             # TODO: ALSO output values of non-dynamical variables, like those
             # from Explicit processes, so that they don't need to be
-            # calculated again after ode finished! 
+            # calculated again after ode finished!
             # TODO: this is the place to implement termination
             # due to events without a priori known occurrence
             # time! if solout returns 0 (or -1?), solver will
@@ -477,7 +498,6 @@ class Runner(_AbstractRunner):
                         # containing the values for all time points:
                         values = list(
                                 ode_trajectory[:, target._from + pos])
-#                        print(" storing for",target,values)
                         try:
                             if len(self.trajectory_dict[
                                        target.target_variable][inst]) < tlen:
@@ -516,7 +536,8 @@ class Runner(_AbstractRunner):
                             var.fast_set_values(ode_values[var._from:var._to])
                         self.apply_explicits(t)
                         # complete the output dictionary:
-                        self.save_to_traj(self.model.process_targets, add_to_output)
+                        self.save_to_traj(self.model.process_targets,
+                                          add_to_output)
 
             # set current model time to end of previous ODE integration:
             t = next_time
@@ -526,7 +547,9 @@ class Runner(_AbstractRunner):
             # Delete the discontinuity from the dictionary and determine when
             # the next one happens:
             if t < t_1 and len(next_discontinuities) > 0:
-                
+
+                # set current model time to end of previous ODE integration:
+                t = next_time
                 self.trajectory_dict['t'].append(t)
 
                 print("  Executing Steps and/or Events at", t, "...")
@@ -541,6 +564,12 @@ class Runner(_AbstractRunner):
                     # discontinuity is a tuple (event/step, entity/taxon)
                     process = discontinuity[0]
                     inst = discontinuity[1]
+                    # Test if the instance is active in case of it being an
+                    # entity:
+                    if isinstance(inst, _AbstractEntityMixin):
+                        if not inst.is_active:
+                            # If it is not active, break.
+                            continue
                     if isinstance(process, Event):
                         print("    Event", process, "@", inst, "...")
                         eventtype = process.specification[0]
@@ -592,7 +621,34 @@ class Runner(_AbstractRunner):
 
                 # Store all information that has been calculated at time t:
                 print("    Completing output dict...")
+
                 self.save_to_traj(self.model.process_targets, add_to_output)
+
+            # if max reoslution is true, the trajectory_dict s length is
+            # reduced to time*dt
+            if max_resolution and t < t_1:
+                print('    Reducing resolution')
+                for i, val in enumerate(self.trajectory_dict['t']):
+                    # See if 3 timesteps are closer than dt:
+                    if (i > 1) and i < (len(self.trajectory_dict['t']) - 2):
+                        diff = self.trajectory_dict['t'][i+1] - self.trajectory_dict['t'][i-1]
+                        if diff < dt:
+                            del self.trajectory_dict['t'][i]
+                            # print(f'deleting, diff={diff}')
+                            # delete this value from all trajectories
+                            for target in targets_to_save:
+                                var = target.target_variable
+                                instances = target.target_class.instances
+                                for inst in instances:
+                                    del self.trajectory_dict[var][inst][i]
+
+                # # Assert every list still has the same lenght:
+                # tlen = len(self.trajectory_dict['t'])
+                # for target in targets_to_save:
+                #     var = target.target_variable
+                #     instances = target.target_class.instances
+                #     for inst in instances:
+                #         assert len(self.trajectory_dict[var][inst]) == tlen
 
             # TODO: discuss whether hooks make sense, then maybe:
             # TODO: add hooks to runner scheme

@@ -39,9 +39,15 @@ class Nature (I.Nature, abstract.Nature):
             geographic_network = Graph()
         assert isinstance(geographic_network, Graph)
         self.geographic_network = geographic_network
+        self._worlds = set()
 
         # make sure all variable values are valid:
         self.assert_valid()
+
+    @property  # read-only
+    def worlds(self):
+        """Get the set of Worlds on this Nature."""
+        return self._worlds
 
     # process-related methods:
 

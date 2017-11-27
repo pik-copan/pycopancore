@@ -180,7 +180,9 @@ class _DotConstruct(sp.AtomicExpr):
                 aggregation=None,
                 argument=None,
                 **assumptions):
-        uid = str(start) # repr
+
+        uid = str(start)  # repr
+
         if len(attribute_sequence) > 0:
             uid += "." + ".".join(attribute_sequence)
         if aggregation:
@@ -213,7 +215,7 @@ class _DotConstruct(sp.AtomicExpr):
             self._target_instances = unknown
             self._branchings = unknown
             self._cardinalities = unknown
-            
+
 #            print("_DotConstruct.__init__ of",self,"performed")
         else:
 #            print("repeated _DotConstruct.__init__ of",self,"skipped")

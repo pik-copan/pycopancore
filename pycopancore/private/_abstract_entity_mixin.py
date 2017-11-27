@@ -80,6 +80,19 @@ class _AbstractEntityMixin(_Mixin):
         self.__class__.idle_entities.remove(self)
         self.__class__.instances.append(self)
 
+    def delete(self):
+        """Delete entity from all lists."""
+        # check if idle_entities list exists and if self in that list:
+        if (self.__class__.idle_entities
+                and self in self.__class__.idle_entities):
+            self.__class__.idle_entities.remove(self)
+        # check if instances list exists and if self in that list:
+        if (self.__class__.instances
+                and self in self.__class__.instances):
+            self.__class__.instances.remove(self)
+        # Now delete for good:
+        del(self)
+
     @property
     def is_active(self):
         """Check if entity is active.

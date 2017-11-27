@@ -10,6 +10,7 @@ It sets the basic structure of dynamic mixins (culture, metabolism, nature).
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
+
 from . import _Mixin
 
 
@@ -30,8 +31,16 @@ class _AbstractProcessTaxonMixin(_Mixin):
 #        else:
         self.__class__.instances = [self]
 
-    # the repr and the str methods were removed in the master/prototype_jobst1
-    # Do we really don't want them anymore?
-    # Jobst: object provides a sufficient __repr__ I guess
-#    def __repr__(self):
-#        return 'Process taxon object'
+    def delete(self):
+        """Delete this Process Taxon from lists."""
+        # Remove from list, if list is existent:
+        if (self.__class__.instances
+                and self in self.__class__.instances):
+            self.__class__.instances.remove(self)
+        # If list then has lenght == 0, set it to None again, so everything is
+        # fresh again...
+        if (self.__class__.instances == []):
+            self.__class__.instances = None
+        # Delete for good:
+        print(f'Process taxon {self} deleted')
+        del(self)

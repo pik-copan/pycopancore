@@ -42,6 +42,7 @@ class Culture (I.Culture, abstract.Culture):
             acquaintance_network = Graph()
         assert isinstance(acquaintance_network, Graph)
         self.acquaintance_network = acquaintance_network
+        self._worlds = set()
 
         self._worlds = set()
 
@@ -53,8 +54,6 @@ class Culture (I.Culture, abstract.Culture):
     def worlds(self):
         """Get the set of all Worlds this Culture acts in."""
         return self._worlds
-
-
 
     # no process-related methods
 

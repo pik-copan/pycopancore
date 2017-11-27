@@ -51,7 +51,9 @@ class World (I.World, abstract.World):
         """
         super().__init__(**kwargs)  # must be the first line
 
+        self._nature = None
         self.nature = nature
+        self._metabolism = None
         self.metabolism = metabolism
         self._culture = None
         self.culture = culture
@@ -62,6 +64,55 @@ class World (I.World, abstract.World):
         self.assert_valid()
 
     # getters and setters:
+    @property
+    def nature(self):
+        """Get world's nature."""
+        return self._nature
+
+    @nature.setter
+    def nature(self, n):
+        """Set world's nature."""
+        if self._nature is not None:
+            # first deregister from previous nature's list of worlds:
+            self._nature.worlds.remove(self)
+        if n is not None:
+            assert isinstance(n, I.Nature), "Nature must be taxon type Nature"
+            n._worlds.add(self)
+        self._nature = n
+
+    @property
+    def metabolism(self):
+        """Get the World the Cell is part of."""
+        return self._metabolism
+
+    @metabolism.setter
+    def metabolism(self, m):
+        """Set the Metabolism the World is part of."""
+        if self._metabolism is not None:
+            # first deregister from previous metabolism's list of worlds:
+            self._metabolism.worlds.remove(self)
+        if m is not None:
+            assert isinstance(m, I.Metabolism), \
+                "Metabolism must be of process taxon type Metabolism"
+            m._worlds.add(self)
+        self._metabolism = m
+
+    @property
+    def culture(self):
+        """Get world's culture."""
+        return self._culture
+
+    @culture.setter
+    def culture(self, c):
+        """Set world's culture."""
+        if self._culture is not None:
+            # first deregister from previous culture's list of worlds:
+            self._culture.worlds.remove(self)
+        if c is not None:
+            assert isinstance(c, I.Culture), \
+                "Culture must be taxon type Culture"
+            c._worlds.add(self)
+        self._culture = c
 
     @property
     def culture(self):
