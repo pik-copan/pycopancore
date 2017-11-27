@@ -20,11 +20,14 @@ Table of Contents:
 The pycopancore package is a python implementation of the copan:CORE modeling framework as described in [include reference to framework description paper]. The framework is designed to allow an easy implementation of World-Earth (i.e., global social-ecological) models by using different model components of environmental, social-metabolic or cultural submodels and combining them with newly developed components.
 The implementation and simulation of World-Earth models within the framework can use  different types of modeling techniques such as differential equations, stochastic and deterministic events and therefore allows to compare different model and component types and implementations.
 
-pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK). Responsible senior scientists at PIK are Jobst Heitzig & Jonathan F. Donges.
+pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK). Responsible senior scientists at PIK are [Jobst Heitzig](https://www.pik-potsdam.de/members/heitzig) & [Jonathan F. Donges.](https://www.pik-potsdam.de/members/donges)
+
+Contact: core@pik-potsdam.de
+Website: www.pik-potsdam.de/copan/software
 
 ## Disclaimer
 
-This software is provided for free as a beta version still under development. It has not been completely tested and can therefore not guarantee  error-free functioning. Please help us further improving the code by reporting possible bugs!
+This software is provided for free as a beta version still under active development. It has not been completely tested and can therefore not guarantee  error-free functioning. Please help us further improving the code by reporting possible bugs via the github issue tracker!
 
 ## Quick start guide
 
@@ -39,7 +42,7 @@ The package can be installed by downloading the repository and and running the s
 ```
 $ pip install
 ```
-from the main directory of the package. The script should automatically install all the required and missing packages.
+from the root directory of the package. The script should automatically install all the required and missing packages.
 
 For developers, the recommended way of installing is to run in the package main directory
 
@@ -73,10 +76,10 @@ To be able to create the automatic UML-Diagrams, [pylint](https://www.pylint.org
 
 ### Code of Good Practice
 
-When developing the code, please follow the guidelines below:
+When contributing to the project, please follow the guidelines below:
 * For every class/function write a proper docstring before committing.
 * Use static values as little as possible. Preferably define a variable in the header of the file instead.
-* For functions describing processes in the model the `model_components`, papers from the scientific literature that use these functional forms should be referenced in the code documentation.
+* For functions describing processes in the `model_components`, papers from the scientific literature that use these functional forms should be referenced in the code documentation.
 * Use as many `assert` statements as possible, even if they are computationally expensive. For actual runs, these checks can be switched off using the `-O` flag of the Python Interpreter.
 * Use proper (and long) variable names. Auto-completion will help typing them.
 * If a similar set of command is used twice, write a function for it right away.
@@ -125,7 +128,7 @@ The code in the repository is organized into different subfolders:
 
 **pycopancore/process_types** contains the definitions for the different process types (events, steps, explicit and implicit equations, and ordinary differential equations).
 
-**pycopancore/runners** contains implementation of model runner, that executes the 
+**pycopancore/runners** contains implementation of model runner, that executes the model by integrating its processes.
 
 **pycopancore/util** contains auxiliary functions.
 
