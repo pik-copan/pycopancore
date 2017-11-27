@@ -9,13 +9,13 @@ want to know how to create new model components, read the
 :doc:`model component developers <./model_component_developers>` tutorial.
 
 Starting point for a model end user is the runfile template (reference) and the
-:doc:`API documentation <../_api/pycopancore.models>`) of the model at hand.
+:doc:`API documentation <../_api/pycopancore.models>` of the model at hand.
 Using the documentation the model end user sets parameters, instantiates the necessary entities and taxa passing the
 appropriate arguments and iterates the model using the runner. The output trajectory of the runner is ready for data
 analysis and plotting.
 
 This tutorial guides the reader through these steps using the
-:doc:`seven dwarfs model <../_api/pycopancore.seven_dwarfs>`.
+:doc:`seven dwarfs model <../_api/pycopancore.models.seven_dwarfs>`.
 
 Starting point of the seven dwarf model: a fairy tale
 -----------------------------------------------------
