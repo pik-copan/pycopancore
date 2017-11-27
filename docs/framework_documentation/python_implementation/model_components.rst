@@ -16,9 +16,9 @@ and one implementation class module for each entity-type and process taxon that 
    <component name>
       implementation
         cell.py
-        society.py
+        social system.py
         individual.py
-        nature.py
+        environment.py
         social_metabolism.py
         culture.py
       interface.py

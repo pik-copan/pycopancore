@@ -29,9 +29,9 @@ Main package structure
       data_model
          master_data_model
             cell.py
-            society.py
+            social system.py
             individual.py
-            nature.py
+            environment.py
             social_metabolism.py
             culture.py
             ...
@@ -44,9 +44,9 @@ Main package structure
          <component name>
             implementation
                cell.py
-               society.py
+               social system.py
                individual.py
-               nature.py
+               environment.py
                social_metabolism.py
                culture.py
             interface.py
