@@ -10,8 +10,4 @@ Model component implementation subpackage template.
 # License: MIT license
 
 # export all provided entity type implementation mixin classes:
-from .world import World
 from .cell import Cell
-from .individual import Individual
-from .culture import Culture
-from .society import Society

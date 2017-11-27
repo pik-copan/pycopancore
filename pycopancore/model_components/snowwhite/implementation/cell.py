@@ -23,16 +23,18 @@ class Cell (I.Cell):
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 eating_stock=100,
-                 **kwargs):
-        """Initialize an instance of Cell."""
-        super().__init__(**kwargs)
-        self.eating_stock = eating_stock
+    def snow_white_arrival(self, t):
+        """Calculate snow white's arrival."""
+        return t + np.random.exponential(14.)
 
-        # Following method is defined in abstract_entity_mixin which is
-        # inherited only by mixing in the model:
-        self.assert_valid()
+    def snow_white_eating(self, unused_t):
+        """Party hard."""
+        print('Snow white arrives and has the munchies.')
+        self.eating_stock = self.eating_stock / 2.
 
-    processes = []
+    processes = [
+        Event("snow_white",
+              [I.Cell.eating_stock],
+              ["time", snow_white_arrival, snow_white_eating]
+              )
+    ]
