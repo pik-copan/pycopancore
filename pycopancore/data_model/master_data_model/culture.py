@@ -14,15 +14,13 @@ class Culture:
     
     intimate_relationship_network = \
         Variable("intimate relationship network",
-                 """Basic undirected social network of intimate relationship between
-                 Individuals. Most other social networks will be subgraphs of this.""",
-                 ref="https://en.wikipedia.org/wiki/Interpersonal_relationship#Stages",
+                 """Basic social network of intimate relationship between
+                 Individuals. Could be used to form hauseholds.""",
+                 ref="Brehm, S. S. (1992). The McGraw-Hill series in social psychology. Intimate relationships, 2nd ed. New York: Mcgraw-Hill Book Company.http://psycnet.apa.org/record/1991-98375-000 ",
                  scale='ordinal',
-                 datatype=Graph)
+                 datatype=Graph) 
     
-    
-    
-    
+      
     
     
     acquaintance_network = \
@@ -43,6 +41,30 @@ class Culture:
                  ref="https://en.wikipedia.org/wiki/Intimate_relationship",
                  scale='nominal',
                  datatype=Graph)
+        
+     political_preference_network = \
+        Variable("political preference network",
+                 """Larger (and typically slower-changing) undirected network of
+                 political opinions and preferences etc. May be used to predict voting outcomes in democratic societies.""",
+                 ref="https://doi.org/10.1017/S0003055404041413",
+                 scale='nominal',
+                 datatype=Graph)     
+      
+     knowledge_network = \
+        Variable("knowledge network",
+                 """Larger (and typically slower-changing) undirected network of
+                 knowledge and information availability, etc. May be used to predict the consuption choices and entering business relationships.""",
+                 ref="Hildreth and Kimble (2004). Knowledge Networks: Innovation Through Communities of Practice. London: Idea Group Publishing. https://books.google.de/books?hl=en&lr=&id=4ANHY1c6b6YC&oi=fnd&pg=PP1&dq=knowledge+networks&ots=8_8DPmfhO0&sig=t_OOtOH2vWtimzLW6S4YhKxK3iM#v=onepage&q=knowledge%20networks&f=false ",
+                 scale='nominal',
+                 datatype=Graph)  
+    
+    beliefs_network = \
+        Variable("beliefs network",
+                 """Larger (and typically slower-changing) undirected network of
+                 beliefs, religion, etc. May be used to predict trust or ability to accept innovation, might influence consumer and buisness relationships.""",
+                 ref="https://doi.org/10.1177/0951692898010004005",
+                 scale='nominal',
+                 datatype=Graph) 
     
     # TODO: maybe use "professional_network":
     trusted_business_network = \
@@ -57,6 +79,7 @@ class Culture:
                  datatype=Graph)
     
     # Networks between firms and potentially also individuals and societies:
+    # Link with metabolic profile
     
     supply_chain_network = \
         Variable("supply chain network",
@@ -67,6 +90,20 @@ class Culture:
                  ref="https://en.wikipedia.org/wiki/Supply_chain",
                  scale='nominal',
                  datatype=DiGraph)
+# Question: what is the difference between Graph and DiGraph?   
+
+  governance_network = \
+        Variable("governance network",
+                 """Directed network of power influence, including the manaement type 
+                  and the of hierarchical relationships.""",
+                 ref="https://www.elgaronline.com/view/9781840642254.00030.xml",
+                 scale='ordinal',
+                 datatype=DiGraph)
+        
+        
+    
+        
+    # Does it make sense to replace "firm" with "enterprise"? Enterprise is more general, could be either public or private.    
     
     # Networks between firms only:
     
@@ -79,6 +116,8 @@ class Culture:
                  ref="https://en.wikipedia.org/wiki/Cartel",
                  scale='nominal',
                  datatype=Graph)
+        
+   # What about metabolic profiles of firms / enterprises?
     
     # Networks and coalitions between societies only:
     
@@ -98,6 +137,9 @@ class Culture:
                  """(a set of sets of societies)""",
                  scale='nominal',
                  datatype=set)
+        
+   # What about metabolic profile?
+        
         
         
     # socio-cultural traits that may occur on different levels:
