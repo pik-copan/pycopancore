@@ -40,37 +40,25 @@ In this step *entity types* and *process taxa* are arranged. This is done by bas
 inheritance. Note that primary inheritors will overwrite attributes of secondary ones (TODO better formulation).
 
 ::
+=======
+*Model composers* create new models by arraging existing model components
+provided by :doc:`model component developers <./model_component_developers>`.
 
-    # entity types:
+This is done by creating a python file in that used entity types, process taxa
+and model components are arranged.
 
-    class World(sd.World,
-                base.World):
-        """World entity type."""
-
-        pass
-
-
-    class Cell(sd.Cell,
-               base.Cell):
-        """Cell entity type."""
-
-        pass
+For the exemplary seven dwarfs model the following file was created:
 
 
-    class Individual(sd.Individual,
-                     base.Individual):
-        """Individual entity type."""
+::
 
-        pass
+    #
+    # Imports
+    #
 
+    from .. import base # all models must use the base component
 
-    # process taxa:
-
-    class Culture(sd.Culture,
-                  base.Culture):
-        """Culture process taxon."""
-
-        pass
+    from ..model_components import seven_dwarfs as sd
 
 
 The model class
@@ -79,17 +67,5 @@ The model class
 This arrangement puts all model classes together. (TODO)
 
 
-    # Model class:
 
-    class Model(sd.Model,
-                base.Model):
-        """Class representing the whole model."""
 
-        name = "Seven dwarfs"
-        description = "Tutorial model"
-        entity_types = [World, Cell, Individual]
-        """List of entity types used in the model"""
-        process_taxa = [Culture]
-        """List of process taxa used in the model"""
-
-TODO!
