@@ -106,8 +106,12 @@ class Individual (I.Individual):
             # Network is fully connected:
             chosen_one = random.choice(self.culture.acquaintance_network.nodes())
             if self.decide_migration(chosen_one):
-                # Migrate
-                self.migrate(chosen_one.cell)
+                # in case of preferential migration, checks are done
+                if self.preferential_migration:
+                    self.preferential_migrate(chosen_one.cell)
+                else:
+                    # Migrate
+                    self.migrate(chosen_one.cell)
         else:  # Not fully connected:
             # Chose Acquaintance, if existent:
             if self.acquaintances:
@@ -225,6 +229,28 @@ class Individual (I.Individual):
             else:
                 print('this is very unlikely, nobody has been found, '
                       'individual loses a connection.')
+
+    def preferential_migrate(self, cell):
+        """Calls migragte in case of preferential migration."""
+        # 3 cases: city-city, farmland-farmland, city-farmland/vice versa
+        # first, check city-city
+        if (self.cell.social_system.municipality_like and
+                cell.social_system.municipality_like):
+            if random.random() < 0.4:  # need of  number that makes sense
+                self.migrate(cell)
+        # second, check farmlad farmland
+        elif (not self.cell.social_system.municipality_like and
+              not cell.social_system.municipality_like):
+            if random.random() < 0.4:  # need of  number that makes sense
+                self.migrate(cell)
+        # third: check city-farmland/farmland-city
+        else:
+            # check if neighbours
+            if ((cell.location[0] ^ self.cell.location[0])
+                    ^ (cell.location[1] ^ self.cell.location[1])):
+                # cells are neighbouring
+                if random.random() < 1:
+                        self.migrate(cell)
 
     def migrate(self, cell):
         """Migrate to Cell.

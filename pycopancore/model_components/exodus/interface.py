@@ -195,6 +195,11 @@ class Individual (object):
                              "Probability to rewire to a random individual"
                              "and cutiing a connection with a known one.",
                              default=0.05)
+    preferential_migration = Variable("preferential migration",
+                                      "Define if migration is hindered in some "
+                                      "direction",
+                                      datatype=bool,
+                                      default=False)
 
     # exogenous variables / parameters:
 

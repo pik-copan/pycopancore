@@ -433,7 +433,7 @@ class Runner(_AbstractRunner):
                 print("    Composing initial value array...")
                 # list of target variables:
                 target_variables = list(set(
-                        [target.target_variable 
+                        [target.target_variable
                          for target in self.model.ODE_targets]))
                 # list of array slice lengths, one for each target variable,
                 # length equalling number of target instances:
@@ -702,6 +702,10 @@ class Runner(_AbstractRunner):
                     # existing list length with no. of time points:
                     if len(self.trajectory_dict[var][inst]) < tlen:
                         self.trajectory_dict[var][inst].append(values[i])
+                    assert len(self.trajectory_dict[var][inst]) == tlen, (
+                        var, inst, tlen, len(self.trajectory_dict[var][inst]),
+                        self.trajectory_dict[var][inst], self.trajectory_dict["t"]
+                    )
                     # else do nothing since value was already stored.
                 except KeyError:
                     # This branch is active if the entity has not been
