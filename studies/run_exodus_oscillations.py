@@ -31,14 +31,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 50
+timeinterval = 10
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
 # Since this is a special model, only 2 of each type of cells are allowed.
 nm = 2  # number of municipalities, also cities
 nc = 2  # number of counties, also farmland_cells
-na = 50  # number of agents
+na = 100  # number of agents
 pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
@@ -183,12 +183,12 @@ plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
 
 for soc in municipalities:
     plot(t, traj[M.SocialSystem.population][soc], "r", lw=3)
-    plot(t, traj[M.SocialSystem.average_utility][soc], "r:", lw=3)
-    plot(t, traj[M.SocialSystem.gini_coefficient][soc], "r--", lw=3)
+    #plot(t, traj[M.SocialSystem.average_utility][soc], "r:", lw=3)
+    #plot(t, traj[M.SocialSystem.gini_coefficient][soc], "r--", lw=3)
 for soc in counties:
     plot(t, traj[M.SocialSystem.population][soc], "k", lw=3)
-    plot(t, traj[M.SocialSystem.average_utility][soc], "k:", lw=3)
-    plot(t, traj[M.SocialSystem.gini_coefficient][soc], "k--", lw=3)
+    #plot(t, traj[M.SocialSystem.average_utility][soc], "k:", lw=3)
+    #plot(t, traj[M.SocialSystem.gini_coefficient][soc], "k--", lw=3)
 
 # for ind in M.Individual.instances:
 #    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)

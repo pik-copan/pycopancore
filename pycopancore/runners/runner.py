@@ -284,7 +284,7 @@ class Runner(_AbstractRunner):
 
         # Only now save initial state to output dict:
         self.trajectory_dict['t'] = [t]
-        self.save_to_traj(self.model.process_targets, add_to_output)
+        self.save_to_traj(targets_to_save, add_to_output)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # TODO: discuss whether hooks make sense, then maybe:
@@ -537,7 +537,7 @@ class Runner(_AbstractRunner):
                             var.fast_set_values(ode_values[var._from:var._to])
                         self.apply_explicits(t)
                         # complete the output dictionary:
-                        self.save_to_traj(self.model.process_targets,
+                        self.save_to_traj(targets_to_save,
                                           add_to_output)
 
             # set current model time to end of previous ODE integration:
@@ -623,11 +623,14 @@ class Runner(_AbstractRunner):
                 # Store all information that has been calculated at time t:
                 print("    Completing output dict...")
 
-                self.save_to_traj(self.model.process_targets, add_to_output)
+                self.save_to_traj(targets_to_save, add_to_output)
 
             # if max reoslution is true, the trajectory_dict s length is
             # reduced to time*dt
-            if max_resolution and t < t_1:
+            if max_resolution and t < (t_1-dt):
+                saving = targets_to_save
+                if add_to_output is not None:
+                    saving += add_to_output
                 print('    Reducing resolution')
                 for i, val in enumerate(self.trajectory_dict['t']):
                     # See if 3 timesteps are closer than dt:
@@ -637,19 +640,26 @@ class Runner(_AbstractRunner):
                             del self.trajectory_dict['t'][i]
                             # print(f'deleting, diff={diff}')
                             # delete this value from all trajectories
-                            for target in targets_to_save:
+                            for target in saving:
                                 var = target.target_variable
                                 instances = target.target_class.instances
                                 for inst in instances:
-                                    del self.trajectory_dict[var][inst][i]
+                                    if (len(self.trajectory_dict[var][inst])
+                                            > len(self.trajectory_dict['t'])):
+                                        del self.trajectory_dict[var][inst][i]
 
-                # # Assert every list still has the same lenght:
+                # Assert every list still has the same lenght:
                 # tlen = len(self.trajectory_dict['t'])
-                # for target in targets_to_save:
+                # for target in saving:
                 #     var = target.target_variable
                 #     instances = target.target_class.instances
                 #     for inst in instances:
-                #         assert len(self.trajectory_dict[var][inst]) == tlen
+                #         assert len(self.trajectory_dict[var][inst]) == tlen, (
+                #             len(self.trajectory_dict[var][inst]), tlen,
+                #             self.trajectory_dict[var][inst],
+                #             self.trajectory_dict['t'],
+                #             var
+                #         )
 
             # TODO: discuss whether hooks make sense, then maybe:
             # TODO: add hooks to runner scheme
@@ -664,6 +674,20 @@ class Runner(_AbstractRunner):
         if Hooks._post_hooks:
             print("  Executing post-hooks ...")
             Hooks.execute_hooks(Hooks.Types.post, self.model, t_0)
+
+        # Assert every list still has the same lenght:
+        print('asserting same lenghts of all entries')
+        tlen = len(self.trajectory_dict['t'])
+        for target in saving:
+            var = target.target_variable
+            instances = target.target_class.instances
+            for inst in instances:
+                assert len(self.trajectory_dict[var][inst]) == tlen, (
+                    len(self.trajectory_dict[var][inst]), tlen,
+                    self.trajectory_dict[var][inst],
+                    self.trajectory_dict['t'],
+                    var
+                )
 
         return self.trajectory_dict
 
@@ -703,11 +727,8 @@ class Runner(_AbstractRunner):
                     # existing list length with no. of time points:
                     if len(self.trajectory_dict[var][inst]) < tlen:
                         self.trajectory_dict[var][inst].append(values[i])
-                    assert len(self.trajectory_dict[var][inst]) == tlen, (
-                        var, inst, tlen, len(self.trajectory_dict[var][inst]),
-                        self.trajectory_dict[var][inst], self.trajectory_dict["t"]
-                    )
                     # else do nothing since value was already stored.
+                    assert len(self.trajectory_dict[var][inst]) == tlen
                 except KeyError:
                     # This branch is active if the entity has not been
                     # activated before.
