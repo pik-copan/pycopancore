@@ -38,7 +38,7 @@ class Culture (I.Culture):
         """Check if anyone is still living.
 
         Returns:
-        -------
+        --------
         extinction : bool
         """
         if self.acquaintance_network.nodes() == []:
