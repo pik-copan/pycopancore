@@ -14,6 +14,3 @@ Contents:
    abstract_level/index
    software_design/index
    python_implementation/index
-   entity_types/index
-   process_taxonomy/index
-   process_types/index
