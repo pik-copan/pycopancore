@@ -678,7 +678,7 @@ class Runner(_AbstractRunner):
         # Assert every list still has the same lenght:
         print('asserting same lenghts of all entries')
         tlen = len(self.trajectory_dict['t'])
-        for target in saving:
+        for target in targets_to_save:
             var = target.target_variable
             instances = target.target_class.instances
             for inst in instances:
@@ -728,7 +728,7 @@ class Runner(_AbstractRunner):
                     if len(self.trajectory_dict[var][inst]) < tlen:
                         self.trajectory_dict[var][inst].append(values[i])
                     # else do nothing since value was already stored.
-                    assert len(self.trajectory_dict[var][inst]) == tlen
+                    # assert len(self.trajectory_dict[var][inst]) == tlen
                 except KeyError:
                     # This branch is active if the entity has not been
                     # activated before.

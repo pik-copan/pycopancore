@@ -236,12 +236,12 @@ class Individual (I.Individual):
         # first, check city-city
         if (self.cell.social_system.municipality_like and
                 cell.social_system.municipality_like):
-            if random.random() < 0.4:  # need of  number that makes sense
+            if random.random() < 0.2:  # need of  number that makes sense
                 self.migrate(cell)
         # second, check farmlad farmland
         elif (not self.cell.social_system.municipality_like and
               not cell.social_system.municipality_like):
-            if random.random() < 0.4:  # need of  number that makes sense
+            if random.random() < 0.2:  # need of  number that makes sense
                 self.migrate(cell)
         # third: check city-farmland/farmland-city
         else:

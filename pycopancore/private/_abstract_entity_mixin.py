@@ -35,7 +35,6 @@ class _AbstractEntityMixin(_Mixin):
     idle_entities = None  # TODO: rename to inactive_entities
     """Inactive entities of this type"""
 
-
     @classmethod
     def get_next_uid(cls):
         """Generate UIDs (Unique identifier).
@@ -48,7 +47,6 @@ class _AbstractEntityMixin(_Mixin):
         current_uid = cls.NEXTUID
         cls.NEXTUID += 1
         return current_uid
-
 
     def __init__(self, *args, **kwargs):
         """Initialize an _AbstractEntityMixin instance."""

@@ -29,7 +29,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 50
+timeinterval = 1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nc = 1  # number of caves
@@ -85,6 +85,8 @@ termination_signal = [M.Culture.check_for_extinction,
 # Define termination_callables as list of all signals
 termination_callables = [termination_signal]
 
+nx.draw(culture.acquaintance_network)
+plt.show()
 
 # Runner is instantiated
 r = Runner(model=model,
@@ -180,3 +182,5 @@ py.plot(fig, filename="our-model-result{}.html".format(5))
 
 #nx.draw(traj[M.Culture.acquaintance_network][culture][1])
 #plt.show()
+for i in range(len(traj['t'])):
+    print(traj[M.Culture.acquaintance_network][culture][i].nodes())
