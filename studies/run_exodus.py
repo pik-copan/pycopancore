@@ -188,9 +188,9 @@ print('runtime: {runtime}'.format(**locals()))
 
 
 # Saving:
-#print('saving:')
-#traj.save(filename='data')
-#print('...is done')
+print('saving:')
+traj.save(filename='data')
+print('...is done')
 
 # Plotting:
 t = np.array(traj['t'])
