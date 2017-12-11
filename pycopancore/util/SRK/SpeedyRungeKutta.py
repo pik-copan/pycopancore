@@ -1,7 +1,7 @@
-from Butcher import *
+from .Butcher import *
 from numba import jit
 import numpy as np
-import NewtonBroyden as nb
+from .NewtonBroyden import newton_broyden as nb
 
 import matplotlib.pyplot as plt
 
@@ -182,7 +182,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
         n = np.size(x_0)
         jac = np.empty((n, n), dtype=np.float64)
 
-        for i in xrange(n):
+        for i in range(n):
 
             if not x_0[i] == 0.:
                 d = 2 ** (-11) * x_0[i]
@@ -216,8 +216,8 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
 
         norm = 1. / norm_inv
         minus_update = norm * (minus_delta_x + np.dot(jac_inv, delta_fun))
-        for i in xrange(system_dimension):
-            for j in xrange(system_dimension):
+        for i in range(system_dimension):
+            for j in range(system_dimension):
                 jac_inv[i, j] -= minus_update[i] * delta_fun[j]
 
         return jac_inv
@@ -226,7 +226,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
     @jit(nopython=force_full_compile)
     def residue_is_small(f_of_x, x):
 
-        for i in xrange(system_dimension):
+        for i in range(system_dimension):
             if np.abs(f_of_x[i]) > reltol * np.abs(x[i]) + abstol:
                 return False
 
@@ -351,7 +351,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
         sqrt_dt = np.sqrt(dt)
         a = np.zeros(n)
         b = np.zeros(n)
-        for k in xrange(j):
+        for k in range(j):
             a += A[j, k] * dt * f(t+c[j]*dt, H[k, :])
             b += (B1[j, k]*xi_n + B2[j, k]*0.5*(xi_n**2-sqrt_dt) + B3[j, k]*sqrt_dt)\
                 * g(t+c[j]*dt, H[k, :])
@@ -378,7 +378,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
         sqrt_dt = np.sqrt(dt)
         a = np.zeros(n)
         b = np.zeros(n)
-        for k in xrange(j):
+        for k in range(j):
             a += A[j, k] * dt * f(t+c[j]*dt, H[k, :])
             b += (B1[j, k]*xi_n + B2[j, k]*0.5*(xi_n**2-sqrt_dt) + B3[j, k]*sqrt_dt)\
                 * g(t+c[j]*dt, H[k, :])
@@ -400,16 +400,16 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
         """
 
         # iterate over all time-steps t
-        for i in xrange(N - 1):
+        for i in range(N - 1):
             dt = t[i + 1] - t[i]
             sqrt_dt = np.sqrt(dt)
             xi_n = np.random.normal(0, sqrt_dt)
 
             # iterate over all stages
-            for j in xrange(s):
+            for j in range(s):
                 H[j, :] = x[i, :]
                 # get last H_s using explicit Butcher-tableau
-                for k in xrange(j):
+                for k in range(j):
                     H[j, :] += A[j, k] * dt * f(t[i] + c[j] * dt, H[k, :]) \
                             + (B1[j, k] * xi_n + B2[j, k] * 0.5 * (xi_n ** 2 - sqrt_dt) + B3[j, k] * sqrt_dt) \
                             * g(t[i] + c[j] * dt, H[k, :])
@@ -430,7 +430,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
         jac_inv = np.zeros((s, system_dimension, system_dimension))
 
         # iterating for every time-step
-        for i in xrange(N - 1):
+        for i in range(N - 1):
             dt = t[i + 1] - t[i]
             sqrt_dt = np.sqrt(dt)
             xi_n = np.random.normal(0, sqrt_dt)
@@ -439,12 +439,12 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
             H[0, :] = x[i, :]
 
             # iterate remaining stages
-            for j in xrange(1, s):
+            for j in range(1, s):
                 # define function for non-linear solver
                 fun = lambda X: fun_sol(X, x[i, :], t[i], H, dt, xi_n, j)
 
                 # solve non-linear problem
-                H[j, :], jac_inv[j] = nb.newton_broyden(fun, x[i, :], x_internal, r_internal, jac_inv[j])
+                H[j, :], jac_inv[j] = nb(fun, x[i, :], x_internal, r_internal, jac_inv[j])
 
             # set approximated step
             x[i + 1, :] = H[s - 1, :]
@@ -461,18 +461,18 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0):
         """
 
         # start iterating for all time-steps t
-        for i in xrange(N - 1):
+        for i in range(N - 1):
             dt = t[i + 1] - t[i]
             sqrt_dt = np.sqrt(dt)
             xi_n = np.random.normal(0, sqrt_dt)
 
             # iterate for all stages
-            for j in xrange(s):
+            for j in range(s):
                 # define function for non-linear solver
                 fun = lambda X: fun_sol(X, x[i, :], t[i], H, dt, xi_n, j)
 
                 # solve non-linear problem
-                H[j, :] = nb.newton_broyden(fun, x[i, :])
+                H[j, :] = nb(fun, x[i, :])
 
             # set approximated step
             x[i + 1, :] = H[s - 1, :]

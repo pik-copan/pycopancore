@@ -13,7 +13,7 @@ import plotly.offline as py
 import plotly.graph_objs as go
 
 import pycopancore.models.seven_dwarfs as M
-from pycopancore.runners.runner import Runner
+from pycopancore.runners.sdae_runner import SDAERunner
 
 
 # setting timeinterval for run method 'Runner.run()'
@@ -72,7 +72,7 @@ termination_callables = [termination_signal]
 
 
 # Runner is instantiated
-r = Runner(model=model,
+r = SDAERunner(model=model,
            termination_calls=termination_callables
            )
 

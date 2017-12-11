@@ -28,7 +28,7 @@ from time import time
 # from profilehooks import coverage, profile
 
 
-class Runner(_AbstractRunner):
+class SDAERunner(_AbstractRunner):
     """Runner-class, it owns the run function which calculates trajectories.
 
     Equations might be of type ODE, explicit, step and event, as stated in the
@@ -55,7 +55,7 @@ class Runner(_AbstractRunner):
             cases prior to the time limit.
         kwargs
         """
-        super(Runner, self).__init__()
+        super(SDAERunner, self).__init__()
 
         # register model and for performance reasons also some of its
         # properties as runner attributes:
@@ -431,7 +431,6 @@ class Runner(_AbstractRunner):
                 # create such an evenly spaced time interval of resolution of
                 # at least dt, following operations are necessary:
                 number_of_steps = math.ceil((next_time - t) / dt)
-                resolution = (next_time - t) / number_of_steps
                 # Create list with times of max dt distance up to next_time:
                 timesteps = np.linspace(t, next_time, number_of_steps)
 
