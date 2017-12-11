@@ -435,7 +435,8 @@ class SDAERunner(_AbstractRunner):
                 timesteps = np.linspace(t, next_time, number_of_steps)
 
                 M = np.diag(np.ones(arraylen, dtype=np.float64))
-                stochastic_handle = np.empty(arraylen)
+
+                def stochastic_handle(t, x): return np.empty(arraylen)
 
                 sol = srk('sdae', M, self.get_rhs_array, stochastic_handle, 0,
                           timesteps, initial_array_ode)

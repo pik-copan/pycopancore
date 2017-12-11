@@ -20,7 +20,7 @@ from pycopancore.runners.sdae_runner import SDAERunner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 50
+timeinterval = 3
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nc = 1  # number of caves
