@@ -18,7 +18,7 @@ from .model_logics import ModelLogics
 
 from .. import abstract
 from . import interface as I
-from . import World, Cell, Nature, Individual, Culture, Society, \
+from . import World, Cell, Environment, Individual, Culture, SocialSystem, \
     Metabolism
 
 
@@ -33,5 +33,5 @@ class Model (I.Model, abstract.Model, ModelLogics):
 
     # specify entity types and process taxon classes 
     # defined in the base component:
-    entity_types = [World, Cell, Individual, Society]
-    process_taxa = [Nature, Culture, Metabolism]
+    entity_types = [World, Cell, Individual, SocialSystem]
+    process_taxa = [Environment, Culture, Metabolism]

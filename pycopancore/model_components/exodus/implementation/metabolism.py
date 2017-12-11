@@ -83,7 +83,7 @@ class Metabolism (I.Metabolism):
         for i, e in enumerate(world.individuals):
             w_i = ws[i]
             y_i = (e.harvest - w_i) * price + e.gross_income
-            av_y = e.society.average_liquidity
+            av_y = e.social_system.average_liquidity
             # Get the rhs of the equation for the individual
             errors[1 + i] = ((y_i - w_i * price)
                              # / (2 * math.sqrt(w_i * y_i * av_y))
@@ -148,7 +148,7 @@ class Metabolism (I.Metabolism):
                 self.non_equilibrium_checker = True
             # Calculate liquidities again, so that sri can be calculated
             # correctly
-            #for s in world.societies:
+            #for s in world.social_systems:
             #    s.liquidity_pdf()
 
     def market_timing(self, t):

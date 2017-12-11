@@ -271,7 +271,7 @@ class Runner(_AbstractRunner):
 
         # Save initial state to output dict:
         self.trajectory_dict['t'] = [t]
-        self.save_to_traj(targets_to_save, add_to_output)
+        self.save_to_traj(targets_to_save, add_to_output=add_to_output)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # Create dictionary containing discontinuities:
@@ -432,7 +432,7 @@ class Runner(_AbstractRunner):
                 print("    Composing initial value array...")
                 # list of target variables:
                 target_variables = list(set(
-                        [target.target_variable 
+                        [target.target_variable
                          for target in self.model.ODE_targets]))
                 # list of array slice lengths, one for each target variable,
                 # length equalling number of target instances:
@@ -686,6 +686,7 @@ class Runner(_AbstractRunner):
             # target is a variable or a dotconstruct
             var = target.target_variable
             instances = target.target_class.instances
+            idle_instances = None
             # Check for deactivated instances. The following check is
             # necessary, since Process Taxa cannot be inactive:
             if issubclass(target.target_class,
@@ -724,7 +725,7 @@ class Runner(_AbstractRunner):
                             # Make list as long as 't' in trajectory_dict:
                             for j in none_list:
                                 self.trajectory_dict[var][inst].append(j)
-                            # And make shure it has the length of 't'
+                            # And make sure it has the length of 't'
                             assert len(self.trajectory_dict[var][inst]) == tlen
                     except KeyError:  # Not yet in trajectory_dict
                         # create new list:

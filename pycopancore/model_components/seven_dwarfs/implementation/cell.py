@@ -35,20 +35,4 @@ class Cell (I.Cell):
         # inherited only by mixing in the model:
         self.assert_valid()
 
-    # process-related methods:
-
-    def snow_white_arrival(self, t):
-        """Calculate snow white's arrival."""
-        return t + np.random.exponential(14.)
-
-    def snow_white_eating(self, unused_t):
-        """Party hard."""
-        print('Snow white arrives and has the munchies.')
-        self.eating_stock = self.eating_stock / 2.
-
-    processes = [
-        Event("snow_white",
-              [I.Cell.eating_stock],
-              ["time", snow_white_arrival, snow_white_eating]
-              )
-    ]
+    processes = []

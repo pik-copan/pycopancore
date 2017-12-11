@@ -1,6 +1,6 @@
 """_abstract_entity_mixin class.
 
-It sets the basic structure of entity mixins (individuals, cells , societies).
+It sets the basic structure of entity mixins (individuals, cells , social_systems).
 """
 
 # This file is part of pycopancore.

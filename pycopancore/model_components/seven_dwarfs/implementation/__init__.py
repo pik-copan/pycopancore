@@ -14,3 +14,4 @@ from .world import World
 from .cell import Cell
 from .individual import Individual
 from .culture import Culture
+from .social_system import SocialSystem

@@ -1,4 +1,4 @@
-"""provides this model component's Nature mixin class"""
+"""provides this model component's Environment mixin class"""
 
 # This file is part of pycopancore.
 #
@@ -11,7 +11,7 @@
 from .. import interface as I
 
 
-class Nature (I.Nature):
-    """Nature process taxon mixin implementation class."""
+class Environment (I.Environment):
+    """Environment process taxon mixin implementation class."""
 
     processes = []

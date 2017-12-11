@@ -14,7 +14,7 @@ then remove these instructions
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import World, Society, Cell, Individual
+from .implementation import World, SocialSystem, Cell, Individual
 # import all needed process taxon implementation classes:
 from .implementation import Metabolism, Culture
 
@@ -24,7 +24,7 @@ class Model (I.Model):
 
     # mixins provided by this model component:
 
-    entity_types = [World, Society, Cell, Individual]
+    entity_types = [World, SocialSystem, Cell, Individual]
     """list of entity types augmented by this component"""
     process_taxa = [Metabolism, Culture]
     """list of process taxa augmented by this component"""
