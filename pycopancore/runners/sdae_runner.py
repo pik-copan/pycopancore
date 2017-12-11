@@ -20,6 +20,7 @@ from ..util import stochastic_runge_kutta_method as srk
 
 from scipy import integrate
 import numpy as np
+import math
 
 from time import time
 # import sys
@@ -114,12 +115,10 @@ class Runner(_AbstractRunner):
 
 #    @profile  # generates time profiling information
     def get_rhs_array(self,
-                      t, value_array  # this order is correct for use with scipy.ode class!
-                      # value_array, t  # this order would be correct for use with scipy.odeint function
-                      ):
+                      t, value_array):
         """Return RHS of composite ODE system as an array.
 
-        Will be passed to scipy.ode class.
+        Will be passed to runge_kutta sdae solver.
 
         Parameters
         ----------
@@ -133,7 +132,8 @@ class Runner(_AbstractRunner):
         array
             array of derivatives in same order as value_array
         """
-        self._current_iteration += 1  # marks current evaluation caches as outdated
+        # mark current evaluation caches as outdated:
+        self._current_iteration += 1
 
         # Execute all explicit processes (3.1.2 in runner scheme):
         self.apply_explicits(t)
@@ -360,46 +360,6 @@ class Runner(_AbstractRunner):
         # At this point, no application of Explicit processes is necessary
         # since that is done during ODE integration
 
-        # prepare SDAE solver:
-        solver = integrate.ode(self.get_rhs_array)
-        # apparently dopri5 is faster than vode, so we use dopri5.
-        # in vode, choosing bdf or adams doesn't seem to make any difference
-        # solver.set_integrator("vode", max_step=dt, method="bdf")
-        solver.set_integrator("dopri5",  # TODO: make this a parameter?
-                              max_step=dt,
-                              verbosity=1,
-                              nsteps=10000  # TODO: make this a parameter?
-                              )
-
-        # running lists of times and solutions:
-        times = []
-        sol = []
-
-        # callback function the solver calls to output solutions:
-        def solout(sol_t, sol_valuearray):
-            """Save solution of solver at one time point.
-
-            Parameters
-            ----------
-            sol_t : float
-                Model time
-            sol_valuearray : array
-                array of variable values in same order as for get_rhs_array
-            """
-            # save solution to lists:
-            times.append(sol_t)
-            sol.append(sol_valuearray.copy())
-            # TODO: ALSO output values of non-dynamical variables, like those
-            # from Explicit processes, so that they don't need to be
-            # calculated again after ode finished!
-            # TODO: this is the place to implement termination
-            # due to events without a priori known occurrence
-            # time! if solout returns 0 (or -1?), solver will
-            # terminate. Similarly for solver "vode" above
-            print("      t =", sol_t, "            ", end='\r')
-            # TODO: return value??
-        solver.set_solout(solout)
-
         # Now loop until end time or early termination is reached:
         while t < t_1:
             # check whether to terminate early:
@@ -467,19 +427,23 @@ class Runner(_AbstractRunner):
                 _starttime = time()  # for performance reporting
 
                 times = []
-                sol = []
+                # the sdae runner only works with evenly spaced samples. To
+                # create such an evenly spaced time interval of resolution of
+                # at least dt, following operations are necessary:
+                number_of_steps = math.ceil((next_time - t) / dt)
+                resolution = (next_time - t) / number_of_steps
+                # Create list with times of max dt distance up to next_time:
+                timesteps = np.linspace(t, next_time, number_of_steps)
 
-                sol = srk('sdae', M, functions, stochasitc_handle, 0,
-                          timesteps, initial_vals)
+                M = np.diag(np.ones(arraylen, dtype=np.float64))
+                stochastic_handle = np.empty(arraylen)
 
-                solver.set_initial_value(initial_array_ode, t)
-                # now tell the solver to integrate from current time to
-                # next_time. it will call solout at least every dt:
-                solver.integrate(next_time)
-                # now solout has filled the times and sol with the integration
-                # result, so we can process them:
-                ts = np.array(times)
-                ode_trajectory = np.array(sol)
+                sol = srk('sdae', M, self.get_rhs_array, stochastic_handle, 0,
+                          timesteps, initial_array_ode)
+
+                # Just renaming, to fit in old structure...
+                ts = timesteps
+                ode_trajectory = sol
 
                 # TODO: capture solver failures and report any errors!
 
@@ -491,7 +455,7 @@ class Runner(_AbstractRunner):
 
                 print("    Saving results to output dict...")
                 # save trajectory of ODE variables to output dict:
-                tlen = len(self.trajectory_dict['t'])  # no. of simulated time points
+                tlen = len(self.trajectory_dict['t'])
                 for i, target in enumerate(self.model.ODE_targets):
                     # from this target's slice starting at column target._from,
                     # read results column by column and store in corresponding
@@ -519,11 +483,7 @@ class Runner(_AbstractRunner):
 
                 # TODO: in principle, this is inefficient since these processes
                 # were applied already during ODE integration, only their
-                # results were not stored. Can this be improved? Sadly, depen-
-                # ding on the solver method, we might not be sure that when
-                # solout is called, the previous call to apply_explicits was
-                # for the same time point and state, so we cannot simply use
-                # its result... (is this really true?)
+                # results were not stored. Can this be improved?
 
                 if len(self.explicit_processes) > 0:
                     print("    Applying Explicit processes to simulated "

@@ -39,7 +39,7 @@ def newton_broyden(fun, x_0, jac_inv=None, reltol=1e-6, abstol=1e-8, max_newton=
         n = np.size(x_0)
         jac = np.empty((n, n), dtype=np.float64)
 
-        for i in xrange(n):
+        for i in range(n):
 
             if not x_0[i] == 0.:
                 d = 2 ** (-11) * x_0[i]
@@ -73,8 +73,8 @@ def newton_broyden(fun, x_0, jac_inv=None, reltol=1e-6, abstol=1e-8, max_newton=
 
         norm = 1. / norm_inv
         minus_update = norm * (minus_delta_x + np.dot(jac_inv, delta_fun))
-        for i in xrange(system_dimension):
-            for j in xrange(system_dimension):
+        for i in range(system_dimension):
+            for j in range(system_dimension):
                 jac_inv[i, j] -= minus_update[i] * delta_fun[j]
 
         return jac_inv
@@ -83,7 +83,7 @@ def newton_broyden(fun, x_0, jac_inv=None, reltol=1e-6, abstol=1e-8, max_newton=
     @jit(nopython=force_full_compile)
     def residue_is_small(f, x):
         # print np.abs(np.max(f))
-        for i in xrange(system_dimension):
+        for i in range(system_dimension):
             if np.abs(f[i]) > reltol * np.abs(x[i]) + abstol:
                 return False
 

@@ -160,7 +160,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0, reltol=1e-6, a
         sqrt_dt = np.sqrt(dt)
         a = np.zeros(n)
         b = np.zeros(n)
-        for k in xrange(j):
+        for k in range(j):
             a += A[j, k] * dt * f(t+c[j]*dt, H[k, :])
             b += (B1[j, k]*xi_n + B2[j, k]*0.5*(xi_n**2-sqrt_dt) + B3[j, k]*sqrt_dt)\
                 * g(t+c[j]*dt, H[k, :])
@@ -187,7 +187,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0, reltol=1e-6, a
         sqrt_dt = np.sqrt(dt)
         a = np.zeros(n)
         b = np.zeros(n)
-        for k in xrange(j):
+        for k in range(j):
             a += A[j, k] * dt * f(t+c[j]*dt, H[k, :])
             b += (B1[j, k]*xi_n + B2[j, k]*0.5*(xi_n**2-sqrt_dt) + B3[j, k]*sqrt_dt)\
                 * g(t+c[j]*dt, H[k, :])
@@ -207,16 +207,16 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0, reltol=1e-6, a
         """
 
         # iterate over all time-steps t
-        for i in xrange(N - 1):
+        for i in range(N - 1):
             dt = t[i + 1] - t[i]
             sqrt_dt = np.sqrt(dt)
             xi_n = np.random.normal(0, sqrt_dt)
 
             # iterate over all stages
-            for j in xrange(s):
+            for j in range(s):
                 H[j, :] = x[i, :]
                 # get last H_s using explicit Butcher-tableau
-                for k in xrange(j):
+                for k in range(j):
                     H[j, :] += A[j, k] * dt * f(t[i] + c[j] * dt, H[k, :]) \
                             + (B1[j, k] * xi_n + B2[j, k] * 0.5 * (xi_n ** 2 - sqrt_dt) + B3[j, k] * sqrt_dt) \
                             * g(t[i] + c[j] * dt, H[k, :])
@@ -239,7 +239,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0, reltol=1e-6, a
         xi_n = np.random.normal(0, sqrt_dt)
         H[0, :] = x[0, :]
 
-        for j in xrange(1, s):
+        for j in range(1, s):
                 # define function for non-linear solver
                 fun = lambda X: fun_sol(X, x[i, :], t[i], H, dt, xi_n, j)
 
@@ -250,7 +250,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0, reltol=1e-6, a
         x[1, :] = H[s - 1, :]
 
         # iterating for every time-step
-        for i in xrange(1, N - 1):
+        for i in range(1, N - 1):
             dt = t[i + 1] - t[i]
             sqrt_dt = np.sqrt(dt)
             xi_n = np.random.normal(0, sqrt_dt)
@@ -259,7 +259,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0, reltol=1e-6, a
             H[0, :] = x[i, :]
 
             # iterate remaining stages
-            for j in xrange(1, s):
+            for j in range(1, s):
                 # define function for non-linear solver
                 fun = lambda X: fun_sol(X, x[0, :], t[0], H, dt, xi_n, j)
 
@@ -284,7 +284,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0, reltol=1e-6, a
         xi_n = np.random.normal(0, sqrt_dt)
 
         # iterate for all stages
-        for j in xrange(s):
+        for j in range(s):
             # define function for non-linear solver
             fun = lambda X: fun_sol(X, x[0, :], t[0], H, dt, xi_n, j)
 
@@ -301,7 +301,7 @@ def stochastic_runge_kutta_method(type, M, f, g, butcher, t, x_0, reltol=1e-6, a
             xi_n = np.random.normal(0, sqrt_dt)
 
             # iterate for all stages
-            for j in xrange(s):
+            for j in range(s):
                 # define function for non-linear solver
                 fun = lambda X: fun_sol(X, x[i, :], t[i], H, dt, xi_n, j)
 

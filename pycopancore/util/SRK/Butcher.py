@@ -1,4 +1,4 @@
-from basics import *
+from .basics import *
 import numpy as np
 
 

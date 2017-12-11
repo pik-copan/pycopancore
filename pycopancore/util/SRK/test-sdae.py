@@ -37,8 +37,8 @@ def main(x_0, n):
         ui = np.zeros(n, dtype=np.complex128)
         v = np.array([1, x[7]])
         y = 10. * np.array([[1, -1], [-1, 1]])
-        for i in xrange(n):
-            for j in xrange(n):
+        for i in range(n):
+            for j in range(n):
                 ui[i] += v[i] * v[j].conjugate() * y[i, j].conjugate() * np.exp(1.j * (x[i]-x[j]))
 
         value = np.empty(8, dtype=np.float64)
