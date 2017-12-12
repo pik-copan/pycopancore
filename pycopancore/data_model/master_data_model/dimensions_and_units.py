@@ -13,6 +13,8 @@ length.default_unit = km = kilometers = \
 time = Dimension("time", "time")
 time.default_unit = a = yr = years = Unit("years", "years", symbol="a")
 s = seconds = (years / 31556952).named("seconds")
+minutes = (seconds * 60).named("minutes", symbol="min")
+h = hours = (minutes * 60).named("hours", symbol="h")
 
 mass = Dimension("mass",
                  "mass (only use for matter changing its type, otherwise use specific mass dimension, e.g. 'carbon')")
@@ -82,7 +84,7 @@ value_flow = (monetary_value / time).named("monetary_value flow")
 carbon_flow = (carbon / time).named("carbon flow")
 human_flow = (humans / time).named("human flow")
 
-GW = gigawatts = (GJ / seconds).named("gigawatts", symbol="GW")
+GW = gigawatts = (GWh / h).named("gigawatts", symbol="GW")
 
 # other derived dimensions and units:
 
