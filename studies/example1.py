@@ -3,12 +3,24 @@
 from time import time
 from numpy import random, array
 import numpy as np
-import pycopancore.models.jobsts_prototype_1 as M
+import pycopancore.models.example1 as M
 # import pycopancore.models.only_copan_global_like_carbon_cycle as M
 from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
+
+# print(D.hours.factor,D.hours.exponents)
+# q=1*D.hours
+# print(q,q._number,q._unit,q.number(),q.number(unit=D.minutes),q.tostr(),q.tostr(unit=D.minutes))
+# print(q+30*D.minutes,q-15*D.minutes)
+# tens=D.unity*10
+# print((1*tens).reduce())
+# u=D.gigatonnes_carbon/D.years
+# print(u,u.factor,u.exponents)
+# q=1*u
+# print(q,q.tostr())
+# exit()
 
 # first thing: set seed so that each execution must return same thing:
 random.seed(10) # 10
@@ -16,7 +28,7 @@ random.seed(10) # 10
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 5 # no. societies #10
+nsocs = 5 # no. societies #5
 ncells = 100  # no. cells #100
 ninds = 1000 # no. individuals
 
@@ -31,7 +43,7 @@ metabolism = M.Metabolism(
         # .1 w protection: success but desertification
         # 0 w/o protection: very slow success but desertification
         # ?: oscillations
-    basic_emigration_probability_rate = 16e-13, # 5e-13 leads to ca. 5mio. at 10 socs, (real)
+    basic_emigration_probability_rate = 16e-13, # leads to ca. 5mio. at 5 socs, (real)
     )
 culture = M.Culture(
     awareness_lower_carbon_density=1e-4, #1e100, # 1e-6?
@@ -135,7 +147,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_0=2000, t_1=2000+100, dt=1, add_to_output=[M.Individual.represented_population])
+traj = runner.run(t_0=2000, t_1=2000+1, dt=1, add_to_output=[M.Individual.represented_population])
 
 
 for v in nature.variables: print(v,v.get_value(nature))
@@ -219,13 +231,17 @@ print("emigration (5e6):",sum(traj[M.Society.emigration][s][5] for s in societie
 print("photo (123):",sum(traj[M.Cell.photosynthesis_carbon_flow][c][5] for c in cells))
 print("resp (118):",sum(traj[M.Cell.terrestrial_respiration_carbon_flow][c][5] for c in cells))
 print("GWP (4e13):",sum(traj[M.Society.economic_output_flow][s][5] for s in societies)) # should be ca. 4e13
-Bglobal = sum(traj[M.Society.biomass_input_flow][s][5] for s in societies) * D.gigatonnes_carbon / D.years
+B0 = sum(traj[M.Society.biomass_input_flow][s][5] for s in societies)
+Bglobal = B0 * D.gigatonnes_carbon / D.years
 Fglobal = sum(traj[M.Society.fossil_fuel_input_flow][s][5] for s in societies) * D.gigatonnes_carbon / D.years
 Rglobal = sum(traj[M.Society.renewable_energy_input_flow][s][5] for s in societies) * D.gigajoules / D.years
+Eglobal = sum(traj[M.Society.secondary_energy_flow][s][5] for s in societies) * D.gigajoules / D.years
 print("B (3), F (11), R(100):",
-      Bglobal.tostr(unit=D.gigatonnes_carbon/D.years), # should be ca. 3
-      Fglobal.tostr(unit=D.gigatonnes_carbon/D.years), # should be ca. 11
-      Rglobal.tostr(unit=D.gigawatts)) # last should be ca. 100
+      Bglobal, Bglobal.tostr(unit=D.gigatonnes_carbon/D.years), # should be ca. 3
+      Fglobal, Fglobal.tostr(unit=D.gigatonnes_carbon/D.years), # should be ca. 11
+      Rglobal, Rglobal.tostr(unit=D.gigawatts), # last should be ca. 100
+      Eglobal, Eglobal.tostr(unit=D.gigawatts), # last should be ca. 100
+      ) 
 #print((Bglobal * metabolism.biomass_energy_density * D.gigajoules/D.gigatonnes_carbon).tostr(unit=D.gigawatts),
 #      (Fglobal * metabolism.fossil_energy_density * D.gigajoules/D.gigatonnes_carbon).tostr(unit=D.gigawatts),
 #      Rglobal.tostr(unit=D.gigawatts), "(100)") # last should be ca. 100
@@ -238,8 +254,7 @@ print("temp. at begin:",traj[M.World.surface_air_temperature][worlds[0]][5])
 print("temp. at end:",traj[M.World.surface_air_temperature][worlds[0]][-1])
 print("prot. carbon share:",[traj[M.Society.protected_terrestrial_carbon][s][-1]/sum(traj[M.Cell.terrestrial_carbon][c][-1]for c in s.cells) for s in societies])
 print(traj[M.World.terrestrial_carbon][worlds[0]][-1],sum(traj[M.Cell.terrestrial_carbon][c][-1] for c in worlds[0].cells))
-
-show()
+#show()
 
 # TODO: 
 # policy shares, env. friendly shares
