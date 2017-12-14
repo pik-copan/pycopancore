@@ -189,7 +189,7 @@ print('runtime: {runtime}'.format(**locals()))
 
 # Saving:
 print('saving:')
-traj.save(filename='data')
+#traj.save(filename='data')
 print('...is done')
 
 # Plotting:

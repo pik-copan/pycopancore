@@ -128,14 +128,14 @@ class _TrajectoryDictionary(dict):
                     raise Exception('neither variable nor time!')
 
             # checking if all entries have the same length as time:
-            tlen = len(dict_to_save['t'])
-            for var, item in dict_to_save.items():
-                if isinstance(item, dict):
-                    for instance, val in item.items():
-                        assert len(dict_to_save[var][instance]) == tlen, (
-                            tlen, len(dict_to_save[var][instance]),
-                            dict_to_save[var][instance], var, instance
-                        )
+            # tlen = len(dict_to_save['t'])
+            # for var, item in dict_to_save.items():
+            #     if isinstance(item, dict):
+            #         for instance, val in item.items():
+            #             assert len(dict_to_save[var][instance]) == tlen, (
+            #                 tlen, len(dict_to_save[var][instance]),
+            #                 dict_to_save[var][instance], var, instance
+            #             )
 
             # Add a file versio:
             dict_to_save['file-version'] = 0.1
