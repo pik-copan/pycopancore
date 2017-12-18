@@ -37,7 +37,7 @@ timestep = .1
 
 nm = 1  # number of municipalities, also cities
 nc = 1  # number of counties, also farmland_cells
-na = 50  # number of agents
+na = 10  # number of agents
 pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
@@ -182,7 +182,10 @@ r = Runner(model=model, termination_calls=termination_conditions
 
 start = time()
 # run the Runner and saving the return dict in traj
-traj = r.run(t_1=timeinterval, dt=timestep, max_resolution=True)
+traj = r.run(t_1=timeinterval,
+             dt=timestep,
+             max_resolution=True
+             )
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
