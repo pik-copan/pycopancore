@@ -18,6 +18,9 @@ import numpy as np
 from time import time
 import datetime as dt
 
+import networkx as nx
+import matplotlib.pyplot as plt
+
 import plotly.offline as py
 import plotly.graph_objs as go
 
@@ -26,7 +29,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 100
+timeinterval = 1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nc = 1  # number of caves
@@ -45,8 +48,11 @@ culture = M.Culture()
 # instantiate world:
 world = M.World(culture=culture)
 
+society = [M.SocialSystem(world=world)]
+
 # instantiate cells (the caves)
 cell = [M.Cell(world=world,
+               social_system=society[0],
                eating_stock=100
                )
         for c in range(nc)
@@ -79,6 +85,8 @@ termination_signal = [M.Culture.check_for_extinction,
 # Define termination_callables as list of all signals
 termination_callables = [termination_signal]
 
+nx.draw(culture.acquaintance_network)
+plt.show()
 
 # Runner is instantiated
 r = Runner(model=model,
@@ -87,7 +95,7 @@ r = Runner(model=model,
 
 start = time()
 # run the Runner and saving the return dict in traj
-traj = r.run(t_1=timeinterval, dt=timestep)
+traj = r.run(t_1=timeinterval, dt=timestep, add_to_output=[M.Culture.acquaintance_network])
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
@@ -101,7 +109,10 @@ print("max. time step", (t[1:]-t[:-1]).max())
 # Create List of all dwarfes, not only the ones instantiated before the run,
 # but also the one created during the run.
 
-all_dwarfs = M.Individual.instances + M.Individual.idle_entities
+if M.Individual.idle_entities:
+    all_dwarfs = M.Individual.instances + M.Individual.idle_entities
+else:
+    all_dwarfs = M.Individual.instances
 
 individuals_age = np.array([traj[M.Individual.age][dwarf]
                                  for dwarf in all_dwarfs])
@@ -162,9 +173,14 @@ layout = dict(title='seven dwarfs',
 
 # getting plots of two dwarfs:
 fig = dict(data=[data_age[0], data_beard_length[0], data_stock[0]],
-            layout=layout)
+           layout=layout)
 py.plot(fig, filename="our-model-result{}.html".format(0))
 
 fig = dict(data=[data_age[5], data_beard_length[5], data_stock[0]],
-            layout=layout)
+           layout=layout)
 py.plot(fig, filename="our-model-result{}.html".format(5))
+
+#nx.draw(traj[M.Culture.acquaintance_network][culture][1])
+#plt.show()
+for i in range(len(traj['t'])):
+    print(traj[M.Culture.acquaintance_network][culture][i].nodes())

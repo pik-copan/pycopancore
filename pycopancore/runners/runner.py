@@ -272,7 +272,10 @@ class Runner(_AbstractRunner):
 
         # Save initial state to output dict:
         self.trajectory_dict['t'] = [t]
-        self.save_to_traj(targets_to_save, add_to_output=add_to_output)
+        self.save_to_traj(targets_to_save,
+                          add_to_output,
+                          max_resolution,
+                          dt)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # Create dictionary containing discontinuities:
@@ -284,7 +287,10 @@ class Runner(_AbstractRunner):
 
         # Only now save initial state to output dict:
         self.trajectory_dict['t'] = [t]
-        self.save_to_traj(self.model.process_targets, add_to_output)
+        self.save_to_traj(targets_to_save,
+                          add_to_output,
+                          max_resolution,
+                          dt)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # TODO: discuss whether hooks make sense, then maybe:
@@ -433,7 +439,7 @@ class Runner(_AbstractRunner):
                 print("    Composing initial value array...")
                 # list of target variables:
                 target_variables = list(set(
-                        [target.target_variable 
+                        [target.target_variable
                          for target in self.model.ODE_targets]))
                 # list of array slice lengths, one for each target variable,
                 # length equalling number of target instances:
@@ -537,8 +543,10 @@ class Runner(_AbstractRunner):
                             var.fast_set_values(ode_values[var._from:var._to])
                         self.apply_explicits(t)
                         # complete the output dictionary:
-                        self.save_to_traj(self.model.process_targets,
-                                          add_to_output)
+                        self.save_to_traj(targets_to_save,
+                                          add_to_output,
+                                          max_resolution,
+                                          dt)
 
             # set current model time to end of previous ODE integration:
             t = next_time
@@ -623,33 +631,8 @@ class Runner(_AbstractRunner):
                 # Store all information that has been calculated at time t:
                 print("    Completing output dict...")
 
-                self.save_to_traj(self.model.process_targets, add_to_output)
-
-            # if max reoslution is true, the trajectory_dict s length is
-            # reduced to time*dt
-            if max_resolution and t < t_1:
-                print('    Reducing resolution')
-                for i, val in enumerate(self.trajectory_dict['t']):
-                    # See if 3 timesteps are closer than dt:
-                    if (i > 1) and i < (len(self.trajectory_dict['t']) - 2):
-                        diff = self.trajectory_dict['t'][i+1] - self.trajectory_dict['t'][i-1]
-                        if diff < dt:
-                            del self.trajectory_dict['t'][i]
-                            # print(f'deleting, diff={diff}')
-                            # delete this value from all trajectories
-                            for target in targets_to_save:
-                                var = target.target_variable
-                                instances = target.target_class.instances
-                                for inst in instances:
-                                    del self.trajectory_dict[var][inst][i]
-
-                # # Assert every list still has the same lenght:
-                # tlen = len(self.trajectory_dict['t'])
-                # for target in targets_to_save:
-                #     var = target.target_variable
-                #     instances = target.target_class.instances
-                #     for inst in instances:
-                #         assert len(self.trajectory_dict[var][inst]) == tlen
+                self.save_to_traj(targets_to_save, add_to_output,
+                                  max_resolution, dt)
 
             # TODO: discuss whether hooks make sense, then maybe:
             # TODO: add hooks to runner scheme
@@ -665,9 +648,27 @@ class Runner(_AbstractRunner):
             print("  Executing post-hooks ...")
             Hooks.execute_hooks(Hooks.Types.post, self.model, t_0)
 
+        # Assert every list still has the same lenght:
+        print('asserting same lenghts of all entries')
+        tlen = len(self.trajectory_dict['t'])
+        for target in targets_to_save:
+            var = target.target_variable
+            instances = target.target_class.instances
+            for inst in instances:
+                assert len(self.trajectory_dict[var][inst]) == tlen, (
+                    len(self.trajectory_dict[var][inst]), tlen,
+                    self.trajectory_dict[var][inst],
+                    self.trajectory_dict['t'],
+                    var
+                )
+
         return self.trajectory_dict
 
-    def save_to_traj(self, targets, add_to_output):
+    def save_to_traj(self,
+                     targets,
+                     add_to_output,
+                     max_resolution,
+                     dt):
         """Save simulation results to output dictionary.
 
         Update self.trajectory_dict for some targets.
@@ -687,6 +688,7 @@ class Runner(_AbstractRunner):
             # target is a variable or a dotconstruct
             var = target.target_variable
             instances = target.target_class.instances
+            idle_instances = None
             # Check for deactivated instances. The following check is
             # necessary, since Process Taxa cannot be inactive:
             if issubclass(target.target_class,
@@ -703,6 +705,7 @@ class Runner(_AbstractRunner):
                     if len(self.trajectory_dict[var][inst]) < tlen:
                         self.trajectory_dict[var][inst].append(values[i])
                     # else do nothing since value was already stored.
+                    # assert len(self.trajectory_dict[var][inst]) == tlen
                 except KeyError:
                     # This branch is active if the entity has not been
                     # activated before.
@@ -725,13 +728,49 @@ class Runner(_AbstractRunner):
                             # Make list as long as 't' in trajectory_dict:
                             for j in none_list:
                                 self.trajectory_dict[var][inst].append(j)
-                            # And make shure it has the length of 't'
+                            # And make sure it has the length of 't'
                             assert len(self.trajectory_dict[var][inst]) == tlen
                     except KeyError:  # Not yet in trajectory_dict
                         # create new list:
                         none_list = [None]*tlen
                         self.trajectory_dict[var][inst] = [none_list]
                         assert len(self.trajectory_dict[var][inst]) == tlen
+        if max_resolution:
+            print('    Reducing resolution')
+            for i, val in enumerate(self.trajectory_dict['t']):
+                # See if 3 timesteps are closer than dt:
+                if (i > 1) and i < (len(self.trajectory_dict['t']) - 10):
+                    diff = (self.trajectory_dict['t'][i + 1]
+                            - self.trajectory_dict['t'][i - 1])
+                    if diff < dt:
+                        del self.trajectory_dict['t'][i]
+                        # print(f'deleting, diff={diff}')
+                        # delete this value from all trajectories
+                        for target in targets:
+                            var = target.target_variable
+                            instances = target.target_class.instances
+                            for inst in instances:
+                                # all active entities/taxa
+                                if (len(self.trajectory_dict[var][inst])
+                                        > len(self.trajectory_dict['t'])):
+                                    del self.trajectory_dict[var][inst][i]
+                                assert len(self.trajectory_dict[var][
+                                               inst]) == len(
+                                    self.trajectory_dict['t'])
+                            if issubclass(target.target_class,
+                                          _AbstractEntityMixin):
+                                # check for inactivie entities
+                                idle_instances = target.target_class.idle_entities
+                                if idle_instances:
+                                    for inst in idle_instances:
+                                        if (len(self.trajectory_dict[var][inst])
+                                                > len(
+                                                self.trajectory_dict['t'])):
+                                            del self.trajectory_dict[var][inst][
+                                                i]
+                                        assert len(self.trajectory_dict[var][
+                                                       inst]) == len(
+                                            self.trajectory_dict['t'])
 
     def terminate(self):
         """Determine if the runner should stop.

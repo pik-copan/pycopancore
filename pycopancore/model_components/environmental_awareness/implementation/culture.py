@@ -15,6 +15,7 @@ from ...base import interface as B
 from numpy import inf
 from numpy.random import exponential, uniform
 
+
 class Culture (I.Culture):
     """Culture process taxon mixin implementation class."""
 
@@ -37,5 +38,5 @@ class Culture (I.Culture):
                        [B.Culture.worlds.individuals.is_environmentally_friendly],
                        ["time",
                         next_awareness_update_time,
-                        update_individuals_awareness])                 
+                        update_individuals_awareness])
                  ]

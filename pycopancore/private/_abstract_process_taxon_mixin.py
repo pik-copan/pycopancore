@@ -24,8 +24,9 @@ class _AbstractProcessTaxonMixin(_Mixin):
 
     def __init__(self, *args, **kwargs):
         """Initialize an _AbstractProcessTaxonMixin instance."""
-        assert len(self.__class__.instances) == 0, \
-            "process taxa can be instantiated only once!"
+        assert (self.__class__.instances is None or
+                self.__class__.instances == []), \
+            ("process taxa can be instantiated only once!")
         super().__init__(*args, **kwargs)
 #        if self.__class__.instances:
 #            self.__class__.instances.append(self)

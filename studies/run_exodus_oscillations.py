@@ -31,13 +31,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 50
+timeinterval = 10
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 1  # number of municipalities, also cities
-nc = 1  # number of counties, also farmland_cells
-na = 10  # number of agents
+# Since this is a special model, only 2 of each type of cells are allowed.
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
+na = 100  # number of agents
 pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
@@ -55,42 +56,44 @@ world = M.World(culture=culture, metabolism=metabolism,
                 water_price=.1)
 # Instantiate Social Systems:
 municipalities = [M.SocialSystem(world=world,
-                            municipality_like=True,
-                            base_mean_income=1000,
-                            scaling_parameter=1.12,
-                            migration_cost=0)
+                                 municipality_like=True,
+                                 base_mean_income=1000,
+                                 scaling_parameter=1.12,
+                                 migration_cost=0)
                   for m in range(nm)
                   ]
 
 counties = [M.SocialSystem(world=world,
-                      municipality_like=False,
-                      migration_cost=0)
+                           municipality_like=False,
+                           migration_cost=0)
             for c in range(nc)
             ]
 # Instantiate farmland cells:
 farmland_cells = []
-county_allocation = list(counties)
-for fc in range(nc):
-    # chose county:
-    county = random.choice(county_allocation)
-    county_allocation.remove(county)
-    farmland_cells.append(M.Cell(world=world,
-                                 social_system=county,
-                                 characteristic='farmland',
-                                 land_area=0.01 * (nf + nt) / nc,  # in square kilometers
-                                 average_precipitation=0.75))
+farmland_cells.append(M.Cell(world=world,
+                             social_system=counties[0],
+                             characteristic='farmland',
+                             land_area=0.01 * (nf + nt) / nc,
+                             average_precipitation=0.75,
+                             location=(0, 0)))
+farmland_cells.append(M.Cell(world=world,
+                             social_system=counties[1],
+                             characteristic='farmland',
+                             land_area=0.01 * (nf + nt) / nc,
+                             average_precipitation=0.75,
+                             location=(0, 1)))
 # Instantiate city cells:
 city_cells = []
-municipality_allocation = list(municipalities)
-
-for cc in range(nm):
-    # chose county:
-    municipality = random.choice(municipality_allocation)
-    municipality_allocation.remove(municipality)
-    city_cells.append(M.Cell(world=world,
-                             social_system=municipality,
-                             characteristic='city',
-                             average_precipitation=0))
+city_cells.append(M.Cell(world=world,
+                         social_system=municipalities[0],
+                         characteristic='city',
+                         average_precipitation=0,
+                         location=(1, 1)))
+city_cells.append(M.Cell(world=world,
+                         social_system=municipalities[1],
+                         characteristic='city',
+                         average_precipitation=0,
+                         location=(1, 0)))
 
 # Instantiate farmers:
 farmers = []
@@ -103,7 +106,8 @@ for f in range(nf):
                                 profession='farmer',
                                 outspokenness=.1,
                                 liquidity=liq,
-                                nutrition=1000))
+                                nutrition=1000,
+                                preferential_migration=True))
 # Instantiate townsmen:
 townsmen = []
 for t in range(nt):
@@ -115,33 +119,8 @@ for t in range(nt):
                                  profession='townsman',
                                  outspokenness=.1,
                                  liquidity=liq,
-                                 nutrition=100))
-
-# # Create Network:
-# expected_degree = 5
-#
-# # from run_adaptive_voter_model:
-#
-#
-# def erdosrenyify(graph, p=0.5):
-#     """Create a ErdosRenyi graph from networkx graph.
-#
-#     Take a a networkx.Graph with nodes and distribute the edges following the
-#     erdos-renyi graph procedure.
-#     """
-#     assert not graph.edges(), "your graph has already edges"
-#     nodes = graph.nodes()
-#     for i, n1 in enumerate(nodes[:-1]):
-#         for n2 in nodes[i+1:]:
-#             if random.random() < p:
-#                 graph.add_edge(n1, n2)
-#
-#
-# # set the initial graph structure to be an erdos-renyi graph
-# print("erdosrenyifying the graph ... ", end="", flush=True)
-# start = time()
-# erdosrenyify(culture.acquaintance_network, p=expected_degree / (nf + nt))
-# print("done ({})".format(dt.timedelta(seconds=(time() - start))))
+                                 nutrition=100,
+                                 preferential_migration=True))
 
 start = time()
 # Calculate social_systems variables before run:
@@ -182,17 +161,14 @@ r = Runner(model=model, termination_calls=termination_conditions
 
 start = time()
 # run the Runner and saving the return dict in traj
-traj = r.run(t_1=timeinterval,
-             dt=timestep,
-             max_resolution=True
-             )
+traj = r.run(t_1=timeinterval, dt=timestep, max_resolution=True)
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
 
 # Saving:
 print('saving:')
-#traj.save(filename='data')
+traj.save(filename='data')
 print('...is done')
 
 # Plotting:
@@ -207,12 +183,12 @@ plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
 
 for soc in municipalities:
     plot(t, traj[M.SocialSystem.population][soc], "r", lw=3)
-    plot(t, traj[M.SocialSystem.average_utility][soc], "r:", lw=3)
-    plot(t, traj[M.SocialSystem.gini_coefficient][soc], "r--", lw=3)
+    #plot(t, traj[M.SocialSystem.average_utility][soc], "r:", lw=3)
+    #plot(t, traj[M.SocialSystem.gini_coefficient][soc], "r--", lw=3)
 for soc in counties:
     plot(t, traj[M.SocialSystem.population][soc], "k", lw=3)
-    plot(t, traj[M.SocialSystem.average_utility][soc], "k:", lw=3)
-    plot(t, traj[M.SocialSystem.gini_coefficient][soc], "k--", lw=3)
+    #plot(t, traj[M.SocialSystem.average_utility][soc], "k:", lw=3)
+    #plot(t, traj[M.SocialSystem.gini_coefficient][soc], "k--", lw=3)
 
 # for ind in M.Individual.instances:
 #    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)
