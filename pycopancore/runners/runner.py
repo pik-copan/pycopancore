@@ -736,18 +736,17 @@ class Runner(_AbstractRunner):
                         self.trajectory_dict[var][inst] = [none_list]
                         assert len(self.trajectory_dict[var][inst]) == tlen
         if max_resolution:
-            saving = targets
             print('    Reducing resolution')
             for i, val in enumerate(self.trajectory_dict['t']):
                 # See if 3 timesteps are closer than dt:
-                if (i > 1) and i < (len(self.trajectory_dict['t']) - 2):
+                if (i > 1) and i < (len(self.trajectory_dict['t']) - 10):
                     diff = (self.trajectory_dict['t'][i + 1]
                             - self.trajectory_dict['t'][i - 1])
                     if diff < dt:
                         del self.trajectory_dict['t'][i]
                         # print(f'deleting, diff={diff}')
                         # delete this value from all trajectories
-                        for target in saving:
+                        for target in targets:
                             var = target.target_variable
                             instances = target.target_class.instances
                             for inst in instances:
