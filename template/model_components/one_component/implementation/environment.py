@@ -1,4 +1,4 @@
-"""Nature process taxon mixing class template.
+"""Enviroment process taxon mixing class template.
 
 TODO: adjust, uncomment or fill in code and documentation wherever marked by
 the "TODO" flag.
@@ -12,14 +12,14 @@ the "TODO" flag.
 
 from .. import interface as I
 
-class Nature (I.Nature):
-    """Nature process taxon mixin implementation class."""
+class Environment (I.Environment):
+    """Environment process taxon mixin implementation class."""
 
 
     def __init__(self,
                  # *,  # TODO: uncomment when adding named args after this
                  **kwargs):
-        """Initialize the unique instance of Nature."""
+        """Initialize the unique instance of Environment."""
         super().__init__(**kwargs)  # must be the first line
         # TODO: add custom code here
         pass

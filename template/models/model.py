@@ -68,10 +68,10 @@ class Individual(SOMECOMPONENT.Individual,
 # TODO: do the same for process taxa:
 
 # TODO: list all mixin classes needed:
-class Nature(SOMECOMPONENT.Nature,
-             ONECOMPONENT.Nature,
-             base.Nature):
-    """Nature process taxon."""
+class Enviroment(SOMECOMPONENT.Enviroment,
+             ONECOMPONENT.Enviroment,
+             base.Enviroment):
+    """Enviroment process taxon."""
     pass
 
 
@@ -109,5 +109,5 @@ class Model(SOMECOMPONENT.Model,
     """List of entity types used in the model"""
 
     # TODO: list all entity types you composed above:
-    process_taxa = [Nature, Metabolism, Culture]
+    process_taxa = [Enviroment, Metabolism, Culture]
     """List of process taxa used in the model"""
