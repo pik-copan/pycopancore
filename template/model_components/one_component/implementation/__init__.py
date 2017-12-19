@@ -1,5 +1,7 @@
 """
 Model component implementation subpackage template.
+
+TODO: uncomment neccessary code wherever marked by the "TODO" flag.
 """
 # This file is part of pycopancore.
 #
@@ -7,11 +9,11 @@ Model component implementation subpackage template.
 # Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
 
-# TODO: adjust the following lists to your needs:
+# TODO: uncomment entity types and process taxa used in this model component 
 
 # export all provided entity type implementation mixin classes:
+<<<<<<< HEAD:pycopancore/model_components/_template/implementation/__init__.py
 from .world import World
 from .social_system import SocialSystem
 from .cell import Cell
