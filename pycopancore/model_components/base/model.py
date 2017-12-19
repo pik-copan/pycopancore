@@ -6,11 +6,12 @@ derives from ModelLogics.
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 # import essential framework logics
 # (this import occurs ONLY in the base component):
@@ -18,7 +19,7 @@ from .model_logics import ModelLogics
 
 from .. import abstract
 from . import interface as I
-from . import World, Cell, Nature, Individual, Culture, Society, \
+from . import World, Cell, Environment, Individual, Culture, SocialSystem, \
     Metabolism
 
 
@@ -33,5 +34,5 @@ class Model (I.Model, abstract.Model, ModelLogics):
 
     # specify entity types and process taxon classes 
     # defined in the base component:
-    entity_types = [World, Cell, Individual, Society]
-    process_taxa = [Nature, Culture, Metabolism]
+    entity_types = [World, Cell, Individual, SocialSystem]
+    process_taxa = [Environment, Culture, Metabolism]

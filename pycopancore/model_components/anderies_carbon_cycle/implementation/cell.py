@@ -1,4 +1,14 @@
 """Jobst: write docstring."""
+
+# This file is part of pycopancore.
+#
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
+
 from .... import Explicit, ODE
 from .... import master_data_model as D
 from ...base import interface as B
@@ -34,9 +44,9 @@ class Cell (I.Cell):
 
         Explicit("net ecosystem production",
                  [I.Cell.net_ecosystem_production],
-                 [B.Cell.nature.ecosystem_dependent_conversion_factor
+                 [B.Cell.environment.ecosystem_dependent_conversion_factor
                   * I.Cell.terrestrial_carbon * (1 - (I.Cell.terrestrial_carbon
-                                                      / B.Cell.nature.terrestrial_carbon_carrying_capacity))
+                                                      / B.Cell.environment.terrestrial_carbon_carrying_capacity))
                   * (I.World.photosynthesis_rate - I.World.respiration_rate)
                   ]),
 
@@ -44,16 +54,16 @@ class Cell (I.Cell):
         # capacity per area?
         # Explicit("net ecosystem production",
         #          [I.Cell.net_ecosystem_production],
-        #          [B.Cell.nature.ecosystem_dependent_conversion_factor
+        #          [B.Cell.environment.ecosystem_dependent_conversion_factor
         #           * I.Cell.terrestrial_carbon * (1 - (I.Cell.terrestrial_carbon
-        #                                               / (B.Cell.nature.terrestrial_carbon_capacity_per_area
+        #                                               / (B.Cell.environment.terrestrial_carbon_capacity_per_area
         #             * B.Cell.land_area)))
         #           * (I.World.photosynthesis_rate - I.World.respiration_rate)
         #           ]),
 
         Explicit("human offtake",  # Interface
                  [I.Cell.human_offtake],
-                 [I.Society.harvest_rate * I.Cell.terrestrial_carbon
+                 [I.SocialSystem.harvest_rate * I.Cell.terrestrial_carbon
                   ]),
 
         ODE("effect of photosynthesis and respiration",
@@ -72,11 +82,11 @@ class Cell (I.Cell):
 #        Sigma = self.land_area
 #
 #        self.photosynthesis_carbon_flow = \
-#            ((self.nature.basic_photosynthesis_productivity
-#              - self.nature.photosynthesis_sensitivity_on_atmospheric_carbon
+#            ((self.environment.basic_photosynthesis_productivity
+#              - self.environment.photosynthesis_sensitivity_on_atmospheric_carbon
 #                * self.world.atmospheric_carbon)
 #             * np.sqrt(self.world.atmospheric_carbon / Sigma)
-#             * (1 - L / (self.nature.terrestrial_carbon_capacity_per_area
+#             * (1 - L / (self.environment.terrestrial_carbon_capacity_per_area
 #                         * Sigma))) \
 #            * L
 #
@@ -87,8 +97,8 @@ class Cell (I.Cell):
 #        """compute and store rhs of ODE respiration"""
 #
 #        self.terrestrial_respiration_carbon_flow = \
-#            (self.nature.basic_respiration_rate
-#             + self.nature.respiration_sensitivity_on_atmospheric_carbon
+#            (self.environment.basic_respiration_rate
+#             + self.environment.respiration_sensitivity_on_atmospheric_carbon
 #               * self.world.atmospheric_carbon) \
 #            * self.terrestrial_carbon
 #

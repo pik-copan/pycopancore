@@ -4,11 +4,12 @@ Model class adaptive_voter_model.
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 #
 #  Imports
@@ -35,9 +36,9 @@ class World(base.World):
 
 
 # NEED TO: list all mixin classes needed:
-class Society(md.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(md.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -64,9 +65,9 @@ class Individual(avof.Individual,
 
 
 # NEED TO: list all mixin classes needed:
-# class Nature (
-#               base.Nature):
-#     """Nature process taxon."""
+# class Environment (
+#               base.Environment):
+#     """Environment process taxon."""
 #
 #     pass
 
@@ -100,7 +101,7 @@ class Model(avof.Model, md.Model,
     """Longer description"""
 
     # NEED TO: list all entity types you composed above:
-    entity_types = [World, Society, Individual]
+    entity_types = [World, SocialSystem, Individual]
     """List of entity types used in the model"""
     # NEED TO: list all entity types you composed above:
     process_taxa = [Culture]

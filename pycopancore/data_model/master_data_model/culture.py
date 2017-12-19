@@ -1,5 +1,14 @@
 """Master data model for culture."""
 
+# This file is part of pycopancore.
+#
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
+
 from .. import Variable
 
 from networkx import DiGraph, Graph
@@ -42,14 +51,14 @@ class Culture:
                  scale='nominal',
                  datatype=Graph)
     
-    # Networks between firms and potentially also individuals and societies:
+    # Networks between firms and potentially also individuals and social_systems:
     
     supply_chain_network = \
         Variable("supply chain network",
                  """Directed network of actual (not potential) supplier-customer
                  relationships through the economic supply chain, including the
                  final end customer link and potentially initial links from
-                 societies.""",
+                 social systems.""",
                  ref="https://en.wikipedia.org/wiki/Supply_chain",
                  scale='nominal',
                  datatype=DiGraph)
@@ -66,22 +75,22 @@ class Culture:
                  scale='nominal',
                  datatype=Graph)
     
-    # Networks and coalitions between societies only:
+    # Networks and coalitions between social_systems only:
     
     trusted_diplomatic_network = \
         Variable("trusted diplomatic network",
                  """Undirected network of basic trust relationships between
-                 societies, to be used in (intersocietal) coalition formation model
+                 social systems, to be used in (intersocietal) coalition formation model
                  components. Represents the prerequisites of forming a coalition,
                  not the actually formed coalition structure (which is rather a set
-                 of sets of societies).""",
+                 of sets of social systems).""",
                  ref="https://en.wikipedia.org/wiki/Coalition#International_relations",
                  scale='nominal',
                  datatype=Graph)
     
     intersocietal_coalition_structure = \
         Variable("intersocietal coalition structure",
-                 """(a set of sets of societies)""",
+                 """(a set of sets of social systems)""",
                  scale='nominal',
                  datatype=set)
         
