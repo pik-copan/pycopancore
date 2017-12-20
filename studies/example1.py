@@ -32,24 +32,42 @@ nsocs = 5 # no. societies #5
 ncells = 100  # no. cells #100
 ninds = 1000 # no. individuals
 
+t_1 = 2120
+
+#filename = "/home/jobst/work/with.pickle"
+filename = "/home/jobst/work/without.pickle"
+
+with_spillovers = 1
+
+if filename == "/home/jobst/work/with.pickle":
+    with_migration = 1
+    with_awareness = 1
+    with_learning = 1
+    with_voting = 1
+else:
+    with_migration = 0
+    with_awareness = 0
+    with_learning = 0
+    with_voting = 0
+
 model = M.Model()
 
 # instantiate process taxa:
 nature = M.Nature()
 metabolism = M.Metabolism(
-    renewable_energy_knowledge_spillover_fraction = .1, #.1, #.1,
+    renewable_energy_knowledge_spillover_fraction = .1 if with_spillovers else 0, #.1, #.1,
         # 1 w/o protection: success but desertification
         # .75 w protection: success (even w/o or w much migration)
         # .1 w protection: success but desertification
         # 0 w/o protection: very slow success but desertification
         # ?: oscillations
-    basic_emigration_probability_rate = 16e-13, # leads to ca. 5mio. at 5 socs, (real)
+    basic_emigration_probability_rate = 16e-13 if with_migration else 0, # leads to ca. 5mio. at 5 socs, (real)
     )
 culture = M.Culture(
     awareness_lower_carbon_density=1e-4, #1e100, # 1e-6?
     awareness_upper_carbon_density=2e-4, #1e100, # 2e-6?
-    awareness_update_rate=0, #1:SUCCESS, #1e-10
-    environmental_friendliness_learning_rate=0, #1:SUCCESS
+    awareness_update_rate = 1 if with_awareness else 0, #0, #1:SUCCESS, #1e-10
+    environmental_friendliness_learning_rate = 1 if with_learning else 0, #0, #1:SUCCESS
     max_protected_terrestrial_carbon_share=0,
     )
 
@@ -62,7 +80,7 @@ societies = [M.Society(world=random.choice(worlds),
                        has_renewable_subsidy = random.choice([False, True], p=[3/4, 1/4]), #True, #False,
                        has_emissions_tax = random.choice([False, True], p=[4/5, 1/5]), #True, #False,
                        has_fossil_ban = False, #True, #False,
-                       time_between_votes = 1e100, #4, #1e100, # 4
+                       time_between_votes = 4 if with_voting else 1e100, #1e100, #4, #1e100, # 4
                        ) for s in range(nsocs)]
 cells = [M.Cell(society=random.choice(societies),
                 renewable_sector_productivity = 2 * random.rand()
@@ -147,7 +165,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 
 start = time()
-traj = runner.run(t_0=2000, t_1=2000+1, dt=1, add_to_output=[M.Individual.represented_population])
+traj = runner.run(t_0=2000, t_1=t_1, dt=1, add_to_output=[M.Individual.represented_population])
 
 
 for v in nature.variables: print(v,v.get_value(nature))
@@ -166,7 +184,7 @@ tosave = {
           for v in traj.keys() if v is not "t"
           }
 tosave["t"] = traj["t"]
-dump(tosave, open("/home/jobst/work/without.pickle","wb"))
+dump(tosave, open(filename,"wb"))
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
