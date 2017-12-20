@@ -6,11 +6,12 @@ then remove these instructions
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from .. import interface as I
 from pycopancore.model_components.base import interface as B
@@ -83,7 +84,7 @@ class Metabolism (I.Metabolism):
         for i, e in enumerate(world.individuals):
             w_i = ws[i]
             y_i = (e.harvest - w_i) * price + e.gross_income
-            av_y = e.society.average_liquidity
+            av_y = e.social_system.average_liquidity
             # Get the rhs of the equation for the individual
             errors[1 + i] = ((y_i - w_i * price)
                              # / (2 * math.sqrt(w_i * y_i * av_y))
@@ -101,37 +102,43 @@ class Metabolism (I.Metabolism):
         # Iterate through worlds
         for w in self.worlds:
             world = w
-            log_nutritions = []
-            for i in world.individuals:
-                nutrition = i.nutrition
-                log_nutritions.append(np.log(nutrition))
-            logp_and_logws = [np.log(world.water_price)] + log_nutritions
-            # Get total harvest once, so that it doesn't need to be
-            # calculated each time the function is called:
+            # Old maret clearing:
+            # log_nutritions = []
+            # for i in world.individuals:
+            #     nutrition = i.nutrition
+            #     log_nutritions.append(np.log(nutrition))
+            # logp_and_logws = [np.log(world.water_price)] + log_nutritions
+            # # Get total harvest once, so that it doesn't need to be
+            # # calculated each time the function is called:
+            # w.calc_total_harvest(unused_t)
+            # th = world.total_harvest
+            # solution = optimize.root(fun=self.market_clearing_rhs,
+            #                          x0=logp_and_logws,
+            #                          args=(th, world),
+            #                          method='lm',
+            #                          options={'ftol': 0.01}
+            #                          )
+            # if solution['success'] is not True:
+            #     print('solution', solution)
+            #     print('Market clearing has failed!')
+            #     self.non_equilibrium_checker = True
+            # print('water price=', np.exp(solution['x'][0]))
+            # world.water_price = np.exp(solution['x'][0])
+            # for i, e in enumerate(world.individuals):
+            #     # Account for shift, since price of water is at first position
+            #     # of list, write solution of market clearing into entities:
+            #     e.nutrition = np.exp(solution['x'][i+1])
+            #     # Calculate liquidity:
+            #     # nutrition = harvest-(liquidity-gross_income)/water_price
+            #     # liquidity = (harvest-nutrition)*water_price + gross_income
+            #     e.liquidity = (e.harvest - e.nutrition) * world.water_price + e.gross_income
             w.calc_total_harvest(unused_t)
-            th = world.total_harvest
-            solution = optimize.root(fun=self.market_clearing_rhs,
-                                     x0=logp_and_logws,
-                                     args=(th, world),
-                                     method='lm',
-                                     options={'ftol': 0.01}
-                                     )
-            if solution['success'] is not True:
-                print('solution', solution)
-                print('Market clearing has failed!')
-                self.non_equilibrium_checker = True
-            print('water price=', np.exp(solution['x'][0]))
-            world.water_price = np.exp(solution['x'][0])
-            for i, e in enumerate(world.individuals):
-                # Account for shift, since price of water is at first position
-                # of list, write solution of market clearing into entities:
-                e.nutrition = np.exp(solution['x'][i+1])
-                # Calculate liquidity:
-                # nutrition = harvest-(liquidity-gross_income)/water_price
-                # liquidity = (harvest-nutrition)*water_price + gross_income
-                e.liquidity = (e.harvest - e.nutrition) * world.water_price + e.gross_income
             w.calc_total_gross_income(unused_t)
-            w.calc_total_harvest(unused_t)
+            price = world.water_price = w.total_gross_income / w.total_harvest
+            for ind in w.individuals:
+                ind.nutrition = (ind.gross_income + price * ind.harvest) / (
+                    2 * price)
+                ind.liquidity = (ind.gross_income + price * ind.harvest) / 2
             w.calc_total_nutrition(unused_t)
             w.calc_total_liquidity(unused_t)
             tgi = world.total_gross_income
@@ -148,7 +155,7 @@ class Metabolism (I.Metabolism):
                 self.non_equilibrium_checker = True
             # Calculate liquidities again, so that sri can be calculated
             # correctly
-            #for s in world.societies:
+            #for s in world.social_systems:
             #    s.liquidity_pdf()
 
     def market_timing(self, t):

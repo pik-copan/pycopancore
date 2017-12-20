@@ -3,6 +3,15 @@
 @author: heitzig
 """
 
+# This file is part of pycopancore.
+#
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
+
 # defines logics to deal with symbolic expressions and their evaluation
 
 import numpy as np
@@ -128,16 +137,16 @@ class _DotConstruct(sp.AtomicExpr):
     starting with an entity-type or process taxon class,
     followed by zero or more ReferenceVariables or SetVariables
     or aggregation keywords such as sum, and ending in either an attribute,
-    e.g. Society.sum.cells.population
+    e.g. SocialSystem.sum.cells.population
     or an aggregation keyword without evaluation,
-    e.g. Society.world.sum,
+    e.g. SocialSystem.world.sum,
     or an aggregation keyword with evaluation,
-    e.g. Society.world.sum(some expression).
+    e.g. SocialSystem.world.sum(some expression).
     """
 
     _start = None
     """the entity-type, process taxon, ReferenceVariable or SetVariable 
-    at the start of the dot construct, e.g. Society or Nature.cells"""
+    at the start of the dot construct, e.g. SocialSystem or Environment.cells"""
     _attribute_sequence = None
     """the sequence of further names, which must be codenames of variables,
     e.g. ["cells","population"]"""
@@ -146,7 +155,7 @@ class _DotConstruct(sp.AtomicExpr):
     at the end of the construct, e.g., "sum"."""
     _argument = None
     """the optional argument expression of the aggregation function, e.g.
-    Society.world.sum.cells.population * Society.world.sum.cells.capital"""
+    SocialSystem.world.sum.cells.population * SocialSystem.world.sum.cells.capital"""
     _can_be_target = None
     """whether this can be a target (i.e., does not involve aggregation)"""
 

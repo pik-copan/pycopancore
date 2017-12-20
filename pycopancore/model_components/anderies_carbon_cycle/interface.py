@@ -3,14 +3,15 @@
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, MET, CUL, W, S, C, I
+from ...data_model.master_data_model import ENV, MET, CUL, W, S, C, I
 from ... import Variable
 
 
@@ -55,7 +56,7 @@ class Cell (object):
         "net ecosystem production", "")  # unit
 
 
-class Society (object):
+class SocialSystem (object):
 
     # variables:
     harvest_rate = Variable("harvest rate", "")  # unit
@@ -64,13 +65,13 @@ class Society (object):
 # process taxa:
 
 
-class Nature (object):
-    """Interface for Nature mixin"""
+class Environment (object):
+    """Interface for Environment mixin"""
 
     # parameters / exogenous veriables:
     ocean_atmosphere_diffusion_coefficient = \
-        NAT.ocean_atmosphere_diffusion_coefficient
-    carbon_solubility_in_sea_water = NAT.carbon_solubility_in_sea_water
+        ENV.ocean_atmosphere_diffusion_coefficient
+    carbon_solubility_in_sea_water = ENV.carbon_solubility_in_sea_water
 
     basic_photosynthesis_productivity = \
         Variable("basic photosynthesis productivity", "",

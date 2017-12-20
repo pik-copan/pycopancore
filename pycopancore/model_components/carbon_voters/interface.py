@@ -6,11 +6,12 @@ remove these instructions.
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 # TODO: use variables from the master data model wherever possible:
 from ... import master_data_model as D
@@ -61,16 +62,16 @@ class World (object):
     # surface_air_temperature = D.world.surface_air_temperature
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
 
     # exogenous variables / parameters:
 
-    opinion = md.Society.opinion
+    opinion = md.SocialSystem.opinion
 
-    harvest_rate = cc.Society.harvest_rate
+    harvest_rate = cc.SocialSystem.harvest_rate
 
 
 # class Cell (object):
@@ -92,8 +93,8 @@ class Society (object):
 # process taxa:
 
 
-# class Nature (object):
-#     """Interface for Nature process taxon mixin."""
+# class Environment (object):
+#     """Interface for Environment process taxon mixin."""
 #
 #     # endogenous variables:
 #
@@ -125,5 +126,5 @@ class Culture (object):
     no_impact_opinion_change = Variable("", "basic probability of opinion change to awareness in "
                                             "avof without climate impact effects")  # take adaptive voter model opinion_change?
 
-    impact = Variable("impact of atmospheric carbon / temperature on society",
+    impact = Variable("impact of atmospheric carbon / temperature on social_system",
                       "based on atmospheric carbon level")
