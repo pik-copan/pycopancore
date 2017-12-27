@@ -44,8 +44,8 @@ metabolism = M.Metabolism(market_frequency=1)
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism,
                 water_price=.1)
-# Instantiate Societies:
-municipalities = [M.Society(world=world,
+# Instantiate SocialSystems:
+municipalities = [M.SocialSystem(world=world,
                             municipality_like=True,
                             base_mean_income=1000,
                             scaling_parameter=1.12,
@@ -53,7 +53,7 @@ municipalities = [M.Society(world=world,
                   for m in range(nm)
                   ]
 
-counties = [M.Society(world=world,
+counties = [M.SocialSystem(world=world,
                       municipality_like=False,
                       migration_cost=0)
             for c in range(nc)
@@ -66,7 +66,7 @@ for fc in range(nc):
     county = random.choice(county_allocation)
     county_allocation.remove(county)
     farmland_cells.append(M.Cell(world=world,
-                                 society=county,
+                                 social_system=county,
                                  characteristic='farmland',
                                  land_area=0.01 * (nf + nt) / nc,  # in square kilometers
                                  average_precipitation=0.75))
@@ -79,7 +79,7 @@ for cc in range(nm):
     municipality = random.choice(municipality_allocation)
     municipality_allocation.remove(municipality)
     city_cells.append(M.Cell(world=world,
-                             society=municipality,
+                             social_system=municipality,
                              characteristic='city',
                              average_precipitation=0))
 
@@ -135,9 +135,9 @@ for t in range(nt):
 # print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 start = time()
-# Calculate societies variables before run:
-print('calculating society attributes before run:')
-for soc in M.Society.instances:
+# Calculate social_systems variables before run:
+print('calculating social_system attributes before run:')
+for soc in M.SocialSystem.instances:
     soc.calc_population(0)
     soc.calculate_mean_income_or_farmsize(0)
     soc.calculate_average_liquidity(0)
@@ -147,7 +147,7 @@ for ind in M.Individual.instances:
     ind.calc_gross_income()
     ind.calculate_harvest(0)
     ind.calculate_utility(0)
-for soc in M.Society.instances:
+for soc in M.SocialSystem.instances:
     soc.calculate_average_utility(0)
     soc.calculate_gini(0)
 
@@ -194,13 +194,13 @@ plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
 # plot(t, traj[M.Culture.modularity][culture], "r:", lw=3)
 
 for soc in municipalities:
-    plot(t, traj[M.Society.population][soc], "r", lw=3)
-    plot(t, traj[M.Society.average_utility][soc], "r:", lw=3)
-    plot(t, traj[M.Society.gini_coefficient][soc], "r--", lw=3)
+    plot(t, traj[M.SocialSystem.population][soc], "r", lw=3)
+    plot(t, traj[M.SocialSystem.average_utility][soc], "r:", lw=3)
+    plot(t, traj[M.SocialSystem.gini_coefficient][soc], "r--", lw=3)
 for soc in counties:
-    plot(t, traj[M.Society.population][soc], "k", lw=3)
-    plot(t, traj[M.Society.average_utility][soc], "k:", lw=3)
-    plot(t, traj[M.Society.gini_coefficient][soc], "k--", lw=3)
+    plot(t, traj[M.SocialSystem.population][soc], "k", lw=3)
+    plot(t, traj[M.SocialSystem.average_utility][soc], "k:", lw=3)
+    plot(t, traj[M.SocialSystem.gini_coefficient][soc], "k--", lw=3)
 
 # for ind in M.Individual.instances:
 #    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)
@@ -220,11 +220,11 @@ show()
 #     else:
 #         professions[ind] = 'red'
 # colors = [professions.get(node) for node in G.nodes()]
-# # Make second list to have labels according to society:
-# societies = {}
+# # Make second list to have labels according to social_system:
+# social_systems = {}
 # for ind in M.Individual.instances:
-#     societies[ind] = str(ind.society._uid)
+#     social_systems[ind] = str(ind.social_system._uid)
 # nx.draw(G, node_color=colors,
-#         labels=societies,
+#         labels=social_systems,
 #         pos=nx.spring_layout(G))
 # show()

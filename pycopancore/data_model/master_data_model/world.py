@@ -1,6 +1,6 @@
 """Master data model for world."""
 
-from . import nature as NAT
+from . import environment as NAT
 from . import metabolism as MET
 from . import gigatonnes_carbon as GtC
 from . import square_kilometers as km2

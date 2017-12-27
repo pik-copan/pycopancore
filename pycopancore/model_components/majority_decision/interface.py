@@ -28,7 +28,7 @@ class Model (object):
     # metadata:
     name = "majority decision"
     """a unique name for the model component"""
-    description = "find the opinion the most represented in a society"
+    description = "find the opinion the most represented in a social_system"
     """some longer description"""
     requires = [avof]
     """list of other model components required for this model component to
@@ -43,8 +43,8 @@ class Model (object):
 # entity types:
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
 

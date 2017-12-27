@@ -20,9 +20,9 @@ class World (I.World):
     """
 
     # abbreviation:
-    diffusion_flow = (B.World.nature.ocean_atmosphere_diffusion_coefficient 
+    diffusion_flow = (B.World.environment.ocean_atmosphere_diffusion_coefficient 
                       * (I.World.upper_ocean_carbon
-                         - B.World.nature.carbon_solubility_in_sea_water 
+                         - B.World.environment.carbon_solubility_in_sea_water 
                            * I.World.atmospheric_carbon))
     """(See Nitzbon et al. 2017)."""
 
@@ -30,10 +30,10 @@ class World (I.World):
 
         Explicit("immediate greenhouse effect",
                  [I.World.surface_air_temperature],
-                 [B.World.nature.reference_temperature
-                  + B.World.nature.temperature_sensitivity_on_atmospheric_carbon
+                 [B.World.environment.reference_temperature
+                  + B.World.environment.temperature_sensitivity_on_atmospheric_carbon
                   * (I.World.atmospheric_carbon 
-                     - B.World.nature.reference_atmospheric_carbon)]),
+                     - B.World.environment.reference_atmospheric_carbon)]),
 
         ODE("ocean-atmosphere diffusion",
             [I.World.upper_ocean_carbon, I.World.atmospheric_carbon],

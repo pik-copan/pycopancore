@@ -55,7 +55,7 @@ class Cell (object):
         "net ecosystem production", "")  # unit
 
 
-class Society (object):
+class SocialSystem (object):
 
     # variables:
     harvest_rate = Variable("harvest rate", "")  # unit
@@ -64,8 +64,8 @@ class Society (object):
 # process taxa:
 
 
-class Nature (object):
-    """Interface for Nature mixin"""
+class Environment (object):
+    """Interface for Environment mixin"""
 
     # parameters / exogenous veriables:
     ocean_atmosphere_diffusion_coefficient = \

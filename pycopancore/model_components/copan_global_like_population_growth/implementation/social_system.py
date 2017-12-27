@@ -1,4 +1,4 @@
-"""Society entity type mixing class template.
+"""SocialSystem entity type mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
@@ -27,50 +27,50 @@ def sqrtorzero(expr):
     return sp.sqrt(sp.Max(0, expr))
 
 
-class Society (I.Society):
-    """Society entity type mixin implementation class."""
+class SocialSystem (I.SocialSystem):
+    """SocialSystem entity type mixin implementation class."""
 
     # abbreviations:
-    land_area = B.Society.sum.cells.land_area
-    terrestrial_carbon = B.Society.sum.cells.terrestrial_carbon
-    min_fert = B.Society.metabolism.min_fertility
-    fert_exp = B.Society.metabolism.fertility_decay_exponent
+    land_area = B.SocialSystem.sum.cells.land_area
+    terrestrial_carbon = B.SocialSystem.sum.cells.terrestrial_carbon
+    min_fert = B.SocialSystem.metabolism.min_fertility
+    fert_exp = B.SocialSystem.metabolism.fertility_decay_exponent
  
-    pop = I.Society.population
+    pop = I.SocialSystem.population
  
     fert = (min_fert
-            + 2 * (B.Society.metabolism.max_fertility - min_fert) 
-              * I.Society.wellbeing 
-              * B.Society.metabolism.fertility_maximizing_wellbeing
+            + 2 * (B.SocialSystem.metabolism.max_fertility - min_fert) 
+              * I.SocialSystem.wellbeing 
+              * B.SocialSystem.metabolism.fertility_maximizing_wellbeing
                 ** fert_exp
-              / (I.Society.wellbeing ** (1 + fert_exp)
-                 + B.Society.metabolism.fertility_maximizing_wellbeing
+              / (I.SocialSystem.wellbeing ** (1 + fert_exp)
+                 + B.SocialSystem.metabolism.fertility_maximizing_wellbeing
                    ** (1 + fert_exp)
               )
            )
      
-    mort = (B.Society.metabolism.characteristic_mortality
-            / (I.Society.wellbeing
-               / B.Society.metabolism.fertility_maximizing_wellbeing)
-              ** B.Society.metabolism.mortality_decay_exponent
-            + I.Society.mortality_temperature_sensitivity
-            * (B.Society.world.surface_air_temperature
-               - I.Society.mortality_reference_temperature)
-            + B.Society.metabolism.population_spatial_competition_coefficient
-            * (I.Society.population / land_area)
-            / sp.sqrt(I.Society.physical_capital))
+    mort = (B.SocialSystem.metabolism.characteristic_mortality
+            / (I.SocialSystem.wellbeing
+               / B.SocialSystem.metabolism.fertility_maximizing_wellbeing)
+              ** B.SocialSystem.metabolism.mortality_decay_exponent
+            + I.SocialSystem.mortality_temperature_sensitivity
+            * (B.SocialSystem.world.surface_air_temperature
+               - I.SocialSystem.mortality_reference_temperature)
+            + B.SocialSystem.metabolism.population_spatial_competition_coefficient
+            * (I.SocialSystem.population / land_area)
+            / sp.sqrt(I.SocialSystem.physical_capital))
     
     processes = [
                  
         Explicit("wellbeing, fertility, mortality, births, deaths",
-            [I.Society.wellbeing,
-             I.Society.fertility,
-             I.Society.mortality,
-             I.Society.births,
-             I.Society.deaths],
-            [B.Society.metabolism.wellbeing_sensitivity_to_consumption 
-               * I.Society.consumption_flow / pop 
-             + B.Society.metabolism.wellbeing_sensitivity_to_terrestrial_carbon 
+            [I.SocialSystem.wellbeing,
+             I.SocialSystem.fertility,
+             I.SocialSystem.mortality,
+             I.SocialSystem.births,
+             I.SocialSystem.deaths],
+            [B.SocialSystem.metabolism.wellbeing_sensitivity_to_consumption 
+               * I.SocialSystem.consumption_flow / pop 
+             + B.SocialSystem.metabolism.wellbeing_sensitivity_to_terrestrial_carbon 
                * terrestrial_carbon / land_area,
              fert,
              mort,
@@ -79,8 +79,8 @@ class Society (I.Society):
                  
         ODE("population dynamics",
             [pop, 
-             I.Society.migrant_population],
-            [I.Society.births - I.Society.deaths,
-             - I.Society.deaths * I.Society.migrant_population / pop])
+             I.SocialSystem.migrant_population],
+            [I.SocialSystem.births - I.SocialSystem.deaths,
+             - I.SocialSystem.deaths * I.SocialSystem.migrant_population / pop])
 
     ]

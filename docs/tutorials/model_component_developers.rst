@@ -77,8 +77,8 @@ Code snippet 1 from ``culture.py``:
 
             Parameters
             ----------
-            agent_i : Agent (Individual or Society)
-            agent_j : Agent (Individual or Society)
+            agent_i : Agent (Individual or SocialSystem)
+            agent_j : Agent (Individual or SocialSystem)
 
             Returns
             -------
@@ -96,9 +96,9 @@ Code snippet 1 from ``culture.py``:
 
             Parameters
             ----------
-            agent_i : Agent (Individual or Society)
+            agent_i : Agent (Individual or SocialSystem)
                 Agent i whose strategy is to be changed to agent j's strategy
-            agent_j : Agent (Individual or Society)
+            agent_j : Agent (Individual or SocialSystem)
                 Agent j whose strategy is imitated
             Returns
             -------
@@ -127,7 +127,7 @@ Code snippet 1 from ``culture.py``:
 
             Parameters
             ----------
-            agent : Agent (Individual or Society)
+            agent : Agent (Individual or SocialSystem)
                 The agent whose new update_time should be drawn and set.
 
             Returns

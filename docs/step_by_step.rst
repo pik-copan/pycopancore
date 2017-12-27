@@ -28,8 +28,8 @@ At first, we identify the necessary entities and process taxa. We model the
 seven dwarfs as ``Individuals`` in the CORE:framework, because they are
 well-distinguishable entities which possess attributes as age, beard length etc.
 We model the cave as a ``Cell``. In our model component, we neither need the
-``Culture`` nor the ``Social Metabolism`` nor the ``Nature`` taxon. This also
-applies to the ``Society`` entity.
+``Culture`` nor the ``Social Metabolism`` nor the ``Environment`` taxon. This also
+applies to the ``SocialSystem`` entity.
 
 TODO: NEXT LINE NEEDS TO BE CHANGED!
 We will continue by tailoring the ``Individual`` entity such that is satisfies

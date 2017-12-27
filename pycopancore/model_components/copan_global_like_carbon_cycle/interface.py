@@ -58,8 +58,8 @@ class Cell (object):
 # process taxa:
 
 
-class Nature (object):
-    """Interface for Nature mixin."""
+class Environment (object):
+    """Interface for Environment mixin."""
 
     # parameters / exogenous veriables:
     

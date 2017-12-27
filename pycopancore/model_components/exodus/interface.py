@@ -69,12 +69,12 @@ class World (object):
                                  default=False)
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
     municipality_like = Variable("municipality like",
-                                 "If true, society is a Municipality, "
+                                 "If true, social_system is a Municipality, "
                                  "otherwise a county",
                                  datatype=bool)
     base_mean_income = Variable("base income",
@@ -99,11 +99,11 @@ class Society (object):
     liquidity_loc = Variable("Liquidity location",
                              "Location parameter of pdf of liquidity")
     average_liquidity = Variable("Average Liquidity",
-                                 "Average over all liquidities in society",
+                                 "Average over all liquidities in social_system",
                                  lower_bound=0,
                                  unit=D.dollars)
     average_utility = Variable("Average Utility",
-                               "Average Utility in a society")
+                               "Average Utility in a social_system")
     gini_coefficient = Variable("Gini Coefficient",
                                 "Gini coefficient of utilities")
     scaling_parameter = Variable("Scaling Parameter",
@@ -112,7 +112,7 @@ class Society (object):
                                  "default from bettencourt paper",
                                  default=1.12)
     migration_cost = Variable("Migration Cost",
-                              "Cost to migrate to this society",
+                              "Cost to migrate to this social_system",
                               default=1000)
 
     # exogenous variables / parameters:
@@ -153,8 +153,8 @@ class Individual (object):
                          lower_bound=0,
                          unit=D.square_kilometers)
     gross_income = Variable("gross income",
-                            "Income before trade, distributed by society if "
-                            "society is a municipality",
+                            "Income before trade, distributed by social_system if "
+                            "social_system is a municipality",
                             lower_bound=0,
                             unit=D.dollars)
     harvest = Variable("harvest",

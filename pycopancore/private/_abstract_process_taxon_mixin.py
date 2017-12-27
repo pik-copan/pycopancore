@@ -1,6 +1,6 @@
 """_abstract_dynamics_mixin class.
 
-It sets the basic structure of dynamic mixins (culture, metabolism, nature).
+It sets the basic structure of dynamic mixins (culture, metabolism, environment).
 """
 # This file is part of pycopancore.
 #

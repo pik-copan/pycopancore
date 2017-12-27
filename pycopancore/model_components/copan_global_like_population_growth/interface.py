@@ -21,7 +21,7 @@ class Model (object):
     # metadata:
     name = "copan:GLOBAL-like population growth"
     """a unique name for the model component"""
-    description = "fertility and mortality act on Society level and depend on well-being"
+    description = "fertility and mortality act on SocialSystem level and depend on well-being"
     """some longer description"""
     requires = []
     """list of other model components required for this model component to
@@ -36,8 +36,8 @@ class Model (object):
 # entity types:
 
 
-class Society (object):
-    """Interface for Society entity type mixin."""
+class SocialSystem (object):
+    """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
     

@@ -66,12 +66,12 @@ class Individual (I.Individual):
         # Check, if not already been calculated:
         if self.farm_size is None:
             # If townsman, individual has no farm:
-            if self.society.municipality_like is True:
+            if self.social_system.municipality_like is True:
                 self.farm_size = 0
             # If farmer, distribute farm size:
-            if self.society.municipality_like is False:
-                # Let society distribute farm size
-                self.farm_size = self.society.calc_gross_income_or_farmsize()
+            if self.social_system.municipality_like is False:
+                # Let social_system distribute farm size
+                self.farm_size = self.social_system.calc_gross_income_or_farmsize()
         # return self.farm_size
 
     def calc_gross_income(self):
@@ -79,11 +79,11 @@ class Individual (I.Individual):
         # Check if not already been calculated:
         if self.gross_income is None:
             # Check if farmer or townsman:
-            if self.society.municipality_like is True:
-                # Let society distribute income:
-                self.gross_income = self.society.calc_gross_income_or_farmsize()
+            if self.social_system.municipality_like is True:
+                # Let social_system distribute income:
+                self.gross_income = self.social_system.calc_gross_income_or_farmsize()
             # If not townsman, income = 0
-            if self.society.municipality_like is False:
+            if self.social_system.municipality_like is False:
                 self.gross_income = 0
         # return self.gross_income
 
@@ -154,10 +154,10 @@ class Individual (I.Individual):
         tanh = 0.5 * (1 + math.tanh(delta_utility / 2))
         if random.random() <= tanh:
             # Migrate if enough liquidity
-            if self.liquidity > neighbour.society.migration_cost:
+            if self.liquidity > neighbour.social_system.migration_cost:
                 # Next line is causing liquidities to drop below 0 if the
-                # society update takes place:
-                # self.liquidity -= neighbour.society.migration_cost
+                # social_system update takes place:
+                # self.liquidity -= neighbour.social_system.migration_cost
                 return True
             else:
                 # Not enough money to migrate
@@ -233,12 +233,12 @@ class Individual (I.Individual):
         cell: exodus.cell
             cell to migrate to.
         """
-        # Change cell and society (done in base.individual):
+        # Change cell and social_system (done in base.individual):
         self.cell = cell
         # Change Profession:
-        if cell.society.municipality_like is False:
+        if cell.social_system.municipality_like is False:
             self.profession = 'farmer'
-        elif cell.society.municipality_like is True:
+        elif cell.social_system.municipality_like is True:
             self.profession = 'townsman'
         else:
             raise TypeError('Neither Municipality nor County!')
@@ -257,31 +257,31 @@ class Individual (I.Individual):
         try:
             self.utility = math.sqrt(
                 self.liquidity * self.nutrition
-                / self.society.average_liquidity / 1240)
+                / self.social_system.average_liquidity / 1240)
             # 1240 m^3 is the annual need, maybe need to incorporate it
         # The folloeing should not happen but do so on the cluster:
         except ValueError:
             print('liquidity could not be calculated! Setting it to 0')
             print(self.liquidity, self.nutrition,
-                  self.society.average_liquidity)
+                  self.social_system.average_liquidity)
             self.utility = 0
         except TypeError:
             print('liquidity could not be calculated! Setting it to 0')
             print(self.liquidity, self.nutrition,
-                  self.society.average_liquidity)
+                  self.social_system.average_liquidity)
             self.utility = 0
 
     def calculate_sri(self, unused_t):
         """Calculate subjective income rank of individual"""
         sri = stats.lognorm.cdf(self.liquidity,
-                                s=self.society.liquidity_sigma,
-                                loc=self.society.liquidity_loc,
-                                scale=self.society.liquidity_median)
+                                s=self.social_system.liquidity_sigma,
+                                loc=self.social_system.liquidity_loc,
+                                scale=self.social_system.liquidity_median)
         self.subjective_income_rank = sri
 
     processes = [
         Event("social update",
-              [B.Individual.society,
+              [B.Individual.social_system,
                # B.Individual.culture.acquaintance_network TOO BIG TO SAVE!
                I.Individual.farm_size,
                I.Individual.gross_income,

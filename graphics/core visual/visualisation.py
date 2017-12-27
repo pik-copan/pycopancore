@@ -399,7 +399,7 @@ for j in range(nc):
 
 
 #
-# Network out of societies
+# Network out of social_systems
 #
 
 ns = 7  # number of connections out of society
