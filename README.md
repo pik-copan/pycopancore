@@ -1,12 +1,10 @@
 # pycopancore
-Python World-Earth modelling framework CORE
+reference implementation of the copan:CORE World-Earth modelling framework
 
 * Responsible senior scientists: Jobst Heitzig & Jonathan F. Donges at the Potsdam Institute for Climate Impact Research.
 * The versioning of pycopancore has been chosen to be administrated on the [github.com system](http://github.com/) as the future prospect of this model strongly encourages outside contributions. Any release version will be pushed on the inhouse versioning systems, [gitlab](http://gitlab.pik-potsdam.de/) and / or [svn](https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion).
 
-CORE is developed at the Potsdam Institute for Climate Impact Research.
-
-Candidates for speeding up Python code: cython, numba, ...
+copan:CORE is developed at the Potsdam Institute for Climate Impact Research.
 
 
 ## Tests
@@ -41,12 +39,9 @@ When Developing the Code, please follow the guidelines below:
 * For every class/function write a proper docstring before committing.
 * Use proper (and long) variable names. Auto-completion will help typing them.
 * If a similar set of command is used twice, write a function for it right away.
-* Design the metadata used in the Variable class according to the [CF conventions](http://cfconventions.org/).
+* Design the metadata used in the Variable class according to established catalogs like the [CF conventions](http://cfconventions.org/).
 * When writing class and method docstrings, already specify types and bounds for arguments and return values in the [sphinx-compatible PyContracts way](https://andreacensi.github.io/contracts/).
-
-Later:
-* Use [NetCDF, the CF conventions](http://cfconventions.org/) and [PIK's Typed Data Transfer](https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt) to store (input and) output data and share it with other models.
-* Read and follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
+* Follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
 
 ## Installation
 
