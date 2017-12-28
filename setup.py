@@ -1,6 +1,6 @@
 """This is setup.py of copan core"""
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # for developers: recommended way of installing is to run in this directory
 # pip install -e .
@@ -13,13 +13,13 @@ setup(name="pycopancore",
       author="Copan-group @ PIK",
       author_email="to be added",
       license="to be added",
-      packages=["pycopancore"],
+      packages=find_packages(), #["pycopancore"],
       install_requires=[
           "numpy>=1.11.0",
           "scipy>=0.17.0",
           "sympy>=1.0",
           "blist>=1.3.6",
-          "python-louvain>=0.9"
+          "python-louvain>=0.9",
           "profilehooks"
 
       ],
