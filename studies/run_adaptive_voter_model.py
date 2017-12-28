@@ -1,5 +1,3 @@
-"""Skript to run Jobsts model."""
-
 from time import time
 import datetime as dt
 # from numpy import random
@@ -42,8 +40,6 @@ cell = M.Cell(world=world, social_system=social_system)
 individuals = [M.Individual(cell=cell,
                             initial_opinion=int(random.random() < p_initial))
                for _ in range(nindividuals)]
-
-# TODO: ask Jobst, why are all individuals already in the network?
 
 
 def erdosrenyify(graph, p=0.5):

@@ -16,7 +16,6 @@ from ....private import unknown
 from .. import interface as I
 
 from .... import Explicit
-from pycopancore.data_model.master_data_model.cell import ocean_carbon
 
 
 class World (I.World, abstract.World):

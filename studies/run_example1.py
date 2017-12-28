@@ -23,8 +23,8 @@ ninds = 1000 # no. individuals
 t_1 = 2120
 
 # choose one of two scenarios:
-filename = "/home/jobst/work/with.pickle"
-#filename = "/home/jobst/work/without.pickle"
+#filename = "/home/jobst/work/with.pickle"
+filename = "/home/jobst/work/without.pickle"
 # (these files will be read by plot_example1.py)
 
 with_spillovers = 1
@@ -119,7 +119,7 @@ P0 = 6e9 * D.people * r / sum(r)  # 6e9 is yr 2000
 M.SocialSystem.population.set_values(social_systems, P0)
 M.SocialSystem.migrant_population.set_values(social_systems, P0 * 250e6 / 6e9)
 for s in social_systems:
-    s.max_protected_terrestrial_carbon = 
+    s.max_protected_terrestrial_carbon = \
         0.90 * sum(c.terrestrial_carbon for c in s.cells)
  
 r = random.uniform(size=nsocs)

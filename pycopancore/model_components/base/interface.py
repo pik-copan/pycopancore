@@ -15,7 +15,7 @@ by entity type and process taxon
 from ...private import _MixinType, unknown
 from ... import Variable, ReferenceVariable, SetVariable
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, CUL, W, S, C
+from ...data_model.master_data_model import ENV, CUL, W, S, C
 
 
 # model component:
@@ -40,7 +40,7 @@ class Environment (object):
     It contains all variables specified as mandatory ("base variables").
     """
 
-    geographic_network = NAT.geographic_network  # copies the specification from the master data model
+    geographic_network = ENV.geographic_network  # copies the specification from the master data model
     worlds = SetVariable("worlds", "set of Worlds on this Environment")
 
 

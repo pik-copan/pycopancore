@@ -9,7 +9,7 @@
 # License: MIT license
 
 from ... import master_data_model as D
-from ...data_model.master_data_model import NAT, W, C
+from ...data_model.master_data_model import ENV, W, C
 from ... import Variable
 
 
@@ -64,8 +64,8 @@ class Environment (object):
     # parameters / exogenous veriables:
     
     ocean_atmosphere_diffusion_coefficient = \
-        NAT.ocean_atmosphere_diffusion_coefficient
-    carbon_solubility_in_sea_water = NAT.carbon_solubility_in_sea_water
+        ENV.ocean_atmosphere_diffusion_coefficient
+    carbon_solubility_in_sea_water = ENV.carbon_solubility_in_sea_water
 
     basic_photosynthesis_productivity = \
         Variable("basic photosynthesis productivity", "",

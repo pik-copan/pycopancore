@@ -57,8 +57,11 @@ class Dimension(object):
         return Dimension(is_base=self.is_base, name=name, desc=self.desc if desc is None else desc,
                          exponents=self.exponents, default_unit=self.default_unit)
 
+    def __str__(self):
+        return self.__repr__()
+
     def __repr__(self):
-        return self.name
+        return self.name + " (dimension)"
 
     def __hash__(self):
         return hash(self.name) if self.is_base else None
