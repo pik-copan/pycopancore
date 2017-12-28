@@ -36,15 +36,18 @@ culture = M.Culture()
 # instantiate world:
 world = M.World(culture=culture)
 
-# instantiate cells (the caves)
-cell = [M.Cell(world=world,
-               eating_stock=100
-               )
+# instantiate one social system:
+social_system = M.SocialSystem(world=world)
+
+# instantiate cells (the caves):
+cells = [M.Cell(social_system=social_system,
+                eating_stock=100
+                )
         for c in range(nc)
         ]
 
 # instantiate dwarfs and assigning initial conditions
-individuals = [M.Individual(cell=cell[0],
+individuals = [M.Individual(cell=cells[0],
                             age=0,
                             beard_length=0,
                             beard_growth_parameter=0.5,
@@ -101,7 +104,7 @@ individuals_age = np.array([traj[M.Individual.age][dwarf]
 individuals_beard_length = np.array([traj[M.Individual.beard_length][dwarf]
                                  for dwarf in all_dwarfs])
 
-cell_stock = np.array(traj[M.Cell.eating_stock][cell[0]])
+cell_stock = np.array(traj[M.Cell.eating_stock][cells[0]])
 
 t = np.array(traj['t'])
 
