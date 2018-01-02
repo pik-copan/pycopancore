@@ -148,7 +148,7 @@ class Culture (I.Culture):
         # this code is currently only precisely following the model prescription
         # without any additional speed-ups
 
-        nodes = self.acquaintance_network.nodes()
+        nodes = list(self.acquaintance_network.nodes())
 
         active_individual = random.choice(nodes)
         neighbors = self.acquaintance_network.neighbors(active_individual)

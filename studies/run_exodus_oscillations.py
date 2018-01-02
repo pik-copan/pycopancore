@@ -207,7 +207,7 @@ show()
 #         professions[ind] = 'yellow'
 #     else:
 #         professions[ind] = 'red'
-# colors = [professions.get(node) for node in G.nodes()]
+# colors = [professions.get(node) for node in list(G.nodes())]
 # # Make second list to have labels according to social_system:
 # social_systems = {}
 # for ind in M.Individual.instances:

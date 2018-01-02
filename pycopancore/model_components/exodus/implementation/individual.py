@@ -104,7 +104,7 @@ class Individual (I.Individual):
         # First: determine if fully connected network:
         if self.culture.fully_connected_network:
             # Network is fully connected:
-            chosen_one = random.choice(self.culture.acquaintance_network.nodes())
+            chosen_one = random.choice(list(self.culture.acquaintance_network.nodes()))
             if self.decide_migration(chosen_one):
                 # in case of preferential migration, checks are done
                 if self.preferential_migration:

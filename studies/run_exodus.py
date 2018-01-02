@@ -130,7 +130,7 @@ for t in range(nt):
 #     erdos-renyi graph procedure.
 #     """
 #     assert not graph.edges(), "your graph has already edges"
-#     nodes = graph.nodes()
+#     nodes = list(graph.nodes())
 #     for i, n1 in enumerate(nodes[:-1]):
 #         for n2 in nodes[i+1:]:
 #             if random.random() < p:
@@ -231,7 +231,7 @@ show()
 #         professions[ind] = 'yellow'
 #     else:
 #         professions[ind] = 'red'
-# colors = [professions.get(node) for node in G.nodes()]
+# colors = [professions.get(node) for node in list(G.nodes())]
 # # Make second list to have labels according to social_system:
 # social_systems = {}
 # for ind in M.Individual.instances:

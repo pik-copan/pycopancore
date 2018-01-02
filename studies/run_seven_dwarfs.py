@@ -183,4 +183,4 @@ py.plot(fig, filename="our-model-result{}.html".format(5))
 #nx.draw(traj[M.Culture.acquaintance_network][culture][1])
 #plt.show()
 for i in range(len(traj['t'])):
-    print(traj[M.Culture.acquaintance_network][culture][i].nodes())
+    print(list(traj[M.Culture.acquaintance_network][culture][i].nodes()))
