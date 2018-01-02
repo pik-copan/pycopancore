@@ -6,11 +6,12 @@ remove these instructions.
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from ... import master_data_model as D
 from ... import Variable
@@ -194,6 +195,11 @@ class Individual (object):
                              "Probability to rewire to a random individual"
                              "and cutiing a connection with a known one.",
                              default=0.05)
+    preferential_migration = Variable("preferential migration",
+                                      "Define if migration is hindered in some "
+                                      "direction",
+                                      datatype=bool,
+                                      default=False)
 
     # exogenous variables / parameters:
 

@@ -1,5 +1,14 @@
 """Master data model for culture."""
 
+# This file is part of pycopancore.
+#
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
+
 from .. import Variable
 
 from networkx import DiGraph, Graph
@@ -49,7 +58,7 @@ class Culture:
                  """Directed network of actual (not potential) supplier-customer
                  relationships through the economic supply chain, including the
                  final end customer link and potentially initial links from
-                 social_systems.""",
+                 social systems.""",
                  ref="https://en.wikipedia.org/wiki/Supply_chain",
                  scale='nominal',
                  datatype=DiGraph)
@@ -74,14 +83,14 @@ class Culture:
                  social_systems, to be used in (intersocietal) coalition formation model
                  components. Represents the prerequisites of forming a coalition,
                  not the actually formed coalition structure (which is rather a set
-                 of sets of social_systems).""",
+                 of sets of social systems).""",
                  ref="https://en.wikipedia.org/wiki/Coalition#International_relations",
                  scale='nominal',
                  datatype=Graph)
     
     intersocietal_coalition_structure = \
         Variable("intersocietal coalition structure",
-                 """(a set of sets of social_systems)""",
+                 """(a set of sets of social systems)""",
                  scale='nominal',
                  datatype=set)
         

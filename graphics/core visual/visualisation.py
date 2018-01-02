@@ -1,5 +1,14 @@
 """Visualization component."""
 
+# This file is part of pycopancore.
+#
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
+
 #
 # Use with Python 3
 #
@@ -91,9 +100,9 @@ for i in range(17):
 #
 r_soc = 1 + 0.5
 
-# Since this society has a different shape it is done in two steps
+# Since this social_system has a different shape it is done in two steps
 
-# step 1: first part of society
+# step 1: first part of social_system
 start_lat = 0.7345 * np.pi  # 1.21
 end_lat = 0.796 * np.pi  # 1.35
 start_lon = 1.34 * np.pi  # 1.33 for sc=4 and grid=5: 1 pixel is 0.005
@@ -111,7 +120,7 @@ for i in range(500):
     ax.plot(x_c, y_c, z_c, linewidth=1, alpha=0.1, color='yellow', zorder=6)
 
 #
-# step 2: second part of society
+# step 2: second part of social_system
 #
 
 start_lat = 0.667 * np.pi  # 1.21
@@ -402,7 +411,7 @@ for j in range(nc):
 # Network out of social_systems
 #
 
-ns = 7  # number of connections out of society
+ns = 7  # number of connections out of social_system
 
 p1 = np.zeros(ns)
 p2 = np.zeros(ns)

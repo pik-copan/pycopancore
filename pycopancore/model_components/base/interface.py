@@ -6,11 +6,12 @@ by entity type and process taxon
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from ...private import _MixinType, unknown
 from ... import Variable, ReferenceVariable, SetVariable
@@ -101,11 +102,11 @@ class World (object, metaclass=_MixinType):
     fossil_carbon = W.fossil_carbon
 
     # attributes storing redundant information (backward references):
-    social_systems = SetVariable("social_systems",
+    social_systems = SetVariable("social systems",
                             "set of all SocialSystems on this world",
                             readonly=True)  # type is SocialSystem, hence it can only be specified after class SocialSystem is defined, see below
     top_level_social_systems = SetVariable(
-        "top level social_systems",
+        "top level social systems",
         "set of top-level SocialSystems on this world",
         readonly=True)
     cells = SetVariable("cells", "set of Cells on this world",
@@ -148,15 +149,15 @@ class SocialSystem (object, metaclass=_MixinType):
     culture = ReferenceVariable("culture", "", type=Culture,
                                 readonly=True)
     higher_social_systems = SetVariable(
-        "higher social_systems",
+        "higher social systems",
         "upward list of (in)direct super-SocialSystems",
         readonly=True)
     next_lower_social_systems = SetVariable(
-        "next lower social_systems",
+        "next lower social systems",
         "set of sub-SocialSystems of next lower level",
         readonly=True)
     lower_social_systems = SetVariable(
-        "lower social_systems",
+        "lower social systems",
         "set of all direct and indirect sub-SocialSystems",
         readonly=True)
     direct_cells = SetVariable("direct cells", "set of direct territory Cells",

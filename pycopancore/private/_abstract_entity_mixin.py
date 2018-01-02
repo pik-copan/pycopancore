@@ -5,11 +5,12 @@ It sets the basic structure of entity mixins (individuals, cells , social_system
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 # TODO:
 # - since this is beginning to contain logics, the name "Abstract..." is
@@ -34,7 +35,6 @@ class _AbstractEntityMixin(_Mixin):
     idle_entities = None  # TODO: rename to inactive_entities
     """Inactive entities of this type"""
 
-
     @classmethod
     def get_next_uid(cls):
         """Generate UIDs (Unique identifier).
@@ -47,7 +47,6 @@ class _AbstractEntityMixin(_Mixin):
         current_uid = cls.NEXTUID
         cls.NEXTUID += 1
         return current_uid
-
 
     def __init__(self, *args, **kwargs):
         """Initialize an _AbstractEntityMixin instance."""

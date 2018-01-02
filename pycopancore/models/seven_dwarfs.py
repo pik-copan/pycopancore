@@ -2,11 +2,12 @@
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 #
 #  Imports
@@ -15,6 +16,7 @@
 from .. import base  # all models must use the base component
 
 from ..model_components import seven_dwarfs as sd
+from ..model_components import snowwhite as sw
 
 # entity types:
 
@@ -37,6 +39,7 @@ class SocialSystem(base.SocialSystem):
 
 
 class Cell(sd.Cell,
+           sw.Cell,
            base.Cell):
     """Cell entity type."""
 
@@ -46,6 +49,13 @@ class Cell(sd.Cell,
 class Individual(sd.Individual,
                  base.Individual):
     """Individual entity type."""
+
+    pass
+
+
+class SocialSystem(sd.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
 
     pass
 
@@ -62,13 +72,14 @@ class Culture(sd.Culture,
 # Model class:
 
 class Model(sd.Model,
+            sw.Model,
             base.Model):
     """Class representing the whole model."""
 
-    name = "..."
-    """Seven dwarfs"""
-    description = "..."
-    """Tutorial model"""
+    name = "Seven dwarfs"
+    """Name of the model"""
+    description = "Tutorial model"
+    """Longer description"""
 
     entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""

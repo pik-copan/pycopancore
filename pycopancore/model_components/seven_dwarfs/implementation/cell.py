@@ -3,13 +3,15 @@
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
+
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# License: MIT license
+# Contact: core@pik-potsdam.de
+# License: BSD 2-clause license
 
 from .. import interface as I
 from pycopancore import Event
@@ -35,20 +37,4 @@ class Cell (I.Cell):
         # inherited only by mixing in the model:
         self.assert_valid()
 
-    # process-related methods:
-
-    def snow_white_arrival(self, t):
-        """Calculate snow white's arrival."""
-        return t + np.random.exponential(14.)
-
-    def snow_white_eating(self, unused_t):
-        """Party hard."""
-        print('Snow white arrives and has the munchies.')
-        self.eating_stock = self.eating_stock / 2.
-
-    processes = [
-        Event("snow_white",
-              [I.Cell.eating_stock],
-              ["time", snow_white_arrival, snow_white_eating]
-              )
-    ]
+    processes = []

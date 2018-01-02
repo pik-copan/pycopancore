@@ -1,13 +1,10 @@
 Model component developers
 ==========================
 
-A model component developer is a person who develops new components in
-copan:CORE in order to provide novel features for a model. A model component
-developer does not edit the copan:CORE  framework.
+A *model component developer* develops new components in order to provide novel features for a model.
 
-This tutorial guides the reader step by step through the implementation of a
-new model component using the `EXPLOIT model`_ as an example.
-:: _`EXPLOIT model`: https://journals.aps.org/pre/abstract/10.1103/PhysRevE.91.052801
+This tutorial guides the reader through the implementation of a
+new model component using the ``seven dwarfs model`` as an example.
 
 Developing a new model component
 --------------------------------
@@ -172,8 +169,8 @@ Code snippet 1 from ``culture.py``:
 
 
 
-Specify processes
------------------
+Specifying processes
+--------------------
 
 At the end of the taxon file, the relevant
 :doc:`processes <../framework_documentation/process_types/index>`
@@ -194,8 +191,8 @@ taxon. It is a ``step`` process which incorporates one update:
 Import ./implementation files in ``model.py`` file.
 
 
-Adjust interface file and model file
-------------------------------------
+Adjusting interface file and model file
+---------------------------------------
 
 ::
 
