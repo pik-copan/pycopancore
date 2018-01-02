@@ -29,7 +29,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 1
+timeinterval = 10
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nc = 1  # number of caves
