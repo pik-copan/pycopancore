@@ -16,16 +16,15 @@ from .. import interface as I
 class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
 
-    def __init__(self,
-                 # *,  # TODO: uncomment when adding named args after this
-                 **kwargs):
-        """Initialize an instance of Cell."""
-        super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here
-        pass
-
-
     # TODO: uncomment neccessary standard methods
+    # def __init__(self,
+    #              # *,  # TODO: uncomment when adding named args after this
+    #              **kwargs):
+    #     """Initialize an instance of Cell."""
+    #     super().__init__(**kwargs)  # must be the first line
+    #     # TODO: add custom code here
+    #     pass
+
     # def deactivate(self):
     #     """Deactivate a cell."""
     #     # TODO: add custom code here
