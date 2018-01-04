@@ -35,6 +35,7 @@ setup(name="pycopancore",
           "pylint",
           "pytest-cov>=2.5.1",
           "pylama_pylint",
+          "numba",
       ],
       zip_safe=False # see http://stackoverflow.com/questions/15869473/what-is-the-advantage-of-setting-zip-safe-to-true-when-packaging-a-python-projec
       )
