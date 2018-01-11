@@ -3,28 +3,32 @@ Model composers
 
 *Model composers* create new models by arraging existing model components
 provided by :doc:`model component developers <./model_component_developers>`.
-
 This is done by creating a python file in that used *entity types*, *process taxa*
-and *model components* (TODO reference) are arranged in inheriting classes.
-
-The basic structure of this file can be examined in the *_template* (reference TODO).
+and *model components* are arranged in inheriting classes.
+The basic structure of this file can be examined in the *_template* directory of this package.
 
 In the following a step-by-step tutorial, based on the exemplary
-:doc:`seven dwarfs model <../_api/pycopancore.models>`, is provided.
+:doc:`seven dwarfs toy model <../_api/pycopancore.models>`, is provided.
 
-Import of model components
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+The general workflow
+is  structured as follows:
+
+(1) Import of desired model components
+(2) Setting entity types and process taxa
+(3) Composing the model class
 
 
-All components that are used must be imported. The *base model component* (reference TODO)
-is used in every model and its import therefore mandatory.
+1. Import of model components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Besides that, additional components can be included. In case of the *seven dwarfs model* (TODO reference)
+The *base model component*
+is used in every model and its import is therefore mandatory.
+
+Besides, additional components can be included. In case of the
+:doc:`seven dwarfs toy model <../_api/pycopancore.models>`
 the *seven_dwarfs* as well as *snowwhite* components are used.
 ::
 
-
-    # base import (always needed)
     from .. import base
 
     # additional components
@@ -35,11 +39,11 @@ the *seven_dwarfs* as well as *snowwhite* components are used.
 
 
 
-Arrangement of entity types and process taxa
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2. Setting entity types and process taxa
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this step *entity types* and *process taxa* are arranged. This is done by basic python
-inheritance. Note that primary inheritors will overwrite attributes of secondary ones (TODO better formulation).
+inheritance. Note that primary inheritors will overwrite attributes of secondary ones.
 
 ::
 
@@ -75,13 +79,17 @@ inheritance. Note that primary inheritors will overwrite attributes of secondary
         pass
 
 
-The model class
-~~~~~~~~~~~~~~~
+3. Composing the model class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This arrangement puts all model classes together. (TODO)
+The model class is composed by putting all model classes together.
+As above this is done by inheritance. Further one needs to specify
+entity types and process taxa that are used in the model. 
 
+The Model class for the :doc:`seven dwarfs toy model <../_api/pycopancore.models>`
+is set up as follows:
 
-    # Model class:
+::
 
     class Model(sd.Model,
                 base.Model):
@@ -93,4 +101,7 @@ This arrangement puts all model classes together. (TODO)
         """List of entity types used in the model"""
         process_taxa = [Culture]
         """List of process taxa used in the model"""
+
+Here entity types *World*, *Cell* and *Individual* as well as
+the process taxa *Culture* are used. 
 
