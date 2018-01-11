@@ -27,22 +27,28 @@ class Implicit(_AbstractProcess):
     """Define the class Implicit."""
 
     type = "Implicit"
-    timetype = "discrete"
+    timetype = "discrete" # ???
 
     def __init__(self,
                  name,
-                 variables,
+                 targets,
                  specification
                 ):
         """Instantiate an instance of an implicit process.
 
+        # TODO: Implement symbolic expressions
         Parameters
         ----------
-        name
-        variables
-        specification
+        name: str
+            Name of the Process
+        variables: list
+            list of variables that are altered by the process
+        specification: method
+            method that depends on the variables and must return zero
         """
         super().__init__(name)
 
-        self.variables = variables
+        assert callable(specification), 'only callable implicits are implemented yet, is {}'.format(type(specification))
+
+        self.targets = targets
         self.specification = specification
