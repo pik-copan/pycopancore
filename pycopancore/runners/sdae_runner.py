@@ -62,6 +62,7 @@ class SDAERunner(_AbstractRunner):
         self.model = model
         self.processes = model.processes
         self.explicit_processes = model.explicit_processes
+        self.implicit_processes = model.implicit_processes
         self.event_processes = model.event_processes
         self.step_processes = model.step_processes
         self.ode_processes = model.ODE_processes
@@ -132,6 +133,7 @@ class SDAERunner(_AbstractRunner):
         array
             array of derivatives in same order as value_array
         """
+
         # mark current evaluation caches as outdated:
         self._current_iteration += 1
 
@@ -142,7 +144,7 @@ class SDAERunner(_AbstractRunner):
 
         # copy values from value_array into instance attributes,
         # and clear target instances' derivative attributes:
-        for target in self.model.ODE_targets:
+        for target in self.model.ODE_targets + self.model.implicit_targets:
             var = target.target_variable
             # use the values stored in the slice of value_array specified
             # by the target's _from and _to attributes:
@@ -205,8 +207,13 @@ class SDAERunner(_AbstractRunner):
             derivative_array[target._from:target._to] += \
                 target.target_variable.get_derivatives(
                             instances=target.target_class.instances)
+        constraint_returns = []
+        for p in self.implicit_processes:
+            spec = p.specification
+            for inst in p.owning_class.instances:
+                constraint_returns.append(spec(inst, t))
 
-        return derivative_array
+        return derivative_array + constraint_returns
 
     # @profile
     def run(self,
@@ -382,17 +389,26 @@ class SDAERunner(_AbstractRunner):
 
                 # clear all targets _DotConstructs' caches of target instances
                 # since events and steps may have changed instance references:
-                for target in self.model.ODE_targets \
-                        + self.model.explicit_targets:
+                for target in (self.model.ODE_targets
+                               + self.model.explicit_targets
+                               + self.model.implicit_targets):
                     target._target_instances = unknown
 
                 # determine array layouts (froms and tos of slices)
                 # and compose initial value-array:
                 print("    Composing initial value array...")
                 # list of target variables:
+                # 'list(set(something))' removes double entries.
+                # Since we dont want that for targets of implicit processes
+                # (doubly targeted variables are prohibited anyways)
+                # we add them separately
                 target_variables = list(set(
                         [target.target_variable
-                         for target in self.model.ODE_targets]))
+                         for target in (self.model.ODE_targets)]))
+
+                target_variables += [target.target_variable for target
+                                     in self.model.implicit_targets]
+
                 # list of array slice lengths, one for each target variable,
                 # length equalling number of target instances:
                 lens = [len(var.owning_class.instances)
@@ -413,7 +429,8 @@ class SDAERunner(_AbstractRunner):
                     initial_array_ode[froms[i]:tos[i]] = \
                         var.eval(instances=var.owning_class.instances)
                 # store slice indices also in targets:
-                for target in self.model.ODE_targets:
+                for target in (self.model.ODE_targets
+                               + self.model.implicit_targets):
                     var = target.target_variable
                     target._from = var._from
                     target._to = var._to
@@ -434,7 +451,15 @@ class SDAERunner(_AbstractRunner):
                 # Create list with times of max dt distance up to next_time:
                 timesteps = np.linspace(t, next_time, number_of_steps)
 
-                M = np.diag(np.ones(arraylen, dtype=np.float64))
+                # Create vector to indicate which of the entries of the value
+                # array are described by odes (indicated by 1) and which are
+                # described by implicits (indicated by 0).
+                # The solver requires this in the form of a diagonal matrix
+                m = np.ones(arraylen, dtype=np.float64)
+                for target in self.model.implicit_targets:
+                    m[target._from:target._to] = 0
+                M = np.diag(m)
+
 
                 def stochastic_handle(t, x): return np.empty(arraylen)
 
