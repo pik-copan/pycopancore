@@ -85,14 +85,13 @@ class Individual (object):
     beard_growth_parameter = Variable("beard growth parameter",
                                       "growth speed of dwarf beard",
                                       default=0.1)
-    eating_parameter = Variable("eating parameter",
-                                "eating speed of dwarf",
-                                default=1)
 
 
 class SocialSystem(object):
     """Interface for SocialSystem mixin"""
-    pass
+    eating_parameter = Variable("eating parameter",
+                                "eating speed of dwarf",
+                                default=1)
 
 class Culture (object):
     """Interface for Culture mixin"""

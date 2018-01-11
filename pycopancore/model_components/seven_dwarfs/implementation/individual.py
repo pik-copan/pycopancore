@@ -61,8 +61,8 @@ class Individual(I.Individual):
         """Let dwarf eat from stock."""
 
         # else:  I.Cell.d_stock -= self.eating_parameter
-        if self.cell.eating_stock >= self.eating_parameter:
-            self.cell.d_eating_stock -= self.eating_parameter
+        if self.cell.eating_stock >= self.social_system.eating_parameter:
+            self.cell.d_eating_stock -= self.social_system.eating_parameter * self.beard_length
         else:
             self.cell.eating_stock = 0
             if self.is_active:

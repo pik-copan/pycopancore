@@ -15,12 +15,21 @@ then remove these instructions
 from .. import interface as I
 from pycopancore.model_components.base import interface as B
 # from .... import master_data_model as D
-from pycopancore import ODE, Step, Explicit, Event
+from pycopancore import Implicit, Explicit
 import numpy as np
 
 
 class SocialSystem(I.SocialSystem):
     """SocialSystem entity type mixin implementation class."""
+    def __init__(self,
+                 *,
+                 eating_parameter=1,
+                 **kwargs):
+        """Initialize an instance of social system."""
+        super().__init__(**kwargs)
+
+        self.eating_parameter = eating_parameter
+
 
     # process-related methods:
     def register_dwarf(self, dwarf):
@@ -34,4 +43,20 @@ class SocialSystem(I.SocialSystem):
                 # Add edge:
                 self.culture.acquaintance_network.add_edge(dwarf, ind)
                 print(self.culture.acquaintance_network.edges())
-    processes = []
+
+    def eating_constraint(self, t):
+        """Implicit process to constraint beard growth."""
+
+        for cell in self.cells:
+            total_allowed_consumption = cell.eating_stock / 100
+
+        consumption = 0
+        for ind in self.individuals:
+            consumption += self.eating_parameter * np.exp(ind.beard_length)
+
+        return (total_allowed_consumption - consumption)
+
+    processes = [
+        Implicit("food_distribution", [I.SocialSystem.eating_parameter],
+                 eating_constraint)
+    ]
