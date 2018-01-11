@@ -16,7 +16,7 @@ variables in special list to be accessed by the runner.
 
 from .. import abstract
 from ... import Variable, ReferenceVariable, SetVariable, \
-                ODE, Explicit, Step, Event, OrderedSet
+                ODE, Explicit, Step, Event, Implicit, OrderedSet
 from ...private import _AbstractProcess, unknown, _expressions, \
     _AbstractEntityMixin, _AbstractProcessTaxonMixin
 import gc
@@ -79,6 +79,8 @@ class ModelLogics (object):
     """ordered set of processes of type Step"""
     event_processes = None
     """ordered set of processes of type Event"""
+    implicit_processes = None
+    """ordered set of processes of type Implicit"""
 
     mixin2composite = None
     """dict mapping mixins to derived composite classes"""
@@ -123,6 +125,7 @@ class ModelLogics (object):
         # lists of process 'targets' by type (= Variables or _DottedReferences):
         cls.ODE_targets = OrderedSet()
         cls.explicit_targets = OrderedSet()
+        cls.implicit_targets = OrderedSet()
         cls.step_variables = OrderedSet()
         cls.event_variables = OrderedSet()
         cls.process_targets = OrderedSet()
@@ -132,6 +135,7 @@ class ModelLogics (object):
         # ...by type:
         cls.ODE_processes = OrderedSet()
         cls.explicit_processes = OrderedSet()
+        cls.implicit_processes = OrderedSet()
         cls.step_processes = OrderedSet()
         cls.event_processes = OrderedSet()
 
@@ -375,6 +379,27 @@ class ModelLogics (object):
 #                                    cls.explicit_dependencies[target.target_variable] = unknown
                                 var2process[target.target_variable] = p
                             cls.explicit_targets += p.targets
+                            cls.process_targets += p.targets
+                        elif isinstance(p, Implicit):
+                            cls.implicit_processes.add(p)
+                            for i, target in enumerate(p.targets):
+                                # TODO: It is probably wise to assert, that
+                                # variables being altered by implicit processes
+                                # are not altered by any other process!
+                                if isinstance(target, Variable):
+                                    assert target.owning_class == composed_class, \
+                                        "Implicit target Variable " \
+                                        + str(target) + " owned " \
+                                                        "by different entity-type/taxon (" \
+                                        + str(target.owning_class) + \
+                                        ", maybe try accessing it via a " \
+                                        "ReferenceVariable)"
+                                else:  # it's a _DotConstruct
+                                    assert target.owning_class == composed_class, \
+                                        "Implicit target attribute " \
+                                        "reference starts at a wrong " \
+                                        "entity-type/taxon:"
+                            cls.implicit_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Step):
                             cls.step_processes.add(p)
