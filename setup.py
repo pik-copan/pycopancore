@@ -29,7 +29,7 @@ setup(name="pycopancore",
           "sympy>=1.0",
           "blist>=1.3.6",
           "python-louvain>=0.9",
-          "profilehooks"
+          "profilehooks",
           "pytest",
           "pylama",
           "pylint",
