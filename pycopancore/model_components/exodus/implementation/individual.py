@@ -105,13 +105,24 @@ class Individual (I.Individual):
         if self.culture.fully_connected_network:
             # Network is fully connected:
             chosen_one = random.choice(self.culture.acquaintance_network.nodes())
+            # Add event to social systems migration counter:
+            self.social_system.migration_counter[0] += 1
+            self.social_system.migration_counter[1].append(
+                chosen_one.social_system)
             if self.decide_migration(chosen_one):
                 # in case of preferential migration, checks are done
                 if self.preferential_migration:
+                    # Add successful event to migration counter:
+                    self.social_system.migration_counter[2].append(
+                        chosen_one.social_system)
                     self.preferential_migrate(chosen_one.cell)
                 else:
+                    # Add successful event to migration counter:
+                    self.social_system.migration_counter[2].append(
+                        chosen_one.social_system)
                     # Migrate
                     self.migrate(chosen_one.cell)
+
         else:  # Not fully connected:
             # Chose Acquaintance, if existent:
             if self.acquaintances:
@@ -312,7 +323,8 @@ class Individual (I.Individual):
                # B.Individual.culture.acquaintance_network TOO BIG TO SAVE!
                I.Individual.farm_size,
                I.Individual.gross_income,
-               I.Individual.liquidity
+               I.Individual.liquidity,
+               B.Individual.social_system.migration_counter
                ],
               ["time", social_update_timer, social_update]),
         Explicit("Calculate harvest",

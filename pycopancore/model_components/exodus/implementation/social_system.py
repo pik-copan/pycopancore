@@ -45,6 +45,9 @@ class SocialSystem (I.SocialSystem):
         self.pdf_sigma = pdf_sigma
         self.scaling_parameter = scaling_parameter
         self.migration_cost = migration_cost
+        self.migration_counter = [0, [], []]
+        # Initializing self.migration_rates list with length of number of
+        # social systems not possibble here, since not all are initialized yet.
 
         self.liquidity_median = None
         self.liquidity_sigma = None
@@ -192,6 +195,57 @@ class SocialSystem (I.SocialSystem):
             # Gini coefficient
             self.gini_coefficient = 0.5 * rmad
 
+    def calculate_migration_rate(self, unused_t):
+        """Calculate migration rates"""
+        # First time this is called, a list of length of number of social
+        # systems is generated:
+        if self.migration_rates is None:
+            self.migration_rates = [0] * len(self.world.social_systems)
+
+        # Every time this is called, this list needs to be reset:
+        for i in range(len(self.migration_rates)):
+            self.migration_rates[i] = 0
+        # The two above steps are not performed as one, since some social
+        # systems might be deactivated during run, resulting in a new length
+        # for the list.
+        if self.is_active:
+            # print(self.migration_counter)
+            tot_tries = self.migration_counter[0]  # total number of tries
+            mig_attempts = self.migration_counter[1]  # list of social systems where attempted
+            mig_moves = self.migration_counter[2]  # list of social system where success
+
+            # for the following to work, it is important, that the uid of
+            # the social systems start with 1. This is the case, if social
+            # systems are initialized directly after the taxa and before any
+            # individuals, cells, ...
+
+            # attempted moves:
+            attempt_list = self.migration_rates.copy()
+            for element in mig_attempts:
+                for i, soc in enumerate(attempt_list):
+                    # since uids start with 1, we need to add one to
+                    # take care of obo errors:
+                    if str(element).endswith(str(i+1)+']'):
+                        attempt_list[i] += 1
+
+            # successful moves:
+            for element in mig_moves:
+                for i, soc in enumerate(self.migration_rates):
+                    # print(i)
+                    # since uids start with 1, we need to add one to
+                    # take care of obo errors:
+                    if str(element).endswith(str(i+1)+']'):
+                        self.migration_rates[i] += 1
+            # Now divide success by attempts
+            for i, el in enumerate(self.migration_rates):
+                try:
+                    self.migration_rates[i] = (self.migration_rates[i]
+                                               / attempt_list[i])
+                except ZeroDivisionError:
+                    # Both entries 0
+                    self.migration_rates[i] = 0
+            print(self.migration_rates)
+
     processes = [
         Explicit('calculate population',
                  [B.SocialSystem.population,
@@ -199,10 +253,6 @@ class SocialSystem (I.SocialSystem):
                   # not afterwards, since this is not saved otherwise:
                   I.SocialSystem.municipality_like],
                  calc_population),
-        Step("Update incomes/farmsizes",
-             [B.SocialSystem.individuals.farm_size,
-              B.SocialSystem.individuals.gross_income],
-             [update_timing, do_update]),
         Explicit('calculate mean income or farmsize',
                  [I.SocialSystem.mean_income_or_farmsize],
                  calculate_mean_income_or_farmsize),
@@ -214,7 +264,14 @@ class SocialSystem (I.SocialSystem):
                  calculate_average_utility),
         Explicit("Calculate gini",
                  [I.SocialSystem.gini_coefficient],
-                 calculate_gini)
+                 calculate_gini),
+        Step("Calculate Migration Rates",
+             [I.SocialSystem.migration_counter],
+             [update_timing, calculate_migration_rate]),
+        Step("Update incomes/farmsizes",
+             [B.SocialSystem.individuals.farm_size,
+              B.SocialSystem.individuals.gross_income],
+             [update_timing, do_update])
     ]
 
 

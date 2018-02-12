@@ -115,6 +115,21 @@ class SocialSystem (object):
     migration_cost = Variable("Migration Cost",
                               "Cost to migrate to this social_system",
                               default=1000)
+    migration_counter = Variable("Migration Counter",
+                                 "List of: "
+                                 "-number of events that could lead to "
+                                 "migration,"
+                                 "-list of social systems uids of possible "
+                                 "taget social systems,"
+                                 "-list of social system and uids "
+                                 "of target SocialSystems",
+                                 datatype=list)
+    migration_rates = Variable("Migration Rates",
+                               "List with migration rates to all other "
+                               "social systems",
+                               datatype=list,
+                               allow_none=True,
+                               default=None)
 
     # exogenous variables / parameters:
 

@@ -31,13 +31,13 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 50
+timeinterval = 2.1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 1  # number of municipalities, also cities
-nc = 1  # number of counties, also farmland_cells
-na = 10  # number of agents
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
+na = 200  # number of agents
 pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
@@ -56,7 +56,7 @@ world = M.World(culture=culture, metabolism=metabolism,
 # Instantiate Social Systems:
 municipalities = [M.SocialSystem(world=world,
                             municipality_like=True,
-                            base_mean_income=1000,
+                            base_mean_income=6130,
                             scaling_parameter=1.12,
                             migration_cost=0)
                   for m in range(nm)
@@ -77,7 +77,7 @@ for fc in range(nc):
     farmland_cells.append(M.Cell(world=world,
                                  social_system=county,
                                  characteristic='farmland',
-                                 land_area=0.01 * (nf + nt) / nc,  # in square kilometers
+                                 land_area=0.0025 * (nf + nt) / nc,  # in square kilometers
                                  average_precipitation=0.75))
 # Instantiate city cells:
 city_cells = []
@@ -101,7 +101,7 @@ for f in range(nf):
     liq = stats.lognorm.rvs(scale=300, s=0.34, loc=0)
     farmers.append(M.Individual(cell=farmland,
                                 profession='farmer',
-                                outspokenness=.1,
+                                outspokenness=3,
                                 liquidity=liq,
                                 nutrition=1000))
 # Instantiate townsmen:
@@ -113,7 +113,7 @@ for t in range(nt):
     liq = stats.lognorm.rvs(scale=700, s=0.34, loc=0)
     townsmen.append(M.Individual(cell=city,
                                  profession='townsman',
-                                 outspokenness=.1,
+                                 outspokenness=3,
                                  liquidity=liq,
                                  nutrition=100))
 
