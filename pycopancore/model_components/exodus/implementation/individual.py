@@ -103,6 +103,23 @@ class Individual (I.Individual):
         """
         # First: determine if fully connected network:
         if self.culture.fully_connected_network:
+            # First check if continuos exploration is turned on:
+            if self.social_system.continuous_exploration:
+                # define threshold for noise:
+                if random.random() < 0.05:
+                    # Do exploration -> Move to any cell/social system
+                    ss = random.sample(self.world.social_systems, 1)[0]
+                    # Get the social systems cell (cells is a set)
+                    print(ss)
+                    for cell in ss.cells:
+                        new_cell = cell
+                    # If social system is idle/deactivated:
+                    if ss.__class__.idle_entities and \
+                                    ss in ss.__class__.idle_entities:
+                        # reactivate it:
+                        ss.reactivate()
+                    self.migrate(new_cell)
+
             # Network is fully connected:
             chosen_one = random.choice(self.culture.acquaintance_network.nodes())
             # Add event to social systems migration counter:
@@ -163,6 +180,11 @@ class Individual (I.Individual):
         bool:
             True if migration takes place
         """
+        # If last one standing is active, check if there are more than one
+        # agent in the social system:
+        if self.social_system.last_one_standing:
+            if self.social_system.population == 1:
+                return False
         # Difference in utility:
         delta_utility = neighbour.utility - self.utility
         # print('delta util', delta_utility)

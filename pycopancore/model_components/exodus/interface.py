@@ -130,6 +130,21 @@ class SocialSystem (object):
                                datatype=list,
                                allow_none=True,
                                default=None)
+    theoretical_mig_rate = Variable("Theoretical Migration Rate",
+                                    "Analytical approximation of rates",
+                                    datatype=list,
+                                    allow_none=True,
+                                    default=None)
+    last_one_standing = Variable("Last one standing",
+                                 "Bool that if True prohibits the last agent "
+                                 "in a social system from migrating",
+                                 datatype=bool,
+                                 default=False)
+    continuous_exploration = Variable("Continuos Exploration",
+                                      "Bool, that if True leads to a noise in"
+                                      "migration",
+                                      datatype=bool,
+                                      default=False)
 
     # exogenous variables / parameters:
 

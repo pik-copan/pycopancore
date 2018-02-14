@@ -31,13 +31,13 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 2.1
+timeinterval = 50
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 2  # number of municipalities, also cities
-nc = 2  # number of counties, also farmland_cells
-na = 200  # number of agents
+nm = 5  # number of municipalities, also cities
+nc = 1  # number of counties, also farmland_cells
+na = 50  # number of agents
 pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
@@ -58,13 +58,17 @@ municipalities = [M.SocialSystem(world=world,
                             municipality_like=True,
                             base_mean_income=6130,
                             scaling_parameter=1.12,
-                            migration_cost=0)
+                            migration_cost=0,
+                            last_one_standing=False,
+                            continuous_exploration=True)
                   for m in range(nm)
                   ]
 
 counties = [M.SocialSystem(world=world,
                       municipality_like=False,
-                      migration_cost=0)
+                      migration_cost=0,
+                      last_one_standing=False,
+                      continuous_exploration=True)
             for c in range(nc)
             ]
 # Instantiate farmland cells:
@@ -200,19 +204,19 @@ t = np.array(traj['t'])
 # for key, val in traj.items():
 #     print('key', key,)
 plot(t, traj[M.World.water_price][world], "b", lw=3)
-plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
-plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
+#plot(t, traj[M.World.total_gross_income][world], "m:", lw=3)
+#plot(t, traj[M.World.total_harvest][world], "m--", lw=3)
 # plot(t, traj[M.Culture.network_clustering][culture], "r--", lw=3)
 # plot(t, traj[M.Culture.modularity][culture], "r:", lw=3)
 
 for soc in municipalities:
     plot(t, traj[M.SocialSystem.population][soc], "r", lw=3)
-    plot(t, traj[M.SocialSystem.average_utility][soc], "r:", lw=3)
-    plot(t, traj[M.SocialSystem.gini_coefficient][soc], "r--", lw=3)
+    #plot(t, traj[M.SocialSystem.average_utility][soc], "r:", lw=3)
+    #plot(t, traj[M.SocialSystem.gini_coefficient][soc], "r--", lw=3)
 for soc in counties:
     plot(t, traj[M.SocialSystem.population][soc], "k", lw=3)
-    plot(t, traj[M.SocialSystem.average_utility][soc], "k:", lw=3)
-    plot(t, traj[M.SocialSystem.gini_coefficient][soc], "k--", lw=3)
+    #plot(t, traj[M.SocialSystem.average_utility][soc], "k:", lw=3)
+    #plot(t, traj[M.SocialSystem.gini_coefficient][soc], "k--", lw=3)
 
 # for ind in M.Individual.instances:
 #    plot(t, traj[M.Individual.utility][ind], "y", lw=0.5)

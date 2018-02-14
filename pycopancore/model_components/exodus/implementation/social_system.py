@@ -36,6 +36,8 @@ class SocialSystem (I.SocialSystem):
                  pdf_sigma=0.34,  # 0.34 taken from Clementi, Gallegati 2005 for income distribution
                  scaling_parameter=1.12,
                  migration_cost=1000,
+                 last_one_standing=False,
+                 continuous_exploration=False,
                  **kwargs):
         """Initialize an instance of SocialSystem."""
         super().__init__(**kwargs)  # must be the first line
@@ -46,6 +48,8 @@ class SocialSystem (I.SocialSystem):
         self.scaling_parameter = scaling_parameter
         self.migration_cost = migration_cost
         self.migration_counter = [0, [], []]
+        self.last_one_standing = last_one_standing
+        self.continuous_exploration = continuous_exploration
         # Initializing self.migration_rates list with length of number of
         # social systems not possibble here, since not all are initialized yet.
 
@@ -208,6 +212,9 @@ class SocialSystem (I.SocialSystem):
         # The two above steps are not performed as one, since some social
         # systems might be deactivated during run, resulting in a new length
         # for the list.
+
+        # Now copy this list for theoretical migration rates:
+        self.theoretical_mig_rate = list(self.migration_rates)
         if self.is_active:
             # print(self.migration_counter)
             tot_tries = self.migration_counter[0]  # total number of tries
@@ -234,7 +241,7 @@ class SocialSystem (I.SocialSystem):
                     # print(i)
                     # since uids start with 1, we need to add one to
                     # take care of obo errors:
-                    if str(element).endswith(str(i+1)+']'):
+                    if element._uid == i+1:
                         self.migration_rates[i] += 1
             # Now divide success by attempts
             for i, el in enumerate(self.migration_rates):
@@ -244,7 +251,17 @@ class SocialSystem (I.SocialSystem):
                 except ZeroDivisionError:
                     # Both entries 0
                     self.migration_rates[i] = 0
-            print(self.migration_rates)
+
+            # Theoretical Calculation:
+            for ss in self.world.social_systems:
+                # Put in values according to the uids. Since uids start with 1,
+                # we have to account for that by subtracting 1:
+                self.theoretical_mig_rate[(ss._uid-1)] = (1/2 + (
+                    math.sqrt(ss.average_liquidity)
+                    - math.sqrt(self.average_liquidity))/(4 * math.sqrt(
+                    self.world.water_price * 1240)))
+            # 1240 is the water need, also set in Individual.calculate_utility
+            print(self.migration_rates, self.theoretical_mig_rate)
 
     processes = [
         Explicit('calculate population',
@@ -266,7 +283,9 @@ class SocialSystem (I.SocialSystem):
                  [I.SocialSystem.gini_coefficient],
                  calculate_gini),
         Step("Calculate Migration Rates",
-             [I.SocialSystem.migration_counter],
+             [I.SocialSystem.migration_counter,
+              I.SocialSystem.migration_rates,
+              I.SocialSystem.theoretical_mig_rate],
              [update_timing, calculate_migration_rate]),
         Step("Update incomes/farmsizes",
              [B.SocialSystem.individuals.farm_size,
