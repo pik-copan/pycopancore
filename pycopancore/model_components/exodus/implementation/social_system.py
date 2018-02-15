@@ -261,7 +261,10 @@ class SocialSystem (I.SocialSystem):
                     - math.sqrt(self.average_liquidity))/(4 * math.sqrt(
                     self.world.water_price * 1240)))
             # 1240 is the water need, also set in Individual.calculate_utility
-            print(self.migration_rates, self.theoretical_mig_rate)
+            #print(self.migration_rates, self.theoretical_mig_rate)
+            # reset migration counter for next step:
+            self.migration_counter = [0, [], []]
+            #print(self.migration_counter)
 
     processes = [
         Explicit('calculate population',
@@ -283,8 +286,7 @@ class SocialSystem (I.SocialSystem):
                  [I.SocialSystem.gini_coefficient],
                  calculate_gini),
         Step("Calculate Migration Rates",
-             [I.SocialSystem.migration_counter,
-              I.SocialSystem.migration_rates,
+             [I.SocialSystem.migration_rates,
               I.SocialSystem.theoretical_mig_rate],
              [update_timing, calculate_migration_rate]),
         Step("Update incomes/farmsizes",

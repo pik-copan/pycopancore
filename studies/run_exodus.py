@@ -1,4 +1,4 @@
-"""This is the test script for the seven dwarfs step by step tutorial.
+"""This is the test exodus model.
 
 In this version only the Step-process 'aging' of entitytype 'Individual' is
 implemented, such that the only relevant attributes of 'Individual' are 'age'
@@ -31,13 +31,13 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 50
+timeinterval = 20.1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 5  # number of municipalities, also cities
-nc = 1  # number of counties, also farmland_cells
-na = 50  # number of agents
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
+na = 100  # number of agents
 pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
