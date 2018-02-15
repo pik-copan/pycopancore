@@ -31,7 +31,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 20.1
+timeinterval = 2.1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 

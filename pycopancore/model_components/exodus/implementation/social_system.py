@@ -221,27 +221,24 @@ class SocialSystem (I.SocialSystem):
             mig_attempts = self.migration_counter[1]  # list of social systems where attempted
             mig_moves = self.migration_counter[2]  # list of social system where success
 
-            # for the following to work, it is important, that the uid of
-            # the social systems start with 1. This is the case, if social
-            # systems are initialized directly after the taxa and before any
-            # individuals, cells, ...
-
+            # for the following to work, it is important, that we know the
+            # smallest uid of the social systems and all other social systems
+            # have following uids!
+            min_uid = min(ss._uid for ss in self.world.social_systems)
             # attempted moves:
             attempt_list = self.migration_rates.copy()
             for element in mig_attempts:
                 for i, soc in enumerate(attempt_list):
-                    # since uids start with 1, we need to add one to
-                    # take care of obo errors:
-                    if str(element).endswith(str(i+1)+']'):
+                    # since uids start with min_uid, we need to add it:
+                    if str(element).endswith(str(i+min_uid)+']'):
                         attempt_list[i] += 1
 
             # successful moves:
             for element in mig_moves:
                 for i, soc in enumerate(self.migration_rates):
                     # print(i)
-                    # since uids start with 1, we need to add one to
-                    # take care of obo errors:
-                    if element._uid == i+1:
+                    # since uids start with min_uid, we need to add it:
+                    if element._uid == i+min_uid:
                         self.migration_rates[i] += 1
             # Now divide success by attempts
             for i, el in enumerate(self.migration_rates):
@@ -254,14 +251,14 @@ class SocialSystem (I.SocialSystem):
 
             # Theoretical Calculation:
             for ss in self.world.social_systems:
-                # Put in values according to the uids. Since uids start with 1,
-                # we have to account for that by subtracting 1:
-                self.theoretical_mig_rate[(ss._uid-1)] = (1/2 + (
+                # Put in values according to the uids. Since uids start with
+                # min_uid, we have to account for that by subtracting it:
+                self.theoretical_mig_rate[(ss._uid-min_uid)] = (1/2 + (
                     math.sqrt(ss.average_liquidity)
                     - math.sqrt(self.average_liquidity))/(4 * math.sqrt(
                     self.world.water_price * 1240)))
             # 1240 is the water need, also set in Individual.calculate_utility
-            #print(self.migration_rates, self.theoretical_mig_rate)
+            print(self.migration_rates, self.theoretical_mig_rate)
             # reset migration counter for next step:
             self.migration_counter = [0, [], []]
             #print(self.migration_counter)
