@@ -101,6 +101,9 @@ class Individual (I.Individual):
         Either migration or de- and re-friending takes place. 
         In case of a fully connected network only migration takes place.
         """
+        # Set Flag to prevent agents from migrating twice when continuos
+        # exploration is True:
+        migrated = False
         # First: determine if fully connected network:
         if self.culture.fully_connected_network:
             # First check if continuos exploration is turned on:
@@ -119,6 +122,7 @@ class Individual (I.Individual):
                         # reactivate it:
                         ss.reactivate()
                     self.migrate(new_cell)
+                    migrated = True
 
             # Network is fully connected:
             chosen_one = random.choice(self.culture.acquaintance_network.nodes())
@@ -126,7 +130,7 @@ class Individual (I.Individual):
             self.social_system.migration_counter[0] += 1
             self.social_system.migration_counter[1].append(
                 chosen_one.social_system)
-            if self.decide_migration(chosen_one):
+            if self.decide_migration(chosen_one) and not migrated:
                 # in case of preferential migration, checks are done
                 if self.preferential_migration:
                     # Add successful event to migration counter:
