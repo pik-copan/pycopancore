@@ -147,7 +147,7 @@ class Variable(Symbol):
                  AMIP=None,
                  IAMC=None,
                  CETS=None,
-                 datatype=None,
+                 datatype=float,
                  array_shape=None,
                  allow_none=False,
                  lower_bound=None,
