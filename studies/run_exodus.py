@@ -31,14 +31,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 2.1
+timeinterval = 10.1
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 1  # number of municipalities, also cities
-nc = 1  # number of counties, also farmland_cells
-na = 10  # number of agents
-pf = .6  # percentage of farmers
+nm = 2  # number of municipalities, also cities
+nc = 2  # number of counties, also farmland_cells
+na = 200  # number of agents
+pf = .9  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
 
@@ -189,7 +189,7 @@ start = time()
 # run the Runner and saving the return dict in traj
 traj = r.run(t_1=timeinterval,
              dt=timestep,
-             max_resolution=False
+             max_resolution=True
              )
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))

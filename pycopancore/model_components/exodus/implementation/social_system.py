@@ -243,8 +243,10 @@ class SocialSystem (I.SocialSystem):
             # Now divide success by attempts
             for i, el in enumerate(self.migration_rates):
                 try:
-                    self.migration_rates[i] = (self.migration_rates[i]
-                                               / attempt_list[i])
+                    self.migration_rates[i] = self.migration_rates[i]
+                    # If probability is needed, following is needed:
+                    #  self.migration_rates[i] = (self.migration_rates[i]
+                    #                             / attempt_list[i])
                 except ZeroDivisionError:
                     # Both entries 0
                     self.migration_rates[i] = 0
@@ -256,9 +258,10 @@ class SocialSystem (I.SocialSystem):
                 self.theoretical_mig_rate[(ss._uid-min_uid)] = (1/2 + (
                     math.sqrt(ss.average_liquidity)
                     - math.sqrt(self.average_liquidity))/(4 * math.sqrt(
-                    self.world.water_price * 1240)))
+                    self.world.water_price * 1240))) * attempt_list[(ss._uid-min_uid)]
+                # if probability is wanted, leave out * attempt_list[(ss._uid-min_uid)]
             # 1240 is the water need, also set in Individual.calculate_utility
-            print(self.migration_rates, self.theoretical_mig_rate)
+            # print(self.migration_rates, self.theoretical_mig_rate)
             # reset migration counter for next step:
             self.migration_counter = [0, [], []]
             #print(self.migration_counter)
