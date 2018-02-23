@@ -703,7 +703,11 @@ class Runner(_AbstractRunner):
                     # check whether value needs to be stored by comparing
                     # existing list length with no. of time points:
                     if len(self.trajectory_dict[var][inst]) < tlen:
-                        self.trajectory_dict[var][inst].append(values[i])
+                        if isinstance(values[i], list):
+                            # when handling lists, python only add references!
+                            self.trajectory_dict[var][inst].append(values[i][:])
+                        else:
+                            self.trajectory_dict[var][inst].append(values[i])
                     # else do nothing since value was already stored.
                     # assert len(self.trajectory_dict[var][inst]) == tlen
                 except KeyError:
