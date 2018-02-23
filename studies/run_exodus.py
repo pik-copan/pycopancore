@@ -22,8 +22,8 @@ import numpy as np
 import networkx as nx
 import pickle, json
 
-import plotly.offline as py
-import plotly.graph_objs as go
+#import plotly.offline as py
+#import plotly.graph_objs as go
 from matplotlib.pyplot import plot, gca, show, savefig
 
 import pycopancore.models.exodus as M
@@ -31,7 +31,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 2.1
+timeinterval = 2
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
@@ -60,7 +60,7 @@ municipalities = [M.SocialSystem(world=world,
                             scaling_parameter=1.12,
                             migration_cost=0,
                             last_one_standing=False,
-                            continuous_exploration=True)
+                            continuous_exploration=False)
                   for m in range(nm)
                   ]
 
@@ -68,7 +68,7 @@ counties = [M.SocialSystem(world=world,
                       municipality_like=False,
                       migration_cost=0,
                       last_one_standing=False,
-                      continuous_exploration=True)
+                      continuous_exploration=False)
             for c in range(nc)
             ]
 # Instantiate farmland cells:
@@ -163,6 +163,7 @@ for ind in M.Individual.instances:
 for soc in M.SocialSystem.instances:
     soc.calculate_average_utility(0)
     soc.calculate_gini(0)
+    soc.calculate_migration_rate(0)
 
 world.calc_total_gross_income(0)
 world.calc_total_harvest(0)
@@ -196,7 +197,7 @@ print('runtime: {runtime}'.format(**locals()))
 
 # Saving:
 print('saving:')
-#traj.save(filename='data')
+traj.save(filename='data')
 print('...is done')
 
 # Plotting:
