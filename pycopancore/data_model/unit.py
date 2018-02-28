@@ -11,8 +11,9 @@
 
 from functools import reduce
 import operator
+from numpy import log10
 
-from . import dimension, dimensional_quantity
+from . import dimension, dimensional_quantity, nondim
 
 
 class Unit (object):
@@ -91,7 +92,13 @@ class Unit (object):
                 items = sorted([(unit.symbol, ex) 
                                 for unit, ex in exponents.items()], 
                                key=lambda i: (-i[1], i[0]))
-                self.symbol = " ".join([sym
+                self.symbol = ("" if factor == 1 
+                               else ("1e" + str(int(log10(factor))) 
+                                                if log10(factor)%1 == 0
+                                     else str(int(factor)) if factor%1 == 0 
+                                     else str(factor)) 
+                               + " ")
+                self.symbol += " ".join([sym
                                         + ("" if ex == 1
                                            else "²" if ex == 2
                                            else "³" if ex == 3
@@ -124,7 +131,8 @@ class Unit (object):
     # standard methods and operators:
 
     def __repr__(self):
-        return self.name + " [" + self.symbol + "]"
+        return ("" if self.name in (None, "") else self.name + " ") \
+            + "[" + self.symbol + "]"
 
     def __hash__(self):
         return hash(self.name) if self.is_base else None
@@ -193,4 +201,4 @@ class Unit (object):
                                                         unit=self)
 
 
-unity = Unit(name="unity", symbol="", desc="number of unity", exponents={})
+unity = Unit(name="unity", symbol="", desc="number of unity", exponents={}, is_base=False) # dimension=nondim,

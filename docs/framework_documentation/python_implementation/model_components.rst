@@ -16,11 +16,11 @@ and one implementation class module for each entity-type and process taxon that 
    <component name>
       implementation
         cell.py
-        society.py
-        individual.py
-        nature.py
-        social_metabolism.py
         culture.py
+        environment.py
+        individual.py
+        social_metabolism.py
+        social system.py
       interface.py
       model.py
 
@@ -29,39 +29,35 @@ Interface module
 ----------------
 
 The interface module defines the attributes of all entity-types and process taxons contributed by this component.
-Each attribute is an instance of ``Variable``,
+Each attribute is an instance of the class ``Variable`` 
+or one of its subclasses such as ``ReferenceVariable`` (for references to at most one other entity, e.g. ``CEO``)
+or ``SetVariable`` (for references to sets of entities, e.g. ``residents``),
 either one imported from the master data model or another component, or a new instance.
 
 Basic structure of ``interface.py``, using attributes imported from the data model and self-defined variables:
 
 ::
 
-   from pycopancore import master_data_model as M
-   from pycopancore import Variable, ReferenceVariable
+   from pycopancore.master_data_model import C, ...
 
-
-   class Model (object):
+   class Model:
       name = '<model name>'
       description = '<model description>'
       requires = []
       ...
 
-   class Cell (object):
-      <variable name> = M.Cell.<some variable name>
-      <other variable name> = M.<some process taxon>.<some other variable name>
+   class Cell:
+      <variable name> = C.<same variable name>
       ...
 
-   class Society (object):
+   class SocialSystem:
       ...
 
-   class Nature (object):
+   class Environment:
       ...
 
 
-Using a variable from the master data model under a locally different *alias*
-can be useful e.g. if the model component makes simplifying assumptions regarding the equality of certain quantities,
-but it should only be used in rare well-motivated occasions,
-and *not* merely to introduce convenient abbreviations for having to type less letters.
+Variables from the master data model must be used under the exact same name as they occur there.
 In turn, the modeling board must ensure
 that variable names in the master data model are reasonably short without losing distinguishability and descriptiveness.
 
@@ -72,13 +68,10 @@ then the preferred choice is to import the attribute from the other component's 
 
 ::
 
-   from pycopancore import master_data_model as M
-
    import pycopancore.model_components.<other component name>.interface as O
 
-   class Cell (object):
+   class Cell:
       <variable name> = O.Cell.<same variable name>
-      <some alternative variable name> = O.Cell.<some original variable name>
       ...
 
    ...
@@ -107,37 +100,17 @@ Example:
 
 ::
 
-   from pycopancore import Entity, ProcessTaxon
+   from pycopancore import Variable, ReferenceVariable, SetVariable
+   import pycopancore.base.interface as B 
+   ...
 
-   class Cell (object):
+   class Cell:
       <variable name> = Variable("<label>", <other metadata>...)
-      surface_temperature = CFVariable() # ref. to CF Conventions Standard Names Entry of the same name
-      atmospheric_carbon = CFVariable("atmosphere_mass_of_carbon_dioxide") # using an alias since Standard Name too long
-      ...
-
-   class Society (object):
-      pct_population_65up = CETSVariable("SP.POP.65UP.TO.ZS")
+      owner = ReferenceVariable("owning firm", type=B.Firm)
+      residents = SetVariable("resident individuals", type=B.Individual)
       ...
 
    ...
-
-(Note that, actually, the variables ``surface_temperature`` and ``atmospheric_carbon``
-used in this example are contained in the master data model
-and should hence rather be imported from there in actual model components,
-while ``pct_population_65up`` is not and should really be defined in the above way)
-
-TODO: ReferenceVariable!
-
-Example:
-
-::
-
-    from pycopancore import ReferenceVariable
-
-    class Cell (object):
-        <some entity> = ReferenceVariable('<some entity>', '<some description>',
-                                type=<some entity>, allow_none=<some boolean value>)
-        ...
 
 
 Implementation class modules
@@ -180,70 +153,49 @@ The basic structure of an implementation class module, here ``cell.py``
 
    class Cell (interface.Cell):
 
-      # specify process metadata:
-
-      processes = [
-         ODE(..., rhs = <method name>),
-         ODE(..., rhs = <some (list of) symbolic expression(s)>),
-         Explicit(..., zero = <another method name>),
-         Explicit(..., zero = <another (list of) symbolic expression(s)>),
-         Event(..., rate = <rate symbolic expression>, action = <event method name>),
-         Step(..., action = <step method name>),
-         ...
-      ]
-
       # define process logics:
 
       def <method name> (self, t):
          ...
-         return <right-hand side>
 
       def <another method name> (self, t):
          ...
-         return <what should be zero>
 
       def <event method name> (self, t):
          ...
-         return
 
       def <step method name> (self, t):
          ...
          return next_t
 
-      ...
+      # specify process metadata:
 
-      # optionally override initialization and (de-)activation methods:
-
-      def __init__ (self, t):
-         # always call general initialization method first:
-         Entity.__init__(self, t)
-         <do any necessary one-time initialization>
-         return
-
-      def deactivate (self, t):
-         <do whatever may be necessary at deactivation>
-         # always call general deactivation method last:
-         Entity.deactivate(self, t)
-
-      def reactivate (self, t):
-         # always call general reactivation method first:
-         Entity.reactivate(self, t)
-         <do whatever may be necessary at reactivation>
-         return
+      processes = [
+         ODE(..., <method name>),
+         ODE(..., <some (list of) symbolic expression(s)>),
+         Explicit(..., <another method name>),
+         Explicit(..., <another (list of) symbolic expression(s)>),
+         Event(..., <rate symbolic expression>, <event method name>),
+         Step(..., <step method name>),
+         ...
+      ]
 
 
 Implementation instance methods
 -------------------------------
 
-Bla...
+Implementation instance methods typically do not return variable values but manipulate entity attributes directly.
+For an explicit equation, step or event, they overwrite variable attributes, e.g. ``self.welfare = consumption/population``
+while for an ordinary differential equation, they *add* to time derivative attributes, e.g.
+``self.d_population += birth_flow``.
+Only implicit equation methods return a value that the runner tries to make zero,
+e.g. ``return supply - demand`` if the equation is "supply = demand".
 
 In case of process taxons, please note that although those classes have only one instance,
 the process logics is still implemented via instance methods (i.e., taking ``self`` as first argument)
 rather than via class or static methods.
 Likewise, the taxon's attribute values are stored in the sole instance's attributes,
 while their metadata are stored in the respective class attributes, just as for entities and entity-types.
-
-TODO...
 
 
 .. [#del]   Note that upon deactivation, an entity object is *not* deleted but remains in memory

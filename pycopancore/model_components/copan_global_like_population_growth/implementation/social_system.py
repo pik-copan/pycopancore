@@ -3,7 +3,6 @@
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
 """
-
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
@@ -41,8 +40,8 @@ class SocialSystem (I.SocialSystem):
     pop = I.SocialSystem.population
  
     fert = (min_fert
-            + 2 * (B.SocialSystem.metabolism.max_fertility - min_fert)
-              * I.SocialSystem.wellbeing
+            + 2 * (B.SocialSystem.metabolism.max_fertility - min_fert) 
+              * I.SocialSystem.wellbeing 
               * B.SocialSystem.metabolism.fertility_maximizing_wellbeing
                 ** fert_exp
               / (I.SocialSystem.wellbeing ** (1 + fert_exp)
@@ -70,9 +69,9 @@ class SocialSystem (I.SocialSystem):
              I.SocialSystem.mortality,
              I.SocialSystem.births,
              I.SocialSystem.deaths],
-            [B.SocialSystem.metabolism.wellbeing_sensitivity_to_consumption
-               * I.SocialSystem.consumption_flow / pop
-             + B.SocialSystem.metabolism.wellbeing_sensitivity_to_terrestrial_carbon
+            [B.SocialSystem.metabolism.wellbeing_sensitivity_to_consumption 
+               * I.SocialSystem.consumption_flow / pop 
+             + B.SocialSystem.metabolism.wellbeing_sensitivity_to_terrestrial_carbon 
                * terrestrial_carbon / land_area,
              fert,
              mort,

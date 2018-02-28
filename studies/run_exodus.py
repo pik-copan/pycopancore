@@ -53,7 +53,7 @@ metabolism = M.Metabolism(market_frequency=1)
 # instantiate world:
 world = M.World(culture=culture, metabolism=metabolism,
                 water_price=.1)
-# Instantiate Social Systems:
+# Instantiate SocialSystems:
 municipalities = [M.SocialSystem(world=world,
                             municipality_like=True,
                             base_mean_income=6130,
@@ -197,4 +197,3 @@ gca().set_yscale('symlog')
 
 # savefig('20_ag_4_soc.png', dpi=150)
 show()
-

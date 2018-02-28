@@ -29,7 +29,7 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 1
+timeinterval = 10
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nc = 1  # number of caves
@@ -48,18 +48,18 @@ culture = M.Culture()
 # instantiate world:
 world = M.World(culture=culture)
 
-society = [M.SocialSystem(world=world)]
+# instantiate one social system:
+social_system = M.SocialSystem(world=world)
 
-# instantiate cells (the caves)
-cell = [M.Cell(world=world,
-               social_system=society[0],
-               eating_stock=100
-               )
+# instantiate cells (the caves):
+cells = [M.Cell(social_system=social_system,
+                eating_stock=100
+                )
         for c in range(nc)
         ]
 
 # instantiate dwarfs and assigning initial conditions
-individuals = [M.Individual(cell=cell[0],
+individuals = [M.Individual(cell=cells[0],
                             age=0,
                             beard_length=0,
                             beard_growth_parameter=0.5,
@@ -121,7 +121,7 @@ individuals_age = np.array([traj[M.Individual.age][dwarf]
 individuals_beard_length = np.array([traj[M.Individual.beard_length][dwarf]
                                  for dwarf in all_dwarfs])
 
-cell_stock = np.array(traj[M.Cell.eating_stock][cell[0]])
+cell_stock = np.array(traj[M.Cell.eating_stock][cells[0]])
 
 t = np.array(traj['t'])
 
@@ -183,4 +183,4 @@ py.plot(fig, filename="our-model-result{}.html".format(5))
 #nx.draw(traj[M.Culture.acquaintance_network][culture][1])
 #plt.show()
 for i in range(len(traj['t'])):
-    print(traj[M.Culture.acquaintance_network][culture][i].nodes())
+    print(list(traj[M.Culture.acquaintance_network][culture][i].nodes()))

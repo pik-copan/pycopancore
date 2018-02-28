@@ -1,4 +1,4 @@
-"""Skript to run Jobsts model."""
+"""Skript to run the model."""
 
 # This file is part of pycopancore.
 #
@@ -8,7 +8,6 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
-
 from time import time
 import datetime as dt
 # from numpy import random
@@ -52,8 +51,6 @@ individuals = [M.Individual(cell=cell,
                             initial_opinion=int(random.random() < p_initial))
                for _ in range(nindividuals)]
 
-# TODO: ask Jobst, why are all individuals already in the network?
-
 
 def erdosrenyify(graph, p=0.5):
     """Create a ErdosRenzi graph from networkx graph.
@@ -62,7 +59,7 @@ def erdosrenyify(graph, p=0.5):
     erdos-renyi graph procedure.
     """
     assert not graph.edges(), "your graph has already edges"
-    nodes = graph.nodes()
+    nodes = list(graph.nodes())
     for i, n1 in enumerate(nodes[:-1]):
         for n2 in nodes[i+1:]:
             if random.random() < p:

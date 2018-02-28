@@ -21,9 +21,9 @@ class World (I.World):
     """
 
     # abbreviation:
-    diffusion_flow = (B.World.environment.ocean_atmosphere_diffusion_coefficient
+    diffusion_flow = (B.World.environment.ocean_atmosphere_diffusion_coefficient 
                       * (I.World.upper_ocean_carbon
-                         - B.World.environment.carbon_solubility_in_sea_water
+                         - B.World.environment.carbon_solubility_in_sea_water 
                            * I.World.atmospheric_carbon))
     """(See Nitzbon et al. 2017)."""
 

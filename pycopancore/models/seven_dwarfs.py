@@ -32,6 +32,12 @@ class World(sd.World,
     pass
 
 
+class SocialSystem(base.SocialSystem):
+    """SocialSystem entity type."""
+
+    pass
+
+
 class Cell(sd.Cell,
            sw.Cell,
            base.Cell):
@@ -75,7 +81,7 @@ class Model(sd.Model,
     description = "Tutorial model"
     """Longer description"""
 
-    entity_types = [World, Cell, Individual]
+    entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""
     process_taxa = [Culture]
     """List of process taxa used in the model"""

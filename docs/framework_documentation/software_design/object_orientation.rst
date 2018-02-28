@@ -8,9 +8,9 @@ Common concepts of object-oriented programming languages
 
 -  Objects and classes can have **attributes** and **methods**:
 
-   -  *Object attributes* (aka *instance attributes*) store data about individual objects.
+   -  *Object attributes* (aka *instance attributes*) store static or variable data about individual objects.
 
-   -  *Class attributes* store data (e.g., metadata) about the class itself.
+   -  *Class attributes* store static or variable data (e.g., metadata) about the class itself.
 
    -  *Object methods* (aka *instance methods*) represent the actions an object "can do" or that can be "done to" an object.
 
@@ -30,7 +30,7 @@ Common concepts of object-oriented programming languages
    and are meant to be overwritten by an "implementation method" in a derived "implementation subclass".
    Such classes are typically called "abstract" or "interface" classes, but this terminology is not completely well-defined.
    They are normally not instantiated directly but rather used to derive "implementation" subclasses that are then instantiated.
-   There are a number of more ore less complex "design patterns" describing common practices of how this can be used.
+   There are a number of more or less complex "design patterns" describing common practices of how this can be used.
 
 -  **Packages** and **Modules** are somehow meaningful collections of classes (and maybe other things) that form a separate *namespace*.
    A class ``A`` in a package or module ``P`` can typically be referred to as ``P.A``.

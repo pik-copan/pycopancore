@@ -272,6 +272,7 @@ class Runner(_AbstractRunner):
 
         # Save initial state to output dict:
         self.trajectory_dict['t'] = [t]
+
         self.save_to_traj(targets_to_save,
                           add_to_output,
                           max_resolution,

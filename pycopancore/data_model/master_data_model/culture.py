@@ -80,7 +80,7 @@ class Culture:
     trusted_diplomatic_network = \
         Variable("trusted diplomatic network",
                  """Undirected network of basic trust relationships between
-                 social systems, to be used in (intersocietal) coalition formation model
+                 social_systems, to be used in (intersocietal) coalition formation model
                  components. Represents the prerequisites of forming a coalition,
                  not the actually formed coalition structure (which is rather a set
                  of sets of social systems).""",

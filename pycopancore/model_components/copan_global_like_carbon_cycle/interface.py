@@ -73,19 +73,19 @@ class Environment (object):
                  unit = D.years**-1
                         / (D.gigatonnes_carbon / D.square_kilometers)**0.5,
                  lower_bound=0,
-                 default=34) # 26.4 with infinity capacity
+                 default=34) # higher than 26.4 due to non-infinity capacity
     photosynthesis_sensitivity_on_atmospheric_carbon = \
         Variable("sensitivity of photosynthesis productivity on atmospheric "
                  "carbon density", "",
                  unit = D.years**-1
                         / (D.gigatonnes_carbon / D.square_kilometers)**0.5
                         / (D.gigatonnes_carbon / D.square_kilometers),
-                 default=1.1e6) # 1.1e6!
+                 default=1.1e6)
     terrestrial_carbon_capacity_per_area = \
         Variable("per-area capacity of terrestrial carbon", "",
                  unit = D.gigatonnes_carbon / D.square_kilometers,
                  lower_bound=0, default = 10 * 2500 / 1.5e8)  
-        # P? ca. 100 times current value. TODO: improve default
+        # ca. 10 times current value. TODO: improve default
 
     basic_respiration_rate = Variable("basic respiration rate", "",
                                       unit=D.years**-1, default=.0298)

@@ -258,9 +258,10 @@ class Variable(Symbol):
         return object.__hash__(self)
 
     def __str__(self):
-        return (self.owning_class.__name__ + "." + self.codename) \
-                if self.owning_class \
-                else self.name + "(uid=" + self._uid + ")"
+        return self.__repr__()
+#        return (self.owning_class.__name__ + "." + self.codename) \
+#                if self.owning_class \
+#                else self.name + "(uid=" + self._uid + ")"
 
     def __repr__(self):
 #        return (self.owning_class.__name__ + "." + self.codename) \

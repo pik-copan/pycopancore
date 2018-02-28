@@ -122,7 +122,7 @@ M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
 
 for v in culture.variables: 
     if v.unit: print(v, v.get_quantity(culture))
-for v in environment.variables:
+for v in environment.variables: 
     if v.unit: print(v, v.get_quantity(environment))
 for v in metabolism.variables: 
     if v.unit: print(v, v.get_quantity(metabolism))
@@ -146,12 +146,12 @@ ax1.plot(t[3:], 100*average(array([traj[M.Individual.is_environmentally_friendly
                             weights=[traj[M.Individual.represented_population][i][0] for i in individuals],
                             axis=0), 
                             "--", color="green", lw=1, label="env. friendly individuals")
-ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_renewable_subsidy][s][3:] for s in social_systems]), axis=0),
-         color="orange", lw=2, label="social systems with renewable subsidy")
-ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_emissions_tax][s][3:] for s in social_systems]), axis=0),
-         color="blue", lw=2, label="social systems with emissions tax")
-ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_fossil_ban][s][3:] for s in social_systems]), axis=0),
-         color="black", lw=2, label="social systems with fossil ban")
+ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_renewable_subsidy][s][3:] for s in social_systems]), axis=0), 
+         color="orange", lw=2, label="social_systems with renewable subsidy")
+ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_emissions_tax][s][3:] for s in social_systems]), axis=0), 
+         color="blue", lw=2, label="social_systems with emissions tax")
+ax1.plot(t[3:], 100*average(array([traj[M.SocialSystem.has_fossil_ban][s][3:] for s in social_systems]), axis=0), 
+         color="black", lw=2, label="social_systems with fossil ban")
 ax1.set_ylabel('percent')
 ax1.legend()
 

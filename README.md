@@ -1,7 +1,8 @@
-# pycopancore #
+# pycopancore
+reference implementation of the copan:CORE World-Earth modelling framework
 
 
-Python copan:CORE World-Earth modeling framework release version [...]
+copan:CORE is developed at the Potsdam Institute for Climate Impact Research.
 
 Table of Contents:
 
@@ -52,6 +53,7 @@ $ pip install -e
 
 This creates a link instead of copying the files, so modifications in this directory are modifications in the installed package.
 
+
 ### Running a model
 
 To run one of the preconfigured models, execute a python script in the `studies` folder, for example
@@ -64,6 +66,7 @@ python run_seven_dwarfs.py
 The documentation can be accessed under [insert link] and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.
 
 To create a local html version of the documentation, access the `docs` directory and type
+
 ```
 > make html
 ```
@@ -83,14 +86,9 @@ When contributing to the project, please follow the guidelines below:
 * Use as many `assert` statements as possible, even if they are computationally expensive. For actual runs, these checks can be switched off using the `-O` flag of the Python Interpreter.
 * Use proper (and long) variable names. Auto-completion will help typing them.
 * If a similar set of command is used twice, write a function for it right away.
-* Design the metadata used in the Variable class according to the [CF conventions](http://cfconventions.org/).
+* Design the metadata used in the Variable class according to established catalogs like the [CF conventions](http://cfconventions.org/).
 * When writing class and method docstrings, already specify types and bounds for arguments and return values in the [sphinx-compatible PyContracts way](https://andreacensi.github.io/contracts/).
-* Write in code-of-conduct: Everything but "models" and "model_components" should be well described with docstrings"
-* Consider the recommendations in the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide for python code.
-
-Additional guidelines:
-* Staff of the Potsdam Institute for Climate Impact research, please read and follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
-* Use [NetCDF, the CF conventions](http://cfconventions.org/) and [PIK's Typed Data Transfer](https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt) to store (input and) output data and share it with other models.
+* Follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
 
 ### Tests
 We are using the python testing framework [pytest](http://pytest.org/latest/) with [pylama](https://github.com/klen/pylama) for style and error checking. Please write corresponding unittests while developing and make sure that all test pass by executing

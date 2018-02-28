@@ -1,6 +1,5 @@
 """SocialSystem entity type mixing class template.
 """
-
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
@@ -35,14 +34,14 @@ class SocialSystem (I.SocialSystem):
         Explicit("emigration",
             [this_social_system.emigration],
             [basic_rate
-             * this_social_system.population
+             * this_social_system.population 
              * B.SocialSystem.world.sum(  # here is the summation
                 other_social_system.population
                 * (1/2 + 1/sp.pi * sp.atan(
                     sp.pi
                     * slope
-                    * sp.log(other_social_system.wellbeing
-                             / this_social_system.wellbeing
+                    * sp.log(other_social_system.wellbeing 
+                             / this_social_system.wellbeing 
                              / offset)
                     )
                   )
@@ -52,14 +51,14 @@ class SocialSystem (I.SocialSystem):
         Explicit("immigration",
             [this_social_system.immigration],
             [basic_rate
-             * this_social_system.population
+             * this_social_system.population 
              * B.SocialSystem.world.sum(  # here is the summation again
                 other_social_system.population
                 * (1/2 + 1/sp.pi * sp.atan(
                     sp.pi
                     * slope
-                    * sp.log(this_social_system.wellbeing
-                             / other_social_system.wellbeing
+                    * sp.log(this_social_system.wellbeing 
+                             / other_social_system.wellbeing 
                              / offset)
                     )
                   )
@@ -69,11 +68,11 @@ class SocialSystem (I.SocialSystem):
         ODE("effect of migration",
             [I.SocialSystem.population,
              I.SocialSystem.migrant_population],
-            [I.SocialSystem.immigration
+            [I.SocialSystem.immigration 
              - I.SocialSystem.emigration,
-             I.SocialSystem.immigration
+             I.SocialSystem.immigration 
              # assuming an equal emigration probability among migrants:
-             - I.SocialSystem.emigration * I.SocialSystem.migrant_population
+             - I.SocialSystem.emigration * I.SocialSystem.migrant_population 
                                     / I.SocialSystem.population])
 
     ]

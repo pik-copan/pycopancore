@@ -17,7 +17,6 @@ from ....private import unknown
 from .. import interface as I
 
 from .... import Explicit
-from pycopancore.data_model.master_data_model.cell import ocean_carbon
 
 
 class World (I.World, abstract.World):
@@ -131,12 +130,12 @@ class World (I.World, abstract.World):
 
     @property  # read-only
     def social_systems(self):
-        """Get the set of all Social Systems on this World."""
+        """Get the set of all SocialSystems on this World."""
         return self._social_systems
 
     @property  # read-only
     def top_level_social_systems(self):
-        """Get the set of top-level Social Systems on this World."""
+        """Get the set of top-level SocialSystems on this World."""
         # find by filtering:
         return set([s for s in self._social_systems
                     if s.next_higher_social_system is None])

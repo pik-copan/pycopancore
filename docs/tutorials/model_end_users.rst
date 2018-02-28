@@ -8,7 +8,7 @@ If you want to know how to create your own model, read the :doc:`model composers
 want to know how to create new model components, read the
 :doc:`model component developers <./model_component_developers>` tutorial.
 
-Starting point for a *model end user* is the runfile template (reference) and the
+Starting point for a *model end user* is the runfile template and the
 :doc:`API documentation <../_api/pycopancore.models>` of the model at hand.
 Using the documentation the *model end user* sets parameters, instantiates the necessary entities and taxa passing the
 appropriate arguments and iterates the model using the runner. The output trajectory of the runner is ready for data
@@ -54,7 +54,7 @@ we import the seven dwarfs model from ``pycopancore.models`` and the runner from
 Setting of parameters
 ---------------------
 Secondly, we set the parameters of our model, including the time interval of our simulation, the time step, the
-number of dwarfs, the eating stock ... We know
+number of dwarfs and the eating stock:
 ::
 
     # setting timeinterval for run method 'Runner.run()'
@@ -67,7 +67,7 @@ number of dwarfs, the eating stock ... We know
 Instantiating Entities and Taxa
 -------------------------------
 Afterwards, we instantiate the model as well as its entities and taxa. In the seven dwarfs example, the entities
-``World`` and ``Cell`` need arguments. We collect these information by checking the entities and taxa in the
+``World`` and ``Cell`` need some required keyword arguments. We collect these information by checking the entities and taxa in the
 :doc:`API documentation <../_api/pycopancore.seven_dwarfs>`.
 ::
 

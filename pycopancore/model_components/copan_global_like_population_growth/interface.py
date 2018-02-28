@@ -99,8 +99,8 @@ class Metabolism (object):
         unit = D.unity,
         strict_lower_bound=0, is_intensive=True,
         default=1/12)
-    renewable_energy_knowledge_depreciation_rate = \
-        MET.renewable_energy_knowledge_depreciation_rate
+#    renewable_energy_knowledge_depreciation_rate = \
+#        MET.renewable_energy_knowledge_depreciation_rate
     population_spatial_competition_coefficient = Variable(
         "coeff. of spatial competition in population dynamics", 
         "causes a capital- and well-being-dependent per-area population limit",

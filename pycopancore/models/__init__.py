@@ -8,7 +8,3 @@ This is the model folder (subpackage)
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
-# Contact: core@pik-potsdam.de
-# License: BSD 2-clause license
-
-from .exploit import World, Cell, Individual, Culture, Model

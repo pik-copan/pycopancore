@@ -1,8 +1,4 @@
-"""Cell entity type mixing class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
-"""
+"""Cell entity type mixing class template."""
 
 # This file is part of pycopancore.
 #
@@ -46,7 +42,7 @@ class Cell (I.Cell):
                         ITE(quotient < 1, 
                             (I.Cell.terrestrial_carbon * (1 - quotient))**2 
                             * (1 
-                               - B.Cell.social_system.emissions_tax_level
+                               - B.Cell.social_system.emissions_tax_level 
                                * I.Cell.total_energy_intensity
                                / B.Cell.metabolism.biomass_energy_density), 
                             0),

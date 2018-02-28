@@ -444,7 +444,7 @@ class ModelLogics (object):
         G = DiGraph(cls.explicit_digraph)
         G.remove_node(unknown)
         cls.explicit_evaluation_order = []
-        while len(G.nodes()) > 0:
+        while len(list(G.nodes())) > 0:
             # find a "nice" node x which depends on no other remaining nice
             # nodes and depends on the smallest set Y no. of remaining "not
             # nice" nodes:
@@ -452,7 +452,7 @@ class ModelLogics (object):
             bestcount = np.inf
             bestvar = None
             bestsources = None
-            for target in G.nodes():
+            for target in list(G.nodes()):
                 if target.explicit_dependencies not in (None, unknown):  # target is nice
                     sources = G.predecessors(target)
                     if any([isinstance(source.explicit_dependencies, set)

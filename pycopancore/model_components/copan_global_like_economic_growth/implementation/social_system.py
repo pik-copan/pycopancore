@@ -20,7 +20,7 @@ class SocialSystem (I.SocialSystem):
     processes = [
 
         Explicit("investment", 
-                 [I.SocialSystem.investment_flow,
+                 [I.SocialSystem.investment_flow, 
                   I.SocialSystem.consumption_flow],
                  [I.SocialSystem.savings_rate * I.SocialSystem.economic_output_flow,
                   (1 - I.SocialSystem.savings_rate) * I.SocialSystem.economic_output_flow]
@@ -35,7 +35,7 @@ class SocialSystem (I.SocialSystem):
                  ),
 
         ODE("growth, spillovers, depreciation",
-            [I.SocialSystem.physical_capital,
+            [I.SocialSystem.physical_capital, 
              I.SocialSystem.renewable_energy_knowledge],
             [I.SocialSystem.investment_flow
              - I.SocialSystem.physical_capital_depreciation_rate
