@@ -31,14 +31,14 @@ from pycopancore.runners.runner import Runner
 
 
 # setting timeinterval for run method 'Runner.run()'
-timeinterval = 10.1
+timeinterval = 200
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 
-nm = 2  # number of municipalities, also cities
-nc = 2  # number of counties, also farmland_cells
+nm = 1  # number of municipalities, also cities
+nc = 1  # number of counties, also farmland_cells
 na = 200  # number of agents
-pf = .9  # percentage of farmers
+pf = .5  # percentage of farmers
 nf = int(na * pf)  # number of farmers
 nt = int(na - nf)  # number of townsmen
 
@@ -47,7 +47,7 @@ model = M.Model()
 
 # instantiate process taxa culture:
 # In this certain case we need 'M.Culture()' for the acquaintance network.
-culture = M.Culture(fully_connected_network=True)
+culture = M.Culture(fully_connected_network=True)  # fully connected -> static network
 metabolism = M.Metabolism(market_frequency=1)
 
 # instantiate world:
@@ -105,7 +105,7 @@ for f in range(nf):
     liq = stats.lognorm.rvs(scale=300, s=0.34, loc=0)
     farmers.append(M.Individual(cell=farmland,
                                 profession='farmer',
-                                outspokenness=.5,
+                                outspokenness=3,
                                 liquidity=liq,
                                 nutrition=1000))
 # Instantiate townsmen:
@@ -117,35 +117,9 @@ for t in range(nt):
     liq = stats.lognorm.rvs(scale=700, s=0.34, loc=0)
     townsmen.append(M.Individual(cell=city,
                                  profession='townsman',
-                                 outspokenness=.5,
+                                 outspokenness=3,
                                  liquidity=liq,
                                  nutrition=100))
-
-# # Create Network:
-# expected_degree = 5
-#
-# # from run_adaptive_voter_model:
-#
-#
-# def erdosrenyify(graph, p=0.5):
-#     """Create a ErdosRenyi graph from networkx graph.
-#
-#     Take a a networkx.Graph with nodes and distribute the edges following the
-#     erdos-renyi graph procedure.
-#     """
-#     assert not graph.edges(), "your graph has already edges"
-#     nodes = graph.nodes()
-#     for i, n1 in enumerate(nodes[:-1]):
-#         for n2 in nodes[i+1:]:
-#             if random.random() < p:
-#                 graph.add_edge(n1, n2)
-#
-#
-# # set the initial graph structure to be an erdos-renyi graph
-# print("erdosrenyifying the graph ... ", end="", flush=True)
-# start = time()
-# erdosrenyify(culture.acquaintance_network, p=expected_degree / (nf + nt))
-# print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 start = time()
 # Calculate social_systems variables before run:
@@ -172,9 +146,7 @@ world.calc_total_liquidity(0)
 
 # Run market clearing once:
 metabolism.do_market_clearing(0)
-# In case of a erdos renyi network:
-# culture.calculate_modularity(0)
-# culture.calculate_transitivity(0)
+
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 termination_conditions = [[M.Metabolism.check_for_market_equilibrium, metabolism],
@@ -197,7 +169,7 @@ print('runtime: {runtime}'.format(**locals()))
 
 # Saving:
 print('saving:')
-traj.save(filename='data')
+#traj.save(filename='data')
 print('...is done')
 
 # Plotting:
@@ -226,22 +198,3 @@ gca().set_yscale('symlog')
 # savefig('20_ag_4_soc.png', dpi=150)
 show()
 
-# network_data = traj[M.Culture.acquaintance_network][culture]
-# G = network_data[-1]
-
-# Make list to have colors according to profession:
-# professions = {}
-# for ind in M.Individual.instances:
-#     if ind.profession == 'farmer':
-#         professions[ind] = 'yellow'
-#     else:
-#         professions[ind] = 'red'
-# colors = [professions.get(node) for node in G.nodes()]
-# # Make second list to have labels according to social_system:
-# social_systems = {}
-# for ind in M.Individual.instances:
-#     social_systems[ind] = str(ind.social_system._uid)
-# nx.draw(G, node_color=colors,
-#         labels=social_systems,
-#         pos=nx.spring_layout(G))
-# show()

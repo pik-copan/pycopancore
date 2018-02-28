@@ -86,19 +86,6 @@ class SocialSystem (object):
                                        "Mean income or farm size dependend on "
                                        "population and base_mean_income",
                                        default=0)
-    pdf_mu = Variable("log normal parameter mu",
-                      "parameter mu of the log-normal distribution",
-                      lower_bound=0)
-    pdf_sigma = Variable("log normal parameter sigma",
-                         "parameter sigma of the log-normal distribution",
-                         lower_bound=0,
-                         default=0.34)
-    liquidity_sigma = Variable("Liquidity sigma",
-                               "Sigma parameter of pdf of liquidity")
-    liquidity_median = Variable("Liquidity Mean",
-                                "Median of pdf of liquidity")
-    liquidity_loc = Variable("Liquidity location",
-                             "Location parameter of pdf of liquidity")
     average_liquidity = Variable("Average Liquidity",
                                  "Average over all liquidities in social_system",
                                  lower_bound=0,
@@ -173,21 +160,18 @@ class Individual (object):
     profession = Variable("profession",
                           "profession of an Individual, eg. 'farmer' or "
                           " 'townsman' ")
-    subjective_income_rank = Variable("subjective income rank",
-                                      "ranking of an individual by income"
-                                      "in its cell",
-                                      lower_bound=0,
-                                      upper_bound=1)
     farm_size = Variable("farm size",
                          "Size of the farm of an individual, if his "
                          "profession is farmer",
                          lower_bound=0,
-                         unit=D.square_kilometers)
+                         unit=D.square_kilometers,
+                         allow_none=True)  # farm size is None until distributed by social system
     gross_income = Variable("gross income",
                             "Income before trade, distributed by social_system if "
                             "social_system is a municipality",
                             lower_bound=0,
-                            unit=D.dollars)
+                            unit=D.dollars,
+                            allow_none=True)  # incomes are none until distributed by social system
     harvest = Variable("harvest",
                        "Water harvested before trade, calculated by farm size "
                        "and average farmland precipitation",

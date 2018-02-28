@@ -27,7 +27,7 @@ class Culture (I.Culture):
     def __init__(self,
                  *,
                  network_clustering=0,  # this is stupid but necessary, plotting failes otherwise
-                 fully_connected_network=False,
+                 fully_connected_network=True,  # static network
                  **kwargs):
         """Initialize the unique instance of Metabolism."""
         super().__init__(**kwargs)  # must be the first line
@@ -91,9 +91,9 @@ class Culture (I.Culture):
         return self.split
 
     processes = [
-                 # Explicit("calculate average clustering",
-                 #          [I.Culture.network_clustering],
-                 #          calculate_av_clustering),
+                 Explicit("calculate average clustering",
+                           [I.Culture.network_clustering],
+                           calculate_av_clustering),
                  Step("Calculate Modularity",
                       [I.Culture.modularity],
                       [modularity_timing, calculate_modularity]),

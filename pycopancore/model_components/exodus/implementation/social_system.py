@@ -34,10 +34,10 @@ class SocialSystem (I.SocialSystem):
                  municipality_like=False,
                  base_mean_income=1000,
                  pdf_sigma=0.34,  # 0.34 taken from Clementi, Gallegati 2005 for income distribution
-                 scaling_parameter=1.12,
+                 scaling_parameter=1.12, # taken from Bettencourt paper
                  migration_cost=1000,
-                 last_one_standing=False,
-                 continuous_exploration=False,
+                 last_one_standing=False,  # measures to ensure ergodicity
+                 continuous_exploration=False,  # kind of a noise term
                  **kwargs):
         """Initialize an instance of SocialSystem."""
         super().__init__(**kwargs)  # must be the first line
@@ -51,11 +51,8 @@ class SocialSystem (I.SocialSystem):
         self.last_one_standing = last_one_standing
         self.continuous_exploration = continuous_exploration
         # Initializing self.migration_rates list with length of number of
-        # social systems not possibble here, since not all are initialized yet.
-
-        self.liquidity_median = None
-        self.liquidity_sigma = None
-        self.liquidity_loc = None
+        # social systems not possibble here, since not all social systems
+        # are initialized yet.
 
     def calc_gross_income_or_farmsize(self):
         "Get random income or farm size distributed log-normal."
@@ -67,22 +64,6 @@ class SocialSystem (I.SocialSystem):
         median = (self.mean_income_or_farmsize / np.exp(sigma**2 / 2))
         lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=median)
         return lognormal_random
-
-    def liquidity_pdf(self):
-        """Calculate the PDF of the liquidity of the social_system."""
-        print('liquidity_pdf is calculated for social_system', self)
-        liquidities = []
-        # Check if there are any individuals:
-        if self.individuals:
-            for individual in self.individuals:
-                liquidities.append(individual.liquidity)
-            self.liquidity_sigma, self.liquidity_loc, self.liquidity_median = (
-                stats.lognorm.fit(liquidities, floc=0))
-            print('sigma, loc, median are',
-                  self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
-            print('population is', self.population)
-        else:
-            print('SocialSystem died out')
 
     def calc_population(self, unused_t):
         """Calculate the social_systems population explicitly.

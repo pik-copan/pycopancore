@@ -33,8 +33,6 @@ class Individual (I.Individual):
                  nutrition_need=1240,
                  liquidity=None,
                  nutrition=None,
-                 migration_threshold=0.7,
-                 migration_steepness=5,
                  second_degree_rewire_prob=0.3,
                  outspokenness=None,
                  random_rewire=0.05,
@@ -45,15 +43,11 @@ class Individual (I.Individual):
         super().__init__(**kwargs)  # must be the first line
         self.profession = profession
         self.nutrition_need = nutrition_need
-        self.migration_threshold = migration_threshold
-        self.migration_steepness = migration_steepness
         self.second_degree_rewire_prob = second_degree_rewire_prob
         self.outspokenness = outspokenness
         self.random_rewire = random_rewire
         self.gross_income = gross_income
         self.farm_size = farm_size
-
-        self._subjective_income_rank = None
         self.liquidity = liquidity
         self.nutrition = nutrition
 
@@ -212,7 +206,8 @@ class Individual (I.Individual):
         """Do rewiring.
 
         Detaches from neighbour and rewires to a neighbour of degree n.
-        Parameters
+        This process is only used, if the network is not static!
+        Parameters.
         ----------
         neighbour: exodus.individual
             neighbour from which to detach
@@ -335,14 +330,6 @@ class Individual (I.Individual):
                   self.social_system.average_liquidity)
             self.utility = 0
 
-    def calculate_sri(self, unused_t):
-        """Calculate subjective income rank of individual"""
-        sri = stats.lognorm.cdf(self.liquidity,
-                                s=self.social_system.liquidity_sigma,
-                                loc=self.social_system.liquidity_loc,
-                                scale=self.social_system.liquidity_median)
-        self.subjective_income_rank = sri
-
     processes = [
         Event("social update",
               [B.Individual.social_system,
@@ -358,8 +345,5 @@ class Individual (I.Individual):
                  calculate_harvest),
         Explicit("Calculate Utility",
                  [I.Individual.utility],
-                 calculate_utility),
-        #Explicit("Calculate Subjective Income Rank",
-        #         [I.Individual.subjective_income_rank],
-        #         calculate_sri)
+                 calculate_utility)
     ]  # TODO: instantiate and list process objects here
