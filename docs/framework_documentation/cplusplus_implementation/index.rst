@@ -13,9 +13,10 @@ with a few exceptions discussed shortly here.
 Multiple inheritance
 --------------------
 
-While C++ supports multiple inheritance, there might arise issues:
-
-- How to call the "next" sister class' constructor not knowing which class this will be?
+To overcome the problem that same-named members declared in two base classes are NOT the same member in C++,
+we need to put each variable into its own class 
+that is then virtually (!) inherited by all components that use the variable,
+so that the final composed entity-type class contains only one copy of the variable.
 
 
 Introspection / reflection
@@ -57,3 +58,32 @@ in a "variables" struct inside the entity/taxon instead of directly as member va
 Symbolic expressions
 --------------------
 Seems possible in principle, see http://issc.uj.ac.za/symbolic/symbolic.html
+
+Dot constructs can be realized by overloading operators similar to properties.
+
+Other elements
+--------------
+Variables can be realized as macros that are given the codenames as arguments.
+
+Processes can also be realized as macros that are given the method code as argument.
+
+Each model component gets its own namespace so that entity type classes can have the same name.
+In model composition one can then use short namespace aliases.
+
+Use static data members and static member functions for instance-independent functionality.
+
+Pitfalls
+--------
+- const
+- pass-by-reference
+- virtual functions
+
+Conventions
+-----------
+probably follow most of https://google.github.io/styleguide/cppguide.html 
+with the obvious exceptions:
+
+- we DO use multiple inheritance
+- wo DO allow parameters passed by reference not labeled const to allow dot notation.
+
+
