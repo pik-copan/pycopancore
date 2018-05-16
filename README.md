@@ -26,9 +26,7 @@ pycopancore is developed at the Potsdam Institute for Climate Impact Research (P
 Contact: core@pik-potsdam.de
 Website: www.pik-potsdam.de/copan/software
 
-<img src="https://www.pik-potsdam.de/members/heitzig/public/core-1.png/image_view_fullscreen" width="1280">
-
-![copan:CORE logics](https://www.pik-potsdam.de/members/heitzig/public/core-1.png/image_view_fullscreen = 1280)
+<img src="https://www.pik-potsdam.de/members/heitzig/public/core-1.png" width="1280">
 
 ## Disclaimer
 
