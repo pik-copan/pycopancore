@@ -86,19 +86,6 @@ class SocialSystem (object):
                                        "Mean income or farm size dependend on "
                                        "population and base_mean_income",
                                        default=0)
-    pdf_mu = Variable("log normal parameter mu",
-                      "parameter mu of the log-normal distribution",
-                      lower_bound=0)
-    pdf_sigma = Variable("log normal parameter sigma",
-                         "parameter sigma of the log-normal distribution",
-                         lower_bound=0,
-                         default=0.34)
-    liquidity_sigma = Variable("Liquidity sigma",
-                               "Sigma parameter of pdf of liquidity")
-    liquidity_median = Variable("Liquidity Mean",
-                                "Median of pdf of liquidity")
-    liquidity_loc = Variable("Liquidity location",
-                             "Location parameter of pdf of liquidity")
     average_liquidity = Variable("Average Liquidity",
                                  "Average over all liquidities in social_system",
                                  lower_bound=0,
@@ -115,6 +102,36 @@ class SocialSystem (object):
     migration_cost = Variable("Migration Cost",
                               "Cost to migrate to this social_system",
                               default=1000)
+    migration_counter = Variable("Migration Counter",
+                                 "List of: "
+                                 "-number of events that could lead to "
+                                 "migration,"
+                                 "-list of social systems uids of possible "
+                                 "taget social systems,"
+                                 "-list of social system and uids "
+                                 "of target SocialSystems",
+                                 datatype=list)
+    migration_rates = Variable("Migration Rates",
+                               "List with migration rates to all other "
+                               "social systems",
+                               datatype=list,
+                               allow_none=True,
+                               default=None)
+    theoretical_mig_rate = Variable("Theoretical Migration Rate",
+                                    "Analytical approximation of rates",
+                                    datatype=list,
+                                    allow_none=True,
+                                    default=None)
+    last_one_standing = Variable("Last one standing",
+                                 "Bool that if True prohibits the last agent "
+                                 "in a social system from migrating",
+                                 datatype=bool,
+                                 default=False)
+    continuous_exploration = Variable("Continuos Exploration",
+                                      "Bool, that if True leads to a noise in"
+                                      "migration",
+                                      datatype=bool,
+                                      default=False)
 
     # exogenous variables / parameters:
 
@@ -143,21 +160,18 @@ class Individual (object):
     profession = Variable("profession",
                           "profession of an Individual, eg. 'farmer' or "
                           " 'townsman' ")
-    subjective_income_rank = Variable("subjective income rank",
-                                      "ranking of an individual by income"
-                                      "in its cell",
-                                      lower_bound=0,
-                                      upper_bound=1)
     farm_size = Variable("farm size",
                          "Size of the farm of an individual, if his "
                          "profession is farmer",
                          lower_bound=0,
-                         unit=D.square_kilometers)
+                         unit=D.square_kilometers,
+                         allow_none=True)  # farm size is None until distributed by social system
     gross_income = Variable("gross income",
                             "Income before trade, distributed by social_system if "
                             "social_system is a municipality",
                             lower_bound=0,
-                            unit=D.dollars)
+                            unit=D.dollars,
+                            allow_none=True)  # incomes are none until distributed by social system
     harvest = Variable("harvest",
                        "Water harvested before trade, calculated by farm size "
                        "and average farmland precipitation",

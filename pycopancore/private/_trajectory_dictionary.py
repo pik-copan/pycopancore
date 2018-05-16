@@ -71,6 +71,11 @@ class _TrajectoryDictionary(dict):
                             # transformed into strings, too:
                             if all(isinstance(val, (float, int)) for val in value):
                                 dict_to_save[new_key][new_key_2] = value
+                            # Maybe value is a list of list with floats/ints?
+                            elif (all(isinstance(val, (float, int)) for val in
+                                     list(self.traverse(value)))
+                                  ):
+                                dict_to_save[new_key][new_key_2] = value
                             # Networks:
                             elif all(isinstance(val, nx.Graph) for val in value):
                                 # save as dict of dicts
@@ -98,6 +103,11 @@ class _TrajectoryDictionary(dict):
                             # If values are not numbers, they have to be
                             # transformed into strings, too:
                             if all(isinstance(val, (float, int)) for val in value):
+                                dict_to_save[new_key][new_key_2] = value
+                            # Maybe value is a list of list with floats/ints?
+                            elif (all(isinstance(val, (float, int)) for val in
+                                     list(self.traverse(value)))
+                                  ):
                                 dict_to_save[new_key][new_key_2] = value
                             # Networks:
                             elif all(isinstance(val, nx.Graph) for val in value):
@@ -161,3 +171,12 @@ class _TrajectoryDictionary(dict):
             # might include floats, booleans, or integers. This is not possible
             # with HDF5 at all.
             raise Exception('Not implemented yet')
+
+    # Helping function to save lists and tuples
+    def traverse(self, item, tree_types=(list, tuple)):
+        if isinstance(item, tree_types):
+            for values in item:
+                for subvalues in self.traverse(values, tree_types):
+                    yield subvalues
+        else:
+            yield item

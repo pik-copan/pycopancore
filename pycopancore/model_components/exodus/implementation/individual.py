@@ -33,8 +33,6 @@ class Individual (I.Individual):
                  nutrition_need=1240,
                  liquidity=None,
                  nutrition=None,
-                 migration_threshold=0.7,
-                 migration_steepness=5,
                  second_degree_rewire_prob=0.3,
                  outspokenness=None,
                  random_rewire=0.05,
@@ -45,15 +43,11 @@ class Individual (I.Individual):
         super().__init__(**kwargs)  # must be the first line
         self.profession = profession
         self.nutrition_need = nutrition_need
-        self.migration_threshold = migration_threshold
-        self.migration_steepness = migration_steepness
         self.second_degree_rewire_prob = second_degree_rewire_prob
         self.outspokenness = outspokenness
         self.random_rewire = random_rewire
         self.gross_income = gross_income
         self.farm_size = farm_size
-
-        self._subjective_income_rank = None
         self.liquidity = liquidity
         self.nutrition = nutrition
 
@@ -101,17 +95,49 @@ class Individual (I.Individual):
         Either migration or de- and re-friending takes place. 
         In case of a fully connected network only migration takes place.
         """
+        # Set Flag to prevent agents from migrating twice when continuos
+        # exploration is True:
+        migrated = False
         # First: determine if fully connected network:
         if self.culture.fully_connected_network:
+            # First check if continuos exploration is turned on:
+            if self.social_system.continuous_exploration:
+                # define threshold for noise:
+                if random.random() < 0.05:
+                    # Do exploration -> Move to any cell/social system
+                    ss = random.sample(self.world.social_systems, 1)[0]
+                    # Get the social systems cell (cells is a set)
+                    print(ss)
+                    for cell in ss.cells:
+                        new_cell = cell
+                    # If social system is idle/deactivated:
+                    if ss.__class__.idle_entities and \
+                                    ss in ss.__class__.idle_entities:
+                        # reactivate it:
+                        ss.reactivate()
+                    self.migrate(new_cell)
+                    migrated = True
+
             # Network is fully connected:
-            chosen_one = random.choice(list(self.culture.acquaintance_network.nodes()))
-            if self.decide_migration(chosen_one):
+            chosen_one = random.choice(self.culture.acquaintance_network.nodes())
+            # Add event to social systems migration counter:
+            self.social_system.migration_counter[0] += 1
+            self.social_system.migration_counter[1].append(
+                chosen_one.social_system)
+            if self.decide_migration(chosen_one) and not migrated:
                 # in case of preferential migration, checks are done
                 if self.preferential_migration:
+                    # Add successful event to migration counter:
+                    self.social_system.migration_counter[2].append(
+                        chosen_one.social_system)
                     self.preferential_migrate(chosen_one.cell)
                 else:
+                    # Add successful event to migration counter:
+                    self.social_system.migration_counter[2].append(
+                        chosen_one.social_system)
                     # Migrate
                     self.migrate(chosen_one.cell)
+
         else:  # Not fully connected:
             # Chose Acquaintance, if existent:
             if self.acquaintances:
@@ -152,6 +178,11 @@ class Individual (I.Individual):
         bool:
             True if migration takes place
         """
+        # If last one standing is active, check if there are more than one
+        # agent in the social system:
+        if self.social_system.last_one_standing:
+            if self.social_system.population == 1:
+                return False
         # Difference in utility:
         delta_utility = neighbour.utility - self.utility
         # print('delta util', delta_utility)
@@ -175,7 +206,8 @@ class Individual (I.Individual):
         """Do rewiring.
 
         Detaches from neighbour and rewires to a neighbour of degree n.
-        Parameters
+        This process is only used, if the network is not static!
+        Parameters.
         ----------
         neighbour: exodus.individual
             neighbour from which to detach
@@ -298,21 +330,14 @@ class Individual (I.Individual):
                   self.social_system.average_liquidity)
             self.utility = 0
 
-    def calculate_sri(self, unused_t):
-        """Calculate subjective income rank of individual"""
-        sri = stats.lognorm.cdf(self.liquidity,
-                                s=self.social_system.liquidity_sigma,
-                                loc=self.social_system.liquidity_loc,
-                                scale=self.social_system.liquidity_median)
-        self.subjective_income_rank = sri
-
     processes = [
         Event("social update",
               [B.Individual.social_system,
                # B.Individual.culture.acquaintance_network TOO BIG TO SAVE!
                I.Individual.farm_size,
                I.Individual.gross_income,
-               I.Individual.liquidity
+               I.Individual.liquidity,
+               B.Individual.social_system.migration_counter
                ],
               ["time", social_update_timer, social_update]),
         Explicit("Calculate harvest",
@@ -320,8 +345,5 @@ class Individual (I.Individual):
                  calculate_harvest),
         Explicit("Calculate Utility",
                  [I.Individual.utility],
-                 calculate_utility),
-        #Explicit("Calculate Subjective Income Rank",
-        #         [I.Individual.subjective_income_rank],
-        #         calculate_sri)
+                 calculate_utility)
     ]  # TODO: instantiate and list process objects here

@@ -34,8 +34,10 @@ class SocialSystem (I.SocialSystem):
                  municipality_like=False,
                  base_mean_income=1000,
                  pdf_sigma=0.34,  # 0.34 taken from Clementi, Gallegati 2005 for income distribution
-                 scaling_parameter=1.12,
+                 scaling_parameter=1.12, # taken from Bettencourt paper
                  migration_cost=1000,
+                 last_one_standing=False,  # measures to ensure ergodicity
+                 continuous_exploration=False,  # kind of a noise term
                  **kwargs):
         """Initialize an instance of SocialSystem."""
         super().__init__(**kwargs)  # must be the first line
@@ -45,10 +47,12 @@ class SocialSystem (I.SocialSystem):
         self.pdf_sigma = pdf_sigma
         self.scaling_parameter = scaling_parameter
         self.migration_cost = migration_cost
-
-        self.liquidity_median = None
-        self.liquidity_sigma = None
-        self.liquidity_loc = None
+        self.migration_counter = [0, [], []]
+        self.last_one_standing = last_one_standing
+        self.continuous_exploration = continuous_exploration
+        # Initializing self.migration_rates list with length of number of
+        # social systems not possibble here, since not all social systems
+        # are initialized yet.
 
     def calc_gross_income_or_farmsize(self):
         "Get random income or farm size distributed log-normal."
@@ -60,22 +64,6 @@ class SocialSystem (I.SocialSystem):
         median = (self.mean_income_or_farmsize / np.exp(sigma**2 / 2))
         lognormal_random = stats.lognorm.ppf(number, s=sigma, scale=median)
         return lognormal_random
-
-    def liquidity_pdf(self):
-        """Calculate the PDF of the liquidity of the social_system."""
-        print('liquidity_pdf is calculated for social_system', self)
-        liquidities = []
-        # Check if there are any individuals:
-        if self.individuals:
-            for individual in self.individuals:
-                liquidities.append(individual.liquidity)
-            self.liquidity_sigma, self.liquidity_loc, self.liquidity_median = (
-                stats.lognorm.fit(liquidities, floc=0))
-            print('sigma, loc, median are',
-                  self.liquidity_sigma, self.liquidity_loc, self.liquidity_median)
-            print('population is', self.population)
-        else:
-            print('SocialSystem died out')
 
     def calc_population(self, unused_t):
         """Calculate the social_systems population explicitly.
@@ -192,6 +180,73 @@ class SocialSystem (I.SocialSystem):
             # Gini coefficient
             self.gini_coefficient = 0.5 * rmad
 
+    def calculate_migration_rate(self, unused_t):
+        """Calculate migration rates"""
+        # First time this is called, a list of length of number of social
+        # systems is generated:
+        if self.migration_rates is None:
+            self.migration_rates = [0] * len(self.world.social_systems)
+
+        # Every time this is called, this list needs to be reset:
+        for i in range(len(self.migration_rates)):
+            self.migration_rates[i] = 0
+        # The two above steps are not performed as one, since some social
+        # systems might be deactivated during run, resulting in a new length
+        # for the list.
+
+        # Now copy this list for theoretical migration rates:
+        self.theoretical_mig_rate = list(self.migration_rates)
+        if self.is_active:
+            # print(self.migration_counter)
+            tot_tries = self.migration_counter[0]  # total number of tries
+            mig_attempts = self.migration_counter[1]  # list of social systems where attempted
+            mig_moves = self.migration_counter[2]  # list of social system where success
+
+            # for the following to work, it is important, that we know the
+            # smallest uid of the social systems and all other social systems
+            # have following uids!
+            min_uid = min(ss._uid for ss in self.world.social_systems)
+            # attempted moves:
+            attempt_list = self.migration_rates.copy()
+            for element in mig_attempts:
+                for i, soc in enumerate(attempt_list):
+                    # since uids start with min_uid, we need to add it:
+                    if str(element).endswith(str(i+min_uid)+']'):
+                        attempt_list[i] += 1
+
+            # successful moves:
+            for element in mig_moves:
+                for i, soc in enumerate(self.migration_rates):
+                    # print(i)
+                    # since uids start with min_uid, we need to add it:
+                    if element._uid == i+min_uid:
+                        self.migration_rates[i] += 1
+            # Now divide success by attempts
+            for i, el in enumerate(self.migration_rates):
+                try:
+                    self.migration_rates[i] = self.migration_rates[i]
+                    # If probability is needed, following is needed:
+                    #  self.migration_rates[i] = (self.migration_rates[i]
+                    #                             / attempt_list[i])
+                except ZeroDivisionError:
+                    # Both entries 0
+                    self.migration_rates[i] = 0
+
+            # Theoretical Calculation:
+            for ss in self.world.social_systems:
+                # Put in values according to the uids. Since uids start with
+                # min_uid, we have to account for that by subtracting it:
+                self.theoretical_mig_rate[(ss._uid-min_uid)] = (1/2 + (
+                    math.sqrt(ss.average_liquidity)
+                    - math.sqrt(self.average_liquidity))/(4 * math.sqrt(
+                    self.world.water_price * 1240))) * attempt_list[(ss._uid-min_uid)]
+                # if probability is wanted, leave out * attempt_list[(ss._uid-min_uid)]
+            # 1240 is the water need, also set in Individual.calculate_utility
+            # print(self.migration_rates, self.theoretical_mig_rate)
+            # reset migration counter for next step:
+            self.migration_counter = [0, [], []]
+            #print(self.migration_counter)
+
     processes = [
         Explicit('calculate population',
                  [B.SocialSystem.population,
@@ -199,10 +254,6 @@ class SocialSystem (I.SocialSystem):
                   # not afterwards, since this is not saved otherwise:
                   I.SocialSystem.municipality_like],
                  calc_population),
-        Step("Update incomes/farmsizes",
-             [B.SocialSystem.individuals.farm_size,
-              B.SocialSystem.individuals.gross_income],
-             [update_timing, do_update]),
         Explicit('calculate mean income or farmsize',
                  [I.SocialSystem.mean_income_or_farmsize],
                  calculate_mean_income_or_farmsize),
@@ -214,7 +265,15 @@ class SocialSystem (I.SocialSystem):
                  calculate_average_utility),
         Explicit("Calculate gini",
                  [I.SocialSystem.gini_coefficient],
-                 calculate_gini)
+                 calculate_gini),
+        Step("Calculate Migration Rates",
+             [I.SocialSystem.migration_rates,
+              I.SocialSystem.theoretical_mig_rate],
+             [update_timing, calculate_migration_rate]),
+        Step("Update incomes/farmsizes",
+             [B.SocialSystem.individuals.farm_size,
+              B.SocialSystem.individuals.gross_income],
+             [update_timing, do_update])
     ]
 
 
