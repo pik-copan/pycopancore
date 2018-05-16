@@ -23,13 +23,13 @@ ninds = 1000 #1000 # no. individuals
 t_1 = 2100
 
 # choose one of two scenarios:
-filename = "/home/jobst/work/withlarge.pickle"
-#filename = "/home/jobst/work/without.pickle"
+filename = "/tmp/with.pickle"
+#filename = "/tmp/without.pickle"
 # (these files will be read by plot_example1.py)
 
 with_spillovers = 1
 
-if filename != "/home/jobst/work/without.pickle":
+if filename != "/tmp/without.pickle":
     with_migration = 1
     with_awareness = 1
     with_learning = 1
