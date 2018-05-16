@@ -23,7 +23,7 @@ class Individual (I.Individual):
         This method is called by Culture's learning process
         """
         # choose random acquaintance if there are any:
-        neighbors = self.culture.acquaintance_network.neighbors(self)
+        neighbors = list(self.culture.acquaintance_network.neighbors(self))
         if len(neighbors) == 0:
             return
         other = random.choice(neighbors)

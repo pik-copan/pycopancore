@@ -76,7 +76,7 @@ class Individual(aware.Individual,
 
 
 class Environment(cc.Environment,
-             base.Environment):
+                  base.Environment):
     """Environment process taxon."""
 
     pass

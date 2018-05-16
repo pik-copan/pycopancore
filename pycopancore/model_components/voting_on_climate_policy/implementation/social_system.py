@@ -16,7 +16,7 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 from .... import Event
-from numpy import array
+from numpy import array, floor
 from numpy.random import uniform
 
 class SocialSystem (I.SocialSystem):
@@ -26,7 +26,7 @@ class SocialSystem (I.SocialSystem):
     
     def next_voting_time(self, t):
         if not self.voting_time_offset:
-            self.voting_time_offset = uniform() * self.time_between_votes
+            self.voting_time_offset = floor(uniform()*8)/8 * self.time_between_votes
         return (self.voting_time_offset 
                 + self.time_between_votes
                 * ((t - self.voting_time_offset + 1e-10) // self.time_between_votes 

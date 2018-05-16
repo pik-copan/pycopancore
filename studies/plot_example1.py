@@ -58,7 +58,7 @@ ax31.set_xlim(1990,2110)
 
 ax12.title.set_text('with social processes')
 
-traj = load(open("/home/jobst/work/with.pickle","rb"))
+traj = load(open("/home/jobst/work/withlarge.pickle","rb"))
 worlds = list(traj["World.atmospheric_carbon"].keys())
 social_systems = list(traj["SocialSystem.population"].keys())
 cells = list(traj["Cell.fossil_carbon"].keys())
