@@ -1,10 +1,11 @@
 [![Documentation Status](https://readthedocs.org/projects/pycopancore/badge/?version=latest)](http://pycopancore.readthedocs.io/en/latest/?badge=latest)
 
 # pycopancore
-reference implementation of the copan:CORE World-Earth modelling framework
-
+Reference implementation of the copan:CORE World-Earth modelling framework
 
 copan:CORE is developed at the Potsdam Institute for Climate Impact Research.
+
+An extensive documentation is found at http://pycopancore.readthedocs.io/
 
 Table of Contents:
 
@@ -67,7 +68,7 @@ python run_seven_dwarfs.py
 
 ### Documentation
 
-The documentation can be accessed under [insert link] and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.
+The documentation can be accessed under http://pycopancore.readthedocs.io/ and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.
 
 To create a local html version of the documentation, access the `docs` directory and type
 
