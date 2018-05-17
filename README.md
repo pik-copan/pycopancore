@@ -1,6 +1,4 @@
-.. image:: https://readthedocs.org/projects/pycopancore/badge/?version=latest
-:target: http://pycopancore.readthedocs.io/en/latest/?badge=latest
-:alt: Documentation Status
+[![Documentation Status](https://readthedocs.org/projects/pycopancore/badge/?version=latest)](http://pycopancore.readthedocs.io/en/latest/?badge=latest)
 
 # pycopancore
 reference implementation of the copan:CORE World-Earth modelling framework
