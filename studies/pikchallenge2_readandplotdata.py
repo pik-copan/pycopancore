@@ -7,8 +7,8 @@ from pickle import load
 
 # load data and list keys:
 
-traj = load(open("/tmp/with.pickle","rb"))
-#traj = load(open("/tmp/without.pickle","rb"))
+#traj = load(open("/tmp/with.pickle","rb")) # TODO: adjust filename
+traj = load(open("/tmp/without.pickle","rb")) # TODO: adjust filename
 # traj is a dict of dicts of lists of variable values.
 # traj[variable_name] is a dict of lists of variable values for that variable.
 # traj[variable_name][entity_label] is a list of variable values for that variable and entity,
@@ -83,7 +83,7 @@ ax32.set_ylabel('gigatonnes carbon')
 ax32.set_ylim(-100,3100)
 
 ax32.set_xlabel('year')
-ax32.set_xlim(1990,2110)
+#ax32.set_xlim(1990,2110)
 
 ax12.legend(title='CUL: opinions & policies')
 ax22.legend(title='MET: energy shares')

@@ -18,25 +18,24 @@ nsocs = 50 #5 # no. social_systems
 ncells = 500 #100  # no. cells
 ninds = 5000 #1000 # no. individuals
 
-t_1 = 2100
+t_1 = 2200
 
 # choose one of two scenarios:
-filename = "/tmp/with.pickle"
-#filename = "/tmp/without.pickle"
-# (these files will be read by plot_example1.py)
-
-with_spillovers = 1
+#filename = "/tmp/with.pickle"
+filename = "/tmp/without.pickle"
 
 if filename != "/tmp/without.pickle":
     with_migration = 1
     with_awareness = 1
     with_learning = 1
     with_voting = 1
+    with_spillovers = 1
 else:
     with_migration = 0
     with_awareness = 0
     with_learning = 0
     with_voting = 0
+    with_spillovers = 0
 
 model = M.Model()
 
@@ -64,7 +63,7 @@ worlds = [M.World(environment=environment,
                   upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.GtC
                   ) for w in range(nworlds)]
 social_systems = [M.SocialSystem(
-                    world=random.choice(worlds),
+                    world = random.choice(worlds),
                     has_renewable_subsidy = random.choice([False, True], 
                                                           p=[3/4, 1/4]),
                     has_emissions_tax = random.choice([False, True], 
@@ -72,12 +71,12 @@ social_systems = [M.SocialSystem(
                     has_fossil_ban = False, 
                     time_between_votes = 4 if with_voting else 1e100, 
                     ) for s in range(nsocs)]
-cells = [M.Cell(social_system=random.choice(social_systems),
+cells = [M.Cell(social_system = random.choice(social_systems),
                 renewable_sector_productivity = 2 * random.rand()
                     * M.Cell.renewable_sector_productivity.default)
          for c in range(ncells)]
 individuals = [M.Individual(
-                cell=random.choice(cells),
+                cell = random.choice(cells),
                 is_environmentally_friendly = 
                     random.choice([False, True], p=[.7, .3]), 
                 ) 
