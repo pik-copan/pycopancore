@@ -23,8 +23,8 @@ ninds = 1000 # no. individuals
 t_1 = 2120
 
 # choose one of two scenarios:
-filename = "/home/jobst/work/with.pickle"
-#filename = "/home/jobst/work/without.pickle"
+#filename = "/home/jobst/work/with.pickle"
+filename = "/home/jobst/work/without.pickle"
 # (these files will be read by plot_example1.py)
 
 with_spillovers = 1
