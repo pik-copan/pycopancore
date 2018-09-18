@@ -18,11 +18,11 @@ nsocs = 50 #5 # no. social_systems
 ncells = 500 #100  # no. cells
 ninds = 5000 #1000 # no. individuals
 
-t_1 = 2200
+t_1 = 2100
 
 # choose one of two scenarios:
-#filename = "/tmp/with.pickle"
-filename = "/tmp/without.pickle"
+filename = "/tmp/with.pickle"
+#filename = "/tmp/without.pickle"
 
 if filename != "/tmp/without.pickle":
     with_migration = 1

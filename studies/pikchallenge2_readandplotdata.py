@@ -7,8 +7,8 @@ from pickle import load
 
 # load data and list keys:
 
-#traj = load(open("/tmp/with.pickle","rb")) # TODO: adjust filename
-traj = load(open("/tmp/without.pickle","rb")) # TODO: adjust filename
+traj = load(open("/tmp/with.pickle","rb")) # TODO: adjust filename
+#traj = load(open("/tmp/without.pickle","rb")) # TODO: adjust filename
 # traj is a dict of dicts of lists of variable values.
 # traj[variable_name] is a dict of lists of variable values for that variable.
 # traj[variable_name][entity_label] is a list of variable values for that variable and entity,
