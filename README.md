@@ -26,7 +26,7 @@ The implementation and simulation of World-Earth models within the framework can
 
 Reference: Donges, J. F., Heitzig, J., Barfuss, W., Kassel, J. A., Kittel, T., Kolb, J. J., Kolster, T., Müller-Hansen, F., Otto, I. M., Wiedermann, M., Zimmerer, K. B., and Lucht, W.: Earth system modelling with complex dynamic human societies: the copan:CORE World-Earth modeling framework, Earth Syst. Dynam. Discuss., https://doi.org/10.5194/esd-2017-126, in review, 2018. 
 
-pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK). Responsible senior scientists at PIK are [Jobst Heitzig](https://www.pik-potsdam.de/members/heitzig) & [Jonathan F. Donges.](https://www.pik-potsdam.de/members/donges)
+pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK), Research Domains for Earth System Analysis and Transdisciplinary Concepts & Methods. Responsible senior scientists at PIK are [Jobst Heitzig](https://www.pik-potsdam.de/members/heitzig) & [Jonathan F. Donges.](https://www.pik-potsdam.de/members/donges)
 
 Contact: core@pik-potsdam.de
 Website: www.pik-potsdam.de/copan/software
