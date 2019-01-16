@@ -90,4 +90,4 @@ class SocialSystem:
         Variable("renewable subsidy level",
                  "level of renewable subsidy when introduced",
                  unit = dollars / gigajoules, 
-                 lower_bound=0, default=50)
+                 lower_bound=0, default=50) # FIXME: check plausibility!

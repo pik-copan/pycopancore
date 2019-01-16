@@ -12,10 +12,9 @@ then remove these instructions
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .... import Explicit
+from .... import Explicit, ITE
 from .. import interface as I
 from ...base import interface as B
-from sympy import ITE
 
 # from .... import master_data_model as D
 

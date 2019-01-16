@@ -2,6 +2,22 @@ import math as ma
 import numpy as np
 import sympy as sp
 
+from sympy import Eq, Piecewise
+from sympy.logic.boolalg import Boolean
+
+
+def ITE(cond, iftrue, iffalse):
+    """
+    returns iftrue when condition is True, else iffalse
+    """
+    cond = Eq(cond, True)  # make sure type is Boolean
+    print("if",cond,isinstance(cond,Boolean))
+    print("then",iftrue,type(iftrue))
+    print("else",iffalse,type(iffalse))
+    print(type((iftrue, cond)))
+    print(type((iffalse, True)))
+    return Piecewise((iftrue, cond), (iffalse, True))
+
 
 def safe_sqrt(x):
     """square root extended to negative values
