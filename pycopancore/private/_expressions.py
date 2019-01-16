@@ -16,6 +16,7 @@
 
 import numpy as np
 import sympy as sp
+from sympy.functions.elementary.piecewise import ExprCondPair
 import scipy.special
 
 from .. import data_model as D
@@ -461,7 +462,10 @@ class _DotConstruct(sp.AtomicExpr):
             arg_values = eval(self._argument, instances)
             cardinalities, branchings = \
                 get_cardinalities_and_branchings(self._argument)
-            aggregation_level = cardinalities.index(len(items))
+            try:
+                aggregation_level = cardinalities.index(len(items))
+            except:
+                aggregation_level = len(cardinalities) - 1
             layout = branchings[aggregation_level:] \
                 if aggregation_level < len(cardinalities) - 1 \
                 else [[1 for i in items]]
@@ -586,7 +590,7 @@ def _eval(expr, iteration=None):
     t = type(expr)
     tt = type(t)
     if (isinstance(expr, sp.Expr) or tt == sp.FunctionClass) \
-            and len(expr.args) > 0:
+            and len(expr.args) > 0 and t != sp.Piecewise:
         args = expr.args
         argvals = [None for a in args]
         argcards = [None for a in args]
@@ -612,6 +616,41 @@ def _eval(expr, iteration=None):
     # binary operators:
     elif t in binary2numpy:
         vals = binary2numpy[t](argvals[0], argvals[1])
+    elif t == sp.Piecewise: # only works for Piecewise constructs of the form (iftrue, cond), (iffalse, True) yet!
+        args = expr.args
+        piecevals = [None for a in args]
+        piececards = [None for a in args]
+        piecebrs = [None for a in args]
+        condvals = [None for a in args]
+        condcards = [None for a in args]
+        condbrs = [None for a in args]
+        for i, arg in enumerate(args):
+            piecevals[i], piececards[i], piecebrs[i] = \
+                _eval(arg[0], iteration=iteration)
+            condvals[i], condcards[i], condbrs[i] = \
+                _eval(arg[1], iteration=iteration)
+        # TODO: broadcast shorter args to level of longest arg!
+        longest = np.argmax([len(c) for c in piececards])
+        cardinalities = piececards[longest]
+        branchings = piecebrs[longest]
+        for i, arg in enumerate(args):
+            if i != longest:
+                length = piecevals[i].size
+                pos = 0 if length == 1 else cardinalities.index(length)
+                piecevals[i] = broadcast(piecevals[i], branchings[pos:])
+        longest = np.argmax([len(c) for c in condcards])
+        cardinalities = condcards[longest]
+        branchings = condbrs[longest]
+        for i, arg in enumerate(args):
+            if i != longest:
+                length = condvals[i].size
+                pos = 0 if length == 1 else cardinalities.index(length)
+                condvals[i] = broadcast(condvals[i], branchings[pos:])
+        assert np.all(condvals[1]), "Piecewise only works with args of the form (iftrue, cond), (iffalse, True) yet!"
+        truthvals = condvals[0]
+        trues = list(np.where(truthvals == True)[0])  # "==" is correct here, since it may be a sympy.True!! Do not replace "==" by "is"!!
+        vals = piecevals[1]
+        vals[trues] = piecevals[0][trues]
     # ternary operators:
     elif t == sp.ITE:
         truthvals = argvals[0]
@@ -666,9 +705,9 @@ def _eval(expr, iteration=None):
     else:
         # simple scalar for broadcasting:
         # clumsy way of converting sympy True to normal True:
-        if expr is True:
+        if expr is True or expr == sp.true:
             expr = True
-        elif expr is False:
+        elif expr is False or expr == sp.false:
             expr = False
         else:
             expr = float(expr)

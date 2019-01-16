@@ -11,11 +11,6 @@ def ITE(cond, iftrue, iffalse):
     returns iftrue when condition is True, else iffalse
     """
     cond = Eq(cond, True)  # make sure type is Boolean
-    print("if",cond,isinstance(cond,Boolean))
-    print("then",iftrue,type(iftrue))
-    print("else",iffalse,type(iffalse))
-    print(type((iftrue, cond)))
-    print(type((iffalse, True)))
     return Piecewise((iftrue, cond), (iffalse, True))
 
 
