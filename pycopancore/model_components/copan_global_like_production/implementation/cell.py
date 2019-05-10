@@ -13,7 +13,7 @@ from .... import Explicit, ITE
 from .... import master_data_model as D
 from .. import interface as I
 from ...base import interface as B
-from sympy import Min
+from sympy import Min, Max
     
 
 # import numpy as np
@@ -78,9 +78,9 @@ class Cell (I.Cell):
         Explicit("total relative productivity",
                  [I.Cell.total_relative_productivity],
                  [
-                     I.Cell.biomass_relative_productivity
-                     + I.Cell.fossil_relative_productivity
-                     + I.Cell.renewable_relative_productivity 
+                     Max(0, I.Cell.biomass_relative_productivity)
+                     + Max(0, I.Cell.fossil_relative_productivity)
+                     + Max(0, I.Cell.renewable_relative_productivity) 
                  ])
 
     ]

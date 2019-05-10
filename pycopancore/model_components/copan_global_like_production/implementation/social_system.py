@@ -72,9 +72,9 @@ class SocialSystem (I.SocialSystem):
         eB = self.metabolism.biomass_energy_density
         eF = self.metabolism.fossil_energy_density
         # TODO: FIX occurrence of intensity:
-        B = np.array([c.biomass_relative_productivity for c in C]) * fac / eB
-        F = np.array([c.fossil_relative_productivity for c in C]) * fac / eF
-        R = np.array([c.renewable_relative_productivity for c in C]) * fac
+        B = np.array([max(0, c.biomass_relative_productivity) for c in C]) * fac / eB
+        F = np.array([max(0, c.fossil_relative_productivity) for c in C]) * fac / eF
+        R = np.array([max(0, c.renewable_relative_productivity) for c in C]) * fac
         E = eB * B + eF * F + R
         Y = E / intensity
         if any(Y < 0):
