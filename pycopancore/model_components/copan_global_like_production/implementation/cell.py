@@ -39,7 +39,8 @@ class Cell (I.Cell):
                  [
                   I.Cell.biomass_sector_productivity
                   # TODO: verify the following:
-                  * ITE(B.Cell.social_system.has_emissions_tax,
+                  * ITE(B.Cell.social_system.has_emissions_tax > 0,
+                        # FIXME: clarify why it does not work without the "> 0" above 
                         ITE(quotient < 1, 
                             (I.Cell.terrestrial_carbon * (1 - quotient))**2 
                             * (1 
@@ -48,10 +49,11 @@ class Cell (I.Cell):
                                / B.Cell.metabolism.biomass_energy_density), 
                             0),
                         unprotected_terrestrial_carbon_squared),
-                  ITE(B.Cell.social_system.has_fossil_ban, 0,
+                  ITE(B.Cell.social_system.has_fossil_ban > 0, 
+                      0,
                       I.Cell.fossil_sector_productivity
                       # TODO: verify the following:
-                      * ITE(B.Cell.social_system.has_emissions_tax,
+                      * ITE(B.Cell.social_system.has_emissions_tax > 0,
                             (I.Cell.fossil_carbon
                              * (1 - B.Cell.social_system.protected_fossil_carbon_share)
                              )**2 * (
@@ -65,7 +67,7 @@ class Cell (I.Cell):
                       ),
                   I.Cell.renewable_sector_productivity
                   # TODO: verify the following:
-                  * ITE(B.Cell.social_system.has_renewable_subsidy,
+                  * ITE(B.Cell.social_system.has_renewable_subsidy > 0,
                         (B.Cell.social_system.renewable_energy_knowledge)**2 * (
                             1
                             + B.Cell.social_system.renewable_subsidy_level
