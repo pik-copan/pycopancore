@@ -1,10 +1,10 @@
-"""Script to run example1 model."""
+"""Script to run example2 model."""
 
 from time import time
 from numpy import random, array
 import numpy as np
 
-import pycopancore.models.example1 as M
+import pycopancore.models.example2 as M
 from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
@@ -16,77 +16,75 @@ random.seed(10)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 5 # no. social_systems
-ncells = 100  # no. cells
-ninds = 1000 # no. individuals
+nsocs = 2 # no. social_systems
+ncells = 4  # no. cells
+ninds = 400 # no. individuals
 
-t_1 = 2010 #2120
+t_1 = 2120
 
 # choose one of two scenarios:
-#filename = "/home/jobst/work/with.pickle"
-filename = "/home/jobst/work/without.pickle"
+filename = "/home/jobst/work/with.pickle"
+#filename = "/home/jobst/work/without.pickle"
 # (these files will be read by plot_example1.py)
 
-with_spillovers = 1
-
 if filename == "/home/jobst/work/with.pickle":
-    with_migration = 1
-    with_awareness = 1
     with_learning = 1
     with_voting = 1
 else:
-    with_migration = 0
-    with_awareness = 0
     with_learning = 0
     with_voting = 0
 
 model = M.Model()
 
 # instantiate process taxa:
+
 environment = M.Environment()
+
 metabolism = M.Metabolism(
-    renewable_energy_knowledge_spillover_fraction = 
-        .1 if with_spillovers else 0,
-    basic_emigration_probability_rate = 
-        16e-13 if with_migration else 0, # leads to ca. 5mio. at 5 socs, (real)
-    )
-culture = M.Culture(
-    awareness_lower_carbon_density=1e-4,
-    awareness_upper_carbon_density=2e-4,
-    awareness_update_rate = 1 if with_awareness else 0,
-    environmental_friendliness_learning_rate = 1 if with_learning else 0,
-    max_protected_terrestrial_carbon_share=0,
+    renewable_energy_knowledge_spillover_fraction = 0
     )
 
-# generate entities and plug them together at random:
-worlds = [M.World(environment=environment, 
-                  metabolism=metabolism, 
-                  culture=culture,
-                  atmospheric_carbon = 830 * D.gigatonnes_carbon,
-                  upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.GtC
-                  ) for w in range(nworlds)]
-social_systems = [M.SocialSystem(
-                    world=random.choice(worlds),
-                    has_renewable_subsidy = random.choice([False, True], 
-                                                          p=[3/4, 1/4]),
-                    has_emissions_tax = random.choice([False, True], 
-                                                      p=[4/5, 1/5]),
-                    has_fossil_ban = False, 
-                    time_between_votes = 4 if with_voting else 1e100, 
-                    ) for s in range(nsocs)]
-cells = [M.Cell(social_system=random.choice(social_systems),
-                renewable_sector_productivity = 2 * random.rand()
-                    * M.Cell.renewable_sector_productivity.default)
-         for c in range(ncells)]
+culture = M.Culture(
+    environmental_friendliness_learning_rate = 1 if with_learning else 0,
+    )
+
+# generate entities and plug them together:
+
+(world, ) = worlds = [M.World(
+    environment = environment, 
+    metabolism = metabolism, 
+    culture = culture,
+    atmospheric_carbon = 830 * D.gigatonnes_carbon,
+    upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.GtC
+    ) for w in range(nworlds)]
+
+(north, south) = social_systems = [M.SocialSystem(
+    world = world,
+    has_renewable_subsidy = False,
+    has_emissions_tax = False,
+    has_fossil_ban = False,
+    renewable_subsidy_intro_threshold = 1, # disabled
+    fossil_ban_intro_threshold = 1, # disabled
+    time_between_votes = 4 if with_voting else 1e100, 
+    ) for s in range(nsocs)]
+
+(boreal, temperate, subtropical, tropical) = cells = [M.Cell(
+    social_system = social_systems[c//2],
+    renewable_sector_productivity = [.7,.9,1.1,1.3][c]
+        * M.Cell.renewable_sector_productivity.default,
+        # represents dependency of solar energy on solar insolation angle
+    # TODO: more heterogeneity?
+    ) for c in range(ncells)]
+
 individuals = [M.Individual(
-                cell=random.choice(cells),
+                cell = cells[i%4],
                 is_environmentally_friendly = 
-                    random.choice([False, True], p=[.7, .3]), 
+                    random.choice([False, True], p=[.8, .2]), # represents the "20% suffice" assumption 
                 ) 
                for i in range(ninds)]
 
 # initialize block model acquaintance network:
-target_degree = 150
+target_degree = 10 # = 2.5% of all agents. Dunbar's number would be too large
 target_degree_samecell = 0.5 * target_degree
 target_degree_samesoc = 0.35 * target_degree
 target_degree_other = 0.15 * target_degree
@@ -101,32 +99,27 @@ for index, i in enumerate(individuals):
                 else p_other):
             culture.acquaintance_network.add_edge(i, j)
 
-# distribute area and vegetation randomly but correlatedly:
-r = random.uniform(size=ncells)
-Sigma0 = 1.5e8 * D.square_kilometers * r / sum(r)
+# distribute area and vegetation uniformly since it seems there are no real differences between the actual zones:
+Sigma0 = 1.5e8 * D.square_kilometers * array([0.25, 0.25,  .25, .36])
 M.Cell.land_area.set_values(cells, Sigma0)
 
-r += random.uniform(size=ncells)
-L0 = 2480 * D.gigatonnes_carbon * r / sum(r)  # 2480 is yr 2000
+L0 = 2480 * D.gigatonnes_carbon * array([0.25, 0.25,  .25, .25])  # 2480 is yr 2000
 M.Cell.terrestrial_carbon.set_values(cells, L0)
 
-r = np.exp(random.normal(size=ncells))
-G0 = 1125 * D.gigatonnes_carbon * r / sum(r)  # 1125 is yr 2000
+# distribute fossils linearly from north to south:
+G0 = 1125 * D.gigatonnes_carbon * array([.4, .3,  .2, .1])  # 1125 is yr 2000
 M.Cell.fossil_carbon.set_values(cells, G0)
 
+# distribute population 1:3 between north and south, and 2:3 within each:
 r = random.uniform(size=nsocs)
-P0 = 6e9 * D.people * r / sum(r)  # 6e9 is yr 2000
+P0 = 6e9 * D.people * array([0.1, 0.15,  0.3, 0.45])  # 6e9 is yr 2000
 M.SocialSystem.population.set_values(social_systems, P0)
-M.SocialSystem.migrant_population.set_values(social_systems, P0 * 250e6 / 6e9)
-for s in social_systems:
-    s.max_protected_terrestrial_carbon = \
-        0.90 * sum(c.terrestrial_carbon for c in s.cells)
- 
-r = random.uniform(size=nsocs)
-K0 = sum(P0) * 1e4 * D.dollars/D.people * r / sum(r)  # ?
+
+# distribute capital 2:1:
+K0 = sum(P0) * 1e4 * D.dollars/D.people * array([2/3, 1/3])
 M.SocialSystem.physical_capital.set_values(social_systems, K0)
 
-# for renewables, do NOT divide by number of socs:    
+# for renewable knowledge stock, do NOT divide by number of socs:    
 r = random.uniform(size=nsocs)
 S0 = 1e12 * D.gigajoules * r / r.mean()
 M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
@@ -171,8 +164,6 @@ t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())
 
 print("\nyr 2000 values (real):")
-print("emigration (5e6):",sum(traj[M.SocialSystem.emigration][s][5] 
-                              for s in social_systems))
 print("photo (123):",sum(traj[M.Cell.photosynthesis_carbon_flow][c][5] 
                          for c in cells))
 print("resp (118):",sum(traj[M.Cell.terrestrial_respiration_carbon_flow][c][5] 
@@ -193,23 +184,11 @@ print("B (3), F (11), R(100):",
       Fglobal, Fglobal.tostr(unit=D.gigatonnes_carbon/D.years),
       Rglobal, Rglobal.tostr(unit=D.gigawatts),
       ) 
-print("life exp. at end:", 1/np.mean([traj[M.SocialSystem.mortality][s][-1] 
-                                     for s in social_systems]))
 print("cap. deprec. at begin (0.1?):",
       np.mean([traj[M.SocialSystem.physical_capital_depreciation_rate][s][5] 
                for s in social_systems]))
 print("cap. deprec. at end (0.1?):",
       np.mean([traj[M.SocialSystem.physical_capital_depreciation_rate][s][-1] 
                for s in social_systems]))
-print("deaths at begin (>250000?):", sum(traj[M.SocialSystem.deaths][s][5] 
-                                        for s in social_systems))
-print("deaths at end (>250000?):", sum(traj[M.SocialSystem.deaths][s][-1] 
-                                      for s in social_systems))
 print("temp. at begin:", traj[M.World.surface_air_temperature][worlds[0]][5])
 print("temp. at end:", traj[M.World.surface_air_temperature][worlds[0]][-1])
-print("prot. carbon share:", 
-      [traj[M.SocialSystem.protected_terrestrial_carbon][s][-1]
-       / sum(traj[M.Cell.terrestrial_carbon][c][-1] 
-             for c in s.cells) for s in social_systems])
-print(traj[M.World.terrestrial_carbon][worlds[0]][-1],
-      sum(traj[M.Cell.terrestrial_carbon][c][-1] for c in worlds[0].cells))
