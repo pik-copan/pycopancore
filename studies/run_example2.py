@@ -71,7 +71,7 @@ culture = M.Culture(
     emissions_tax_intro_threshold = 0.5, # disabled
     renewable_subsidy_intro_threshold = 1, # disabled
     fossil_ban_intro_threshold = 1, # disabled
-    emissions_tax_level = 20 * 200e9, # see Wikipedia social cost of carbon. 100e9*3.5,
+    emissions_tax_level = 30 * 200e9, # see Wikipedia social cost of carbon. 100e9*3.5,
     time_between_votes = 4 if with_voting else 1e100, 
     ) for s in range(nsocs)]
 
@@ -145,7 +145,10 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 start = time()
 traj = runner.run(t_0=2000, t_1=t_1, dt=1, 
-                  add_to_output=[M.Individual.represented_population])
+                  add_to_output=[
+                    M.Individual.represented_population, 
+                    M.SocialSystem.population
+                    ])
 
 
 for v in environment.variables: print(v,v.get_value(environment))
