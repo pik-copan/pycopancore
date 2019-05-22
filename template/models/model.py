@@ -40,10 +40,10 @@ class World(SOMECOMPONENT.World,
 
 
 # TODO: list all mixin classes needed:
-class Society(SOMECOMPONENT.Society,
-              ONECOMPONENT.Society,
-              base.Society):
-    """Society entity type."""
+class SocialSystem(SOMECOMPONENT.SocialSystem,
+              ONECOMPONENT.SocialSystem,
+              base.SocialSystem):
+    """SocialSystem entity type."""
     pass
 
 
@@ -105,7 +105,7 @@ class Model(SOMECOMPONENT.Model,
     """Longer description"""
 
     # TODO: list all entity types you composed above:
-    entity_types = [World, Society, Cell, Individual]
+    entity_types = [World, SocialSystem, Cell, Individual]
     """List of entity types used in the model"""
 
     # TODO: list all entity types you composed above:

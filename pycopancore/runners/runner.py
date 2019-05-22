@@ -316,8 +316,8 @@ class Runner(_AbstractRunner):
                     assert rate_or_timefunc > 0, \
                         "zero, negative, or varying rates not supported yet."
                     next_time = t_0 + np.random.exponential(1. / rate_or_timefunc)
-                    # TODO: if rate_or_timefunc is a function in this case,
-                    # it returns a time-varying rate that depends on state,
+                    # TODO: if rate_or_timefunc is a function or symbolic expression in this case,
+                    # it returns a potentially time-varying rate that depends on state,
                     # hence it must be used in ode integration to integrate
                     # its cumulative distribution function, and when the
                     # latter crosses a threshold that we randomly draw
