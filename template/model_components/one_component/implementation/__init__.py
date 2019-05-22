@@ -13,7 +13,6 @@ TODO: uncomment neccessary code wherever marked by the "TODO" flag.
 # TODO: uncomment entity types and process taxa used in this model component 
 
 # export all provided entity type implementation mixin classes:
-<<<<<<< HEAD:pycopancore/model_components/_template/implementation/__init__.py
 from .world import World
 from .social_system import SocialSystem
 from .cell import Cell
