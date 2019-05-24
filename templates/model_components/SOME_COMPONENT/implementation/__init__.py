@@ -13,12 +13,12 @@ TODO: uncomment neccessary code wherever marked by the "TODO" flag.
 # TODO: uncomment entity types and process taxa used in this model component 
 
 # export all provided entity type implementation mixin classes:
-from .world import World
-from .social_system import SocialSystem
-from .cell import Cell
-from .individual import Individual
+#from .world import World
+#from .social_system import SocialSystem
+#from .cell import Cell
+#from .individual import Individual
 
 # export all provided process taxon implementation mixin classes:
-from .environment import Environment
-from .metabolism import Metabolism
-from .culture import Culture
+#from .environment import Environment
+#from .metabolism import Metabolism
+#from .culture import Culture
