@@ -13,11 +13,8 @@ also the model development tutorial.
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
  
-# TODO: (uncomment if needed) Either Import a model from pycopancore ...
-# from pycopancore.models import MODEL as M
-
-# TODO: (uncomment if needed) ... or import a model you designed yourself
-# import ..models.model as M 
+# TODO: (uncomment if needed) Import a model from pycopancore ...
+# import pycopancore.models.SOMEMODEL as M 
 
 # You need a runner to run your model. Do not remove this.
 from pycopancore.runners.runner import Runner

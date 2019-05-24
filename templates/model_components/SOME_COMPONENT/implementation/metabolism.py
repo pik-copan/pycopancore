@@ -21,15 +21,15 @@ class Metabolism (I.Metabolism):
     """Metabolism process taxon mixin implementation class."""
 
     # standard methods:
-    # TODO: remove those that you don't use
+    # TODO: only uncomment when adding custom code!
 
-    def __init__(self,
-                 # *,  # TODO: uncomment when adding named args behind here
-                 **kwargs):
-        """Initialize the unique instance of Metabolism."""
-        super().__init__(**kwargs)  # must be the first line
-        # TODO: add custom code here:
-        pass
+#     def __init__(self,
+#                  # *,  # TODO: uncomment when adding named args behind here
+#                  **kwargs):
+#         """Initialize the unique instance of Metabolism."""
+#         super().__init__(**kwargs)  # must be the first line
+#         # TODO: add custom code here:
+#         pass
 
     # process-related methods:
 

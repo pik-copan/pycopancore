@@ -45,8 +45,6 @@ class Culture (I.Culture, abstract.Culture):
         self.acquaintance_network = acquaintance_network
         self._worlds = set()
 
-        self._worlds = set()
-
         # make sure all variable values are valid:
         self.assert_valid()
 
