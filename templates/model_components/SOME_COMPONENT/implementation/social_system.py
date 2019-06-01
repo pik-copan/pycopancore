@@ -14,6 +14,8 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 
+# TODO: uncomment this if you need ref. variables such as B.SocialSystem.individuals:
+#from ...base import interface as B
 
 class SocialSystem (I.SocialSystem):
     """SocialSystem entity type mixin implementation class."""

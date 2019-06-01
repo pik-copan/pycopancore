@@ -16,6 +16,8 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 
+# TODO: uncomment this if you need ref. variables such as B.Metabolism.social_systems:
+#from ...base import interface as B
 
 class Metabolism (I.Metabolism):
     """Metabolism process taxon mixin implementation class."""

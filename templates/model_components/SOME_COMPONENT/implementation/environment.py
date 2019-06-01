@@ -11,6 +11,10 @@ the "TODO" flag.
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 from .. import interface as I
+# from .... import master_data_model as D
+
+# TODO: uncomment this if you need ref. variables such as B.Environment.cells:
+#from ...base import interface as B
 
 class Environment (I.Environment):
     """Environment process taxon mixin implementation class."""

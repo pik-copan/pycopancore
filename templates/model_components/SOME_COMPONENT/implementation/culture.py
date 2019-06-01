@@ -16,6 +16,8 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 
+# TODO: uncomment this if you need ref. variables such as B.Culture.individuals:
+#from ...base import interface as B
 
 class Culture (I.Culture):
     """Culture process taxon mixin implementation class."""

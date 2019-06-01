@@ -21,12 +21,16 @@ class DimensionsAndUnits:
     m = meters = Unit("meters", "meters", symbol="m", dimension=length)
     length.default_unit = km = kilometers = \
         (meters * 1000).named("kilometers", symbol="km")
+    decimeters = (meters / 10).named("decimeters", symbol="dm")
     
     time = Dimension("time", "time")
     time.default_unit = a = yr = years = Unit("years", "years", symbol="a")
-    s = seconds = (years / 31556952).named("seconds")
+    s = seconds = (years / 31556952).named("seconds", symbol="s")
     minutes = (seconds * 60).named("minutes", symbol="min")
     h = hours = (minutes * 60).named("hours", symbol="h")
+    days = (hours * 24).named("days", symbol="d")
+    weeks = (days * 7).named("weeks")
+    months = (years / 12).named("months")
     
     mass = Dimension("mass",
                      "mass (only use for matter changing its type, otherwise use specific mass dimension, e.g. 'carbon')")
@@ -69,7 +73,7 @@ class DimensionsAndUnits:
                                                           symbol="GtC")
     
     humans = Dimension("humans", "cardinality of a set of human beings")
-    humans.default_unit = H = people = \
+    humans.default_unit = H = people = persons = \
         Unit("people", "number of human beings", symbol="H")
     
     # we do NOT treat energy as convertible to mass, so we do NOT say:
@@ -101,10 +105,15 @@ class DimensionsAndUnits:
     # other derived dimensions and units:
     
     area = (length**2).named("area", "2D spatial dimension")
-    square_kilometers = kilometers**2
+    square_kilometers = (kilometers**2).named("square kilometers", symbol="km²")
+    hectares = (meters**2 * 1e4).named("hectares", symbol="ha")
     
     volume = (length**3).named("volume", "3D spatial dimension")
+    litres = (decimeters**3).named("litres", symbol="l") 
     
     velocity = (length / time).named("velocity")
     
     acceleration = (velocity / time).named("acceleration")
+
+    person_hours = (people * hours).named("person hours")
+    person_months = (people * months).named("person months")

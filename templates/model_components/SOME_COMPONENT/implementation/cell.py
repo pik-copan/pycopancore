@@ -12,12 +12,16 @@ the "TODO" flag.
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 from .. import interface as I
+# from .... import master_data_model as D
+
+# TODO: uncomment this if you need ref. variables such as B.Cell.individuals:
+#from ...base import interface as B
 
 class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
 
     # standard methods:
-    # TODO: only uncomment when adding custom code!
+    # TODO: only uncomment when adding custom code inside!
 
 #     def __init__(self,
 #                  # *,  # TODO: uncomment when adding named args behind here

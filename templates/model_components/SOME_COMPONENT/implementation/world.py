@@ -16,6 +16,8 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 
+# TODO: uncomment this if you need ref. variables such as B.World.cells:
+#from ...base import interface as B
 
 class World (I.World):
     """World entity type mixin implementation class."""
