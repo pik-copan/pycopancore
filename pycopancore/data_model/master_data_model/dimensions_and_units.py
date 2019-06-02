@@ -10,7 +10,7 @@
 # License: BSD 2-clause license
 
 from .. import Dimension
-from .. import Unit
+from .. import Unit, unity
 
 
 class DimensionsAndUnits:
@@ -103,6 +103,8 @@ class DimensionsAndUnits:
     GW = gigawatts = (GWh / h).named("gigawatts", symbol="GW")
     
     # other derived dimensions and units:
+    
+    percent = pct = (unity / 100).named("per cent", symbol="%")
     
     area = (length**2).named("area", "2D spatial dimension")
     square_kilometers = (kilometers**2).named("square kilometers", symbol="km²")
