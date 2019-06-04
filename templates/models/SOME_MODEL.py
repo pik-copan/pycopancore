@@ -13,16 +13,14 @@ also the model development tutorial.
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 # all models must use the base component
-from pycopancore import base
+from .. import base
 
 #
 # TODO: import all other needed model components (adjust as needed):
 #
-# Model components are either provided by pycopancore
-from pycopancore.model_components import SOMECOMPONENT
+from ..model_components import SOMECOMPONENT as FOO
+from ..model_components import ANOTHERCOMPONENT as BAR
 
-# Or you implement your own components
-from model_components import one_component as ONECOMPONENT
 
 # entity types:
 
@@ -32,32 +30,32 @@ from model_components import one_component as ONECOMPONENT
 # delete the templates for the unneeded ones, and add those for missing ones:
 
 # TODO: list all mixin classes needed:
-class World(SOMECOMPONENT.World,
-            ONECOMPONENT.World,
+class World(FOO.World,
+            BAR.World,
             base.World):
     """World entity type."""
     pass
 
 
 # TODO: list all mixin classes needed:
-class SocialSystem(SOMECOMPONENT.SocialSystem,
-              ONECOMPONENT.SocialSystem,
-              base.SocialSystem):
+class SocialSystem(FOO.SocialSystem,
+                   BAR.SocialSystem,
+                   base.SocialSystem):
     """SocialSystem entity type."""
     pass
 
 
 # TODO: list all mixin classes needed:
-class Cell(SOMECOMPONENT.Cell,
-           ONECOMPONENT.Cell,
+class Cell(FOO.Cell,
+           BAR.Cell,
            base.Cell):
     """Cell entity type."""
     pass
 
 
 # TODO: list all mixin classes needed:
-class Individual(SOMECOMPONENT.Individual,
-                 ONECOMPONENT.Individual,
+class Individual(FOO.Individual,
+                 BAR.Individual,
                  base.Individual):
     """Individual entity type."""
     pass
@@ -68,24 +66,24 @@ class Individual(SOMECOMPONENT.Individual,
 # TODO: do the same for process taxa:
 
 # TODO: list all mixin classes needed:
-class Enviroment(SOMECOMPONENT.Enviroment,
-             ONECOMPONENT.Enviroment,
-             base.Enviroment):
+class Enviroment(FOO.Enviroment,
+                 BAR.Enviroment,
+                 base.Enviroment):
     """Enviroment process taxon."""
     pass
 
 
 # TODO: list all mixin classes needed:
-class Metabolism(SOMECOMPONENT.Metabolism,
-                 ONECOMPONENT.Metabolism,
+class Metabolism(FOO.Metabolism,
+                 BAR.Metabolism,
                  base.Metabolism):
     """Metabolism process taxon."""
     pass
 
 
 # TODO: list all mixin classes needed:
-class Culture(SOMECOMPONENT.Culture,
-              ONECOMPONENT.Culture,
+class Culture(FOO.Culture,
+              BAR.Culture,
               base.Culture):
     """Culture process taxon."""
     pass
@@ -94,8 +92,8 @@ class Culture(SOMECOMPONENT.Culture,
 # Model class:
 
 # TODO: list all used model components:
-class Model(SOMECOMPONENT.Model,
-            ONECOMPONENT.Model,
+class Model(FOO.Model,
+            BAR.Model,
             base.Model):
     """Class representing the whole model."""
 
