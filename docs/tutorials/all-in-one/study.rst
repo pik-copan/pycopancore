@@ -5,7 +5,8 @@ As we have seen, model components and models are implemented in an
 *object-oriented* way as subpackages and modules of the ``pycopancore`` 
 *package* folder. Studies that use a model for a simulation experiment are
 however implemented as python *scripts* and reside in the ``study`` folder.
-Again, we can use a template to get started:
+So let us now switch into the role of a *model end user* and perform some such
+'study'. Again, we can use a template to get started:
 
 - Copy ``templates/studies/SOME_STUDY.py`` to ``studies/run_my_exploit.py`` and
   edit the imports like this::
@@ -46,7 +47,7 @@ fish stocks:
 
 - Replace the random population block by this similar code::
     
-    S0 = uniform(high=10, size=ncells)
+    S0 = uniform(size=ncells)
     M.Cell.fish_stock.set_values(cells, S0)
     
 Note that here we did not specify a unit, so the numbers will be interpreted as
@@ -58,7 +59,7 @@ specific entity or process taxon is by accessing the variable's *value*
 directly, so we could have instead written::
 
     for c in cells:
-        c.fish_stock = uniform() * 10 * M.t_fish
+        c.fish_stock = uniform() * M.t_fish
 
 We use this way of accessing values now for initializing the social network
 between the individuals, which is stored in the variable 
@@ -108,8 +109,9 @@ the final step of our study, we can do it like this:
     effort = traj[M.Individual.fishing_effort] 
     total_stock = np.sum([stock[c] for c in cells], axis=0)
     avg_effort = np.mean([effort[i] for i in inds], axis=0)
-    plt.plot(traj["t"], total_stock, 'g')
-    plt.plot(traj["t"], avg_effort, 'r')
+    plt.plot(traj["t"], total_stock, 'g', label="fish stock")
+    plt.plot(traj["t"], avg_effort, 'b', label="fishing effort")
+    plt.legend()
     plt.show()
 
 This finishes our coding work, so let's finally try it out and hope we made no

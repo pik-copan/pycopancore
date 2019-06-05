@@ -1,8 +1,9 @@
 Part 5. Composing the model
 ---------------------------
 
-Now that we have our three model components, we need to compose them into an
-actual model:
+Now that we have our three model components, we can switch from the role of a
+*model component developer* into the role of a *model composer* and compose 
+the three model components into an actual model:
 
 - Copy ``templates/models/SOME_MODEL.py`` into ``pycopancore/models``, 
   rename it to ``my_exploit.py``, and edit it to have::

@@ -1,6 +1,7 @@
 Part 2. Implementing the growth component
 -----------------------------------------
 
+From parts 2 to 4, we act in the role of a *model component developer*.
 We start by doing some simple preparations:
 
 - ``git clone https://github.com/pik-copan/pycopancore.git``
@@ -147,7 +148,7 @@ Since in ``grow``, we use two parameters, ``self.fish_capacity`` and
             unit = Model.t_fish,
             lower_bound = 0,
             is_extensive = True,
-            default = 10 * Model.t_fish)
+            default = 1 * Model.t_fish)
             
     class Environment ...
     

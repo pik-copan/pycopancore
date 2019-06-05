@@ -29,5 +29,6 @@ Contents:
    model
    study
    test
+   exercises
 
 
