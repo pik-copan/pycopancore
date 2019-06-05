@@ -67,10 +67,6 @@ other quantities in ways that make no sense. Therefore:
         fish.default_unit = t_fish = \
             Unit("t fish", "metric tonnes of fish", symbol="t")
     
-- Comment out the line::
-
-    ONECELLVARIABLE = master_data_model.Cell....
-
 - Uncomment the lines::
 
     from ... import Variable
@@ -103,7 +99,11 @@ We will add further variables here later whenever we need them, so best keep
 We chose to do it by specifying the corresponding term in the ODE for 
 ``fish_stock`` via a *method* of ``Cell``:
 
-- In ``implementation/cell.py``, add the following method to ``class Cell``::
+- In ``implementation/cell.py``, add this import::
+
+    from .... import ODE
+
+- Add the following method to ``class Cell``::
 
     def grow(self, unused_t):
         competition_factor = 1 - self.fish_stock / self.fish_capacity
@@ -112,9 +112,14 @@ We chose to do it by specifying the corresponding term in the ODE for
   
 - In the list ``processes = []``, add the following list entry::
 
-    ODE("fish growth", [fish_stock], grow)
+    ODE("fish growth", [I.Cell.fish_stock], grow)
 
-With the latter entry, we declare that ``fish_stock`` changes according to an
+Any process declaration is of the form 
+``PROCESS_TYPE("NAME", [TARGET_VARIABLE(S)], ...)``,
+where ``PROCESS_TYPE`` can be ``ODE``, ``Explicit``, ``Event``, etc.,
+and each ``TARGET_VARIABLE`` is a ``Variable`` object referenced via the 
+interface ``I``.
+With the process entry, we declare that ``fish_stock`` changes according to an
 ordinary differential equation and that the method ``grow`` adds a term to this 
 differential equation. Note that the method does so not by *returning* the term 
 but by explicitly adding it to the special attribute ``Cell.d_fish_stock`` 
@@ -142,17 +147,17 @@ Since in ``grow``, we use two parameters, ``self.fish_capacity`` and
             unit = Model.t_fish,
             lower_bound = 0,
             is_extensive = True,
-            default = 100 * Model.t_fish)
+            default = 10 * Model.t_fish)
             
     class Environment ...
     
         # exogenous variables / parameters:
         basic_fish_growth_rate = Variable("basic fish growth rate",
             "basic rate at which fish would grow without competition",
-            unit = Model.t_fish / D.years,
+            unit = D.months**(-1),
             lower_bound = 0,
             is_intensive = True,
-            default = 1.0 * Model.t_fish / D.months)
+            default = 2 / D.years)
             
 While we treat the capacity as a cell variable that may vary from cell to cell,
 we treat the basic growth rate as some kind of natural constant which belongs
@@ -168,8 +173,8 @@ an appropriate way.
 For parameters, one often wants to specify default values, which we have done 
 here. Bounds and default values can either be specified as pure numbers (like 
 ``0``), in which case they are assumed to be in the unit specified under 
-``unit=``, or as *dimensional quantities* (like ``1.0 * t_fish / months``, 
-meaning one ton of fish per month), in which case the unit of the dimensional 
+``unit=``, or as *dimensional quantities* (like ``2 / years``, 
+meaning two per year), in which case the unit of the dimensional 
 quantity must belong to the same physical dimension as the unit specified under 
 ``unit=``. In the latter case, pycopancore automatically takes care of the 
 necessary conversions, hence we encourage you to always specify values in the 
@@ -179,7 +184,7 @@ for the reader and avoid conversion mistakes.
 As you can see, units can also be multiplied and divided to create suitable 
 units for derived dimensions. E.g., in the case of ``basic_fish_growth_rate``, 
 the correct dimension is fish per time, so we can use units such as 
-``t_fish / years``, ``t_fish / months``, etc. We don't need to define the 
+``years**(-1)``, ``months**(-1)``, etc. We don't need to define the 
 time dimension and units ourselves but use those provided by pycopancore's 
 *master data model*, which is here imported under the abbreviation ``D``
 (more on this later).

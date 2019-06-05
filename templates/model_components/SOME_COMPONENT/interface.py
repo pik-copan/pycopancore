@@ -16,7 +16,7 @@ from ... import master_data_model as D
 
 # TODO: uncomment and adjust to use variables from other pycopancore model
 # components:
-# import ..MODEL_COMPONENT.interface as MODEL_COMPONENT
+# from ..MODEL_COMPONENT import interface as MODEL_COMPONENT
 
 # TODO: uncomment and adjust only if you really need other variables:
 # from ... import Variable
@@ -50,7 +50,7 @@ class World (object):
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    ONEWORLDVARIABLE = D.World.ONEWORLDVARIABLE
+    # ONEWORLDVARIABLE = D.World.ONEWORLDVARIABLE
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
@@ -70,7 +70,7 @@ class SocialSystem (object):
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    ONESOCIALSYSTEMVARIABLE = master_data_model.SocialSystem.ONESOCIALSYSTEMVARIABLE
+    # ONESOCIALSYSTEMVARIABLE = master_data_model.SocialSystem.ONESOCIALSYSTEMVARIABLE
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
@@ -89,7 +89,7 @@ class Cell (object):
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    ONECELLVARIABLE = master_data_model.Cell.ONECELLVARIABLE
+    # ONECELLVARIABLE = master_data_model.Cell.ONECELLVARIABLE
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
@@ -108,7 +108,7 @@ class Individual (object):
         
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    ONEINDIVIDUALVARIABLE = master_data_model.Individual.ONEINDIVIDUALVARIABLE
+    # ONEINDIVIDUALVARIABLE = master_data_model.Individual.ONEINDIVIDUALVARIABLE
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
@@ -129,7 +129,7 @@ class Environment (object):
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    ONEENVIRONMENTVARIABLE = master_data_model.Environment.ONEENVIRONMENTVARIABLE
+    # ONEENVIRONMENTVARIABLE = master_data_model.Environment.ONEENVIRONMENTVARIABLE
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
@@ -148,7 +148,7 @@ class Metabolism (object):
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    ONEMETABOLISMVARIABLE = master_data_model.Metabolism.ONEMETABOLISMVARIABLE
+    # ONEMETABOLISMVARIABLE = master_data_model.Metabolism.ONEMETABOLISMVARIABLE
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
@@ -167,7 +167,7 @@ class Culture (object):
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    ONECULTUREVARIABLE = master_data_model.Culture.ONECULTUREVARIABLE
+    # ONECULTUREVARIABLE = master_data_model.Culture.ONECULTUREVARIABLE
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:

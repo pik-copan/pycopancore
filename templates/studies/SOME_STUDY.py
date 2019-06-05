@@ -18,7 +18,7 @@ import pycopancore.models.SOME_MODEL as M  # TODO: adjust
 # standard runner for simulating any model:
 from pycopancore.runners.runner import Runner
 
-import pycopancore.master_data_model as D  # to be able to specify variables with physical units
+from pycopancore import master_data_model as D  # to be able to specify variables with physical units
 
 import numpy as np  # which is usually needed
 from numpy.random import choice, uniform  # to generate random initial conditions

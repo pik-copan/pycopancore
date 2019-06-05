@@ -19,6 +19,9 @@ from .. import interface as I
 # TODO: uncomment this if you need ref. variables such as B.Individual.cell:
 #from ...base import interface as B
 
+# TODO: import those process types you need:
+# from .... import Explicit, ODE, Event, Step
+
 class Individual (I.Individual):
     """Individual entity type mixin implementation class."""
 

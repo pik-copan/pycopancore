@@ -20,14 +20,14 @@ Again, we can use a template to get started:
     
     ncells = 100
     nindseach = 1  # no. of individuals per cell
-    link_density = 10 * D.pct  # random network link density
+    link_density = 0.1  # random network link density
     low_effort = 30 * D.person_hours / D.weeks
     high_effort = 60 * D.person_hours / D.weeks
     
     # simulation parameters:
     
-    t_max = 100 * D.years  # interval for which the model will be simulated
-    dt = 1 * D.months  # desired temporal resolution of the resulting output.
+    t_max = 100  # interval for which the model will be simulated
+    dt = 1  # desired temporal resolution of the resulting output.
 
 - Adjust the entity generation as follows::
     
@@ -46,8 +46,8 @@ fish stocks:
 
 - Replace the random population block by this similar code::
     
-    S0 = uniform(high=100, size=ncells)
-    M.Cell.fish_stock.set_values(cells, P0)
+    S0 = uniform(high=10, size=ncells)
+    M.Cell.fish_stock.set_values(cells, S0)
     
 Note that here we did not specify a unit, so the numbers will be interpreted as
 multiples of the variable's default unit (``t_fish`` in this case, as specified
@@ -58,7 +58,7 @@ specific entity or process taxon is by accessing the variable's *value*
 directly, so we could have instead written::
 
     for c in cells:
-        c.fish_stock = uniform() * 100 * M.t_fish
+        c.fish_stock = uniform() * 10 * M.t_fish
 
 We use this way of accessing values now for initializing the social network
 between the individuals, which is stored in the variable 

@@ -15,7 +15,7 @@ parameters:
 
     from ... import Variable
     from ... import master_data_model as D
-    import ..my_exploit_fishing.interface as F
+    from ..my_exploit_fishing import interface as F
 
     class Individual...
 
@@ -44,12 +44,12 @@ parameters:
             "fishing effort exploration probability",
             """probability that an individual copies a neighbours effort if
             both catches are equal""",
-            default = 10 * D.percent, lower_bound = 0, upper_bound = 1)
+            default = 0.1, lower_bound = 0, upper_bound = 1)
         fishing_imitation_char_prob = Variable(
             "fishing effort imitation characteristic probability",
             """probability that an individual copies a neighbours effort if
             the other's catch is twice the own catch""",
-            default = 90 * D.percent, lower_bound = 0, upper_bound = 1)
+            default = 0.9, lower_bound = 0, upper_bound = 1)
             
 The learning process consists of two parts: 
 
@@ -71,20 +71,23 @@ The first part we implement as follows, using the process type ``Event``:
 - In ``implementation/culture.py``::
 
     from numpy.random import exponential, uniform
+    from .... import Event
+    from ...base import interface as B    
     
     class Culture...
     
         def next_fishing_update_time(self, t):
-            return t + exponential(1 / fishing_update_rate)
+            return t + exponential(1 / self.fishing_update_rate)
             
         def update_fishing_efforts(self, unused_t):
-            for i in self.individuals:
-                if uniform() < self.fishing_update_prob:
-                    i.update_fishing_effort()
+            for w in self.worlds:
+                for i in w.individuals:
+                    if uniform() < self.fishing_update_prob:
+                        i.update_fishing_effort()
                     
         processes = [
-            Event("update fishing effors",
-                   [B.Culture.individuals.fishing_effort],
+            Event("update fishing efforts",
+                   [B.Culture.worlds.individuals.fishing_effort],
                    ["time",
                     next_fishing_update_time,
                     update_fishing_efforts])
@@ -100,7 +103,7 @@ The latter method finds out which individuals actually update and calls their
 - In ``implementation/individual.py``::
 
     from numpy import exp, log
-    from numpy.random import choice
+    from numpy.random import choice, uniform
 
     class Individual...
     

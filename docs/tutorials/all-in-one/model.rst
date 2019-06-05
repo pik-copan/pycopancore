@@ -65,6 +65,6 @@ those later on.
         name = "exploit tutorial"
         description = "tutorial version of the copan:EXPLOIT model"
         entity_types = [World, SocialSystem, Cell, Individual]
-        process_taxa = [Enviroment, Metabolism, Culture]
+        process_taxa = [Environment, Metabolism, Culture]
 
 Now the model is ready to be used in a study: :doc:`study`

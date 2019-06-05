@@ -17,6 +17,9 @@ from .. import interface as I
 # TODO: uncomment this if you need ref. variables such as B.SocialSystem.individuals:
 #from ...base import interface as B
 
+# TODO: import those process types you need:
+# from .... import Explicit, ODE, Event, Step
+
 class SocialSystem (I.SocialSystem):
     """SocialSystem entity type mixin implementation class."""
 

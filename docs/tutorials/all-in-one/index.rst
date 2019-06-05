@@ -8,8 +8,13 @@ The model we will implement is a version of the copan\:EXPLOIT model described
 in `Wiedermann et al. (2015) 
 <https://journals.aps.org/pre/abstract/10.1103/PhysRevE.91.052801>`_.
 
-Start here: :doc:`overview`
+Preliminaries:
 
+- You should have experience with Python 3
+- You should have a basic understanding of object-oriented programming 
+  (classes vs. objects, methods vs. functions, ...)
+
+Start here: :doc:`overview`
 
 
 Contents:
@@ -23,5 +28,6 @@ Contents:
    third_component
    model
    study
+   test
 
 

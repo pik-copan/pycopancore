@@ -19,6 +19,9 @@ from .. import interface as I
 # TODO: uncomment this if you need ref. variables such as B.Culture.individuals:
 #from ...base import interface as B
 
+# TODO: import those process types you need:
+# from .... import Explicit, ODE, Event, Step
+
 class Culture (I.Culture):
     """Culture process taxon mixin implementation class."""
 

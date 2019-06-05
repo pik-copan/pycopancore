@@ -66,10 +66,10 @@ class Individual(FOO.Individual,
 # TODO: do the same for process taxa:
 
 # TODO: list all mixin classes needed:
-class Enviroment(FOO.Enviroment,
-                 BAR.Enviroment,
-                 base.Enviroment):
-    """Enviroment process taxon."""
+class Environment(FOO.Environment,
+                  BAR.Environment,
+                  base.Environment):
+    """Environment process taxon."""
     pass
 
 
@@ -107,5 +107,5 @@ class Model(FOO.Model,
     """List of entity types used in the model"""
 
     # TODO: list all entity types you composed above:
-    process_taxa = [Enviroment, Metabolism, Culture]
+    process_taxa = [Environment, Metabolism, Culture]
     """List of process taxa used in the model"""

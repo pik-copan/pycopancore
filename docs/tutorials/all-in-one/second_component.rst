@@ -9,12 +9,13 @@ their individual catchs and the decline of the fish stock.
   ``model_components/my_expoit_fishing``, this time keeping only the following 
   entity-types and process taxa: ``Cell``, ``Individual``, ``Metabolism``.
 
-- In its ``interface.py``, uncomment and add the following imports and 
+- In its ``interface.py``, change the order of ``class Cell`` and 
+  ``class Individual`` and uncomment and add the following imports and 
   variables::
 
-    from ... import master_data_model as D
-    import ..my_exploit_growth.interface as G
-     
+    from ..my_exploit_growth import interface as G
+    from ... import Variable
+    
     class Individual...
 
         # endogenous:    
@@ -46,19 +47,20 @@ their individual catchs and the decline of the fish stock.
             "catch cost coeff.",
             """coefficient c of quadratic fishing cost function
             effort = c * catch**2""",
-            unit = (D.person_hours / D.weeks) / (G.Model.t_fish / D.weeks)**2,
+            unit = (D.person_hours / D.weeks) * D.years**2,
             lower_bound = 0,
-            default = 40)  # so 40 hrs per week catch one tonne per week
+            default = (40 * D.person_hours / D.weeks) / (1 / D.years)**2)  
+                # so at 40 hrs per week, stock declines at rate 1/year
 
 Several things can be learned from this:
 
 - Different units of the same dimension work seemlessly together (like 
-  ``months`` and ``weeks``).
+  ``years`` and ``weeks``).
   
 - Derived units can be quite complex and can be specified as fractions which
   need not be reduced (pycopancore takes care of that automatically). E.g., 
-  the unit ``(D.person_hours / D.weeks) / (G.t_fish / D.weeks)**2``)
-  could also have been written ``D.person_hours * D.weeks / G.t_fish**2`` 
+  instead of the unit ``(D.person_hours / D.weeks) * D.years**2``)
+  we could also have used ``D.persons * D.years**2`` 
   which would however be less transparent.
   
 - If one component needs to access a Variable defined in another component,
@@ -72,6 +74,9 @@ Several things can be learned from this:
   level, one can *copy* the other variable's *metadata* as seen in this line::
 
     total_fishing_effort = Individual.fishing_effort.copy()
+    
+- The latter only works here since we define ``Individual`` before ``Cell``,
+  which is why we needed to change their order.
 
 - The differences between referencing a variable and copying its metadata are:
 
@@ -94,11 +99,12 @@ reflect competition for best catch locations. Therefore, we model the process
 as partially owned by the entity-type ``Individual`` and partially owned by the
 entity-type ``Cell``. 
 
-- In ``implementation/cell.py``, add an import and three entries to the list of
+- In ``implementation/cell.py``, add some imports and three entries to the list of
   ``processes``::
 
     import sympy as sp  # to be able to use sp.sqrt
     from ...base import interface as B  # to be able to use B.Cell.metabolism
+    from .... import Explicit, ODE
 
     class Cell...
     
@@ -108,10 +114,11 @@ entity-type ``Cell``.
                 [B.Cell.sum.individuals.fishing_effort]),
             Explicit("total catch",
                 [I.Cell.total_catch],
-                [sp.sqrt(I.Cell.total_fishing_effort 
-                      / B.Cell.metabolism.catch_cost_coeff)]),
+                [I.Cell.fish_stock
+                 * sp.sqrt(I.Cell.total_fishing_effort
+                           / B.Cell.metabolism.catch_cost_coeff)]),
             ODE("stock decline due to fishing",
-                [I.Cell.fish_stock]
+                [I.Cell.fish_stock],
                 [- I.Cell.total_catch])
         ]
 
@@ -170,6 +177,7 @@ We complete the implementation of the fishing component like this:
 - In ``implementation/individual.py``, add::
 
     from ...base import interface as B
+    from .... import Explicit
     
     class Individual...
     
