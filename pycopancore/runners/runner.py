@@ -137,11 +137,6 @@ class Runner(_AbstractRunner):
         """
         self._current_iteration += 1  # marks current evaluation caches as outdated
 
-        # Execute all explicit processes (3.1.2 in runner scheme):
-        self.apply_explicits(t)
-        # TODO: for speedup, only do this for those explicits whose targets
-        # are needed during ODE integration, and execute all others ex post.
-
         # copy values from value_array into instance attributes,
         # and clear target instances' derivative attributes:
         for target in self.model.ODE_targets:
@@ -150,6 +145,11 @@ class Runner(_AbstractRunner):
             # by the target's _from and _to attributes:
             var.fast_set_values(values=value_array[target._from:target._to])
             var.clear_derivatives()
+
+        # Execute all explicit processes (3.1.2 in runner scheme):
+        self.apply_explicits(t)
+        # TODO: for speedup, only do this for those explicits whose targets
+        # are needed during ODE integration, and execute all others ex post.
 
         # let all processes calculate their derivative terms:
         summands_array = np.zeros(value_array.size)
@@ -194,6 +194,7 @@ class Runner(_AbstractRunner):
         # compose complete derivative array:
         derivative_array = np.zeros(value_array.size)
         for target in self.model.ODE_targets:
+#            print("target:",target)
             if isinstance(target, Variable):
                 # add terms from summands_array to derivative attributes:
 #                print("adding from summands_array for",target)
@@ -204,10 +205,10 @@ class Runner(_AbstractRunner):
 #                print(" new:",target.target_variable.get_derivatives(
 #                            instances=target.target_class.instances))
             # extract complete derivative terms from derivative attributes:
-            derivative_array[target._from:target._to] += \
+            derivative_array[target._from:target._to] = \
                 target.target_variable.get_derivatives(
                             instances=target.target_class.instances)
-
+#        print("derivs:",derivative_array)
         return derivative_array
 
     # @profile

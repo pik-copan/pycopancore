@@ -38,6 +38,7 @@ class World (I.World):
 
         ODE("ocean-atmosphere diffusion",
             [I.World.upper_ocean_carbon, I.World.atmospheric_carbon],
-            [-diffusion_flow, diffusion_flow])
+            [-diffusion_flow, diffusion_flow]
+            )
 
     ]
