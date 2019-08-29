@@ -47,8 +47,8 @@ metabolism = M.Metabolism(
     )
 
 culture = M.Culture(
-    awareness_lower_carbon_density=1e-4,
-    awareness_upper_carbon_density=2e-4,
+    awareness_lower_carbon_density=1e-5,
+    awareness_upper_carbon_density=4e-5,
     awareness_update_rate = 1 if with_awareness else 0,
     environmental_friendliness_learning_rate = 1 if with_learning else 0,
     )
