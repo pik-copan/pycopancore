@@ -1,0 +1,287 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Part 7: Running the study script &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="part-7-running-the-study-script">
+<h1>Part 7: Running the study script<a class="headerlink" href="#part-7-running-the-study-script" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first">In the main <code class="docutils literal"><span class="pre">pycopancore</span></code> repository folder (not the package folder!), call
+the script like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;.&quot;</span> <span class="n">python</span> <span class="n">studies</span><span class="o">/</span><span class="n">run_my_exploit</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>If you made no mistakes, you should see a lot of output, roughly structured
+like this:</p>
+<ul>
+<li><p class="first">At first the model configures itself. This happens at the point in the script
+code where <code class="docutils literal"><span class="pre">Model</span></code> is instantiated via <code class="docutils literal"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">M.Model()</span></code>. During this
+self-configuration, the model analyses its own structure and tells the user
+what it found in three different hierarchical lists.</p>
+</li>
+<li><p class="first">It first lists all model components, entity-types and process
+taxons used in each component, and variables and processes used and
+contributed by each component to each class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>Configuring model exploit tutorial ( &lt;class &#39;pycopancore.models.my_exploit.Model&#39;&gt; ) ...
+Analysing model structure...
+
+Model component  my exploit: growth ( &lt;class &#39;pycopancore.model_components.my_exploit_growth.model.Model&#39;&gt; )...
+    Entity-type  &lt;class &#39;pycopancore.model_components.my_exploit_growth.implementation.cell.Cell&#39;&gt;
+        Variable  extensive variable &#39;fish stock&#39; (stock of a generic local resource &#39;fish&#39; that can grow and be harvested), not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=t fish [t], &gt;=0
+        Variable  extensive variable &#39;fish capacity&#39; (limit to fish stock due to competition for resources), not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=t fish [t], &gt;=0
+        Process  fish growth (ODE)
+    Process taxon  &lt;class &#39;pycopancore.model_components.my_exploit_growth.implementation.environment.Environment&#39;&gt;
+        Variable  intensive variable &#39;basic fish growth rate&#39; (basic rate at which fish would grow without competition), not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=[a^-1], &gt;=0
+Model component  my exploit: fishing ( &lt;class &#39;pycopancore.model_components.my_exploit_fishing.model.Model&#39;&gt; )...
+    ...
+</pre></div>
+</div>
+</li>
+<li><p class="first">It then again lists all variables appearing in the composed model, by
+entity-type and process taxon, but no longer caring in which components they
+occurr:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>Variables:
+  Entity-type  &lt;class &#39;pycopancore.models.my_exploit.World&#39;&gt;
+    Variable  environment(uid=0.08591877944338966)
+    Variable  metabolism(uid=0.03203445696610063)
+    Variable  culture(uid=0.9052984695216689)
+    Variable  extensive variable &#39;human population&#39;, IAMC=Population, CETS=SP.POP, not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=people [H], &gt;=0
+    Variable  extensive variable &#39;atmospheric carbon stock&#39; ((mass of C in any chemical compound)), not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=gigatonnes carbon [GtC], &gt;=0
+    Variable  intensive variable &#39;surface air temperature&#39; ((in the meaning used in climate policy debates,
+                 i.e., at 2m above surface, averaged over the day)), AMIP=tas, not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=kelvins [K], &gt;=0
+    Variable  extensive variable &#39;ocean carbon stock&#39; ((mass of C in any chemical compound)), not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=gigatonnes carbon [GtC], &gt;=0
+    Variable  extensive variable &#39;terrestrial carbon stock&#39; ((mass of C in any chemical compound)), not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=gigatonnes carbon [GtC], &gt;=0
+    Variable  extensive variable &#39;fossil carbon stock&#39; ((mass of C in any chemical compound,
+                             potentially accessible for human extraction
+                             and combustion)), not None, scale=ratio, datatype=&lt;class &#39;float&#39;&gt;, unit=gigatonnes carbon [GtC], &gt;=0
+    Variable  social systems(uid=0.41401426897646976)
+    Variable  top level social systems(uid=0.0008966739545156477)
+    Variable  cells(uid=0.05318452850985511)
+    Variable  individuals(uid=0.5385475206516981)
+  Entity-type  &lt;class &#39;pycopancore.models.my_exploit.SocialSystem&#39;&gt;
+    ...
+</pre></div>
+</div>
+</li>
+<li><p class="first">It does the same for all processes happening in the composed model, also
+telling us which variables are affected by the process and on which ‘input’
+variables they depend because of this process:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>Processes:
+  Entity-type  &lt;class &#39;pycopancore.models.my_exploit.World&#39;&gt;
+    Process  aggregate cell carbon stocks (Explicit)
+      Target var. World.terrestrial_carbon directly depends on {Cell.terrestrial_carbon}
+      Target var. World.fossil_carbon directly depends on {Cell.fossil_carbon}
+  Entity-type  &lt;class &#39;pycopancore.models.my_exploit.SocialSystem&#39;&gt;
+    ...
+
+Targets affected by some process: OrderedSet([World.terrestrial_carbon, World.fossil_carbon, Cell.fish_stock, Cell.total_fishing_effort, Cell.total_catch, Individual.catch, Culture.worlds.individuals.fishing_effort])
+</pre></div>
+</div>
+</li>
+<li><p class="first">For variables which are set by explicit equations, the order of evaluation
+of these equations matters, so pycopancore reports next which order it will
+use to make sure dependent variables are computed after those variables they
+depend on:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Order</span> <span class="n">of</span> <span class="n">evaluation</span> <span class="n">of</span> <span class="n">variables</span> <span class="nb">set</span> <span class="n">by</span> <span class="n">explicit</span> <span class="n">equations</span><span class="p">:</span>
+   <span class="n">World</span><span class="o">.</span><span class="n">terrestrial_carbon</span>
+   <span class="n">World</span><span class="o">.</span><span class="n">fossil_carbon</span>
+   <span class="n">Cell</span><span class="o">.</span><span class="n">total_fishing_effort</span>
+   <span class="n">Cell</span><span class="o">.</span><span class="n">total_catch</span>
+   <span class="n">Individual</span><span class="o">.</span><span class="n">catch</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">This finished the self-configuration triggered by the line
+<code class="docutils literal"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">M.Model()</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">End</span> <span class="n">of</span> <span class="n">model</span> <span class="n">configuration</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The next output occurs when the model is <em>run</em> by calling
+<code class="docutils literal"><span class="pre">runner.run(...)</span></code>. The runner starts by evaluating all <code class="docutils literal"><span class="pre">Explicit</span></code>
+equations to compute the initial values of dependent variables:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Running</span> <span class="kn">from</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">100</span> <span class="k">with</span> <span class="n">output</span> <span class="n">at</span> <span class="n">least</span> <span class="n">every</span> <span class="mi">1</span> <span class="o">...</span>
+  <span class="n">Initial</span> <span class="n">application</span> <span class="n">of</span> <span class="n">Explicit</span> <span class="n">processes</span><span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">It then asks all <code class="docutils literal"><span class="pre">Event</span></code> s when they occur first by calling their
+respective methods that return the next time point of occurrence:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Finding</span> <span class="n">times</span> <span class="n">of</span> <span class="n">first</span> <span class="n">occurrence</span> <span class="n">of</span> <span class="n">Events</span><span class="o">...</span>
+  <span class="n">Event</span> <span class="n">process</span> <span class="n">update</span> <span class="n">fishing</span> <span class="n">effors</span> <span class="p">(</span><span class="n">Event</span><span class="p">)</span> <span class="o">...</span>
+    <span class="n">time</span> <span class="mf">0.6196357717485598</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">pycopancore</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">my_exploit</span><span class="o">.</span><span class="n">Culture</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7efcffacf860</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">If there were any processes of type <code class="docutils literal"><span class="pre">Step</span></code> (which represent regularly
+timed thing such as elections or annual cycles implemented via difference
+equations), the runner would now call these a first time. Even though we have
+no <code class="docutils literal"><span class="pre">Step</span></code> type processes in our model, we still see this line in the log:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Executing</span> <span class="n">Steps</span> <span class="ow">and</span> <span class="n">finding</span> <span class="n">times</span> <span class="n">of</span> <span class="nb">next</span> <span class="n">execution</span><span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Then the runner iteratively repeats the following four things until the
+requested simulation time is reached.</p>
+</li>
+<li><p class="first">(a) It ‘runs smoothly’ until the time at which the next event or step will
+occur (it knows already when this happens since it has asked the event
+processes). It does so by using some ODE solver to integrate all the <code class="docutils literal"><span class="pre">ODE</span></code> s
+in the model, automatically also evaluating all <code class="docutils literal"><span class="pre">Explicit</span></code> equations that
+are needed to determine variables that occur in any of the ODEs:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Running</span> <span class="n">smoothly</span> <span class="kn">from</span> <span class="mi">0</span> <span class="n">to</span> <span class="mf">0.6196357717485598</span> <span class="o">...</span>
+  <span class="n">Composing</span> <span class="n">initial</span> <span class="n">value</span> <span class="n">array</span><span class="o">...</span>
+  <span class="n">Calling</span> <span class="n">ODE</span> <span class="n">solver</span><span class="o">...</span>
+    <span class="o">...</span><span class="n">took</span> <span class="mf">0.7260878086090088</span> <span class="n">seconds</span> <span class="ow">and</span> <span class="mi">90</span> <span class="n">time</span> <span class="n">steps</span>
+  <span class="n">Saving</span> <span class="n">results</span> <span class="n">to</span> <span class="n">output</span> <span class="nb">dict</span><span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">(b) For this newly simulated time interval, it evaluated all remaining
+<code class="docutils literal"><span class="pre">Explicit</span></code> equations to calculate the trajectories of variables that were
+<em>not</em> needed to evaluate the ODEs:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Applying</span> <span class="n">Explicit</span> <span class="n">processes</span> <span class="n">to</span> <span class="n">simulated</span> <span class="n">time</span> <span class="n">points</span><span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><ol class="first loweralpha" start="3">
+<li><p class="first">It executes the steps or events that happen next:</p>
+<dl class="docutils">
+<dt>Executing Steps and/or Events at 0.6196357717485598 …</dt>
+<dd><dl class="first last docutils">
+<dt>Event update fishing effors (Event) &#64; &lt;pycopancore.models.my_exploit.Culture object at 0x7efcffacf860&gt; …</dt>
+<dd><p class="first last">next time 1.0721577757408507</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ol>
+</li>
+<li><p class="first">(d) It again evaluates all <code class="docutils literal"><span class="pre">Explicit</span></code> equations to see what indirect effect
+the steps or events have:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Applying</span> <span class="n">Explicit</span> <span class="n">processes</span> <span class="n">to</span> <span class="n">changed</span> <span class="n">state</span><span class="o">...</span>
+<span class="n">Completing</span> <span class="n">output</span> <span class="nb">dict</span><span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The runner repeats (a)–(d) until the requested model time is reached:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Running</span> <span class="n">smoothly</span> <span class="kn">from</span> <span class="mf">0.6196357717485598</span> <span class="n">to</span> <span class="mf">1.0721577757408507</span> <span class="o">...</span>
+  <span class="o">...</span>
+<span class="n">Running</span> <span class="n">smoothly</span> <span class="kn">from</span> <span class="mf">99.22698397375639</span> <span class="n">to</span> <span class="mi">100</span> <span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">This completes what happens when we called <code class="docutils literal"><span class="pre">runner.run(...)</span></code>.</p>
+</li>
+<li><p class="first">Finally, our script should use the returned <code class="docutils literal"><span class="pre">traj</span></code> object to produce and
+show a plot like the following. Notice the vertical jumps in the fishing
+effort at irregular time points. For each such time, the <code class="docutils literal"><span class="pre">traj</span></code> contains
+two entries, one with the values right before the event happened, one with
+the values right after the event.</p>
+</li>
+</ul>
+<a class="reference internal image-reference" href="../../_images/example.png"><img alt="example output of tutorial study" src="../../_images/example.png" style="width: 600px;" /></a>
+<p>If the script completed successfully, you might like to consolidate your
+knowledge further by doing some exercises based on the tutorial model:
+<a class="reference internal" href="exercises.html"><span class="doc">Optional part 8: Further exercises</span></a></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/tutorials/all-in-one/test.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/tutorials/all-in-one/test.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

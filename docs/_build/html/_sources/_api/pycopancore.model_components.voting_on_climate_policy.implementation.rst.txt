@@ -1,0 +1,22 @@
+pycopancore\.model\_components\.voting\_on\_climate\_policy\.implementation package
+===================================================================================
+
+Submodules
+----------
+
+pycopancore\.model\_components\.voting\_on\_climate\_policy\.implementation\.social\_system module
+--------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.voting_on_climate_policy.implementation.social_system
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.voting_on_climate_policy.implementation
+    :members:
+    :undoc-members:
+    :show-inheritance:

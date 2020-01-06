@@ -1,0 +1,38 @@
+pycopancore\.model\_components\.copan\_global\_like\_economic\_growth\.implementation package
+=============================================================================================
+
+Submodules
+----------
+
+pycopancore\.model\_components\.copan\_global\_like\_economic\_growth\.implementation\.metabolism module
+--------------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_economic_growth.implementation.metabolism
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.copan\_global\_like\_economic\_growth\.implementation\.social\_system module
+------------------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_economic_growth.implementation.social_system
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.copan\_global\_like\_economic\_growth\.implementation\.world module
+---------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_economic_growth.implementation.world
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_economic_growth.implementation
+    :members:
+    :undoc-members:
+    :show-inheritance:

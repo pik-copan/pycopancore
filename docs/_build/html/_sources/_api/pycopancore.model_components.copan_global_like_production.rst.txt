@@ -1,0 +1,37 @@
+pycopancore\.model\_components\.copan\_global\_like\_production package
+=======================================================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pycopancore.model_components.copan_global_like_production.implementation
+
+Submodules
+----------
+
+pycopancore\.model\_components\.copan\_global\_like\_production\.interface module
+---------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_production.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.copan\_global\_like\_production\.model module
+-----------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_production.model
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_production
+    :members:
+    :undoc-members:
+    :show-inheritance:

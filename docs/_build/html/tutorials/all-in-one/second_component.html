@@ -1,0 +1,341 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Part 3. Implementing the fishing component &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="part-3-implementing-the-fishing-component">
+<h1>Part 3. Implementing the fishing component<a class="headerlink" href="#part-3-implementing-the-fishing-component" title="Permalink to this headline">¶</a></h1>
+<p>In this part, we will add another component in which each cell uses
+all corresponding individuals’ fishing effort levels to determine
+their individual catchs and the decline of the fish stock.</p>
+<ul>
+<li><p class="first">Just as before, copy the template to a new model component
+<code class="docutils literal"><span class="pre">model_components/my_expoit_fishing</span></code>, this time keeping only the following
+entity-types and process taxa: <code class="docutils literal"><span class="pre">Cell</span></code>, <code class="docutils literal"><span class="pre">Individual</span></code>, <code class="docutils literal"><span class="pre">Metabolism</span></code>.</p>
+</li>
+<li><p class="first">In its <code class="docutils literal"><span class="pre">interface.py</span></code>, change the order of <code class="docutils literal"><span class="pre">class</span> <span class="pre">Cell</span></code> and
+<code class="docutils literal"><span class="pre">class</span> <span class="pre">Individual</span></code> and uncomment and add the following imports and
+variables:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">..my_exploit_growth</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">G</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">Variable</span>
+
+<span class="k">class</span> <span class="nc">Individual</span><span class="o">...</span>
+
+    <span class="c1"># endogenous:</span>
+    <span class="n">catch</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;fishing catch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;flow of fish received due to fishing&quot;</span><span class="p">,</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Model</span><span class="o">.</span><span class="n">t_fish</span> <span class="o">/</span> <span class="n">D</span><span class="o">.</span><span class="n">months</span><span class="p">,</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">is_extensive</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># exogenous:</span>
+    <span class="n">fishing_effort</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;fishing effort&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;effort spent fishing&quot;</span><span class="p">,</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">person_hours</span> <span class="o">/</span> <span class="n">D</span><span class="o">.</span><span class="n">weeks</span><span class="p">,</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">is_extensive</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="mi">40</span> <span class="o">*</span> <span class="n">D</span><span class="o">.</span><span class="n">person_hours</span> <span class="o">/</span> <span class="n">D</span><span class="o">.</span><span class="n">weeks</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Cell</span><span class="o">...</span>
+
+    <span class="c1"># endogenous:</span>
+    <span class="n">fish_stock</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">fish_stock</span>
+    <span class="n">total_fishing_effort</span> <span class="o">=</span> <span class="n">Individual</span><span class="o">.</span><span class="n">fishing_effort</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">total_catch</span> <span class="o">=</span> <span class="n">Individual</span><span class="o">.</span><span class="n">catch</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Metabolism</span><span class="o">...</span>
+
+    <span class="c1"># exogenous:</span>
+    <span class="n">catch_cost_coeff</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;catch cost coeff.&quot;</span><span class="p">,</span>
+        <span class="sd">&quot;&quot;&quot;coefficient c of quadratic fishing cost function</span>
+<span class="sd">        effort = c * catch**2&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">person_hours</span> <span class="o">/</span> <span class="n">D</span><span class="o">.</span><span class="n">weeks</span><span class="p">)</span> <span class="o">*</span> <span class="n">D</span><span class="o">.</span><span class="n">years</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="p">(</span><span class="mi">40</span> <span class="o">*</span> <span class="n">D</span><span class="o">.</span><span class="n">person_hours</span> <span class="o">/</span> <span class="n">D</span><span class="o">.</span><span class="n">weeks</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">D</span><span class="o">.</span><span class="n">years</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># so at 40 hrs per week, stock declines at rate 1/year</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Several things can be learned from this:</p>
+<ul>
+<li><p class="first">Different units of the same dimension work seemlessly together (like
+<code class="docutils literal"><span class="pre">years</span></code> and <code class="docutils literal"><span class="pre">weeks</span></code>).</p>
+</li>
+<li><p class="first">Derived units can be quite complex and can be specified as fractions which
+need not be reduced (pycopancore takes care of that automatically). E.g.,
+instead of the unit <code class="docutils literal"><span class="pre">(D.person_hours</span> <span class="pre">/</span> <span class="pre">D.weeks)</span> <span class="pre">*</span> <span class="pre">D.years**2</span></code>)
+we could also have used <code class="docutils literal"><span class="pre">D.persons</span> <span class="pre">*</span> <span class="pre">D.years**2</span></code>
+which would however be less transparent.</p>
+</li>
+<li><p class="first">If one component needs to access a Variable defined in another component,
+it needs to import the other component’s interface and <em>use the same</em>
+variable as seen in this line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fish_stock</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">fish_stock</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">To define a <em>new</em> variable that has the same metadata as an existing one,
+e.g., since it is just an aggregation of the other variable to another
+level, one can <em>copy</em> the other variable’s <em>metadata</em> as seen in this line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">total_fishing_effort</span> <span class="o">=</span> <span class="n">Individual</span><span class="o">.</span><span class="n">fishing_effort</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The latter only works here since we define <code class="docutils literal"><span class="pre">Individual</span></code> before <code class="docutils literal"><span class="pre">Cell</span></code>,
+which is why we needed to change their order.</p>
+</li>
+<li><p class="first">The differences between referencing a variable and copying its metadata are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>When a component uses an existing variable, there is still just one
+variable that both components have access to in order to exchange data.
+Therefore, the variable must have the <em>same identifier</em> in all components
+that use it: <code class="docutils literal"><span class="pre">fish_stock</span></code>.</li>
+<li>When you copy a variable’s metadata via <code class="docutils literal"><span class="pre">copy()</span></code>, you get a new
+variable that is totally independent of the original one and can have
+<em>any identifier</em> you like. (If one wants one to be the aggregation of the
+other, one has to specify this relationship explicitly via an equation,
+see below for an example.)</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>We can now implement the fishing process, and this time we will specify the
+corresponding equations not via methods but as symbolic expressions. The
+catches of individuals fishing in the same cell will not be independent but
+will depend on the total effort of all individuals fishing in that cell, to
+reflect competition for best catch locations. Therefore, we model the process
+as partially owned by the entity-type <code class="docutils literal"><span class="pre">Individual</span></code> and partially owned by the
+entity-type <code class="docutils literal"><span class="pre">Cell</span></code>.</p>
+<ul>
+<li><p class="first">In <code class="docutils literal"><span class="pre">implementation/cell.py</span></code>, add some imports and three entries to the list of
+<code class="docutils literal"><span class="pre">processes</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sp</span>  <span class="c1"># to be able to use sp.sqrt</span>
+<span class="kn">from</span> <span class="nn">...base</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">B</span>  <span class="c1"># to be able to use B.Cell.metabolism</span>
+<span class="kn">from</span> <span class="nn">....</span> <span class="k">import</span> <span class="n">Explicit</span><span class="p">,</span> <span class="n">ODE</span>
+
+<span class="k">class</span> <span class="nc">Cell</span><span class="o">...</span>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;total effort&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">total_fishing_effort</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">individuals</span><span class="o">.</span><span class="n">fishing_effort</span><span class="p">]),</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;total catch&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">total_catch</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">fish_stock</span>
+             <span class="o">*</span> <span class="n">sp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">total_fishing_effort</span>
+                       <span class="o">/</span> <span class="n">B</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">catch_cost_coeff</span><span class="p">)]),</span>
+        <span class="n">ODE</span><span class="p">(</span><span class="s2">&quot;stock decline due to fishing&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">fish_stock</span><span class="p">],</span>
+            <span class="p">[</span><span class="o">-</span> <span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">total_catch</span><span class="p">])</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Again, some things can be learned here:</p>
+<ul>
+<li><p class="first">ODEs can either be specified via methods (as before) or via symbolic
+expressions (as here). In the latter case, the third argument of the <code class="docutils literal"><span class="pre">ODE</span></code>
+specification is not the name of a method but a list of symbolic expressions,
+one for each entry in the list of dependent variables (2nd argument of
+<code class="docutils literal"><span class="pre">ODE</span></code>). In our case, there’s one dependent variable, <code class="docutils literal"><span class="pre">I.Cell.fish_stock</span></code>,
+and one rather simple symbolic expression, <code class="docutils literal"><span class="pre">-I.Cell.total_catch</span></code>.</p>
+</li>
+<li><p class="first">Similarly, processes that define some variables directly (rather than their
+time derivative) as functions of some other variables are specified via the
+process type <code class="docutils literal"><span class="pre">Explicit</span></code>, and here again the third argument is either a
+method that sets the dependent variables directly, or a list of symbolic
+expressions. Above, we have said via a symbolic expression that
+<code class="docutils literal"><span class="pre">total_fishing_effort</span></code> equals the sum of all the cell’s individuals’
+<code class="docutils literal"><span class="pre">fishing_effort</span></code> s. Alternatively, we could have specified the same as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">class</span> <span class="nc">Cell</span><span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">total_effort</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_fishing_effort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">fishing_effort</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">])</span>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;total effort&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">total_fishing_effort</span><span class="p">],</span>
+            <span class="n">total_effort</span><span class="p">),</span>
+        <span class="o">...</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Generally, a symbolic expression is basically a piece of code constructed
+from these possible ingredients:</p>
+<ul class="simple">
+<li>Variables defined in an interface such as <code class="docutils literal"><span class="pre">I.Cell.total_catch</span></code></li>
+<li>Variables of other entity-types or process taxa (e.g.
+<code class="docutils literal"><span class="pre">Metabolism.catch_cost_coeff</span></code>) accessed via an inbuilt reference variable
+defined in the base component (e.g. <code class="docutils literal"><span class="pre">B.Cell.metabolism</span></code>),
+leading to a so-called <em>dot-construct</em> such as
+<code class="docutils literal"><span class="pre">B.Cell.metabolism.catch_cost_coeff</span></code>.</li>
+<li>Aggregation keywords specified as part of a dot-construct, such as <code class="docutils literal"><span class="pre">sum</span></code>
+in <code class="docutils literal"><span class="pre">B.Cell.sum.individuals.fishing_effort</span></code>. Valid aggregations for
+numerical variables are <code class="docutils literal"><span class="pre">sum</span></code>, <code class="docutils literal"><span class="pre">mean</span></code>, <code class="docutils literal"><span class="pre">median</span></code>, <code class="docutils literal"><span class="pre">min</span></code>, <code class="docutils literal"><span class="pre">max</span></code>,
+<code class="docutils literal"><span class="pre">std</span></code> and <code class="docutils literal"><span class="pre">var</span></code>, and the aggregation keyword must be followed by a
+set-valued reference variable such as <code class="docutils literal"><span class="pre">individuals</span></code>, <code class="docutils literal"><span class="pre">cells</span></code>, etc.</li>
+<li>Mathematical functions provided by the <code class="docutils literal"><span class="pre">sympy</span></code> package, such as
+<code class="docutils literal"><span class="pre">sp.sqrt</span></code>. (Caution: do <em>not</em> use <code class="docutils literal"><span class="pre">numpy</span></code> functions in symbolic expr.!)</li>
+<li>Standard operators and numerals such as <code class="docutils literal"><span class="pre">+</span></code>, <code class="docutils literal"><span class="pre">**</span></code>, <code class="docutils literal"><span class="pre">12.345</span></code> etc.</li>
+</ul>
+</li>
+</ul>
+<p>We complete the implementation of the fishing component like this:</p>
+<ul>
+<li><p class="first">In <code class="docutils literal"><span class="pre">implementation/individual.py</span></code>, add:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">...base</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">B</span>
+<span class="kn">from</span> <span class="nn">....</span> <span class="k">import</span> <span class="n">Explicit</span>
+
+<span class="k">class</span> <span class="nc">Individual</span><span class="o">...</span>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;individual catch&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">catch</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">total_catch</span>
+             <span class="o">*</span> <span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">fishing_effort</span>
+             <span class="o">/</span> <span class="n">B</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">total_fishing_effort</span><span class="p">])</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>(Note that alternatively, we could have achieved the same effect by letting
+<code class="docutils literal"><span class="pre">Cell</span></code> own this part of the process as well:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Cell</span><span class="o">...</span>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="o">...</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;individual catch&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">individuals</span><span class="o">.</span><span class="n">catch</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">total_catch</span>
+             <span class="o">*</span> <span class="n">B</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">individuals</span><span class="o">.</span><span class="n">fishing_effort</span>
+             <span class="o">/</span> <span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="o">.</span><span class="n">total_fishing_effort</span><span class="p">])</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+<p>In this version, each cell ‘hands out’ the catch to all its corresponding
+individuals, so the target variable reads <code class="docutils literal"><span class="pre">B.Cell.individuals.catch</span></code>
+instead of <code class="docutils literal"><span class="pre">I.Individual.catch</span></code>. If you compare the two versions, you will
+notice that in the first version, all occurring variables and dot-constructs
+start with <code class="docutils literal"><span class="pre">Individual</span></code>, while in the second they all start with <code class="docutils literal"><span class="pre">Cell</span></code>.
+As a general rule, all variables and dot-constructs occurring in a process
+owned by some entity-type process taxon must start with that entity-type or
+process taxon and can access other entity-types’ or process taxons’ variables
+only via reference variables.)</p>
+<p>To recap, in this part you’ve learned about…</p>
+<ul class="simple">
+<li>process taxon <code class="docutils literal"><span class="pre">Metabolism</span></code></li>
+<li>some predefined time units, and using several units simultaneously</li>
+<li>using variables defined in other components</li>
+<li>copying metadata from existing variables to new variables</li>
+<li>the process type <code class="docutils literal"><span class="pre">Explicit</span></code></li>
+<li>implementing processes via symbolic expressions</li>
+<li>reference variables, dot-constructs, and aggregation keywords</li>
+</ul>
+<p>Let’s move on to the last component: <a class="reference internal" href="third_component.html"><span class="doc">Part 4. Implementing the learning component</span></a></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/tutorials/all-in-one/second_component.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/tutorials/all-in-one/second_component.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

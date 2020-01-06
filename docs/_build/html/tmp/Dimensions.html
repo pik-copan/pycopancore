@@ -1,0 +1,206 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dimensions &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dimensions">
+<h1>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="time-events">
+<h2>Time, events<a class="headerlink" href="#time-events" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Time is essentially continuous</li>
+<li>Some processes are represented in continuous time via differential equations</li>
+<li>Some processes are represented as discontinuous
+<em>steps</em>
+or
+<a href="#id1"><span class="problematic" id="id2">*</span></a>events *<ul>
+<li>Steps and events may happen at any time (not only on a fixed regular time grid)</li>
+<li>If a step or event happens at
+<em>t</em>
+, we distinguish between the system state at time
+<em>t–</em>
+, just before the step or event, and at time
+<em>t+</em>
+, right after the step or event</li>
+<li>The distinction between steps and events is not completely sharp. Steps are rather meant to represent either regularly occurring things (e.g., sunrise) or discretizations of actually continuous-time processes (e.g. via a difference equation) and typically involve few stochasticity, whereas events are rather meant to represent irregularly occurring things (e.g. birth or death of a node, link, or coalition, merger or split of a coalition, rewiring of a node, imitation of one agent by another, arrival of a large perturbation such as an economic crisis, etc.) and may involve a lot of stochasticity in both their timing and consequences.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="space">
+<h2>Space<a class="headerlink" href="#space" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="spatial-resolution">
+<h3>Spatial resolution<a class="headerlink" href="#spatial-resolution" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Space is essentially continuous</li>
+<li>Basic space geometry is two-dimensional<ul>
+<li>one periodic dimension
+<em>x</em>
+(“longitude”, going from 0 to
+360
+)</li>
+<li>one nonperiodic dimension
+<em>y</em>
+(“latitude”, going from –90 to 90)</li>
+</ul>
+</li>
+<li>Some types of model entities (e.g. humans) are located at arbitrary
+<em>points</em></li>
+<li>Some types of model entities (e.g. patches of land or ocean) are located at
+<em>individual grid cells</em>
+of a formally regular lon/lat
+grid</li>
+<li>Some types of model entities (e.g. societies) are located at
+<em>connected sets of grid cells</em>
+called
+<em>territories</em></li>
+</ul>
+</div>
+<div class="section" id="fixed-spatial-heterogeneity">
+<h3>Fixed spatial heterogeneity<a class="headerlink" href="#fixed-spatial-heterogeneity" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Fixed aspects of spatial heterogeneity are represented by parameters or distributions at the
+<em>grid level</em>
+, all points within a grid cell are similar</li>
+<li>Grid cells may (but need not) differ in<ul>
+<li>area
+(constant in the first version, but may depend on latitude in later versions when Earth system submodels are coupled)</li>
+<li>type of terrain
+(initially all is land, later some cells may be ocean, even later distinctions like plain/mountainous etc may be made)</li>
+<li>solar insolation (
+initially constant
+)</li>
+<li>basic soil quality</li>
+<li>Potential biomass productivity</li>
+<li>basic availability of fossil resources and water (if hydrology is deemed essential)</li>
+<li>surface temperature</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="other-physical-dimensions">
+<h2>Other physical dimensions<a class="headerlink" href="#other-physical-dimensions" title="Permalink to this headline">¶</a></h2>
+<p>(Not to be confused with individual variables. They are listed later!)</p>
+<p>Each variable will have an explicit physical dimension and unit in order to facilitate</p>
+<ul class="simple">
+<li>estimation of parameters and initial conditions from data</li>
+<li>comparison of results with data</li>
+<li>later coupling to other models</li>
+</ul>
+<p>Basic dimensions (and units) that will probably occur are</p>
+<ul class="simple">
+<li>Human population (discrete, humans)</li>
+<li>Carbon (gigatons)</li>
+<li>Energy (gigajoules)</li>
+<li>Power: energy / time (gigajoules / s)</li>
+<li>Temperature</li>
+<li>Money (
+time-independent “coins”? “unskilled working hours”?
+)</li>
+<li>Produced goods
+/ Capital
+(
+nevertheless in monetary units to make aggregation possible
+)</li>
+<li>Utility/wellbeing (not to be confused with money, unit “utils”)</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tmp/Dimensions.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/tmp/Dimensions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

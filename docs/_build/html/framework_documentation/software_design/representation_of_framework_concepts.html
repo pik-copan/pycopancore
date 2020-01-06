@@ -1,0 +1,310 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Representing modeling framework concepts by object-oriented concepts &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Logics for simulation and analysis" href="simulation_and_analysis.html" />
+    <link rel="prev" title="Common concepts of object-oriented programming languages" href="object_orientation.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="representing-modeling-framework-concepts-by-object-oriented-concepts">
+<h1>Representing modeling framework concepts by object-oriented concepts<a class="headerlink" href="#representing-modeling-framework-concepts-by-object-oriented-concepts" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="entities-processes-variables">
+<h2>Entities, processes, variables<a class="headerlink" href="#entities-processes-variables" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">A model’s <strong>entity-types</strong> are represented as classes that are derived from a common abstract class
+and are named with the common noun used for the respective type of entity (i.e., <code class="docutils literal"><span class="pre">Cell</span></code>, <code class="docutils literal"><span class="pre">SocialSysten</span></code>, <code class="docutils literal"><span class="pre">Individual</span></code>, …).</p>
+</li>
+<li><p class="first">All individual <strong>entities</strong> (which can be many and whose number may change during a model run)
+are represented by objects that are instances of the class representing the respective entity-type.
+While the entity-type class holds some processes’ and variables’ metadata, the entity object holds their logics and values, see below.</p>
+</li>
+<li><p class="first">Likewise, each <strong>process taxon</strong> is represented by a class derived from a common abstract class.
+In addition, each of these process taxon classes will have exactly one instance object.
+(As above, the class holds process and variable metadata and the object holds logics and values)</p>
+</li>
+<li><p class="first">Also each formal <strong>process-type</strong> is represented by a class derived from a common abstract class
+(e.g., <code class="docutils literal"><span class="pre">ODE</span></code>, <code class="docutils literal"><span class="pre">Explicit</span></code>, <code class="docutils literal"><span class="pre">Implicit</span></code>, <code class="docutils literal"><span class="pre">Step</span></code>, <code class="docutils literal"><span class="pre">Event</span></code>, …).</p>
+</li>
+<li><p class="first">Each individual <strong>process</strong> is represented by two things:</p>
+<ul class="simple">
+<li>The process’ <em>metadata</em> (e.g., name, description, influenced variables, …)
+are represented by an object that is an instance of the respective process-type class</li>
+<li>The process’ <em>logics</em> (e.g., its defining equations or algorithm)
+are represented by<ul>
+<li>either a method that reads and writes the object attributes representing variable values and time derivatives (see below),</li>
+<li>or by <em>symbolic expressions</em> contained in the process’ metadata object,
+constructed from the class attributes representing the variables (see below).</li>
+</ul>
+</li>
+</ul>
+<p>If the process belongs to an entity-type, its metadata object is listed in this entity-type’s <em>class attribute ``processes``</em>,
+and its logics methods are implemented as object methods inside this class, thus becoming methods of each individual entity object.</p>
+<p>Analogously,
+if the process instead belongs to a process taxon, its metadata object is listed in this taxon’s class attribute <code class="docutils literal"><span class="pre">processes</span></code>,
+and its logics methods are implemented as object methods inside this class, thus becoming methods of the unique instance object of this taxon class.</p>
+</li>
+<li><p class="first">Also each individual <strong>variable</strong> is represented by two things:</p>
+<ul class="simple">
+<li>The variable’s <em>metadata</em> are represented by an instance of the class <code class="docutils literal"><span class="pre">Variable</span></code>.
+This object is assigned to a <em>class attribute</em> of the entity-type or process taxon the variable belongs to,
+using a descriptive and unique attribute name (e.g., <code class="docutils literal"><span class="pre">atmospheric_carbon</span></code>).</li>
+<li>During model runs, the variable’s current <em>value</em> and optionally <em>time derivative</em> are stored as <em>object attributes</em> as follows:<ul>
+<li>If the variable belongs to a process taxon (which should rarely be the case),
+the value is stored in an attribute of the process taxon’s unique object under the same name as the metadata object,
+and the derivative is stored in the same object using the same name prefixed with <code class="docutils literal"><span class="pre">d_</span></code>.</li>
+<li>If the variable <code class="docutils literal"><span class="pre">x</span></code> belongs to an entity-type (which should mostly be the case),
+it can and often will have a different value and derivative in each entity of this type.
+The current value and derivative of <code class="docutils literal"><span class="pre">x</span></code> in some entity <code class="docutils literal"><span class="pre">e</span></code> are thus stored in the object attributes <code class="docutils literal"><span class="pre">x</span></code> and <code class="docutils literal"><span class="pre">d_x</span></code> of the object <code class="docutils literal"><span class="pre">e</span></code>
+and can typically refered as <code class="docutils literal"><span class="pre">e.x</span></code> and <code class="docutils literal"><span class="pre">e.d_x</span></code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p class="first">A <strong>symbolic expression</strong> is represented by an instance of a superclass of <code class="docutils literal"><span class="pre">Variable</span></code>, called e.g., <code class="docutils literal"><span class="pre">Expr</span></code>,
+which supports arithmetic operations whose results are again objects of this class.
+Each symbolic expression has an “owning” entity type or process taxon and a “target” entity type or process taxon
+which in simple cases coincide.
+E.g., the symbolic expression <code class="docutils literal"><span class="pre">Cell.population</span> <span class="pre">/</span> <span class="pre">Cell.land_area</span></code> has owning and target class <code class="docutils literal"><span class="pre">Cell</span></code>.
+Symbolic expressions may however also be used to state that a process owned by one entity type, say <code class="docutils literal"><span class="pre">SocialSystem</span></code>,
+influences variables from another entity type, say <code class="docutils literal"><span class="pre">Cell</span></code>, using a certain relationship between the corresponding entities.
+E.g., the target variables of a process “taxation” owned by a dictatorial <code class="docutils literal"><span class="pre">SocialSystem</span></code> may be stated by the two expressions
+<code class="docutils literal"><span class="pre">SocialSystem.residents.tax_load</span></code> and <code class="docutils literal"><span class="pre">SocialSystem.dictator.income</span></code>,
+both having owning type <code class="docutils literal"><span class="pre">SocialSystem</span></code> and target type <code class="docutils literal"><span class="pre">Individual</span></code>.
+Finally, symbolic expressions may also perform aggregations across different entity types
+and also combine variables from different entity types, e.g. as in
+<code class="docutils literal"><span class="pre">World.respiration_rate</span> <span class="pre">*</span> <span class="pre">World.sum.cells.terrestrial_carbon_stock</span></code>;
+due to the <em>aggregation keyword</em> <code class="docutils literal"><span class="pre">sum</span></code>, the latter expression has target class <code class="docutils literal"><span class="pre">World</span></code> rather than <code class="docutils literal"><span class="pre">Cell</span></code>.
+More complex aggregations can be written by using an <em>aggregation method</em>,
+e.g. <code class="docutils literal"><span class="pre">World.sum(World.cells.population</span> <span class="pre">/</span> <span class="pre">World.cells.land_area)</span></code>;</p>
+</li>
+</ul>
+</div>
+<div class="section" id="modularization">
+<h2>Modularization<a class="headerlink" href="#modularization" title="Permalink to this headline">¶</a></h2>
+<p>All of the above is true not only on the level of (composed) models
+but already on the level of <strong>model components</strong>, though restricted to the types, processes and variables used in the respective component.
+To avoid name clashes but still be able to use the same simple naming convention throughout in all model components,
+we use <em>subpackages</em> of the main copan:CORE package to represent model components as follows:</p>
+<ul>
+<li><p class="first">Each model component is represented by a subpackage, say <code class="docutils literal"><span class="pre">P</span></code>, containing class definitions for all used entity-types and process taxons.</p>
+</li>
+<li><p class="first">Each entity-type used in the model component’s package, say <code class="docutils literal"><span class="pre">A</span></code>,
+is represented by an <strong>implementation class</strong> invariably named <code class="docutils literal"><span class="pre">A</span></code>,
+which can be referred to from outside the package as <code class="docutils literal"><span class="pre">P.A</span></code>.</p>
+</li>
+<li><p class="first">Since a method or symbolic expression that represent the logics of a process belonging to <code class="docutils literal"><span class="pre">A</span></code>
+may need to refer to another entity-type’s variables, say <code class="docutils literal"><span class="pre">B.y</span></code>, and vice versa from <code class="docutils literal"><span class="pre">B</span></code> to <code class="docutils literal"><span class="pre">A</span></code>,
+but as cyclical imports must be avoided,
+each package provides an additional <strong>interface class</strong> for each entity-type named exactly as the implementation class
+and collected in a special module <code class="docutils literal"><span class="pre">P.interface</span></code>, so that it can be referred to as <code class="docutils literal"><span class="pre">P.interface.A</span></code>.
+The interface class contains all variable metatada objects,
+and it is thus sufficient to import the respective interface class, say <code class="docutils literal"><span class="pre">interface.A</span></code>,
+into another entity-type’s implementation class, say <code class="docutils literal"><span class="pre">B</span></code>,
+to let a process in <code class="docutils literal"><span class="pre">B</span></code> read and write variables from <code class="docutils literal"><span class="pre">A</span></code>.
+Consequently, all processes must reside in the implementation class (<code class="docutils literal"><span class="pre">A</span></code>)
+rather than in the interface class (<code class="docutils literal"><span class="pre">interface.A</span></code>).</p>
+<p>In order to avoid redundancy, the entity-type <code class="docutils literal"><span class="pre">A</span></code> is thus defined inside package <code class="docutils literal"><span class="pre">P</span></code> as follows:</p>
+<ul class="simple">
+<li>The interface class <code class="docutils literal"><span class="pre">P.interface.A</span></code> defines the entity-type’s variables
+and nothing else (in particular, no method declarations).</li>
+<li>The implementation class <code class="docutils literal"><span class="pre">P.A</span></code> is derived from this interface class
+and lists and defines the entity-type’s processes and nothing else
+(in particular, it inherits the variables from the interface).
+If it needs access to another entity-types’ variables, it imports the other interface classes.</li>
+</ul>
+</li>
+</ul>
+<p>Finally, a <strong>model</strong>’s composition from model components is represented via <em>multiple inheritance from mixin classes</em> as follows:</p>
+<ul class="simple">
+<li>Each model is defined in a separate <em>module</em> (if the language has modules, otherwise a subpackage), say <code class="docutils literal"><span class="pre">M</span></code>.</li>
+<li>For each entity-type, say <code class="docutils literal"><span class="pre">E</span></code>, that is defined in at least one of model component packages, say <code class="docutils literal"><span class="pre">P1</span></code>, <code class="docutils literal"><span class="pre">P2</span></code>, …,
+the model defines a (composite) class <code class="docutils literal"><span class="pre">M.E</span></code> that derives from all the implementation classes of <code class="docutils literal"><span class="pre">E</span></code> contained in these packages.
+I.e., if packages <code class="docutils literal"><span class="pre">P2</span></code> and <code class="docutils literal"><span class="pre">P5</span></code> contain a definition of <code class="docutils literal"><span class="pre">E</span></code>, then <code class="docutils literal"><span class="pre">M.E</span></code> derives from <code class="docutils literal"><span class="pre">P2.E</span></code> and <code class="docutils literal"><span class="pre">P5.E</span></code>.
+If the programming language allows that a method occurs in more than one mixin class,
+this feature can be used to “overrule” specifications from one model component by another model component,
+and in that case the order of overruling must be specified in the definition of <code class="docutils literal"><span class="pre">M.E</span></code>,
+typically by listing its mixin classes in a suitable order. <a class="footnote-reference" href="#id2" id="id1">[1]</a></li>
+</ul>
+</div>
+<div class="section" id="tabular-summary">
+<h2>Tabular summary<a class="headerlink" href="#tabular-summary" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="16%" />
+<col width="74%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Modeling concept</th>
+<th class="head">Used object-oriented concept(s)</th>
+<th class="head">Comments</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Entity-type</td>
+<td>Class</td>
+<td>of which the entity objects are instances</td>
+</tr>
+<tr class="row-odd"><td>Entity</td>
+<td>Object</td>
+<td>instance of class representing its entity-type</td>
+</tr>
+<tr class="row-even"><td>Process taxon</td>
+<td>Class and unique object</td>
+<td>used to hold Variables’ metadata and values</td>
+</tr>
+<tr class="row-odd"><td>Process-type</td>
+<td>Class</td>
+<td>of which the process metadata objects are instances</td>
+</tr>
+<tr class="row-even"><td>Process’ metadata</td>
+<td>Object used as list entry</td>
+<td>instance of class representing its process-type, listed in the <em>class</em> representing the entity-type or process taxon it belongs to</td>
+</tr>
+<tr class="row-odd"><td>Process’ logics</td>
+<td>Object method</td>
+<td>of the entity or process taxon <em>object</em> it belongs to</td>
+</tr>
+<tr class="row-even"><td>Variable’s metadata</td>
+<td>Object used as class attribute</td>
+<td>instance of class “Variable” and used as an attribute in the <em>interface class</em> representing the entity-type or process taxon it belongs to</td>
+</tr>
+<tr class="row-odd"><td>Variable value</td>
+<td>Object attribute</td>
+<td>of the entity or process taxon <em>object</em> it belongs to</td>
+</tr>
+<tr class="row-even"><td>Variable time deriv.</td>
+<td>Object attribute</td>
+<td>of the entity or process taxon <em>object</em> it belongs to, named with prefix <code class="docutils literal"><span class="pre">d_</span></code></td>
+</tr>
+<tr class="row-odd"><td>Entity relationship</td>
+<td>special Variable object</td>
+<td>whose value is an instance or set of instances of a certain type</td>
+</tr>
+<tr class="row-even"><td>Model component</td>
+<td>Package of mixin classes</td>
+<td>one for each entity-type and process taxon used in the component, containing the processes and variables used in the component</td>
+</tr>
+<tr class="row-odd"><td>Model</td>
+<td>Collection of derived classes</td>
+<td>mixed from the mixin classes provided by the components specified in the model’s metadata</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>If the programming language provides enough introspection features (like Python does),
+the framework may “recompile” the class <code class="docutils literal"><span class="pre">M.E</span></code> at runtime from the merged source code of <code class="docutils literal"><span class="pre">P2.E</span></code> and <code class="docutils literal"><span class="pre">P5.E</span></code>
+for performance reasons, effectively “flattening” the class <code class="docutils literal"><span class="pre">M.E</span></code> into a class without superclasses.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Framework documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../abstract_level/index.html">Abstract description of the copan:CORE modeling framework</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Software design (independent of programming language)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_implementation/index.html">Python implementation</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Framework documentation</a><ul>
+  <li><a href="index.html">Software design (independent of programming language)</a><ul>
+      <li>Previous: <a href="object_orientation.html" title="previous chapter">Common concepts of object-oriented programming languages</a></li>
+      <li>Next: <a href="simulation_and_analysis.html" title="next chapter">Logics for simulation and analysis</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/framework_documentation/software_design/representation_of_framework_concepts.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/framework_documentation/software_design/representation_of_framework_concepts.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

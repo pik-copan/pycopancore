@@ -1,0 +1,194 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.environmental_awareness.interface &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.environmental_awareness.interface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;model component Interface template.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="c1"># TODO: use variables from the master data model wherever possible:</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">master_data_model</span> <span class="k">as</span> <span class="n">D</span>
+<span class="kn">from</span> <span class="nn">...data_model.master_data_model</span> <span class="k">import</span> <span class="n">CUL</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">S</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">Variable</span>
+
+
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.environmental_awareness.html#pycopancore.model_components.environmental_awareness.interface.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Interface for Model mixin.&quot;&quot;&quot;</span>
+
+    <span class="c1"># metadata:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;environmental awareness&quot;</span>
+    <span class="sd">&quot;&quot;&quot;a unique name for the model component&quot;&quot;&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Declining/growing terrestrial carbon increases likelihood&quot;</span> \
+                    <span class="s2">&quot;of individuals becoming environmentally friendly/careless&quot;</span>
+    <span class="sd">&quot;&quot;&quot;some longer description&quot;&quot;&quot;</span>
+    <span class="n">requires</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="sd">&quot;&quot;&quot;list of other model components required for this model component to</span>
+<span class="sd">    make sense&quot;&quot;&quot;</span></div>
+
+
+<span class="c1"># entity types:</span>
+
+
+<div class="viewcode-block" id="SocialSystem"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.environmental_awareness.html#pycopancore.model_components.environmental_awareness.interface.SocialSystem">[docs]</a><span class="k">class</span> <span class="nc">SocialSystem</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Interface for Individual entity type mixin.&quot;&quot;&quot;</span>
+
+    <span class="c1"># endogenous variables:</span>
+    <span class="n">protected_terrestrial_carbon</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">protected_terrestrial_carbon</span>
+    <span class="n">protected_terrestrial_carbon_share</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">protected_terrestrial_carbon_share</span>
+
+    <span class="c1"># exogenous variables / parameters:</span>
+    <span class="n">max_protected_terrestrial_carbon</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;maximal protected stock of terrestrial carbon&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;what stock of the current terrestrial carbon would be treated</span>
+<span class="sd">                 as protected if population is environmentally friendly&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">gigatonnes_carbon</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Individual"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.environmental_awareness.html#pycopancore.model_components.environmental_awareness.interface.Individual">[docs]</a><span class="k">class</span> <span class="nc">Individual</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Interface for Individual entity type mixin.&quot;&quot;&quot;</span>
+
+    <span class="c1"># endogenous variables:</span>
+    <span class="n">is_environmentally_friendly</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">is_environmentally_friendly</span></div>
+
+    <span class="c1"># exogenous variables / parameters:</span>
+
+
+<span class="c1"># process taxa:</span>
+
+
+<div class="viewcode-block" id="Culture"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.environmental_awareness.html#pycopancore.model_components.environmental_awareness.interface.Culture">[docs]</a><span class="k">class</span> <span class="nc">Culture</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Interface for Culture process taxon mixin.&quot;&quot;&quot;</span>
+
+    <span class="c1"># endogenous variables:</span>
+
+    <span class="c1"># exogenous variables / parameters:</span>
+    <span class="n">awareness_update_rate</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;awareness update rate&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;rate at which a fraction of individuals update their &quot;</span> \
+                 <span class="s2">&quot;awareness&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">awareness_update_fraction</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;awareness update fraction&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;fraction of individuals updating their awareness&quot;</span> \
+                 <span class="s2">&quot;simultaneously&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">awareness_lower_carbon_density</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;awareness lower carbon density&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;characteristic value of terrestrial carbon density below which &quot;</span> \
+                 <span class="s2">&quot;individuals get more likely to become environmentally aware&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">D</span><span class="o">.</span><span class="n">square_kilometers</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                 <span class="n">default</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>  <span class="c1"># ca. 2e-5 is the current global mean</span>
+    <span class="n">awareness_upper_carbon_density</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;awareness upper carbon density&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;characteristic value of terrestrial carbon density above which &quot;</span> \
+                 <span class="s2">&quot;individuals get more likely to become environmentally unaware&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">D</span><span class="o">.</span><span class="n">square_kilometers</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                 <span class="n">default</span><span class="o">=</span><span class="mf">2e-5</span><span class="p">)</span>  <span class="c1"># ca. 2e-5 is the current global mean</span>
+    <span class="n">max_protected_terrestrial_carbon_share</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;maximal protected share of terrestrial carbon&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;what share of the current terrestrial carbon would be treated</span>
+<span class="sd">                 as protected if population is environmentally friendly&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># TODO: a plausible value?</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

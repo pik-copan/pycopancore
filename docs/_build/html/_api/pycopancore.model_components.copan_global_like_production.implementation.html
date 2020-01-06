@@ -1,0 +1,380 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.copan_global_like_production.implementation package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-model-components-copan-global-like-production-implementation-package">
+<h1>pycopancore.model_components.copan_global_like_production.implementation package<a class="headerlink" href="#pycopancore-model-components-copan-global-like-production-implementation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_production.implementation.cell">
+<span id="pycopancore-model-components-copan-global-like-production-implementation-cell-module"></span><h2>pycopancore.model_components.copan_global_like_production.implementation.cell module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_production.implementation.cell" title="Permalink to this headline">¶</a></h2>
+<p>Cell entity type mixing class template.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.cell.Cell">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_production.implementation.cell.</code><code class="descname">Cell</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_production/implementation/cell.html#Cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.cell.Cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.copan_global_like_production.html#pycopancore.model_components.copan_global_like_production.interface.Cell" title="pycopancore.model_components.copan_global_like_production.interface.Cell"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_production.interface.Cell</span></code></a></p>
+<p>Cell entity type mixin implementation class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.cell.Cell.processes">
+<code class="descname">processes</code><em class="property"> = [sectoral relative productivities, total relative productivity]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.cell.Cell.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.cell.Cell.quotient">
+<code class="descname">quotient</code><em class="property"> = social_system(uid=0.19291324901781182).protected_terrestrial_carbon*social_system(uid=0.19291324901781182).sum(social_system(uid=0.19291324901781182).cells.terrestrial_carbon)**(-1)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.cell.Cell.quotient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.cell.Cell.unprotected_terrestrial_carbon_squared">
+<code class="descname">unprotected_terrestrial_carbon_squared</code><em class="property"> = Piecewise((terrestrial carbon stock**2*(1 - social_system(uid=0.19291324901781182).protected_terrestrial_carbon*social_system(uid=0.19291324901781182).sum(social_system(uid=0.19291324901781182).cells.terrestrial_carbon)**(-1))**2, Eq(True, social_system(uid=0.19291324901781182).protected_terrestrial_carbon*social_system(uid=0.19291324901781182).sum(social_system(uid=0.19291324901781182).cells.terrestrial_carbon)**(-1) &lt; 1)), (0, True))</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.cell.Cell.unprotected_terrestrial_carbon_squared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_production.implementation.metabolism">
+<span id="pycopancore-model-components-copan-global-like-production-implementation-metabolism-module"></span><h2>pycopancore.model_components.copan_global_like_production.implementation.metabolism module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_production.implementation.metabolism" title="Permalink to this headline">¶</a></h2>
+<p>Metabolism process taxon mixin class.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.metabolism.Metabolism">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_production.implementation.metabolism.</code><code class="descname">Metabolism</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_production/implementation/metabolism.html#Metabolism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.metabolism.Metabolism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.copan_global_like_production.html#pycopancore.model_components.copan_global_like_production.interface.Metabolism" title="pycopancore.model_components.copan_global_like_production.interface.Metabolism"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_production.interface.Metabolism</span></code></a></p>
+<p>Metabolism process taxon mixin implementation class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.metabolism.Metabolism.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.metabolism.Metabolism.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_production.implementation.social_system">
+<span id="pycopancore-model-components-copan-global-like-production-implementation-social-system-module"></span><h2>pycopancore.model_components.copan_global_like_production.implementation.social_system module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_production.implementation.social_system" title="Permalink to this headline">¶</a></h2>
+<p>SocialSystem entity type mixing class template.</p>
+<p>TODO: adjust or fill in code and documentation wherever marked by “TODO:”,
+then remove these instructions</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_production.implementation.social_system.</code><code class="descname">SocialSystem</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_production/implementation/social_system.html#SocialSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.copan_global_like_production.html#pycopancore.model_components.copan_global_like_production.interface.SocialSystem" title="pycopancore.model_components.copan_global_like_production.interface.SocialSystem"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_production.interface.SocialSystem</span></code></a></p>
+<p>SocialSystem entity type mixin implementation class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Bcell">
+<code class="descname">Bcell</code><em class="property"> = cells(uid=0.14022002696173774).biomass_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).biomass_energy_density**(-1)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Bcell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Bsoc">
+<code class="descname">Bsoc</code><em class="property"> = &lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).biomass_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).biomass_energy_density**(-1))</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Bsoc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Ecell">
+<code class="descname">Ecell</code><em class="property"> = cells(uid=0.14022002696173774).renewable_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8) + metabolism(uid=0.5571429708940656).biomass_energy_density*cells(uid=0.14022002696173774).biomass_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).biomass_energy_density**(-1) + metabolism(uid=0.5571429708940656).fossil_energy_density*cells(uid=0.14022002696173774).fossil_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).fossil_energy_density**(-1)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Ecell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Esoc">
+<code class="descname">Esoc</code><em class="property"> = &lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).renewable_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8) + metabolism(uid=0.5571429708940656).biomass_energy_density*cells(uid=0.14022002696173774).biomass_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).biomass_energy_density**(-1) + metabolism(uid=0.5571429708940656).fossil_energy_density*cells(uid=0.14022002696173774).fossil_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).fossil_energy_density**(-1))</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Esoc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Fcell">
+<code class="descname">Fcell</code><em class="property"> = cells(uid=0.14022002696173774).fossil_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).fossil_energy_density**(-1)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Fcell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Fsoc">
+<code class="descname">Fsoc</code><em class="property"> = &lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).fossil_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).fossil_energy_density**(-1))</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Fsoc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.K">
+<code class="descname">K</code><em class="property"> = physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.K" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.P">
+<code class="descname">P</code><em class="property"> = human population*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.P" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Rcell">
+<code class="descname">Rcell</code><em class="property"> = cells(uid=0.14022002696173774).renewable_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Rcell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Rsoc">
+<code class="descname">Rsoc</code><em class="property"> = &lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).renewable_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8))</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Rsoc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Ycell">
+<code class="descname">Ycell</code><em class="property"> = (cells(uid=0.14022002696173774).renewable_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8) + metabolism(uid=0.5571429708940656).biomass_energy_density*cells(uid=0.14022002696173774).biomass_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).biomass_energy_density**(-1) + metabolism(uid=0.5571429708940656).fossil_energy_density*cells(uid=0.14022002696173774).fossil_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).fossil_energy_density**(-1))*cells(uid=0.14022002696173774).total_energy_intensity**(-1)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Ycell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Ysoc">
+<code class="descname">Ysoc</code><em class="property"> = &lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum((cells(uid=0.14022002696173774).renewable_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8) + metabolism(uid=0.5571429708940656).biomass_energy_density*cells(uid=0.14022002696173774).biomass_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).biomass_energy_density**(-1) + metabolism(uid=0.5571429708940656).fossil_energy_density*cells(uid=0.14022002696173774).fossil_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).fossil_energy_density**(-1))*cells(uid=0.14022002696173774).total_energy_intensity**(-1))</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.Ysoc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.cs">
+<code class="descname">cs</code><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.cs" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.denom">
+<code class="descname">denom</code><em class="property"> = (cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**0.8</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.denom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.do_economic_production">
+<code class="descname">do_economic_production</code><span class="sig-paren">(</span><em>unused_t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_production/implementation/social_system.html#SocialSystem.do_economic_production"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.do_economic_production" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do something.</p>
+<p>It needs to be described so other people want to use it.
+:param unused_t:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.do_harvest_extraction_emissions">
+<code class="descname">do_harvest_extraction_emissions</code><span class="sig-paren">(</span><em>unused_t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_production/implementation/social_system.html#SocialSystem.do_harvest_extraction_emissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.do_harvest_extraction_emissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add carbon emission flow to world’s athmospheric carbon.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>unused_t</strong> – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.eB">
+<code class="descname">eB</code><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.eB" title="Permalink to this definition">¶</a></dt>
+<dd><p>A _DotConstruct represents a syntactical construct with dots,
+starting with an entity-type or process taxon class,
+followed by zero or more ReferenceVariables or SetVariables
+or aggregation keywords such as sum, and ending in either an attribute,
+e.g. SocialSystem.sum.cells.population
+or an aggregation keyword without evaluation,
+e.g. SocialSystem.world.sum,
+or an aggregation keyword with evaluation,
+e.g. SocialSystem.world.sum(some expression).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.eF">
+<code class="descname">eF</code><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.eF" title="Permalink to this definition">¶</a></dt>
+<dd><p>A _DotConstruct represents a syntactical construct with dots,
+starting with an entity-type or process taxon class,
+followed by zero or more ReferenceVariables or SetVariables
+or aggregation keywords such as sum, and ending in either an attribute,
+e.g. SocialSystem.sum.cells.population
+or an aggregation keyword without evaluation,
+e.g. SocialSystem.world.sum,
+or an aggregation keyword with evaluation,
+e.g. SocialSystem.world.sum(some expression).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.emissions">
+<code class="descname">emissions</code><em class="property"> = &lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).biomass_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).biomass_energy_density**(-1)) + &lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).fossil_relative_productivity*(human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)*metabolism(uid=0.5571429708940656).fossil_energy_density**(-1))</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.emissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.fac">
+<code class="descname">fac</code><em class="property"> = (human population*physical capital*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)*cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1))**0.4*(cells(uid=0.14022002696173774).total_relative_productivity*cells(uid=0.14022002696173774).total_energy_intensity)**(-0.8)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.fac" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.intensity">
+<code class="descname">intensity</code><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.intensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>A _DotConstruct represents a syntactical construct with dots,
+starting with an entity-type or process taxon class,
+followed by zero or more ReferenceVariables or SetVariables
+or aggregation keywords such as sum, and ending in either an attribute,
+e.g. SocialSystem.sum.cells.population
+or an aggregation keyword without evaluation,
+e.g. SocialSystem.world.sum,
+or an aggregation keyword with evaluation,
+e.g. SocialSystem.world.sum(some expression).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.met">
+<code class="descname">met</code><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.met" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.processes">
+<code class="descname">processes</code><em class="property"> = [economic production, harvest, extraction, emissions]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.relative_weight">
+<code class="descname">relative_weight</code><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.relative_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>A _DotConstruct represents a syntactical construct with dots,
+starting with an entity-type or process taxon class,
+followed by zero or more ReferenceVariables or SetVariables
+or aggregation keywords such as sum, and ending in either an attribute,
+e.g. SocialSystem.sum.cells.population
+or an aggregation keyword without evaluation,
+e.g. SocialSystem.world.sum,
+or an aggregation keyword with evaluation,
+e.g. SocialSystem.world.sum(some expression).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.this">
+<code class="descname">this</code><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.this" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="pycopancore.model_components.copan_global_like_production.html#pycopancore.model_components.copan_global_like_production.interface.SocialSystem" title="pycopancore.model_components.copan_global_like_production.interface.SocialSystem"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_production.interface.SocialSystem</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.total_relative_weight">
+<code class="descname">total_relative_weight</code><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.total_relative_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>A _DotConstruct represents a syntactical construct with dots,
+starting with an entity-type or process taxon class,
+followed by zero or more ReferenceVariables or SetVariables
+or aggregation keywords such as sum, and ending in either an attribute,
+e.g. SocialSystem.sum.cells.population
+or an aggregation keyword without evaluation,
+e.g. SocialSystem.world.sum,
+or an aggregation keyword with evaluation,
+e.g. SocialSystem.world.sum(some expression).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.weight">
+<code class="descname">weight</code><em class="property"> = cells(uid=0.14022002696173774).total_relative_productivity*&lt;class 'pycopancore.model_components.base.interface.SocialSystem'&gt;.sum(cells(uid=0.14022002696173774).total_relative_productivity)**(-1)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.weight" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_production.implementation.world">
+<span id="pycopancore-model-components-copan-global-like-production-implementation-world-module"></span><h2>pycopancore.model_components.copan_global_like_production.implementation.world module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_production.implementation.world" title="Permalink to this headline">¶</a></h2>
+<p>World entity type mixing class template.</p>
+<p>TODO: adjust or fill in code and documentation wherever marked by “TODO:”,
+then remove these instructions</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.world.World">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_production.implementation.world.</code><code class="descname">World</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_production/implementation/world.html#World"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.world.World" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.copan_global_like_production.html#pycopancore.model_components.copan_global_like_production.interface.World" title="pycopancore.model_components.copan_global_like_production.interface.World"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_production.interface.World</span></code></a></p>
+<p>World entity type mixin implementation class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_production.implementation.world.World.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_production.implementation.world.World.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_production.implementation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_production.implementation" title="Permalink to this headline">¶</a></h2>
+<p>Model component implementation subpackage template.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.model_components.copan_global_like_production.implementation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.model_components.copan_global_like_production.implementation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

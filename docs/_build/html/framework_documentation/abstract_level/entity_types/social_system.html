@@ -1,0 +1,162 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Entity-type “Social System” &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Entity-type “Individual”" href="individual.html" />
+    <link rel="prev" title="Entity-type “Cell”" href="cell.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="entity-type-social-system">
+<h1>Entity-type “Social System”<a class="headerlink" href="#entity-type-social-system" title="Permalink to this headline">¶</a></h1>
+<p>What we call a <em>social system</em> (and many others may simply call a <em>society</em>)
+is meant to represent
+“an economic, social, industrial or cultural infrastructure”
+(see Wikipedia’s definition of “society”)
+of considerable size
+(e.g., a nation such as the US, a country such as Scotland, an urban area such as the Greater Tokyo Area,
+or an economically very closely integrated world region such as the EU),
+having a sufficiently well-defined <em>territory</em> (represented by a set of <a class="reference internal" href="cell.html"><span class="doc">cells</span></a>)
+and encompassing all the social-metabolic and cultural processes occurring within that territory.
+Social systems are <em>not</em> meant to represent a single social group or stratum,
+for which one should use different entity-types (such as <a class="reference internal" href="group.html"><span class="doc">group</span></a>).</p>
+<p>The social systems in a model are either all disjoint
+(e.g., representing twelve world regions, or about 200 countries),
+or they will form a nested hierarchy with no nontrivial overlaps
+(e.g., representing a three-level hierarchy of world regions, countries, and urban areas),
+This is important for model components that assume a hierarchical organization of political decision-making and economic and social metabolic accounting.</p>
+<p>As the attributes of social systems will often correspond to data assembled by official statistics,
+we encourage to use a partition of the world into individual social systems that is compatible to
+established standard classifications such as <a class="reference external" href="https://en.wikipedia.org/wiki/ISO_3166">ISO 3166-1/2</a>.</p>
+<p>Social systems will only rarely act as agents in agent-based model components
+(a better choice would be to use its “elite” group
+or “head of government” individual as agents instead).</p>
+<div class="section" id="basic-relationships-to-other-entity-types">
+<h2>Basic relationships to other entity-types<a class="headerlink" href="#basic-relationships-to-other-entity-types" title="Permalink to this headline">¶</a></h2>
+<p>A social system will usually…</p>
+<ul class="simple">
+<li>reside on a single <a class="reference internal" href="world.html"><span class="doc">world</span></a></li>
+<li>have several member <a class="reference internal" href="individual.html"><span class="doc">individuals</span></a></li>
+<li>have several <a class="reference internal" href="cell.html"><span class="doc">cells</span></a> forming its territory</li>
+</ul>
+<p>In addition, a social system may…</p>
+<ul class="simple">
+<li>be a subsystem of a larger social system
+(e.g., “UK” may be a subsystem of “EU” for some time)</li>
+<li>have several member <a class="reference internal" href="household.html"><span class="doc">households</span></a></li>
+<li>have a “capital” <a class="reference internal" href="cell.html"><span class="doc">cell</span></a></li>
+<li>be the “legal headquarters” of several <a class="reference internal" href="firm.html"><span class="doc">firms</span></a></li>
+<li>have some <a class="reference internal" href="group.html"><span class="doc">group</span></a> acting as its “elite”</li>
+<li>have one or several <a class="reference internal" href="individual.html"><span class="doc">individuals</span></a> acting as “head of government”</li>
+</ul>
+<p>All the above relationships may be dynamic.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Framework documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Abstract description of the copan:CORE modeling framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../software_design/index.html">Software design (independent of programming language)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_implementation/index.html">Python implementation</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Framework documentation</a><ul>
+  <li><a href="../index.html">Abstract description of the copan:CORE modeling framework</a><ul>
+  <li><a href="index.html">Entity-types in the copan:CORE base model</a><ul>
+      <li>Previous: <a href="cell.html" title="previous chapter">Entity-type “Cell”</a></li>
+      <li>Next: <a href="individual.html" title="next chapter">Entity-type “Individual”</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/framework_documentation/abstract_level/entity_types/social_system.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../../_sources/framework_documentation/abstract_level/entity_types/social_system.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

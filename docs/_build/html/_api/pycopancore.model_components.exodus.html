@@ -1,0 +1,405 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.exodus package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-model-components-exodus-package">
+<h1>pycopancore.model_components.exodus package<a class="headerlink" href="#pycopancore-model-components-exodus-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html">pycopancore.model_components.exodus.implementation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html#module-pycopancore.model_components.exodus.implementation.cell">pycopancore.model_components.exodus.implementation.cell module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html#pycopancore-model-components-exodus-implementation-culture-module">pycopancore.model_components.exodus.implementation.culture module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html#module-pycopancore.model_components.exodus.implementation.individual">pycopancore.model_components.exodus.implementation.individual module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html#module-pycopancore.model_components.exodus.implementation.metabolism">pycopancore.model_components.exodus.implementation.metabolism module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html#module-pycopancore.model_components.exodus.implementation.social_system">pycopancore.model_components.exodus.implementation.social_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html#module-pycopancore.model_components.exodus.implementation.world">pycopancore.model_components.exodus.implementation.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.exodus.implementation.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.model_components.exodus.interface">
+<span id="pycopancore-model-components-exodus-interface-module"></span><h2>pycopancore.model_components.exodus.interface module<a class="headerlink" href="#module-pycopancore.model_components.exodus.interface" title="Permalink to this headline">¶</a></h2>
+<p>model component Interface template.</p>
+<p>TODO: adjust or fill in code and documentation wherever marked by “TODO:”, then
+remove these instructions.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.exodus.interface.Cell">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.exodus.interface.</code><code class="descname">Cell</code><a class="reference internal" href="../_modules/pycopancore/model_components/exodus/interface.html#Cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Cell entity type mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Cell.average_precipitation">
+<code class="descname">average_precipitation</code><em class="property"> = variable 'average precipitation' (average precipitation per square meter of cell's area and year), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[m a^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Cell.average_precipitation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Cell.characteristic">
+<code class="descname">characteristic</code><em class="property"> = variable 'characteristic' (sort of cell, e.g 'farmland' or 'city' ), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Cell.characteristic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.exodus.interface.Culture">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.exodus.interface.</code><code class="descname">Culture</code><a class="reference internal" href="../_modules/pycopancore/model_components/exodus/interface.html#Culture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Culture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Culture process taxon mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Culture.fully_connected_network">
+<code class="descname">fully_connected_network</code><em class="property"> = variable 'Fully connected Network' (This var is set true when the acquaintance network is fully connected), not None, scale=ratio, datatype=&lt;class 'bool'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Culture.fully_connected_network" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Culture.modularity">
+<code class="descname">modularity</code><em class="property"> = variable 'Modularity' (Modularity of a partition of the network), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Culture.modularity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Culture.network_clustering">
+<code class="descname">network_clustering</code><em class="property"> = variable 'network clustering' (Average clustering of network, values fromnetworkx.average_clustering), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Culture.network_clustering" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Culture.split">
+<code class="descname">split</code><em class="property"> = variable 'Split' (Shows if network has split), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Culture.split" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Culture.transitivity">
+<code class="descname">transitivity</code><em class="property"> = variable 'Transitivity' (Transitivity of the network), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Culture.transitivity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.exodus.interface.Individual">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.exodus.interface.</code><code class="descname">Individual</code><a class="reference internal" href="../_modules/pycopancore/model_components/exodus/interface.html#Individual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Individual entity type mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.farm_size">
+<code class="descname">farm_size</code><em class="property"> = variable 'farm size' (Size of the farm of an individual, if his profession is farmer), scale=ratio, datatype=&lt;class 'float'&gt;, unit=square kilometers [km²], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.farm_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.gross_income">
+<code class="descname">gross_income</code><em class="property"> = variable 'gross income' (Income before trade, distributed by social_system if social_system is a municipality), scale=ratio, datatype=&lt;class 'float'&gt;, unit=dollars [$], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.gross_income" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.harvest">
+<code class="descname">harvest</code><em class="property"> = variable 'harvest' (Water harvested before trade, calculated by farm size and average farmland precipitation), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[m³ a^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.harvest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.liquidity">
+<code class="descname">liquidity</code><em class="property"> = variable 'liquidity' (income after trade), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=dollars [$], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.liquidity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.nutrition">
+<code class="descname">nutrition</code><em class="property"> = variable 'nutrition' (water after trade. Since it is virtual water, it can be subsumed into nutrition.), not None, scale=ratio, datatype=&lt;class 'float'&gt;, &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.nutrition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.nutrition_need">
+<code class="descname">nutrition_need</code><em class="property"> = variable 'nutrition need' (need of nutrition per time), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[m³ a^-1]</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.nutrition_need" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.outspokenness">
+<code class="descname">outspokenness</code><em class="property"> = variable 'outspokenness' (Describes how often per year an individual does social updates in average), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.outspokenness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.preferential_migration">
+<code class="descname">preferential_migration</code><em class="property"> = variable 'preferential migration' (Define if migration is hindered in some direction), not None, scale=ratio, datatype=&lt;class 'bool'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.preferential_migration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.profession">
+<code class="descname">profession</code><em class="property"> = variable 'profession' (profession of an Individual, eg. 'farmer' or  'townsman' ), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.profession" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.random_rewire">
+<code class="descname">random_rewire</code><em class="property"> = variable 'Random rewire' (Probability to rewire to a random individualand cutiing a connection with a known one.), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.random_rewire" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.second_degree_rewire_prob">
+<code class="descname">second_degree_rewire_prob</code><em class="property"> = variable 'second degree rewire probability' (Probability to rewire to a neighbour of degree 2.), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.second_degree_rewire_prob" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Individual.utility">
+<code class="descname">utility</code><em class="property"> = variable 'utility' (Utility of an agent, calculated by any useful function), not None, scale=ratio, datatype=&lt;class 'float'&gt;, &gt;=0, &lt;=1</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Individual.utility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.exodus.interface.Metabolism">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.exodus.interface.</code><code class="descname">Metabolism</code><a class="reference internal" href="../_modules/pycopancore/model_components/exodus/interface.html#Metabolism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Metabolism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Metabolism process taxon mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Metabolism.market_frequency">
+<code class="descname">market_frequency</code><em class="property"> = variable 'market frequency' (Defines how often per year the market clearing is calculated), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Metabolism.market_frequency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Metabolism.non_equilibrium_checker">
+<code class="descname">non_equilibrium_checker</code><em class="property"> = variable 'Nonequilibrium Checker' (Is set true, if market is not in equilibrium anymore), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Metabolism.non_equilibrium_checker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.exodus.interface.Model">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.exodus.interface.</code><code class="descname">Model</code><a class="reference internal" href="../_modules/pycopancore/model_components/exodus/interface.html#Model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Model mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Model.description">
+<code class="descname">description</code><em class="property"> = '...'</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Model.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A migration model in the urban rural space.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Model.name">
+<code class="descname">name</code><em class="property"> = 'Exodus'</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Model.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.Model.requires">
+<code class="descname">requires</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.Model.requires" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of other model components required for this model component to
+make sense</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.exodus.interface.</code><code class="descname">SocialSystem</code><a class="reference internal" href="../_modules/pycopancore/model_components/exodus/interface.html#SocialSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for SocialSystem entity type mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.average_liquidity">
+<code class="descname">average_liquidity</code><em class="property"> = variable 'Average Liquidity' (Average over all liquidities in social_system), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=dollars [$], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.average_liquidity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.average_utility">
+<code class="descname">average_utility</code><em class="property"> = variable 'Average Utility' (Average Utility in a social_system), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.average_utility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.base_mean_income">
+<code class="descname">base_mean_income</code><em class="property"> = variable 'base income' (Base of scaling mean income dependend on population, only important for municipality), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.base_mean_income" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.continuous_exploration">
+<code class="descname">continuous_exploration</code><em class="property"> = variable 'Continuos Exploration' (Bool, that if True leads to a noise inmigration), not None, scale=ratio, datatype=&lt;class 'bool'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.continuous_exploration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.gini_coefficient">
+<code class="descname">gini_coefficient</code><em class="property"> = variable 'Gini Coefficient' (Gini coefficient of utilities), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.gini_coefficient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.last_one_standing">
+<code class="descname">last_one_standing</code><em class="property"> = variable 'Last one standing' (Bool that if True prohibits the last agent in a social system from migrating), not None, scale=ratio, datatype=&lt;class 'bool'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.last_one_standing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.mean_income_or_farmsize">
+<code class="descname">mean_income_or_farmsize</code><em class="property"> = variable 'Mean income or farmsize' (Mean income or farm size dependend on population and base_mean_income), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.mean_income_or_farmsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.migration_cost">
+<code class="descname">migration_cost</code><em class="property"> = variable 'Migration Cost' (Cost to migrate to this social_system), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.migration_cost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.migration_counter">
+<code class="descname">migration_counter</code><em class="property"> = variable 'Migration Counter' (List of: -number of events that could lead to migration,-list of social systems uids of possible taget social systems,-list of social system and uids of target SocialSystems), not None, scale=ratio, datatype=&lt;class 'list'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.migration_counter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.migration_rates">
+<code class="descname">migration_rates</code><em class="property"> = variable 'Migration Rates' (List with migration rates to all other social systems), scale=ratio, datatype=&lt;class 'list'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.migration_rates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.municipality_like">
+<code class="descname">municipality_like</code><em class="property"> = variable 'municipality like' (If true, social_system is a Municipality, otherwise a county), not None, scale=ratio, datatype=&lt;class 'bool'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.municipality_like" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.scaling_parameter">
+<code class="descname">scaling_parameter</code><em class="property"> = variable 'Scaling Parameter' (Parameter that scales income as in Total_income = base_inc ** parameter, default from bettencourt paper), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.scaling_parameter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.SocialSystem.theoretical_mig_rate">
+<code class="descname">theoretical_mig_rate</code><em class="property"> = variable 'Theoretical Migration Rate' (Analytical approximation of rates), scale=ratio, datatype=&lt;class 'list'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.SocialSystem.theoretical_mig_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.exodus.interface.World">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.exodus.interface.</code><code class="descname">World</code><a class="reference internal" href="../_modules/pycopancore/model_components/exodus/interface.html#World"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.exodus.interface.World" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for World mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.World.exception_checker">
+<code class="descname">exception_checker</code><em class="property"> = variable 'Exception checker' (Check for exceptions to terminate run), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.World.exception_checker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.World.total_gross_income">
+<code class="descname">total_gross_income</code><em class="property"> = variable 'total gross income' (Total income generated in the world.), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=dollars [$], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.World.total_gross_income" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.World.total_harvest">
+<code class="descname">total_harvest</code><em class="property"> = variable 'total harvest' (All water that has been harvested in the world), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[m³ a^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.World.total_harvest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.World.total_liquidity">
+<code class="descname">total_liquidity</code><em class="property"> = variable 'total liquidity' (All the liquidity in the world, shall be equalto the total gross income), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=dollars [$], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.World.total_liquidity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.World.total_nutrition">
+<code class="descname">total_nutrition</code><em class="property"> = variable 'total nutrition' (All water that is being consumed in the world), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[m³ a^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.World.total_nutrition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.exodus.interface.World.water_price">
+<code class="descname">water_price</code><em class="property"> = variable 'water price' (price of water that is calculated by market clearing), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=dollars [$], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.exodus.interface.World.water_price" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="pycopancore-model-components-exodus-model-module">
+<h2>pycopancore.model_components.exodus.model module<a class="headerlink" href="#pycopancore-model-components-exodus-model-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.model_components.exodus.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.model_components.exodus.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

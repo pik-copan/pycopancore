@@ -1,0 +1,280 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.runners.hooks &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.runners.hooks</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Register hooks for the run inside a runner.&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="c1">#</span>
+<span class="c1"># Imports</span>
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">unique</span>
+
+<span class="c1">#</span>
+<span class="c1"># Specific Error Definition</span>
+<span class="c1">#</span>
+
+
+<div class="viewcode-block" id="HookRegistrationError"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.hooks.HookRegistrationError">[docs]</a><span class="k">class</span> <span class="nc">HookRegistrationError</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dummy docstring&quot;&quot;&quot;</span>
+    <span class="c1"># TODO: missing class docstring</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="HooksError"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.hooks.HooksError">[docs]</a><span class="k">class</span> <span class="nc">HooksError</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dummy docstring&quot;&quot;&quot;</span>
+    <span class="c1"># TODO: missing class docstring</span>
+    <span class="k">pass</span></div>
+
+<span class="c1">#</span>
+<span class="c1"># Definition of class _AbstractRunner</span>
+<span class="c1">#</span>
+
+
+<div class="viewcode-block" id="Hooks"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.hooks.Hooks">[docs]</a><span class="k">class</span> <span class="nc">Hooks</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class managing the hooks that are called before, during and after a run.&quot;&quot;&quot;</span>
+
+    <span class="c1"># class variables</span>
+    <span class="n">_pre_hooks</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;dict of hooks that are executed before the run</span>
+
+<span class="sd">    keys: None or Entity class or Taxon class</span>
+
+<span class="sd">    values: list of functions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_mid_hooks</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;dict of hooks that are executed every time the run is halted for a step or an event</span>
+
+<span class="sd">    keys: None or Entity class or Taxon class</span>
+
+<span class="sd">    values: list of functions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_post_hooks</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;dict of hooks that are executed after the run</span>
+
+<span class="sd">    keys: None or Entity class or Taxon class</span>
+
+<span class="sd">    values: list of functions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># TODO: to be deleted again, just for testing purposes</span>
+
+<div class="viewcode-block" id="Hooks.Types"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.hooks.Hooks.Types">[docs]</a>    <span class="nd">@unique</span>
+    <span class="k">class</span> <span class="nc">Types</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Defines the three hook types: pre, mid, post&quot;&quot;&quot;</span>
+        <span class="n">pre</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">post</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+<div class="viewcode-block" id="Hooks.register_hook"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.hooks.Hooks.register_hook">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">register_hook</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">hook</span><span class="p">,</span> <span class="n">theclass</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register a hook.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+
+<span class="sd">        type: HookTypes member</span>
+<span class="sd">            Specifies the type of the hook.</span>
+
+<span class="sd">        hook: function</span>
+<span class="sd">            The function to be called.</span>
+<span class="sd">            arguments: instance of the corresponding enitity or taxon, time when called</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="p">,</span> <span class="s2">&quot;please give a type from </span><span class="si">{}</span><span class="s2">.HookTypes&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">theclass</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">pre</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_pre_hooks</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">mid</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_mid_hooks</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">post</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_post_hooks</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if the Code ends up here, there is an error in the implementation because</span>
+            <span class="c1"># cls.HookTypes has been extended but there is no registration done</span>
+            <span class="c1"># here</span>
+            <span class="k">raise</span> <span class="n">HooksError</span><span class="p">(</span><span class="s2">&quot;unknown hook type&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">theclass</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">hook</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">[</span><span class="n">theclass</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">HookRegistrationError</span><span class="p">(</span>
+                    <span class="s2">&quot;already registered hook: </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hook</span><span class="p">))</span>
+            <span class="n">hooks</span><span class="p">[</span><span class="n">theclass</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hooks</span><span class="p">[</span><span class="n">theclass</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">hook</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Hooks.unregister_hook"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.hooks.Hooks.unregister_hook">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">unregister_hook</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">hook</span><span class="p">,</span> <span class="n">theclass</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">error_if_not_registered</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register a hook.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+
+<span class="sd">        type: HookTypes member</span>
+<span class="sd">            Specifies the type of the hook.</span>
+
+<span class="sd">        hook: function</span>
+<span class="sd">            The function to be removed.</span>
+
+<span class="sd">        Errors</span>
+<span class="sd">        ======</span>
+<span class="sd">        raises HookRegistrationError when hook is not listed as registered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="p">,</span> <span class="s2">&quot;please give a type from </span><span class="si">{}</span><span class="s2">.HookTypes&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">theclass</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">pre</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_pre_hooks</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">mid</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_mid_hooks</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">post</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_post_hooks</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if the Code ends up here, there is an error in the implementation because</span>
+            <span class="c1"># cls.HookTypes has been extended but there is no registration done</span>
+            <span class="c1"># here</span>
+            <span class="k">raise</span> <span class="n">HooksError</span><span class="p">(</span><span class="s2">&quot;unknown hook type&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">theclass</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;class has no hook registered&quot;</span><span class="p">)</span>
+            <span class="n">hooks</span><span class="p">[</span><span class="n">theclass</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">error_if_not_registered</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">HookRegistrationError</span><span class="p">(</span>
+                    <span class="s2">&quot;hook is not listed as registered, so it cannot be unregistered&quot;</span><span class="p">)</span></div>
+            <span class="c1"># else: ignore quietly</span>
+
+<div class="viewcode-block" id="Hooks.execute_hooks"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.hooks.Hooks.execute_hooks">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">execute_hooks</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dummy docstring&quot;&quot;&quot;</span>
+        <span class="c1"># TODO: Missing method docstring</span>
+        <span class="k">assert</span> <span class="nb">type</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="p">,</span> <span class="s2">&quot;please give a type from </span><span class="si">{}</span><span class="s2">.HookTypes&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="vm">__qualname__</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">pre</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_pre_hooks</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">mid</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_mid_hooks</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="ow">is</span> <span class="bp">cls</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">post</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_post_hooks</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if the Code ends up here, there is an error in the implementation because</span>
+            <span class="c1"># cls.HookTypes has been extended but there is no registration done</span>
+            <span class="c1"># here</span>
+            <span class="k">raise</span> <span class="n">HooksError</span><span class="p">(</span><span class="s2">&quot;unknown hook type&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hooks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">:</span>
+                <span class="c1"># go throught all hooks that don&#39;t have an entity or taxon</span>
+                <span class="c1"># associated with it</span>
+                <span class="k">for</span> <span class="n">hook</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
+                    <span class="n">hook</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="c1"># look for the correct components fitting to each hook_class</span>
+            <span class="c1"># and then run the hook for each instance</span>
+            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">entity_types</span> <span class="o">+</span> <span class="n">model</span><span class="o">.</span><span class="n">process_taxa</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">hook_class</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">hook_class</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">hook</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">[</span><span class="n">hook_class</span><span class="p">]:</span>
+                                <span class="n">hook</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Hooks.__new__"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.hooks.Hooks.__new__">[docs]</a>    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;raises an error because this class should not be instantiated&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">HooksError</span><span class="p">(</span><span class="s2">&quot;This class should not be instantiated.&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

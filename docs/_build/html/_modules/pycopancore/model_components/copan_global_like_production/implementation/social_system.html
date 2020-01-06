@@ -1,0 +1,272 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.copan_global_like_production.implementation.social_system &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.copan_global_like_production.implementation.social_system</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;SocialSystem entity type mixing class template.</span>
+
+<span class="sd">TODO: adjust or fill in code and documentation wherever marked by &quot;TODO:&quot;,</span>
+<span class="sd">then remove these instructions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">....</span> <span class="k">import</span> <span class="n">Explicit</span><span class="p">,</span> <span class="n">ODE</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">I</span>
+<span class="kn">from</span> <span class="nn">...base</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">B</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="SocialSystem"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.copan_global_like_production.implementation.html#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem">[docs]</a><span class="k">class</span> <span class="nc">SocialSystem</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;SocialSystem entity type mixin implementation class.&quot;&quot;&quot;</span>
+
+    
+    <span class="c1"># process-related methods:</span>
+
+<div class="viewcode-block" id="SocialSystem.do_economic_production"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.copan_global_like_production.implementation.html#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.do_economic_production">[docs]</a>    <span class="k">def</span> <span class="nf">do_economic_production</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Do something.</span>
+
+<span class="sd">        It needs to be described so other people want to use it.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        unused_t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># list of cells in some fixed order, so that we can use arrays below:</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">)</span>
+        <span class="c1"># collect cellwise input for energy subsectors:</span>
+        <span class="n">intensity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">total_energy_intensity</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">C</span><span class="p">])</span>
+        <span class="c1"># use the copan:GLOBAL Leontieff/Cobb-Douglas nested production</span>
+        <span class="c1"># function:</span>
+        <span class="n">relative_productivity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">total_relative_productivity</span>
+                                          <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">C</span><span class="p">])</span>
+        <span class="sd">&quot;&quot;&quot;an aggregate, production-function specific indicator&quot;&quot;&quot;</span>
+        <span class="c1"># distribute population and capital to cells so that wages and rents</span>
+        <span class="c1"># are equal across cells (efficient allocation):</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">relative_productivity</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
+            <span class="c1"># give equal prod. to those with inf relative prod.:</span>
+            <span class="n">wh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">relative_productivity</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">relative_productivity</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">relative_productivity</span><span class="p">[</span><span class="n">wh</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">relative_weight</span> <span class="o">=</span> <span class="n">relative_productivity</span>
+            <span class="n">total_relative_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">relative_weight</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">relative_weight</span> <span class="o">=</span> <span class="n">relative_productivity</span>
+            <span class="n">total_relative_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">relative_weight</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">total_relative_weight</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># unimportant since relative_weight == 0, just to avoid division error:</span>
+                <span class="n">total_relative_weight</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">relative_weight</span> <span class="o">/</span> <span class="n">total_relative_weight</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_capital</span>
+        <span class="c1"># resulting cell-wise harvest, extraction and production:</span>
+        <span class="n">denom</span> <span class="o">=</span> <span class="n">relative_productivity</span><span class="o">**</span><span class="mf">0.8</span>
+        <span class="c1"># unimportant since numerator is then 0, just to avoid division error:</span>
+        <span class="n">denom</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">denom</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">fac</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">K</span><span class="p">)</span><span class="o">**</span><span class="mf">0.4</span> <span class="o">/</span> <span class="n">denom</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">fac</span><span class="p">)):</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">fac</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> 
+<span class="c1">#            print(&quot;fac&quot;,self.physical_capital,P[w],K[w],weight[w],relative_productivity[w],intensity[w])</span>
+            <span class="n">exit</span><span class="p">()</span>
+        <span class="n">eB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">biomass_energy_density</span>
+        <span class="n">eF</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">fossil_energy_density</span>
+        <span class="c1"># TODO: FIX occurrence of intensity:</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">biomass_relative_productivity</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">C</span><span class="p">])</span> <span class="o">*</span> <span class="n">fac</span> <span class="o">/</span> <span class="n">eB</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">fossil_relative_productivity</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">C</span><span class="p">])</span> <span class="o">*</span> <span class="n">fac</span> <span class="o">/</span> <span class="n">eF</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">renewable_relative_productivity</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">C</span><span class="p">])</span> <span class="o">*</span> <span class="n">fac</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">eB</span> <span class="o">*</span> <span class="n">B</span> <span class="o">+</span> <span class="n">eF</span> <span class="o">*</span> <span class="n">F</span> <span class="o">+</span> <span class="n">R</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">E</span> <span class="o">/</span> <span class="n">intensity</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">Y</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">fac</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> 
+<span class="c1">#            print(&quot;Y&quot;,P[w],K[w],weight[w],relative_productivity[w],intensity[w],E[w])</span>
+            <span class="n">exit</span><span class="p">()</span>
+            
+        <span class="c1"># tell cells what their harvest and extraction is:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)):</span>
+            <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">biomass_harvest_flow</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">fossil_extraction_flow</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># store social_systems&#39; total harvest and extraction, emissions,</span>
+        <span class="c1"># and production:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">biomass_input_flow</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fossil_fuel_input_flow</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renewable_energy_input_flow</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secondary_energy_flow</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">economic_output_flow</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">carbon_emission_flow</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">biomass_input_flow</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fossil_fuel_input_flow</span></div>
+
+<div class="viewcode-block" id="SocialSystem.do_harvest_extraction_emissions"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.copan_global_like_production.implementation.html#pycopancore.model_components.copan_global_like_production.implementation.social_system.SocialSystem.do_harvest_extraction_emissions">[docs]</a>    <span class="k">def</span> <span class="nf">do_harvest_extraction_emissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add carbon emission flow to world&#39;s athmospheric carbon.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        unused_t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># this is an example of a process that is owned by SocialSystem</span>
+        <span class="c1"># but affects its cells and the world:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">d_terrestrial_carbon</span> <span class="o">-=</span> <span class="n">c</span><span class="o">.</span><span class="n">biomass_harvest_flow</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">d_fossil_carbon</span> <span class="o">-=</span> <span class="n">c</span><span class="o">.</span><span class="n">fossil_extraction_flow</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">d_atmospheric_carbon</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">carbon_emission_flow</span></div>
+
+
+    <span class="c1"># abbreviations:</span>
+    
+    <span class="n">this</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span>
+    <span class="n">met</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">cells</span>
+    <span class="c1"># distribute population and capital to cells so that wages and rents</span>
+    <span class="c1"># are equal across cells (efficient allocation):</span>
+    <span class="n">relative_weight</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">total_relative_productivity</span>
+    <span class="n">total_relative_weight</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">relative_weight</span><span class="p">)</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">relative_weight</span> <span class="o">/</span> <span class="n">total_relative_weight</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">this</span><span class="o">.</span><span class="n">population</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">this</span><span class="o">.</span><span class="n">physical_capital</span>
+    <span class="c1"># resulting cell-wise harvest, extraction and production:</span>
+    <span class="n">intensity</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">total_energy_intensity</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">total_relative_productivity</span> <span class="o">*</span> <span class="n">intensity</span><span class="p">)</span><span class="o">**</span><span class="mf">0.8</span>
+    <span class="n">fac</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">K</span><span class="p">)</span><span class="o">**</span><span class="mf">0.4</span> <span class="o">/</span> <span class="n">denom</span>
+    <span class="n">eB</span> <span class="o">=</span> <span class="n">met</span><span class="o">.</span><span class="n">biomass_energy_density</span>
+    <span class="n">eF</span> <span class="o">=</span> <span class="n">met</span><span class="o">.</span><span class="n">fossil_energy_density</span>
+    <span class="n">Bcell</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">biomass_relative_productivity</span> <span class="o">*</span> <span class="n">fac</span> <span class="o">/</span> <span class="n">eB</span>
+    <span class="n">Fcell</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">fossil_relative_productivity</span> <span class="o">*</span> <span class="n">fac</span> <span class="o">/</span> <span class="n">eF</span>
+    <span class="n">Rcell</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">renewable_relative_productivity</span> <span class="o">*</span> <span class="n">fac</span>
+    <span class="n">Ecell</span> <span class="o">=</span> <span class="n">eB</span> <span class="o">*</span> <span class="n">Bcell</span> <span class="o">+</span> <span class="n">eF</span> <span class="o">*</span> <span class="n">Fcell</span> <span class="o">+</span> <span class="n">Rcell</span>
+    <span class="n">Ycell</span> <span class="o">=</span> <span class="n">Ecell</span> <span class="o">/</span> <span class="n">intensity</span>
+    <span class="c1"># societal aggregates:</span>
+    <span class="n">Bsoc</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Bcell</span><span class="p">)</span>
+    <span class="n">Fsoc</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Fcell</span><span class="p">)</span>
+    <span class="n">Rsoc</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Rcell</span><span class="p">)</span>
+    <span class="n">Esoc</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Ecell</span><span class="p">)</span>
+    <span class="n">Ysoc</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Ycell</span><span class="p">)</span>
+    <span class="n">emissions</span> <span class="o">=</span> <span class="n">Bsoc</span> <span class="o">+</span> <span class="n">Fsoc</span>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;economic production&quot;</span><span class="p">,</span>
+                 <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">biomass_harvest_flow</span><span class="p">,</span>
+                  <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">fossil_extraction_flow</span><span class="p">,</span>
+                  <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">biomass_input_flow</span><span class="p">,</span>
+                  <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">fossil_fuel_input_flow</span><span class="p">,</span>
+                  <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">renewable_energy_input_flow</span><span class="p">,</span>
+                  <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">secondary_energy_flow</span><span class="p">,</span>
+                  <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">economic_output_flow</span><span class="p">,</span>
+                  <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">carbon_emission_flow</span><span class="p">],</span>
+<span class="c1">#                 [Bcell,</span>
+<span class="c1">#                  Fcell,</span>
+<span class="c1">#                  Bsoc,</span>
+<span class="c1">#                  Fsoc,</span>
+<span class="c1">#                  Rsoc,</span>
+<span class="c1">#                  Esoc,</span>
+<span class="c1">#                  Ysoc,</span>
+<span class="c1">#                  emissions</span>
+<span class="c1">#                  ]),</span>
+                 <span class="n">do_economic_production</span><span class="p">),</span>
+
+        <span class="n">ODE</span><span class="p">(</span><span class="s2">&quot;harvest, extraction, emissions&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">terrestrial_carbon</span><span class="p">,</span>
+             <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">fossil_carbon</span><span class="p">,</span>
+             <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">atmospheric_carbon</span><span class="p">],</span>
+<span class="c1">#            [-Bcell,</span>
+<span class="c1">#             -Fcell,</span>
+<span class="c1">#             emissions</span>
+<span class="c1">#             ])</span>
+            <span class="n">do_harvest_extraction_emissions</span><span class="p">)</span>
+
+    <span class="p">]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

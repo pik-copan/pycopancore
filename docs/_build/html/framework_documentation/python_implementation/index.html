@@ -1,0 +1,221 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Python implementation &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Model component subpackages" href="model_components.html" />
+    <link rel="prev" title="Logics for simulation and analysis" href="../software_design/simulation_and_analysis.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="python-implementation">
+<h1>Python implementation<a class="headerlink" href="#python-implementation" title="Permalink to this headline">¶</a></h1>
+<p>This section describes how the computer software described in the <a class="reference internal" href="../software_design/index.html"><span class="doc">Software design (independent of programming language)</span></a> is currently
+implemented in the Python programming language.
+For a detailed reference of the resulting Python package pycopancore, see <a class="reference internal" href="../../api_reference.html"><span class="doc">API reference</span></a>.</p>
+<p>Because it allows a comfortable mix of object-oriented and imperative programming,
+is well-established in many scientific communities
+and provides powerful tools for statistical analysis and data management and exchange,
+we chose to implement the software in the standard <strong>Python</strong> programming language, using the current grammar version 3,
+with the option to port it later to other Python variants like <em>Cython</em> or to other object-oriented languages such as C++ or Java.</p>
+<div class="section" id="typographic-conventions">
+<h2>Typographic conventions<a class="headerlink" href="#typographic-conventions" title="Permalink to this headline">¶</a></h2>
+<p>In this documentation, <code class="docutils literal"><span class="pre">&lt;text</span> <span class="pre">in</span> <span class="pre">this</span> <span class="pre">kind</span> <span class="pre">of</span> <span class="pre">brackets&gt;</span></code> is always a placeholder,
+e.g., <code class="docutils literal"><span class="pre">&lt;variable</span> <span class="pre">name&gt;</span></code> is a placeholder for a variable name.</p>
+</div>
+<div class="section" id="main-package-structure">
+<h2>Main package structure<a class="headerlink" href="#main-package-structure" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pycopancore</span>
+
+   <span class="n">data_model</span>
+      <span class="n">master_data_model</span>
+         <span class="n">cell</span><span class="o">.</span><span class="n">py</span>
+         <span class="n">culture</span><span class="o">.</span><span class="n">py</span>
+         <span class="n">environment</span><span class="o">.</span><span class="n">py</span>
+         <span class="n">individual</span><span class="o">.</span><span class="n">py</span>
+         <span class="n">social_metabolism</span><span class="o">.</span><span class="n">py</span>
+         <span class="n">social_system</span><span class="o">.</span><span class="n">py</span>
+         <span class="n">world</span><span class="o">.</span><span class="n">py</span>
+         <span class="o">...</span>
+      <span class="n">dimensions</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">dimensional_quantity</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">reference_variable</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">set_variable</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">unit</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">variable</span><span class="o">.</span><span class="n">py</span>
+      <span class="o">...</span>
+
+   <span class="n">model_components</span>
+      <span class="o">&lt;</span><span class="n">component</span> <span class="n">name</span><span class="o">&gt;</span>
+         <span class="n">implementation</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">py</span>
+            <span class="n">culture</span><span class="o">.</span><span class="n">py</span>
+            <span class="o">...</span>
+         <span class="n">interface</span><span class="o">.</span><span class="n">py</span>
+         <span class="n">model</span><span class="o">.</span><span class="n">py</span>
+         <span class="o">...</span>
+      <span class="o">&lt;</span><span class="n">other</span> <span class="n">component</span> <span class="n">name</span><span class="o">&gt;</span>
+         <span class="o">...</span>
+      <span class="o">...</span>
+
+   <span class="n">models</span>
+      <span class="o">&lt;</span><span class="n">model_name</span><span class="o">&gt;.</span><span class="n">py</span>
+      <span class="o">...</span>
+
+   <span class="n">private</span>
+      <span class="n">_abstract_entity_mixin</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">_abstract_process</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">_abstract_runner</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">_expressions</span><span class="o">.</span><span class="n">py</span>
+      <span class="o">...</span>
+
+   <span class="n">process_types</span>
+      <span class="n">explicit</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">event</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">implicit</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">ODE</span><span class="o">.</span><span class="n">py</span>
+      <span class="n">step</span><span class="o">.</span><span class="n">py</span>
+      <span class="o">...</span>
+
+   <span class="n">runners</span>
+      <span class="n">scipy_odeint_runner</span><span class="o">.</span><span class="n">py</span>
+      <span class="o">...</span>
+
+   <span class="n">util</span>
+      <span class="n">functions</span><span class="o">.</span><span class="n">py</span>
+      <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="local-workspace">
+<h2>Local workspace<a class="headerlink" href="#local-workspace" title="Permalink to this headline">¶</a></h2>
+<p>Users work in a local <em>workspace</em> folder of a slighty similar but simpler structure:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pycopancore</span><span class="o">-</span><span class="n">workspace</span>
+
+   <span class="n">model_components</span>
+      <span class="n">_component_template</span>
+         <span class="o">...</span>
+      <span class="o">&lt;</span><span class="n">component</span> <span class="n">name</span><span class="o">&gt;</span>
+         <span class="o">...</span>
+
+   <span class="n">models</span>
+      <span class="n">_model_template</span><span class="o">.</span><span class="n">py</span>
+      <span class="o">&lt;</span><span class="n">model_name</span><span class="o">&gt;.</span><span class="n">py</span>
+      <span class="o">...</span>
+
+   <span class="n">studies</span>
+      <span class="n">_study_template</span><span class="o">.</span><span class="n">py</span>
+      <span class="o">&lt;</span><span class="n">some_simulation_script</span><span class="o">&gt;.</span><span class="n">py</span>
+      <span class="o">...</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model_components.html">Model component subpackages</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Framework documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../abstract_level/index.html">Abstract description of the copan:CORE modeling framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../software_design/index.html">Software design (independent of programming language)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Python implementation</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Framework documentation</a><ul>
+      <li>Previous: <a href="../software_design/simulation_and_analysis.html" title="previous chapter">Logics for simulation and analysis</a></li>
+      <li>Next: <a href="model_components.html" title="next chapter">Model component subpackages</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/framework_documentation/python_implementation/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/framework_documentation/python_implementation/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

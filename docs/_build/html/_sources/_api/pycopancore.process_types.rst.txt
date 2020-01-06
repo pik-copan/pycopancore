@@ -1,0 +1,54 @@
+pycopancore\.process\_types package
+===================================
+
+Submodules
+----------
+
+pycopancore\.process\_types\.ODE module
+---------------------------------------
+
+.. automodule:: pycopancore.process_types.ODE
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.process\_types\.event module
+-----------------------------------------
+
+.. automodule:: pycopancore.process_types.event
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.process\_types\.explicit module
+--------------------------------------------
+
+.. automodule:: pycopancore.process_types.explicit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.process\_types\.implicit module
+--------------------------------------------
+
+.. automodule:: pycopancore.process_types.implicit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.process\_types\.step module
+----------------------------------------
+
+.. automodule:: pycopancore.process_types.step
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.process_types
+    :members:
+    :undoc-members:
+    :show-inheritance:

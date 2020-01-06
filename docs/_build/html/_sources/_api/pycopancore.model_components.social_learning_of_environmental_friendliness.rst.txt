@@ -1,0 +1,37 @@
+pycopancore\.model\_components\.social\_learning\_of\_environmental\_friendliness package
+=========================================================================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pycopancore.model_components.social_learning_of_environmental_friendliness.implementation
+
+Submodules
+----------
+
+pycopancore\.model\_components\.social\_learning\_of\_environmental\_friendliness\.interface module
+---------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.social_learning_of_environmental_friendliness.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.social\_learning\_of\_environmental\_friendliness\.model module
+-----------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.social_learning_of_environmental_friendliness.model
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.social_learning_of_environmental_friendliness
+    :members:
+    :undoc-members:
+    :show-inheritance:

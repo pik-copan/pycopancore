@@ -1,0 +1,30 @@
+pycopancore\.runners package
+============================
+
+Submodules
+----------
+
+pycopancore\.runners\.hooks module
+----------------------------------
+
+.. automodule:: pycopancore.runners.hooks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.runners\.runner module
+-----------------------------------
+
+.. automodule:: pycopancore.runners.runner
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.runners
+    :members:
+    :undoc-members:
+    :show-inheritance:

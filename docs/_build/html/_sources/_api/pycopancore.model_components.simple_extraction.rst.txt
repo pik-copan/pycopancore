@@ -1,0 +1,37 @@
+pycopancore\.model\_components\.simple\_extraction package
+==========================================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pycopancore.model_components.simple_extraction.implementation
+
+Submodules
+----------
+
+pycopancore\.model\_components\.simple\_extraction\.interface module
+--------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.simple_extraction.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.simple\_extraction\.model module
+----------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.simple_extraction.model
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.simple_extraction
+    :members:
+    :undoc-members:
+    :show-inheritance:

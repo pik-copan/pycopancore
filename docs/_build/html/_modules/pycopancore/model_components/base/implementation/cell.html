@@ -1,0 +1,248 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.base.implementation.cell &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.base.implementation.cell</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="c1"># only used in this component, not in others:</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">abstract</span>
+<span class="kn">from</span> <span class="nn">....private</span> <span class="k">import</span> <span class="n">unknown</span>
+
+<span class="c1"># typical imports for implementation classes:</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">I</span>
+<span class="kn">from</span> <span class="nn">....</span> <span class="k">import</span> <span class="n">master_data_model</span> <span class="k">as</span> <span class="n">D</span>
+
+
+<div class="viewcode-block" id="Cell"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.base.implementation.html#pycopancore.model_components.base.implementation.cell.Cell">[docs]</a><span class="k">class</span> <span class="nc">Cell</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">Cell</span><span class="p">,</span> <span class="n">abstract</span><span class="o">.</span><span class="n">Cell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cell entity type mixin implementation class.</span>
+
+<span class="sd">    Base component&#39;s Cell mixin that every model must use in composing their</span>
+<span class="sd">    Cell class. Inherits from I.Cell as the interface with all necessary</span>
+<span class="sd">    variables and parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">social_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span>
+                 <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize an instance of Cell.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world : obj</span>
+<span class="sd">            World the Cell belongs to (the default is None)</span>
+<span class="sd">        social_system : obj</span>
+<span class="sd">            SocialSystem the Cell belongs to (the default is None)</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            keyword arguments passed to super()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># must be the first line</span>
+
+        <span class="c1"># init and set variables implemented via properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_social_system</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">world</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span> <span class="o">=</span> <span class="n">social_system</span>  <span class="c1"># this line must occur after setting world!</span>
+
+        <span class="c1"># make sure all variable values are valid:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assert_valid</span><span class="p">()</span>
+
+        <span class="c1"># init other caches:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_individuals</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="c1"># register with all mandatory networks:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">geographic_network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="c1"># getters and setters for references:</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">world</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the World the Cell is part of.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span>
+
+    <span class="nd">@world</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the World the Cell is part of.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># first deregister from previous world&#39;s list of cells:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">I</span><span class="o">.</span><span class="n">World</span><span class="p">),</span> <span class="s2">&quot;world must be of entity type World&quot;</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">_cells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="n">w</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">social_system</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the lowest-level SocialSystem whose territory the Cell is part of.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_social_system</span>
+
+    <span class="nd">@social_system</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">social_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the lowest-level SocialSystem whose territory the Cell is part of.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_social_system</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># first deregister from previous social_system&#39;s list of cells:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_social_system</span><span class="o">.</span><span class="n">_direct_cells</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="c1"># reset dependent caches:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_social_system</span><span class="o">.</span><span class="n">cells</span> <span class="o">=</span> <span class="n">unknown</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_social_system</span><span class="o">.</span><span class="n">direct_individuals</span> <span class="o">=</span> <span class="n">unknown</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="p">),</span> \
+                <span class="s2">&quot;social_system must be of entity type SocialSystem&quot;</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">_direct_cells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="c1"># reset dependent caches:</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">cells</span> <span class="o">=</span> <span class="n">unknown</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">direct_individuals</span> <span class="o">=</span> <span class="n">unknown</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_social_system</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="c1"># reset dependent caches:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">social_systems</span> <span class="o">=</span> <span class="n">unknown</span>
+
+    <span class="c1"># getters for backwards references and convenience variables:</span>
+
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">environment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the Environment of which the Cell is a part.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">environment</span>
+
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">metabolism</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the Metabolism of which the Cell is a part.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">metabolism</span>
+
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">culture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the Culture of which the Cell is a part.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">culture</span>
+
+    <span class="n">_social_systems</span> <span class="o">=</span> <span class="n">unknown</span>
+    <span class="sd">&quot;&quot;&quot;cache, depends on self.social_system, self.social_system.higher_social_systems&quot;&quot;&quot;</span>
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">social_systems</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get upward list of SocialSystems the Cell belongs to (in)directly.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_social_systems</span> <span class="ow">is</span> <span class="n">unknown</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_social_systems</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span> <span class="ow">is</span> <span class="kc">None</span> \
+                <span class="k">else</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">higher_social_systems</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_social_systems</span>
+
+    <span class="nd">@social_systems</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">social_systems</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set upward list of SocialSystems the Cell belongs to (in)directly.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">u</span> <span class="o">==</span> <span class="n">unknown</span><span class="p">,</span> <span class="s2">&quot;setter can only be used to reset cache&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_social_systems</span> <span class="o">=</span> <span class="n">unknown</span>
+        <span class="c1"># reset dependent caches:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">individuals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the Individuals which reside in the Cell.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_individuals</span>
+
+    <span class="c1"># no process-related methods</span>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># no processes in base</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

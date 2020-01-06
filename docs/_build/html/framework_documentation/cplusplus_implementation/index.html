@@ -1,0 +1,153 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>C++ implementation &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="c-implementation">
+<h1>C++ implementation<a class="headerlink" href="#c-implementation" title="Permalink to this headline">¶</a></h1>
+<p>This section describes how the computer software described in the <a class="reference internal" href="../software_design/index.html"><span class="doc">Software design (independent of programming language)</span></a> is planned to be
+also implemented in the C++ programming language in the future.</p>
+<p>Most implementation details should be easily portable from Python to C++,
+including multiple inheritance,
+with a few exceptions discussed shortly here.</p>
+<div class="section" id="multiple-inheritance">
+<h2>Multiple inheritance<a class="headerlink" href="#multiple-inheritance" title="Permalink to this headline">¶</a></h2>
+<p>While C++ supports multiple inheritance, there might arise issues:</p>
+<ul class="simple">
+<li>How to call the “next” sister class’ constructor not knowing which class this will be?</li>
+</ul>
+</div>
+<div class="section" id="introspection-reflection">
+<h2>Introspection / reflection<a class="headerlink" href="#introspection-reflection" title="Permalink to this headline">¶</a></h2>
+<p>To realize the modularization needs of copan:CORE,
+the implementation needs to make use of a suitable reflection mechanism in C++
+that allows the following operations at runtime,
+similar to what is currently done in the ModelLogics and Variable classes
+of the Python implementation:</p>
+<ol class="arabic simple">
+<li>Identify and compare the types of any objects</li>
+<li>For any class, get the list of parent classes and variables names</li>
+<li>Get and set existing variables by their name stored in a string</li>
+</ol>
+<p>The currently apparently most standard reflection mechanism in C++, RTTI,
+allows to perform tast 1 but not 2 and 3.</p>
+<p>Apparently there is no standard reflection mechanism in C++ yet
+but according to
+<a class="reference external" href="http://jackieokay.com/2017/05/06/reflection2.html">http://jackieokay.com/2017/05/06/reflection2.html</a>
+there are two likely candidates existing as prototypes:</p>
+<ul class="simple">
+<li>reflexpr: <a class="reference external" href="http://matus-chochlik.github.io/mirror/doc/html/index.html">http://matus-chochlik.github.io/mirror/doc/html/index.html</a></li>
+<li>cpp3k clang-reflect: <a class="reference external" href="https://github.com/asutton/clang-reflect">https://github.com/asutton/clang-reflect</a></li>
+</ul>
+<p>clang-reflect seems to be the more actively developed and clean approach so far,
+implementing the proposal
+<a class="reference external" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0590r0.pdf">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0590r0.pdf</a>
+that makes use of the reflection operator $ to access the metadata of a
+type or object.
+It seems that clang-reflect supports 2. and 3. via the functions
+$T.bases() and $T.member_variables().
+It is possible that we have to store entities’ and taxa’s variable values
+in a “variables” struct inside the entity/taxon instead of directly as member variables though.</p>
+</div>
+<div class="section" id="symbolic-expressions">
+<h2>Symbolic expressions<a class="headerlink" href="#symbolic-expressions" title="Permalink to this headline">¶</a></h2>
+<p>Seems possible in principle, see <a class="reference external" href="http://issc.uj.ac.za/symbolic/symbolic.html">http://issc.uj.ac.za/symbolic/symbolic.html</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/framework_documentation/cplusplus_implementation/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/framework_documentation/cplusplus_implementation/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

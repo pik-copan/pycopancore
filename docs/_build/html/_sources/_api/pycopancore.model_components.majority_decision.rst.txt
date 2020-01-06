@@ -1,0 +1,37 @@
+pycopancore\.model\_components\.majority\_decision package
+==========================================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pycopancore.model_components.majority_decision.implementation
+
+Submodules
+----------
+
+pycopancore\.model\_components\.majority\_decision\.interface module
+--------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.majority_decision.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.majority\_decision\.model module
+----------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.majority_decision.model
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.majority_decision
+    :members:
+    :undoc-members:
+    :show-inheritance:

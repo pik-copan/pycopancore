@@ -1,0 +1,154 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.most_simple_vegetation.implementation package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-model-components-most-simple-vegetation-implementation-package">
+<h1>pycopancore.model_components.most_simple_vegetation.implementation package<a class="headerlink" href="#pycopancore-model-components-most-simple-vegetation-implementation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.model_components.most_simple_vegetation.implementation.cell">
+<span id="pycopancore-model-components-most-simple-vegetation-implementation-cell-module"></span><h2>pycopancore.model_components.most_simple_vegetation.implementation.cell module<a class="headerlink" href="#module-pycopancore.model_components.most_simple_vegetation.implementation.cell" title="Permalink to this headline">¶</a></h2>
+<p>Cell entity type mixing of class most_simple_vegetation.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.most_simple_vegetation.implementation.cell.</code><code class="descname">Cell</code><span class="sig-paren">(</span><em>*</em>, <em>stock=1</em>, <em>capacity=1</em>, <em>growth_rate=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/most_simple_vegetation/implementation/cell.html#Cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.simple_extraction.html#pycopancore.model_components.simple_extraction.interface.Cell" title="pycopancore.model_components.simple_extraction.interface.Cell"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.simple_extraction.interface.Cell</span></code></a></p>
+<p>Cell entity type mixin implementation class.</p>
+<dl class="method">
+<dt id="pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell.deactivate">
+<code class="descname">deactivate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/most_simple_vegetation/implementation/cell.html#Cell.deactivate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell.deactivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deactivate a cell.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell.logistic_growth">
+<code class="descname">logistic_growth</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/most_simple_vegetation/implementation/cell.html#Cell.logistic_growth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell.logistic_growth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the biophysical logistic growth function of cell’s stock.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> (<em>float</em>) – time</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell.processes">
+<code class="descname">processes</code><em class="property"> = [logistic_growth_function]</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell.reactivate">
+<code class="descname">reactivate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/most_simple_vegetation/implementation/cell.html#Cell.reactivate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell.reactivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reactivate a cell.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.most_simple_vegetation.implementation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.model_components.most_simple_vegetation.implementation" title="Permalink to this headline">¶</a></h2>
+<p>Model component implementation subpackage most_simple_vegetation.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.model_components.most_simple_vegetation.implementation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.model_components.most_simple_vegetation.implementation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

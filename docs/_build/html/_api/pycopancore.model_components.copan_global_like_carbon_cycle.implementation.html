@@ -1,0 +1,176 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.copan_global_like_carbon_cycle.implementation package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-model-components-copan-global-like-carbon-cycle-implementation-package">
+<h1>pycopancore.model_components.copan_global_like_carbon_cycle.implementation package<a class="headerlink" href="#pycopancore-model-components-copan-global-like-carbon-cycle-implementation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell">
+<span id="pycopancore-model-components-copan-global-like-carbon-cycle-implementation-cell-module"></span><h2>pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell" title="Permalink to this headline">¶</a></h2>
+<p>provides this model component’s Cell mixin class</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.</code><code class="descname">Cell</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_carbon_cycle/implementation/cell.html#Cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.html#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell" title="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell</span></code></a></p>
+<p>Jobst: write docstring.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell.atmospheric_carbon_density">
+<code class="descname">atmospheric_carbon_density</code><em class="property"> = Max(0, world(uid=0.8725751043214295).atmospheric_carbon*world(uid=0.8725751043214295).sum(world(uid=0.8725751043214295).cells.land_area)**(-1))</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell.atmospheric_carbon_density" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell.balance">
+<code class="descname">balance</code><em class="property"> = photosynthesis carbon flow - plant and soil respiration carbon flow</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell.balance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell.processes">
+<code class="descname">processes</code><em class="property"> = [photosynthesis flow, respiration flow, effect of photosynthesis and respiration]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment">
+<span id="pycopancore-model-components-copan-global-like-carbon-cycle-implementation-environment-module"></span><h2>pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment" title="Permalink to this headline">¶</a></h2>
+<p>provides this model component’s Environment mixin class</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment.Environment">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment.</code><code class="descname">Environment</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_carbon_cycle/implementation/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.html#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment" title="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment</span></code></a></p>
+<p>Environment process taxon mixin implementation class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment.Environment.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment.Environment.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world">
+<span id="pycopancore-model-components-copan-global-like-carbon-cycle-implementation-world-module"></span><h2>pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world" title="Permalink to this headline">¶</a></h2>
+<p>provides this model component’s World mixin class</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world.World">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world.</code><code class="descname">World</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_carbon_cycle/implementation/world.html#World"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world.World" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.html#pycopancore.model_components.copan_global_like_carbon_cycle.interface.World" title="pycopancore.model_components.copan_global_like_carbon_cycle.interface.World"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_carbon_cycle.interface.World</span></code></a></p>
+<p>World with ocean-atmosphere diffusion
+and linear relationship between temperature and atmospheric carbon</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world.World.diffusion_flow">
+<code class="descname">diffusion_flow</code><em class="property"> = environment(uid=0.15168580466619452).ocean_atmosphere_diffusion_coefficient*(-atmospheric carbon stock*environment(uid=0.15168580466619452).carbon_solubility_in_sea_water + upper ocean carbon stock)</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world.World.diffusion_flow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world.World.processes">
+<code class="descname">processes</code><em class="property"> = [immediate greenhouse effect, ocean-atmosphere diffusion]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world.World.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation" title="Permalink to this headline">¶</a></h2>
+<p>This is the copan_global_like_carbon_cycle model-component implementation subpackage</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.model_components.copan_global_like_carbon_cycle.implementation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.model_components.copan_global_like_carbon_cycle.implementation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

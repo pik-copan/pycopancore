@@ -1,0 +1,166 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Experiments &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="experiments">
+<h1>Experiments<a class="headerlink" href="#experiments" title="Permalink to this headline">¶</a></h1>
+<p>Due to stochastic model components, experiments will generally fall into these categories:</p>
+<div class="section" id="individual-runs-for-specific-parameters-and-initial-conditions">
+<h2>Individual runs for specific parameters and initial conditions<a class="headerlink" href="#individual-runs-for-specific-parameters-and-initial-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>output:<ul>
+<li>sequence of event times, types, and event parameters (e.g. which node, link was active etc.)</li>
+<li>time series of all dynamic and derived model variables</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="monte-carlo-simulations-for-specific-parameters-and-initial-conditions">
+<h2>Monte-Carlo simulations for specific parameters and initial conditions<a class="headerlink" href="#monte-carlo-simulations-for-specific-parameters-and-initial-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>parameter: ensemble size</li>
+<li>output: aggregate statistical information about the above, including<ul>
+<li>time series and asymptotic values of<ul>
+<li>means, standard deviations, skewnesses</li>
+<li>0th, 5th, 10th, 25th, 50th, 75th, 90th, 95th and 100th percentiles</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="monte-carlo-simulations-for-specific-parameters-but-varying-initial-conditions">
+<h2>Monte-Carlo simulations for specific parameters but varying initial conditions<a class="headerlink" href="#monte-carlo-simulations-for-specific-parameters-but-varying-initial-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>parameters:<ul>
+<li>ensemble size</li>
+<li>distribution of initial conditions</li>
+</ul>
+</li>
+<li>output: as above</li>
+<li>analyses:<ul>
+<li>dependence of output on initial condition</li>
+<li>Basin Stability, survivability</li>
+<li>topology of management options (method: one experiment for each essential management option)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="monte-carlo-simulations-with-varying-parameters-and-initial-conditions">
+<h2>Monte-Carlo simulations with varying parameters and initial conditions<a class="headerlink" href="#monte-carlo-simulations-with-varying-parameters-and-initial-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>parameters:<ul>
+<li>meta-ensemble size (no. of different parameter combinations)</li>
+<li>ensemble size (no. of different initial conditions)w</li>
+</ul>
+</li>
+<li>output: as above</li>
+<li>analyses:<ul>
+<li>dependence of output on<ul>
+<li>parameters</li>
+<li>combination of parameters and initial conditions</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tmp/Experiments.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/tmp/Experiments.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

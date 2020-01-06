@@ -1,0 +1,477 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.base.implementation package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-model-components-base-implementation-package">
+<h1>pycopancore.model_components.base.implementation package<a class="headerlink" href="#pycopancore-model-components-base-implementation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.model_components.base.implementation.cell">
+<span id="pycopancore-model-components-base-implementation-cell-module"></span><h2>pycopancore.model_components.base.implementation.cell module<a class="headerlink" href="#module-pycopancore.model_components.base.implementation.cell" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.base.implementation.cell.</code><code class="descname">Cell</code><span class="sig-paren">(</span><em>*</em>, <em>world=None</em>, <em>social_system=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/cell.html#Cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Cell" title="pycopancore.model_components.base.interface.Cell"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.base.interface.Cell</span></code></a>, <a class="reference internal" href="pycopancore.model_components.abstract.html#pycopancore.model_components.abstract.cell.Cell" title="pycopancore.model_components.abstract.cell.Cell"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.abstract.cell.Cell</span></code></a></p>
+<p>Cell entity type mixin implementation class.</p>
+<p>Base component’s Cell mixin that every model must use in composing their
+Cell class. Inherits from I.Cell as the interface with all necessary
+variables and parameters.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell.culture">
+<code class="descname">culture</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell.culture" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell.environment">
+<code class="descname">environment</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell.environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell.individuals">
+<code class="descname">individuals</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell.individuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell.metabolism">
+<code class="descname">metabolism</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell.metabolism" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell.social_system">
+<code class="descname">social_system</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell.social_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell.social_systems">
+<code class="descname">social_systems</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell.social_systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.cell.Cell.world">
+<code class="descname">world</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.cell.Cell.world" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.base.implementation.culture">
+<span id="pycopancore-model-components-base-implementation-culture-module"></span><h2>pycopancore.model_components.base.implementation.culture module<a class="headerlink" href="#module-pycopancore.model_components.base.implementation.culture" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.model_components.base.implementation.culture.Culture">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.base.implementation.culture.</code><code class="descname">Culture</code><span class="sig-paren">(</span><em>*</em>, <em>acquaintance_network=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/culture.html#Culture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.culture.Culture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Culture" title="pycopancore.model_components.base.interface.Culture"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.base.interface.Culture</span></code></a>, <a class="reference internal" href="pycopancore.model_components.abstract.html#pycopancore.model_components.abstract.culture.Culture" title="pycopancore.model_components.abstract.culture.Culture"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.abstract.culture.Culture</span></code></a></p>
+<p>Culture process taxon mixin implementation class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.culture.Culture.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.base.implementation.culture.Culture.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.culture.Culture.worlds">
+<code class="descname">worlds</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.culture.Culture.worlds" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.base.implementation.environment">
+<span id="pycopancore-model-components-base-implementation-environment-module"></span><h2>pycopancore.model_components.base.implementation.environment module<a class="headerlink" href="#module-pycopancore.model_components.base.implementation.environment" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.model_components.base.implementation.environment.Environment">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.base.implementation.environment.</code><code class="descname">Environment</code><span class="sig-paren">(</span><em>*</em>, <em>geographic_network=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.environment.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Environment" title="pycopancore.model_components.base.interface.Environment"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.base.interface.Environment</span></code></a>, <a class="reference internal" href="pycopancore.model_components.abstract.html#pycopancore.model_components.abstract.environment.Environment" title="pycopancore.model_components.abstract.environment.Environment"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.abstract.environment.Environment</span></code></a></p>
+<p>Environment process taxon mixin implementation class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.environment.Environment.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.base.implementation.environment.Environment.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.environment.Environment.worlds">
+<code class="descname">worlds</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.environment.Environment.worlds" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.base.implementation.individual">
+<span id="pycopancore-model-components-base-implementation-individual-module"></span><h2>pycopancore.model_components.base.implementation.individual module<a class="headerlink" href="#module-pycopancore.model_components.base.implementation.individual" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.base.implementation.individual.</code><code class="descname">Individual</code><span class="sig-paren">(</span><em>*</em>, <em>cell</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/individual.html#Individual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Individual" title="pycopancore.model_components.base.interface.Individual"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.base.interface.Individual</span></code></a>, <a class="reference internal" href="pycopancore.model_components.abstract.html#pycopancore.model_components.abstract.individual.Individual" title="pycopancore.model_components.abstract.individual.Individual"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.abstract.individual.Individual</span></code></a></p>
+<p>Individual entity type mixin implementation class.</p>
+<p>Base component’s Individual mixin that every model must use in composing
+their Individual class. Inherits from I.Individual as the interface with all
+necessary variables and parameters.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.acquaintances">
+<code class="descname">acquaintances</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.acquaintances" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.cell">
+<code class="descname">cell</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.culture">
+<code class="descname">culture</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.culture" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.deactivate">
+<code class="descname">deactivate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/individual.html#Individual.deactivate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.deactivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deactivate an individual.</p>
+<p>In particular, deregister from all networks.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.environment">
+<code class="descname">environment</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.metabolism">
+<code class="descname">metabolism</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.metabolism" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.population_share">
+<code class="descname">population_share</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.population_share" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the share of SocialSystem’s direct population represented by this
+individual.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.reactivate">
+<code class="descname">reactivate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/individual.html#Individual.reactivate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.reactivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reactivate an individual.</p>
+<p>In particular, deregister with all mandatory networks.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.represented_population">
+<code class="descname">represented_population</code><em class="property"> = read-only extensive variable 'represented population' (absolute population represented by this individual), scale=ratio, datatype=&lt;class 'float'&gt;, unit=people [H]</em><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.represented_population" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.social_system">
+<code class="descname">social_system</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.social_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.social_systems">
+<code class="descname">social_systems</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.social_systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.individual.Individual.world">
+<code class="descname">world</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.individual.Individual.world" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.base.implementation.metabolism">
+<span id="pycopancore-model-components-base-implementation-metabolism-module"></span><h2>pycopancore.model_components.base.implementation.metabolism module<a class="headerlink" href="#module-pycopancore.model_components.base.implementation.metabolism" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.model_components.base.implementation.metabolism.Metabolism">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.base.implementation.metabolism.</code><code class="descname">Metabolism</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/metabolism.html#Metabolism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.metabolism.Metabolism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Metabolism" title="pycopancore.model_components.base.interface.Metabolism"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.base.interface.Metabolism</span></code></a>, <a class="reference internal" href="pycopancore.model_components.abstract.html#pycopancore.model_components.abstract.metabolism.Metabolism" title="pycopancore.model_components.abstract.metabolism.Metabolism"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.abstract.metabolism.Metabolism</span></code></a></p>
+<p>Metabolism process taxon mixin implementation class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.metabolism.Metabolism.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.base.implementation.metabolism.Metabolism.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.metabolism.Metabolism.worlds">
+<code class="descname">worlds</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.metabolism.Metabolism.worlds" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.base.implementation.social_system">
+<span id="pycopancore-model-components-base-implementation-social-system-module"></span><h2>pycopancore.model_components.base.implementation.social_system module<a class="headerlink" href="#module-pycopancore.model_components.base.implementation.social_system" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.base.implementation.social_system.</code><code class="descname">SocialSystem</code><span class="sig-paren">(</span><em>*</em>, <em>world</em>, <em>next_higher_social_system=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/social_system.html#SocialSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.base.html#pycopancore.model_components.base.interface.SocialSystem" title="pycopancore.model_components.base.interface.SocialSystem"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.base.interface.SocialSystem</span></code></a>, <a class="reference internal" href="pycopancore.model_components.abstract.html#pycopancore.model_components.abstract.social_system.SocialSystem" title="pycopancore.model_components.abstract.social_system.SocialSystem"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.abstract.social_system.SocialSystem</span></code></a></p>
+<p>SocialSystem entity type mixin implementation class.</p>
+<p>Base component’s SocialSystem mixin that every model must use in composing
+their SocialSystem class. Inherits from I.SocialSystem as the interface with all
+necessary variables and parameters.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.cells">
+<code class="descname">cells</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.culture">
+<code class="descname">culture</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.culture" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.direct_cells">
+<code class="descname">direct_cells</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.direct_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.direct_individuals">
+<code class="descname">direct_individuals</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.direct_individuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.environment">
+<code class="descname">environment</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.higher_social_systems">
+<code class="descname">higher_social_systems</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.higher_social_systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.individuals">
+<code class="descname">individuals</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.individuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.lower_social_systems">
+<code class="descname">lower_social_systems</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.lower_social_systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.metabolism">
+<code class="descname">metabolism</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.metabolism" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.next_higher_social_system">
+<code class="descname">next_higher_social_system</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.next_higher_social_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.next_lower_social_systems">
+<code class="descname">next_lower_social_systems</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.next_lower_social_systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.processes">
+<code class="descname">processes</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.social_system.SocialSystem.world">
+<code class="descname">world</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.social_system.SocialSystem.world" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.base.implementation.world">
+<span id="pycopancore-model-components-base-implementation-world-module"></span><h2>pycopancore.model_components.base.implementation.world module<a class="headerlink" href="#module-pycopancore.model_components.base.implementation.world" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.model_components.base.implementation.world.World">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.base.implementation.world.</code><code class="descname">World</code><span class="sig-paren">(</span><em>*</em>, <em>environment=None</em>, <em>metabolism=None</em>, <em>culture=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/base/implementation/world.html#World"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.base.html#pycopancore.model_components.base.interface.World" title="pycopancore.model_components.base.interface.World"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.base.interface.World</span></code></a>, <a class="reference internal" href="pycopancore.model_components.abstract.html#pycopancore.model_components.abstract.world.World" title="pycopancore.model_components.abstract.world.World"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.abstract.world.World</span></code></a></p>
+<p>World entity type mixin implementation class.</p>
+<p>Base component’s World mixin that every model must use in composing their
+World class. Inherits from I.World as the interface with all necessary
+variables and parameters.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.world.World.cells">
+<code class="descname">cells</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World.cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.world.World.culture">
+<code class="descname">culture</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World.culture" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.world.World.environment">
+<code class="descname">environment</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World.environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.world.World.individuals">
+<code class="descname">individuals</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World.individuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.world.World.metabolism">
+<code class="descname">metabolism</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World.metabolism" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to another entity or process taxon</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.world.World.processes">
+<code class="descname">processes</code><em class="property"> = [aggregate cell carbon stocks]</em><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.world.World.social_systems">
+<code class="descname">social_systems</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World.social_systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.base.implementation.world.World.top_level_social_systems">
+<code class="descname">top_level_social_systems</code><a class="headerlink" href="#pycopancore.model_components.base.implementation.world.World.top_level_social_systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>reference to a set of entities</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.base.implementation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.model_components.base.implementation" title="Permalink to this headline">¶</a></h2>
+<p>This is the base model-component implementation subpackage</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.model_components.base.implementation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.model_components.base.implementation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,37 @@
+pycopancore\.model\_components\.most\_simple\_vegetation package
+================================================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pycopancore.model_components.most_simple_vegetation.implementation
+
+Submodules
+----------
+
+pycopancore\.model\_components\.most\_simple\_vegetation\.interface module
+--------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.most_simple_vegetation.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.most\_simple\_vegetation\.model module
+----------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.most_simple_vegetation.model
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.most_simple_vegetation
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,228 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.process_types package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-process-types-package">
+<h1>pycopancore.process_types package<a class="headerlink" href="#pycopancore-process-types-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.process_types.ODE">
+<span id="pycopancore-process-types-ode-module"></span><h2>pycopancore.process_types.ODE module<a class="headerlink" href="#module-pycopancore.process_types.ODE" title="Permalink to this headline">¶</a></h2>
+<p>ODE process class.</p>
+<p>ODE stands for Ordinary Differential Equation.
+ODEs are used for continuos processes in which one of the targets is
+dependent of the time.</p>
+<dl class="class">
+<dt id="pycopancore.process_types.ODE.ODE">
+<em class="property">class </em><code class="descclassname">pycopancore.process_types.ODE.</code><code class="descname">ODE</code><span class="sig-paren">(</span><em>name</em>, <em>targets</em>, <em>specification</em>, <em>*</em>, <em>smoothness=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/process_types/ODE.html#ODE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.process_types.ODE.ODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pycopancore.private._abstract_process._AbstractProcess</span></code></p>
+<p>Define ODE process class.</p>
+<dl class="attribute">
+<dt id="pycopancore.process_types.ODE.ODE.timetype">
+<code class="descname">timetype</code><em class="property"> = 'continuous'</em><a class="headerlink" href="#pycopancore.process_types.ODE.ODE.timetype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.process_types.ODE.ODE.type">
+<code class="descname">type</code><em class="property"> = 'ODE'</em><a class="headerlink" href="#pycopancore.process_types.ODE.ODE.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.process_types.event">
+<span id="pycopancore-process-types-event-module"></span><h2>pycopancore.process_types.event module<a class="headerlink" href="#module-pycopancore.process_types.event" title="Permalink to this headline">¶</a></h2>
+<p>Event-type process class.</p>
+<p>It is used for processes that do not occur in regular timesteps.
+An event might be something like a birth or death, catastrophes of all sorts.</p>
+<dl class="class">
+<dt id="pycopancore.process_types.event.Event">
+<em class="property">class </em><code class="descclassname">pycopancore.process_types.event.</code><code class="descname">Event</code><span class="sig-paren">(</span><em>name</em>, <em>variables</em>, <em>specification</em>, <em>smoothness=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/process_types/event.html#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.process_types.event.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pycopancore.private._abstract_process._AbstractProcess</span></code></p>
+<p>Define Event process class.</p>
+<dl class="attribute">
+<dt id="pycopancore.process_types.event.Event.timetype">
+<code class="descname">timetype</code><em class="property"> = 'discrete'</em><a class="headerlink" href="#pycopancore.process_types.event.Event.timetype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.process_types.event.Event.type">
+<code class="descname">type</code><em class="property"> = 'Event'</em><a class="headerlink" href="#pycopancore.process_types.event.Event.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.process_types.explicit">
+<span id="pycopancore-process-types-explicit-module"></span><h2>pycopancore.process_types.explicit module<a class="headerlink" href="#module-pycopancore.process_types.explicit" title="Permalink to this headline">¶</a></h2>
+<p>Explicit process class.</p>
+<p>Explicit functions are used to calculate variables to help other functions,
+for example calculate temperature from co2 level.</p>
+<dl class="class">
+<dt id="pycopancore.process_types.explicit.Explicit">
+<em class="property">class </em><code class="descclassname">pycopancore.process_types.explicit.</code><code class="descname">Explicit</code><span class="sig-paren">(</span><em>name</em>, <em>targets</em>, <em>specification</em>, <em>smoothness=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/process_types/explicit.html#Explicit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.process_types.explicit.Explicit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pycopancore.private._abstract_process._AbstractProcess</span></code></p>
+<p>Define explicit process class.</p>
+<dl class="attribute">
+<dt id="pycopancore.process_types.explicit.Explicit.timetype">
+<code class="descname">timetype</code><em class="property"> = 'continuous'</em><a class="headerlink" href="#pycopancore.process_types.explicit.Explicit.timetype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.process_types.explicit.Explicit.type">
+<code class="descname">type</code><em class="property"> = 'Explicit'</em><a class="headerlink" href="#pycopancore.process_types.explicit.Explicit.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.process_types.implicit">
+<span id="pycopancore-process-types-implicit-module"></span><h2>pycopancore.process_types.implicit module<a class="headerlink" href="#module-pycopancore.process_types.implicit" title="Permalink to this headline">¶</a></h2>
+<p>Implicit proccess class.</p>
+<p>Implicit functions are not yet implemented.</p>
+<dl class="class">
+<dt id="pycopancore.process_types.implicit.Implicit">
+<em class="property">class </em><code class="descclassname">pycopancore.process_types.implicit.</code><code class="descname">Implicit</code><span class="sig-paren">(</span><em>name</em>, <em>variables</em>, <em>specification</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/process_types/implicit.html#Implicit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.process_types.implicit.Implicit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pycopancore.private._abstract_process._AbstractProcess</span></code></p>
+<p>Define the class Implicit.</p>
+<dl class="attribute">
+<dt id="pycopancore.process_types.implicit.Implicit.timetype">
+<code class="descname">timetype</code><em class="property"> = 'discrete'</em><a class="headerlink" href="#pycopancore.process_types.implicit.Implicit.timetype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.process_types.implicit.Implicit.type">
+<code class="descname">type</code><em class="property"> = 'Implicit'</em><a class="headerlink" href="#pycopancore.process_types.implicit.Implicit.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.process_types.step">
+<span id="pycopancore-process-types-step-module"></span><h2>pycopancore.process_types.step module<a class="headerlink" href="#module-pycopancore.process_types.step" title="Permalink to this headline">¶</a></h2>
+<p>Step process class.</p>
+<p>A step process may be used for things that reoccur regularly.
+It might also be used for things that are continuos but are approximated by
+steps.</p>
+<dl class="class">
+<dt id="pycopancore.process_types.step.Step">
+<em class="property">class </em><code class="descclassname">pycopancore.process_types.step.</code><code class="descname">Step</code><span class="sig-paren">(</span><em>name</em>, <em>variables</em>, <em>specification</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/process_types/step.html#Step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.process_types.step.Step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pycopancore.private._abstract_process._AbstractProcess</span></code></p>
+<p>Define the step-process-type.</p>
+<dl class="attribute">
+<dt id="pycopancore.process_types.step.Step.timetype">
+<code class="descname">timetype</code><em class="property"> = 'discrete'</em><a class="headerlink" href="#pycopancore.process_types.step.Step.timetype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.process_types.step.Step.type">
+<code class="descname">type</code><em class="property"> = 'Step'</em><a class="headerlink" href="#pycopancore.process_types.step.Step.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.process_types">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.process_types" title="Permalink to this headline">¶</a></h2>
+<p>This is the process-types package. Here, process-types are defined.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.process_types.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.process_types.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

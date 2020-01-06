@@ -1,0 +1,379 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.base.interface &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.base.interface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Base model component interface.</span>
+
+<span class="sd">Specifies the variables used by this component,</span>
+<span class="sd">by entity type and process taxon</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">...private</span> <span class="k">import</span> <span class="n">_MixinType</span><span class="p">,</span> <span class="n">unknown</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">ReferenceVariable</span><span class="p">,</span> <span class="n">SetVariable</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">master_data_model</span> <span class="k">as</span> <span class="n">D</span>
+<span class="kn">from</span> <span class="nn">...data_model.master_data_model</span> <span class="k">import</span> <span class="n">ENV</span><span class="p">,</span> <span class="n">CUL</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">C</span>
+
+
+<span class="c1"># model component:</span>
+
+
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic Model component interface.&quot;&quot;&quot;</span>
+
+    <span class="c1"># necessary metadata:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;copan:CORE Base&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Basic model component only providing basic relationships &quot;</span> \
+                  <span class="s2">&quot;between entity types.&quot;</span>
+    <span class="n">requires</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<span class="c1"># process taxa:</span>
+
+
+<div class="viewcode-block" id="Environment"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Environment">[docs]</a><span class="k">class</span> <span class="nc">Environment</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic Environment interface.</span>
+
+<span class="sd">    It contains all variables specified as mandatory (&quot;base variables&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">geographic_network</span> <span class="o">=</span> <span class="n">ENV</span><span class="o">.</span><span class="n">geographic_network</span>  <span class="c1"># copies the specification from the master data model</span>
+    <span class="n">worlds</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;worlds&quot;</span><span class="p">,</span> <span class="s2">&quot;set of Worlds on this Environment&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Metabolism"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Metabolism">[docs]</a><span class="k">class</span> <span class="nc">Metabolism</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic Metabolism interface.</span>
+
+<span class="sd">    It contains all variables specified as mandatory (&quot;base variables&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">worlds</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;worlds&quot;</span><span class="p">,</span> <span class="s2">&quot;set of Worlds on this Metabolism&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Culture"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Culture">[docs]</a><span class="k">class</span> <span class="nc">Culture</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic Culture interface.</span>
+
+<span class="sd">    It contains all variables specified as mandatory (&quot;base variables&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">acquaintance_network</span> <span class="o">=</span> <span class="n">CUL</span><span class="o">.</span><span class="n">acquaintance_network</span>
+    <span class="n">worlds</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;worlds&quot;</span><span class="p">,</span> <span class="s2">&quot;set of Worlds on this Culture&quot;</span><span class="p">)</span>
+
+    <span class="c1"># read-only attributes storing redundant information:</span>
+    <span class="n">worlds</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;worlds&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;set of Worlds this Culture acts in&quot;</span><span class="p">,</span>
+                         <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<span class="c1"># entity types:</span>
+
+
+<span class="c1"># TODO: clarify whether it is necessary to specify the metaclass here!</span>
+<div class="viewcode-block" id="World"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.interface.World">[docs]</a><span class="k">class</span> <span class="nc">World</span> <span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">_MixinType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic World interface.</span>
+
+<span class="sd">    It contains all variables specified as mandatory (&quot;base variables&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># the metaclass is needed to allow for intercepting class attribute calls</span>
+    <span class="c1"># when constructing DotConstructs like World.environment.geographic_network.</span>
+    <span class="c1"># similarly for the other entity types.</span>
+
+
+    <span class="c1"># references to other entities and taxa:</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;environment&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;Environment taxon working on this world&quot;</span><span class="p">,</span>
+                               <span class="nb">type</span><span class="o">=</span><span class="n">Environment</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">metabolism</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;metabolism&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;Metabolism taxon working on this world&quot;</span><span class="p">,</span>
+                                   <span class="nb">type</span><span class="o">=</span><span class="n">Metabolism</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">culture</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;culture&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;Culture taxon working on this world&quot;</span><span class="p">,</span>
+                                <span class="nb">type</span><span class="o">=</span><span class="n">Culture</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># variables taken from the master data model:</span>
+    <span class="n">population</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">population</span>  <span class="c1"># TODO: make sure it is no smaller than aggregate top-level social_systems&#39;?</span>
+    <span class="n">atmospheric_carbon</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">atmospheric_carbon</span>
+    <span class="n">surface_air_temperature</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">surface_air_temperature</span>
+    <span class="n">ocean_carbon</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">ocean_carbon</span>
+    <span class="n">terrestrial_carbon</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">terrestrial_carbon</span>
+    <span class="n">fossil_carbon</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">fossil_carbon</span>
+
+    <span class="c1"># attributes storing redundant information (backward references):</span>
+    <span class="n">social_systems</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;social systems&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;set of all SocialSystems on this world&quot;</span><span class="p">,</span>
+                            <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type is SocialSystem, hence it can only be specified after class SocialSystem is defined, see below</span>
+    <span class="n">top_level_social_systems</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span>
+        <span class="s2">&quot;top level social systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;set of top-level SocialSystems on this world&quot;</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;cells&quot;</span><span class="p">,</span> <span class="s2">&quot;set of Cells on this world&quot;</span><span class="p">,</span>
+                        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">individuals</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;individuals&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;set of Individuals residing on this world&quot;</span><span class="p">,</span>
+                              <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<span class="c1"># specified only now to avoid recursion errors:</span>
+<span class="n">Culture</span><span class="o">.</span><span class="n">worlds</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">World</span>
+<span class="n">Metabolism</span><span class="o">.</span><span class="n">worlds</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">World</span>
+<span class="n">Environment</span><span class="o">.</span><span class="n">worlds</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">World</span>
+
+
+<div class="viewcode-block" id="SocialSystem"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.interface.SocialSystem">[docs]</a><span class="k">class</span> <span class="nc">SocialSystem</span> <span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">_MixinType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic SocialSystem interface.</span>
+
+<span class="sd">    It contains all variables specified as mandatory (&quot;base variables&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># references:</span>
+    <span class="n">world</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">World</span><span class="p">)</span>
+    <span class="n">next_higher_social_system</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;next higher social_system&quot;</span><span class="p">,</span> <span class="s2">&quot;optional&quot;</span><span class="p">,</span>
+                                            <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type is SocialSystem, hence it can only be specified after class SocialSystem is defined, see below</span>
+
+    <span class="c1"># other variables:</span>
+    <span class="c1"># population is explicitly allowed to be non-integer so that we can use</span>
+    <span class="c1"># ODEs:</span>
+    <span class="c1"># TODO: replace by suitable CETSVariable!</span>
+    <span class="n">population</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">population</span>
+    <span class="c1"># TODO: make sure it is no smaller than</span>
+    <span class="c1"># aggregate next_lower_level social_systems&#39;</span>
+
+    <span class="c1"># read-only attributes storing redundant information:</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;environment&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Environment</span><span class="p">,</span>
+                               <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">metabolism</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;metabolism&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Metabolism</span><span class="p">,</span>
+                                   <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">culture</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;culture&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Culture</span><span class="p">,</span>
+                                <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">higher_social_systems</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span>
+        <span class="s2">&quot;higher social systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;upward list of (in)direct super-SocialSystems&quot;</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">next_lower_social_systems</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span>
+        <span class="s2">&quot;next lower social systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;set of sub-SocialSystems of next lower level&quot;</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">lower_social_systems</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span>
+        <span class="s2">&quot;lower social systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;set of all direct and indirect sub-SocialSystems&quot;</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">direct_cells</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;direct cells&quot;</span><span class="p">,</span> <span class="s2">&quot;set of direct territory Cells&quot;</span><span class="p">,</span>
+                               <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;cells&quot;</span><span class="p">,</span> <span class="s2">&quot;set of direct and indirect territory Cells&quot;</span><span class="p">,</span>
+                        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">direct_individuals</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span>
+        <span class="s2">&quot;direct individuals&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;set of resident Individuals not in subsocial_systems&quot;</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">individuals</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;individuals&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;set of direct or indirect resident Individuals&quot;</span><span class="p">,</span>
+                              <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<span class="c1"># specified only now to avoid recursion errors:</span>
+<span class="n">SocialSystem</span><span class="o">.</span><span class="n">next_higher_social_system</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">SocialSystem</span>
+<span class="n">SocialSystem</span><span class="o">.</span><span class="n">higher_social_systems</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">SocialSystem</span>
+<span class="n">SocialSystem</span><span class="o">.</span><span class="n">next_lower_social_systems</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">SocialSystem</span>
+<span class="n">SocialSystem</span><span class="o">.</span><span class="n">lower_social_systems</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">SocialSystem</span>
+<span class="n">World</span><span class="o">.</span><span class="n">social_systems</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">SocialSystem</span>
+<span class="n">World</span><span class="o">.</span><span class="n">top_level_social_systems</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">SocialSystem</span>
+
+
+<div class="viewcode-block" id="Cell"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Cell">[docs]</a><span class="k">class</span> <span class="nc">Cell</span> <span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">_MixinType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic Cell interface.</span>
+
+<span class="sd">    It contains all variables specified as mandatory (&quot;base variables&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># references:</span>
+    <span class="n">world</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">World</span><span class="p">)</span>
+    <span class="n">social_system</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;social_system&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;optional lowest-level soc. cell belongs to&quot;</span><span class="p">,</span>
+                                <span class="nb">type</span><span class="o">=</span><span class="n">SocialSystem</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># other variables:</span>
+    <span class="n">location</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;pair of coordinates?&quot;</span><span class="p">,</span>
+                        <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># TODO: specify data type</span>
+    <span class="n">land_area</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">land_area</span>
+
+    <span class="n">terrestrial_carbon</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">terrestrial_carbon</span>
+    <span class="n">fossil_carbon</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">fossil_carbon</span>
+
+    <span class="c1"># attributes storing redundant information:</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;environment&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Environment</span><span class="p">,</span>
+                               <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">metabolism</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;metabolism&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Metabolism</span><span class="p">,</span>
+                                   <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">culture</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;culture&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Culture</span><span class="p">,</span>
+                                <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">social_systems</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span>
+        <span class="s2">&quot;social_systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;upward list of SocialSystems it belongs to (in)directly&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">SocialSystem</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">individuals</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;individuals&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;set of resident Individuals&quot;</span><span class="p">,</span>
+                              <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<span class="c1"># specified only now to avoid recursion:</span>
+<span class="n">World</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Cell</span>
+<span class="n">SocialSystem</span><span class="o">.</span><span class="n">direct_cells</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Cell</span>
+<span class="n">SocialSystem</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Cell</span>
+
+
+<div class="viewcode-block" id="Individual"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.interface.Individual">[docs]</a><span class="k">class</span> <span class="nc">Individual</span> <span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">_MixinType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic Individual interface.</span>
+
+<span class="sd">    It contains all variables specified as mandatory (&quot;base variables&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># references:</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span> <span class="s2">&quot;cell of residence&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Cell</span><span class="p">)</span>
+
+    <span class="c1"># other variables:</span>
+    <span class="n">relative_weight</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;relative representation weight&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;relative representation weight for social_system&#39;s population, &quot;</span>
+                 <span class="s2">&quot;to be used in determining how many people this individual &quot;</span>
+                 <span class="s2">&quot;represents&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># attributes storing redundant information:</span>
+    <span class="n">world</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">World</span><span class="p">,</span>
+                              <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;environment&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Environment</span><span class="p">,</span>
+                               <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">metabolism</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;metabolism&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Metabolism</span><span class="p">,</span>
+                                   <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">culture</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span><span class="s2">&quot;culture&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Culture</span><span class="p">,</span>
+                                <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">social_system</span> <span class="o">=</span> <span class="n">ReferenceVariable</span><span class="p">(</span>
+        <span class="s2">&quot;social_system&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lowest level SocialSystem this individual is resident of&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">SocialSystem</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">social_systems</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span>
+        <span class="s2">&quot;social_systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;upward list of all SocialSystems it is resident of&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">SocialSystem</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">acquaintances</span> <span class="o">=</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;acquaintances&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;set of Individuals this one is acquainted with&quot;</span><span class="p">,</span>
+                    <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># TODO: specify Variable objects for the following:</span>
+    <span class="n">population_share</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;share of social_system&#39;s direct population represented by this individual&quot;&quot;&quot;</span>
+    <span class="n">represented_population</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;represented population&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;absolute population represented by this individual&quot;</span><span class="p">,</span>
+        <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">people</span><span class="p">,</span>
+        <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<span class="c1"># specified only now to avoid recursion:</span>
+<span class="n">World</span><span class="o">.</span><span class="n">individuals</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Individual</span>
+<span class="n">SocialSystem</span><span class="o">.</span><span class="n">direct_individuals</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Individual</span>
+<span class="n">SocialSystem</span><span class="o">.</span><span class="n">individuals</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Individual</span>
+<span class="n">Cell</span><span class="o">.</span><span class="n">individuals</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Individual</span>
+<span class="n">Individual</span><span class="o">.</span><span class="n">acquaintances</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Individual</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials by role</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../step_by_step.html">Step by step tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

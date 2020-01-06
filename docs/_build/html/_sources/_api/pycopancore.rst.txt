@@ -1,0 +1,23 @@
+pycopancore package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pycopancore.data_model
+    pycopancore.model_components
+    pycopancore.models
+    pycopancore.private
+    pycopancore.process_types
+    pycopancore.runners
+    pycopancore.util
+
+Module contents
+---------------
+
+.. automodule:: pycopancore
+    :members:
+    :undoc-members:
+    :show-inheritance:

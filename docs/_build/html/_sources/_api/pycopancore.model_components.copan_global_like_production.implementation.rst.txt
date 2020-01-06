@@ -1,0 +1,46 @@
+pycopancore\.model\_components\.copan\_global\_like\_production\.implementation package
+=======================================================================================
+
+Submodules
+----------
+
+pycopancore\.model\_components\.copan\_global\_like\_production\.implementation\.cell module
+--------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_production.implementation.cell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.copan\_global\_like\_production\.implementation\.metabolism module
+--------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_production.implementation.metabolism
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.copan\_global\_like\_production\.implementation\.social\_system module
+------------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_production.implementation.social_system
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.copan\_global\_like\_production\.implementation\.world module
+---------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_production.implementation.world
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_production.implementation
+    :members:
+    :undoc-members:
+    :show-inheritance:
