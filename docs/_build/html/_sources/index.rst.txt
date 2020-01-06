@@ -15,7 +15,7 @@ Contents:
 .. TODO: move introduction to inside this page so that it is more immediately available for reading?
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :titlesonly:
 
    introduction
