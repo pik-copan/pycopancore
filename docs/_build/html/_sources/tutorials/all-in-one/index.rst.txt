@@ -1,4 +1,4 @@
-All in one tutorial
+Tutorial
 ===================
 
 In this tuturial, we will implement and use a simple toy model from scratch,

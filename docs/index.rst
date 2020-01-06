@@ -21,8 +21,7 @@ Contents:
    introduction
    license
    api_reference
-   tutorials/index
-   step_by_step
+   tutorials/all-in-one/index
    framework_documentation/index
 
 Indices and tables
