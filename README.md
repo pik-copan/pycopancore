@@ -1,11 +1,9 @@
-[![Documentation Status](https://readthedocs.org/projects/pycopancore/badge/?version=latest)](http://pycopancore.readthedocs.io/en/latest/?badge=latest)
-
 # pycopancore
 Reference implementation of the copan:CORE World-Earth modelling framework
 
 copan:CORE is developed at the Potsdam Institute for Climate Impact Research.
 
-An extensive documentation is found at http://pycopancore.readthedocs.io/
+An extensive documentation is found at https://pik-copan.github.io/pycopancore
 
 Table of Contents:
 
