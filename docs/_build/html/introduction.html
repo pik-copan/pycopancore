@@ -44,7 +44,6 @@
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="one-framework-to-rule-them-all">
 <h2>… one framework to rule them all!<a class="headerlink" href="#one-framework-to-rule-them-all" title="Permalink to this headline">¶</a></h2>
-<p>Python copan:CORE World-Earth modeling framework release version […]</p>
 <div class="section" id="table-of-contents">
 <h3>Table of Contents:<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
@@ -68,9 +67,19 @@
 </div>
 <div class="section" id="intro">
 <span id="id1"></span><h2>Introduction<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
-<p>The pycopancore package is a python implementation of the copan:CORE modeling framework as described in [include reference to framework description paper]. The framework is designed to allow an easy implementation of World-Earth (i.e., global social-ecological) models by using different model components of environmental, social-metabolic or cultural submodels and combining them with newly developed components.
-The implementation and simulation of World-Earth models within the framework can use  different types of modeling techniques such as differential equations, stochastic and deterministic events and therefore allows to compare different model and component types and implementations.</p>
-<p>pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK). Responsible senior scientists at PIK are [Jobst Heitzig](<a class="reference external" href="https://www.pik-potsdam.de/members/heitzig">https://www.pik-potsdam.de/members/heitzig</a>) &amp; [Jonathan F. Donges.](<a class="reference external" href="https://www.pik-potsdam.de/members/donges">https://www.pik-potsdam.de/members/donges</a>)</p>
+<p>The pycopancore package is a python implementation of the copan:CORE modeling
+framework as described in this <a class="reference external" href="https://www.earth-syst-dynam-discuss.net/esd-2017-126/">paper</a>.
+The framework is designed to allow an easy implementation of World-Earth (i.e.,
+global social-ecological) models by using different model components of
+environmental, social-metabolic or cultural submodels and combining them with
+newly developed components.  The implementation and simulation of World-Earth
+models within the framework can use  different types of modeling techniques
+such as differential equations, stochastic and deterministic events and
+therefore allows to compare different model and component types and
+implementations.</p>
+<p>pycopancore is developed at the Potsdam Institute for Climate Impact Research
+(PIK). Responsible senior scientists at PIK are <a class="reference external" href="https://www.pik-potsdam.de/members/heitzig">Jobst Heitzig</a> &amp; <a class="reference external" href="https://www.pik-potsdam.de/members/donges">Jonathan F.
+Donges</a>.</p>
 </div>
 <div class="section" id="disclaimer">
 <span id="id2"></span><h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Permalink to this headline">¶</a></h2>
@@ -81,7 +90,7 @@ The implementation and simulation of World-Earth models within the framework can
 <div class="section" id="installation">
 <span id="id3"></span><h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
 <p>For running pycopancore, an installation with python &gt; 3.6 with some additional packages is required.</p>
-<p>An easy way to install python is to use the Anaconda environment ([<a class="reference external" href="https://www.anaconda.com/download/](https://www.anaconda.com/download/">https://www.anaconda.com/download/](https://www.anaconda.com/download/</a>)).</p>
+<p>An easy way to install python is to use the <a class="reference external" href="https://www.anaconda.com/download/">Anaconda environment</a>.</p>
 <p>The package can be installed by downloading the repository and and running the setup.py script with</p>
 <p><code class="docutils literal"><span class="pre">`</span>
 <span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span>
@@ -102,55 +111,58 @@ from the root directory of the package. The script should automatically install 
 </div>
 <div class="section" id="documentation">
 <span id="docu"></span><h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
-<p>The documentation can be accessed under [insert link] and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.</p>
+<p>The documentation can be accessed under <a class="reference external" href="https://pik-copan.github.io/pycopancore">https://pik-copan.github.io/pycopancore</a> and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.</p>
 <p>To create a local html version of the documentation, access the <cite>docs</cite> directory and type
 <code class="docutils literal"><span class="pre">`</span>
 <span class="pre">&gt;</span> <span class="pre">make</span> <span class="pre">html</span>
 <span class="pre">`</span></code>
 The documentation can then be accessed under <cite>docs/_build/html/index.html</cite>.</p>
-<p>To be able to create the automatic UML-Diagrams, [pylint](<a class="reference external" href="https://www.pylint.org/">https://www.pylint.org/</a>) and [graphviz](<a class="reference external" href="http://www.graphviz.org/">http://www.graphviz.org/</a>) needs to be installed. To finally create the diagrams, use
+<p>To be able to create the automatic UML-Diagrams, <a class="reference external" href="https://www.pylint.org/">pylint</a> and <a class="reference external" href="http://www.graphviz.org/">graphviz</a> needs to be installed. To finally create the diagrams, use
 <code class="docutils literal"><span class="pre">`</span>
 <span class="pre">&gt;</span> <span class="pre">make</span> <span class="pre">uml</span>
 <span class="pre">`</span></code></p>
 </div>
 <div class="section" id="code-of-good-practice">
 <span id="coc"></span><h3>Code of Good Practice<a class="headerlink" href="#code-of-good-practice" title="Permalink to this headline">¶</a></h3>
-<p>When contributing to the project, please follow the guidelines below:
-* For every class/function write a proper docstring before committing.
-* Use static values as little as possible. Preferably define a variable in the header of the file instead.
-* For functions describing processes in the <cite>model_components</cite>, papers from the scientific literature that use these functional forms should be referenced in the code documentation.
-* Use as many <cite>assert</cite> statements as possible, even if they are computationally expensive. For actual runs, these checks can be switched off using the <cite>-O</cite> flag of the Python Interpreter.
-* Use proper (and long) variable names. Auto-completion will help typing them.
-* If a similar set of command is used twice, write a function for it right away.
-* Design the metadata used in the Variable class according to the [CF conventions](<a class="reference external" href="http://cfconventions.org/">http://cfconventions.org/</a>).
-* When writing class and method docstrings, already specify types and bounds for arguments and return values in the [sphinx-compatible PyContracts way](<a class="reference external" href="https://andreacensi.github.io/contracts/">https://andreacensi.github.io/contracts/</a>).
-* Write in code-of-conduct: Everything but “models” and “model_components” should be well described with docstrings”
-* Consider the recommendations in the [PEP 8](<a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">https://www.python.org/dev/peps/pep-0008/</a>) style guide for python code.</p>
+<p>When contributing to the project, please follow the guidelines below:</p>
+<ul class="simple">
+<li>For every class/function write a proper docstring before committing.</li>
+<li>Use static values as little as possible. Preferably define a variable in the header of the file instead.</li>
+<li>For functions describing processes in the <cite>model_components</cite>, papers from the scientific literature that use these functional forms should be referenced in the code documentation.</li>
+<li>Use as many <cite>assert</cite> statements as possible, even if they are computationally expensive. For actual runs, these checks can be switched off using the <cite>-O</cite> flag of the Python Interpreter.</li>
+<li>Use proper (and long) variable names. Auto-completion will help typing them.</li>
+<li>If a similar set of command is used twice, write a function for it right away.</li>
+<li>Design the metadata used in the Variable class according to the <a class="reference external" href="http://cfconventions.org/">CF conventions</a>.</li>
+<li>When writing class and method docstrings, already specify types and bounds for arguments and return values in the <a class="reference external" href="https://andreacensi.github.io/contracts/">sphinx-compatible PyContracts way</a>.</li>
+<li>Write in code-of-conduct: Everything but “models” and “model_components” should be well described with docstrings”</li>
+<li>Consider the recommendations in the <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP 8</a> style guide for python code.</li>
+</ul>
 <p>Additional guidelines:
-* Staff of the Potsdam Institute for Climate Impact research, please read and follow the [“Guidelines for Ensuring Good Scientific Modelling Practice at PIK”](<a class="reference external" href="https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy">https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy</a>).
-* Use [NetCDF, the CF conventions](<a class="reference external" href="http://cfconventions.org/">http://cfconventions.org/</a>) and [PIK’s Typed Data Transfer](<a class="reference external" href="https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt">https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt</a>) to store (input and) output data and share it with other models.</p>
+- Staff of the Potsdam Institute for Climate Impact research, please read and follow the <a class="reference external" href="https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy">“Guidelines for Ensuring Good Scientific Modelling Practice at PIK”</a>.
+- Use <a class="reference external" href="http://cfconventions.org/">NetCDF, the CF conventions</a> and <a class="reference external" href="https://www.pik-potsdam.de/research/transdisciplinary-concepts-and-methods/tools/tdt/tdt">PIK’s Typed Data Transfer</a> to store (input and) output data and share it with other models.</p>
 </div>
 <div class="section" id="tests">
 <span id="test"></span><h3>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h3>
-<p>We are using the python testing framework [pytest](<a class="reference external" href="http://pytest.org/latest/">http://pytest.org/latest/</a>) with [pylama](<a class="reference external" href="https://github.com/klen/pylama">https://github.com/klen/pylama</a>) for style and error checking. Please write corresponding unittests while developing and make sure that all test pass by executing
+<p>We are using the python testing framework <a class="reference external" href="http://pytest.org/latest/">pytest</a> with <a class="reference external" href="https://github.com/klen/pylama">pylama</a> for style and error checking. Please write corresponding unittests while developing and make sure that all test pass by executing
 <code class="docutils literal"><span class="pre">`</span>
 <span class="pre">py.test</span>
 <span class="pre">`</span></code>
 in the root of the project tree.</p>
-<p>Requires
-* pytest
-* pylama
-* pylint
-* pylama_pylint
-* pytest-cov, to check of test coverage</p>
+<p>Requires</p>
+<ul class="simple">
+<li>pytest</li>
+<li>pylama</li>
+<li>pylint</li>
+<li>pylama_pylint</li>
+<li>pytest-cov, to check of test coverage</li>
+</ul>
 </div>
 </div>
 <div class="section" id="licence-and-development">
 <span id="licence"></span><h2>Licence and Development<a class="headerlink" href="#licence-and-development" title="Permalink to this headline">¶</a></h2>
 <p>pycopancore is licenced under the BSD 2-Clause License.
 See the <cite>LICENCE</cite> file for further information.</p>
-<p>The versioning of pycopancore has been chosen to be administrated on the [github.com system](<a class="reference external" href="http://github.com/">http://github.com/</a>) as the future prospect of this model strongly encourages outside contributions. Any release version will be pushed on the inhouse versioning systems, [gitlab](<a class="reference external" href="http://gitlab.pik-potsdam.de/">http://gitlab.pik-potsdam.de/</a>) and / or [svn](<a class="reference external" href="https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion">https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion</a>).</p>
-<p>Candidates for speeding up Python code: cython, numba, …</p>
+<p>The versioning of pycopancore has been chosen to be administrated on the <a class="reference external" href="http://github.com/">github.com system</a> as the future prospect of this model strongly encourages outside contributions. Any release version will be pushed on the inhouse versioning systems, <a class="reference external" href="http://gitlab.pik-potsdam.de/">gitlab</a> and / or <a class="reference external" href="https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion">svn</a>.</p>
 </div>
 </div>
 
