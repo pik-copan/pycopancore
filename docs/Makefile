@@ -9,7 +9,7 @@ APIDOC = sphinx-apidoc
 SPHINX_APIDOC_OPTIONS=members,undoc-members,private-members,special-members,inherited-members,show-inheritance
 DOT = dot
 PAPER         =
-BUILDDIR      = _build
+BUILDDIR      = build
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
