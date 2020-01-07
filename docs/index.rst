@@ -7,6 +7,9 @@
 pycopancore: a Python package implementing the copan\:CORE World-Earth modeling framework and base model
 ========================================================================================================
 
+The source code is available at `https://github.com/pik-copan/pycopancore
+<https://github.com/pik-copan/pycopancore>`_.
+
 Contents:
 
 .. The following structure roughly follows http://docs.python-guide.org/en/latest/writing/documentation/,
