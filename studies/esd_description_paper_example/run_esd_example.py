@@ -146,13 +146,14 @@ def main():
                         default=False)
     args = vars(parser.parse_args())
 
+    print(args)
     seed = args["seed"]
     with_social = args["with_social"]
     p_env_friendly = args["initial_share_enviromentally_friendly"]
 
     if args["update_rate"]:
         updates = args["update_rate"]
-    elif args["task_id"]:
+    elif args["task_id"] is not None:
         updates = np.logspace(np.log10(1/50), np.log10(12), 50)[args["task_id"]]
     elif not with_social:
         updates = 0

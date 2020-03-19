@@ -10,9 +10,22 @@ python plot_figure5.py
 As of now this only works properly on the High Performance Cluster at the
 Potsdam Institute for Climate Impact Research.
 
-Follow this steps to reproduce the figure:
-1. 
+Follow these steps to reproduce the figure:
+1. Create a temporary output directory for the results of the model
+   simulations. On PIK's high performace cluster this should be somewhere under
+   `/p/tmp/YOURUSERNAME/`.
 
+2. Set the correct path to your desired output directory in line 9 of
+   `submit_jobarray.sh`. 
+
+3. Make sure the `pycopancore` repository is located in your home folder such
+   that `$HOME/pycopancore/studies/esd_description_paper_example/` is a
+   valid path. If `pycopancore` is located elsewhere make sure to set the
+   correct paths in `submit_single_runs.py` and `submit_jobarray.sh`.
+
+4. Use `sbatch submit_jobarray.sh` to submit the simulations to the cluster.
+
+# Information on the files in this directory
 
 ## collect_results.py
 Extract the results the we aim to plot in the bifurcation analysis from the
