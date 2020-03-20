@@ -77,7 +77,7 @@ ax1a.set_ylabel("Global mean temperature in 2120 [K]")
 ax2.set_xlabel("Learning rate [$yr^{-1}$]")
 ax2.set_ylabel("GDP/capita in 2120 [$/yr]")
 
-data = np.load("core_without_social_u_0.020000000000000004_loweredS0_0.p")
+data = np.load("esd_example_without_social_seed_0.p")
 world = list(data["World.surface_air_temperature"].keys())[0]
 terr = data["World.terrestrial_carbon"][world][-1]
 atmo = data["World.atmospheric_carbon"][world][-1]

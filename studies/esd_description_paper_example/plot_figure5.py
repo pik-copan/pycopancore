@@ -8,7 +8,7 @@ from pylab import plot, gca, show, figure, subplots, gca, semilogy, legend, \
     tight_layout, NullLocator, savefig, setp, tight_layout
 from pickle import load
 
-with_file = "esd_example_with_social_update_rate_4.0_seed_10.p"
+with_file = "esd_example_with_social_update_rate_12.0_seed_0.p"
 wo_file = "esd_example_without_social_seed_0.p"
 
 f, ((ax11, ax12), (ax21, ax22), (ax21a, ax22a), (ax31, ax32)) = \

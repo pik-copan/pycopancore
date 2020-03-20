@@ -6,6 +6,6 @@
 #SBATCH --output=core-%A_%a.out
 #SBATCH --error=core-%A_%a.err
 #SBATCH --account=copan
-#SBATCH --workdir=/p/tmp/marcwie/corefinal
+#SBATCH --workdir=
 
 python3 $HOME/pycopancore/studies/esd_description_paper_example/submit_single_runs.py

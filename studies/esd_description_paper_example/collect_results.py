@@ -1,13 +1,27 @@
 import glob
 import numpy as np
 import pickle
+import os
+import argparse
 
-files=glob.glob("/p/tmp/marcwie/core20190627/*.p")
+parser = argparse.ArgumentParser()
+parser.add_argument('-t', '--tmp-dir', required=True)
+parser.add_argument('--overwrite', action='store_const', const=True,
+                    default=False)
+args = vars(parser.parse_args())
 
-try:
+
+
+input_dir = args["tmp_dir"]
+if input_dir[-1] != "/":
+    input_dir += "/"
+
+files=glob.glob(input_dir+"*.p")
+
+if os.path.exists("results_ensemble.p") and not args["overwrite"]:
     results = np.load("results_ensemble.p")
     print("Loading results from disk")
-except:
+else:
     results = {"succesful_files": []}
     print("Creating new results file")
 
@@ -16,7 +30,8 @@ print(len(files))
 for i, datafile in enumerate(files):
 
     print(i, datafile, end="\r")
-    updaterate = float(datafile.split("_")[-3])
+
+    updaterate = float(datafile.split("_")[6])
 
     if updaterate not in results.keys():
         results[updaterate] = {"terr": [], "atmo": [], "foss": [], "ocea": [],
