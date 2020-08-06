@@ -68,7 +68,7 @@ python run_seven_dwarfs.py
 
 ### Documentation
 
-The documentation can be accessed under http://pycopancore.readthedocs.io/ and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.
+The documentation can be accessed under https://pik-copan.github.io/pycopancore and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.
 
 To create a local html version of the documentation, access the `docs` directory and type
 
