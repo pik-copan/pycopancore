@@ -19,12 +19,12 @@ Table of Contents:
 
 ## Introduction
 
-The pycopancore package is a python implementation of the copan:CORE modeling framework as described in [this paper](https://www.earth-syst-dynam-discuss.net/esd-2017-126). The framework is designed to allow an easy implementation of World-Earth (i.e., global social-ecological) models by using different model components of environmental, social-metabolic or cultural submodels and combining them with newly developed components.
+The pycopancore package is a python implementation of the copan:CORE modeling framework as described in [this paper](http://dx.doi.org/10.5194/esd-11-395-2020). The framework is designed to allow an easy implementation of World-Earth (i.e., global social-ecological) models by using different model components of environmental, social-metabolic or cultural submodels and combining them with newly developed components.
 The implementation and simulation of World-Earth models within the framework can use  different types of modeling techniques such as differential equations, stochastic and deterministic events and therefore allows to compare different model and component types and implementations.
 
-Reference: Donges, J. F., Heitzig, J., Barfuss, W., Kassel, J. A., Kittel, T., Kolb, J. J., Kolster, T., Müller-Hansen, F., Otto, I. M., Wiedermann, M., Zimmerer, K. B., and Lucht, W.: Earth system modelling with complex dynamic human societies: the copan:CORE World-Earth modeling framework, Earth Syst. Dynam. Discuss., https://doi.org/10.5194/esd-2017-126, in review, 2018. 
+Reference: J.F. Donges*/J. Heitzig*, W. Barfuss, M. Wiedermann, J.A. Kassel, T. Kittel, J.J. Kolb, T. Kolster, F. Müller-Hansen, I.M. Otto, K.B. Zimmerer, and W. Lucht, Earth system modeling with endogenous and dynamic human societies: the copan:CORE open World-Earth modeling framework, Earth System Dynamics 11, 395–413 (2020), DOI: 10.5194/esd-11-395-2020, * The first two authors share the lead authorship.
 
-pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK), Research Domains for Earth System Analysis and Transdisciplinary Concepts & Methods. Responsible senior scientists at PIK are [Jobst Heitzig](https://www.pik-potsdam.de/members/heitzig) & [Jonathan F. Donges.](https://www.pik-potsdam.de/members/donges)
+pycopancore is developed at the Potsdam Institute for Climate Impact Research (PIK), Research Domains for Earth System Analysis and Complexity Science. Responsible senior scientists at PIK are [Jobst Heitzig](https://www.pik-potsdam.de/members/heitzig) & [Jonathan F. Donges.](https://www.pik-potsdam.de/members/donges)
 
 Contact: core@pik-potsdam.de
 Website: www.pik-potsdam.de/copan/software
