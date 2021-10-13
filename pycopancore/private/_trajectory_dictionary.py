@@ -14,7 +14,7 @@ are easily done by the user."""
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-import pickle, json, h5py
+import pickle, json
 import networkx as nx
 from . import _AbstractEntityMixin, _AbstractProcessTaxonMixin
 
