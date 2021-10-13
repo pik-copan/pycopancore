@@ -1,0 +1,131 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.seven_dwarfs.implementation.social_system &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.seven_dwarfs.implementation.social_system</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;SocialSystem entity type class template.</span>
+
+<span class="sd">TODO: adjust or fill in code and documentation wherever marked by &quot;TODO:&quot;,</span>
+<span class="sd">then remove these instructions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># License: MIT license</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">I</span>
+<span class="kn">from</span> <span class="nn">pycopancore.model_components.base</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">B</span>
+<span class="c1"># from .... import master_data_model as D</span>
+<span class="kn">from</span> <span class="nn">pycopancore</span> <span class="k">import</span> <span class="n">ODE</span><span class="p">,</span> <span class="n">Step</span><span class="p">,</span> <span class="n">Explicit</span><span class="p">,</span> <span class="n">Event</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="SocialSystem"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.seven_dwarfs.implementation.html#pycopancore.model_components.seven_dwarfs.implementation.social_system.SocialSystem">[docs]</a><span class="k">class</span> <span class="nc">SocialSystem</span><span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;SocialSystem entity type mixin implementation class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># process-related methods:</span>
+<div class="viewcode-block" id="SocialSystem.register_dwarf"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.seven_dwarfs.implementation.html#pycopancore.model_components.seven_dwarfs.implementation.social_system.SocialSystem.register_dwarf">[docs]</a>    <span class="k">def</span> <span class="nf">register_dwarf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dwarf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Connect dwarf with other individuals in network.</span>
+
+<span class="sd">        When a dwarf is instantiated, this function is called and</span>
+<span class="sd">        connects the dwarf with all other ones in its social_system.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dwarf</span><span class="o">.</span><span class="n">acquaintances</span>
+                    <span class="ow">and</span> <span class="n">dwarf</span> <span class="o">!=</span> <span class="n">ind</span><span class="p">):</span>
+                <span class="c1"># Add edge:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">dwarf</span><span class="p">,</span> <span class="n">ind</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span></div>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

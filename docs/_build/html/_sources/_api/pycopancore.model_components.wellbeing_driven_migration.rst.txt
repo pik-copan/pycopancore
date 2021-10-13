@@ -1,0 +1,37 @@
+pycopancore\.model\_components\.wellbeing\_driven\_migration package
+====================================================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pycopancore.model_components.wellbeing_driven_migration.implementation
+
+Submodules
+----------
+
+pycopancore\.model\_components\.wellbeing\_driven\_migration\.interface module
+------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.wellbeing_driven_migration.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.wellbeing\_driven\_migration\.model module
+--------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.wellbeing_driven_migration.model
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.wellbeing_driven_migration
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,77 @@
+pycopancore\.data\_model package
+================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pycopancore.data_model.master_data_model
+
+Submodules
+----------
+
+pycopancore\.data\_model\.dimension module
+------------------------------------------
+
+.. automodule:: pycopancore.data_model.dimension
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.dimensional\_quantity module
+------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.dimensional_quantity
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.ordered\_set module
+---------------------------------------------
+
+.. automodule:: pycopancore.data_model.ordered_set
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.reference\_variable module
+----------------------------------------------------
+
+.. automodule:: pycopancore.data_model.reference_variable
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.set\_variable module
+----------------------------------------------
+
+.. automodule:: pycopancore.data_model.set_variable
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.unit module
+-------------------------------------
+
+.. automodule:: pycopancore.data_model.unit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.variable module
+-----------------------------------------
+
+.. automodule:: pycopancore.data_model.variable
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.data_model
+    :members:
+    :undoc-members:
+    :show-inheritance:

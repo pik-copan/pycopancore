@@ -1,0 +1,337 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.runners package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-runners-package">
+<h1>pycopancore.runners package<a class="headerlink" href="#pycopancore-runners-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.runners.hooks">
+<span id="pycopancore-runners-hooks-module"></span><h2>pycopancore.runners.hooks module<a class="headerlink" href="#module-pycopancore.runners.hooks" title="Permalink to this headline">¶</a></h2>
+<p>Register hooks for the run inside a runner.</p>
+<dl class="exception">
+<dt id="pycopancore.runners.hooks.HookRegistrationError">
+<em class="property">exception </em><code class="descclassname">pycopancore.runners.hooks.</code><code class="descname">HookRegistrationError</code><a class="reference internal" href="../_modules/pycopancore/runners/hooks.html#HookRegistrationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.hooks.HookRegistrationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">BaseException</span></code></p>
+<p>Dummy docstring</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.runners.hooks.Hooks">
+<em class="property">class </em><code class="descclassname">pycopancore.runners.hooks.</code><code class="descname">Hooks</code><a class="reference internal" href="../_modules/pycopancore/runners/hooks.html#Hooks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.hooks.Hooks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class managing the hooks that are called before, during and after a run.</p>
+<dl class="class">
+<dt id="pycopancore.runners.hooks.Hooks.Types">
+<em class="property">class </em><code class="descname">Types</code><a class="reference internal" href="../_modules/pycopancore/runners/hooks.html#Hooks.Types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.Types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></p>
+<p>Defines the three hook types: pre, mid, post</p>
+<dl class="attribute">
+<dt id="pycopancore.runners.hooks.Hooks.Types.mid">
+<code class="descname">mid</code><em class="property"> = 2</em><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.Types.mid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.runners.hooks.Hooks.Types.post">
+<code class="descname">post</code><em class="property"> = 3</em><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.Types.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.runners.hooks.Hooks.Types.pre">
+<code class="descname">pre</code><em class="property"> = 1</em><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.Types.pre" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="pycopancore.runners.hooks.Hooks.__new__">
+<em class="property">static </em><code class="descname">__new__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/hooks.html#Hooks.__new__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>raises an error because this class should not be instantiated</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="pycopancore.runners.hooks.Hooks.execute_hooks">
+<em class="property">classmethod </em><code class="descname">execute_hooks</code><span class="sig-paren">(</span><em>type</em>, <em>model</em>, <em>t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/hooks.html#Hooks.execute_hooks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.execute_hooks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy docstring</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="pycopancore.runners.hooks.Hooks.register_hook">
+<em class="property">classmethod </em><code class="descname">register_hook</code><span class="sig-paren">(</span><em>type</em>, <em>hook</em>, <em>theclass=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/hooks.html#Hooks.register_hook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.register_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a hook.
+:param type: Specifies the type of the hook.
+:type type: HookTypes member
+:param hook: The function to be called.</p>
+<blockquote>
+<div>arguments: instance of the corresponding enitity or taxon, time when called</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.runners.hooks.Hooks.tmp">
+<code class="descname">tmp</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.tmp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pycopancore.runners.hooks.Hooks.unregister_hook">
+<em class="property">classmethod </em><code class="descname">unregister_hook</code><span class="sig-paren">(</span><em>type</em>, <em>hook</em>, <em>theclass=None</em>, <em>error_if_not_registered=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/hooks.html#Hooks.unregister_hook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.hooks.Hooks.unregister_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a hook.
+:param type: Specifies the type of the hook.
+:type type: HookTypes member
+:param hook: The function to be removed.
+:type hook: function
+:param Errors:
+:param ======:
+:param raises HookRegistrationError when hook is not listed as registered:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="pycopancore.runners.hooks.HooksError">
+<em class="property">exception </em><code class="descclassname">pycopancore.runners.hooks.</code><code class="descname">HooksError</code><a class="reference internal" href="../_modules/pycopancore/runners/hooks.html#HooksError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.hooks.HooksError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">BaseException</span></code></p>
+<p>Dummy docstring</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.runners.runner">
+<span id="pycopancore-runners-runner-module"></span><h2>pycopancore.runners.runner module<a class="headerlink" href="#module-pycopancore.runners.runner" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.runners.runner.Runner">
+<em class="property">class </em><code class="descclassname">pycopancore.runners.runner.</code><code class="descname">Runner</code><span class="sig-paren">(</span><em>model</em>, <em>*</em>, <em>termination_calls=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/runner.html#Runner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.runner.Runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pycopancore.private._abstract_runner._AbstractRunner</span></code></p>
+<p>Runner-class, it owns the run function which calculates trajectories.</p>
+<p>Equations might be of type ODE, explicit, step and event, as stated in the
+process_types package.</p>
+<dl class="method">
+<dt id="pycopancore.runners.runner.Runner.apply_explicits">
+<code class="descname">apply_explicits</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/runner.html#Runner.apply_explicits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.runner.Runner.apply_explicits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply all Explicit processes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> (<em>float</em>) – Model time</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.runners.runner.Runner.get_rhs_array">
+<code class="descname">get_rhs_array</code><span class="sig-paren">(</span><em>t</em>, <em>value_array</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/runner.html#Runner.get_rhs_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.runner.Runner.get_rhs_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return RHS of composite ODE system as an array.</p>
+<p>Will be passed to scipy.ode class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> (<em>float</em>) – Model time</li>
+<li><strong>value_array</strong> (<em>array</em>) – array of variable values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">array of derivatives in same order as value_array</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.runners.runner.Runner.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>*</em>, <em>t_0=0</em>, <em>t_1</em>, <em>dt</em>, <em>exclusions=None</em>, <em>max_resolution=False</em>, <em>add_to_output=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/runner.html#Runner.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.runner.Runner.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the model for a specified time interval.</p>
+<p>Run the model by simulating all processes in the right order in a way
+depending on process type (ODE integration, time stepping, etc.).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t_0</strong> (<em>float</em><em>, </em><em>optional</em>) – Starting time (default: 0)</li>
+<li><strong>t_1</strong> (<em>float</em>) – End time</li>
+<li><strong>dt</strong> (<em>float</em>) – Maximal interval between output time points</li>
+<li><strong>exclusions</strong> (<em>list</em>) – List with Variables, that shan’t be included into the output
+trajectory_dict</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p><strong>trajectory_dict</strong> – Model trajectory in requested time interval.
+Keys: ‘t’ (contains the list of time points)</p>
+<blockquote>
+<div><p>and each Variable object simulated.</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>Value of trajectory_dict[var]: dict with</dt>
+<dd><p class="first last">key: entity or taxon,
+value: list of variable values in same order as time points.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.runners.runner.Runner.save_to_traj">
+<code class="descname">save_to_traj</code><span class="sig-paren">(</span><em>targets</em>, <em>add_to_output</em>, <em>max_resolution</em>, <em>dt</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/runner.html#Runner.save_to_traj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.runner.Runner.save_to_traj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save simulation results to output dictionary.</p>
+<p>Update self.trajectory_dict for some targets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>targets</strong> (<em>list</em>) – list of targets (variables or dotconstructs) to save</li>
+<li><strong>add_to_output</strong> (<em>list</em><em> or </em><em>None</em>) – optional additional list</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.runners.runner.Runner.terminate">
+<code class="descname">terminate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/runners/runner.html#Runner.terminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.runners.runner.Runner.terminate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the runner should stop.</p>
+<p>Apply all callables specified in self.termination_calls on their
+respective instances. If one of them indicates a termination condition
+by returning True, then return True. Else return False.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the runner should stop according to one of the
+callables in self.termination_calls.
+False, if there are no such callables or if they all return False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.runners">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.runners" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mar 10, 2017</p>
+<p>&#64;author: heitzig</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.runners.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.runners.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

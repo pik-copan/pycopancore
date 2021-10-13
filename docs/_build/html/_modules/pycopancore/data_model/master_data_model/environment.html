@@ -1,0 +1,256 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.data_model.master_data_model.environment &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.data_model.master_data_model.environment</h1><div class="highlight"><pre>
+<span></span><span class="c1"># WARNING: DON&#39;T, I REPEAT, DON&#39;T REMOVE SPACES AROUND = !!!</span>
+
+<span class="sd">&quot;&quot;&quot;Master data model for environment.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">Variable</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">gigatonnes_carbon</span><span class="p">,</span> <span class="n">kelvins</span><span class="p">,</span> <span class="n">years</span><span class="p">,</span> <span class="n">square_kilometers</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">unity</span>
+
+<span class="kn">from</span> <span class="nn">networkx</span> <span class="k">import</span> <span class="n">DiGraph</span><span class="p">,</span> <span class="n">Graph</span>
+
+
+<div class="viewcode-block" id="Environment"><a class="viewcode-back" href="../../../../_api/pycopancore.data_model.master_data_model.html#pycopancore.data_model.master_data_model.environment.Environment">[docs]</a><span class="k">class</span> <span class="nc">Environment</span><span class="p">:</span>
+    
+    <span class="c1"># Geography:</span>
+    
+    <span class="n">land_area</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;land area&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">square_kilometers</span><span class="p">,</span>
+                         <span class="n">strict_lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Atmosphere:</span>
+    
+    <span class="n">atmospheric_carbon</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;atmospheric carbon stock&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;(mass of C in any chemical compound)&quot;</span><span class="p">,</span>
+                                  <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                                  <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Note: this is NOT the same as the CF var. atmosphere_mass_of_carbon_dioxide</span>
+    
+    <span class="n">surface_air_temperature</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;surface air temperature&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;(in the meaning used in climate policy debates,</span>
+<span class="sd">                 i.e., at 2m above surface, averaged over the day)&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">AMIP</span><span class="o">=</span><span class="s2">&quot;tas&quot;</span><span class="p">,</span>  <span class="c1"># CF=&quot;air_temperature&quot;?</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">kelvins</span><span class="p">,</span>
+                 <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">287</span><span class="p">)</span>
+    <span class="c1"># TODO: higher layers as a vector by (geopotential) hight?</span>
+    
+    
+    <span class="c1"># Oceans:</span>
+    
+    <span class="n">ocean_carbon</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;ocean carbon stock&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;(mass of C in any chemical compound)&quot;</span><span class="p">,</span>
+                            <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                            <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: when using the following, include</span>
+    <span class="c1"># Implicit(ocean_carbon == upper_ocean_carbon + deep_ocean_carbon)</span>
+    <span class="n">upper_ocean_carbon</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;upper ocean carbon stock&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(that which interacts relatively much/fast with atmosphere)&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">deep_ocean_carbon</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;deep ocean carbon stock&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(that which interacts relatively little/slow with atmosphere)&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: there are no corresponding CF vars. yet</span>
+    
+    
+    <span class="c1"># Land:</span>
+    
+    <span class="n">terrestrial_carbon</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;terrestrial carbon stock&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;(mass of C in any chemical compound)&quot;</span><span class="p">,</span>
+                                  <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                                  <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: when using the following, include</span>
+    <span class="c1"># Implicit(terrestrial_carbon == soil_carbon + biomass_carbon)</span>
+    <span class="n">soil_carbon</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;soil carbon stock&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;(mass of C in any chemical compound)&quot;</span><span class="p">,</span>
+                           <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                           <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Note: has to do with CF var. soil_carbon_content</span>
+    <span class="n">biomass_carbon</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;biomass/plant carbon stock&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;(mass of C in any chemical compound)&quot;</span><span class="p">,</span>
+                              <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                              <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: when using the following, include</span>
+    <span class="c1"># Implicit(biomass_carbon == harvestable_biomass_carbon + other_biomass_carbon)</span>
+    <span class="n">harvestable_biomass_carbon</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;harvestable biomass carbon stock&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;(that which can be accessed easily for direct harvesting,</span>
+<span class="sd">                    in particular agricultural biomass)&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">other_biomass_carbon</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;other (non-harvestable) biomass carbon stock&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(that which cannot be accessed easily for direct harvesting)&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: there are no corresponding CF vars. yet</span>
+    
+    
+    <span class="c1"># Other:</span>
+    
+    <span class="n">fossil_carbon</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;fossil carbon stock&quot;</span><span class="p">,</span>
+                             <span class="sd">&quot;&quot;&quot;(mass of C in any chemical compound,</span>
+<span class="sd">                             potentially accessible for human extraction</span>
+<span class="sd">                             and combustion)&quot;&quot;&quot;</span><span class="p">,</span>
+                             <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                             <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: when using the following, include</span>
+    <span class="c1"># Implicit(fossil_carbon == harvestable_biomass_carbon + other_biomass_carbon)</span>
+    <span class="n">discovered_fossil_reserves</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;discovered fossil reserves carbon stock&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;(that which can currently be accessed for extraction)&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">undiscovered_fossil_reserves</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;undiscovered fossil reserves carbon stock&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(that which cannot currently be accessed for extraction)&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># For ocean-atmosphere interactions:</span>
+    
+    <span class="n">ocean_atmosphere_diffusion_coefficient</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;ocean-atmosphere diffusion coefficient&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.016</span><span class="p">)</span>
+    <span class="n">carbon_solubility_in_sea_water</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;carbon solubility in sea water&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(in the sense of Nitzbon et al. 2017, not in g/L but unitless!)&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    
+    <span class="c1"># For land-atmosphere interactions:</span>
+    
+    <span class="n">photosynthesis_carbon_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;photosynthesis carbon flow&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Photosynthesis&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">terrestrial_respiration_carbon_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;plant and soil respiration carbon flow&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: when using the following, include</span>
+    <span class="c1"># Implicit(terrestrial_respiration_carbon_flow</span>
+    <span class="c1">#          == plant_respiration_carbon_flow + soil_respiration_carbon_flow)</span>
+    <span class="n">plant_respiration_carbon_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;plant respiration carbon flow&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Cellular_respiration&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">soil_respiration_carbon_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;soil respiration carbon flow&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Soil_respiration&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: there are no corresponding CF vars. yet</span>
+    
+    
+    <span class="n">geographic_network</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;geographic network&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;Undirected network of cells and geographic neighborhood.</span>
+<span class="sd">                 Two cells should be linked iff they share a common boundary of positive</span>
+<span class="sd">                 measure.&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="n">Graph</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

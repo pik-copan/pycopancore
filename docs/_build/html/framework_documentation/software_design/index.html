@@ -1,0 +1,132 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Software design (independent of programming language) &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Common concepts of object-oriented programming languages" href="object_orientation.html" />
+    <link rel="prev" title="Process-type “Step”" href="../abstract_level/process_types/step.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="software-design-independent-of-programming-language">
+<h1>Software design (independent of programming language)<a class="headerlink" href="#software-design-independent-of-programming-language" title="Permalink to this headline">¶</a></h1>
+<p>This section describes the programming language-independent parts of
+how the <a class="reference internal" href="../abstract_level/index.html"><span class="doc">abstract description</span></a> of the modeling framework is realized as computer software.
+For the current implementation concept in the Python programming language, see <a class="reference internal" href="../python_implementation/index.html"><span class="doc">here</span></a>.</p>
+<p>As it corresponds closely with the <em>entity-centric</em> view of the abstract framework,
+<strong>object-orientation</strong> is our main design principle.
+All parts of the software are organized in packages, subpackages, modules, and classes.</p>
+<p>The only exception are those parts of the software that are written by model end-users to perform actual studies,
+which will typically be in the form of scripts
+following a mainly <em>imperative programming</em> style that uses the classes provided by the framework.</p>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="object_orientation.html">Common concepts of object-oriented programming languages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representation_of_framework_concepts.html">Representing modeling framework concepts by object-oriented concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="representation_of_framework_concepts.html#entities-processes-variables">Entities, processes, variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representation_of_framework_concepts.html#modularization">Modularization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representation_of_framework_concepts.html#tabular-summary">Tabular summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_and_analysis.html">Logics for simulation and analysis</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Framework documentation</a><ul>
+      <li>Previous: <a href="../abstract_level/process_types/step.html" title="previous chapter">Process-type “Step”</a></li>
+      <li>Next: <a href="object_orientation.html" title="next chapter">Common concepts of object-oriented programming languages</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/framework_documentation/software_design/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/framework_documentation/software_design/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

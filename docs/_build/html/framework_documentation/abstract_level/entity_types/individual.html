@@ -1,0 +1,152 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Entity-type “Individual” &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Entity-type “Household”" href="household.html" />
+    <link rel="prev" title="Entity-type “Social System”" href="social_system.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="entity-type-individual">
+<h1>Entity-type “Individual”<a class="headerlink" href="#entity-type-individual" title="Permalink to this headline">¶</a></h1>
+<p>An <em>individual</em> is a (natural) person, i.e., a single human being.
+Individuals will mainly act as agents in agent-based model components,
+(but also social systems, firms, groups, and households
+may act as agents in agent-based components!)</p>
+<p>In contrast to certain economic modeling approaches that use “representative consumers”,
+an entity of type “Individual” in copan:CORE is <em>not</em> usually meant to represent a whole class of similar individuals
+(e.g., all the actual individuals of a certain profession)
+but just one specific individual.
+So typically a model will contain many individuals.
+Still, since it is typically not sensible to model every single person on Earth,
+the set of all “Individual” entities contained in the model
+should be interpreted as being a <em>representative sample</em> of all real-world people,
+which is facilitated by the attribute “represented population”.</p>
+<div class="section" id="basic-relationships-to-other-entity-types">
+<h2>Basic relationships to other entity-types<a class="headerlink" href="#basic-relationships-to-other-entity-types" title="Permalink to this headline">¶</a></h2>
+<p>An individual will usually…</p>
+<ul class="simple">
+<li>reside in some <a class="reference internal" href="cell.html"><span class="doc">cell</span></a></li>
+</ul>
+<p>In addition, an individual may…</p>
+<ul class="simple">
+<li>belong to one <a class="reference internal" href="household.html"><span class="doc">household</span></a></li>
+<li>have an employer <a class="reference internal" href="firm.html"><span class="doc">firm</span></a></li>
+<li>have a current spouse and (professional) supervisor individual</li>
+<li>belong to some <a class="reference internal" href="group.html"><span class="doc">groups</span></a> and identify primarily with one of them</li>
+<li>act as the head of some <a class="reference internal" href="household.html"><span class="doc">household</span></a>,
+leader of some <a class="reference internal" href="group.html"><span class="doc">groups</span></a>,
+CEO of some <a class="reference internal" href="firm.html"><span class="doc">firms</span></a>,
+or head of government of some <span class="xref std std-doc">social systems</span></li>
+<li>be related to others via a network of acquaintances owned by the <a class="reference internal" href="../process_taxonomy/culture.html"><span class="doc">culture</span></a> taxon</li>
+</ul>
+<p>All these relationships may be dynamic.</p>
+<p>Finally, an individual may…</p>
+<ul class="simple">
+<li>have a father and mother individual</li>
+<li>have a birthplace <a class="reference internal" href="cell.html"><span class="doc">cell</span></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Framework documentation</a><ul>
+  <li><a href="../index.html">Abstract description of the copan:CORE modeling framework</a><ul>
+  <li><a href="index.html">Entity-types in the copan:CORE base model</a><ul>
+      <li>Previous: <a href="social_system.html" title="previous chapter">Entity-type “Social System”</a></li>
+      <li>Next: <a href="household.html" title="next chapter">Entity-type “Household”</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/framework_documentation/abstract_level/entity_types/individual.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../../_sources/framework_documentation/abstract_level/entity_types/individual.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

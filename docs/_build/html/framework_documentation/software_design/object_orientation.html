@@ -1,0 +1,150 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Common concepts of object-oriented programming languages &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Representing modeling framework concepts by object-oriented concepts" href="representation_of_framework_concepts.html" />
+    <link rel="prev" title="Software design (independent of programming language)" href="index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="common-concepts-of-object-oriented-programming-languages">
+<h1>Common concepts of object-oriented programming languages<a class="headerlink" href="#common-concepts-of-object-oriented-programming-languages" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first">An <strong>object</strong> is an <em>instance</em> of a certain <strong>class</strong>.</p>
+</li>
+<li><p class="first">A <strong>class</strong> is a collection of like objects.
+It is usually named by a common noun in the singular.</p>
+</li>
+<li><p class="first">Objects and classes can have <strong>attributes</strong> and <strong>methods</strong>:</p>
+<ul class="simple">
+<li><em>Object attributes</em> (aka <em>instance attributes</em>) store static or variable data about individual objects.</li>
+<li><em>Class attributes</em> store static or variable data (e.g., metadata) about the class itself.</li>
+<li><em>Object methods</em> (aka <em>instance methods</em>) represent the actions an object “can do” or that can be “done to” an object.</li>
+<li><em>Class methods</em> represent actions that can be done to the class itself.</li>
+</ul>
+<p>An attribute <code class="docutils literal"><span class="pre">x</span></code> or method <code class="docutils literal"><span class="pre">f</span></code> of a class <code class="docutils literal"><span class="pre">A</span></code> or object <code class="docutils literal"><span class="pre">a</span></code> can typically be referred to as
+<code class="docutils literal"><span class="pre">A.x</span></code>, <code class="docutils literal"><span class="pre">A.f</span></code>, <code class="docutils literal"><span class="pre">a.x</span></code>, <code class="docutils literal"><span class="pre">a.f</span></code>, respectively (<em>dot notation</em>).</p>
+</li>
+<li><p class="first">A class is often <strong>derived</strong> from one or more <em>superclasses</em> (maybe in several levels).
+Their attributes and methods are then <strong>inherited</strong> by the derived class but can also be <strong>overwritten</strong> by subclasses.</p>
+</li>
+<li><p class="first">If a class is derived from more than one superclass (<em>multiple inheritance</em>)
+which are not meant to be instantiated directly, the latter are often called <strong>mixin classes</strong>.</p>
+</li>
+<li><p class="first">Some classes don’t have methods
+or have only <em>method declarations</em> that contain no implementation
+and are meant to be overwritten by an “implementation method” in a derived “implementation subclass”.
+Such classes are typically called “abstract” or “interface” classes, but this terminology is not completely well-defined.
+They are normally not instantiated directly but rather used to derive “implementation” subclasses that are then instantiated.
+There are a number of more or less complex “design patterns” describing common practices of how this can be used.</p>
+</li>
+<li><p class="first"><strong>Packages</strong> and <strong>Modules</strong> are somehow meaningful collections of classes (and maybe other things) that form a separate <em>namespace</em>.
+A class <code class="docutils literal"><span class="pre">A</span></code> in a package or module <code class="docutils literal"><span class="pre">P</span></code> can typically be referred to as <code class="docutils literal"><span class="pre">P.A</span></code>.
+Packages and subpackages can typically form a hierarchical structure similarly (and often implemented as) a file folder structure,
+with modules typically representing the deepest level of this hierarchy, similar to files within a folder structure.
+To be able to refer to things from package <code class="docutils literal"><span class="pre">A</span></code> within package <code class="docutils literal"><span class="pre">B</span></code>,
+one typically needs to <em>import</em> them from <code class="docutils literal"><span class="pre">A</span></code> to <code class="docutils literal"><span class="pre">B</span></code>, and most programming languages forbid cyclical imports.
+A similar need for importing often exists if a class needs access to another class’ attributes and methods.</p>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Framework documentation</a><ul>
+  <li><a href="index.html">Software design (independent of programming language)</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Software design (independent of programming language)</a></li>
+      <li>Next: <a href="representation_of_framework_concepts.html" title="next chapter">Representing modeling framework concepts by object-oriented concepts</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/framework_documentation/software_design/object_orientation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/framework_documentation/software_design/object_orientation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

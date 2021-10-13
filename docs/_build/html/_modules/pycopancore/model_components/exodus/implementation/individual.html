@@ -1,0 +1,443 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.exodus.implementation.individual &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.exodus.implementation.individual</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Individual entity type class template.</span>
+
+<span class="sd">TODO: adjust or fill in code and documentation wherever marked by &quot;TODO:&quot;,</span>
+<span class="sd">then remove these instructions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">I</span>
+<span class="kn">from</span> <span class="nn">pycopancore.model_components.base</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">B</span>
+<span class="kn">from</span> <span class="nn">pycopancore</span> <span class="k">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Explicit</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">stats</span>
+
+
+<div class="viewcode-block" id="Individual"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual">[docs]</a><span class="k">class</span> <span class="nc">Individual</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Individual entity type mixin implementation class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># standard methods:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">profession</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">nutrition_need</span><span class="o">=</span><span class="mi">1240</span><span class="p">,</span>
+                 <span class="n">liquidity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">nutrition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">second_degree_rewire_prob</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                 <span class="n">outspokenness</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">random_rewire</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                 <span class="n">farm_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">gross_income</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize an instance of Cell.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># must be the first line</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profession</span> <span class="o">=</span> <span class="n">profession</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nutrition_need</span> <span class="o">=</span> <span class="n">nutrition_need</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">second_degree_rewire_prob</span> <span class="o">=</span> <span class="n">second_degree_rewire_prob</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outspokenness</span> <span class="o">=</span> <span class="n">outspokenness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_rewire</span> <span class="o">=</span> <span class="n">random_rewire</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gross_income</span> <span class="o">=</span> <span class="n">gross_income</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">farm_size</span> <span class="o">=</span> <span class="n">farm_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">liquidity</span> <span class="o">=</span> <span class="n">liquidity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nutrition</span> <span class="o">=</span> <span class="n">nutrition</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profession</span> <span class="o">==</span> <span class="s1">&#39;farmer&#39;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">characteristic</span> <span class="o">==</span> <span class="s1">&#39;farmland&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profession</span> <span class="o">==</span> <span class="s1">&#39;townsman&#39;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">characteristic</span> <span class="o">==</span> <span class="s1">&#39;city&#39;</span>
+
+<div class="viewcode-block" id="Individual.calc_farm_size"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.calc_farm_size">[docs]</a>    <span class="k">def</span> <span class="nf">calc_farm_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the farm size.&quot;&quot;&quot;</span>
+        <span class="c1"># Check, if not already been calculated:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">farm_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># If townsman, individual has no farm:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">farm_size</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># If farmer, distribute farm size:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="c1"># Let social_system distribute farm size</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">farm_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">calc_gross_income_or_farmsize</span><span class="p">()</span></div>
+        <span class="c1"># return self.farm_size</span>
+
+<div class="viewcode-block" id="Individual.calc_gross_income"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.calc_gross_income">[docs]</a>    <span class="k">def</span> <span class="nf">calc_gross_income</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the gross income.&quot;&quot;&quot;</span>
+        <span class="c1"># Check if not already been calculated:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gross_income</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Check if farmer or townsman:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="c1"># Let social_system distribute income:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gross_income</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">calc_gross_income_or_farmsize</span><span class="p">()</span>
+            <span class="c1"># If not townsman, income = 0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gross_income</span> <span class="o">=</span> <span class="mi">0</span></div>
+        <span class="c1"># return self.gross_income</span>
+
+    <span class="c1"># process-related methods:</span>
+<div class="viewcode-block" id="Individual.social_update_timer"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.social_update_timer">[docs]</a>    <span class="k">def</span> <span class="nf">social_update_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate when a social update takes place&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">t</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outspokenness</span><span class="p">)</span></div>
+    <span class="c1"># outspokenness = 1 means in average once a year, 0.1 = 10 times a year,</span>
+    <span class="c1"># 10 means once every 10 years in average.</span>
+
+<div class="viewcode-block" id="Individual.social_update"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.social_update">[docs]</a>    <span class="k">def</span> <span class="nf">social_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Do social update.</span>
+
+<span class="sd">        Either migration or de- and re-friending takes place. </span>
+<span class="sd">        In case of a fully connected network only migration takes place.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set Flag to prevent agents from migrating twice when continuos</span>
+        <span class="c1"># exploration is True:</span>
+        <span class="n">migrated</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># First: determine if fully connected network:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">fully_connected_network</span><span class="p">:</span>
+            <span class="c1"># First check if continuos exploration is turned on:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">continuous_exploration</span><span class="p">:</span>
+                <span class="c1"># define threshold for noise:</span>
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+                    <span class="c1"># Do exploration -&gt; Move to any cell/social system</span>
+                    <span class="n">ss</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">social_systems</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c1"># Get the social systems cell (cells is a set)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ss</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+                        <span class="n">new_cell</span> <span class="o">=</span> <span class="n">cell</span>
+                    <span class="c1"># If social system is idle/deactivated:</span>
+                    <span class="k">if</span> <span class="n">ss</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">idle_entities</span> <span class="ow">and</span> \
+                                    <span class="n">ss</span> <span class="ow">in</span> <span class="n">ss</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">idle_entities</span><span class="p">:</span>
+                        <span class="c1"># reactivate it:</span>
+                        <span class="n">ss</span><span class="o">.</span><span class="n">reactivate</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">new_cell</span><span class="p">)</span>
+                    <span class="n">migrated</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Network is fully connected:</span>
+            <span class="n">chosen_one</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+            <span class="c1"># Add event to social systems migration counter:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">migration_counter</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">migration_counter</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">chosen_one</span><span class="o">.</span><span class="n">social_system</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">decide_migration</span><span class="p">(</span><span class="n">chosen_one</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">migrated</span><span class="p">:</span>
+                <span class="c1"># in case of preferential migration, checks are done</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">preferential_migration</span><span class="p">:</span>
+                    <span class="c1"># Add successful event to migration counter:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">migration_counter</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">chosen_one</span><span class="o">.</span><span class="n">social_system</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">preferential_migrate</span><span class="p">(</span><span class="n">chosen_one</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Add successful event to migration counter:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">migration_counter</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">chosen_one</span><span class="o">.</span><span class="n">social_system</span><span class="p">)</span>
+                    <span class="c1"># Migrate</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">chosen_one</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Not fully connected:</span>
+            <span class="c1"># Chose Acquaintance, if existent:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">:</span>
+                <span class="n">chosen_one</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">)</span>
+                <span class="c1"># Get the Chosen One&#39;s Profession:</span>
+                <span class="n">chosen_profession</span> <span class="o">=</span> <span class="n">chosen_one</span><span class="o">.</span><span class="n">profession</span>
+                <span class="c1"># Check, whether same profession, therefore define</span>
+                <span class="c1"># if migration or rewiring takes place or nothing</span>
+                <span class="k">if</span> <span class="n">chosen_profession</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profession</span><span class="p">:</span>
+                    <span class="c1"># Compare utility and decide if migration takes place:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">decide_migration</span><span class="p">(</span><span class="n">chosen_one</span><span class="p">):</span>
+                        <span class="c1"># Migrate</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">chosen_one</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">rewire</span><span class="p">(</span><span class="n">chosen_one</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">chosen_profession</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">profession</span>
+                        <span class="ow">and</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_rewire</span><span class="p">):</span>
+                    <span class="c1"># Noise: Rewire to a random individual</span>
+                    <span class="n">random_guy</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">individuals</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">random_guy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">):</span>
+                        <span class="c1"># Add edge:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_guy</span><span class="p">)</span>
+                        <span class="c1"># remove old edge:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                                                      <span class="n">chosen_one</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Individual.decide_migration"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.decide_migration">[docs]</a>    <span class="k">def</span> <span class="nf">decide_migration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decide, if rewire or migration takes place.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        neighbour: exodus.individual</span>
+<span class="sd">            Object of type individual that has different profession than the</span>
+<span class="sd">            self object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool:</span>
+<span class="sd">            True if migration takes place</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If last one standing is active, check if there are more than one</span>
+        <span class="c1"># agent in the social system:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">last_one_standing</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">population</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="c1"># Difference in utility:</span>
+        <span class="n">delta_utility</span> <span class="o">=</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">utility</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">utility</span>
+        <span class="c1"># print(&#39;delta util&#39;, delta_utility)</span>
+        <span class="c1"># Tanh function:</span>
+        <span class="n">tanh</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">delta_utility</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">tanh</span><span class="p">:</span>
+            <span class="c1"># Migrate if enough liquidity</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">liquidity</span> <span class="o">&gt;</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">migration_cost</span><span class="p">:</span>
+                <span class="c1"># Next line is causing liquidities to drop below 0 if the</span>
+                <span class="c1"># social_system update takes place:</span>
+                <span class="c1"># self.liquidity -= neighbour.social_system.migration_cost</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Not enough money to migrate</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Rewire</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Individual.rewire"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.rewire">[docs]</a>    <span class="k">def</span> <span class="nf">rewire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Do rewiring.</span>
+
+<span class="sd">        Detaches from neighbour and rewires to a neighbour of degree n.</span>
+<span class="sd">        This process is only used, if the network is not static!</span>
+<span class="sd">        Parameters.</span>
+<span class="sd">        ----------</span>
+<span class="sd">        neighbour: exodus.individual</span>
+<span class="sd">            neighbour from which to detach</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Remove edge:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">)</span>
+        <span class="c1"># Chose another random neighbour</span>
+        <span class="c1"># Check if individuals has acquaintances:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">:</span>
+            <span class="c1"># If so, connect to random one in model:</span>
+            <span class="n">random_one</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">individuals</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_one</span><span class="p">)</span>
+        <span class="n">random_neighbour</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">)</span>
+        <span class="n">third_degree_neighbors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">break_cond</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Iterate through second degree neighbours of random neighbour:</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">random_neighbour</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">:</span>
+            <span class="c1"># Attach with second_degree_rewire_prob, if not already connected</span>
+            <span class="c1"># or if not just detached:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_degree_rewire_prob</span>
+                    <span class="ow">and</span> <span class="n">n</span> <span class="o">!=</span> <span class="n">neighbour</span>
+                    <span class="ow">and</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+                <span class="n">break_cond</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+            <span class="c1"># If rewiring did not take place, add his neighbours to third</span>
+            <span class="c1"># degree neighbour list:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">!=</span> <span class="n">neighbour</span>
+                    <span class="ow">and</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">nn</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">:</span>
+                    <span class="n">third_degree_neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="p">)</span>
+        <span class="c1"># Iterate through 3 degree neighbours, if ne neighbour was not found:</span>
+        <span class="k">if</span> <span class="n">break_cond</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">third_degree_neighbors</span><span class="p">:</span>
+                <span class="c1"># Attach with second_degree_rewire_prob^2, if not already</span>
+                <span class="c1"># connected or if not just detached:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">second_degree_rewire_prob</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                        <span class="ow">and</span> <span class="n">n</span> <span class="o">!=</span> <span class="n">neighbour</span>
+                        <span class="ow">and</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+                    <span class="n">break_cond</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+        <span class="c1"># if nobody has connected yet, chose any random individual:</span>
+        <span class="k">if</span> <span class="n">break_cond</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="c1"># tuple is necessary since self.world.individuals is a set,</span>
+            <span class="c1"># therefore random.choice alone does not work!</span>
+            <span class="n">random_guy</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">individuals</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">random_guy</span> <span class="o">!=</span> <span class="n">neighbour</span>
+                    <span class="ow">and</span> <span class="n">random_guy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintances</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_guy</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;this is very unlikely, nobody has been found, &#39;</span>
+                      <span class="s1">&#39;individual loses a connection.&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Individual.preferential_migrate"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.preferential_migrate">[docs]</a>    <span class="k">def</span> <span class="nf">preferential_migrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calls migragte in case of preferential migration.&quot;&quot;&quot;</span>
+        <span class="c1"># 3 cases: city-city, farmland-farmland, city-farmland/vice versa</span>
+        <span class="c1"># first, check city-city</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">and</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>  <span class="c1"># need of  number that makes sense</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+        <span class="c1"># second, check farmlad farmland</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">and</span>
+              <span class="ow">not</span> <span class="n">cell</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>  <span class="c1"># need of  number that makes sense</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+        <span class="c1"># third: check city-farmland/farmland-city</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># check if neighbours</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">cell</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">^</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="o">^</span> <span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">^</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+                <span class="c1"># cells are neighbouring</span>
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Individual.migrate"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.migrate">[docs]</a>    <span class="k">def</span> <span class="nf">migrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Migrate to Cell.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cell: exodus.cell</span>
+<span class="sd">            cell to migrate to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Change cell and social_system (done in base.individual):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span>
+        <span class="c1"># Change Profession:</span>
+        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profession</span> <span class="o">=</span> <span class="s1">&#39;farmer&#39;</span>
+        <span class="k">elif</span> <span class="n">cell</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profession</span> <span class="o">=</span> <span class="s1">&#39;townsman&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Neither Municipality nor County!&#39;</span><span class="p">)</span>
+        <span class="c1"># Set Values to None, so they can be recalculated:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">farm_size</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gross_income</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_gross_income</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_farm_size</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Individual.calculate_harvest"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.calculate_harvest">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_harvest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the harvest of an Individual.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">harvest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">farm_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">average_precipitation</span> <span class="o">*</span> <span class="mi">1000000</span></div>
+
+<div class="viewcode-block" id="Individual.calculate_utility"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.individual.Individual.calculate_utility">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate utility if an Individual.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">utility</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">liquidity</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nutrition</span>
+                <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">average_liquidity</span> <span class="o">/</span> <span class="mi">1240</span><span class="p">)</span>
+            <span class="c1"># 1240 m^3 is the annual need, maybe need to incorporate it</span>
+        <span class="c1"># The folloeing should not happen but do so on the cluster:</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;liquidity could not be calculated! Setting it to 0&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liquidity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nutrition</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">average_liquidity</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">utility</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;liquidity could not be calculated! Setting it to 0&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liquidity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nutrition</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">average_liquidity</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">utility</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Event</span><span class="p">(</span><span class="s2">&quot;social update&quot;</span><span class="p">,</span>
+              <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">social_system</span><span class="p">,</span>
+               <span class="c1"># B.Individual.culture.acquaintance_network TOO BIG TO SAVE!</span>
+               <span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">farm_size</span><span class="p">,</span>
+               <span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">gross_income</span><span class="p">,</span>
+               <span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">liquidity</span><span class="p">,</span>
+               <span class="n">B</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">social_system</span><span class="o">.</span><span class="n">migration_counter</span>
+               <span class="p">],</span>
+              <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">social_update_timer</span><span class="p">,</span> <span class="n">social_update</span><span class="p">]),</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;Calculate harvest&quot;</span><span class="p">,</span>
+                 <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">harvest</span><span class="p">],</span>
+                 <span class="n">calculate_harvest</span><span class="p">),</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;Calculate Utility&quot;</span><span class="p">,</span>
+                 <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">utility</span><span class="p">],</span>
+                 <span class="n">calculate_utility</span><span class="p">)</span>
+    <span class="p">]</span>  <span class="c1"># TODO: instantiate and list process objects here</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

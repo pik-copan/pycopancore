@@ -1,0 +1,376 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.exodus.implementation.social_system &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.exodus.implementation.social_system</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;SocialSystem entity type mixing class template.</span>
+
+<span class="sd">TODO: adjust or fill in code and documentation wherever marked by &quot;TODO:&quot;,</span>
+<span class="sd">then remove these instructions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">I</span>
+<span class="kn">from</span> <span class="nn">pycopancore.model_components.base</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">B</span>
+<span class="kn">from</span> <span class="nn">pycopancore</span> <span class="k">import</span> <span class="n">Explicit</span><span class="p">,</span> <span class="n">Step</span>
+<span class="c1"># from .... import master_data_model as D</span>
+
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">stats</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+
+<div class="viewcode-block" id="SocialSystem"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem">[docs]</a><span class="k">class</span> <span class="nc">SocialSystem</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;SocialSystem entity type mixin implementation class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># standard methods:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">municipality_like</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">base_mean_income</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                 <span class="n">pdf_sigma</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span>  <span class="c1"># 0.34 taken from Clementi, Gallegati 2005 for income distribution</span>
+                 <span class="n">scaling_parameter</span><span class="o">=</span><span class="mf">1.12</span><span class="p">,</span> <span class="c1"># taken from Bettencourt paper</span>
+                 <span class="n">migration_cost</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                 <span class="n">last_one_standing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># measures to ensure ergodicity</span>
+                 <span class="n">continuous_exploration</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># kind of a noise term</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize an instance of SocialSystem.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># must be the first line</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">municipality_like</span> <span class="o">=</span> <span class="n">municipality_like</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_mean_income</span> <span class="o">=</span> <span class="n">base_mean_income</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pdf_sigma</span> <span class="o">=</span> <span class="n">pdf_sigma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaling_parameter</span> <span class="o">=</span> <span class="n">scaling_parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">migration_cost</span> <span class="o">=</span> <span class="n">migration_cost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">migration_counter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_one_standing</span> <span class="o">=</span> <span class="n">last_one_standing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">continuous_exploration</span> <span class="o">=</span> <span class="n">continuous_exploration</span>
+        <span class="c1"># Initializing self.migration_rates list with length of number of</span>
+        <span class="c1"># social systems not possibble here, since not all social systems</span>
+        <span class="c1"># are initialized yet.</span>
+
+<div class="viewcode-block" id="SocialSystem.calc_gross_income_or_farmsize"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.calc_gross_income_or_farmsize">[docs]</a>    <span class="k">def</span> <span class="nf">calc_gross_income_or_farmsize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;Get random income or farm size distributed log-normal.&quot;</span>
+
+        <span class="c1"># Use log-normal</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_sigma</span>
+        <span class="c1"># calculate ´median from mean:</span>
+        <span class="n">median</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mean_income_or_farmsize</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">lognormal_random</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">lognorm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">median</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lognormal_random</span></div>
+
+<div class="viewcode-block" id="SocialSystem.calc_population"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.calc_population">[docs]</a>    <span class="k">def</span> <span class="nf">calc_population</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the social_systems population explicitly.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        unused_t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deactivate</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;social_system </span><span class="si">{self}</span><span class="s1"> died out at time </span><span class="si">{unused_t}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># to prevent division by zero:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SocialSystem.update_incomes"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.update_incomes">[docs]</a>    <span class="k">def</span> <span class="nf">update_incomes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update incomes to adjust to population in some manner.&quot;&quot;&quot;</span>
+        <span class="c1"># first: Check if really a municipaity:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SocialSystemTypeError</span><span class="p">(</span><span class="s1">&#39;SocialSystem not a municipality&#39;</span><span class="p">)</span>
+        <span class="c1"># Define factor how fast adjusting takes place</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">:</span>
+            <span class="nb">sum</span> <span class="o">+=</span> <span class="n">ind</span><span class="o">.</span><span class="n">gross_income</span>
+        <span class="c1"># Now divide by number of individuals to get mean:</span>
+        <span class="n">real_mean</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+        <span class="n">adaption_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_income_or_farmsize</span> <span class="o">/</span> <span class="n">real_mean</span>
+        <span class="n">adaption</span> <span class="o">=</span> <span class="n">adaption_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">adaption_rate</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">:</span>
+            <span class="n">ind</span><span class="o">.</span><span class="n">gross_income</span> <span class="o">*=</span> <span class="n">adaption</span></div>
+
+<div class="viewcode-block" id="SocialSystem.update_farmsizes"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.update_farmsizes">[docs]</a>    <span class="k">def</span> <span class="nf">update_farmsizes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update farmsizes to adjust to population.&quot;&quot;&quot;</span>
+        <span class="c1"># first: Check if really a county:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SocialSystemTypeError</span><span class="p">(</span><span class="s1">&#39;SocialSystem not a county&#39;</span><span class="p">)</span>
+        <span class="c1"># Define factor how fast adjusting takes place</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">:</span>
+            <span class="nb">sum</span> <span class="o">+=</span> <span class="n">ind</span><span class="o">.</span><span class="n">farm_size</span>
+        <span class="c1"># Now divide by number of individuals to get mean:</span>
+        <span class="n">real_mean</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+        <span class="n">adaption_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_income_or_farmsize</span> <span class="o">/</span> <span class="n">real_mean</span>
+        <span class="n">adaption</span> <span class="o">=</span> <span class="n">adaption_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">adaption_rate</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">:</span>
+            <span class="n">ind</span><span class="o">.</span><span class="n">farm_size</span> <span class="o">*=</span> <span class="n">adaption</span></div>
+
+<div class="viewcode-block" id="SocialSystem.update_timing"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.update_timing">[docs]</a>    <span class="k">def</span> <span class="nf">update_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decide how often income and farm size are adjusted.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="SocialSystem.do_update"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.do_update">[docs]</a>    <span class="k">def</span> <span class="nf">do_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Do the adjustment of income or farmsize&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_incomes</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;incomes updated of social_system&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">municipality_like</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_farmsizes</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;farmsizes updated of social_system&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SocialSystemTypeError</span><span class="p">(</span><span class="s1">&#39;Neither County nor Municipality!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SocialSystem.calculate_mean_income_or_farmsize"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.calculate_mean_income_or_farmsize">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_mean_income_or_farmsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate mean income (if municipality) or farm size (county).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">municipality_like</span><span class="p">:</span>
+                <span class="c1"># in case of municipality</span>
+                <span class="n">total_income</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_mean_income</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">scaling_parameter</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mean_income_or_farmsize</span> <span class="o">=</span> <span class="n">total_income</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">municipality_like</span><span class="p">:</span>
+                <span class="c1"># in case of county</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_cells</span><span class="p">:</span>
+                    <span class="c1"># mean farm size:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mean_income_or_farmsize</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">land_area</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span></div>
+
+<div class="viewcode-block" id="SocialSystem.calculate_average_liquidity"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.calculate_average_liquidity">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_average_liquidity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate average liquidity of social_system.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+            <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">:</span>
+                <span class="nb">sum</span> <span class="o">+=</span> <span class="n">ind</span><span class="o">.</span><span class="n">liquidity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">average_liquidity</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This should not happen, but apparently does nevertheless...</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">average_liquidity</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="SocialSystem.calculate_average_utility"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.calculate_average_utility">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_average_utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the average utility in this social_system.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+            <span class="n">summe</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">:</span>
+                <span class="n">summe</span> <span class="o">+=</span> <span class="n">ind</span><span class="o">.</span><span class="n">utility</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">average_utility</span> <span class="o">=</span> <span class="n">summe</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span></div>
+
+<div class="viewcode-block" id="SocialSystem.calculate_gini"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.calculate_gini">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_gini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the gini coefficient of the utility. </span>
+<span class="sd">        </span>
+<span class="sd">        This is using the Relative mean absolute difference:</span>
+<span class="sd">        https://en.wikipedia.org/wiki/Mean_absolute_difference#Relative_mean_absolute_difference</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Mean absolute difference</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+            <span class="n">utilities</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individuals</span><span class="p">:</span>
+                <span class="n">utilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">utility</span><span class="p">)</span>
+            <span class="n">mad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">utilities</span><span class="p">,</span> <span class="n">utilities</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="c1"># Relative mean absolute difference</span>
+            <span class="n">rmad</span> <span class="o">=</span> <span class="n">mad</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">utilities</span><span class="p">)</span>
+            <span class="c1"># Gini coefficient</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gini_coefficient</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rmad</span></div>
+
+<div class="viewcode-block" id="SocialSystem.calculate_migration_rate"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystem.calculate_migration_rate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_migration_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unused_t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate migration rates&quot;&quot;&quot;</span>
+        <span class="c1"># First time this is called, a list of length of number of social</span>
+        <span class="c1"># systems is generated:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">social_systems</span><span class="p">)</span>
+
+        <span class="c1"># Every time this is called, this list needs to be reset:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># The two above steps are not performed as one, since some social</span>
+        <span class="c1"># systems might be deactivated during run, resulting in a new length</span>
+        <span class="c1"># for the list.</span>
+
+        <span class="c1"># Now copy this list for theoretical migration rates:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theoretical_mig_rate</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+            <span class="c1"># print(self.migration_counter)</span>
+            <span class="n">tot_tries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">migration_counter</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># total number of tries</span>
+            <span class="n">mig_attempts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">migration_counter</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># list of social systems where attempted</span>
+            <span class="n">mig_moves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">migration_counter</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># list of social system where success</span>
+
+            <span class="c1"># for the following to work, it is important, that we know the</span>
+            <span class="c1"># smallest uid of the social systems and all other social systems</span>
+            <span class="c1"># have following uids!</span>
+            <span class="n">min_uid</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ss</span><span class="o">.</span><span class="n">_uid</span> <span class="k">for</span> <span class="n">ss</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">social_systems</span><span class="p">)</span>
+            <span class="c1"># attempted moves:</span>
+            <span class="n">attempt_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">mig_attempts</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">soc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">attempt_list</span><span class="p">):</span>
+                    <span class="c1"># since uids start with min_uid, we need to add it:</span>
+                    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">min_uid</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;]&#39;</span><span class="p">):</span>
+                        <span class="n">attempt_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># successful moves:</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">mig_moves</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">soc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">):</span>
+                    <span class="c1"># print(i)</span>
+                    <span class="c1"># since uids start with min_uid, we need to add it:</span>
+                    <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">_uid</span> <span class="o">==</span> <span class="n">i</span><span class="o">+</span><span class="n">min_uid</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># Now divide success by attempts</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="c1"># If probability is needed, following is needed:</span>
+                    <span class="c1">#  self.migration_rates[i] = (self.migration_rates[i]</span>
+                    <span class="c1">#                             / attempt_list[i])</span>
+                <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+                    <span class="c1"># Both entries 0</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># Theoretical Calculation:</span>
+            <span class="k">for</span> <span class="n">ss</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">social_systems</span><span class="p">:</span>
+                <span class="c1"># Put in values according to the uids. Since uids start with</span>
+                <span class="c1"># min_uid, we have to account for that by subtracting it:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">theoretical_mig_rate</span><span class="p">[(</span><span class="n">ss</span><span class="o">.</span><span class="n">_uid</span><span class="o">-</span><span class="n">min_uid</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span>
+                    <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ss</span><span class="o">.</span><span class="n">average_liquidity</span><span class="p">)</span>
+                    <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">average_liquidity</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">water_price</span> <span class="o">*</span> <span class="mi">1240</span><span class="p">)))</span> <span class="o">*</span> <span class="n">attempt_list</span><span class="p">[(</span><span class="n">ss</span><span class="o">.</span><span class="n">_uid</span><span class="o">-</span><span class="n">min_uid</span><span class="p">)]</span>
+                <span class="c1"># if probability is wanted, leave out * attempt_list[(ss._uid-min_uid)]</span>
+            <span class="c1"># 1240 is the water need, also set in Individual.calculate_utility</span>
+            <span class="c1"># print(self.migration_rates, self.theoretical_mig_rate)</span>
+            <span class="c1"># reset migration counter for next step:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">migration_counter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[]]</span></div>
+            <span class="c1">#print(self.migration_counter)</span>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s1">&#39;calculate population&#39;</span><span class="p">,</span>
+                 <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">population</span><span class="p">,</span>
+                  <span class="c1"># Following is only done to determine if soc is a city or</span>
+                  <span class="c1"># not afterwards, since this is not saved otherwise:</span>
+                  <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">municipality_like</span><span class="p">],</span>
+                 <span class="n">calc_population</span><span class="p">),</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s1">&#39;calculate mean income or farmsize&#39;</span><span class="p">,</span>
+                 <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">mean_income_or_farmsize</span><span class="p">],</span>
+                 <span class="n">calculate_mean_income_or_farmsize</span><span class="p">),</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;Calculate average liquidities&quot;</span><span class="p">,</span>
+                 <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">average_liquidity</span><span class="p">],</span>
+                 <span class="n">calculate_average_liquidity</span><span class="p">),</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;Calculate average utilities&quot;</span><span class="p">,</span>
+                 <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">average_utility</span><span class="p">],</span>
+                 <span class="n">calculate_average_utility</span><span class="p">),</span>
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;Calculate gini&quot;</span><span class="p">,</span>
+                 <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">gini_coefficient</span><span class="p">],</span>
+                 <span class="n">calculate_gini</span><span class="p">),</span>
+        <span class="n">Step</span><span class="p">(</span><span class="s2">&quot;Calculate Migration Rates&quot;</span><span class="p">,</span>
+             <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">migration_rates</span><span class="p">,</span>
+              <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">theoretical_mig_rate</span><span class="p">],</span>
+             <span class="p">[</span><span class="n">update_timing</span><span class="p">,</span> <span class="n">calculate_migration_rate</span><span class="p">]),</span>
+        <span class="n">Step</span><span class="p">(</span><span class="s2">&quot;Update incomes/farmsizes&quot;</span><span class="p">,</span>
+             <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">individuals</span><span class="o">.</span><span class="n">farm_size</span><span class="p">,</span>
+              <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">individuals</span><span class="o">.</span><span class="n">gross_income</span><span class="p">],</span>
+             <span class="p">[</span><span class="n">update_timing</span><span class="p">,</span> <span class="n">do_update</span><span class="p">])</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SocialSystemTypeError"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.exodus.implementation.html#pycopancore.model_components.exodus.implementation.social_system.SocialSystemTypeError">[docs]</a><span class="k">class</span> <span class="nc">SocialSystemTypeError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Error Class if wrong type of social_system.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

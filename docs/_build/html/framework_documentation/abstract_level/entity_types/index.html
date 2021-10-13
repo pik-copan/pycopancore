@@ -1,0 +1,161 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Entity-types in the copan:CORE base model &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Entity-type “World”" href="world.html" />
+    <link rel="prev" title="Language, basic terminology, and concepts" href="../language_terminology_concepts.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="entity-types-in-the-copan-core-base-model">
+<h1>Entity-types in the copan:CORE base model<a class="headerlink" href="#entity-types-in-the-copan-core-base-model" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="entity-or-attribute">
+<h2>Entity or attribute?<a class="headerlink" href="#entity-or-attribute" title="Permalink to this headline">¶</a></h2>
+<p>We try to keep the number of explicitly considered entity types manageably small
+and thus choose to model some relevant things that occur in the real world not as separate entities
+but rather as <em>attributes</em> of other entities.</p>
+<p>As a rule of thumb, things that can occur in <em>a priori unknown and maybe changing numbers</em> (e.g., individuals)
+will be modeled as entities,
+whereas things that typically occur <em>only once or only once for each entity of some type</em> (e.g., an individual’s bank account)
+are modeled as attributes of the latter entity-type.</p>
+<p>A notable exception is the entity type <em>“world”</em>.
+Although it will typically (but not necessarily) only have one instance (“the world”),
+it is introduced so that all other things a model typically considers to be <em>singular</em>
+(e.g., the global trade network or the well-mixed atmospheric carbon stock)
+can be modelled as attributes of the world entity.</p>
+<p>In addition to the entity-type <a class="reference internal" href="world.html"><span class="doc">“world”</span></a>,
+the copan:CORE base model currently provides the three main entity-types
+<a class="reference internal" href="cell.html"><span class="doc">“cell”</span></a>, <span class="xref std std-doc">“social system”</span>, and <a class="reference internal" href="individual.html"><span class="doc">“individual”</span></a>
+that are meant to be the main subjects and objects
+of the three process taxons
+<a class="reference internal" href="../process_taxonomy/environment.html"><span class="doc">“environment”</span></a>,
+<a class="reference internal" href="../process_taxonomy/social_metabolism.html"><span class="doc">“social metabolism”</span></a>,
+and <a class="reference internal" href="../process_taxonomy/culture.html"><span class="doc">“culture”</span></a>,
+although modelers are free to attach, say, a cultural process to a social system or cell,
+or an environmental process to an indivudual, etc.</p>
+<p>In addition to these, we may provide further entity-types in the future, such as
+<a class="reference internal" href="household.html"><span class="doc">“household”</span></a>, <a class="reference internal" href="group.html"><span class="doc">“group”</span></a> and <a class="reference internal" href="firm.html"><span class="doc">“firm”</span></a>
+since they will likely be needed by some more detailed social-metabolic model components.</p>
+<p>During a model run, entities may come into existence
+(individual may be born, groups and firms may be founded, social systems may merge into larger ones)
+or cease to exist (individuals may die, firms may be terminated, social systems may collapse).</p>
+</div>
+<div class="section" id="basic-relationships">
+<h2>Basic relationships<a class="headerlink" href="#basic-relationships" title="Permalink to this headline">¶</a></h2>
+<p>The following UML diagram shows the basic relationships between the entities of the different types:</p>
+<a class="reference internal image-reference" href="../../../_images/basic_relationships.png"><img alt="../../../_images/basic_relationships.png" src="../../../_images/basic_relationships.png" style="width: 1195.2px; height: 1204.0px;" /></a>
+<p><a class="reference download internal" href="../../../_downloads/basic_relationships.pdf" download=""><code class="xref download docutils literal"><span class="pre">Here</span></code></a> is the pdf version of the image.</p>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="world.html">Entity-type “World”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cell.html">Entity-type “Cell”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="social_system.html">Entity-type “Social System”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="individual.html">Entity-type “Individual”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="household.html">Entity-type “Household”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="group.html">Entity-type “Group”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firm.html">Entity-type “Firm”</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Framework documentation</a><ul>
+  <li><a href="../index.html">Abstract description of the copan:CORE modeling framework</a><ul>
+      <li>Previous: <a href="../language_terminology_concepts.html" title="previous chapter">Language, basic terminology, and concepts</a></li>
+      <li>Next: <a href="world.html" title="next chapter">Entity-type “World”</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/framework_documentation/abstract_level/entity_types/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../../_sources/framework_documentation/abstract_level/entity_types/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

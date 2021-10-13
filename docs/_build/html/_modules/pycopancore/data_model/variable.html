@@ -1,0 +1,769 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.data_model.variable &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.data_model.variable</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A class to define model variables, inherits from Symbol.</span>
+
+<span class="sd">Each Variable can be connected to any number of entity types and/or process</span>
+<span class="sd">taxa.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="n">Symbol</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">DimensionalQuantity</span><span class="p">,</span> <span class="n">Unit</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">private</span>
+
+
+<span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-10</span>
+<span class="sd">&quot;&quot;&quot;infinitesimal value for ensuring strict bounds&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="Variable"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable">[docs]</a><span class="k">class</span> <span class="nc">Variable</span><span class="p">(</span><span class="n">Symbol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Metadata object representing a model variable or parameter.&quot;&quot;&quot;</span>
+
+    <span class="c1"># standard metadata:</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;human-readable name to be used as label etc.&quot;&quot;&quot;</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;longer description text&quot;&quot;&quot;</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;mathematical symbol or abbrev. to be used as a short label&quot;&quot;&quot;</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;some URI, e.g. a wikipedia page&quot;&quot;&quot;</span>
+
+    <span class="n">scale</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;level of measurement: &quot;ratio&quot; (default), &quot;interval&quot;, &quot;ordinal&quot;,</span>
+<span class="sd">    or &quot;nominal&quot; (see https://en.wikipedia.org/wiki/Level_of_measurement)&quot;&quot;&quot;</span>
+
+    <span class="n">readonly</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;whether variable is read-only, e.g. holding redundant information&quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="n">private</span><span class="o">.</span><span class="n">unset</span>  <span class="c1"># can&#39;t use None since None is a possible default value</span>
+    <span class="sd">&quot;&quot;&quot;default initial value&quot;&quot;&quot;</span>
+    <span class="n">uninformed_prior</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;random value generator (probability distribution)</span>
+<span class="sd">    if nothing else is known about the value&quot;&quot;&quot;</span>
+
+    <span class="c1"># catalog references:</span>
+
+    <span class="n">CF</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;corresponding CF Standard Name</span>
+<span class="sd">    (http://cfconventions.org/Data/cf-standard-names)&quot;&quot;&quot;</span>
+    <span class="n">AMIP</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;corresponding AMIP2 variable name</span>
+<span class="sd">    (http://pcmdi.github.io/projects/amip/OUTPUT/AMIP2/outlist.html)&quot;&quot;&quot;</span>
+    <span class="n">IAMC</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;corresponding IAMC variable name</span>
+<span class="sd">    (https://tntcat.iiasa.ac.at/ADVANCEWP1DB/static/download/Diagnostics_template_2015-08-12.xlsx)&quot;&quot;&quot;</span>
+    <span class="n">CETS</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;corresponding World Bank CETS code</span>
+<span class="sd">    (https://databank.worldbank.org/data/download/site-content/WDI_CETS.xls)&quot;&quot;&quot;</span>
+
+    <span class="c1"># data type and constraints:</span>
+
+    <span class="n">datatype</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;e.g. float, integer, numpy.ndarray, networkx.Graph, ...&quot;&quot;&quot;</span>
+    <span class="n">array_shape</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;if numpy array, specifies its shape&quot;&quot;&quot;</span>
+    <span class="n">allow_none</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;whether None is an allowed value&quot;&quot;&quot;</span>
+    <span class="n">lower_bound</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;(inclusive, value must be &gt;=)&quot;&quot;&quot;</span>
+    <span class="n">strict_lower_bound</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;(exclusive, value must be &gt;)&quot;&quot;&quot;</span>
+    <span class="n">upper_bound</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;(inclusive, value must be &lt;=)&quot;&quot;&quot;</span>
+    <span class="n">strict_upper_bound</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;(exclusive, value must be &lt;)&quot;&quot;&quot;</span>
+    <span class="n">quantum</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;values must be integer multiples of this&quot;&quot;&quot;</span>
+
+    <span class="c1"># scale-specific metadata:</span>
+
+    <span class="n">unit</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;a pycopancore.data_model.Unit (only for ratio- or interval-scaled)&quot;&quot;&quot;</span>
+    <span class="n">is_extensive</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;whether variable scales proportionally with system size</span>
+<span class="sd">    (only for ratio-scaled)&quot;&quot;&quot;</span>
+    <span class="n">is_intensive</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;whether variable must remain invariant when doubling system&quot;&quot;&quot;</span>
+
+    <span class="c1"># if &quot;ordinal&quot; or &quot;nominal&quot;:</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># values must be element of this</span>
+
+    <span class="c1"># attributes needed for internal framework logics, </span>
+    <span class="c1"># set by Model.configure():</span>
+
+    <span class="n">owning_class</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;the class owning the Variable as its attribute&quot;&quot;&quot;</span>
+    <span class="n">codename</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;the attribute name of the Variable in its owning class&quot;&quot;&quot;</span>
+    <span class="n">explicit_dependencies</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;set of Vars. in the RHS of the explicit equation setting this Var.&quot;&quot;&quot;</span>
+    <span class="n">ODE_dependencies</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;set of Vars. in the RHS of any ODE changing this Var.&quot;&quot;&quot;</span>
+    <span class="c1"># TODO: similar for Step, Event. How to deal with Implicit?</span>
+
+    <span class="n">_uid</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;unique id&quot;&quot;&quot;</span>
+
+    <span class="c1"># needed to make sympy and expressions happy:</span>
+    <span class="n">_iterable</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_can_be_target</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># needed to make sphinx happy:</span>
+    <span class="vm">__qualname__</span> <span class="o">=</span> <span class="s2">&quot;pycopancore.data_model.master_data_model.variable.Variable&quot;</span>
+
+    <span class="c1"># standard methods:</span>
+
+    <span class="c1"># inheritance from Symbol is a little tricky since Symbol has a custom</span>
+    <span class="c1"># __new__ method that returns the same object everytime the name is the</span>
+    <span class="c1"># same! We break this behaviour by using random Symbol.names so that we</span>
+    <span class="c1"># can multiple copies of a Variable having the same name, to be attached</span>
+    <span class="c1"># to different entity types:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">assumptions</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
+                               <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()),</span>
+                               <span class="o">**</span><span class="n">assumptions</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">name</span><span class="p">,</span>
+                 <span class="n">desc</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">symbol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s2">&quot;ratio&quot;</span><span class="p">,</span>
+                 <span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="n">private</span><span class="o">.</span><span class="n">unset</span><span class="p">,</span>
+                 <span class="n">uninformed_prior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">CF</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">AMIP</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">IAMC</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">CETS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                 <span class="n">array_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">allow_none</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">strict_lower_bound</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">upper_bound</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">strict_upper_bound</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">quantum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">is_intensive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">levels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span>
+                 <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># store unique &quot;name&quot; given by sympy in _uid:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_uid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref</span> <span class="o">=</span> <span class="n">ref</span>
+
+        <span class="k">assert</span> <span class="n">scale</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ratio&quot;</span><span class="p">,</span> <span class="s2">&quot;interval&quot;</span><span class="p">,</span> <span class="s2">&quot;ordinal&quot;</span><span class="p">,</span> <span class="s2">&quot;nominal&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;scale must be ratio, interval, ordinal, or nominal&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">readonly</span> <span class="o">=</span> <span class="n">readonly</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">CF</span> <span class="o">=</span> <span class="n">CF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMIP</span> <span class="o">=</span> <span class="n">AMIP</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">IAMC</span> <span class="o">=</span> <span class="n">IAMC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CETS</span> <span class="o">=</span> <span class="n">CETS</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datatype</span> <span class="o">=</span> <span class="n">datatype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_shape</span> <span class="o">=</span> <span class="n">array_shape</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">default</span><span class="o">.</span><span class="n">unit</span>
+        <span class="k">elif</span> <span class="n">unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span> <span class="n">Unit</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="n">lower_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span> <span class="o">=</span> <span class="n">strict_lower_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="n">upper_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span> <span class="o">=</span> <span class="n">strict_upper_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantum</span> <span class="o">=</span> <span class="n">quantum</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">is_extensive</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">is_intensive</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">),</span> \
+            <span class="s2">&quot;cannot be both extensive and intensive&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_extensive</span> <span class="o">=</span> <span class="n">is_extensive</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_intensive</span> <span class="o">=</span> <span class="n">is_intensive</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="n">levels</span>
+
+        <span class="k">if</span> <span class="n">readonly</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">private</span><span class="o">.</span><span class="n">unset</span>
+            <span class="k">assert</span> <span class="n">uninformed_prior</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">allow_none</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">private</span><span class="o">.</span><span class="n">unknown</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">allow_none</span> <span class="o">=</span> <span class="n">allow_none</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uninformed_prior</span> <span class="o">=</span> <span class="n">uninformed_prior</span>
+
+<div class="viewcode-block" id="Variable.copy"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">newkwargs</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span>
+                <span class="s2">&quot;ref&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span>
+                <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
+                <span class="s2">&quot;readonly&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">readonly</span><span class="p">,</span>
+                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">,</span>
+                <span class="s2">&quot;uninformed_prior&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">uninformed_prior</span><span class="p">,</span>
+                <span class="s2">&quot;CF&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">CF</span><span class="p">,</span>
+                <span class="s2">&quot;AMIP&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">AMIP</span><span class="p">,</span>
+                <span class="s2">&quot;IAMC&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">IAMC</span><span class="p">,</span>
+                <span class="s2">&quot;CETS&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">CETS</span><span class="p">,</span>
+                <span class="s2">&quot;datatype&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">datatype</span><span class="p">,</span>
+                <span class="s2">&quot;array_shape&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_shape</span><span class="p">,</span>
+                <span class="s2">&quot;allow_none&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_none</span><span class="p">,</span>
+                <span class="s2">&quot;lower_bound&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">,</span>
+                <span class="s2">&quot;strict_lower_bound&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span><span class="p">,</span>
+                <span class="s2">&quot;upper_bound&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">,</span>
+                <span class="s2">&quot;strict_upper_bound&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span><span class="p">,</span>
+                <span class="s2">&quot;quantum&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum</span><span class="p">,</span>
+                <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span>
+                <span class="s2">&quot;is_extensive&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_extensive</span><span class="p">,</span>
+                <span class="s2">&quot;is_intensive&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_intensive</span><span class="p">,</span>
+                <span class="s2">&quot;levels&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span>
+            <span class="p">}</span>
+        <span class="n">newkwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">desc</span><span class="p">,</span> <span class="o">**</span><span class="n">newkwargs</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default</span>
+        
+    <span class="nd">@default</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">private</span><span class="o">.</span><span class="n">unset</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assert_valid</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+<span class="c1">#        return (self.owning_class.__name__ + &quot;.&quot; + self.codename) \</span>
+<span class="c1">#                if self.owning_class \</span>
+<span class="c1">#                else self.name + &quot;(uid=&quot; + self._uid + &quot;)&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="c1">#        return (self.owning_class.__name__ + &quot;.&quot; + self.codename) \</span>
+<span class="c1">#            if self.owning_class \</span>
+<span class="c1">#            else self.name + &quot;(uid=&quot; + self._uid + &quot;)&quot;</span>
+        <span class="c1"># dirty fix for lengthy output</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="s2">&quot;read-only &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">readonly</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;extensive &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_extensive</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;intensive &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_intensive</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;variable &#39;&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, ref=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">CF</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, CF=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">CF</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">AMIP</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, AMIP=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">AMIP</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">IAMC</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, IAMC=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">IAMC</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">CETS</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, CETS=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">CETS</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, symbol=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_none</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, not None&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, scale=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">datatype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, datatype=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datatype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, unit=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, % &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantum</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; == 0&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, &gt;=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, &gt;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, &lt;=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, &lt;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, levels=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="s2">&quot;, shape=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_shape</span><span class="p">)</span>
+<span class="c1"># FIXME: the following was commented out as a dirty fix of the AttributeError </span>
+<span class="c1"># in run_example1.py:</span>
+<span class="c1">#        if self.default is not private.unset:</span>
+<span class="c1">#            r += &quot;, default=&quot; + str(self.default)</span>
+        <span class="k">return</span> <span class="n">r</span> <span class="c1"># + &quot; (uid=&quot; + str(self._uid) + &quot;)&quot;</span>
+
+    <span class="c1"># validation:</span>
+
+    <span class="k">def</span> <span class="nf">_check_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;check validity of candidate value&quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">private</span><span class="o">.</span><span class="n">unset</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; has no value set&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">array_shape</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> \
+                    <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; array shape must be &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_shape</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_valid</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">res</span>
+
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_none</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; may not be None&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+<span class="c1"># FIXME: the following was commented out since it does not accept 0 as float:</span>
+<span class="c1">#            if self.datatype is not None:</span>
+<span class="c1">#                if not isinstance(v, self.datatype):</span>
+<span class="c1">#                    return False, \</span>
+<span class="c1">#                        str(self) + &quot; must be instance of &quot; + \</span>
+<span class="c1">#                        str(self.datatype)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> \
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; must be &gt;= &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> \
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; must be &gt; &quot;</span> <span class="o">+</span> \
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> \
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; must be &lt;= &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> \
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; must be &lt; &quot;</span> <span class="o">+</span> \
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> \
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; must be integer number of &quot;</span> \
+                        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantum</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> \
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; must be in &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># TODO: improve docstring</span>
+<div class="viewcode-block" id="Variable.is_valid"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Is valid.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">number</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_valid</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Variable.assert_valid"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.assert_valid">[docs]</a>    <span class="k">def</span> <span class="nf">assert_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make sure by assertion that value is valid&quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_valid</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">res</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+    <span class="c1"># &quot;getters&quot; and &quot;setters&quot;:</span>
+
+<div class="viewcode-block" id="Variable.set_value"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.set_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set value for some instance,</span>
+<span class="sd">        possibly performing conversion to correct unit</span>
+<span class="sd">        if value is a DimensionalQuantity,</span>
+<span class="sd">        otherwise using own default unit&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">number</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
+<span class="c1">#        self.assert_valid(value)</span>
+<span class="c1">#         print(f&#39;in set_value, instance {instance} &#39;</span>
+<span class="c1">#               f&#39;and value {value}&#39;</span>
+<span class="c1">#               f&#39; and codename is {self.codename}&#39;)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Variable.__setitem__"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.__setitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;magic method allowing access to instance values via var[instance]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Variable.convert_to_standard_units"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.convert_to_standard_units">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_standard_units</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># if None: all entities/taxa</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert to standart units.</span>
+
+<span class="sd">        Replace all variable values of type DimensionalQuantity</span>
+<span class="sd">        to float using the standard unit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">instances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>  <span class="c1"># does the conversion</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>  <span class="c1"># does the conversion</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;converts argument into a set of instances</span>
+<span class="sd">        (entities or process taxa)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">instances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># use all that have this variable</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>  <span class="c1"># use all that appear in keys or values</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">instances</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="n">instances</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span>
+                        <span class="p">(</span><span class="n">private</span><span class="o">.</span><span class="n">_AbstractEntityMixin</span><span class="p">,</span>
+                         <span class="n">private</span><span class="o">.</span><span class="n">_AbstractProcessTaxonMixin</span><span class="p">)):</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">instances</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span>
+
+<div class="viewcode-block" id="Variable.set_to_default"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.set_to_default">[docs]</a>    <span class="k">def</span> <span class="nf">set_to_default</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># if None: all entities/taxa</span>
+        <span class="sd">&quot;&quot;&quot;Set values in selected entities to default if a default was given&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="n">private</span><span class="o">.</span><span class="n">unset</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">instances</span><span class="p">:</span>  <span class="c1"># Maybe variables owning class has no instances!</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Variable.set_to_random"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.set_to_random">[docs]</a>    <span class="k">def</span> <span class="nf">set_to_random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># if None: all entities/taxa</span>
+                      <span class="n">distribution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># if None: self.uninformed_prior</span>
+                      <span class="o">*</span><span class="p">,</span>
+                      <span class="n">p</span><span class="o">=</span><span class="mi">1</span>
+                      <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set values in selected entities to random value.</span>
+<span class="sd">        If distribution=None, use uninformed_prior.</span>
+<span class="sd">        If optional p is given, replace current value only with probability p.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">distribution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">distribution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uninformed_prior</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">distribution</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Variable.add_noise"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.add_noise">[docs]</a>    <span class="k">def</span> <span class="nf">add_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># if None: all entities/taxa</span>
+                  <span class="n">distribution</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">,</span> <span class="c1"># basic noise distribution</span>
+                  <span class="o">*</span><span class="p">,</span>
+                  <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="c1"># scale factor</span>
+                  <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="c1"># location offset</span>
+                  <span class="n">multiplicative</span><span class="o">=</span><span class="kc">False</span>
+                  <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set values in selected entities to random value.</span>
+<span class="sd">        If distribution=None, use uninformed_prior.</span>
+<span class="sd">        If optional p is given, replace current value only with probability p.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ratio&quot;</span><span class="p">,</span> <span class="s2">&quot;interval&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;can only add noise to ratio or interval scaled variables&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">noise</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">distribution</span><span class="p">()</span> <span class="o">+</span> <span class="n">offset</span>
+            <span class="k">if</span> <span class="n">multiplicative</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">*=</span> <span class="n">noise</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">+=</span> <span class="n">noise</span>
+            <span class="c1"># enforce bounds and quantization</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_lower_bound</span> <span class="o">+</span> <span class="n">EPS</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">strict_upper_bound</span> <span class="o">-</span> <span class="n">EPS</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum</span>
+            <span class="c1"># TODO: deal with possible interferences between bounds and quantum</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Variable.fast_set_values"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.fast_set_values">[docs]</a>    <span class="k">def</span> <span class="nf">fast_set_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;fast-track method to set values without checks and conversions&quot;&quot;&quot;</span>
+        <span class="n">cn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span>
+        <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Variable.set_values"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.set_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                   <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="o">*</span><span class="p">,</span>
+                   <span class="n">dictionary</span><span class="o">=</span><span class="kc">None</span>
+                   <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set values for the variable.</span>
+
+<span class="sd">        This function set values for the variable. If given a list of entities,</span>
+<span class="sd">        it sets values for all of them.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dictionary : dictionary</span>
+<span class="sd">            Optional dictionary of variable values keyed by Entity</span>
+<span class="sd">            object (e.g. {cell:location, individual:age}, ...)</span>
+<span class="sd">        instances : list</span>
+<span class="sd">            List of entities/process taxa</span>
+<span class="sd">        values : list/array</span>
+<span class="sd">            Optional corresponding list or array of values</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dictionary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+                <span class="c1">#</span>
+                <span class="c1"># Following assert statements need _AbstractEntityMixin. We</span>
+                <span class="c1"># maybe should move them into the test environment:</span>
+                <span class="c1"># assert isinstance(e, _AbstractEntityMixin), /</span>
+                <span class="c1"># &quot;key is not a model entity&quot;</span>
+                <span class="c1"># assert hastattr(e, self.codename), /</span>
+                <span class="c1"># &quot;variable is not contained in entity&quot;</span>
+                <span class="c1">#</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">instances</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Variable.clear_derivatives"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.clear_derivatives">[docs]</a>    <span class="k">def</span> <span class="nf">clear_derivatives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="o">*</span><span class="p">,</span>
+                          <span class="n">instances</span><span class="o">=</span><span class="kc">None</span>
+                          <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set all derivatives to zero.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : list</span>
+<span class="sd">            List of the entities</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;d_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Variable.get_derivatives"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.get_derivatives">[docs]</a>    <span class="k">def</span> <span class="nf">get_derivatives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">instances</span><span class="o">=</span><span class="kc">None</span>
+                        <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of derivatives saved in entities.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances : list</span>
+<span class="sd">            List of entities/process taxa</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;d_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Variable.add_derivatives"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.add_derivatives">[docs]</a>    <span class="k">def</span> <span class="nf">add_derivatives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;adds summands to referenced attribute values&quot;&quot;&quot;</span>
+        <span class="n">dname</span> <span class="o">=</span> <span class="s2">&quot;d_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span>
+        <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_instances</span><span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">dname</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">dname</span><span class="p">)</span> <span class="o">+</span> <span class="n">values</span><span class="p">[</span><span class="n">pos</span><span class="p">])</span></div>
+
+    <span class="c1"># TODO: improve docstring</span>
+<div class="viewcode-block" id="Variable.get_value"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get value.&quot;&quot;&quot;</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Variable</span><span class="p">),</span> \
+            <span class="s2">&quot;Variable &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; uninitialized at instance &quot;</span> \
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span> <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Variable.get_quantity"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.get_quantity">[docs]</a>    <span class="k">def</span> <span class="nf">get_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span>
+        <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">),</span> <span class="n">unit</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Variable.__getitem__"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.__getitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;magic method allowing access to instance values via var[instance]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Variable.eval"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.variable.Variable.eval">[docs]</a>    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+             <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="o">*</span><span class="p">,</span>
+             <span class="n">unit</span><span class="o">=</span><span class="kc">None</span>
+             <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return values for given entities,</span>
+<span class="sd">        optionally in a different unit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instances: iterable</span>
+<span class="sd">            List of entities/process taxa</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List of variable value of each entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="c1">#        return [self.get_value(inst, unit=unit) for inst in instances]  # too slow...</span>
+        <span class="k">if</span> <span class="n">instances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codename</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">cn</span><span class="p">)</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">]</span></div>
+
+    <span class="c1"># TODO: improve subsequent doctstrings</span>
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">target_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Target class.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span>
+
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">target_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Target variable.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">target_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Target instances.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span>
+
+    <span class="c1"># stuff needed if Variable occurs as arg of _DotConstruct:</span>
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">branchings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Branchings.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">)]]</span>
+
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">cardinalities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cardinalities.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">)]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

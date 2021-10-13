@@ -1,0 +1,803 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.data_model package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-data-model-package">
+<h1>pycopancore.data_model package<a class="headerlink" href="#pycopancore-data-model-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pycopancore.data_model.master_data_model.html">pycopancore.data_model.master_data_model package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model.cell">pycopancore.data_model.master_data_model.cell module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model.culture">pycopancore.data_model.master_data_model.culture module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model.dimensions_and_units">pycopancore.data_model.master_data_model.dimensions_and_units module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model.environment">pycopancore.data_model.master_data_model.environment module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model.individual">pycopancore.data_model.master_data_model.individual module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model.metabolism">pycopancore.data_model.master_data_model.metabolism module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model.social_system">pycopancore.data_model.master_data_model.social_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model.world">pycopancore.data_model.master_data_model.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.data_model.master_data_model.html#module-pycopancore.data_model.master_data_model">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.data_model.dimension">
+<span id="pycopancore-data-model-dimension-module"></span><h2>pycopancore.data_model.dimension module<a class="headerlink" href="#module-pycopancore.data_model.dimension" title="Permalink to this headline">¶</a></h2>
+<p>Module for Dimension class.</p>
+<dl class="class">
+<dt id="pycopancore.data_model.dimension.Dimension">
+<em class="property">class </em><code class="descclassname">pycopancore.data_model.dimension.</code><code class="descname">Dimension</code><span class="sig-paren">(</span><em>is_base=True</em>, <em>name=None</em>, <em>desc=None</em>, <em>exponents=None</em>, <em>default_unit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimension.html#Dimension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Dimension class.</p>
+<dl class="method">
+<dt id="pycopancore.data_model.dimension.Dimension.__mul__">
+<code class="descname">__mul__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimension.html#Dimension.__mul__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.__mul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>multiplication *</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.dimension.Dimension.__pow__">
+<code class="descname">__pow__</code><span class="sig-paren">(</span><em>power</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimension.html#Dimension.__pow__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.__pow__" title="Permalink to this definition">¶</a></dt>
+<dd><p>exponentiation **</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.dimension.Dimension.__truediv__">
+<code class="descname">__truediv__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimension.html#Dimension.__truediv__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.__truediv__" title="Permalink to this definition">¶</a></dt>
+<dd><p>division /</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.dimension.Dimension.default_unit">
+<code class="descname">default_unit</code><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.default_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>default Unit</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.dimension.Dimension.desc">
+<code class="descname">desc</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>description</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.dimension.Dimension.exponents">
+<code class="descname">exponents</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.exponents" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict of base Dimension</em> – nonzero exponent</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.dimension.Dimension.is_base">
+<code class="descname">is_base</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.is_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>whether this is a base dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.dimension.Dimension.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>full name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.dimension.Dimension.named">
+<code class="descname">named</code><span class="sig-paren">(</span><em>name</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimension.html#Dimension.named"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimension.Dimension.named" title="Permalink to this definition">¶</a></dt>
+<dd><p>Named.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.data_model.dimensional_quantity">
+<span id="pycopancore-data-model-dimensional-quantity-module"></span><h2>pycopancore.data_model.dimensional_quantity module<a class="headerlink" href="#module-pycopancore.data_model.dimensional_quantity" title="Permalink to this headline">¶</a></h2>
+<p>Module for DimensionalQuantity class.</p>
+<dl class="class">
+<dt id="pycopancore.data_model.dimensional_quantity.DimensionalQuantity">
+<em class="property">class </em><code class="descclassname">pycopancore.data_model.dimensional_quantity.</code><code class="descname">DimensionalQuantity</code><span class="sig-paren">(</span><em>number</em>, <em>unit</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimensional_quantity.html#DimensionalQuantity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimensional_quantity.DimensionalQuantity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Physical or other dimensional quantity given by
+a number of some unit</p>
+<dl class="attribute">
+<dt id="pycopancore.data_model.dimensional_quantity.DimensionalQuantity.dimension">
+<code class="descname">dimension</code><a class="headerlink" href="#pycopancore.data_model.dimensional_quantity.DimensionalQuantity.dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dimension of this quantity</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.dimensional_quantity.DimensionalQuantity.number">
+<code class="descname">number</code><span class="sig-paren">(</span><em>unit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimensional_quantity.html#DimensionalQuantity.number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimensional_quantity.DimensionalQuantity.number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get quantity as a dimensionless number of some (or the default) unit</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.dimensional_quantity.DimensionalQuantity.reduce">
+<code class="descname">reduce</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimensional_quantity.html#DimensionalQuantity.reduce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimensional_quantity.DimensionalQuantity.reduce" title="Permalink to this definition">¶</a></dt>
+<dd><p>return unit as dimensionless if it is nondimensional, else return self</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.dimensional_quantity.DimensionalQuantity.tostr">
+<code class="descname">tostr</code><span class="sig-paren">(</span><em>width=12</em>, <em>decimals=2</em>, <em>unit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/dimensional_quantity.html#DimensionalQuantity.tostr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.dimensional_quantity.DimensionalQuantity.tostr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.dimensional_quantity.DimensionalQuantity.unit">
+<code class="descname">unit</code><a class="headerlink" href="#pycopancore.data_model.dimensional_quantity.DimensionalQuantity.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the unit this quantity is given in</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.data_model.ordered_set">
+<span id="pycopancore-data-model-ordered-set-module"></span><h2>pycopancore.data_model.ordered_set module<a class="headerlink" href="#module-pycopancore.data_model.ordered_set" title="Permalink to this headline">¶</a></h2>
+<p>Module for OrderedSet class.</p>
+<dl class="class">
+<dt id="pycopancore.data_model.ordered_set.OrderedSet">
+<em class="property">class </em><code class="descclassname">pycopancore.data_model.ordered_set.</code><code class="descname">OrderedSet</code><span class="sig-paren">(</span><em>iterable=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/ordered_set.html#OrderedSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.ordered_set.OrderedSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">collections.abc.MutableSet</span></code></p>
+<p>Ordered Set.</p>
+<dl class="method">
+<dt id="pycopancore.data_model.ordered_set.OrderedSet.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/ordered_set.html#OrderedSet.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.ordered_set.OrderedSet.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.ordered_set.OrderedSet.discard">
+<code class="descname">discard</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/ordered_set.html#OrderedSet.discard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.ordered_set.OrderedSet.discard" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.ordered_set.OrderedSet.pop">
+<code class="descname">pop</code><span class="sig-paren">(</span><em>last=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/ordered_set.html#OrderedSet.pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.ordered_set.OrderedSet.pop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.data_model.reference_variable">
+<span id="pycopancore-data-model-reference-variable-module"></span><h2>pycopancore.data_model.reference_variable module<a class="headerlink" href="#module-pycopancore.data_model.reference_variable" title="Permalink to this headline">¶</a></h2>
+<p>Module for ReferenceVariable class.</p>
+<dl class="class">
+<dt id="pycopancore.data_model.reference_variable.ReferenceVariable">
+<em class="property">class </em><code class="descclassname">pycopancore.data_model.reference_variable.</code><code class="descname">ReferenceVariable</code><span class="sig-paren">(</span><em>name</em>, <em>desc</em>, <em>*</em>, <em>type=&lt;class 'object'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/reference_variable.html#ReferenceVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.reference_variable.ReferenceVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pycopancore.data_model.variable.Variable" title="pycopancore.data_model.variable.Variable"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.data_model.variable.Variable</span></code></a></p>
+<p>reference to another entity or process taxon</p>
+<dl class="method">
+<dt id="pycopancore.data_model.reference_variable.ReferenceVariable.__getattr__">
+<code class="descname">__getattr__</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/reference_variable.html#ReferenceVariable.__getattr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.reference_variable.ReferenceVariable.__getattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a _DotConstruct representing a variable of the referenced class</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.reference_variable.ReferenceVariable.default_assumptions">
+<code class="descname">default_assumptions</code><em class="property"> = {}</em><a class="headerlink" href="#pycopancore.data_model.reference_variable.ReferenceVariable.default_assumptions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.reference_variable.ReferenceVariable.type">
+<code class="descname">type</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.reference_variable.ReferenceVariable.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>required type of referred entity or taxon
+(will be adjusted by model.configure to point to composite class
+instead of mixin class)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.data_model.set_variable">
+<span id="pycopancore-data-model-set-variable-module"></span><h2>pycopancore.data_model.set_variable module<a class="headerlink" href="#module-pycopancore.data_model.set_variable" title="Permalink to this headline">¶</a></h2>
+<p>Module for SetVariable class.</p>
+<dl class="class">
+<dt id="pycopancore.data_model.set_variable.SetVariable">
+<em class="property">class </em><code class="descclassname">pycopancore.data_model.set_variable.</code><code class="descname">SetVariable</code><span class="sig-paren">(</span><em>name</em>, <em>desc</em>, <em>*</em>, <em>type=&lt;class 'object'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/set_variable.html#SetVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.set_variable.SetVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pycopancore.data_model.variable.Variable" title="pycopancore.data_model.variable.Variable"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.data_model.variable.Variable</span></code></a></p>
+<p>reference to a set of entities</p>
+<dl class="method">
+<dt id="pycopancore.data_model.set_variable.SetVariable.__getattr__">
+<code class="descname">__getattr__</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/set_variable.html#SetVariable.__getattr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.set_variable.SetVariable.__getattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a _DotConstruct representing a variable of the referenced class</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.set_variable.SetVariable.default_assumptions">
+<code class="descname">default_assumptions</code><em class="property"> = {}</em><a class="headerlink" href="#pycopancore.data_model.set_variable.SetVariable.default_assumptions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.set_variable.SetVariable.type">
+<code class="descname">type</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.set_variable.SetVariable.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>required type of referred entities
+(will be adjusted by model.configure to point to composite class
+instead of mixin class)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.data_model.unit">
+<span id="pycopancore-data-model-unit-module"></span><h2>pycopancore.data_model.unit module<a class="headerlink" href="#module-pycopancore.data_model.unit" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pycopancore.data_model.unit.Unit">
+<em class="property">class </em><code class="descclassname">pycopancore.data_model.unit.</code><code class="descname">Unit</code><span class="sig-paren">(</span><em>name=''</em>, <em>desc=''</em>, <em>*</em>, <em>is_base=True</em>, <em>symbol=None</em>, <em>factor=1</em>, <em>exponents=None</em>, <em>dimension=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/unit.html#Unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.unit.Unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="pycopancore.data_model.unit.Unit.__mul__">
+<code class="descname">__mul__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/unit.html#Unit.__mul__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.unit.Unit.__mul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unit * other returns a unit
+(while non-unit * unit would return a DimensionalQuantity)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.unit.Unit.__pow__">
+<code class="descname">__pow__</code><span class="sig-paren">(</span><em>power</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/unit.html#Unit.__pow__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.unit.Unit.__pow__" title="Permalink to this definition">¶</a></dt>
+<dd><p>exponentiation **</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.unit.Unit.__rmul__">
+<code class="descname">__rmul__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/unit.html#Unit.__rmul__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.unit.Unit.__rmul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>non-unit * unit returns a DimensionalQuantity</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.unit.Unit.__rtruediv__">
+<code class="descname">__rtruediv__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/unit.html#Unit.__rtruediv__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.unit.Unit.__rtruediv__" title="Permalink to this definition">¶</a></dt>
+<dd><p>non-unit / unit returns a DimensionalQuantity</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.unit.Unit.__truediv__">
+<code class="descname">__truediv__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/unit.html#Unit.__truediv__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.unit.Unit.__truediv__" title="Permalink to this definition">¶</a></dt>
+<dd><p>unit / other returns a unit
+(while non-unit / unit would return a DimensionalQuantity)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.unit.Unit.convert">
+<code class="descname">convert</code><span class="sig-paren">(</span><em>number</em>, <em>unit</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/unit.html#Unit.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.unit.Unit.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.unit.Unit.desc">
+<code class="descname">desc</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.unit.Unit.desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>description</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.unit.Unit.dimension">
+<code class="descname">dimension</code><a class="headerlink" href="#pycopancore.data_model.unit.Unit.dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>corresponding Dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.unit.Unit.exponents">
+<code class="descname">exponents</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.unit.Unit.exponents" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict of base Unit</em> – nonzero exponent</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.unit.Unit.factor">
+<code class="descname">factor</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.unit.Unit.factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>scalar factor in front of product of powers of base Units</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.unit.Unit.is_base">
+<code class="descname">is_base</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.unit.Unit.is_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>whether this is a base unit</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.unit.Unit.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.unit.Unit.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>full name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.unit.Unit.named">
+<code class="descname">named</code><span class="sig-paren">(</span><em>name</em>, <em>desc=None</em>, <em>*</em>, <em>symbol=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/unit.html#Unit.named"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.unit.Unit.named" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.unit.Unit.symbol">
+<code class="descname">symbol</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.unit.Unit.symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>symbol</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.data_model.variable">
+<span id="pycopancore-data-model-variable-module"></span><h2>pycopancore.data_model.variable module<a class="headerlink" href="#module-pycopancore.data_model.variable" title="Permalink to this headline">¶</a></h2>
+<p>A class to define model variables, inherits from Symbol.</p>
+<p>Each Variable can be connected to any number of entity types and/or process
+taxa.</p>
+<dl class="data">
+<dt id="pycopancore.data_model.variable.EPS">
+<code class="descclassname">pycopancore.data_model.variable.</code><code class="descname">EPS</code><em class="property"> = 1e-10</em><a class="headerlink" href="#pycopancore.data_model.variable.EPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>infinitesimal value for ensuring strict bounds</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.data_model.variable.Variable">
+<em class="property">class </em><code class="descclassname">pycopancore.data_model.variable.</code><code class="descname">Variable</code><span class="sig-paren">(</span><em>name</em>, <em>desc</em>, <em>*</em>, <em>symbol=None</em>, <em>ref=None</em>, <em>scale='ratio'</em>, <em>readonly=False</em>, <em>default=&lt;pycopancore.private._expressions._Unset object&gt;</em>, <em>uninformed_prior=None</em>, <em>CF=None</em>, <em>AMIP=None</em>, <em>IAMC=None</em>, <em>CETS=None</em>, <em>datatype=&lt;class 'float'&gt;</em>, <em>array_shape=None</em>, <em>allow_none=False</em>, <em>lower_bound=None</em>, <em>strict_lower_bound=None</em>, <em>upper_bound=None</em>, <em>strict_upper_bound=None</em>, <em>quantum=None</em>, <em>unit=None</em>, <em>is_extensive=False</em>, <em>is_intensive=False</em>, <em>levels=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sympy.core.symbol.Symbol</span></code></p>
+<p>Metadata object representing a model variable or parameter.</p>
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.AMIP">
+<code class="descname">AMIP</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.AMIP" title="Permalink to this definition">¶</a></dt>
+<dd><p>corresponding AMIP2 variable name
+(<a class="reference external" href="http://pcmdi.github.io/projects/amip/OUTPUT/AMIP2/outlist.html">http://pcmdi.github.io/projects/amip/OUTPUT/AMIP2/outlist.html</a>)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.CETS">
+<code class="descname">CETS</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.CETS" title="Permalink to this definition">¶</a></dt>
+<dd><p>corresponding World Bank CETS code
+(<a class="reference external" href="https://databank.worldbank.org/data/download/site-content/WDI_CETS.xls">https://databank.worldbank.org/data/download/site-content/WDI_CETS.xls</a>)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.CF">
+<code class="descname">CF</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.CF" title="Permalink to this definition">¶</a></dt>
+<dd><p>corresponding CF Standard Name
+(<a class="reference external" href="http://cfconventions.org/Data/cf-standard-names">http://cfconventions.org/Data/cf-standard-names</a>)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.IAMC">
+<code class="descname">IAMC</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.IAMC" title="Permalink to this definition">¶</a></dt>
+<dd><p>corresponding IAMC variable name
+(<a class="reference external" href="https://tntcat.iiasa.ac.at/ADVANCEWP1DB/static/download/Diagnostics_template_2015-08-12.xlsx">https://tntcat.iiasa.ac.at/ADVANCEWP1DB/static/download/Diagnostics_template_2015-08-12.xlsx</a>)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.ODE_dependencies">
+<code class="descname">ODE_dependencies</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.ODE_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>set of Vars. in the RHS of any ODE changing this Var.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>magic method allowing access to instance values via var[instance]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.__setitem__">
+<code class="descname">__setitem__</code><span class="sig-paren">(</span><em>instance</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.__setitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>magic method allowing access to instance values via var[instance]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.add_derivatives">
+<code class="descname">add_derivatives</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.add_derivatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.add_derivatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds summands to referenced attribute values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.add_noise">
+<code class="descname">add_noise</code><span class="sig-paren">(</span><em>instances=None</em>, <em>distribution=&lt;bound method Random.gauss of &lt;random.Random object at 0x21a7948&gt;&gt;</em>, <em>*</em>, <em>factor=1</em>, <em>offset=0</em>, <em>multiplicative=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.add_noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.add_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set values in selected entities to random value.
+If distribution=None, use uninformed_prior.
+If optional p is given, replace current value only with probability p.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.allow_none">
+<code class="descname">allow_none</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.allow_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>whether None is an allowed value</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.array_shape">
+<code class="descname">array_shape</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.array_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>if numpy array, specifies its shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.assert_valid">
+<code class="descname">assert_valid</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.assert_valid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.assert_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure by assertion that value is valid</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.branchings">
+<code class="descname">branchings</code><a class="headerlink" href="#pycopancore.data_model.variable.Variable.branchings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Branchings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.cardinalities">
+<code class="descname">cardinalities</code><a class="headerlink" href="#pycopancore.data_model.variable.Variable.cardinalities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cardinalities.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.clear_derivatives">
+<code class="descname">clear_derivatives</code><span class="sig-paren">(</span><em>*</em>, <em>instances=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.clear_derivatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.clear_derivatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set all derivatives to zero.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>instances</strong> (<em>list</em>) – List of the entities</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.codename">
+<code class="descname">codename</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.codename" title="Permalink to this definition">¶</a></dt>
+<dd><p>the attribute name of the Variable in its owning class</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.convert_to_standard_units">
+<code class="descname">convert_to_standard_units</code><span class="sig-paren">(</span><em>instances=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.convert_to_standard_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.convert_to_standard_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to standart units.</p>
+<p>Replace all variable values of type DimensionalQuantity
+to float using the standard unit</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.datatype">
+<code class="descname">datatype</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.datatype" title="Permalink to this definition">¶</a></dt>
+<dd><p>e.g. float, integer, numpy.ndarray, networkx.Graph, …</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.default">
+<code class="descname">default</code><a class="headerlink" href="#pycopancore.data_model.variable.Variable.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>default initial value</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.default_assumptions">
+<code class="descname">default_assumptions</code><em class="property"> = {}</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.default_assumptions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.desc">
+<code class="descname">desc</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>longer description text</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.eval">
+<code class="descname">eval</code><span class="sig-paren">(</span><em>instances=None</em>, <em>*</em>, <em>unit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return values for given entities,
+optionally in a different unit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>instances</strong> (<em>iterable</em>) – List of entities/process taxa</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">List of variable value of each entity</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.explicit_dependencies">
+<code class="descname">explicit_dependencies</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.explicit_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>set of Vars. in the RHS of the explicit equation setting this Var.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.fast_set_values">
+<code class="descname">fast_set_values</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.fast_set_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.fast_set_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>fast-track method to set values without checks and conversions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.get_derivatives">
+<code class="descname">get_derivatives</code><span class="sig-paren">(</span><em>instances=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.get_derivatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.get_derivatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of derivatives saved in entities.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>instances</strong> (<em>list</em>) – List of entities/process taxa</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.get_quantity">
+<code class="descname">get_quantity</code><span class="sig-paren">(</span><em>instance</em>, <em>unit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.get_quantity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.get_quantity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.get_value">
+<code class="descname">get_value</code><span class="sig-paren">(</span><em>instance</em>, <em>unit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.is_extensive">
+<code class="descname">is_extensive</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.is_extensive" title="Permalink to this definition">¶</a></dt>
+<dd><p>whether variable scales proportionally with system size
+(only for ratio-scaled)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.is_intensive">
+<code class="descname">is_intensive</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.is_intensive" title="Permalink to this definition">¶</a></dt>
+<dd><p>whether variable must remain invariant when doubling system</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.is_valid">
+<code class="descname">is_valid</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.is_valid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is valid.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.levels">
+<code class="descname">levels</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.levels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.lower_bound">
+<code class="descname">lower_bound</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.lower_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>(inclusive, value must be &gt;=)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>human-readable name to be used as label etc.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.owning_class">
+<code class="descname">owning_class</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.owning_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>the class owning the Variable as its attribute</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.quantum">
+<code class="descname">quantum</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.quantum" title="Permalink to this definition">¶</a></dt>
+<dd><p>values must be integer multiples of this</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.readonly">
+<code class="descname">readonly</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.readonly" title="Permalink to this definition">¶</a></dt>
+<dd><p>whether variable is read-only, e.g. holding redundant information</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.ref">
+<code class="descname">ref</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>some URI, e.g. a wikipedia page</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.scale">
+<code class="descname">scale</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>level of measurement</em> – “ratio” (default), “interval”, “ordinal”,
+or “nominal” (see <a class="reference external" href="https://en.wikipedia.org/wiki/Level_of_measurement">https://en.wikipedia.org/wiki/Level_of_measurement</a>)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.set_to_default">
+<code class="descname">set_to_default</code><span class="sig-paren">(</span><em>instances=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.set_to_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.set_to_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set values in selected entities to default if a default was given</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.set_to_random">
+<code class="descname">set_to_random</code><span class="sig-paren">(</span><em>instances=None</em>, <em>distribution=None</em>, <em>*</em>, <em>p=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.set_to_random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.set_to_random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set values in selected entities to random value.
+If distribution=None, use uninformed_prior.
+If optional p is given, replace current value only with probability p.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.set_value">
+<code class="descname">set_value</code><span class="sig-paren">(</span><em>instance</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.set_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set value for some instance,
+possibly performing conversion to correct unit
+if value is a DimensionalQuantity,
+otherwise using own default unit</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.data_model.variable.Variable.set_values">
+<code class="descname">set_values</code><span class="sig-paren">(</span><em>instances=None</em>, <em>values=None</em>, <em>*</em>, <em>dictionary=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/data_model/variable.html#Variable.set_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.data_model.variable.Variable.set_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set values for the variable.</p>
+<p>This function set values for the variable. If given a list of entities,
+it sets values for all of them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dictionary</strong> (<em>dictionary</em>) – Optional dictionary of variable values keyed by Entity
+object (e.g. {cell:location, individual:age}, …)</li>
+<li><strong>instances</strong> (<em>list</em>) – List of entities/process taxa</li>
+<li><strong>values</strong> (<em>list/array</em>) – Optional corresponding list or array of values</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.strict_lower_bound">
+<code class="descname">strict_lower_bound</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.strict_lower_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>(exclusive, value must be &gt;)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.strict_upper_bound">
+<code class="descname">strict_upper_bound</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.strict_upper_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>(exclusive, value must be &lt;)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.symbol">
+<code class="descname">symbol</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>mathematical symbol or abbrev. to be used as a short label</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.target_class">
+<code class="descname">target_class</code><a class="headerlink" href="#pycopancore.data_model.variable.Variable.target_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.target_instances">
+<code class="descname">target_instances</code><a class="headerlink" href="#pycopancore.data_model.variable.Variable.target_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target instances.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.target_variable">
+<code class="descname">target_variable</code><a class="headerlink" href="#pycopancore.data_model.variable.Variable.target_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target variable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.uninformed_prior">
+<code class="descname">uninformed_prior</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.uninformed_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>random value generator (probability distribution)
+if nothing else is known about the value</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.unit">
+<code class="descname">unit</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>a pycopancore.data_model.Unit (only for ratio- or interval-scaled)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.data_model.variable.Variable.upper_bound">
+<code class="descname">upper_bound</code><em class="property"> = None</em><a class="headerlink" href="#pycopancore.data_model.variable.Variable.upper_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>(inclusive, value must be &lt;=)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.data_model">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.data_model" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.data_model.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.data_model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

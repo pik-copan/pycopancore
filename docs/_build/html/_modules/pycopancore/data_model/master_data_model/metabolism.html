@@ -1,0 +1,384 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.data_model.master_data_model.metabolism &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.data_model.master_data_model.metabolism</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Master data model for metabolism.&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">Variable</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">gigajoules</span><span class="p">,</span> <span class="n">dollars</span><span class="p">,</span> <span class="n">gigatonnes_carbon</span><span class="p">,</span> <span class="n">years</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">kelvins</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">unity</span>
+
+
+<div class="viewcode-block" id="Metabolism"><a class="viewcode-back" href="../../../../_api/pycopancore.data_model.master_data_model.html#pycopancore.data_model.master_data_model.metabolism.Metabolism">[docs]</a><span class="k">class</span> <span class="nc">Metabolism</span><span class="p">:</span>
+
+    <span class="c1"># Population, demographics:</span>
+    
+    <span class="n">population</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;human population&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;Population&quot;</span><span class="p">,</span>
+                          <span class="n">CETS</span><span class="o">=</span><span class="s2">&quot;SP.POP&quot;</span><span class="p">,</span>
+                          <span class="n">unit</span><span class="o">=</span><span class="n">people</span><span class="p">,</span>
+                          <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Note: when using the following, include</span>
+    <span class="c1"># Implicit(population == sum(population_by_age))</span>
+    <span class="n">population_by_age</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;human population by age&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;(in years from 0 to 99+)&quot;</span><span class="p">,</span>
+                                 <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;Population&quot;</span><span class="p">,</span>
+                                 <span class="n">CETS</span><span class="o">=</span><span class="s2">&quot;SP.POP&quot;</span><span class="p">,</span>
+                                 <span class="n">unit</span><span class="o">=</span><span class="n">people</span><span class="p">,</span>
+                                 <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                 <span class="n">array_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,))</span>  <span class="c1"># 1d-array</span>
+    
+    <span class="n">migrant_population</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;first-generation migrant population&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                  <span class="n">unit</span><span class="o">=</span><span class="n">people</span><span class="p">,</span>
+                                  <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">fertility</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;current human fertility rate&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                         <span class="n">unit</span><span class="o">=</span><span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                         <span class="n">default</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="n">min_fertility</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;minimum human fertility rate&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                             <span class="n">unit</span><span class="o">=</span><span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">default</span><span class="o">=</span><span class="mf">0.008</span><span class="p">)</span>
+    <span class="n">max_fertility</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;maximum human fertility rate&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                             <span class="n">unit</span><span class="o">=</span><span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    
+    <span class="n">mortality</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;current human mortility rate&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                         <span class="n">unit</span><span class="o">=</span><span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">default</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">mortality_temperature_sensitivity</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;mortality temperature sensitivity&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">years</span><span class="o">**-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">kelvins</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default</span> <span class="o">=</span> <span class="mf">5e-5</span><span class="o">/</span><span class="n">years</span> <span class="o">/</span> <span class="n">kelvins</span>
+                 <span class="p">)</span>
+    <span class="n">mortality_reference_temperature</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;reference temperature for relationship with mortality&quot;</span><span class="p">,</span> 
+                 <span class="s2">&quot;default: pre-industrial value&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">kelvins</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mi">287</span><span class="p">)</span>  <span class="c1"># TODO: verify! </span>
+    
+    <span class="n">births</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;births per time&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                      <span class="n">unit</span> <span class="o">=</span> <span class="n">people</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                      <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">deaths</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;deaths per time&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                      <span class="n">unit</span> <span class="o">=</span> <span class="n">people</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                      <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">immigration</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;immigrants per time&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                           <span class="n">unit</span> <span class="o">=</span> <span class="n">people</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                           <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">emigration</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;emigrants per time&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">unit</span> <span class="o">=</span> <span class="n">people</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                          <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    
+    <span class="c1"># Resource extraction and waste:</span>
+    
+    <span class="n">biomass_harvest_flow</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;biomass harvest flow&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                    <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span> <span class="c1"># leave whitespace as it is, for g*ds sake!!!!</span>
+                                    <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">fossil_extraction_flow</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;fossil extraction flow&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                      <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                                      <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">carbon_emission_flow</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;carbon emission flow&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                    <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                                    <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;Emissions|CO2&quot;</span><span class="p">,</span>
+                                    <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Economy:</span>
+    
+    <span class="c1"># labour, physical capital, energy input, other factors,</span>
+    <span class="c1"># and their elasticities, prices (wages, capital rents, energy prices etc.),</span>
+    <span class="c1"># depreciation rates</span>
+    <span class="c1"># (total and by sector: energy(fossil/biomass/renewables)/final(clean/dirty)</span>
+    
+    <span class="c1"># stocks:</span>
+    
+    <span class="n">physical_capital</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;physical capital&quot;</span><span class="p">,</span> <span class="s2">&quot;(in value units)&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">dollars</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">renewable_energy_knowledge</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;renewable energy production knowledge stock&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;= non-depreciated cumulative energy produced in the past. &quot;</span>
+                 <span class="s2">&quot;Interpreted as in Wright&#39;s law&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigajoules</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># flows:</span>
+    
+    <span class="c1"># TODO: clarify whether biomass should include food...</span>
+    <span class="n">biomass_input_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;biomass input flow&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(in carbon units)&quot;</span><span class="p">,</span>
+                 <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;Primary Energy|Biomass&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">fossil_fuel_input_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;fossil fuels input flow&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(in carbon units)&quot;</span><span class="p">,</span>
+                 <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;Primary Energy|Fossil&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigatonnes_carbon</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">renewable_energy_input_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;non-biomass renewable energy input flow&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;Primary Energy|Non-Biomass Renewables&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigajoules</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">secondary_energy_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;secondary energy flow&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(all sources)&quot;</span><span class="p">,</span>
+                 <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;Secondary Energy&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigajoules</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">total_energy_intensity</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;total energy intensity&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">gigajoules</span> <span class="o">/</span> <span class="n">dollars</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">147</span><span class="p">)</span>
+    
+    <span class="n">economic_output_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;total economic output flow&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;(in value units)&quot;</span><span class="p">,</span>
+                 <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;GDP|PPP&quot;</span><span class="p">,</span>  <span class="c1"># or GDP|MER?</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">dollars</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">consumption_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;consumption flow&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;(in value units)&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">IAMC</span><span class="o">=</span><span class="s2">&quot;Consumption&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">dollars</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">investment_flow</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;flow of total investment into physical capital&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="c1">#             IAMC=&quot;Investment&quot;,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">dollars</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_extensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># per-capita quantities:</span>
+    
+    <span class="n">welfare_flow_per_capita</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;cardinal social welfare flow &#39;per capita&#39;&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;Note that &#39;per capita&#39; here does not imply that the value is &quot;</span>
+                 <span class="s2">&quot;an average, but only that it is an intensive quantity&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">utils</span> <span class="o">/</span> <span class="n">people</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">wellbeing</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;well-being&quot;</span><span class="p">,</span> <span class="s2">&quot;(in utility flow units)&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">utils</span> <span class="o">/</span> <span class="n">people</span> <span class="o">/</span> <span class="n">years</span><span class="p">,</span>
+                 <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># productivities, efficiencies etc.</span>
+    
+    <span class="n">biomass_energy_density</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;biomass energy density&quot;</span><span class="p">,</span> 
+                                      <span class="s2">&quot;(default from Nitzbon 2016)&quot;</span><span class="p">,</span>
+                                      <span class="n">unit</span> <span class="o">=</span> <span class="n">gigajoules</span> <span class="o">/</span> <span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                                      <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">default</span><span class="o">=</span><span class="mf">40e9</span><span class="p">)</span>
+    
+    <span class="n">fossil_energy_density</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;fossil energy density&quot;</span><span class="p">,</span> 
+                                     <span class="s2">&quot;(default from Nitzbon 2016)&quot;</span><span class="p">,</span>
+                                     <span class="n">unit</span> <span class="o">=</span> <span class="n">gigajoules</span> <span class="o">/</span> <span class="n">gigatonnes_carbon</span><span class="p">,</span>
+                                     <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">default</span><span class="o">=</span><span class="mf">47e9</span><span class="p">)</span>
+    
+    
+    <span class="c1"># protected shares:</span>
+    
+    <span class="n">protected_terrestrial_carbon</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;protected stock of terrestrial carbon&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;what stock of the current terrestrial carbon will be treated</span>
+<span class="sd">                 as protected and thus not harvested at each point in time&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># may be increased by cultural components</span>
+    <span class="n">protected_fossil_carbon</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;protected stock of fossil carbon&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;what stock of the current fossil carbon will be treated</span>
+<span class="sd">                 as protected and thus not extracted at each point in time&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">gigatonnes_carbon</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># may be increased by cultural components</span>
+    <span class="n">protected_terrestrial_carbon_share</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;protected share of terrestrial carbon&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;what share of the current terrestrial carbon will be treated</span>
+<span class="sd">                 as protected and thus not harvested at each point in time&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># may be increased by cultural components</span>
+    <span class="n">protected_fossil_carbon_share</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;protected share of fossil carbon&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;what share of the current fossil carbon will be treated</span>
+<span class="sd">                 as protected and thus not extracted at each point in time&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># may be increased by cultural components</span>
+    
+    
+    <span class="c1"># depreciation, learning, discounting, interest etc. rates</span>
+    
+    <span class="n">physical_capital_depreciation_rate</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;physical capital depreciation rate&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">basic_physical_capital_depreciation_rate</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;basic physical capital depreciation rate&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">physical_capital_depreciation_rate_temperature_sensitivity</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;physical capital depreciation rate temperature sensitivity&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">years</span><span class="o">**-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">kelvins</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">/</span><span class="n">years</span> <span class="o">/</span> <span class="n">kelvins</span>
+                    <span class="c1"># the following gives much too large sensitivity:</span>
+                    <span class="c1"># (40e9 * dollars / years) / (6e13 * dollars)</span>
+                    <span class="c1">#    / ((1.5*kelvins) / (1000*gigatonnes_carbon))</span>
+                 <span class="p">)</span>
+    <span class="n">physical_capital_depreciation_rate_reference_temperature</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;reference temperature for relationship with capital depreciation&quot;</span><span class="p">,</span> 
+                 <span class="s2">&quot;default: pre-industrial value&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">kelvins</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mi">287</span><span class="p">)</span>  <span class="c1"># TODO: verify! </span>
+    
+    <span class="n">renewable_energy_knowledge_depreciation_rate</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;renewable energy production knowledge depreciation rate&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span> <span class="o">=</span> <span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    
+    <span class="c1"># other non-time rates:</span>
+    
+    <span class="n">savings_rate</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;savings (investment) rate&quot;</span><span class="p">,</span> <span class="s2">&quot;(as a fraction of income)&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">unity</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mf">0.244</span><span class="p">)</span>
+    
+    <span class="n">renewable_energy_knowledge_spillover_fraction</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;renewable_energy_knowledge_spillover_fraction&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">unit</span><span class="o">=</span><span class="n">unity</span><span class="p">,</span>
+                 <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_intensive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+    
+    <span class="c1"># financial capital?</span>
+    
+    <span class="c1"># transaction costs?</span>
+    
+    <span class="c1"># trade network?</span>
+    
+    
+    <span class="c1"># Infrastructure:</span>
+    
+    <span class="c1"># transportation network?</span>
+    
+    <span class="c1"># housing and similar assets?</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

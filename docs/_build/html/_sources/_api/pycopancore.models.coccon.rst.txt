@@ -1,0 +1,23 @@
+pycopancore\.models\.coccon namespace
+=====================================
+
+Submodules
+----------
+
+pycopancore\.models\.coccon\.carboncycle module
+-----------------------------------------------
+
+.. automodule:: pycopancore.models.coccon.carboncycle
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.models\.coccon\.full module
+----------------------------------------
+
+.. automodule:: pycopancore.models.coccon.full
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+

@@ -1,0 +1,613 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.base.model_logics &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.base.model_logics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;base component&#39;s Model component mixin class and essential framework logics.</span>
+
+<span class="sd">This class is the Model component mixin of the base model component and also</span>
+<span class="sd">owns the configure method. This method is central to the framework since it</span>
+<span class="sd">fuses together the used classes and puts information about process types and</span>
+<span class="sd">variables in special list to be accessed by the runner.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">abstract</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">ReferenceVariable</span><span class="p">,</span> <span class="n">SetVariable</span><span class="p">,</span> \
+                <span class="n">ODE</span><span class="p">,</span> <span class="n">Explicit</span><span class="p">,</span> <span class="n">Step</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">OrderedSet</span>
+<span class="kn">from</span> <span class="nn">...private</span> <span class="k">import</span> <span class="n">_AbstractProcess</span><span class="p">,</span> <span class="n">unknown</span><span class="p">,</span> <span class="n">_expressions</span><span class="p">,</span> \
+    <span class="n">_AbstractEntityMixin</span><span class="p">,</span> <span class="n">_AbstractProcessTaxonMixin</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">networkx</span> <span class="k">import</span> <span class="n">DiGraph</span><span class="p">,</span> <span class="n">write_graphml</span>
+
+
+<span class="c1"># helper function:</span>
+<div class="viewcode-block" id="guess_deps"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.model_logics.guess_deps">[docs]</a><span class="k">def</span> <span class="nf">guess_deps</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">variable_pool</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;guess the dependencies of a process&#39; target variable from searching</span>
+<span class="sd">    its&#39; specification method for known variable codenames&quot;&quot;&quot;</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variable_pool</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\b&#39;</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">codename</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;\b&#39;</span><span class="p">,</span>
+                             <span class="n">source</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span></div>
+    <span class="c1"># TODO: exclude matches after a # or in string literals</span>
+    <span class="c1"># TODO: if the match is &quot;self.&lt;codename&gt;&quot;, make sure owning_class of matched var is correct</span>
+
+
+<div class="viewcode-block" id="ModelLogics"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.model_logics.ModelLogics">[docs]</a><span class="k">class</span> <span class="nc">ModelLogics</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Model logics class.</span>
+
+<span class="sd">    Provide the configure method.</span>
+<span class="sd">    The configure method has a very central role in the COPAN:core framework,</span>
+<span class="sd">    it is called before letting run a model. It then searches which model class</span>
+<span class="sd">    is used from the model module. It will then go through all components</span>
+<span class="sd">    listed there and collect all variables and processes of said components.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_configured</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="sd">&quot;&quot;&quot;whether model was configured already&quot;&quot;&quot;</span>
+
+    <span class="n">components</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of model components in method resolution order&quot;&quot;&quot;</span>
+
+    <span class="n">variables</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of Variables occurring in the model&quot;&quot;&quot;</span>
+    <span class="n">explicit_targets</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of targets controlled by processes of type Explicit&quot;&quot;&quot;</span>
+    <span class="n">step_variables</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of Variables changed by processes of type Step&quot;&quot;&quot;</span>
+    <span class="n">event_variables</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of Variables changed by processes of type Event&quot;&quot;&quot;</span>
+    <span class="n">ODE_targets</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of targets or _AttributeReferences changed by processes</span>
+<span class="sd">    of type ODE&quot;&quot;&quot;</span>
+    <span class="n">process_targets</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of Variables or _AttributeReferences changed by any</span>
+<span class="sd">    process&quot;&quot;&quot;</span>
+
+    <span class="n">processes</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of processes&quot;&quot;&quot;</span>
+    <span class="n">ODE_processes</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of processes of type ODE&quot;&quot;&quot;</span>
+    <span class="n">explicit_processes</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of processes of type Explicit&quot;&quot;&quot;</span>
+    <span class="n">step_processes</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of processes of type Step&quot;&quot;&quot;</span>
+    <span class="n">event_processes</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;ordered set of processes of type Event&quot;&quot;&quot;</span>
+
+    <span class="n">mixin2composite</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;dict mapping mixins to derived composite classes&quot;&quot;&quot;</span>
+
+    <span class="n">explicit_dependencies</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;dict giving for each explicit target variable the set of vars occurring on RHS of equation&quot;&quot;&quot;</span>
+    <span class="n">ODE_dependencies</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;dict giving for each ODE target variable the set of vars occurring on RHS of equation&quot;&quot;&quot;</span>
+    <span class="n">explicit_evaluation_order</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;list of explicit target Variables in planned order of evaluation&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">reconfigure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Upon initialization of model: configure if not yet configured.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_configured</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">reconfigure</span><span class="o">=</span><span class="n">reconfigure</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ModelLogics.configure"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.model_logics.ModelLogics.configure">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">reconfigure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Configure the model.</span>
+
+<span class="sd">        This classmethod configures the model by analysing the model&#39;s and all</span>
+<span class="sd">        its entity types&#39; and process taxa&#39;s class inheritance structure to</span>
+<span class="sd">        find all mixin classes (implementation and interface), analyse them</span>
+<span class="sd">        to compile and output lists (actually OrderedSets) of variables and</span>
+<span class="sd">        processes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        reconfigure : bool</span>
+<span class="sd">            Flag that indicates if the model should be reconfigured even if</span>
+<span class="sd">            it is already configured</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_configured</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">reconfigure</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigureError</span><span class="p">(</span><span class="s2">&quot;This model is already configured. &quot;</span>
+                                 <span class="s2">&quot;Use optional argument &#39;reconfigure&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>  <span class="c1"># ordered set (special type of list) of Variables</span>
+
+        <span class="c1"># lists of process &#39;targets&#39; by type (= Variables or _DottedReferences):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_targets</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_targets</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">step_variables</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">event_variables</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">process_targets</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+
+        <span class="c1"># lists of processes:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">processes</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>  <span class="c1"># all processes</span>
+        <span class="c1"># ...by type:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_processes</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_processes</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">step_processes</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">event_processes</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+
+        <span class="c1"># dict mapping mixin classes to corresponding composite class:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">mixin2composite</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_dependencies</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_dependencies</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># start the extensive log output:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Configuring model&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;) ...&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Analysing model structure...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">variable_pool</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>  <span class="c1"># temp. list of all variables found</span>
+
+        <span class="c1"># Find all model components in this model.</span>
+        <span class="c1"># These are among the ancestor classes of the composed model.</span>
+        <span class="c1"># For each used component, there are two ancestor classes, one is the</span>
+        <span class="c1"># interface class, the other is the corresponding implementation class</span>
+        <span class="c1"># (typically both are named &quot;Model&quot; since they are the mixin classes</span>
+        <span class="c1"># for the composite class of the name &quot;Model&quot;)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span>
+                 <span class="c1"># exclude things that are definitely not model components:</span>
+                 <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">abstract</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">ModelLogics</span><span class="p">)</span>
+                 <span class="c1"># exclude interface classes (which have an attribute &quot;name&quot;):</span>
+                 <span class="ow">and</span> <span class="ow">not</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="vm">__dict__</span>  <span class="c1"># TODO: use a cleaner method than this to distinguish interfaces from implementation?</span>
+                 <span class="p">])</span>
+        <span class="c1"># iterate through all model components:</span>
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
+            <span class="n">component_interface</span> <span class="o">=</span> <span class="n">component</span><span class="o">.</span><span class="vm">__bases__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># the first base class of an impl. cl. is its interface</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model component &quot;</span><span class="p">,</span> <span class="n">component_interface</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span>
+                  <span class="s2">&quot;)...&quot;</span><span class="p">)</span>
+            <span class="c1"># iterate through all entity-type and process taxon mixins this</span>
+            <span class="c1"># model components defines:</span>
+            <span class="k">for</span> <span class="n">mixin</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">entity_types</span> <span class="o">+</span> <span class="n">component</span><span class="o">.</span><span class="n">process_taxa</span><span class="p">:</span>
+                <span class="n">mixin_interface</span> <span class="o">=</span> <span class="n">mixin</span><span class="o">.</span><span class="vm">__bases__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># interface of this mixin</span>
+                <span class="k">if</span> <span class="n">mixin</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">entity_types</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Entity-type &quot;</span><span class="p">,</span> <span class="n">mixin</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Process taxon &quot;</span><span class="p">,</span> <span class="n">mixin</span><span class="p">)</span>
+                <span class="c1"># find and register all Variables defined directly in this</span>
+                <span class="c1"># mixin&#39;s interface:</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">mixin_interface</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  <span class="c1"># k is the attribute&#39;s name (here the variable name), v the attribute&#39;s value (here the Variable object)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">variable_pool</span><span class="p">:</span>  <span class="c1"># we found a new one</span>
+                            <span class="k">assert</span> <span class="n">v</span><span class="o">.</span><span class="n">codename</span> <span class="ow">is</span> <span class="kc">None</span>  <span class="c1"># since Variables are assigned their codename attribute only here</span>
+                            <span class="c1"># store codename in Variable object for convenience:</span>
+                            <span class="n">v</span><span class="o">.</span><span class="n">codename</span> <span class="o">=</span> <span class="n">k</span>
+                            <span class="n">variable_pool</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;        Variable &quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>  <span class="c1"># same Var. has been registered in another component or mixin already:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;        Variable &quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                            <span class="c1"># make sure all mixins use the same codename</span>
+                            <span class="c1"># for this Var.:</span>
+                            <span class="k">assert</span> <span class="n">v</span><span class="o">.</span><span class="n">codename</span> <span class="o">==</span> <span class="n">k</span><span class="p">,</span> \
+                                <span class="s2">&quot;Variable was already registered by a &quot;</span> \
+                                <span class="s2">&quot;different component or mixin using a &quot;</span> \
+                                <span class="s2">&quot;different codename.&quot;</span>
+                <span class="c1"># find and register all processes defined directly in this</span>
+                <span class="c1"># mixin&#39;s &quot;process&quot; attribute:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">mixin</span><span class="o">.</span><span class="n">processes</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">_AbstractProcess</span><span class="p">),</span> \
+                        <span class="s2">&quot;The &#39;processes&#39; attribute of an implementation &quot;</span> \
+                        <span class="s2">&quot;class must only contain process objects.&quot;</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;        Process &quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                    <span class="c1"># other than variables, the same process cannot be named</span>
+                    <span class="c1"># by more than one mixin:</span>
+                    <span class="k">assert</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">processes</span><span class="p">,</span> \
+                        <span class="s2">&quot;Process was already registered by a different &quot;</span> \
+                        <span class="s2">&quot;component or mixin.&quot;</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">processes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="c1"># now iterate again through all composed entity-types and process taxa,</span>
+        <span class="c1"># output all found variables and complete the composed class&#39; logics:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Variables:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">composed_class</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">entity_types</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">process_taxa</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">composed_class</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">entity_types</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Entity-type &quot;</span><span class="p">,</span> <span class="n">composed_class</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Process taxon &quot;</span><span class="p">,</span> <span class="n">composed_class</span><span class="p">)</span>
+            <span class="c1"># initialize empty list of instances:</span>
+            <span class="n">composed_class</span><span class="o">.</span><span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># find all parent classes and register in dict mixin2composite:</span>
+            <span class="n">parents</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="n">composed_class</span><span class="p">)))</span> <span class="o">-</span> <span class="p">[</span><span class="nb">object</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">mixin</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">mixin2composite</span><span class="p">[</span><span class="n">mixin</span><span class="p">]</span> <span class="o">=</span> <span class="n">mixin</span><span class="o">.</span><span class="n">_composed_class</span> <span class="o">=</span> <span class="n">composed_class</span>
+            <span class="c1"># iterate through all Variables and set their owning_class</span>
+            <span class="c1"># to the correct composite class (rather than to the mixin class):</span>
+            <span class="n">variables</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">parents</span>
+                                    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Variable</span><span class="p">)])</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+                    <span class="k">assert</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variable_pool</span><span class="p">,</span> \
+                        <span class="s2">&quot;Variable &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; was not defined in any component interface!&quot;</span>
+                        <span class="c1"># this version is shorter and easier to understand than the cryptic .format(**locals()) version,</span>
+                        <span class="c1"># so why the hell change it???</span>
+<span class="c1">#                    assert v.codename == k, \</span>
+<span class="c1">#                        &quot;Variable &#39;{v!r}&#39; was registered under a different codename&quot;.format(**locals())</span>
+                    <span class="c1"># the previous lines were disabled to allow introducing</span>
+                    <span class="c1"># local abbreviations for lengthy variable names in</span>
+                    <span class="c1"># implementation classes. therefore also the following:</span>
+                    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">codename</span> <span class="o">==</span> <span class="n">k</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Variable &quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                        <span class="bp">cls</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                        <span class="n">composed_class</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                        <span class="k">assert</span> <span class="n">v</span><span class="o">.</span><span class="n">owning_class</span> <span class="ow">is</span> <span class="kc">None</span>  <span class="c1"># since it is only set here!</span>
+                        <span class="n">v</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">=</span> <span class="n">composed_class</span>
+            <span class="c1"># add an __init__ method to the composed class:</span>
+            <span class="k">def</span> <span class="nf">new__init__</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;make sure all values have valid values&quot;&quot;&quot;</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">inst</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">inst</span><span class="o">.</span><span class="n">complete_values</span><span class="p">()</span>
+                <span class="n">inst</span><span class="o">.</span><span class="n">assert_valid</span><span class="p">()</span>
+            <span class="n">composed_class</span><span class="o">.</span><span class="fm">__init__</span> <span class="o">=</span> <span class="n">new__init__</span>
+
+        <span class="c1"># replace refs to mixins by refs to corresponding composite class</span>
+        <span class="c1"># in all Reference/SetVariables where possible.</span>
+        <span class="c1"># This is necessary since (i) at the time the Reference/SetVariable is</span>
+        <span class="c1"># defined, the composite class is not known, so the referenced type</span>
+        <span class="c1"># is given by a mixin class, but (ii) when running the model, the</span>
+        <span class="c1"># references needs to point to the correct composite class:</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variable_pool</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="n">ReferenceVariable</span><span class="p">,</span> <span class="n">SetVariable</span><span class="p">)):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">mixin2composite</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processes:&quot;</span><span class="p">)</span>
+        <span class="c1"># iterate again through all composed entity-types and process taxa</span>
+        <span class="c1"># to output all processes and check process targets:</span>
+        <span class="n">var2process</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># dict needed for determining explicit evaluation order</span>
+        <span class="k">for</span> <span class="n">composed_class</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">entity_types</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">process_taxa</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">composed_class</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">entity_types</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Entity-type &quot;</span><span class="p">,</span> <span class="n">composed_class</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Process taxon &quot;</span><span class="p">,</span> <span class="n">composed_class</span><span class="p">)</span>
+            <span class="n">parents</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="n">composed_class</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;processes&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="vm">__dict__</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">processes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># since some implementation classes may not define any processes</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">processes</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Process &quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                        <span class="c1"># all processes found here should have been seen</span>
+                        <span class="c1"># already above, so we verify this:</span>
+                        <span class="k">assert</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">processes</span><span class="p">,</span> \
+                            <span class="s2">&quot;Process was not listed in any implementation &quot;</span> \
+                            <span class="s2">&quot;class!&quot;</span>
+                        <span class="k">assert</span> <span class="n">p</span><span class="o">.</span><span class="n">owning_class</span> <span class="ow">is</span> <span class="kc">None</span>  <span class="c1"># since it is only set here!</span>
+                        <span class="n">p</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">=</span> <span class="n">composed_class</span>
+                        <span class="c1"># depending on process type, register in correct list</span>
+                        <span class="c1"># and analyse process targets:</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">ODE</span><span class="p">):</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_processes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">targets</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+                                    <span class="c1"># make sure the named process target</span>
+                                    <span class="c1"># actually belongs to the same entity type</span>
+                                    <span class="c1"># or taxon as the process:</span>
+                                    <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">==</span> \
+                                           <span class="n">composed_class</span><span class="p">,</span> \
+                                           <span class="s2">&quot;ODE target Variable owned by &quot;</span> \
+                                           <span class="s2">&quot;different entity-type/taxon! &quot;</span> \
+                                           <span class="s2">&quot;(maybe try accessing it via a &quot;</span> \
+                                           <span class="s2">&quot;ReferenceVariable)&quot;</span>
+                                <span class="k">else</span><span class="p">:</span>  <span class="c1"># target is a _DotConstruct</span>
+                                    <span class="c1"># make sure the possibly lengthy attribute</span>
+                                    <span class="c1"># reference named as the process target</span>
+                                    <span class="c1"># actually starts at the entity type</span>
+                                    <span class="c1"># or taxon the process belongs to:</span>
+                                    <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">==</span> \
+                                           <span class="n">composed_class</span><span class="p">,</span> \
+                                           <span class="s2">&quot;ODE target attribute reference &quot;</span> \
+                                           <span class="s2">&quot;starts at a wrong &quot;</span> \
+                                           <span class="s2">&quot;entity-type/taxon&quot;</span> \
+                                           <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> \
+                                           <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">owning_class</span><span class="p">)</span> \
+                                           <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">composed_class</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">specification</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                                    <span class="n">deps</span> <span class="o">=</span> <span class="n">_expressions</span><span class="o">.</span><span class="n">get_vars</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      Derivative of&quot;</span><span class="p">,</span>
+                                          <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">,</span>
+                                          <span class="s2">&quot;directly depends on&quot;</span><span class="p">,</span> <span class="n">deps</span><span class="p">)</span>
+                                    <span class="k">try</span><span class="p">:</span>
+                                        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_dependencies</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">deps</span><span class="p">)</span>
+                                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                                        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_dependencies</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">deps</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">deps</span> <span class="o">=</span> <span class="n">guess_deps</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">specification</span><span class="p">,</span> <span class="n">variable_pool</span><span class="p">)</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      Derivative of&quot;</span><span class="p">,</span>
+                                          <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">,</span>
+                                          <span class="s2">&quot;probably directly depends on&quot;</span><span class="p">,</span> <span class="n">deps</span><span class="p">)</span>
+                                    <span class="k">try</span><span class="p">:</span>
+                                        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_dependencies</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">deps</span><span class="p">)</span>
+                                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                                        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_dependencies</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">deps</span>
+<span class="c1">#                                    print(&quot;      Derivative of&quot;,</span>
+<span class="c1">#                                          target.target_variable,</span>
+<span class="c1">#                                          &quot;has unknown dependencies&quot;)</span>
+<span class="c1">#                                    cls.ODE_dependencies[target.target_variable] = unknown</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_targets</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">targets</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">process_targets</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">targets</span>
+                        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Explicit</span><span class="p">):</span>
+                            <span class="c1"># TODO: determine dependency structure among</span>
+                            <span class="c1"># variable to set the right order of execution</span>
+                            <span class="c1"># of explicit processes!</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_processes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">targets</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+                                    <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">==</span> <span class="n">composed_class</span><span class="p">,</span> \
+                                           <span class="s2">&quot;Explicit target Variable &quot;</span> \
+                                           <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; owned &quot;</span> \
+                                           <span class="s2">&quot;by different entity-type/taxon (&quot;</span> \
+                                           <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">owning_class</span><span class="p">)</span> <span class="o">+</span> \
+                                           <span class="s2">&quot;, maybe try accessing it via a &quot;</span> \
+                                           <span class="s2">&quot;ReferenceVariable)&quot;</span>
+                                <span class="k">else</span><span class="p">:</span>  <span class="c1"># it&#39;s a _DotConstruct</span>
+                                    <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">==</span> <span class="n">composed_class</span><span class="p">,</span> \
+                                           <span class="s2">&quot;Explicit target attribute &quot;</span> \
+                                           <span class="s2">&quot;reference starts at a wrong &quot;</span> \
+                                           <span class="s2">&quot;entity-type/taxon:&quot;</span>
+                                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">specification</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                                    <span class="n">deps</span> <span class="o">=</span> <span class="n">_expressions</span><span class="o">.</span><span class="n">get_vars</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      Target var.&quot;</span><span class="p">,</span>
+                                          <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">,</span>
+                                          <span class="s2">&quot;directly depends on&quot;</span><span class="p">,</span> <span class="n">deps</span><span class="p">)</span>
+                                    <span class="k">try</span><span class="p">:</span>
+                                        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_dependencies</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">deps</span><span class="p">)</span>
+                                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                                        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_dependencies</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">deps</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">deps</span> <span class="o">=</span> <span class="n">guess_deps</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">specification</span><span class="p">,</span> <span class="n">variable_pool</span><span class="p">)</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      Target var.&quot;</span><span class="p">,</span>
+                                          <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">,</span>
+                                          <span class="s2">&quot;probably directly depends on&quot;</span><span class="p">,</span> <span class="n">deps</span><span class="p">)</span>
+                                    <span class="k">try</span><span class="p">:</span>
+                                        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_dependencies</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">deps</span><span class="p">)</span>
+                                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                                        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_dependencies</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">deps</span>
+<span class="c1">#                                    print(&quot;      Target var.&quot;,</span>
+<span class="c1">#                                          target.target_variable,</span>
+<span class="c1">#                                          &quot;has unknown dependencies&quot;)</span>
+<span class="c1">#                                    cls.explicit_dependencies[target.target_variable] = unknown</span>
+                                <span class="n">var2process</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_targets</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">targets</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">process_targets</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">targets</span>
+                        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Step</span><span class="p">):</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">step_processes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+                                    <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">==</span> <span class="n">composed_class</span><span class="p">,</span> \
+                                           <span class="s2">&quot;Step target Variable owned &quot;</span> \
+                                           <span class="s2">&quot;by different entity-type/taxon! &quot;</span> \
+                                           <span class="s2">&quot;(maybe try accessing it via a &quot;</span> \
+                                           <span class="s2">&quot;ReferenceVariable)&quot;</span>
+                                <span class="k">else</span><span class="p">:</span>  <span class="c1"># it&#39;s a _DotConstruct</span>
+                                    <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">==</span> <span class="n">composed_class</span><span class="p">,</span> \
+                                           <span class="s2">&quot;Step target attribute &quot;</span> \
+                                           <span class="s2">&quot;reference starts at a wrong &quot;</span> \
+                                           <span class="s2">&quot;entity-type/taxon:&quot;</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">step_variables</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">variables</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">process_targets</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">variables</span>
+                        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Event</span><span class="p">):</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">event_processes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+                                    <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">==</span> <span class="n">composed_class</span><span class="p">,</span> \
+                                           <span class="s2">&quot;Event target Variable owned &quot;</span> \
+                                           <span class="s2">&quot;by different entity-type/taxon! &quot;</span> \
+                                           <span class="s2">&quot;(maybe try accessing it via a &quot;</span> \
+                                           <span class="s2">&quot;ReferenceVariable)&quot;</span>
+                                <span class="k">else</span><span class="p">:</span>  <span class="c1"># it&#39;s a _DotConstruct</span>
+                                    <span class="k">assert</span> <span class="n">target</span><span class="o">.</span><span class="n">owning_class</span> <span class="o">==</span> <span class="n">composed_class</span><span class="p">,</span> \
+                                           <span class="s2">&quot;Event target attribute &quot;</span> \
+                                           <span class="s2">&quot;reference starts at a wrong &quot;</span> \
+                                           <span class="s2">&quot;entity-type/taxon:&quot;</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">event_variables</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">variables</span>
+                            <span class="bp">cls</span><span class="o">.</span><span class="n">process_targets</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">variables</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;unsupported process type&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Targets affected by some process:&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">process_targets</span><span class="p">)</span>
+
+        <span class="c1"># analyse dependency structure between variables to determine</span>
+        <span class="c1"># correct order of process evaluation:</span>
+
+        <span class="c1"># compose dependency graphs and variables&#39; dependency attributes:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_digraph</span> <span class="o">=</span> <span class="n">DiGraph</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_digraph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">unknown</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">deps</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_dependencies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">explicit_dependencies</span> <span class="o">=</span> <span class="n">deps</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_digraph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">unknown</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">deps</span> <span class="ow">is</span> <span class="n">unknown</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_digraph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">unknown</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">deps</span><span class="p">:</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_digraph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_digraph</span> <span class="o">=</span> <span class="n">DiGraph</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_digraph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">unknown</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">deps</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_dependencies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">ODE_dependencies</span> <span class="o">=</span> <span class="n">deps</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_digraph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">unknown</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">deps</span> <span class="ow">is</span> <span class="n">unknown</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_digraph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">unknown</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">deps</span><span class="p">:</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">ODE_digraph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+
+        <span class="c1"># determine explicit evaluation order:</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">DiGraph</span><span class="p">()</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">DiGraph</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">explicit_digraph</span><span class="p">)</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">unknown</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_evaluation_order</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># find a &quot;nice&quot; node x which depends on no other remaining nice</span>
+            <span class="c1"># nodes and depends on the smallest set Y no. of remaining &quot;not</span>
+            <span class="c1"># nice&quot; nodes:</span>
+            <span class="n">candidates</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">bestcount</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="n">bestvar</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">bestsources</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">explicit_dependencies</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="p">):</span>  <span class="c1"># target is nice</span>
+                    <span class="n">sources</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">explicit_dependencies</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">]):</span>
+                        <span class="k">continue</span>
+                    <span class="n">badsources</span> <span class="o">=</span> <span class="p">[</span><span class="n">source</span> <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span>
+                                  <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">explicit_dependencies</span> <span class="ow">is</span> <span class="n">unknown</span><span class="p">]</span>
+                    <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">badsources</span><span class="p">)</span>
+                    <span class="n">candidates</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="n">bestcount</span><span class="p">:</span>
+                        <span class="n">bestcount</span> <span class="o">=</span> <span class="n">count</span>
+                        <span class="n">bestvar</span> <span class="o">=</span> <span class="n">target</span>
+                        <span class="n">bestsources</span> <span class="o">=</span> <span class="n">badsources</span>
+            <span class="k">if</span> <span class="n">candidates</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">assert</span> <span class="n">bestvar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+                <span class="s2">&quot;model is logically inconsistent (cyclic explicit dependencies)&quot;</span>
+            <span class="c1"># add first all y from Y and then x to the evaluation stack and</span>
+            <span class="c1"># remove these nodes from the graph:</span>
+            <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">bestsources</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">var2process</span><span class="p">[</span><span class="n">source</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">tgt</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">targets</span><span class="p">:</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_evaluation_order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tgt</span><span class="o">.</span><span class="n">target_variable</span><span class="p">)</span>
+                    <span class="n">G</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">tgt</span><span class="o">.</span><span class="n">target_variable</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_evaluation_order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bestvar</span><span class="p">)</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">bestvar</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Order of evaluation of variables set by explicit equations:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">explicit_evaluation_order</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="c1"># TODO:</span>
+        <span class="c1"># - during ODE evaluation, only evaluate those from the evaluation</span>
+        <span class="c1">#   stack which at least one differential d_x depends on either</span>
+        <span class="c1">#   directly or indirectly, assuming that a &quot;not nice&quot; differential</span>
+        <span class="c1">#   depends on all variables</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_configured</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">(End of model configuration)&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ModelLogics.convert_to_standard_units"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.model_logics.ModelLogics.convert_to_standard_units">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_standard_units</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Replace all variable values of type DimensionalQuantity to float.</span>
+
+<span class="sd">        Using the standard unit. This is mainly done for performance reasons.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">convert_to_standard_units</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ModelLogics.reset"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.model_logics.ModelLogics.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reset all varaibles back to default values.&quot;&quot;&quot;</span>
+        <span class="c1"># First set all variables to default:</span>
+        <span class="c1"># print(&quot;\n&quot;, &#39;self.variables&#39;,self.variables)</span>
+        <span class="n">obj_to_delete</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_objects</span><span class="p">()</span>
+                         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">_AbstractEntityMixin</span><span class="p">,</span>
+                                             <span class="n">_AbstractProcessTaxonMixin</span><span class="p">))]</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_to_delete</span><span class="p">:</span>
+            <span class="c1"># print(f&#39;obj{obj} is going to be deleted:&#39;)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="ConfigureError"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.base.html#pycopancore.model_components.base.model_logics.ConfigureError">[docs]</a><span class="k">class</span> <span class="nc">ConfigureError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Define Error.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

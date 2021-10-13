@@ -1,0 +1,895 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.runners.runner &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.runners.runner</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+
+<span class="c1"># TODO: rename to ScipyODERunner</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Step</span><span class="p">,</span> <span class="n">Variable</span>
+<span class="kn">from</span> <span class="nn">..private</span> <span class="k">import</span> <span class="n">_AbstractRunner</span><span class="p">,</span> <span class="n">_DotConstruct</span><span class="p">,</span> <span class="nb">eval</span><span class="p">,</span> <span class="n">unknown</span><span class="p">,</span> \
+    <span class="n">_AbstractEntityMixin</span><span class="p">,</span> <span class="n">_TrajectoryDictionary</span><span class="p">,</span> <span class="n">_AbstractProcessTaxonMixin</span>
+<span class="c1"># TODO: discuss whether this makes sense or leads to problems:</span>
+<span class="kn">from</span> <span class="nn">.hooks</span> <span class="k">import</span> <span class="n">Hooks</span>
+
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">integrate</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">time</span>
+<span class="c1"># import sys</span>
+
+<span class="c1"># from profilehooks import coverage, profile</span>
+
+
+<div class="viewcode-block" id="Runner"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.runner.Runner">[docs]</a><span class="k">class</span> <span class="nc">Runner</span><span class="p">(</span><span class="n">_AbstractRunner</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Runner-class, it owns the run function which calculates trajectories.</span>
+
+<span class="sd">    Equations might be of type ODE, explicit, step and event, as stated in the</span>
+<span class="sd">    process_types package.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_current_iteration</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;counter for expression evaluation cache&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">model</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">termination_calls</span><span class="o">=</span><span class="kc">None</span>
+                 <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiate a Runner.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model : Model</span>
+<span class="sd">            The model to be run.</span>
+<span class="sd">        termination_calls : list, optional</span>
+<span class="sd">            List of lists of callables and instances on which they are to be</span>
+<span class="sd">            called to determine if the runner should terminate in special</span>
+<span class="sd">            cases prior to the time limit.</span>
+<span class="sd">        kwargs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Runner</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># register model and for performance reasons also some of its</span>
+        <span class="c1"># properties as runner attributes:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">processes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">processes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">explicit_processes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">explicit_processes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_processes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">event_processes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_processes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">step_processes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ode_processes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ODE_processes</span>
+        <span class="c1"># trajectory_dict is of Class _TrajectoryDictionary to have a save</span>
+        <span class="c1"># method and otherwise inherits from dict:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span> <span class="o">=</span> <span class="n">_TrajectoryDictionary</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">termination_calls</span> <span class="o">=</span> <span class="n">termination_calls</span>
+
+        <span class="c1"># initialize counter:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_iteration</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1">#    @profile  # generates time profiling information</span>
+<div class="viewcode-block" id="Runner.apply_explicits"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.runner.Runner.apply_explicits">[docs]</a>    <span class="k">def</span> <span class="nf">apply_explicits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply all Explicit processes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Model time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: apply them in an order that respects dependencies among</span>
+        <span class="c1"># variables! for this, determine dependency structure in</span>
+        <span class="c1"># modellogics.configure!</span>
+        <span class="c1"># TODO: use a numpy array to store values of explicitly calculated</span>
+        <span class="c1"># variables just as for ode variables, to avoid reading and writing</span>
+        <span class="c1"># entities&#39; attributes all the time (profiling has shown that this</span>
+        <span class="c1"># takes a significant portion of the time).</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">explicit_processes</span><span class="p">:</span>
+<span class="c1">#            print(t,&quot;Process&quot;,p)</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">specification</span>  <span class="c1"># either a list of symbolic expressions or a method</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="c1"># it&#39;s a list of symbolic expressions, one for each target in</span>
+                <span class="c1"># the same order as in &quot;targets&quot;. hence we loop over those:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">targets</span><span class="p">):</span>
+<span class="c1">#                    print(&quot;Process&quot;,p,&quot;target&quot;,target)</span>
+                    <span class="c1"># evaluate corresponding expression,</span>
+                    <span class="c1"># giving a list of values, one for each instance,</span>
+                    <span class="c1"># in an order determined by the target:</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">_current_iteration</span><span class="p">)</span>
+                    <span class="c1"># note that values may have different length than</span>
+                    <span class="c1"># p.owning_class.instances due to broadcasting effects</span>
+                    <span class="c1"># if the target is a dotconstruct.</span>
+                    <span class="c1"># store values in these target instances:</span>
+                    <span class="n">target</span><span class="o">.</span><span class="n">fast_set_values</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># it&#39;s a method</span>
+                <span class="c1"># call process&#39; implementation method for each of its</span>
+                <span class="c1"># owning class&#39; (!) instances. This will store values in</span>
+                <span class="c1"># the target (!) instances&#39; attributes directly:</span>
+                <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+                    <span class="n">spec</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
+
+<span class="c1">#    @profile  # generates time profiling information</span>
+<div class="viewcode-block" id="Runner.get_rhs_array"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.runner.Runner.get_rhs_array">[docs]</a>    <span class="k">def</span> <span class="nf">get_rhs_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">t</span><span class="p">,</span> <span class="n">value_array</span>  <span class="c1"># this order is correct for use with scipy.ode class!</span>
+                      <span class="c1"># value_array, t  # this order would be correct for use with scipy.odeint function</span>
+                      <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return RHS of composite ODE system as an array.</span>
+
+<span class="sd">        Will be passed to scipy.ode class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t : float</span>
+<span class="sd">            Model time</span>
+<span class="sd">        value_array : array</span>
+<span class="sd">            array of variable values</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array</span>
+<span class="sd">            array of derivatives in same order as value_array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_iteration</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># marks current evaluation caches as outdated</span>
+
+        <span class="c1"># copy values from value_array into instance attributes,</span>
+        <span class="c1"># and clear target instances&#39; derivative attributes:</span>
+        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ODE_targets</span><span class="p">:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span>
+            <span class="c1"># use the values stored in the slice of value_array specified</span>
+            <span class="c1"># by the target&#39;s _from and _to attributes:</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">fast_set_values</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">value_array</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">_from</span><span class="p">:</span><span class="n">target</span><span class="o">.</span><span class="n">_to</span><span class="p">])</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">clear_derivatives</span><span class="p">()</span>
+
+        <span class="c1"># Execute all explicit processes (3.1.2 in runner scheme):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_explicits</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="c1"># TODO: for speedup, only do this for those explicits whose targets</span>
+        <span class="c1"># are needed during ODE integration, and execute all others ex post.</span>
+
+        <span class="c1"># let all processes calculate their derivative terms:</span>
+        <span class="n">summands_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">value_array</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ode_processes</span><span class="p">:</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">specification</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="c1"># its a list of symbolic expressions, one for each target:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">targets</span><span class="p">):</span>
+                    <span class="c1"># evaluate symbolic expression for each target instance,</span>
+                    <span class="c1"># giving a list:</span>
+                    <span class="n">summands</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_iteration</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+                        <span class="c1"># add result directly to output array</span>
+                        <span class="c1"># (rather than in instances&#39; derivative attributes):</span>
+<span class="c1">#                        print(&quot;storing into summands_array for&quot;,target,&quot;in&quot;,p)</span>
+                        <span class="n">summands_array</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">_from</span><span class="p">:</span><span class="n">target</span><span class="o">.</span><span class="n">_to</span><span class="p">]</span> <span class="o">+=</span> <span class="n">summands</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># summands may have different length than</span>
+                        <span class="c1"># p.owning_class.instances due to broadcasting effects</span>
+                        <span class="c1"># if target is a dotconstruct,</span>
+                        <span class="c1"># hence we cannot simply copy it into the</span>
+                        <span class="c1"># derivative_array array slice target._from:target._to.</span>
+                        <span class="c1"># instead, we add terms directly to target instances&#39;</span>
+                        <span class="c1"># derivative attributes where they will be read from</span>
+                        <span class="c1"># later:</span>
+<span class="c1">#                        print(&quot;calling add_derivatives on&quot;,target,&quot;in&quot;,p)</span>
+                        <span class="n">target</span><span class="o">.</span><span class="n">add_derivatives</span><span class="p">(</span><span class="n">summands</span><span class="p">)</span>
+                        <span class="c1"># TODO: use an njitted function add2array(array,</span>
+                        <span class="c1"># positions, values) and expr._target_positions based</span>
+                        <span class="c1"># on a new entity attribute _index</span>
+                        <span class="c1"># that marks the position in the ordered set entities.</span>
+                        <span class="c1"># when an entity is removed from this set, move the one</span>
+                        <span class="c1"># at the last position to the freed position.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># call process&#39; implementation method for each of it&#39;s</span>
+                <span class="c1"># owning class&#39; (!) instances. This will add terms to</span>
+                <span class="c1"># the target (!) instances&#39; derivative attributes:</span>
+<span class="c1">#                print(&quot;calling spec for&quot;,p,&quot;with targets&quot;,p.targets)</span>
+                <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+                    <span class="n">spec</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="c1"># compose complete derivative array:</span>
+        <span class="n">derivative_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">value_array</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ODE_targets</span><span class="p">:</span>
+<span class="c1">#            print(&quot;target:&quot;,target)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
+                <span class="c1"># add terms from summands_array to derivative attributes:</span>
+<span class="c1">#                print(&quot;adding from summands_array for&quot;,target)</span>
+<span class="c1">#                print(&quot; old:&quot;,target.target_variable.get_derivatives(</span>
+<span class="c1">#                            instances=target.target_class.instances))</span>
+<span class="c1">#                print(&quot; plus:&quot;,summands_array[target._from:target._to])</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">add_derivatives</span><span class="p">(</span><span class="n">summands_array</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">_from</span><span class="p">:</span><span class="n">target</span><span class="o">.</span><span class="n">_to</span><span class="p">])</span>
+<span class="c1">#                print(&quot; new:&quot;,target.target_variable.get_derivatives(</span>
+<span class="c1">#                            instances=target.target_class.instances))</span>
+            <span class="c1"># extract complete derivative terms from derivative attributes:</span>
+            <span class="n">derivative_array</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">_from</span><span class="p">:</span><span class="n">target</span><span class="o">.</span><span class="n">_to</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="o">.</span><span class="n">get_derivatives</span><span class="p">(</span>
+                            <span class="n">instances</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span>
+<span class="c1">#        print(&quot;derivs:&quot;,derivative_array)</span>
+        <span class="k">return</span> <span class="n">derivative_array</span></div>
+
+    <span class="c1"># @profile</span>
+<div class="viewcode-block" id="Runner.run"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.runner.Runner.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">,</span>
+            <span class="n">t_0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">t_1</span><span class="p">,</span>
+            <span class="n">dt</span><span class="p">,</span>  <span class="c1"># TODO: rename to &quot;resolution&quot; since it is only an upper bound?</span>
+            <span class="n">exclusions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="c1"># TODO: add some kwargs for choosing solver and setting its params</span>
+            <span class="n">max_resolution</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">add_to_output</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># optional list of variables to include in output</span>
+            <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the model for a specified time interval.</span>
+
+<span class="sd">        Run the model by simulating all processes in the right order in a way</span>
+<span class="sd">        depending on process type (ODE integration, time stepping, etc.).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        t_0 : float, optional</span>
+<span class="sd">            Starting time (default: 0)</span>
+<span class="sd">        t_1 : float</span>
+<span class="sd">            End time</span>
+<span class="sd">        dt : float</span>
+<span class="sd">            Maximal interval between output time points</span>
+<span class="sd">        exclusions: list</span>
+<span class="sd">            List with Variables, that shan&#39;t be included into the output</span>
+<span class="sd">            trajectory_dict</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        trajectory_dict: dict</span>
+<span class="sd">            Model trajectory in requested time interval.</span>
+<span class="sd">            Keys: &#39;t&#39; (contains the list of time points)</span>
+<span class="sd">                and each Variable object simulated.</span>
+<span class="sd">            Value of trajectory_dict[var]: dict with</span>
+<span class="sd">                key: entity or taxon,</span>
+<span class="sd">                value: list of variable values in same order as time points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Running from&quot;</span><span class="p">,</span> <span class="n">t_0</span><span class="p">,</span> <span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="n">t_1</span><span class="p">,</span> <span class="s2">&quot;with output at least every&quot;</span><span class="p">,</span>
+              <span class="n">dt</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Initialize running time variable to starting time:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t_0</span>
+
+        <span class="c1"># For performance reasons, convert all variable values to standard</span>
+        <span class="c1"># units, so that no DimensionalQuantities are left in variable values:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">convert_to_standard_units</span><span class="p">()</span>
+
+        <span class="c1"># Create output dictionary:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span> <span class="o">=</span> <span class="n">_TrajectoryDictionary</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Remove exclusions from being saved:</span>
+        <span class="n">targets_to_save</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">process_targets</span>
+        <span class="c1"># print(self.model.process_targets)</span>
+        <span class="k">if</span> <span class="n">exclusions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">exclusions</span><span class="p">:</span>
+                <span class="n">targets_to_save</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+
+        <span class="c1"># Save initial state to output dict:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_to_traj</span><span class="p">(</span><span class="n">targets_to_save</span><span class="p">,</span>
+                          <span class="n">add_to_output</span><span class="p">,</span>
+                          <span class="n">max_resolution</span><span class="p">,</span>
+                          <span class="n">dt</span><span class="p">)</span>
+        <span class="c1"># TODO: have save_to_traj() save t as well to have this cleaner.</span>
+
+        <span class="c1"># Create dictionary containing discontinuities:</span>
+        <span class="n">next_discontinuities</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Apply all Explicit processes (2.2 in runner scheme)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Initial application of Explicit processes...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_explicits</span><span class="p">(</span><span class="n">t_0</span><span class="p">)</span>
+
+        <span class="c1"># Only now save initial state to output dict:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_to_traj</span><span class="p">(</span><span class="n">targets_to_save</span><span class="p">,</span>
+                          <span class="n">add_to_output</span><span class="p">,</span>
+                          <span class="n">max_resolution</span><span class="p">,</span>
+                          <span class="n">dt</span><span class="p">)</span>
+        <span class="c1"># TODO: have save_to_traj() save t as well to have this cleaner.</span>
+
+        <span class="c1"># TODO: discuss whether hooks make sense, then maybe:</span>
+        <span class="c1"># TODO: add hooks to runner scheme</span>
+        <span class="c1"># apply all pre-hooks</span>
+        <span class="k">if</span> <span class="n">Hooks</span><span class="o">.</span><span class="n">_pre_hooks</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Executing pre-hooks ...&quot;</span><span class="p">)</span>
+            <span class="n">Hooks</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="n">Hooks</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">pre</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">t_0</span><span class="p">)</span>
+
+        <span class="c1"># Find first occurrence times of events (2.3 in runner scheme):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Finding times of first occurrence of Events...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_processes</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Event process&quot;</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+            <span class="n">eventtype</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">rate_or_timefunc</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># TODO: Check if the following loop is correct:</span>
+            <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+                <span class="c1"># inst is a process taxon or entity</span>
+                <span class="k">assert</span> <span class="n">eventtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;rate&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">),</span> \
+                    <span class="s2">&quot;unsupported type of Event&quot;</span>
+                <span class="k">if</span> <span class="n">eventtype</span> <span class="o">==</span> <span class="s2">&quot;rate&quot;</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">rate_or_timefunc</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> \
+                        <span class="s2">&quot;zero, negative, or varying rates not supported yet.&quot;</span>
+                    <span class="n">next_time</span> <span class="o">=</span> <span class="n">t_0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">rate_or_timefunc</span><span class="p">)</span>
+                    <span class="c1"># TODO: if rate_or_timefunc is a function or symbolic expression in this case,</span>
+                    <span class="c1"># it returns a potentially time-varying rate that depends on state,</span>
+                    <span class="c1"># hence it must be used in ode integration to integrate</span>
+                    <span class="c1"># its cumulative distribution function, and when the</span>
+                    <span class="c1"># latter crosses a threshold that we randomly draw</span>
+                    <span class="c1"># here, solout must terminate (see below).</span>
+                <span class="k">elif</span> <span class="n">eventtype</span> <span class="o">==</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span>
+                    <span class="c1"># in this case, rate_or_timefunc directly returns a time:</span>
+                    <span class="n">next_time</span> <span class="o">=</span> <span class="n">rate_or_timefunc</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">next_time</span> <span class="o">&gt;</span> <span class="n">t_0</span><span class="p">,</span> <span class="s2">&quot;next time must be &gt; t&quot;</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">next_discontinuities</span><span class="p">[</span><span class="n">next_time</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">event</span><span class="p">,</span> <span class="n">inst</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="n">next_discontinuities</span><span class="p">[</span><span class="n">next_time</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">event</span><span class="p">,</span> <span class="n">inst</span><span class="p">)]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      time&quot;</span><span class="p">,</span> <span class="n">next_time</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">inst</span><span class="p">)</span>
+
+        <span class="c1"># Fill next_discontinuities with times of next steps and perform</span>
+        <span class="c1"># a step if necessary (still 2.3 in runner scheme):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Executing Steps and finding times of next execution...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_processes</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Step process&quot;</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+            <span class="n">next_time_func</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+                <span class="c1"># inst is a process taxon or entity</span>
+                <span class="c1"># FIXME: it seems inconsistent how we currently deal with the</span>
+                <span class="c1"># question whether a step exectutes at t_0 since it is unclear</span>
+                <span class="c1"># how the step would indicate that it is so.</span>
+                <span class="c1"># if next_time_func(inst, t) gives the smallest stepping time</span>
+                <span class="c1"># AFTER t, the following check would be incorrect:</span>
+                <span class="k">if</span> <span class="n">next_time_func</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t_0</span><span class="p">)</span> <span class="o">==</span> <span class="n">t_0</span><span class="p">:</span>
+                    <span class="c1"># so this step occurs right at the beginning</span>
+                    <span class="n">method</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                    <span class="c1"># ask process when it steps next:</span>
+                    <span class="n">next_time</span> <span class="o">=</span> <span class="n">next_time_func</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">next_time</span> <span class="o">&gt;</span> <span class="n">t_0</span><span class="p">,</span> <span class="s2">&quot;next time must be &gt; t&quot;</span>
+                <span class="c1"># TODO: Same time for all instances? self. necessary?</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># ask process when it steps next:</span>
+                    <span class="n">next_time</span> <span class="o">=</span> <span class="n">next_time_func</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">next_time</span> <span class="o">&gt;</span> <span class="n">t_0</span><span class="p">,</span> <span class="s2">&quot;next time must be &gt; t&quot;</span>
+                <span class="c1"># register next stepping time in dict:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">next_discontinuities</span><span class="p">[</span><span class="n">next_time</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">step</span><span class="p">,</span> <span class="n">inst</span><span class="p">))</span>
+                    <span class="c1"># so there were already events at the same time</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="c1"># so there was no event yet at that time</span>
+                    <span class="n">next_discontinuities</span><span class="p">[</span><span class="n">next_time</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">step</span><span class="p">,</span> <span class="n">inst</span><span class="p">)]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      time&quot;</span><span class="p">,</span> <span class="n">next_time</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">inst</span><span class="p">)</span>
+
+        <span class="c1"># At this point, no application of Explicit processes is necessary</span>
+        <span class="c1"># since that is done during ODE integration</span>
+
+        <span class="c1"># prepare ODE solver:</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">ode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_rhs_array</span><span class="p">)</span>
+        <span class="c1"># apparently dopri5 is faster than vode, so we use dopri5.</span>
+        <span class="c1"># in vode, choosing bdf or adams doesn&#39;t seem to make any difference</span>
+        <span class="c1"># solver.set_integrator(&quot;vode&quot;, max_step=dt, method=&quot;bdf&quot;)</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">set_integrator</span><span class="p">(</span><span class="s2">&quot;dopri5&quot;</span><span class="p">,</span>  <span class="c1"># TODO: make this a parameter?</span>
+                              <span class="n">max_step</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
+                              <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">nsteps</span><span class="o">=</span><span class="mi">10000</span>  <span class="c1"># TODO: make this a parameter?</span>
+                              <span class="p">)</span>
+
+        <span class="c1"># running lists of times and solutions:</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># callback function the solver calls to output solutions:</span>
+        <span class="k">def</span> <span class="nf">solout</span><span class="p">(</span><span class="n">sol_t</span><span class="p">,</span> <span class="n">sol_valuearray</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Save solution of solver at one time point.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            sol_t : float</span>
+<span class="sd">                Model time</span>
+<span class="sd">            sol_valuearray : array</span>
+<span class="sd">                array of variable values in same order as for get_rhs_array</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># save solution to lists:</span>
+            <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sol_t</span><span class="p">)</span>
+            <span class="n">sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sol_valuearray</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+            <span class="c1"># TODO: ALSO output values of non-dynamical variables, like those</span>
+            <span class="c1"># from Explicit processes, so that they don&#39;t need to be</span>
+            <span class="c1"># calculated again after ode finished!</span>
+            <span class="c1"># TODO: this is the place to implement termination</span>
+            <span class="c1"># due to events without a priori known occurrence</span>
+            <span class="c1"># time! if solout returns 0 (or -1?), solver will</span>
+            <span class="c1"># terminate. Similarly for solver &quot;vode&quot; above</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      t =&quot;</span><span class="p">,</span> <span class="n">sol_t</span><span class="p">,</span> <span class="s2">&quot;            &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># TODO: return value??</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">set_solout</span><span class="p">(</span><span class="n">solout</span><span class="p">)</span>
+
+        <span class="c1"># Now loop until end time or early termination is reached:</span>
+        <span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">t_1</span><span class="p">:</span>
+            <span class="c1"># check whether to terminate early:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">terminate</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Terminating run early at time &#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="c1"># Get next discontinuity to find the next timestep where something</span>
+            <span class="c1"># happens.</span>
+            <span class="c1"># If there are no discontinuities, the next_discontinuities</span>
+            <span class="c1"># dict is empty, therefore try is necessary:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">next_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">t_1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">next_discontinuities</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>  <span class="c1"># TODO: speed-up by using different data type for next_discontinuities, something like OrderedDict?</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">next_time</span> <span class="o">=</span> <span class="n">t_1</span>
+
+            <span class="c1"># Call ode solver if there are any ODE processes:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ODE_processes</span><span class="p">:</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Running smoothly from&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="n">next_time</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+
+                <span class="c1"># clear all targets _DotConstructs&#39; caches of target instances</span>
+                <span class="c1"># since events and steps may have changed instance references:</span>
+                <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ODE_targets</span> \
+                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">explicit_targets</span><span class="p">:</span>
+                    <span class="n">target</span><span class="o">.</span><span class="n">_target_instances</span> <span class="o">=</span> <span class="n">unknown</span>
+
+                <span class="c1"># determine array layouts (froms and tos of slices)</span>
+                <span class="c1"># and compose initial value-array:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Composing initial value array...&quot;</span><span class="p">)</span>
+                <span class="c1"># list of target variables:</span>
+                <span class="n">target_variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_variable</span>
+                         <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ODE_targets</span><span class="p">]))</span>
+                <span class="c1"># list of array slice lengths, one for each target variable,</span>
+                <span class="c1"># length equalling number of target instances:</span>
+                <span class="n">lens</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">target_variables</span><span class="p">]</span>
+                <span class="c1"># upper slice index is given by cumulative sum of lens:</span>
+                <span class="n">tos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">lens</span><span class="p">)</span>
+                <span class="c1"># lower slice index is previous slice&#39;s upper index:</span>
+                <span class="n">froms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mi">0</span><span class="p">],</span> <span class="n">tos</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="c1"># total array length:</span>
+                <span class="n">arraylen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">lens</span><span class="p">)</span>
+                <span class="c1"># init the array:</span>
+                <span class="n">initial_array_ode</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">arraylen</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">target_variables</span><span class="p">):</span>
+                    <span class="c1"># store slice indices in target variables:</span>
+                    <span class="n">var</span><span class="o">.</span><span class="n">_from</span> <span class="o">=</span> <span class="n">froms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">var</span><span class="o">.</span><span class="n">_to</span> <span class="o">=</span> <span class="n">tos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="c1"># get initial values from instances and store in array:</span>
+                    <span class="n">initial_array_ode</span><span class="p">[</span><span class="n">froms</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">tos</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> \
+                        <span class="n">var</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">instances</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">owning_class</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span>
+                <span class="c1"># store slice indices also in targets:</span>
+                <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ODE_targets</span><span class="p">:</span>
+                    <span class="n">var</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span>
+                    <span class="n">target</span><span class="o">.</span><span class="n">_from</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">_from</span>
+                    <span class="n">target</span><span class="o">.</span><span class="n">_to</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">_to</span>
+
+                <span class="c1"># In Odeint, call get_rhs_array to get the RHS of the ODE</span>
+                <span class="c1"># system as an array (step 3.1 in runner scheme) then return</span>
+                <span class="c1"># the trajectory (3.2 in runner scheme):</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Calling ODE solver...&quot;</span><span class="p">)</span>
+
+                <span class="n">_starttime</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>  <span class="c1"># for performance reporting</span>
+
+                <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">solver</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">initial_array_ode</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                <span class="c1"># now tell the solver to integrate from current time to</span>
+                <span class="c1"># next_time. it will call solout at least every dt:</span>
+                <span class="n">solver</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">next_time</span><span class="p">)</span>
+                <span class="c1"># now solout has filled the times and sol with the integration</span>
+                <span class="c1"># result, so we can process them:</span>
+                <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+                <span class="n">ode_trajectory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+
+                <span class="c1"># TODO: capture solver failures and report any errors!</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      ...took&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">_starttime</span><span class="p">,</span> <span class="s2">&quot;seconds and&quot;</span><span class="p">,</span>
+                      <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">),</span> <span class="s2">&quot;time steps&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Save t values to output dict:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Saving results to output dict...&quot;</span><span class="p">)</span>
+                <span class="c1"># save trajectory of ODE variables to output dict:</span>
+                <span class="n">tlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">])</span>  <span class="c1"># no. of simulated time points</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ODE_targets</span><span class="p">):</span>
+                    <span class="c1"># from this target&#39;s slice starting at column target._from,</span>
+                    <span class="c1"># read results column by column and store in corresponding</span>
+                    <span class="c1"># target instances:</span>
+                    <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="o">.</span><span class="n">instances</span><span class="p">):</span>
+                        <span class="c1"># get this instance&#39;s value column as a list,</span>
+                        <span class="c1"># containing the values for all time points:</span>
+                        <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                                <span class="n">ode_trajectory</span><span class="p">[:,</span> <span class="n">target</span><span class="o">.</span><span class="n">_from</span> <span class="o">+</span> <span class="n">pos</span><span class="p">])</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span>
+                                       <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tlen</span><span class="p">:</span>
+                                <span class="c1"># append to existing list:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span>
+                                    <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">][</span><span class="n">inst</span><span class="p">]</span> <span class="o">+=</span> <span class="n">values</span>
+                        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                            <span class="c1"># store as new list:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span>
+                                <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span><span class="p">][</span><span class="n">inst</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
+
+                <span class="c1"># Take the time steps output by the ODE solver and apply</span>
+                <span class="c1"># Explicit processes a posteriori (step 3.3 in runner scheme).</span>
+                <span class="c1"># Save them to the trajectory_dict</span>
+                <span class="c1"># This is only done if there are any Explicit processes.</span>
+
+                <span class="c1"># TODO: in principle, this is inefficient since these processes</span>
+                <span class="c1"># were applied already during ODE integration, only their</span>
+                <span class="c1"># results were not stored. Can this be improved? Sadly, depen-</span>
+                <span class="c1"># ding on the solver method, we might not be sure that when</span>
+                <span class="c1"># solout is called, the previous call to apply_explicits was</span>
+                <span class="c1"># for the same time point and state, so we cannot simply use</span>
+                <span class="c1"># its result... (is this really true?)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">explicit_processes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Applying Explicit processes to simulated &quot;</span>
+                          <span class="s2">&quot;time points...&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ts</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_current_iteration</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># marks current evaluation caches as outdated</span>
+                        <span class="c1"># copy values from returned matrix to instances&#39;</span>
+                        <span class="c1"># attributes:</span>
+                        <span class="n">ode_values</span> <span class="o">=</span> <span class="n">ode_trajectory</span><span class="p">[</span><span class="n">pos</span><span class="p">,</span> <span class="p">:]</span>
+                        <span class="c1"># read values from result vector in same order as</span>
+                        <span class="c1"># written into it:</span>
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">target_variables</span><span class="p">):</span>
+                            <span class="n">var</span><span class="o">.</span><span class="n">fast_set_values</span><span class="p">(</span><span class="n">ode_values</span><span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">_from</span><span class="p">:</span><span class="n">var</span><span class="o">.</span><span class="n">_to</span><span class="p">])</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">apply_explicits</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                        <span class="c1"># complete the output dictionary:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">save_to_traj</span><span class="p">(</span><span class="n">targets_to_save</span><span class="p">,</span>
+                                          <span class="n">add_to_output</span><span class="p">,</span>
+                                          <span class="n">max_resolution</span><span class="p">,</span>
+                                          <span class="n">dt</span><span class="p">)</span>
+
+            <span class="c1"># set current model time to end of previous ODE integration:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">next_time</span>
+
+            <span class="c1"># After all that is done, determine what happens at the</span>
+            <span class="c1"># discontinuity (step 3.4 in runner scheme)</span>
+            <span class="c1"># Delete the discontinuity from the dictionary and determine when</span>
+            <span class="c1"># the next one happens:</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">t_1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">next_discontinuities</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="c1"># set current model time to end of previous ODE integration:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">next_time</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Executing Steps and/or Events at&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+
+                <span class="c1"># loop over all co-occurring steps/events.</span>
+                <span class="c1"># TODO: determine a &quot;correct&quot; order of steps/events or deal</span>
+                <span class="c1"># in some other way with the problem of co-occurrence and</span>
+                <span class="c1"># potential mutual dependences, including the potential</span>
+                <span class="c1"># (de)activation of entities.</span>
+                <span class="k">for</span> <span class="n">discontinuity</span> <span class="ow">in</span> <span class="n">next_discontinuities</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+                    <span class="c1"># print(&#39;        Entering the dicontinuity loop, t=&#39;, t)</span>
+                    <span class="c1"># discontinuity is a tuple (event/step, entity/taxon)</span>
+                    <span class="n">process</span> <span class="o">=</span> <span class="n">discontinuity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">inst</span> <span class="o">=</span> <span class="n">discontinuity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="c1"># Test if the instance is active in case of it being an</span>
+                    <span class="c1"># entity:</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">_AbstractEntityMixin</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">inst</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+                            <span class="c1"># If it is not active, break.</span>
+                            <span class="k">continue</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Event</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Event&quot;</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">inst</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+                        <span class="n">eventtype</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">rate_or_timefunc</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">method</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                        <span class="c1"># Perform the event by calling its implementation method:</span>
+                        <span class="n">method</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                        <span class="c1"># determine this event&#39;s next occurrence:</span>
+                        <span class="k">if</span> <span class="n">eventtype</span> <span class="o">==</span> <span class="s2">&quot;rate&quot;</span><span class="p">:</span>
+                            <span class="c1"># draw time from exponential distribution:</span>
+                            <span class="n">next_time</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> \
+                                        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span>
+                                                              <span class="n">rate_or_timefunc</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">eventtype</span> <span class="o">==</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span>
+                            <span class="c1"># ask event when it next happens:</span>
+                            <span class="n">next_time</span> <span class="o">=</span> <span class="n">rate_or_timefunc</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                            <span class="k">assert</span> <span class="n">next_time</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;next time must be &gt; t&quot;</span>
+                        <span class="c1"># register it:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">next_discontinuities</span><span class="p">[</span><span class="n">next_time</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">process</span><span class="p">,</span>
+                                                                    <span class="n">inst</span><span class="p">))</span>
+                        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                            <span class="n">next_discontinuities</span><span class="p">[</span><span class="n">next_time</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">process</span><span class="p">,</span>
+                                                                <span class="n">inst</span><span class="p">)]</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      next time&quot;</span><span class="p">,</span> <span class="n">next_time</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Step</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Step&quot;</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">inst</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+                        <span class="n">timefunc</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">method</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">specification</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="c1"># Perform the step by calling its implementation method:</span>
+                        <span class="n">method</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                        <span class="c1"># determine this event&#39;s next occurrence:</span>
+                        <span class="n">next_time</span> <span class="o">=</span> <span class="n">timefunc</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                        <span class="k">assert</span> <span class="n">next_time</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;next time must be &gt; t&quot;</span>
+                        <span class="c1"># register it:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">next_discontinuities</span><span class="p">[</span><span class="n">next_time</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">process</span><span class="p">,</span>
+                                                                    <span class="n">inst</span><span class="p">))</span>
+                        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                            <span class="n">next_discontinuities</span><span class="p">[</span><span class="n">next_time</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">process</span><span class="p">,</span>
+                                                                <span class="n">inst</span><span class="p">)]</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      next time&quot;</span><span class="p">,</span> <span class="n">next_time</span><span class="p">)</span>
+
+                <span class="c1"># Complete the new state by applying all explicit processes</span>
+                <span class="c1"># (3.5 in runner scheme):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Applying Explicit processes to changed state...&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">explicit_processes</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">apply_explicits</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+                <span class="c1"># Store all information that has been calculated at time t:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Completing output dict...&quot;</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_to_traj</span><span class="p">(</span><span class="n">targets_to_save</span><span class="p">,</span> <span class="n">add_to_output</span><span class="p">,</span>
+                                  <span class="n">max_resolution</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+
+            <span class="c1"># TODO: discuss whether hooks make sense, then maybe:</span>
+            <span class="c1"># TODO: add hooks to runner scheme</span>
+            <span class="c1"># apply all mid-hooks</span>
+            <span class="k">if</span> <span class="n">Hooks</span><span class="o">.</span><span class="n">_mid_hooks</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Executing mid-hooks ...&quot;</span><span class="p">)</span>
+                <span class="n">Hooks</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="n">Hooks</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">mid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">t_0</span><span class="p">)</span>
+
+        <span class="c1"># TODO: discuss whether hooks make sense, then maybe:</span>
+        <span class="c1"># TODO: add hooks to runner scheme</span>
+        <span class="c1"># apply all post-hooks</span>
+        <span class="k">if</span> <span class="n">Hooks</span><span class="o">.</span><span class="n">_post_hooks</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Executing post-hooks ...&quot;</span><span class="p">)</span>
+            <span class="n">Hooks</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="n">Hooks</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">post</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">t_0</span><span class="p">)</span>
+
+        <span class="c1"># Assert every list still has the same lenght:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;asserting same lenghts of all entries&#39;</span><span class="p">)</span>
+        <span class="n">tlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">targets_to_save</span><span class="p">:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="o">.</span><span class="n">instances</span>
+            <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span> <span class="o">==</span> <span class="n">tlen</span><span class="p">,</span> <span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">]),</span> <span class="n">tlen</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">],</span>
+                    <span class="n">var</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span></div>
+
+<div class="viewcode-block" id="Runner.save_to_traj"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.runner.Runner.save_to_traj">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_traj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                     <span class="n">targets</span><span class="p">,</span>
+                     <span class="n">add_to_output</span><span class="p">,</span>
+                     <span class="n">max_resolution</span><span class="p">,</span>
+                     <span class="n">dt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save simulation results to output dictionary.</span>
+
+<span class="sd">        Update self.trajectory_dict for some targets.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        targets : list</span>
+<span class="sd">            list of targets (variables or dotconstructs) to save</span>
+<span class="sd">        add_to_output : list or None</span>
+<span class="sd">            optional additional list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">add_to_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">targets</span> <span class="o">+=</span> <span class="n">add_to_output</span>
+        <span class="c1"># determine no. of simulated time points:</span>
+        <span class="n">tlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+            <span class="c1"># target is a variable or a dotconstruct</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="o">.</span><span class="n">instances</span>
+            <span class="n">idle_instances</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># Check for deactivated instances. The following check is</span>
+            <span class="c1"># necessary, since Process Taxa cannot be inactive:</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="p">,</span>
+                          <span class="n">_AbstractEntityMixin</span><span class="p">):</span>
+                <span class="n">idle_instances</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="o">.</span><span class="n">idle_entities</span>
+            <span class="c1"># get values to store from instance attributes:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+
+            <span class="c1"># write values into all active Instances:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">instances</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># check whether value needs to be stored by comparing</span>
+                    <span class="c1"># existing list length with no. of time points:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tlen</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                            <span class="c1"># when handling lists, python only add references!</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][:])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="c1"># else do nothing since value was already stored.</span>
+                    <span class="c1"># assert len(self.trajectory_dict[var][inst]) == tlen</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="c1"># This branch is active if the entity has not been</span>
+                    <span class="c1"># activated before.</span>
+                    <span class="c1"># create new list with Nones for time that has passed:</span>
+                    <span class="n">value_strip</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">tlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">value_strip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_strip</span>
+                    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span> <span class="o">==</span> <span class="n">tlen</span>
+
+            <span class="c1"># check if there are any idle instances and fill their trajectory</span>
+            <span class="c1"># with None to fit he length of &#39;t&#39;:</span>
+            <span class="k">if</span> <span class="n">idle_instances</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">idle_instances</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>  <span class="c1"># already in trajectory_dict</span>
+                        <span class="c1"># Check for length of list:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tlen</span><span class="p">:</span>
+                            <span class="n">len_of_none</span> <span class="o">=</span> <span class="p">(</span>
+                                <span class="n">tlen</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">]))</span>
+                            <span class="n">none_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="n">len_of_none</span>
+                            <span class="c1"># Make list as long as &#39;t&#39; in trajectory_dict:</span>
+                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">none_list</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                            <span class="c1"># And make sure it has the length of &#39;t&#39;</span>
+                            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span> <span class="o">==</span> <span class="n">tlen</span>
+                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>  <span class="c1"># Not yet in trajectory_dict</span>
+                        <span class="c1"># create new list:</span>
+                        <span class="n">none_list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="n">tlen</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">none_list</span><span class="p">]</span>
+                        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span> <span class="o">==</span> <span class="n">tlen</span>
+        <span class="k">if</span> <span class="n">max_resolution</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;    Reducing resolution&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]):</span>
+                <span class="c1"># See if 3 timesteps are closer than dt:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">10</span><span class="p">):</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="n">dt</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                        <span class="c1"># print(f&#39;deleting, diff={diff}&#39;)</span>
+                        <span class="c1"># delete this value from all trajectories</span>
+                        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+                            <span class="n">var</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_variable</span>
+                            <span class="n">instances</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="o">.</span><span class="n">instances</span>
+                            <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+                                <span class="c1"># all active entities/taxa</span>
+                                <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span>
+                                        <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">])):</span>
+                                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span>
+                                               <span class="n">inst</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">])</span>
+                            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="p">,</span>
+                                          <span class="n">_AbstractEntityMixin</span><span class="p">):</span>
+                                <span class="c1"># check for inactivie entities</span>
+                                <span class="n">idle_instances</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">target_class</span><span class="o">.</span><span class="n">idle_entities</span>
+                                <span class="k">if</span> <span class="n">idle_instances</span><span class="p">:</span>
+                                    <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">idle_instances</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">])</span>
+                                                <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">])):</span>
+                                            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span><span class="n">inst</span><span class="p">][</span>
+                                                <span class="n">i</span><span class="p">]</span>
+                                        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="n">var</span><span class="p">][</span>
+                                                       <span class="n">inst</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_dict</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Runner.terminate"><a class="viewcode-back" href="../../../_api/pycopancore.runners.html#pycopancore.runners.runner.Runner.terminate">[docs]</a>    <span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine if the runner should stop.</span>
+
+<span class="sd">        Apply all callables specified in self.termination_calls on their</span>
+<span class="sd">        respective instances. If one of them indicates a termination condition</span>
+<span class="sd">        by returning True, then return True. Else return False.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        boolean</span>
+<span class="sd">            True if the runner should stop according to one of the</span>
+<span class="sd">            callables in self.termination_calls.</span>
+<span class="sd">            False, if there are no such callables or if they all return False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_calls</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">signal</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_calls</span><span class="p">:</span>
+                <span class="n">method</span> <span class="o">=</span> <span class="n">signal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">inst</span> <span class="o">=</span> <span class="n">signal</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">method</span><span class="p">(</span><span class="n">inst</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

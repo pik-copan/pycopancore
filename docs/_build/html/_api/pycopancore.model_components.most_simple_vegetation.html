@@ -1,0 +1,199 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.most_simple_vegetation package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-model-components-most-simple-vegetation-package">
+<h1>pycopancore.model_components.most_simple_vegetation package<a class="headerlink" href="#pycopancore-model-components-most-simple-vegetation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pycopancore.model_components.most_simple_vegetation.implementation.html">pycopancore.model_components.most_simple_vegetation.implementation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.most_simple_vegetation.implementation.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.most_simple_vegetation.implementation.html#module-pycopancore.model_components.most_simple_vegetation.implementation.cell">pycopancore.model_components.most_simple_vegetation.implementation.cell module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.most_simple_vegetation.implementation.html#module-pycopancore.model_components.most_simple_vegetation.implementation">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.model_components.most_simple_vegetation.interface">
+<span id="pycopancore-model-components-most-simple-vegetation-interface-module"></span><h2>pycopancore.model_components.most_simple_vegetation.interface module<a class="headerlink" href="#module-pycopancore.model_components.most_simple_vegetation.interface" title="Permalink to this headline">¶</a></h2>
+<p>model component Interface most_simple_vegetation.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.most_simple_vegetation.interface.Cell">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.most_simple_vegetation.interface.</code><code class="descname">Cell</code><a class="reference internal" href="../_modules/pycopancore/model_components/most_simple_vegetation/interface.html#Cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.interface.Cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Cell.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.interface.Cell.capacity">
+<code class="descname">capacity</code><em class="property"> = variable 'capacity' (capacity of resource), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.interface.Cell.capacity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.interface.Cell.growth_rate">
+<code class="descname">growth_rate</code><em class="property"> = variable 'growth rate' (growth rate of resource), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.interface.Cell.growth_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.interface.Cell.stock">
+<code class="descname">stock</code><em class="property"> = variable 'current stock' (current stock of resource), not None, scale=ratio, datatype=&lt;class 'float'&gt;</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.interface.Cell.stock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.most_simple_vegetation.interface.Model">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.most_simple_vegetation.interface.</code><code class="descname">Model</code><a class="reference internal" href="../_modules/pycopancore/model_components/most_simple_vegetation/interface.html#Model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.interface.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Model mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.interface.Model.description">
+<code class="descname">description</code><em class="property"> = '...'</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.interface.Model.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A most simple vegetation growth model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.interface.Model.name">
+<code class="descname">name</code><em class="property"> = '...'</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.interface.Model.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>most simple vegetation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.interface.Model.requires">
+<code class="descname">requires</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.interface.Model.requires" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of other model components required for this model component to
+make sense</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.most_simple_vegetation.model">
+<span id="pycopancore-model-components-most-simple-vegetation-model-module"></span><h2>pycopancore.model_components.most_simple_vegetation.model module<a class="headerlink" href="#module-pycopancore.model_components.most_simple_vegetation.model" title="Permalink to this headline">¶</a></h2>
+<p>Model mixing class most_simple_vegetation.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.most_simple_vegetation.model.Model">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.most_simple_vegetation.model.</code><code class="descname">Model</code><a class="reference internal" href="../_modules/pycopancore/model_components/most_simple_vegetation/model.html#Model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.model.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pycopancore.model_components.most_simple_vegetation.interface.Model" title="pycopancore.model_components.most_simple_vegetation.interface.Model"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.most_simple_vegetation.interface.Model</span></code></a></p>
+<p>Model mixin class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.model.Model.entity_types">
+<code class="descname">entity_types</code><em class="property"> = [&lt;class 'pycopancore.model_components.most_simple_vegetation.implementation.cell.Cell'&gt;]</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.model.Model.entity_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of entity types augmented by this component</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.most_simple_vegetation.model.Model.process_taxa">
+<code class="descname">process_taxa</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.most_simple_vegetation.model.Model.process_taxa" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of process taxa augmented by this component</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.most_simple_vegetation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.model_components.most_simple_vegetation" title="Permalink to this headline">¶</a></h2>
+<p>Model component package most_simple_vegetation.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.model_components.most_simple_vegetation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.model_components.most_simple_vegetation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

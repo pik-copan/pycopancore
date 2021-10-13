@@ -1,0 +1,181 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.copan_global_like_population_growth.implementation.social_system &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.copan_global_like_population_growth.implementation.social_system</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;SocialSystem entity type mixing class template.</span>
+
+<span class="sd">TODO: adjust or fill in code and documentation wherever marked by &quot;TODO:&quot;,</span>
+<span class="sd">then remove these instructions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">....</span> <span class="k">import</span> <span class="n">Explicit</span><span class="p">,</span> <span class="n">ODE</span>
+<span class="kn">from</span> <span class="nn">...base</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">B</span>
+<span class="kn">from</span> <span class="nn">....</span> <span class="k">import</span> <span class="n">master_data_model</span> <span class="k">as</span> <span class="n">D</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">I</span>
+
+<span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sp</span>  <span class="c1"># to be able to use sp.sqrt</span>
+
+
+<span class="c1"># TODO: move this to a suitable place (like pycopancore.util?):</span>
+<div class="viewcode-block" id="sqrtorzero"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.copan_global_like_population_growth.implementation.html#pycopancore.model_components.copan_global_like_population_growth.implementation.social_system.sqrtorzero">[docs]</a><span class="k">def</span> <span class="nf">sqrtorzero</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;square root if positive, zero otherwise.</span>
+<span class="sd">    needed since ODE solver may pass negative values in Jacobian estimation&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">Max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">expr</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="SocialSystem"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.copan_global_like_population_growth.implementation.html#pycopancore.model_components.copan_global_like_population_growth.implementation.social_system.SocialSystem">[docs]</a><span class="k">class</span> <span class="nc">SocialSystem</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;SocialSystem entity type mixin implementation class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># abbreviations:</span>
+    <span class="n">land_area</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">land_area</span>
+    <span class="n">terrestrial_carbon</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">terrestrial_carbon</span>
+    <span class="n">min_fert</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">min_fertility</span>
+    <span class="n">fert_exp</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">fertility_decay_exponent</span>
+ 
+    <span class="n">pop</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">population</span>
+ 
+    <span class="n">fert</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_fert</span>
+            <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">max_fertility</span> <span class="o">-</span> <span class="n">min_fert</span><span class="p">)</span> 
+              <span class="o">*</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">wellbeing</span> 
+              <span class="o">*</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">fertility_maximizing_wellbeing</span>
+                <span class="o">**</span> <span class="n">fert_exp</span>
+              <span class="o">/</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">wellbeing</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">fert_exp</span><span class="p">)</span>
+                 <span class="o">+</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">fertility_maximizing_wellbeing</span>
+                   <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">fert_exp</span><span class="p">)</span>
+              <span class="p">)</span>
+           <span class="p">)</span>
+     
+    <span class="n">mort</span> <span class="o">=</span> <span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">characteristic_mortality</span>
+            <span class="o">/</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">wellbeing</span>
+               <span class="o">/</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">fertility_maximizing_wellbeing</span><span class="p">)</span>
+              <span class="o">**</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">mortality_decay_exponent</span>
+            <span class="o">+</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">mortality_temperature_sensitivity</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">surface_air_temperature</span>
+               <span class="o">-</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">mortality_reference_temperature</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">population_spatial_competition_coefficient</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">population</span> <span class="o">/</span> <span class="n">land_area</span><span class="p">)</span>
+            <span class="o">/</span> <span class="n">sp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">physical_capital</span><span class="p">))</span>
+    
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+                 
+        <span class="n">Explicit</span><span class="p">(</span><span class="s2">&quot;wellbeing, fertility, mortality, births, deaths&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">wellbeing</span><span class="p">,</span>
+             <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">fertility</span><span class="p">,</span>
+             <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">mortality</span><span class="p">,</span>
+             <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">births</span><span class="p">,</span>
+             <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">deaths</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">wellbeing_sensitivity_to_consumption</span> 
+               <span class="o">*</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">consumption_flow</span> <span class="o">/</span> <span class="n">pop</span> 
+             <span class="o">+</span> <span class="n">B</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">metabolism</span><span class="o">.</span><span class="n">wellbeing_sensitivity_to_terrestrial_carbon</span> 
+               <span class="o">*</span> <span class="n">terrestrial_carbon</span> <span class="o">/</span> <span class="n">land_area</span><span class="p">,</span>
+             <span class="n">fert</span><span class="p">,</span>
+             <span class="n">mort</span><span class="p">,</span>
+             <span class="n">pop</span> <span class="o">*</span> <span class="n">fert</span><span class="p">,</span>
+             <span class="n">pop</span> <span class="o">*</span> <span class="n">mort</span><span class="p">]),</span>
+                 
+        <span class="n">ODE</span><span class="p">(</span><span class="s2">&quot;population dynamics&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">pop</span><span class="p">,</span> 
+             <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">migrant_population</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">births</span> <span class="o">-</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">deaths</span><span class="p">,</span>
+             <span class="o">-</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">deaths</span> <span class="o">*</span> <span class="n">I</span><span class="o">.</span><span class="n">SocialSystem</span><span class="o">.</span><span class="n">migrant_population</span> <span class="o">/</span> <span class="n">pop</span><span class="p">])</span>
+
+    <span class="p">]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

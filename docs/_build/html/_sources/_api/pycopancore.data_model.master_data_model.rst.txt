@@ -1,0 +1,78 @@
+pycopancore\.data\_model\.master\_data\_model package
+=====================================================
+
+Submodules
+----------
+
+pycopancore\.data\_model\.master\_data\_model\.cell module
+----------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.master_data_model.cell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.master\_data\_model\.culture module
+-------------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.master_data_model.culture
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.master\_data\_model\.dimensions\_and\_units module
+----------------------------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.master_data_model.dimensions_and_units
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.master\_data\_model\.environment module
+-----------------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.master_data_model.environment
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.master\_data\_model\.individual module
+----------------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.master_data_model.individual
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.master\_data\_model\.metabolism module
+----------------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.master_data_model.metabolism
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.master\_data\_model\.social\_system module
+--------------------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.master_data_model.social_system
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.data\_model\.master\_data\_model\.world module
+-----------------------------------------------------------
+
+.. automodule:: pycopancore.data_model.master_data_model.world
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.data_model.master_data_model
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,149 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Entity-type “Cell” &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Entity-type “Social System”" href="social_system.html" />
+    <link rel="prev" title="Entity-type “World”" href="world.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="entity-type-cell">
+<h1>Entity-type “Cell”<a class="headerlink" href="#entity-type-cell" title="Permalink to this headline">¶</a></h1>
+<p>A <em>cell</em> represents a small spatial region used for discretizing the spatial aspect
+of processes and attributes which are actually continuously distributed in space.</p>
+<p>Each cells is assumed to be connected (consist of one piece)
+and will usually be convex and two-dimensional,
+representing a part of the Earth surface,
+but may also be three-dimensional if the radial dimension is relevant for modeling.</p>
+<p>They may be of a more or less “regular” shape and arrangement,
+e.g., represent a latitude-longitude-regular grid (with rectangular shaped cells whose area diminishes however towards the poles),
+an icosahedral grid (with roughly equally sized hexagonal cells but a small number of pentagonal cells),
+an irregular triangulation adapted to topography (with higher resolution in regions where the correlation length of the relevant environmental processes is smaller),
+or a rough division of the world into a small number of boxes.</p>
+<p>Since they typicylly have no real-world meaning beyond their use for discretization,
+cells are not meant to be used as agents in agent-based model components
+(but their residents or owners may be).</p>
+<div class="section" id="basic-relationships-to-other-entity-types">
+<h2>Basic relationships to other entity-types<a class="headerlink" href="#basic-relationships-to-other-entity-types" title="Permalink to this headline">¶</a></h2>
+<p>Each cell will…</p>
+<ul class="simple">
+<li>be part of a single <a class="reference internal" href="world.html"><span class="doc">world</span></a></li>
+</ul>
+<p>In addition, a cell may…</p>
+<ul class="simple">
+<li>have a location and shape w.r.t. some coordinate system</li>
+<li>have several resident <a class="reference internal" href="individual.html"><span class="doc">individuals</span></a> and <a class="reference internal" href="household.html"><span class="doc">households</span></a></li>
+<li>belong to the territory of a single or a hierarchy of <span class="xref std std-doc">social systems</span></li>
+<li>be owned by some <a class="reference internal" href="individual.html"><span class="doc">individual</span></a> or <a class="reference internal" href="firm.html"><span class="doc">firm</span></a> (e.g. for modeling land use)</li>
+<li>contain the capital or headquarters of a <span class="xref std std-doc">social systems</span> or some <a class="reference internal" href="group.html"><span class="doc">groups</span></a> or <a class="reference internal" href="firm.html"><span class="doc">firms</span></a></li>
+<li>be the place of business of some <a class="reference internal" href="firm.html"><span class="doc">firms</span></a></li>
+</ul>
+<p>All these relationships may be dynamic.</p>
+<p>Finally, a cell may…</p>
+<ul class="simple">
+<li>be related to other cells in a permanent network of geographically neighbouring cells owned by its <a class="reference internal" href="world.html"><span class="doc">world</span></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Framework documentation</a><ul>
+  <li><a href="../index.html">Abstract description of the copan:CORE modeling framework</a><ul>
+  <li><a href="index.html">Entity-types in the copan:CORE base model</a><ul>
+      <li>Previous: <a href="world.html" title="previous chapter">Entity-type “World”</a></li>
+      <li>Next: <a href="social_system.html" title="next chapter">Entity-type “Social System”</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/framework_documentation/abstract_level/entity_types/cell.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../../_sources/framework_documentation/abstract_level/entity_types/cell.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

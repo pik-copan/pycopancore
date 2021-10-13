@@ -1,0 +1,38 @@
+pycopancore\.model\_components\.copan\_global\_like\_carbon\_cycle\.implementation package
+==========================================================================================
+
+Submodules
+----------
+
+pycopancore\.model\_components\.copan\_global\_like\_carbon\_cycle\.implementation\.cell module
+-----------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.copan\_global\_like\_carbon\_cycle\.implementation\.environment module
+------------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.copan\_global\_like\_carbon\_cycle\.implementation\.world module
+------------------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.copan_global_like_carbon_cycle.implementation
+    :members:
+    :undoc-members:
+    :show-inheritance:

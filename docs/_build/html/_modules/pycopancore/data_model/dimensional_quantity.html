@@ -1,0 +1,263 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.data_model.dimensional_quantity &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.data_model.dimensional_quantity</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module for DimensionalQuantity class.&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">dimension</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">unit</span> <span class="k">as</span> <span class="n">U</span>
+
+
+<div class="viewcode-block" id="DimensionalQuantity"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.dimensional_quantity.DimensionalQuantity">[docs]</a><span class="k">class</span> <span class="nc">DimensionalQuantity</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Physical or other dimensional quantity given by</span>
+<span class="sd">    a number of some unit&quot;&quot;&quot;</span>
+
+    <span class="c1"># Note: we avoid the word &quot;value&quot; in this code since</span>
+    <span class="c1"># it is ambiguous (may refer to the whole quantity or just</span>
+    <span class="c1"># the number)</span>
+
+    <span class="c1"># basic data:</span>
+    <span class="n">_number</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;The number of units this quantity equals&quot;&quot;&quot;</span>
+    <span class="n">_unit</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;The unit in which this quantity is given&quot;&quot;&quot;</span>
+
+    <span class="n">_dimension</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;The corresponding dimension&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DimensionalQuantity.number"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.dimensional_quantity.DimensionalQuantity.number">[docs]</a>    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get quantity as a dimensionless number of some (or the default) unit&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO: improve docstring</span>
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the unit this quantity is given in&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span>
+
+    <span class="c1"># TODO: improve docstring</span>
+    <span class="nd">@property</span>  <span class="c1"># read-only</span>
+    <span class="k">def</span> <span class="nf">dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the dimension of this quantity&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dimension</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">unit</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a dimensional quantity from a number and a unit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        number : float or array</span>
+<span class="sd">            The number of units this quantity equals</span>
+<span class="sd">        unit : Unit</span>
+<span class="sd">            The unit in which this quantity is given</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">),</span> \
+            <span class="s2">&quot;number must be a non-dimensional number or array&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span> <span class="n">U</span><span class="o">.</span><span class="n">Unit</span><span class="p">),</span> <span class="s2">&quot;unit must be a Unit object&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span> <span class="o">=</span> <span class="n">unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dimension</span> <span class="o">=</span> <span class="n">unit</span><span class="o">.</span><span class="n">dimension</span>
+
+<div class="viewcode-block" id="DimensionalQuantity.tostr"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.dimensional_quantity.DimensionalQuantity.tostr">[docs]</a>    <span class="k">def</span> <span class="nf">tostr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span>
+        <span class="nb">format</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">unit</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">decimals</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;f&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;{:&quot;</span><span class="o">+</span><span class="nb">format</span><span class="o">+</span><span class="s2">&quot;}&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">(</span><span class="n">unit</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">unit</span><span class="o">.</span><span class="n">symbol</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">symbol</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="p">))</span>
+
+<div class="viewcode-block" id="DimensionalQuantity.reduce"><a class="viewcode-back" href="../../../_api/pycopancore.data_model.html#pycopancore.data_model.dimensional_quantity.DimensionalQuantity.reduce">[docs]</a>    <span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;return unit as dimensionless if it is nondimensional, else return self&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">factor</span> \
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dimension</span> <span class="o">==</span> <span class="n">dimension</span><span class="o">.</span><span class="n">nondim</span> <span class="k">else</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">power</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="o">**</span><span class="n">power</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="o">**</span><span class="n">power</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">exponents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">),</span> \
+                <span class="s2">&quot;can only add DimensionalQuantity to DimensionalQuantity&quot;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">U</span><span class="o">.</span><span class="n">unity</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">other</span><span class="o">.</span><span class="n">_dimension</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dimension</span><span class="p">,</span> \
+            <span class="s2">&quot;different dimensions cannot be added&quot;</span>
+        <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span>
+                                   <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">_number</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">factor</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">exponents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">),</span> \
+                <span class="s2">&quot;can only subtract DimensionalQuantity from DimensionalQuantity&quot;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">U</span><span class="o">.</span><span class="n">unity</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">other</span><span class="o">.</span><span class="n">_dimension</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dimension</span><span class="p">,</span> \
+            <span class="s2">&quot;different dimensions cannot be subtracted&quot;</span>
+        <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span>
+                                   <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">_number</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">factor</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="c1"># TODO: improve the following dirty fix:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;exponents&#39;</span><span class="p">):</span>  <span class="c1"># then it is probably a Unit</span>
+            <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span> <span class="o">*</span> <span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">_number</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">*</span> <span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span>\
+                <span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="c1"># TODO: improve the following dirty fix:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;exponents&#39;</span><span class="p">):</span>  <span class="c1"># then it is probably a Unit</span>
+            <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span> <span class="o">/</span> <span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DimensionalQuantity</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">_number</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">/</span> <span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span>\
+                <span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span> <span class="o">+</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DimensionalQuantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">[</span><span class="n">items</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">_number</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">_number</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">_number</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">_number</span> <span class="o">&lt;</span> <span class="mi">0</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

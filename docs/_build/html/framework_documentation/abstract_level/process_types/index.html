@@ -1,0 +1,148 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Process-types &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Process-type “Ordinary Differential Equation”" href="ODE.html" />
+    <link rel="prev" title="Process taxon “Culture”" href="../process_taxonomy/culture.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="process-types">
+<h1>Process-types<a class="headerlink" href="#process-types" title="Permalink to this headline">¶</a></h1>
+<p>Independently of a classification of processes as belonging to certain process taxa,
+processes are also distinguished by how they are represented formally in a model.</p>
+<p>In copan:CORE, each process has a “mathematical” <em>process type</em>,
+such as “ordinary differential equation”, “implicit equation”, “event”, …</p>
+<p>Note that because of this requirement to have exactly one of these types,
+some complex real-world processes (e.g., “off-equilibrium economic production”)
+whose description in a model involves more than one of these types
+needs to be split up into smaller processes
+(e.g., an “reallocation of factors” process of type “ODE”
+and a “usage of factors” process of type “explicit equation”).</p>
+<p>The process types may be classified into two groups,
+those which influence a variable continuously over time
+(such as “ODE”, “explicit” and “implicit equation”)
+and those which do so only at discrete time points
+(“event” and “step”).</p>
+<p>While each variable may be influenced by several processes,
+there are certain restrictions as to which process type combinations may
+influence the same variable.
+The main restriction is that a variable that is governed
+by a process of type “explicit equation” cannot by influenced by any other process,
+but may occur in processes of type “implicit equation”.
+In contrast, it is possible that a variable whose continuous evolution
+is governed by an “ODE” may also occur in an “implicit equation”
+and may also be changed at discrete time points by an “event” or “step”)</p>
+<p>Currently, we provide the following process types:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ODE.html">Process-type “Ordinary Differential Equation”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="explicit.html">Process-type “Explicit Equation”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implicit.html">Process-type “Implicit Equation”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="event.html">Process-type “Event”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step.html">Process-type “Step”</a></li>
+</ul>
+</div>
+<p>Stochastic differential equations are not currently supported but may be
+approximated by processes of type “step” with a small time step.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Framework documentation</a><ul>
+  <li><a href="../index.html">Abstract description of the copan:CORE modeling framework</a><ul>
+      <li>Previous: <a href="../process_taxonomy/culture.html" title="previous chapter">Process taxon “Culture”</a></li>
+      <li>Next: <a href="ODE.html" title="next chapter">Process-type “Ordinary Differential Equation”</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/framework_documentation/abstract_level/process_types/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../../_sources/framework_documentation/abstract_level/process_types/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

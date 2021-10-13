@@ -1,0 +1,255 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Entities and their main state variables &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="entities-and-their-main-state-variables">
+<h1>Entities and their main state variables<a class="headerlink" href="#entities-and-their-main-state-variables" title="Permalink to this headline">¶</a></h1>
+<p>There are basically two types of
+<em>natural</em>
+entities that come in fixed numbers (a large number of
+<em>grid cells</em>
+and one
+<em>“planet”</em>
+) and three or four types of
+<em>social</em>
+entities that come in variable numbers, two types of
+<em>“agents”</em>
+(
+<em>“individuals” *
+and
+*“societies”</em>
+) and one or two types of network
+<em>links</em>
+(one between “individuals”, and optionally one between “societies”). We list them in ascending order of spatial scale, including those state variables deemed important for the first version of the model (see “Interfaces” below for a longer list of potential variables for later model versions):</p>
+<div class="section" id="individuals">
+<h2>Individuals<a class="headerlink" href="#individuals" title="Permalink to this headline">¶</a></h2>
+<p>By “individual” we here mean a single human or a very small group of humans such as a household or small village that has almost no spatial extent and cannot “merge” or “split” as societies can but that is rather a “member” of a society (see below).</p>
+<ul class="simple">
+<li>The model contains a number
+<em>N</em>
+of explicitly modelled individuals which are understood as a representative
+<em>sample</em>
+of individuals from a usually much larger population
+<em>P &gt;&gt; N.</em></li>
+<li>Both
+<em>N</em>
+and
+<em>P</em>
+will change over time due to birth and death of explicitly modelled individuals in line with population dynamics modelled on the society level (see below).</li>
+<li>Optionally, the model may only have one representative individual per cell, with a “weight” (see below) equal to that cell’s total population, but should allow for more.</li>
+<li>One suggestion would be to introduce a scaling factor P = a N, such that every 1/a individual is modeled explicitly. Also the decision to recreate could be modeled on the individual level, depending on the opinion vector.</li>
+</ul>
+<p>Would it be possible to have a hierarchical structure - that you have individuals belonging to e.g. socio-metabolistic classes and/or /villages/cities at the first level and then countries/regions at the second/third level?</p>
+<p>Each explicitly modelled individual
+<em>i</em>
+has the following variables:</p>
+<ul>
+<li><p class="first">Spatial
+<em>location</em></p>
+<p><em>loc(i) = (x(i), y(i))</em></p>
+</li>
+<li><p class="first">ID of the society it belongs to (see below),
+<em>soc(i)</em></p>
+</li>
+<li><p class="first">Binary (yes/no) opinions
+on certain metabolic/policy questions (
+e.g. exploiting fossil fuels, harvesting more biomass for energy than for food, subsidizing renewable energy, having positive population growth, etc.
+). These will interact with society’s actual choices (see below)</p>
+</li>
+<li><p class="first">Aggregation weight
+<em>w(i)</em>
+due to modelling only a sample of all individuals (should basically equal
+<em>P(soc(i)) / N(soc(i))</em>
+as long as no further heterogeneity is introduced)</p>
+</li>
+</ul>
+<p>In a later version, one may introduce heterogeneity via parameters such as</p>
+<ul class="simple">
+<li>gender and age (if demographics and inequality become interesting)</li>
+<li>certain needs (e.g. demand for food) and dispositions for having certain opinions (e.g. level of risk-aversion, attitude towards technology in general)</li>
+<li>social-metabolic and socio-cultural class / strata (e.g. Sinus bubbles, …)</li>
+</ul>
+</div>
+<div class="section" id="individual-links">
+<h2>Individual links<a class="headerlink" href="#individual-links" title="Permalink to this headline">¶</a></h2>
+<p>These represent a form of friendship, trust,
+economic exchange (?)
+or regular interaction between individuals and carry those bilateral social processes (e.g. imitation, see below) that are not mediated via society (e.g., market processes, see below).</p>
+<ul class="simple">
+<li>Each indiv. link is an
+undirected
+connection between two
+individuals
+.</li>
+<li>Initially, the links should be drawn at random using a suitable random geometric / random spatial network model (e.g. probability of being linked is decaying exponentially or as a power law with spatial distance at some rate or exponent
+<em>d</em>
+).</li>
+<li>Over time, this parameter
+<em>d</em>
+of the spatial link length distribution may be changed either exogenously or as a function of society sizes to represent globalization which may be relevant for modelling the great acceleration.</li>
+<li>Also, links will adapt in some way to the macroscopic social structure represented by the partition of individuals into societies (see below)</li>
+</ul>
+</div>
+<div class="section" id="cells">
+<h2>Cells<a class="headerlink" href="#cells" title="Permalink to this headline">¶</a></h2>
+<p>In each grid cell
+<em>c</em>
+, we may have these variables:</p>
+<ul class="simple">
+<li><em>stocks</em>
+of metabolism-relevant resources (see below), e.g. soil and vegetation carbon stocks, lifestock, area of managed land
+, fossil fuel resources available
+, amount of public infrastructure, other material capital, financial capital</li>
+<li>non-stock variables representing
+<em>qualitative</em>
+states such as soil quality
+, biosphere integrity</li>
+</ul>
+<p>The possible fixed heterogeneities of grid cells were discussed already above under “fixed spatial heterogeneities”.</p>
+</div>
+<div class="section" id="societies-metabolic-groups">
+<h2>“Societies” (=metabolic groups)<a class="headerlink" href="#societies-metabolic-groups" title="Permalink to this headline">¶</a></h2>
+<p>By “society” we here mean a somewhat generic type of group of humans that are metabolically strongly interacting and in that sense may be considered as “acting as one” in most respects that concern their interaction with nature. This is considered to be the most important kind of macroscopic social
+organization
+.</p>
+<ul class="simple">
+<li>Each indiv. is a member of exactly one soc.: societies are non-overlapping and form a partition of the set of individuals.</li>
+<li>This
+<em>membership</em>
+may change over time, e.g. when societies merge or split (see below), or due to migration (the latter not modelled initially?).</li>
+<li>All indivs. living in the same grid cell belong to the same soc. since that enables an easier modelling of the relationship between soc. and nature.</li>
+<li>The
+<em>territory</em>
+of a soc. is the union of all the cells where its members live, hence territories are non-overlapping but may not cover the whole planet (some cells may not belong to any territory).</li>
+<li>Each soc. has some form of
+<em>metabolism/economy</em>
+that decides in some way how much of the available resources (see below) are harvested/extracted and used as input to some “production” processes resulting in population dynamics, some form of emissions/waste, optionally changes in cell attributes such as soil quality, and optionally some changes in wealth and/or
+capital
+.</li>
+<li>Each soc. makes certain
+binary
+choices, e.g. about which resources or technologies to use and/or subsidize that are influenced by indiv. opinions about this.</li>
+</ul>
+</div>
+<div class="section" id="the-planet">
+<h2>The “planet”<a class="headerlink" href="#the-planet" title="Permalink to this headline">¶</a></h2>
+<p>This would only be needed if climate processes are explicitly modelled, e.g. CO2 emissions leading to warming with metabolic impacts. If so, the main variables are probably</p>
+<ul class="simple">
+<li>atmospheric carbon stock</li>
+<li>global mean surface temperature</li>
+</ul>
+<p>More advanced items here with direct relevance to planetary boundaries and the safe operating space issue:</p>
+<ul class="simple">
+<li>carbon cycle</li>
+<li>water cycle</li>
+<li>nutrient cycles</li>
+<li>other biogeochemical cycles</li>
+<li>…</li>
+</ul>
+</div>
+<div class="section" id="other-entities-not-modelled-yet-but-maybe-later">
+<h2>Other entities not modelled yet but maybe later<a class="headerlink" href="#other-entities-not-modelled-yet-but-maybe-later" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Intermediate levels of the metabolic hierarchy, e.g. households, villages, cities</li>
+<li>Groups of individuals that are not closely metabolically interdependent but may still in some respects “act as one”, e.g. society-overarching interest or lobby groups</li>
+<li>Different forms of individual networks such as a distinction between acquaintance and interaction networks like in Schleussner et al.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tmp/Entities_and_their_main_state_variables.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/tmp/Entities_and_their_main_state_variables.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,250 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Modularization, interfaces &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="modularization-interfaces">
+<h1>Modularization, interfaces<a class="headerlink" href="#modularization-interfaces" title="Permalink to this headline">¶</a></h1>
+<p>In order to be able to taylor specific model variants to specific research questions (see below), including the first major questions of</p>
+<ol class="arabic simple">
+<li>reproducing the ongoing
+great acceleration
+and</li>
+<li>identifying scenarios for a future great transformation,</li>
+<li>analyzing resilience of development pathways (as those provided by IAMs, aka optimizing on the edge)</li>
+</ol>
+<p>and to study the
+<em>structural stability</em>
+of the model by replacing individual variants of subcomponents by other variants of the same subcomponent, a thoroughly designed modularization needs to be followed from the start, both in</p>
+<ol class="arabic simple">
+<li>abstract model design and</li>
+<li>concrete software implementation.</li>
+</ol>
+<p>A suitable modularization has probably more than just one level, but the levels should be compatible, preferably forming a hierarchy of components and subcomponents, each of which might represent</p>
+<ul class="simple">
+<li>an individual
+<em>structural/causal equation</em>
+that
+<em>calculates</em>
+one specific
+<em>output variable</em>
+or its first or second time derivative (left-hand side) on the basis of zero or more specific
+<a href="#id1"><span class="problematic" id="id2">*</span></a>input variables *
+(occurring on the right hand side), some of which might be optional,</li>
+<li>an individual
+<em>algebraic/implicit equation</em>
+that states a certain
+<em>relationship</em>
+between a set of variables or their derivatives, which could hence be named the
+<a href="#id3"><span class="problematic" id="id4">*</span></a>interacting variables *
+of this component (e.g. the equation stating that the wages in the energy and final sectors must be equal),</li>
+<li>a
+<em>set</em>
+of such equations belonging together
+<em>thematically</em>
+(e.g. a set of ODEs representing the carbon cycle, or a set of algebraic equations representing the general equilibrium allocation of resources to production processes)</li>
+<li><em>what else?</em></li>
+</ul>
+<p>Particular care needs to be taken with components representing stochastic, discontinuous processes. E.g., the network adaptation
+<em>might</em>
+be represented by</p>
+<ol class="arabic simple">
+<li>an “adaptation timing component” that selects the next time point at which adaptation occurs in one of several ways (output variable: yes/no whether the current time point is this time point)</li>
+<li>a “rewired link selection component” that selects the link to be rewired in one of several ways</li>
+<li>and a “rewiring component” that selects a pair of nodes to be newly connected in one of several ways</li>
+<li>or: just one component doing all of these three things.</li>
+</ol>
+<p>As some processes, especially those acting on stocks, often have
+<em>additive</em>
+effects, the default behaviour of the model should be that if a variable occurs as output in more than one component, their output is added, as long as the component does not explicitly state that this is not considered making sense.</p>
+<p>The
+<em>interface</em>
+of a component thus consists at least in naming the</p>
+<ul class="simple">
+<li>input variables (mandatory and optional)</li>
+<li>output variables and corresponding orders of time derivatives, with flags whether output may be added to other components output to the same variables</li>
+<li>interacting variables and corresponding orders of time derivatives</li>
+</ul>
+<p>In order for components to be linked, it is of utmost importance that a consistent set of (potential) interface variables is used, which should be designed in parallel to the components’ interfaces. For many variables, different
+<em>levels of aggregation</em>
+might be needed in different components, so a list like this may be helpful, indicating stocks and flows explicitly in the name:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="6%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>variable name (aggregation level)</strong></td>
+<td><strong>physical</strong>
+<strong>dimension</strong></td>
+<td><strong>description</strong></td>
+</tr>
+<tr class="row-even"><td>population stock (cell)</td>
+<td>humans</td>
+<td>a cell’s total human population</td>
+</tr>
+<tr class="row-odd"><td>population stock (cell, age group)</td>
+<td>humans</td>
+<td>a cell’s population of a certain age group</td>
+</tr>
+<tr class="row-even"><td>labour
+stock
+(cell)</td>
+<td>time per time</td>
+<td>a cell’s total available labour hours per time (will be related to population, possibly by aggregating population over age groups)</td>
+</tr>
+<tr class="row-odd"><td>energy inflow (cell)</td>
+<td>energy per time</td>
+<td>…</td>
+</tr>
+<tr class="row-even"><td>physical capital value (cell)</td>
+<td>monetary</td>
+<td>value
+of all machines, tools, etc. used for economic production in a cell as an exclusive good (i.e., the unit that is used in one production process/facility cannot be used simultaneously in another production process/facility)</td>
+</tr>
+<tr class="row-odd"><td>public infrastructure value (cell)</td>
+<td>monetary</td>
+<td>value of all infrastructure (mostly networked such as transportation &amp; communication) used as a nonexclusive public
+good</td>
+</tr>
+<tr class="row-even"><td>financial capital (cell)</td>
+<td>monetary</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>managed material stock mass (cell)</td>
+<td>mass</td>
+<td>total mass of physical capital, public infrastructure, and other materials managed by society in the cell. the ratio
+* (physical capital value + public infrastructure value) / managed material stock mass*
+may be considered a material efficiency indicator</td>
+</tr>
+<tr class="row-even"><td>…</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p>Aggregation needs to happen on a consistent hierarchy (which should probably match established classifications from relevant disciplines, e.g. age groups used in official statistics, geographic regions used in geosciences), so another list like this may be helpful:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>aggregation level</strong></td>
+<td><strong>description</strong></td>
+</tr>
+<tr class="row-even"><td>cell</td>
+<td>smallest geographic unit, e.g. defined by a lon/lat grid</td>
+</tr>
+<tr class="row-odd"><td>age group</td>
+<td>interval of possible ages of a human, e.g. [0a,18a], [18a,65a], [65a,infinity]</td>
+</tr>
+<tr class="row-even"><td>age in yrs</td>
+<td>one-year intervals of possible ages of a human: [0a,1a], [1a,2a], …</td>
+</tr>
+<tr class="row-odd"><td>…</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<p>In order to bridge different aggregation levels if some component outputs a different aggregation level than another needs as input, there may be specific “
+<em>resolution components</em>
+” whose sole job is to aggregate, disaggregate (using some heuristics?) or interpolate between aggregation levels.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tmp/Modularization__interfaces.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/tmp/Modularization__interfaces.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.data_model.master_data_model.culture &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.data_model.master_data_model.culture</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Master data model for culture.&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">Variable</span>
+
+<span class="kn">from</span> <span class="nn">networkx</span> <span class="k">import</span> <span class="n">DiGraph</span><span class="p">,</span> <span class="n">Graph</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">unity</span>
+
+
+<div class="viewcode-block" id="Culture"><a class="viewcode-back" href="../../../../_api/pycopancore.data_model.master_data_model.html#pycopancore.data_model.master_data_model.culture.Culture">[docs]</a><span class="k">class</span> <span class="nc">Culture</span><span class="p">:</span>
+
+    <span class="c1"># Social networks between individuals:</span>
+    
+    <span class="n">acquaintance_network</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;acquaintance network&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;Basic undirected social network of acquaintance between</span>
+<span class="sd">                 Individuals. Most other social networks will be subgraphs of this.&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Interpersonal_relationship#Stages&quot;</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="n">Graph</span><span class="p">)</span>
+    
+    <span class="n">friendship_network</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;friendship/intimate/family network&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;Smaller (and typically slower-changing) undirected network of</span>
+<span class="sd">                 actual friendships and other intimate relationships such as close</span>
+<span class="sd">                 familiar ties etc. May have a significantly different structure,</span>
+<span class="sd">                 e.g. a qualitatively (less heavy-tailed) degree distribution</span>
+<span class="sd">                 and a higher transitivity.&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Intimate_relationship&quot;</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="n">Graph</span><span class="p">)</span>
+    
+    <span class="c1"># TODO: maybe use &quot;professional_network&quot;:</span>
+    <span class="n">trusted_business_network</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;trusted business partners/colleagues network&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;Similar undirected network for the business side of life, may</span>
+<span class="sd">                 overlap.</span>
+<span class="sd">                 Not meant to include all business contacts such as competitors,</span>
+<span class="sd">                 customers etc. which should rather be represented by a network</span>
+<span class="sd">                 between firms&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Interpersonal_relationship#Types&quot;</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="n">Graph</span><span class="p">)</span>
+    
+    <span class="c1"># Networks between firms and potentially also individuals and social_systems:</span>
+    
+    <span class="n">supply_chain_network</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;supply chain network&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;Directed network of actual (not potential) supplier-customer</span>
+<span class="sd">                 relationships through the economic supply chain, including the</span>
+<span class="sd">                 final end customer link and potentially initial links from</span>
+<span class="sd">                 social systems.&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Supply_chain&quot;</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="n">DiGraph</span><span class="p">)</span>
+    
+    <span class="c1"># Networks between firms only:</span>
+    
+    <span class="n">trusted_competitor_network</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;trusted competitor network&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;Undirected network of basic trust relationships between</span>
+<span class="sd">                 competiting firms, to be used in cartel formation model components.</span>
+<span class="sd">                 Represents the prerequisites of forming a cartel, not the actually</span>
+<span class="sd">                 formed cartel structure (which is rather a set of sets of firms).&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Cartel&quot;</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="n">Graph</span><span class="p">)</span>
+    
+    <span class="c1"># Networks and coalitions between social_systems only:</span>
+    
+    <span class="n">trusted_diplomatic_network</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;trusted diplomatic network&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;Undirected network of basic trust relationships between</span>
+<span class="sd">                 social_systems, to be used in (intersocietal) coalition formation model</span>
+<span class="sd">                 components. Represents the prerequisites of forming a coalition,</span>
+<span class="sd">                 not the actually formed coalition structure (which is rather a set</span>
+<span class="sd">                 of sets of social systems).&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;https://en.wikipedia.org/wiki/Coalition#International_relations&quot;</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="n">Graph</span><span class="p">)</span>
+    
+    <span class="n">intersocietal_coalition_structure</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;intersocietal coalition structure&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;(a set of sets of social systems)&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                 <span class="n">datatype</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+        
+        
+    <span class="c1"># socio-cultural traits that may occur on different levels:</span>
+    
+    <span class="n">is_environmentally_friendly</span> <span class="o">=</span> \
+        <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;is environmentally friendly&quot;</span><span class="p">,</span>
+                 <span class="sd">&quot;&quot;&quot;whether the entity is environmentally friendly or not&quot;&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">scale</span><span class="o">=</span><span class="s2">&quot;ordinal&quot;</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

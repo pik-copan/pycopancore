@@ -1,0 +1,279 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pycopancore.model_components.copan_global_like_carbon_cycle package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-model-components-copan-global-like-carbon-cycle-package">
+<h1>pycopancore.model_components.copan_global_like_carbon_cycle package<a class="headerlink" href="#pycopancore-model-components-copan-global-like-carbon-cycle-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.html">pycopancore.model_components.copan_global_like_carbon_cycle.implementation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.html#module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell">pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.html#module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment">pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.html#module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world">pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pycopancore.model_components.copan_global_like_carbon_cycle.implementation.html#module-pycopancore.model_components.copan_global_like_carbon_cycle.implementation">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_carbon_cycle.interface">
+<span id="pycopancore-model-components-copan-global-like-carbon-cycle-interface-module"></span><h2>pycopancore.model_components.copan_global_like_carbon_cycle.interface module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_carbon_cycle.interface" title="Permalink to this headline">¶</a></h2>
+<p>copan_global_like_carbon_cycle model component Interface.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_carbon_cycle.interface.</code><code class="descname">Cell</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_carbon_cycle/interface.html#Cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Cell mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell.land_area">
+<code class="descname">land_area</code><em class="property"> = variable 'land area', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=square kilometers [km²], &gt;0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell.land_area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell.photosynthesis_carbon_flow">
+<code class="descname">photosynthesis_carbon_flow</code><em class="property"> = extensive variable 'photosynthesis carbon flow', ref=https://en.wikipedia.org/wiki/Photosynthesis, not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[1e9 tC a^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell.photosynthesis_carbon_flow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell.terrestrial_carbon">
+<code class="descname">terrestrial_carbon</code><em class="property"> = extensive variable 'terrestrial carbon stock' ((mass of C in any chemical compound)), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=gigatonnes carbon [GtC], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell.terrestrial_carbon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell.terrestrial_respiration_carbon_flow">
+<code class="descname">terrestrial_respiration_carbon_flow</code><em class="property"> = extensive variable 'plant and soil respiration carbon flow', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[1e9 tC a^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Cell.terrestrial_respiration_carbon_flow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_carbon_cycle.interface.</code><code class="descname">Environment</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_carbon_cycle/interface.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Environment mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.basic_photosynthesis_productivity">
+<code class="descname">basic_photosynthesis_productivity</code><em class="property"> = variable 'basic photosynthesis productivity', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[0.03162277660168379 m tC^-0.5 a^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.basic_photosynthesis_productivity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.basic_respiration_rate">
+<code class="descname">basic_respiration_rate</code><em class="property"> = variable 'basic respiration rate', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[a^-1]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.basic_respiration_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.carbon_solubility_in_sea_water">
+<code class="descname">carbon_solubility_in_sea_water</code><em class="property"> = variable 'carbon solubility in sea water' ((in the sense of Nitzbon et al. 2017, not in g/L but unitless!)), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=unity [], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.carbon_solubility_in_sea_water" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.ocean_atmosphere_diffusion_coefficient">
+<code class="descname">ocean_atmosphere_diffusion_coefficient</code><em class="property"> = variable 'ocean-atmosphere diffusion coefficient', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[a^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.ocean_atmosphere_diffusion_coefficient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.photosynthesis_sensitivity_on_atmospheric_carbon">
+<code class="descname">photosynthesis_sensitivity_on_atmospheric_carbon</code><em class="property"> = variable 'sensitivity of photosynthesis productivity on atmospheric carbon density', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[3.162277660168379e-05 m³ a^-1 tC^-1.5]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.photosynthesis_sensitivity_on_atmospheric_carbon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.reference_atmospheric_carbon">
+<code class="descname">reference_atmospheric_carbon</code><em class="property"> = variable 'reference atmospheric carbon for relationship with temperature' (default: pre-industrial value), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=gigatonnes carbon [GtC], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.reference_atmospheric_carbon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.reference_temperature">
+<code class="descname">reference_temperature</code><em class="property"> = variable 'reference temperature for relationship with atmospheric carbon' (default: pre-industrial value), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=kelvins [K], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.reference_temperature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.respiration_sensitivity_on_atmospheric_carbon">
+<code class="descname">respiration_sensitivity_on_atmospheric_carbon</code><em class="property"> = variable 'sensitivity of respiration rate on atmospheric carbon', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[1e-3 m² a^-1 tC^-1]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.respiration_sensitivity_on_atmospheric_carbon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.temperature_sensitivity_on_atmospheric_carbon">
+<code class="descname">temperature_sensitivity_on_atmospheric_carbon</code><em class="property"> = variable 'sensitivity of temperature on atmospheric carbon', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[1e-9 K tC^-1], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.temperature_sensitivity_on_atmospheric_carbon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.terrestrial_carbon_capacity_per_area">
+<code class="descname">terrestrial_carbon_capacity_per_area</code><em class="property"> = variable 'per-area capacity of terrestrial carbon', not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=[1e3 tC m^-2], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Environment.terrestrial_carbon_capacity_per_area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_carbon_cycle.interface.</code><code class="descname">Model</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_carbon_cycle/interface.html#Model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Model mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model.description">
+<code class="descname">description</code><em class="property"> = 'Simple carbon cycle as in copan:GLOBAL, but with cell-based terrestrial and fossil carbon'</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model.name">
+<code class="descname">name</code><em class="property"> = 'copan:GLOBAL-like carbon cycle'</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model.requires">
+<code class="descname">requires</code><em class="property"> = []</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model.requires" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.World">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_carbon_cycle.interface.</code><code class="descname">World</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_carbon_cycle/interface.html#World"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.World" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for World mixin.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.World.atmospheric_carbon">
+<code class="descname">atmospheric_carbon</code><em class="property"> = extensive variable 'atmospheric carbon stock' ((mass of C in any chemical compound)), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=gigatonnes carbon [GtC], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.World.atmospheric_carbon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.World.surface_air_temperature">
+<code class="descname">surface_air_temperature</code><em class="property"> = intensive variable 'surface air temperature' ((in the meaning used in climate policy debates,                  i.e., at 2m above surface, averaged over the day)), AMIP=tas, not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=kelvins [K], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.World.surface_air_temperature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.interface.World.upper_ocean_carbon">
+<code class="descname">upper_ocean_carbon</code><em class="property"> = extensive variable 'upper ocean carbon stock' ((that which interacts relatively much/fast with atmosphere)), not None, scale=ratio, datatype=&lt;class 'float'&gt;, unit=gigatonnes carbon [GtC], &gt;=0</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.World.upper_ocean_carbon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_carbon_cycle.model">
+<span id="pycopancore-model-components-copan-global-like-carbon-cycle-model-module"></span><h2>pycopancore.model_components.copan_global_like_carbon_cycle.model module<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_carbon_cycle.model" title="Permalink to this headline">¶</a></h2>
+<p>copan_global_like_carbon_cycle model mixing class.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.model.Model">
+<em class="property">class </em><code class="descclassname">pycopancore.model_components.copan_global_like_carbon_cycle.model.</code><code class="descname">Model</code><a class="reference internal" href="../_modules/pycopancore/model_components/copan_global_like_carbon_cycle/model.html#Model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.model.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model" title="pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model"><code class="xref py py-class docutils literal"><span class="pre">pycopancore.model_components.copan_global_like_carbon_cycle.interface.Model</span></code></a></p>
+<p>Model component mixin class.</p>
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.model.Model.entity_types">
+<code class="descname">entity_types</code><em class="property"> = [&lt;class 'pycopancore.model_components.copan_global_like_carbon_cycle.implementation.world.World'&gt;, &lt;class 'pycopancore.model_components.copan_global_like_carbon_cycle.implementation.cell.Cell'&gt;]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.model.Model.entity_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.copan_global_like_carbon_cycle.model.Model.process_taxa">
+<code class="descname">process_taxa</code><em class="property"> = [&lt;class 'pycopancore.model_components.copan_global_like_carbon_cycle.implementation.environment.Environment'&gt;]</em><a class="headerlink" href="#pycopancore.model_components.copan_global_like_carbon_cycle.model.Model.process_taxa" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.copan_global_like_carbon_cycle">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.model_components.copan_global_like_carbon_cycle" title="Permalink to this headline">¶</a></h2>
+<p>copan_global_like_carbon_cycle model component</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.model_components.copan_global_like_carbon_cycle.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.model_components.copan_global_like_carbon_cycle.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

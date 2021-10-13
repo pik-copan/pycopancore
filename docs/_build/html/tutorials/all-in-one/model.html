@@ -1,0 +1,185 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Part 5. Composing the model &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Part 6: Using the model for a study" href="study.html" />
+    <link rel="prev" title="Part 4. Implementing the learning component" href="third_component.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="part-5-composing-the-model">
+<h1>Part 5. Composing the model<a class="headerlink" href="#part-5-composing-the-model" title="Permalink to this headline">¶</a></h1>
+<p>Now that we have our three model components, we can switch from the role of a
+<em>model component developer</em> into the role of a <em>model composer</em> and compose
+the three model components into an actual model:</p>
+<ul>
+<li><p class="first">Copy <code class="docutils literal"><span class="pre">templates/models/SOME_MODEL.py</span></code> into <code class="docutils literal"><span class="pre">pycopancore/models</span></code>,
+rename it to <code class="docutils literal"><span class="pre">my_exploit.py</span></code>, and edit it to have:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">..model_components</span> <span class="k">import</span> <span class="n">my_exploit_growth</span> <span class="k">as</span> <span class="n">growth</span>
+<span class="kn">from</span> <span class="nn">..model_components</span> <span class="k">import</span> <span class="n">my_exploit_fishing</span> <span class="k">as</span> <span class="n">fishing</span>
+<span class="kn">from</span> <span class="nn">..model_components</span> <span class="k">import</span> <span class="n">my_exploit_learning</span> <span class="k">as</span> <span class="n">learning</span>
+
+<span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">Cell</span><span class="p">(</span><span class="n">growth</span><span class="o">.</span><span class="n">Cell</span><span class="p">,</span>
+           <span class="n">fishing</span><span class="o">.</span><span class="n">Cell</span><span class="p">,</span>
+           <span class="n">base</span><span class="o">.</span><span class="n">Cell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cell entity type.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Thereby you say which components the model has and which of them contribute to
+the <code class="docutils literal"><span class="pre">Cell</span></code> entity type. The final <code class="docutils literal"><span class="pre">Cell</span></code> class is composed via multiple
+inheritance from the mixin classes provided by two of our model components,
+and the basic <code class="docutils literal"><span class="pre">Cell</span></code> mixin class shipped within the <code class="docutils literal"><span class="pre">base</span></code> model component.
+Note that <code class="docutils literal"><span class="pre">base.Cell</span></code> must always be named last in the list. (Despite this,
+the order is almost arbitrary and matters only when different components
+define the <em>same</em> attribute or method in different ways.)</p>
+<ul>
+<li><p class="first">In the same way as for <code class="docutils literal"><span class="pre">Cell</span></code>, edit the definitions of the classes
+<code class="docutils literal"><span class="pre">Individual</span></code>, <code class="docutils literal"><span class="pre">Environment</span></code>, <code class="docutils literal"><span class="pre">Metabolism</span></code>, and <code class="docutils literal"><span class="pre">Culture</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Individual</span><span class="p">(</span><span class="n">fishing</span><span class="o">.</span><span class="n">Individual</span><span class="p">,</span>
+                 <span class="n">learning</span><span class="o">.</span><span class="n">Individual</span><span class="p">,</span>
+                 <span class="n">base</span><span class="o">.</span><span class="n">Individual</span><span class="p">)</span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">Environment</span><span class="p">(</span><span class="n">growth</span><span class="o">.</span><span class="n">Environment</span><span class="p">,</span>
+                  <span class="n">base</span><span class="o">.</span><span class="n">Environment</span><span class="p">)</span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">Metabolism</span><span class="p">(</span><span class="n">fishing</span><span class="o">.</span><span class="n">Metabolism</span><span class="p">,</span>
+                 <span class="n">base</span><span class="o">.</span><span class="n">Metabolism</span><span class="p">)</span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">Culture</span><span class="p">(</span><span class="n">learning</span><span class="o">.</span><span class="n">Culture</span><span class="p">,</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">Culture</span><span class="p">)</span><span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Even though we do not explicitly use them, all pycopancore models must also
+contain the <code class="docutils literal"><span class="pre">World</span></code> and <code class="docutils literal"><span class="pre">SocialSystem</span></code> entity-types, so we need to keep
+also:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">World</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">World</span><span class="p">)</span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">SocialSystem</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">SocialSystem</span><span class="p">)</span><span class="o">...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The latter is because every <code class="docutils literal"><span class="pre">Individual</span></code> must belong to some <code class="docutils literal"><span class="pre">SocialSystem</span></code>
+and every <code class="docutils literal"><span class="pre">Cell</span></code> to some <code class="docutils literal"><span class="pre">World</span></code>, hence we will have one object each of
+those later on.</p>
+<ul>
+<li><p class="first">Finally, also compose the <code class="docutils literal"><span class="pre">Model</span></code> class that will serve as the main
+entry-point for pycopancore’s runner, and edit its metadata:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">growth</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+            <span class="n">fishing</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+            <span class="n">learning</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+            <span class="n">base</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;exploit tutorial&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;tutorial version of the copan:EXPLOIT model&quot;</span>
+    <span class="n">entity_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">World</span><span class="p">,</span> <span class="n">SocialSystem</span><span class="p">,</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">Individual</span><span class="p">]</span>
+    <span class="n">process_taxa</span> <span class="o">=</span> <span class="p">[</span><span class="n">Environment</span><span class="p">,</span> <span class="n">Metabolism</span><span class="p">,</span> <span class="n">Culture</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Now the model is ready to be used in a study: <a class="reference internal" href="study.html"><span class="doc">Part 6: Using the model for a study</span></a></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Tutorial</a><ul>
+      <li>Previous: <a href="third_component.html" title="previous chapter">Part 4. Implementing the learning component</a></li>
+      <li>Next: <a href="study.html" title="next chapter">Part 6: Using the model for a study</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/tutorials/all-in-one/model.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/tutorials/all-in-one/model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

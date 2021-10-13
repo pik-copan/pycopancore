@@ -1,0 +1,30 @@
+pycopancore\.model\_components\.simple\_extraction\.implementation package
+==========================================================================
+
+Submodules
+----------
+
+pycopancore\.model\_components\.simple\_extraction\.implementation\.cell module
+-------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.simple_extraction.implementation.cell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pycopancore\.model\_components\.simple\_extraction\.implementation\.individual module
+-------------------------------------------------------------------------------------
+
+.. automodule:: pycopancore.model_components.simple_extraction.implementation.individual
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pycopancore.model_components.simple_extraction.implementation
+    :members:
+    :undoc-members:
+    :show-inheritance:

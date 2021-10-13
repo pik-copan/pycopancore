@@ -1,0 +1,146 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Optional part 8: Further exercises &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Framework documentation" href="../../framework_documentation/index.html" />
+    <link rel="prev" title="Part 7: Running the study script" href="test.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="optional-part-8-further-exercises">
+<h1>Optional part 8: Further exercises<a class="headerlink" href="#optional-part-8-further-exercises" title="Permalink to this headline">¶</a></h1>
+<p>In the role of <em>model end user</em>:</p>
+<ul class="simple">
+<li>In the study script, introduce another parameter <code class="docutils literal"><span class="pre">initial_high_fraction</span></code>
+that regulates the fraction of individuals who have a high effort initially.</li>
+<li>Set a fixed <code class="docutils literal"><span class="pre">numpy.random.seed</span></code> so that repeated runs
+give the exact same result.</li>
+<li>Use a python package of your taste to save some results from <code class="docutils literal"><span class="pre">traj</span></code> to
+disk, and write a script that reads them and does some further plots.</li>
+<li>Perform a Monte-Carlo simulation in which the model is run with a hundred
+different seeds, and plot the average trajectory of the stock surrounded by a
+band showing the variation of that trajectory over different runs.</li>
+<li>Perform a bifurcation analysis in which this Monte-Carlo simulation is done
+for twenty-one different values of <code class="docutils literal"><span class="pre">initial_high_fraction</span></code> from zero to
+one, and plot the average and standard deviation of the final fish stock
+(i.e. the one at time 100, where the average and standard deviation are
+w.r.t. the 100 runs in the same Monte-Carlo simulation) vs. the value of
+<code class="docutils literal"><span class="pre">initial_high_fraction</span></code>.</li>
+<li>Vary the number of individuals per cell by reducing the number of cells,
+keeping the total number of individuals at 100 and the total fish capacity
+of all cells together at 100. Plot some example runs, then do a Monte-Carlo
+simulation, and finally a bifurcation analysis in which you vary the number
+of cells (instead of the value of <code class="docutils literal"><span class="pre">initial_high_fraction</span></code>).</li>
+<li>Make the cells heterogeneous by giving them different capacities and numbers
+of indidivuals.</li>
+</ul>
+<p>In the role of <em>model composer</em>:</p>
+<ul class="simple">
+<li>Make another model in which you simply leave out the learning component,
+and test it with a copy of the existing study script.</li>
+</ul>
+<p>In the role of <em>model component developer</em>:</p>
+<ul class="simple">
+<li>Change <code class="docutils literal"><span class="pre">my_exploit_growth</span></code> so that the basic growth rate is
+an attribute of <code class="docutils literal"><span class="pre">Cell</span></code> rather than <code class="docutils literal"><span class="pre">Environment</span></code>.</li>
+<li>… (TODO!)</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Tutorial</a><ul>
+      <li>Previous: <a href="test.html" title="previous chapter">Part 7: Running the study script</a></li>
+      <li>Next: <a href="../../framework_documentation/index.html" title="next chapter">Framework documentation</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/tutorials/all-in-one/exercises.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/tutorials/all-in-one/exercises.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
