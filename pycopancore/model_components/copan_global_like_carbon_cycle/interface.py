@@ -55,14 +55,13 @@ class Cell (object):
     terrestrial_respiration_carbon_flow = \
         C.terrestrial_respiration_carbon_flow
 
-
 # process taxa:
 
 
 class Environment (object):
     """Interface for Environment mixin."""
 
-    # parameters / exogenous veriables:
+    # parameters / exogenous variables / read-only:
     
     ocean_atmosphere_diffusion_coefficient = \
         ENV.ocean_atmosphere_diffusion_coefficient

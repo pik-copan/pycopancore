@@ -23,11 +23,11 @@ ninds = 400 # no. individuals
 t_1 = 2120
 
 # choose one of two scenarios:
-filename = "/home/jobst/work/with.pickle"
-#filename = "/home/jobst/work/without.pickle"
+#filename = "/home/heitzig/work/with.pickle"
+filename = "/home/heitzig/work/without.pickle"
 # (these files will be read by plot_example1.py)
 
-if filename == "/home/jobst/work/with.pickle":
+if filename == "/home/heitzig/work/with.pickle":
     with_awareness = 1
     with_learning = 1
     with_voting = 1
