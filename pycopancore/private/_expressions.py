@@ -607,6 +607,8 @@ def _eval(expr, iteration=None):
                 length = argvals[i].size
                 pos = 0 if length == 1 else cardinalities.index(length)
                 argvals[i] = broadcast(argvals[i], branchings[pos:])
+    else:
+        argvals = []
     if t in (D.Variable, _DotConstruct):
         vals = np.array(expr.eval())
         cardinalities = expr.cardinalities

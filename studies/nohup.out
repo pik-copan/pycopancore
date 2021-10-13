@@ -1,2 +1,7 @@
 log4j:WARN No appenders could be found for logger (com.spotify.docker.client.DockerConfigReader).
 log4j:WARN Please initialize the log4j system properly.
+2021-10-13 11:03:48 Loading updated app package /home/heitzig/.config/obsidian/obsidian-0.12.15.asar
+2021-10-13 11:03:48 Checking for update using Github
+2021-10-13 11:03:49 Success.
+2021-10-13 11:03:49 Latest version is 0.12.15
+2021-10-13 11:03:49 App is up to date.
