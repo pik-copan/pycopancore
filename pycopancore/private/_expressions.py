@@ -609,6 +609,7 @@ def _eval(expr, iteration=None):
                 argvals[i] = broadcast(argvals[i], branchings[pos:])
     else:
         argvals = []
+    print("XXX", isinstance(expr, sp.Expr), tt == sp.FunctionClass, len(expr.args), t != sp.Piecewise, t, tt, argvals)
     if t in (D.Variable, _DotConstruct):
         vals = np.array(expr.eval())
         cardinalities = expr.cardinalities
