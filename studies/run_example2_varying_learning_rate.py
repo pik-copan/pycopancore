@@ -9,29 +9,56 @@ from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
+import argparse
+import os
 
-# first thing: set seed so that each execution must return same thing:
-random.seed(10)
+parser = argparse.ArgumentParser()
+parser.add_argument('-i','--task-id', required=True, type=int)
+parser.add_argument('-s','--seed', required=True, type=int)
+args = vars(parser.parse_args())
+
+seed = args["seed"]
+task = args["task_id"]
+
+random.seed(seed)
+
+p_env_friendly = 0.40 #0.25
+updates = np.logspace(np.log10(1/50), np.log10(12), 50)[task]
+with_social = True
+t_1 = 2120
 
 # parameters:
+
+#This is going in the right direction
+#S0 = 2e11 * D.gigajoules * array([1, 1])
+#renewable_scaling = 2500000
+
+#1e12 collapse
+#5e11 collapse
+#2.5e11 almost collapse
+#4e11 scaling 600000, 98 W collapse
+#3e11 scaling 1100000 101.91 GW almost collapse
+S0 = 2e11 * D.gigajoules * array([1, 1])
+renewable_scaling = 2500000
+
 
 nworlds = 1  # no. worlds
 nsocs = 2 # no. social_systems
 ncells = 4  # no. cells
 ninds = 400 # no. individuals
 
-t_1 = 2120
 
 # choose one of two scenarios:
-#filename = "/home/heitzig/work/with.pickle"
-filename = "/home/heitzig/work/without.pickle"
+#filename = "/home/jobst/work/without.pickle"
 # (these files will be read by plot_example1.py)
 
-if filename == "/home/heitzig/work/with.pickle":
+if with_social: 
+    filename = "core_with_social_u_{0}_loweredS0_{1}.p".format(updates,seed)
     with_awareness = 1
     with_learning = 1
     with_voting = 1
 else:
+    filename = "core_without_social_u_{0}_loweredS0_{1}.p".format(updates, seed)
     with_awareness = 0
     with_learning = 0
     with_voting = 0
@@ -49,8 +76,8 @@ metabolism = M.Metabolism(
 culture = M.Culture(
     awareness_lower_carbon_density=1e-5,
     awareness_upper_carbon_density=4e-5,
-    awareness_update_rate = 1 if with_awareness else 0,
-    environmental_friendliness_learning_rate = 1 if with_learning else 0,
+    awareness_update_rate = updates if with_awareness else 0,
+    environmental_friendliness_learning_rate = updates if with_learning else 0,
     )
 
 # generate entities and plug them together:
@@ -68,27 +95,32 @@ culture = M.Culture(
     has_renewable_subsidy = False,
     has_emissions_tax = False,
     has_fossil_ban = False,
-    emissions_tax_intro_threshold = 0.5, # disabled
-    renewable_subsidy_intro_threshold = 1, # disabled
-    fossil_ban_intro_threshold = 1, # disabled
-    emissions_tax_level = 30 * 200e9, # see Wikipedia social cost of carbon. 100e9*3.5,
+    emissions_tax_intro_threshold = 1, # disabled
+    renewable_subsidy_intro_threshold = 0.5, # disabled
+    fossil_ban_intro_threshold = 0.5, # disabled
+    renewable_subsidy_keeping_threshold = 0.5,
+    fossil_ban_keeping_threshold = 0.5,
+    emissions_tax_level = 20 * 200e9, # see Wikipedia social cost of carbon. 100e9*3.5,
     time_between_votes = 4 if with_voting else 1e100, 
     ) for s in range(nsocs)]
 
+# renewable_scaling = 100000
 (boreal, temperate, subtropical, tropical) = cells = [M.Cell(
     social_system = social_systems[c//2],
     renewable_sector_productivity = [.7, .9, 1.1, 1.3][c]
-        * 2000 * M.Cell.renewable_sector_productivity.default,
+        * renewable_scaling * M.Cell.renewable_sector_productivity.default,
         # represents dependency of solar energy on solar insolation angle
-    fossil_sector_productivity = M.Cell.fossil_sector_productivity.default * 7,
-    biomass_sector_productivity = M.Cell.biomass_sector_productivity.default * 5
+    fossil_sector_productivity = M.Cell.fossil_sector_productivity.default *280,
+    #biomass_sector_productivity = M.Cell.biomass_sector_productivity.default * 5
+    biomass_sector_productivity=3e5*10**(0.4)*900,
     # these values result in realistic total energy production for the year 2000, see below
     ) for c in range(ncells)]
 
 individuals = [M.Individual(
                 cell = cells[i%4],
                 is_environmentally_friendly = 
-                    random.choice([False, True], p=[.8, .2]), # represents the "20% suffice" assumption 
+                    random.choice([False, True], p=[1-p_env_friendly,
+                                                    p_env_friendly]), # represents the "20% suffice" assumption 
                 ) 
                for i in range(ninds)]
 
@@ -109,7 +141,7 @@ for index, i in enumerate(individuals):
             culture.acquaintance_network.add_edge(i, j)
 
 # distribute area and vegetation uniformly since it seems there are no real differences between the actual zones:
-Sigma0 = 1.5e8 * D.square_kilometers * array([0.25, 0.25,  .25, .36])
+Sigma0 = 1.5e8 * D.square_kilometers * array([0.25, 0.25,  .25, .25])
 M.Cell.land_area.set_values(cells, Sigma0)
 
 L0 = 2480 * D.gigatonnes_carbon * array([0.25, 0.25,  .25, .25])  # 2480 is yr 2000
@@ -121,14 +153,17 @@ M.Cell.fossil_carbon.set_values(cells, G0)
 
 # distribute population 1:3 between north and south, and 2:3 within each:
 r = random.uniform(size=nsocs)
-P0 = 6e9 * D.people * array([0.1, 0.15,  0.3, 0.45])  # 6e9 is yr 2000
+#P0 = 6e9 * D.people * array([0.1, 0.15,  0.3, 0.45])  # 6e9 is yr 2000
+P0 = 6e9 * D.people * array([0.25, 0.75])  # 6e9 is yr 2000
+
 M.SocialSystem.population.set_values(social_systems, P0)
 
 # distribute capital 2:1:
 K0 = sum(P0) * 1e4 * D.dollars/D.people * array([2/3, 1/3])
 M.SocialSystem.physical_capital.set_values(social_systems, K0)
 
-S0 = 1e12 * D.gigajoules * array([1, 1])
+#S0 = 1e12 * D.gigajoules * array([1, 1])
+#S0 = 1e12 * D.gigajoules * array([1, 1])
 M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
 
 w = worlds[0]
@@ -145,10 +180,7 @@ for v in c.variables: print(v,v.get_value(c))
 runner = Runner(model=model)
 start = time()
 traj = runner.run(t_0=2000, t_1=t_1, dt=1, 
-                  add_to_output=[
-                    M.Individual.represented_population, 
-                    M.SocialSystem.population
-                    ])
+                  add_to_output=[M.Individual.represented_population])
 
 
 for v in environment.variables: print(v,v.get_value(environment))
@@ -194,6 +226,23 @@ print("B (3), F (11), R(100):",
       Fglobal, Fglobal.tostr(unit=D.gigatonnes_carbon/D.years),
       Rglobal, Rglobal.tostr(unit=D.gigawatts),
       ) 
+
+B0 = sum(traj[M.SocialSystem.biomass_input_flow][s][-1] 
+         for s in social_systems)
+Bglobal = B0 * D.gigatonnes_carbon / D.years
+Fglobal = sum(traj[M.SocialSystem.fossil_fuel_input_flow][s][-1] 
+              for s in social_systems) * D.gigatonnes_carbon / D.years
+Rglobal = sum(traj[M.SocialSystem.renewable_energy_input_flow][s][-1] 
+              for s in social_systems) * D.gigajoules / D.years
+Eglobal = sum(traj[M.SocialSystem.secondary_energy_flow][s][-1] 
+              for s in social_systems) * D.gigajoules / D.years
+print("B (3), F (11), R(100):",
+      Bglobal, Bglobal.tostr(unit=D.gigatonnes_carbon/D.years),
+      Fglobal, Fglobal.tostr(unit=D.gigatonnes_carbon/D.years),
+      Rglobal, Rglobal.tostr(unit=D.gigawatts),
+      ) 
+
+
 print("cap. deprec. at begin (0.1?):",
       np.mean([traj[M.SocialSystem.physical_capital_depreciation_rate][s][5] 
                for s in social_systems]))

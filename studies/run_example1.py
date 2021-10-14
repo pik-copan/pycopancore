@@ -10,6 +10,11 @@ from pycopancore.runners import Runner
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
 
+from numba.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
+import warnings
+warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
+warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
+
 # first thing: set seed so that each execution must return same thing:
 random.seed(10)
 
@@ -20,25 +25,27 @@ nsocs = 5 # no. social_systems
 ncells = 100  # no. cells
 ninds = 1000 # no. individuals
 
-t_1 = 2010 #2120
+t_1 = 2120
 
 # choose one of two scenarios:
-#filename = "/home/jobst/work/with.pickle"
-filename = "/home/jobst/work/without.pickle"
-# (these files will be read by plot_example1.py)
+with_social = 1
+#dir = "/home/heitzig/work/pycopancore/";
+dir = "/tmp/";
 
-with_spillovers = 1
 
-if filename == "/home/jobst/work/with.pickle":
+if with_social:
+    filename = dir + "with_social.pickle"
     with_migration = 1
     with_awareness = 1
     with_learning = 1
     with_voting = 1
 else:
+    filename = dir + "without_social.pickle"
     with_migration = 0
     with_awareness = 0
     with_learning = 0
     with_voting = 0
+with_spillovers = 1
 
 model = M.Model()
 
@@ -170,7 +177,36 @@ print(time()-start, " seconds")
 t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())
 
-print("\nyr 2000 values (real):")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exit()
+
+print("\nYr 2000 values (real):")
 print("emigration (5e6):",sum(traj[M.SocialSystem.emigration][s][5] 
                               for s in social_systems))
 print("photo (123):",sum(traj[M.Cell.photosynthesis_carbon_flow][c][5] 

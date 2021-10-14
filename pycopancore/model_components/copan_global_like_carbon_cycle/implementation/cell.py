@@ -98,6 +98,6 @@ class Cell (I.Cell):
 #                                        B.Cell.world.atmospheric_carbon],
 #                     do_photosynthesis),
 #                 ODE("respiration", [I.Cell.terrestrial_carbon,
-#                                     I.World.atmospheric_carbon],
+#                                     B.Cell.world.atmospheric_carbon],
 #                     do_respiration),
 #                 ]

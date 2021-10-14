@@ -1,4 +1,6 @@
-"""Script to run example2 model."""
+"""Script to run example2 model, plus comments for possible use by Leander."""
+
+# @Leander: siehe Kommentare mit TODO
 
 from time import time
 from numpy import random, array
@@ -16,25 +18,17 @@ random.seed(10)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 2 # no. social_systems
-ncells = 4  # no. cells
-ninds = 400 # no. individuals
+nsocs = 2 # no. social_systems  # TODO: zunächst Anzahl Länder in Nils' Daten. Später auf Ländercluster aus Sophie Spilles Arbeit reduzieren.
+ncells = 4  # no. cells  # TODO: zunächst = nsocs, also eine pro Land. Später mit Luana abstimmen wegen LPJ. Alternativ: Zellen aus Sophie Spilles Arbeit verwenden.
+ninds = 400 # no. individuals  # TODO: 10000 wie bei Nils
 
 t_1 = 2120
 
-# choose one of two scenarios:
-#filename = "/home/heitzig/work/with.pickle"
-filename = "/home/heitzig/work/without.pickle"
-# (these files will be read by plot_example1.py)
+filename = "/home/heitzig/work/with.pickle"
 
-if filename == "/home/heitzig/work/with.pickle":
-    with_awareness = 1
-    with_learning = 1
-    with_voting = 1
-else:
-    with_awareness = 0
-    with_learning = 0
-    with_voting = 0
+with_awareness = 1
+with_learning = 1
+with_voting = 1
 
 model = M.Model()
 
@@ -47,8 +41,8 @@ metabolism = M.Metabolism(
     )
 
 culture = M.Culture(
-    awareness_lower_carbon_density=1e-5,
-    awareness_upper_carbon_density=4e-5,
+    awareness_lower_carbon_density=1e-4,
+    awareness_upper_carbon_density=2e-4,
     awareness_update_rate = 1 if with_awareness else 0,
     environmental_friendliness_learning_rate = 1 if with_learning else 0,
     )
@@ -63,6 +57,7 @@ culture = M.Culture(
     upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.GtC
     ) for w in range(nworlds)]
 
+# TODO: statt des folgenden ein SocialSystem pro Land:
 (north, south) = social_systems = [M.SocialSystem(
     world = world,
     has_renewable_subsidy = False,
@@ -75,6 +70,7 @@ culture = M.Culture(
     time_between_votes = 4 if with_voting else 1e100, 
     ) for s in range(nsocs)]
 
+# TODO: statt des folgenden eine Zelle pro Land:
 (boreal, temperate, subtropical, tropical) = cells = [M.Cell(
     social_system = social_systems[c//2],
     renewable_sector_productivity = [.7, .9, 1.1, 1.3][c]
@@ -82,9 +78,10 @@ culture = M.Culture(
         # represents dependency of solar energy on solar insolation angle
     fossil_sector_productivity = M.Cell.fossil_sector_productivity.default * 7,
     biomass_sector_productivity = M.Cell.biomass_sector_productivity.default * 5
-    # these values result in realistic total energy production for the year 2000, see below
+    # these values result in realistic total energy production for the year 2000, see below  # TODO: anpassen, so dass die Gesamtenergieprod. wieder stimmt, s.u.
     ) for c in range(ncells)]
 
+# TODO: hier die Variable is_environmentally_friendly stattdessen gemäß Nils' "certainly active" nodes ersetzen:
 individuals = [M.Individual(
                 cell = cells[i%4],
                 is_environmentally_friendly = 
@@ -92,6 +89,7 @@ individuals = [M.Individual(
                 ) 
                for i in range(ninds)]
 
+# TODO: statt des folgenden das von Nils Skript GenerateNetwork.py erzeugte Netzwerk einlesen und verwenden:
 # initialize block model acquaintance network:
 target_degree = 10 # = 2.5% of all agents. Dunbar's number would be too large
 target_degree_samecell = 0.5 * target_degree
@@ -108,6 +106,9 @@ for index, i in enumerate(individuals):
                 else p_other):
             culture.acquaintance_network.add_edge(i, j)
 
+# TODO: statt des folgenden die echten Landflächen der Länder verwenden 
+# und dann die Gesamtvegetation von 2480 GtC und die Fossilen Ressourcen von 1125 GtC proportional zur Landfläche der Länder verteilen:
+
 # distribute area and vegetation uniformly since it seems there are no real differences between the actual zones:
 Sigma0 = 1.5e8 * D.square_kilometers * array([0.25, 0.25,  .25, .36])
 M.Cell.land_area.set_values(cells, Sigma0)
@@ -119,15 +120,18 @@ M.Cell.terrestrial_carbon.set_values(cells, L0)
 G0 = 1125 * D.gigatonnes_carbon * array([.4, .3,  .2, .1])  # 1125 is yr 2000
 M.Cell.fossil_carbon.set_values(cells, G0)
 
+# TODO: statt des folgenden die reale Bevölkerung der Länder gemäß Nils' Inputdaten verwenden:
 # distribute population 1:3 between north and south, and 2:3 within each:
 r = random.uniform(size=nsocs)
 P0 = 6e9 * D.people * array([0.1, 0.15,  0.3, 0.45])  # 6e9 is yr 2000
 M.SocialSystem.population.set_values(social_systems, P0)
 
+# TODO: statt des folgenden zunächst ein Kapital von 1e4 $ * Bevölkerung des Landes annehmen:
 # distribute capital 2:1:
 K0 = sum(P0) * 1e4 * D.dollars/D.people * array([2/3, 1/3])
 M.SocialSystem.physical_capital.set_values(social_systems, K0)
 
+# TODO: dies so lassen (alle wissen genau gleich viel zu erneuerbaren Energien):
 S0 = 1e12 * D.gigajoules * array([1, 1])
 M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
 
@@ -189,7 +193,9 @@ Rglobal = sum(traj[M.SocialSystem.renewable_energy_input_flow][s][5]
               for s in social_systems) * D.gigajoules / D.years
 Eglobal = sum(traj[M.SocialSystem.secondary_energy_flow][s][5] 
               for s in social_systems) * D.gigajoules / D.years
-print("B (3), F (11), R(100):",
+
+# TODO: oben in Z.79/80 die Faktoren so wählen, dass hier ungef. B=3, F=11 und R=100 herauskommt:
+print("B, F, R:",
       Bglobal, Bglobal.tostr(unit=D.gigatonnes_carbon/D.years),
       Fglobal, Fglobal.tostr(unit=D.gigatonnes_carbon/D.years),
       Rglobal, Rglobal.tostr(unit=D.gigawatts),

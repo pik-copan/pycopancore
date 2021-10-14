@@ -1,5 +1,7 @@
 """Script to plot example1 model results."""
 
+dir = "/home/heitzig/work/pycopancore/";
+
 import numpy as np
 from numpy import array, average, mean
 from pylab import plot, gca, show, figure, subplots, gca, semilogy, legend, \
@@ -15,7 +17,7 @@ al = 0.5
 
 ax11.title.set_text('example run without socio-cultural processes')
 
-traj = load(open("/home/jobst/work/without.pickle","rb"))
+traj = load(open(dir + "without_social.pickle","rb"))
 worlds = list(traj["World.atmospheric_carbon"].keys())
 social_systems = list(traj["SocialSystem.population"].keys())
 cells = list(traj["Cell.fossil_carbon"].keys())
@@ -72,7 +74,7 @@ ax31.set_xlim(1990,2110)
 
 ax12.title.set_text('example run with socio-cultural processes')
 
-traj = load(open("/home/jobst/work/with.pickle","rb"))
+traj = load(open(dir + "with_social.pickle","rb"))
 worlds = list(traj["World.atmospheric_carbon"].keys())
 social_systems = list(traj["SocialSystem.population"].keys())
 cells = list(traj["Cell.fossil_carbon"].keys())
