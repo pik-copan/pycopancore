@@ -24,11 +24,19 @@ ninds = 400 # no. individuals  # TODO: 10000 wie bei Nils
 
 t_1 = 2120
 
-filename = "/home/heitzig/work/with.pickle"
+# choose one of two scenarios:
+filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle"
+#filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/without.pickle"
+# (these files will be read by plot_jobst2leander.py)
 
-with_awareness = 1
-with_learning = 1
-with_voting = 1
+if filename == "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle":
+    with_awareness = 1
+    with_learning = 1
+    with_voting = 1
+else:
+    with_awareness = 0
+    with_learning = 0
+    with_voting = 0
 
 model = M.Model()
 

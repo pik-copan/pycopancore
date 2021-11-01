@@ -23,11 +23,11 @@ ninds = 400 # no. individuals
 t_1 = 2120
 
 # choose one of two scenarios:
-#filename = "/home/heitzig/work/with.pickle"
-filename = "/home/heitzig/work/without.pickle"
+#filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle"
+filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/without.pickle"
 # (these files will be read by plot_example1.py)
 
-if filename == "/home/heitzig/work/with.pickle":
+if filename == "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle":
     with_awareness = 1
     with_learning = 1
     with_voting = 1
