@@ -1,10 +1,14 @@
+import sys
+sys.path.insert(0, '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils')
+
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+
 from Do_Simulations import Simulations
 
-networks_folder = './Output_Networks'
-nodesets_folder = './Output_Nodesets'
+networks_folder = './codevonnils/Output_Networks'
+nodesets_folder = './codevonnils/Output_Nodesets'
 
 network_data = np.load(networks_folder + '/network_0.npz', allow_pickle=True)
 
@@ -23,11 +27,11 @@ node_alts = nodeset['arr_3']
 
 s = Simulations(first_year=2020,
                 last_year=2050,
-                n_networks=5,
+                n_networks=1,
                 event_forcing=0.12)
 
 G = s.create_graph(nodes=number_of_nodes, node_lons=node_lons, node_lats=node_lats,
                             adjacency_matrix=adjacency_matrix)
 
-nx.draw(G, nodelist=range(10), with_labels=True, font_weight='bold')
+nx.draw(G, nodelist=range(10), with_labels=False, font_weight='bold')
 plt.show()

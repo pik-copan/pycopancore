@@ -7,8 +7,8 @@ from pylab import plot, gca, show, figure, subplots, gca, semilogy, legend, \
     tight_layout, NullLocator, savefig, setp
 from pickle import load
 
-with_file = "/home/leander/Dokumente/Studium/13/Masterthesis/simulation_files/with.pickle"
-wo_file = "/home/leander/Dokumente/Studium/13/Masterthesis/simulation_files/without.pickle"
+with_file = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle"
+wo_file = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/without.pickle"
 
 
 f, ((ax11, ax12), (ax21, ax22), (ax31, ax32)) = \
