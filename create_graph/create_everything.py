@@ -8,9 +8,9 @@ import Create_Nodesets as cnodes
 import Create_Network as cnets
 
 
-input_folder = './codevonnils/Input'
-output_nodesets_folder = './codevonnils/Output_Nodesets'
-output_networks_folder = './codevonnils/Output_Networks'
+input_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Input'
+output_nodesets_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Output_Nodesets'
+output_networks_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Output_Networks'
 
 number_of_nodes = 1000
 number_of_nodesets = 1

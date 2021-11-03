@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 from Do_Simulations import Simulations
 
-networks_folder = './codevonnils/Output_Networks'
-nodesets_folder = './codevonnils/Output_Nodesets'
+networks_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Output_Networks'
+nodesets_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Output_Nodesets'
 
 network_data = np.load(networks_folder + '/network_0.npz', allow_pickle=True)
 
