@@ -18,11 +18,11 @@ random.seed(10)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 2 # no. social_systems  # TODO: zunächst Anzahl Länder in Nils' Daten. Später auf Ländercluster aus Sophie Spilles Arbeit reduzieren.
-ncells = 4  # no. cells  # TODO: zunächst = nsocs, also eine pro Land. Später mit Luana abstimmen wegen LPJ. Alternativ: Zellen aus Sophie Spilles Arbeit verwenden.
-ninds = 400 # no. individuals  # TODO: 10000 wie bei Nils
+nsocs = 248 # no. social_systems  # TODO: zunächst Anzahl Länder in Nils' Daten. Später auf Ländercluster aus Sophie Spilles Arbeit reduzieren.
+ncells = 248  # no. cells  # TODO: zunächst = nsocs, also eine pro Land. Später mit Luana abstimmen wegen LPJ. Alternativ: Zellen aus Sophie Spilles Arbeit verwenden.
+ninds = 1000 # no. individuals  # TODO: 10000 wie bei Nils
 
-t_1 = 2120
+t_1 = 2001
 
 # choose one of two scenarios:
 filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle"
@@ -66,7 +66,7 @@ culture = M.Culture(
     ) for w in range(nworlds)]
 
 # TODO: statt des folgenden ein SocialSystem pro Land:
-(north, south) = social_systems = [M.SocialSystem(
+social_systems = [M.SocialSystem(
     world = world,
     has_renewable_subsidy = False,
     has_emissions_tax = False,
@@ -79,13 +79,12 @@ culture = M.Culture(
     ) for s in range(nsocs)]
 
 # TODO: statt des folgenden eine Zelle pro Land:
-(boreal, temperate, subtropical, tropical) = cells = [M.Cell(
-    social_system = social_systems[c//2],
-    renewable_sector_productivity = [.7, .9, 1.1, 1.3][c]
-        * 2000 * M.Cell.renewable_sector_productivity.default,
+cells = [M.Cell(
+    social_system = social_systems[c],
+    renewable_sector_productivity = 2000/62 * M.Cell.renewable_sector_productivity.default,
         # represents dependency of solar energy on solar insolation angle
-    fossil_sector_productivity = M.Cell.fossil_sector_productivity.default * 7,
-    biomass_sector_productivity = M.Cell.biomass_sector_productivity.default * 5
+    fossil_sector_productivity = M.Cell.fossil_sector_productivity.default * 7/62,
+    biomass_sector_productivity = M.Cell.biomass_sector_productivity.default * 5/62
     # these values result in realistic total energy production for the year 2000, see below  # TODO: anpassen, so dass die Gesamtenergieprod. wieder stimmt, s.u.
     ) for c in range(ncells)]
 
@@ -118,29 +117,29 @@ for index, i in enumerate(individuals):
 # und dann die Gesamtvegetation von 2480 GtC und die Fossilen Ressourcen von 1125 GtC proportional zur Landfläche der Länder verteilen:
 
 # distribute area and vegetation uniformly since it seems there are no real differences between the actual zones:
-Sigma0 = 1.5e8 * D.square_kilometers * array([0.25, 0.25,  .25, .36])
+Sigma0 = 1.5e8 * D.square_kilometers / ncells * np.ones(ncells)
 M.Cell.land_area.set_values(cells, Sigma0)
 
-L0 = 2480 * D.gigatonnes_carbon * array([0.25, 0.25,  .25, .25])  # 2480 is yr 2000
+L0 = 2480 * D.gigatonnes_carbon / ncells * np.ones(ncells)  # 2480 is yr 2000
 M.Cell.terrestrial_carbon.set_values(cells, L0)
 
 # distribute fossils linearly from north to south:
-G0 = 1125 * D.gigatonnes_carbon * array([.4, .3,  .2, .1])  # 1125 is yr 2000
+G0 = 1125 * D.gigatonnes_carbon / ncells * np.ones(ncells)  # 1125 is yr 2000
 M.Cell.fossil_carbon.set_values(cells, G0)
 
 # TODO: statt des folgenden die reale Bevölkerung der Länder gemäß Nils' Inputdaten verwenden:
 # distribute population 1:3 between north and south, and 2:3 within each:
 r = random.uniform(size=nsocs)
-P0 = 6e9 * D.people * array([0.1, 0.15,  0.3, 0.45])  # 6e9 is yr 2000
-M.SocialSystem.population.set_values(social_systems, P0)
+P0 = 6e9 * D.people / ncells * np.ones(nsocs)  # 6e9 is yr 2000
+M.SocialSystem.population.set_values(social_systems, P0) #WARNING before we read in array of length 4 for nsocs=2 with no errors
 
 # TODO: statt des folgenden zunächst ein Kapital von 1e4 $ * Bevölkerung des Landes annehmen:
 # distribute capital 2:1:
-K0 = sum(P0) * 1e4 * D.dollars/D.people * array([2/3, 1/3])
+K0 = sum(P0) * 1e4 * D.dollars/D.people * np.ones(nsocs)
 M.SocialSystem.physical_capital.set_values(social_systems, K0)
 
 # TODO: dies so lassen (alle wissen genau gleich viel zu erneuerbaren Energien):
-S0 = 1e12 * D.gigajoules * array([1, 1])
+S0 = 1e12 * D.gigajoules * np.ones(nsocs)
 M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
 
 w = worlds[0]
@@ -216,8 +215,10 @@ print("cap. deprec. at end (0.1?):",
                for s in social_systems]))
 print("temp. at begin:", traj[M.World.surface_air_temperature][worlds[0]][5])
 print("temp. at end:", traj[M.World.surface_air_temperature][worlds[0]][-1])
-print("has emissions tax at begin", traj[M.SocialSystem.has_emissions_tax][north][5])
-print("has emissions tax at end", traj[M.SocialSystem.has_emissions_tax][north][-1])
-print("biomass prod. at begin", traj[M.Cell.biomass_relative_productivity][boreal][5] / traj[M.Cell.terrestrial_carbon][boreal][5]**2)
-print("biomass prod. at end", traj[M.Cell.biomass_relative_productivity][boreal][-1] / traj[M.Cell.terrestrial_carbon][boreal][-1]**2)
+
+# following only applicable after categorization of socs and cells
+#print("has emissions tax at begin", traj[M.SocialSystem.has_emissions_tax][north][5])
+#print("has emissions tax at end", traj[M.SocialSystem.has_emissions_tax][north][-1])
+#print("biomass prod. at begin", traj[M.Cell.biomass_relative_productivity][boreal][5] / traj[M.Cell.terrestrial_carbon][boreal][5]**2)
+#print("biomass prod. at end", traj[M.Cell.biomass_relative_productivity][boreal][-1] / traj[M.Cell.terrestrial_carbon][boreal][-1]**2)
 
