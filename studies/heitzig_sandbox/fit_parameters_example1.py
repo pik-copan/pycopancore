@@ -197,7 +197,7 @@ def target(productivities):
     
 productivities0 = np.array([3e5, 5e6, 7e-18])
 print("START:",productivities0)
-productivities = productivities0 #fmin(target, productivities0)
+productivities = fmin(target, productivities0)
 print("OPTIMAL:",productivities)
 set_initial_state(x0)
 M.Cell.biomass_sector_productivity.set_values(cells, np.ones(ncells) * productivities[0])
