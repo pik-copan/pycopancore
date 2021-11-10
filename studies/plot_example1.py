@@ -1,6 +1,7 @@
 """Script to plot example1 model results."""
 
-dir = "/home/heitzig/work/pycopancore/";
+#dir = "/home/heitzig/work/pycopancore/";
+dir = "/tmp/";
 
 import numpy as np
 from numpy import array, average, mean

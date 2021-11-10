@@ -612,6 +612,12 @@ class Variable(Symbol):
             + str(instance)
         return v if unit is None else self.unit.convert(v, unit)
     
+    def get_values(self, instances, unit=None):
+        """Get values."""
+        return [self.get_value(i, unit) for i in instances]
+    
+    # TODO: add method get_values(self, instances, values, unit=None)
+     
     def get_quantity(self, instance, unit=None):
         if unit is None:
             unit = self.unit

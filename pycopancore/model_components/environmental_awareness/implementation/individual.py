@@ -25,7 +25,7 @@ class Individual (I.Individual):
         This method is called by Culture's awareness updating process
         """
         r = exponential()
-        density = self.cell.terrestrial_carbon / self.cell.land_area
+        density = self.cell.mean_past_terrestrial_carbon / self.cell.land_area
         if r * self.culture.awareness_lower_carbon_density > density: 
             self.is_environmentally_friendly = True
         elif r * self.culture.awareness_upper_carbon_density < density:

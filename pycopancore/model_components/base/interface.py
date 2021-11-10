@@ -42,7 +42,11 @@ class Environment (object):
     """
 
     geographic_network = ENV.geographic_network  # copies the specification from the master data model
-    worlds = SetVariable("worlds", "set of Worlds on this Environment")
+
+    # read-only attributes storing redundant information:
+    worlds = SetVariable("worlds", 
+                         "Set of Worlds governed by this Environment", 
+                         readonly=True)
 
 
 class Metabolism (object):
@@ -51,7 +55,10 @@ class Metabolism (object):
     It contains all variables specified as mandatory ("base variables").
     """
 
-    worlds = SetVariable("worlds", "set of Worlds on this Metabolism")
+    # read-only attributes storing redundant information:
+    worlds = SetVariable("worlds", 
+                         "Set of Worlds governed by this Metabolism", 
+                         readonly=True)
 
 
 class Culture (object):
@@ -61,11 +68,10 @@ class Culture (object):
     """
 
     acquaintance_network = CUL.acquaintance_network
-    worlds = SetVariable("worlds", "set of Worlds on this Culture")
 
     # read-only attributes storing redundant information:
     worlds = SetVariable("worlds",
-                         "set of Worlds this Culture acts in",
+                         "Set of Worlds governed by this Culture",
                          readonly=True)
 
 # entity types:
@@ -103,16 +109,16 @@ class World (object, metaclass=_MixinType):
 
     # attributes storing redundant information (backward references):
     social_systems = SetVariable("social systems",
-                            "set of all SocialSystems on this world",
+                            "Set of all SocialSystems on this world",
                             readonly=True)  # type is SocialSystem, hence it can only be specified after class SocialSystem is defined, see below
     top_level_social_systems = SetVariable(
         "top level social systems",
-        "set of top-level SocialSystems on this world",
+        "Set of top-level SocialSystems on this world",
         readonly=True)
     cells = SetVariable("cells", "set of Cells on this world",
                         readonly=True)
     individuals = SetVariable("individuals",
-                              "set of Individuals residing on this world",
+                              "Set of Individuals residing on this world",
                               readonly=True)
 
 

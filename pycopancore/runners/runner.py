@@ -10,7 +10,9 @@
 # License: BSD 2-clause license
 
 
-# TODO: rename to ScipyODERunner
+# TODOs: 
+# - rename to ScipyODERunner
+# - enable verbosity level, use proper logger
 
 from .. import Event, Step, Variable
 from ..private import _AbstractRunner, _DotConstruct, eval, unknown, \
@@ -722,7 +724,7 @@ class Runner(_AbstractRunner):
                     assert len(self.trajectory_dict[var][inst]) == tlen
 
             # check if there are any idle instances and fill their trajectory
-            # with None to fit he length of 't':
+            # with None to fit the length of 't':
             if idle_instances:
                 for i, inst in enumerate(idle_instances):
                     try:  # already in trajectory_dict

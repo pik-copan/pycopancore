@@ -228,7 +228,7 @@ class ModelLogics (object):
             for (k, v) in variables:
                 if isinstance(v, Variable):
                     assert v in variable_pool, \
-                        "Variable " + str(v) + " was not defined in any component interface!"
+                        "Variable " + str(v) + " was not defined in any component interface! Maybe you forgot to include some entity type in some model component's Model.entity_types?"
                         # this version is shorter and easier to understand than the cryptic .format(**locals()) version,
                         # so why the hell change it???
 #                    assert v.codename == k, \
