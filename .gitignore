@@ -76,6 +76,7 @@ target/
 # Misc
 /.project
 /.pydevproject
+nohup.out
 
 /kernprof.py
 /last.prof
