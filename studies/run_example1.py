@@ -28,10 +28,10 @@ ninds = 1000 # no. individuals
 t_1 = 2120
 
 # choose one of two scenarios:
-with_social = 1
-#dir = "/home/heitzig/work/pycopancore/";
-dir = "/tmp/";
+with_social = 1  # 0 or 1
 
+# directory to store results:
+dir = "/tmp/";
 
 if with_social:
     filename = dir + "with_social.pickle"
@@ -47,7 +47,9 @@ else:
     with_voting = 0
 with_spillovers = 1
 
+print("Using model as defined in file", M.__file__)
 model = M.Model()
+runner = Runner(model=model)
 
 # instantiate process taxa:
 environment = M.Environment()
@@ -60,9 +62,10 @@ metabolism = M.Metabolism(
 culture = M.Culture(
     awareness_lower_carbon_density=1e-4,
     awareness_upper_carbon_density=2e-4,
-    awareness_update_rate = 1 if with_awareness else 0,
+    awareness_update_rate = 10 if with_awareness else 0,
     environmental_friendliness_learning_rate = 1 if with_learning else 0,
     max_protected_terrestrial_carbon_share=0,
+    terrestrial_carbon_averaging_time=10,
     )
 
 # generate entities and plug them together at random:
@@ -81,9 +84,7 @@ social_systems = [M.SocialSystem(
                     has_fossil_ban = False, 
                     time_between_votes = 4 if with_voting else 1e100, 
                     ) for s in range(nsocs)]
-cells = [M.Cell(social_system=random.choice(social_systems),
-                renewable_sector_productivity = 2 * random.rand()
-                    * M.Cell.renewable_sector_productivity.default)
+cells = [M.Cell(social_system=random.choice(social_systems))
          for c in range(ncells)]
 individuals = [M.Individual(
                 cell=random.choice(cells),
@@ -108,6 +109,10 @@ for index, i in enumerate(individuals):
                 else p_other):
             culture.acquaintance_network.add_edge(i, j)
 
+# set renewable sector productivities randomly:
+rel_prod = 2 * random.uniform(size=ncells)
+M.Cell.renewable_sector_productivity.set_values(cells, rel_prod * M.Cell.renewable_sector_productivity.default)
+
 # distribute area and vegetation randomly but correlatedly:
 r = random.uniform(size=ncells)
 Sigma0 = 1.5e8 * D.square_kilometers * r / sum(r)
@@ -116,6 +121,7 @@ M.Cell.land_area.set_values(cells, Sigma0)
 r += random.uniform(size=ncells)
 L0 = 2480 * D.gigatonnes_carbon * r / sum(r)  # 2480 is yr 2000
 M.Cell.terrestrial_carbon.set_values(cells, L0)
+M.Cell.mean_past_terrestrial_carbon.set_values(cells, L0)
 
 r = np.exp(random.normal(size=ncells))
 G0 = 1125 * D.gigatonnes_carbon * r / sum(r)  # 1125 is yr 2000
@@ -147,13 +153,11 @@ for v in w.variables: print(v,v.get_value(w))
 for v in s.variables: print(v,v.get_value(s))
 for v in c.variables: print(v,v.get_value(c))
 
-
 # do simulation:
-runner = Runner(model=model)
 start = time()
 traj = runner.run(t_0=2000, t_1=t_1, dt=1, 
-                  add_to_output=[M.Individual.represented_population])
-
+                  add_to_output=[M.Individual.represented_population,
+                                 M.Cell.mean_past_terrestrial_carbon])
 
 for v in environment.variables: print(v,v.get_value(environment))
 for v in metabolism.variables: print(v,v.get_value(metabolism))
@@ -176,33 +180,6 @@ print(time()-start, " seconds")
 
 t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 exit()
 
@@ -249,3 +226,5 @@ print("prot. carbon share:",
              for c in s.cells) for s in social_systems])
 print(traj[M.World.terrestrial_carbon][worlds[0]][-1],
       sum(traj[M.Cell.terrestrial_carbon][c][-1] for c in worlds[0].cells))
+
+

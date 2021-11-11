@@ -59,6 +59,7 @@ class SocialSystem(
 
 class Cell(cc.Cell,
            prod.Cell,
+           aware.Cell,
            base.Cell):
     """Cell entity type."""
 

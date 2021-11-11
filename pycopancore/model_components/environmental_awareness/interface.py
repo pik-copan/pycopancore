@@ -12,7 +12,7 @@
 
 # TODO: use variables from the master data model wherever possible:
 from ... import master_data_model as D
-from ...data_model.master_data_model import CUL, I, S
+from ...data_model.master_data_model import CUL, I, S, C
 from ... import Variable
 
 
@@ -60,7 +60,6 @@ class Individual (object):
 
 # process taxa:
 
-
 class Culture (object):
     """Interface for Culture process taxon mixin."""
 
@@ -97,3 +96,19 @@ class Culture (object):
                  as protected if population is environmentally friendly""",
                  unit=D.unity, lower_bound=0, upper_bound=1,
                  default=0.5)  # TODO: a plausible value?
+
+    terrestrial_carbon_averaging_time = \
+        Variable("terrestrial carbon averaging time",
+                 """characteristic time for time-averaging of terrestrial carbon""",
+                 unit=D.years, lower_bound=0, 
+                 default=0  # for backwards compatibility
+                 )
+
+class Cell (object):
+    
+    terrestrial_carbon = C.terrestrial_carbon
+    mean_past_terrestrial_carbon = \
+        Variable("mean past terrestrial carbon", 
+                 "running exponentially discounted mean over 50 years", 
+                 unit=D.gigatonnes_carbon)
+    
