@@ -51,7 +51,9 @@ def create_nodesets(number_of_nodes, number_of_nodesets, first_nodeset_index, po
         print("country %d first pass took %f sec." % (country, time() - start))
 
     keys = list(country_pops.keys())
-    weights = np.array(list(country_pops.values())) / total_pop
+    pops = np.array(list(country_pops.values()))
+    np.save(nodesets_folder + '/country_pops', pops)
+    weights = pops / total_pop
 
     for round in range(R):
         print("ROUND %d" % round)
