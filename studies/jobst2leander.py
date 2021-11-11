@@ -5,6 +5,8 @@
 from time import time
 from numpy import random, array
 import numpy as np
+import pandas as pd
+import networkx as nx
 
 import pycopancore.models.example2 as M
 from pycopancore import master_data_model as D
@@ -18,15 +20,15 @@ random.seed(10)
 # parameters:
 
 nworlds = 1  # no. worlds
-nsocs = 248 # no. social_systems  # TODO: zunächst Anzahl Länder in Nils' Daten. Später auf Ländercluster aus Sophie Spilles Arbeit reduzieren.
-ncells = 248  # no. cells  # TODO: zunächst = nsocs, also eine pro Land. Später mit Luana abstimmen wegen LPJ. Alternativ: Zellen aus Sophie Spilles Arbeit verwenden.
+nsocs = 248 # no. social_systems  # TODO: Später auf Ländercluster aus Sophie Spilles Arbeit reduzieren.
+ncells = 248  # no. cells  # TODO: Später mit Luana abstimmen wegen LPJ. Alternativ: Zellen aus Sophie Spilles Arbeit verwenden.
 ninds = 1000 # no. individuals  # TODO: 10000 wie bei Nils
 
-t_1 = 2001
+t_1 = 2001 #TODO: Zeiten anpassen wie bei Nils
 
 # choose one of two scenarios:
-filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle"
-#filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/without.pickle"
+#filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle"
+filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/without.pickle"
 # (these files will be read by plot_jobst2leander.py)
 
 if filename == "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle":
@@ -39,6 +41,28 @@ else:
     with_voting = 0
 
 model = M.Model()
+
+# read in countries data
+data_folder = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/data"
+usecols = ["mw_numeric", "area", "population", "gdp"]
+countries_df = pd.read_csv(data_folder + "/countries_data.csv", usecols = usecols)
+
+country_ids_list = countries_df.mw_numeric.to_numpy()
+country_ids_reverse_dict = {country_ids_list[i]: i for i in range(len(country_ids_list))}
+
+# read in nodeset from Nils
+nodesets_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Output_Nodesets'
+
+nodeset_data = np.load(nodesets_folder + '/nodeset_0.npz')
+node_country_array = nodeset_data['arr_4']
+
+# read in network from Nils
+networks_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Output_Networks'
+
+network_data = np.load(networks_folder + '/network_0.npz')
+adjacency_matrix = network_data['arr_0']
+# culture.acquaintance_network.add_edges_from(adjacency_matrix)
+
 
 # instantiate process taxa:
 
@@ -53,6 +77,7 @@ culture = M.Culture(
     awareness_upper_carbon_density=2e-4,
     awareness_update_rate = 1 if with_awareness else 0,
     environmental_friendliness_learning_rate = 1 if with_learning else 0,
+    acquaintance_network = nx.from_numpy_matrix(adjacency_matrix), # adding Nils' network already here
     )
 
 # generate entities and plug them together:
@@ -65,7 +90,7 @@ culture = M.Culture(
     upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.GtC
     ) for w in range(nworlds)]
 
-# TODO: statt des folgenden ein SocialSystem pro Land:
+# TODO: Distinguish further? Sinnvoll allen einen Namen zu geben?
 social_systems = [M.SocialSystem(
     world = world,
     has_renewable_subsidy = False,
@@ -78,64 +103,45 @@ social_systems = [M.SocialSystem(
     time_between_votes = 4 if with_voting else 1e100, 
     ) for s in range(nsocs)]
 
-# TODO: statt des folgenden eine Zelle pro Land:
+# TODO: Sinnvolle productivities je nach Land
 cells = [M.Cell(
     social_system = social_systems[c],
-    renewable_sector_productivity = 2000/62 * M.Cell.renewable_sector_productivity.default,
-        # represents dependency of solar energy on solar insolation angle
-    fossil_sector_productivity = M.Cell.fossil_sector_productivity.default * 7/62,
-    biomass_sector_productivity = M.Cell.biomass_sector_productivity.default * 5/62
+    renewable_sector_productivity = 1/ncells * M.Cell.renewable_sector_productivity.default,
+        # represents dependency of solar energy on solar insolation angle TODO reimplement! 
+    fossil_sector_productivity =  5/ncells * M.Cell.fossil_sector_productivity.default,
+    biomass_sector_productivity =  5/ncells * M.Cell.biomass_sector_productivity.default
     # these values result in realistic total energy production for the year 2000, see below  # TODO: anpassen, so dass die Gesamtenergieprod. wieder stimmt, s.u.
     ) for c in range(ncells)]
 
 # TODO: hier die Variable is_environmentally_friendly stattdessen gemäß Nils' "certainly active" nodes ersetzen:
 individuals = [M.Individual(
-                cell = cells[i%4],
+                cell = cells[country_ids_reverse_dict[node_country_array[i]]], # assign cell according to id from nodeset
                 is_environmentally_friendly = 
                     random.choice([False, True], p=[.8, .2]), # represents the "20% suffice" assumption 
                 ) 
                for i in range(ninds)]
 
-# TODO: statt des folgenden das von Nils Skript GenerateNetwork.py erzeugte Netzwerk einlesen und verwenden:
-# initialize block model acquaintance network:
-target_degree = 10 # = 2.5% of all agents. Dunbar's number would be too large
-target_degree_samecell = 0.5 * target_degree
-target_degree_samesoc = 0.35 * target_degree
-target_degree_other = 0.15 * target_degree
-p_samecell = target_degree_samecell / (ninds/ncells - 1)
-p_samesoc = target_degree_samesoc / (ninds/nsocs - ninds/ncells - 1)
-p_other = target_degree_other / (ninds - ninds/nsocs - 1)
-for index, i in enumerate(individuals):
-    for j in individuals[:index]:
-        if random.uniform() < (
-                p_samecell if i.cell == j.cell 
-                else p_samesoc if i.social_system == j.social_system \
-                else p_other):
-            culture.acquaintance_network.add_edge(i, j)
-
-# TODO: statt des folgenden die echten Landflächen der Länder verwenden 
-# und dann die Gesamtvegetation von 2480 GtC und die Fossilen Ressourcen von 1125 GtC proportional zur Landfläche der Länder verteilen:
-
-# distribute area and vegetation uniformly since it seems there are no real differences between the actual zones:
-Sigma0 = 1.5e8 * D.square_kilometers / ncells * np.ones(ncells)
+# read in land area and distribute vegetation accordingly since it seems there are no real differences between the actual zones:
+# WARNING: this is still total area
+area_per_country = countries_df.area.to_numpy()
+Sigma0 = area_per_country * D.square_kilometers
 M.Cell.land_area.set_values(cells, Sigma0)
 
-L0 = 2480 * D.gigatonnes_carbon / ncells * np.ones(ncells)  # 2480 is yr 2000
+L0 = 2480 * area_per_country/sum(area_per_country) * D.gigatonnes_carbon  # 2480 is yr 2000
 M.Cell.terrestrial_carbon.set_values(cells, L0)
 
 # distribute fossils linearly from north to south:
-G0 = 1125 * D.gigatonnes_carbon / ncells * np.ones(ncells)  # 1125 is yr 2000
+G0 = 1125 * area_per_country/sum(area_per_country) * D.gigatonnes_carbon  # 1125 is yr 2000
 M.Cell.fossil_carbon.set_values(cells, G0)
 
-# TODO: statt des folgenden die reale Bevölkerung der Länder gemäß Nils' Inputdaten verwenden:
-# distribute population 1:3 between north and south, and 2:3 within each:
-r = random.uniform(size=nsocs)
-P0 = 6e9 * D.people / ncells * np.ones(nsocs)  # 6e9 is yr 2000
-M.SocialSystem.population.set_values(social_systems, P0) #WARNING before we read in array of length 4 for nsocs=2 with no errors
+# read in population distribution from Nils' input data:
+population_per_country = countries_df.population.to_numpy()
+P0 = population_per_country * D.people # total of 7.77e9
+M.SocialSystem.population.set_values(social_systems, P0) #WARNING before we had read in array of length 4 for nsocs=2 with no errors
 
-# TODO: statt des folgenden zunächst ein Kapital von 1e4 $ * Bevölkerung des Landes annehmen:
-# distribute capital 2:1:
-K0 = sum(P0) * 1e4 * D.dollars/D.people * np.ones(nsocs)
+# read in gdp (for some countries this is just scaled up average per capita gdp, see data generation):
+gdp_per_country = countries_df.gdp.to_numpy()
+K0 = gdp_per_country * D.dollars
 M.SocialSystem.physical_capital.set_values(social_systems, K0)
 
 # TODO: dies so lassen (alle wissen genau gleich viel zu erneuerbaren Energien):
@@ -202,7 +208,8 @@ Eglobal = sum(traj[M.SocialSystem.secondary_energy_flow][s][5]
               for s in social_systems) * D.gigajoules / D.years
 
 # TODO: oben in Z.79/80 die Faktoren so wählen, dass hier ungef. B=3, F=11 und R=100 herauskommt:
-print("B, F, R:",
+# TODO: Verstehen, wie die Werte zusammenhängen
+print("B (3), F (11), R (30):",
       Bglobal, Bglobal.tostr(unit=D.gigatonnes_carbon/D.years),
       Fglobal, Fglobal.tostr(unit=D.gigatonnes_carbon/D.years),
       Rglobal, Rglobal.tostr(unit=D.gigawatts),
