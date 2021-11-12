@@ -20,14 +20,14 @@ nsocs = 2 # no. social_systems
 ncells = 4  # no. cells
 ninds = 400 # no. individuals
 
-t_1 = 2120
-
+t_1 = 2100
+dir = "/tmp/"
 # choose one of two scenarios:
-#filename = "/home/heitzig/work/with.pickle"
-filename = "/home/heitzig/work/without.pickle"
+filename = "with.pickle"
+#filename = "without.pickle"
 # (these files will be read by plot_example1.py)
 
-if filename == "/home/heitzig/work/with.pickle":
+if filename == "with.pickle":
     with_awareness = 1
     with_learning = 1
     with_voting = 1
@@ -114,6 +114,7 @@ M.Cell.land_area.set_values(cells, Sigma0)
 
 L0 = 2480 * D.gigatonnes_carbon * array([0.25, 0.25,  .25, .25])  # 2480 is yr 2000
 M.Cell.terrestrial_carbon.set_values(cells, L0)
+M.Cell.mean_past_terrestrial_carbon.set_values(cells, L0)
 
 # distribute fossils linearly from north to south:
 G0 = 1125 * D.gigatonnes_carbon * array([.4, .3,  .2, .1])  # 1125 is yr 2000
@@ -147,6 +148,7 @@ start = time()
 traj = runner.run(t_0=2000, t_1=t_1, dt=1, 
                   add_to_output=[
                     M.Individual.represented_population, 
+                    M.Cell.mean_past_terrestrial_carbon,
                     M.SocialSystem.population
                     ])
 
@@ -167,7 +169,7 @@ tosave = {
           for v in traj.keys() if v is not "t"
           }
 tosave["t"] = traj["t"]
-dump(tosave, open(filename,"wb"))
+dump(tosave, open(dir+filename,"wb"))
 print(time()-start, " seconds")
 
 t = np.array(traj['t'])
