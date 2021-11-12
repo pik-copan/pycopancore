@@ -14,6 +14,11 @@ from pycopancore.runners import Runner
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
 
+from numba.core.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
+import warnings
+warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
+warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
+
 # first thing: set seed so that each execution must return same thing:
 random.seed(10)
 
@@ -24,14 +29,16 @@ nsocs = 248 # no. social_systems  # TODO: Später auf Ländercluster aus Sophie 
 ncells = 248  # no. cells  # TODO: Später mit Luana abstimmen wegen LPJ. Alternativ: Zellen aus Sophie Spilles Arbeit verwenden.
 ninds = 1000 # no. individuals  # TODO: 10000 wie bei Nils
 
-t_1 = 2001 #TODO: Zeiten anpassen wie bei Nils
+t_1 = 2000.1 #TODO: Zeiten anpassen wie bei Nils
+
+dump_dir = "/tmp/"
 
 # choose one of two scenarios:
-#filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle"
-filename = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/without.pickle"
+filename = "with.pickle"
+#filename = "without.pickle"
 # (these files will be read by plot_jobst2leander.py)
 
-if filename == "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/simulation_results/with.pickle":
+if filename == "with.pickle":
     with_awareness = 1
     with_learning = 1
     with_voting = 1
@@ -43,24 +50,27 @@ else:
 model = M.Model()
 
 # read in countries data
-data_folder = "/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/data"
+data_folder = "../create_graph/data/"
+
 usecols = ["mw_numeric", "area", "population", "gdp"]
-countries_df = pd.read_csv(data_folder + "/countries_data.csv", usecols = usecols)
+countries_df = pd.read_csv(data_folder + "countries_data.csv", usecols = usecols)
 
 country_ids_list = countries_df.mw_numeric.to_numpy()
 country_ids_reverse_dict = {country_ids_list[i]: i for i in range(len(country_ids_list))}
 
 # read in nodeset from Nils
-nodesets_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Output_Nodesets'
+nodesets_folder = "../create_graph/codevonnils/Output_Nodesets/"
 
-nodeset_data = np.load(nodesets_folder + '/nodeset_0.npz')
+nodeset_data = np.load(nodesets_folder + "nodeset_0.npz")
 node_country_array = nodeset_data['arr_4']
+node_elevation_array = nodeset_data['arr_3']
 
 # read in network from Nils
-networks_folder = '/home/leander/Dokumente/Studium/13/Masterthesis/pycopancore/create_graph/codevonnils/Output_Networks'
+networks_folder = "../create_graph/codevonnils/Output_Networks/"
 
-network_data = np.load(networks_folder + '/network_0.npz')
+network_data = np.load(networks_folder + "network_0.npz")
 adjacency_matrix = network_data['arr_0']
+node_is_potentially_active_array = network_data['arr_1']
 # culture.acquaintance_network.add_edges_from(adjacency_matrix)
 
 
@@ -114,6 +124,7 @@ cells = [M.Cell(
     ) for c in range(ncells)]
 
 # TODO: hier die Variable is_environmentally_friendly stattdessen gemäß Nils' "certainly active" nodes ersetzen:
+# TODO: Nils uses only elevation but not distance to coast??
 individuals = [M.Individual(
                 cell = cells[country_ids_reverse_dict[node_country_array[i]]], # assign cell according to id from nodeset
                 is_environmentally_friendly = 
@@ -129,6 +140,7 @@ M.Cell.land_area.set_values(cells, Sigma0)
 
 L0 = 2480 * area_per_country/sum(area_per_country) * D.gigatonnes_carbon  # 2480 is yr 2000
 M.Cell.terrestrial_carbon.set_values(cells, L0)
+M.Cell.mean_past_terrestrial_carbon.set_values(cells, L0)
 
 # distribute fossils linearly from north to south:
 G0 = 1125 * area_per_country/sum(area_per_country) * D.gigatonnes_carbon  # 1125 is yr 2000
@@ -137,7 +149,7 @@ M.Cell.fossil_carbon.set_values(cells, G0)
 # read in population distribution from Nils' input data:
 population_per_country = countries_df.population.to_numpy()
 P0 = population_per_country * D.people # total of 7.77e9
-M.SocialSystem.population.set_values(social_systems, P0) #WARNING before we had read in array of length 4 for nsocs=2 with no errors
+M.SocialSystem.population.set_values(social_systems, P0) #WARNING before we had read in an array of length 4 for nsocs=2 with no errors
 
 # read in gdp (for some countries this is just scaled up average per capita gdp, see data generation):
 gdp_per_country = countries_df.gdp.to_numpy()
@@ -164,6 +176,7 @@ start = time()
 traj = runner.run(t_0=2000, t_1=t_1, dt=1, 
                   add_to_output=[
                     M.Individual.represented_population, 
+                    M.Cell.mean_past_terrestrial_carbon, 
                     M.SocialSystem.population
                     ])
 
@@ -184,10 +197,10 @@ tosave = {
           for v in traj.keys() if v is not "t"
           }
 tosave["t"] = traj["t"]
-dump(tosave, open(filename,"wb"))
+dump(tosave, open(dump_dir+filename,"wb"))
 print(time()-start, " seconds")
 
-t = np.array(traj['t'])
+t = np.array(traj["t"])
 print("max. time step", (t[1:]-t[:-1]).max())
 
 print("\nyr 2000 values (real):")
@@ -223,9 +236,11 @@ print("cap. deprec. at end (0.1?):",
 print("temp. at begin:", traj[M.World.surface_air_temperature][worlds[0]][5])
 print("temp. at end:", traj[M.World.surface_air_temperature][worlds[0]][-1])
 
-# following only applicable after categorization of socs and cells
-#print("has emissions tax at begin", traj[M.SocialSystem.has_emissions_tax][north][5])
-#print("has emissions tax at end", traj[M.SocialSystem.has_emissions_tax][north][-1])
-#print("biomass prod. at begin", traj[M.Cell.biomass_relative_productivity][boreal][5] / traj[M.Cell.terrestrial_carbon][boreal][5]**2)
-#print("biomass prod. at end", traj[M.Cell.biomass_relative_productivity][boreal][-1] / traj[M.Cell.terrestrial_carbon][boreal][-1]**2)
+# following was north and boreal only, now Germany and all cells
+print("Germany has emissions tax at begin", traj[M.SocialSystem.has_emissions_tax][social_systems[76]][5])
+print("Germany has emissions tax at end", traj[M.SocialSystem.has_emissions_tax][social_systems[76]][-1])
+
+# TODO: understand what indices 5 and -1 mean and if sum or mean is needed
+print("biomass prod. at begin", sum([traj[M.Cell.biomass_relative_productivity][c][5] / traj[M.Cell.terrestrial_carbon][c][5]**2 for c in cells]))
+print("biomass prod. at end", sum([traj[M.Cell.biomass_relative_productivity][c][-1] / traj[M.Cell.terrestrial_carbon][c][-1]**2 for c in cells]))
 
