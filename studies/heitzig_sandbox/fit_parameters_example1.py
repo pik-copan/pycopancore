@@ -191,7 +191,7 @@ def target(productivities):
     Bglobal = sum(traj[M.SocialSystem.biomass_input_flow][s][1] for s in social_systems)
     Fglobal = sum(traj[M.SocialSystem.fossil_fuel_input_flow][s][1] for s in social_systems)
     Rglobal = sum(traj[M.SocialSystem.renewable_energy_input_flow][s][1] for s in social_systems)  # D.gigajoules / D.years
-    err = (Bglobal - 3)**2 + (Fglobal - 11)**2 + (Rglobal - Rtarget)**2
+    err = ((Bglobal - 3)/3)**2 + ((Fglobal - 11)/11)**2 + ((Rglobal - Rtarget)/Rtarget)**2
     print("\nERROR:", err)
     return err
     
@@ -214,6 +214,8 @@ GWP_2000 = 33.57e12  # gross world product in 2000 in USD
 # for illustration, use a random GDP distribution (later use real-world data):
 r = random.uniform(size=nsocs)
 Ytargets = GWP_2000 * r / r.sum()
+weights = Ytargets**(5/2) / P0
+capitals0 = sum(P0) * 1e4 * weights/sum(weights)
 
 def target2(logcapitals):
     capitals = np.exp(logcapitals)
@@ -225,7 +227,7 @@ def target2(logcapitals):
     print("\nERROR:", err)
     return err
     
-capitals0 = np.array(M.SocialSystem.physical_capital.get_values(social_systems))
+#capitals0 = np.array(M.SocialSystem.physical_capital.get_values(social_systems))
 capitals = np.exp(fmin(target2, np.log(capitals0)))
 print("START:",capitals0)
 print("OPTIMAL:",capitals)
