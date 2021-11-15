@@ -14,6 +14,7 @@
 
 # defines logics to deal with symbolic expressions and their evaluation
 
+import traceback, sys
 import numpy as np
 import sympy as sp
 from sympy.functions.elementary.piecewise import ExprCondPair
@@ -54,7 +55,6 @@ def aggregation(npfunc):
         """Dummy docstring"""
 
         # TODO: add docstring to function
-        # values = np.array(values)
         results = np.zeros(len(lens), dtype=values.dtype)
         offset = 0
         for i, le in enumerate(lens):
@@ -168,8 +168,6 @@ class _DotConstruct(sp.AtomicExpr):
     args = ()
     is_Add = False
     is_float = False
-#    is_symbol = True
-#    is_Symbol = True
     precedence = sp.printing.precedence.PRECEDENCE["Atom"]
     _iterable = False
 
@@ -199,7 +197,6 @@ class _DotConstruct(sp.AtomicExpr):
             uid += "." + aggregation
             if argument:
                 uid += "(" + str(argument) + ")"  # repr
-#        print("_DotConstruct.__new__ with uid", uid)
         return super().__new__(cls, uid, **assumptions)
 
     def __init__(self,
@@ -226,9 +223,7 @@ class _DotConstruct(sp.AtomicExpr):
             self._branchings = unknown
             self._cardinalities = unknown
 
-#            print("_DotConstruct.__init__ of",self,"performed")
         else:
-#            print("repeated _DotConstruct.__init__ of",self,"skipped")
             pass
 
     def __getattr__(self, name):
@@ -237,10 +232,8 @@ class _DotConstruct(sp.AtomicExpr):
         attribute, giving special treatment to aggregations"""
         if name == "__qualname__":  # needed to make sphinx happy
             return "DUMMY"  # FIXME!
-#        print("_DotConstruct.__getattr__(", self, ",", name, ")")
         if self._argument is not None:  # we are an aggregation with argument
             # append name to argument:
-#            print("extending argument",self._argument,"by",name)
             newarg = getattr(self._argument, name)
             newdc = _DotConstruct(self._start,
                                   self._attribute_sequence,
@@ -250,18 +243,15 @@ class _DotConstruct(sp.AtomicExpr):
             # add an argument:
             argument = _DotConstruct(self._start,
                                 self._attribute_sequence + [name])
-#            print("adding argument",argument,"to aggregation of type",self._aggregation)
             newdc = _DotConstruct(self._start,
                                   self._attribute_sequence,
                                   aggregation=self._aggregation,
                                   argument=argument)
         elif name in aggregation_names:  # we become an aggregation
-#            print("adding aggregation of type",name)
             newdc = _DotConstruct(self._start,
                                   self._attribute_sequence,
                                   aggregation=name)
         else:  # append name to attribute_sequence:
-#            print("adding variable reference named",name)
             newdc = _DotConstruct(self._start,
                                   self._attribute_sequence + [name])
         return newdc
@@ -278,9 +268,6 @@ class _DotConstruct(sp.AtomicExpr):
                              self._attribute_sequence,
                              aggregation=self._aggregation,
                              argument=args[0])
-# TODO: understand why an earlier version had this:
-#        else:
-#            return sp.AtomicExpr()
 
     def __repr__(self):
         r = repr(self._start)
@@ -293,7 +280,6 @@ class _DotConstruct(sp.AtomicExpr):
         return r
 
     def __str__(self):
-#        return self.__repr__()
         r = str(self._start)
         if len(self._attribute_sequence) > 0:
             r += "." + ".".join(self._attribute_sequence)
@@ -358,7 +344,6 @@ class _DotConstruct(sp.AtomicExpr):
                 assert isinstance(var, (D.ReferenceVariable, D.SetVariable))
                 cls = var.type
             self._target_class = cls
-#            print("finding target class of",self,"as",cls)
         return self._target_class
 
     @property  # read-only
@@ -368,7 +353,6 @@ class _DotConstruct(sp.AtomicExpr):
         if self._target_variable is unknown:
             self._target_variable = getattr(self.target_class,
                                             self._attribute_sequence[-1])
-#            print("getting target variable of",self,"as",self._target_variable)
         return self._target_variable
 
     @property  # read-only
@@ -397,7 +381,6 @@ class _DotConstruct(sp.AtomicExpr):
         return self._cardinalities
 
     def _analyse_instances(self):
-        # print("      (analysing instance structure of",self,")")
         oc = self.owning_class
         items = oc.instances
         branchings = [[len(items)]]
@@ -436,7 +419,6 @@ class _DotConstruct(sp.AtomicExpr):
         """gets referenced attribute values and performs aggregations
         where necessary.
         """
-#        print("eval",self)
         try:
             items = self.owning_class.instances if instances is None else instances
         except:
@@ -472,7 +454,6 @@ class _DotConstruct(sp.AtomicExpr):
             lens = layout2lens(layout)
             items = name2aggregation[self._aggregation](arg_values, lens) \
                         if len(arg_values) > 0 else [0 for l in lens]
-#            print("aggregation",self,items)
         return items
 
     def _broadcast(self, values):
@@ -509,10 +490,6 @@ class _DotConstruct(sp.AtomicExpr):
         name = self._attribute_sequence[-1]
         for pos, i in enumerate(self.target_instances):
             setattr(i, name, values[pos])
-
-#    def __iter__(self):
-#        print("AHA!")
-#        yield self
 
     def _eval_expand_power_base(self, **kwargs):
         return self
@@ -572,6 +549,7 @@ have_warned = False
 # TODO: use a separate cache for expressions that do not change during ode
 # integration and devaluate it only between integration intervals.
 # TODO: also use sympy to simplify and maybe even solve systems of equations
+@np.errstate(all='call')
 def _eval(expr, iteration=None):
     if iteration is not None:
         global _cached_iteration, _cached_values
@@ -579,7 +557,6 @@ def _eval(expr, iteration=None):
             # still up to date, so try returning vals from cache:
             try:
                 res = _cached_values[expr]
-#                print("read from cache:",expr)
                 return res
             except KeyError:
                 pass
@@ -587,6 +564,8 @@ def _eval(expr, iteration=None):
             # clear cache:
             _cached_values = {}
             _cached_iteration = iteration
+    global _last_expr
+    _last_expr = expr
     t = type(expr)
     tt = type(t)
     if (isinstance(expr, sp.Basic) or tt == sp.FunctionClass) \
@@ -672,23 +651,6 @@ def _eval(expr, iteration=None):
     elif t == sp.Pow:
         base = argvals[0]
         exponent = argvals[1]
-        # FIXME: do the following much better!
-#        EPS = 1e-10
-#        LARGE = 1e50
-#        base[np.where(np.isnan(base))] = 0
-#        # try to avoid overflows due to (small abs)**(negative):
-#        base[np.where(np.logical_and(np.abs(base) < EPS, exponent < 0))] = EPS
-#        # try to avoid overflows due to (large abs)**(positive):
-#        base[np.where(np.logical_and(
-#             np.abs(base) > LARGE, exponent > 0))] = LARGE
-#        # try to avoid invalid values due to (negative)**(non-integer):
-#        base[np.where(np.logical_and(base < 0, exponent % 1 != 0))] = EPS
-#        print(base[:10],exponent[:10])
-        try:
-            pass
-#            base[np.where((base == 0)*(exponent < 0))] = 1e-10
-        except:
-            print("oops! couldn't set values")
         vals = base ** exponent
         isn = np.isnan(vals.astype("float"))
         if np.any(isn):
@@ -719,7 +681,6 @@ def _eval(expr, iteration=None):
     if iteration is not None:
         # store vals in cache:
         _cached_values[expr] = (vals, cardinalities, branchings)
-#        print("stored in cache:",expr)
     return vals, cardinalities, branchings
 
 
@@ -740,3 +701,41 @@ def get_vars(expr):
     for a in expr.args:
         varset.update(get_vars(a))
     return varset
+
+
+
+# support proper error handling:
+    
+global _expression_stacks, _last_expr
+_expression_stacks = {}
+_last_expr = None
+
+# patch sympy.Expr so that all expressions store the stacktrace of their creation:
+
+def make_init_store_stack(cls):
+    cls.___original_init = cls.__init__
+    def new_init(self, *args, **kwargs):
+        try:
+            cls.___original_init(self, *args, **kwargs)
+        except:
+            # necessary since sympy apparently does some magic with __init__ itself 
+            # that changes the signature:
+            cls.___original_init(self)
+        global _expression_stacks
+        st = traceback.extract_stack()
+        st2 = [fr for fr in st if "model_components" in fr.filename]
+        _expression_stacks[self] = st2 if len(st2)>0 else st
+    cls.__init__ = new_init
+
+try:
+    sp.Expr.___original_init
+except:
+    make_init_store_stack(sp.Expr)
+
+def _print_expression_traceback(err, flag):
+    global _expression_stacks, _last_expr
+    print("RuntimeWarning:", err, "\n  symbolic expression: ", _last_expr)
+    if _last_expr in _expression_stacks:
+        traceback.print_list(_expression_stacks[_last_expr], file=sys.stderr)             
+
+np.seterrcall(_print_expression_traceback)
