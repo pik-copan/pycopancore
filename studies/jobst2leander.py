@@ -29,20 +29,20 @@ nsocs = 248 # no. social_systems  # TODO: Später auf Ländercluster aus Sophie 
 ncells = 248  # no. cells  # TODO: Später mit Luana abstimmen wegen LPJ. Alternativ: Zellen aus Sophie Spilles Arbeit verwenden.
 ninds = 1000 # no. individuals  # TODO: 10000 wie bei Nils
 
-t_1 = 2000.1 #TODO: Zeiten anpassen wie bei Nils
+t_1 = 2000.2 #TODO: Zeiten anpassen wie bei Nils
 
 dump_dir = "/tmp/"
 
 # choose one of two scenarios:
-filename = "with.pickle"
-#filename = "without.pickle"
-# (these files will be read by plot_jobst2leander.py)
+with_socials = 0 # 0 or 1
 
-if filename == "with.pickle":
+if with_socials == 1:
+    filename = dump_dir + "with.pickle" # (this file will be read by plot_jobst2leander.py)
     with_awareness = 1
     with_learning = 1
     with_voting = 1
 else:
+    filename = dump_dir + "without.pickle"
     with_awareness = 0
     with_learning = 0
     with_voting = 0
@@ -50,23 +50,23 @@ else:
 model = M.Model()
 
 # read in countries data
-data_folder = "../create_graph/data/"
+data_folder = "leanders_model/data/"
 
-usecols = ["mw_numeric", "area", "population", "gdp"]
-countries_df = pd.read_csv(data_folder + "countries_data.csv", usecols = usecols)
+usecols = ["mw_numeric", "area", "population", "gdp", "gdi"]
+countries_df = pd.read_csv(data_folder + "country_data.csv", usecols = usecols)
 
 country_ids_list = countries_df.mw_numeric.to_numpy()
 country_ids_reverse_dict = {country_ids_list[i]: i for i in range(len(country_ids_list))}
 
 # read in nodeset from Nils
-nodesets_folder = "../create_graph/codevonnils/Output_Nodesets/"
+nodesets_folder = "leanders_model/codevonnils/Output_Nodesets/"
 
 nodeset_data = np.load(nodesets_folder + "nodeset_0.npz")
 node_country_array = nodeset_data['arr_4']
 node_elevation_array = nodeset_data['arr_3']
 
 # read in network from Nils
-networks_folder = "../create_graph/codevonnils/Output_Networks/"
+networks_folder = "leanders_model/codevonnils/Output_Networks/"
 
 network_data = np.load(networks_folder + "network_0.npz")
 adjacency_matrix = network_data['arr_0']
@@ -100,7 +100,7 @@ culture = M.Culture(
     upper_ocean_carbon = (5500 - 830 - 2480 - 1125) * D.GtC
     ) for w in range(nworlds)]
 
-# TODO: Distinguish further? Sinnvoll allen einen Namen zu geben?
+# TODO: Distinguish further? give all of these a name?
 social_systems = [M.SocialSystem(
     world = world,
     has_renewable_subsidy = False,
@@ -113,13 +113,13 @@ social_systems = [M.SocialSystem(
     time_between_votes = 4 if with_voting else 1e100, 
     ) for s in range(nsocs)]
 
-# TODO: Sinnvolle productivities je nach Land
+# TODO: Change productivities of each country?
 cells = [M.Cell(
     social_system = social_systems[c],
-    renewable_sector_productivity = 1/ncells * M.Cell.renewable_sector_productivity.default,
+    renewable_sector_productivity = 0.1 * M.Cell.renewable_sector_productivity.default,
         # represents dependency of solar energy on solar insolation angle TODO reimplement! 
-    fossil_sector_productivity =  5/ncells * M.Cell.fossil_sector_productivity.default,
-    biomass_sector_productivity =  5/ncells * M.Cell.biomass_sector_productivity.default
+    fossil_sector_productivity =  80 * M.Cell.fossil_sector_productivity.default,
+    biomass_sector_productivity =  60 * M.Cell.biomass_sector_productivity.default
     # these values result in realistic total energy production for the year 2000, see below  # TODO: anpassen, so dass die Gesamtenergieprod. wieder stimmt, s.u.
     ) for c in range(ncells)]
 
@@ -149,14 +149,15 @@ M.Cell.fossil_carbon.set_values(cells, G0)
 # read in population distribution from Nils' input data:
 population_per_country = countries_df.population.to_numpy()
 P0 = population_per_country * D.people # total of 7.77e9
-M.SocialSystem.population.set_values(social_systems, P0) #WARNING before we had read in an array of length 4 for nsocs=2 with no errors
+M.SocialSystem.population.set_values(social_systems, P0) #WARNING before we had read in an array of length 4 here for nsocs=2 with no errors
 
 # read in gdp (for some countries this is just scaled up average per capita gdp, see data generation):
 gdp_per_country = countries_df.gdp.to_numpy()
-K0 = gdp_per_country * D.dollars
+gdi_per_country = countries_df.gdi.to_numpy()
+K0 = gdi_per_country * D.dollars
 M.SocialSystem.physical_capital.set_values(social_systems, K0)
 
-# TODO: dies so lassen (alle wissen genau gleich viel zu erneuerbaren Energien):
+# everybody knows the same about renewables:
 S0 = 1e12 * D.gigajoules * np.ones(nsocs)
 M.SocialSystem.renewable_energy_knowledge.set_values(social_systems, S0)
 
@@ -197,12 +198,13 @@ tosave = {
           for v in traj.keys() if v is not "t"
           }
 tosave["t"] = traj["t"]
-dump(tosave, open(dump_dir+filename,"wb"))
+dump(tosave, open(filename,"wb"))
 print(time()-start, " seconds")
 
 t = np.array(traj["t"])
 print("max. time step", (t[1:]-t[:-1]).max())
 
+# TODO: why index 5 as compared to 0 or 1?
 print("\nyr 2000 values (real):")
 print("photo (123):",sum(traj[M.Cell.photosynthesis_carbon_flow][c][5] 
                          for c in cells))
@@ -220,8 +222,7 @@ Rglobal = sum(traj[M.SocialSystem.renewable_energy_input_flow][s][5]
 Eglobal = sum(traj[M.SocialSystem.secondary_energy_flow][s][5] 
               for s in social_systems) * D.gigajoules / D.years
 
-# TODO: oben in Z.79/80 die Faktoren so wählen, dass hier ungef. B=3, F=11 und R=100 herauskommt:
-# TODO: Verstehen, wie die Werte zusammenhängen
+# TODO: oben in Z.79/80 die Faktoren so wählen, dass hier ungef. B=3, F=11 und R=100 herauskommt bzw. fitting nutzen:
 print("B (3), F (11), R (30):",
       Bglobal, Bglobal.tostr(unit=D.gigatonnes_carbon/D.years),
       Fglobal, Fglobal.tostr(unit=D.gigatonnes_carbon/D.years),
@@ -240,7 +241,6 @@ print("temp. at end:", traj[M.World.surface_air_temperature][worlds[0]][-1])
 print("Germany has emissions tax at begin", traj[M.SocialSystem.has_emissions_tax][social_systems[76]][5])
 print("Germany has emissions tax at end", traj[M.SocialSystem.has_emissions_tax][social_systems[76]][-1])
 
-# TODO: understand what indices 5 and -1 mean and if sum or mean is needed
 print("biomass prod. at begin", sum([traj[M.Cell.biomass_relative_productivity][c][5] / traj[M.Cell.terrestrial_carbon][c][5]**2 for c in cells]))
 print("biomass prod. at end", sum([traj[M.Cell.biomass_relative_productivity][c][-1] / traj[M.Cell.terrestrial_carbon][c][-1]**2 for c in cells]))
 

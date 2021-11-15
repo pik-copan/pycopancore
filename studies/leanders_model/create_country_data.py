@@ -66,6 +66,7 @@ def main():
     print("\nCountries with no population in Nils' dataset (mostly those with inoffial ISO): ")
     print(countries_df[countries_df["population"]==0])
     print(countries_df.loc[240, "name"] + " did not have an official ISO in MW's dataset but has population " + str(countries_df.loc[240, "population"]) + " =/= 0")
+    # NOTE: Only United States Minor Outlying Islands has population (300) according to Wikipedia
 
 
 
@@ -74,7 +75,7 @@ def main():
 
     gdp_df = pd.read_csv(data_folder + "API_NY.GDP.MKTP.CD_DS2_en_csv_v2_3263806.csv", skiprows=4, usecols=usecols_gdp) # from https://data.worldbank.org/indicator/NY.GDP.MKTP.CD
     
-    # if no data for 2020 exists, instead take the latest data
+    # if no data for 2020 exists, instead take the latest data # ATTENTION: 2000 could be too far in the past already
     gdp_df["gdp"] = gdp_df["2020"]
     
     years_used_to_fill = list(reversed(usecols_gdp[1:-1]))
@@ -93,6 +94,28 @@ def main():
 
     # add some with average GDP (1.1e4 per capita) where we don't have data
     countries_df["gdp"] = countries_df["gdp"].fillna(countries_df["population"]*1.1e4)
+    
+    
+    # add capital/investment data (GDI)
+    usecols_gdi = ["Country Code", "2018", "2019", "2020"]
+
+    gdi_df = pd.read_csv(data_folder + "API_NE.GDI.TOTL.CD_DS2_en_csv_v2_3165060.csv", skiprows=4, usecols=usecols_gdi) # https://data.worldbank.org/indicator/NE.GDI.TOTL.CD
+    
+    # if no data for 2020 exists, instead take the latest data
+    gdi_df["gdi"] = gdi_df["2020"]
+    
+    years_used_to_fill = list(reversed(usecols_gdi[1:-1]))
+    for y in years_used_to_fill:
+        gdi_df["gdi"] = gdi_df["gdi"].fillna(gdi_df[y])
+
+    countries_df = countries_df.merge(gdi_df[["Country Code", "gdi"]], how="left", left_on="alpha3", right_on="Country Code").drop(columns=["Country Code"])
+
+    # still missing gdi data for countries with population > 1 mio
+    print("\nCountries with no GDI data (pop > 1 mio): ")
+    print(countries_df[(countries_df["gdi"].isna()) & (countries_df["population"] > 1e6)][["name", "population"]].sort_values(by="population", ascending=False))
+
+    # add some with average GDP (1.1e4 per capita) where we don't have data
+    countries_df["gdi"] = countries_df["gdi"].fillna(countries_df["population"]*2.8e3) # world average per capita
 
 
     # save to csv
