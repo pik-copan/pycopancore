@@ -36,6 +36,7 @@ for key, value in traj.items():
         codenames[etpt].append(codename)
         colors[codename] = str(np.random.uniform())+','+str(np.random.uniform())+','+str(np.random.uniform())
         units[codename] = '' # TODO!
+    
 
 # now make a single scrollable page with one panel for each entity type/process taxon:
 fig = make_subplots(rows=len(etpts), cols=1, 
@@ -43,6 +44,7 @@ fig = make_subplots(rows=len(etpts), cols=1,
                     specs=[[{}] for etpt in etpts], 
                     vertical_spacing=0.1/(len(etpts)-1))
 for r, etpt in enumerate(etpts):
+    codenames[etpt].sort()
     # fake a legend separator:
     fig.add_trace(go.Scatter(name=' ', x=[np.nan], y=[np.nan], mode='lines', line={'color':'rgba(255,255,255,0)'}, showlegend=True))
     fig.add_trace(go.Scatter(name=etpt, x=[np.nan], y=[np.nan], mode='lines', line={'color':'rgba(255,255,255,0)'}, showlegend=True))
