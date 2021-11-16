@@ -1,6 +1,7 @@
 
 """
 TODO:
+- unite this with private._trajectory_dictionary
 - add auto-generated "id" field and optional "name" and "description" fields to all entity types in base
 - add set_state(State) to ModelLogics 
 """
