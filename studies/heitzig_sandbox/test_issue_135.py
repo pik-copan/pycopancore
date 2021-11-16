@@ -10,7 +10,7 @@ from pycopancore.runners import Runner
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
 
-from numba.core.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
+from numba.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
 import warnings
 warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
 warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
@@ -54,6 +54,7 @@ runner = Runner(model=model)
 # instantiate process taxa:
 environment = M.Environment()
 metabolism = M.Metabolism(
+    biomass_energy_density = 0,  # to test division by zero
     renewable_energy_knowledge_spillover_fraction = 
         .1 if with_spillovers else 0,
     basic_emigration_probability_rate = 
@@ -188,6 +189,7 @@ def target(productivities):
     M.Cell.fossil_sector_productivity.set_values(cells, np.ones(ncells) * productivities[1])
     M.Cell.renewable_sector_productivity.set_values(cells, rel_prod * productivities[2])
     traj = runner.run(t_0=2000, t_1=2000.001, dt=1)
+    exit()
     Bglobal = sum(traj[M.SocialSystem.biomass_input_flow][s][1] for s in social_systems)
     Fglobal = sum(traj[M.SocialSystem.fossil_fuel_input_flow][s][1] for s in social_systems)
     Rglobal = sum(traj[M.SocialSystem.renewable_energy_input_flow][s][1] for s in social_systems)  # D.gigajoules / D.years
@@ -197,7 +199,7 @@ def target(productivities):
     
 productivities0 = np.array([3e5, 5e6, 7e-18])
 print("START:",productivities0)
-productivities = productivities0 #fmin(target, productivities0)
+productivities = fmin(target, productivities0)
 print("OPTIMAL:",productivities)
 set_initial_state(x0)
 M.Cell.biomass_sector_productivity.set_values(cells, np.ones(ncells) * productivities[0])
@@ -214,8 +216,8 @@ GWP_2000 = 33.57e12  # gross world product in 2000 in USD
 # for illustration, use a random GDP distribution (later use real-world data):
 r = random.uniform(size=nsocs)
 Ytargets = GWP_2000 * r / r.sum()
-weights = Ytargets**(5/2) / P0.number()
-capitals0 = sum(P0.number()) * weights/sum(weights)
+weights = Ytargets**(5/2) / P0
+capitals0 = sum(P0) * 1e4 * weights/sum(weights)
 
 def target2(logcapitals):
     capitals = np.exp(logcapitals)
@@ -228,8 +230,6 @@ def target2(logcapitals):
     return err
     
 #capitals0 = np.array(M.SocialSystem.physical_capital.get_values(social_systems))
-print(type(capitals0))
-print(capitals0)
 capitals = np.exp(fmin(target2, np.log(capitals0)))
 print("START:",capitals0)
 print("OPTIMAL:",capitals)
