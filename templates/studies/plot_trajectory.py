@@ -15,6 +15,7 @@ traj = load(open(filename,"rb"))
 
 # extract time points, entity types/process taxa, variable codenames, instances:
 t = np.array(traj['t'])
+nts = t.size
 etpts = []
 codenames = {}
 units = {}
@@ -57,26 +58,31 @@ for r, etpt in enumerate(etpts):
             exp = max(exp, np.ceil(np.log10(np.max(np.abs(y))))-1)
         scale = 10**exp
         # plot one line for each instance:
-        total = 0
         nvals = len(vals.keys())
         if nvals == 0: continue
-        for i, y in vals.items():
-            y = np.array(y)
-            total += y
-            if nvals > 1:
-                fig.add_trace(go.Scatter(name=cn+' ('+i+')',
-                                         x=t, y=y/scale,
-                                         mode='lines',  
-                                         line={'color':'rgba('+color+',0.5)','width':1},
-                                         showlegend=False,
-                                         ),
-                              row=1+r,col=1)
+        # combine all instances' data into one long sequence, separated by nans, 
+        # so that they can form a single trace we can toggle with a single click:
+        xs = np.zeros((nvals, nts+1)) + np.nan
+        ys = np.zeros((nvals, nts+1)) + np.nan
+        for i, inst in enumerate(vals.keys()):
+            xs[i, :nts] = y = t
+            ys[i, :nts] = y = vals[inst]
+        if nvals > 1:
+            fig.add_trace(go.Scatter(name=cn+(' [%g'%scale)+unit+']',
+                                     x=xs.flatten(), y=ys.flatten()/scale,
+                                     mode='lines',  
+                                     line={'color':'rgba('+color+',0.5)','width':1},
+                                     showlegend=True,
+                                     visible='legendonly'
+                                     ),
+                          row=1+r,col=1)
         # plot a line for the average:
-        fig.add_trace(go.Scatter(name=cn+(' [%g'%scale)+unit+']',  # TODO: nicer scale formatting
-                                 x=t, y=total/nvals/scale,
+        fig.add_trace(go.Scatter(name=('avg. ' if nvals > 1 else '')+cn+(' [%g'%scale)+unit+']',  # TODO: nicer scale formatting
+                                 x=t, y=ys[:, :nts].mean(axis=0)/scale,
                                  mode='lines',  
                                  line={'color':'rgb('+color+')','width':3},
                                  showlegend=True,
+                                 visible='legendonly'
                                  ),
                       row=1+r,col=1)
         fig.update_xaxes(row=1+r, col=1, showgrid=False)
