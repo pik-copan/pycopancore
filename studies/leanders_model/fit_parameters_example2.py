@@ -54,7 +54,7 @@ model = M.Model()
 runner = Runner(model=model)
 
 # read in countries data
-data_folder = "leanders_model/data/"
+data_folder = "studies/leanders_model/data/"
 
 usecols = ["mw_numeric", "area", "population", "gdp", "gdi"]
 countries_df = pd.read_csv(data_folder + "country_data.csv", usecols = usecols)
@@ -63,14 +63,14 @@ country_ids_list = countries_df.mw_numeric.to_numpy()
 country_ids_reverse_dict = {country_ids_list[i]: i for i in range(len(country_ids_list))}
 
 # read in nodeset from Nils
-nodesets_folder = "leanders_model/codevonnils/Output_Nodesets/"
+nodesets_folder = "studies/leanders_model/codevonnils/Output_Nodesets/"
 
 nodeset_data = np.load(nodesets_folder + "nodeset_0.npz")
 node_country_array = nodeset_data['arr_4']
 node_elevation_array = nodeset_data['arr_3']
 
 # read in network from Nils
-networks_folder = "leanders_model/codevonnils/Output_Networks/"
+networks_folder = "studies/leanders_model/codevonnils/Output_Networks/"
 
 network_data = np.load(networks_folder + "network_0.npz")
 adjacency_matrix = network_data['arr_0']
