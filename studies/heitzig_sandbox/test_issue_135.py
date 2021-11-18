@@ -10,7 +10,7 @@ from pycopancore.runners import Runner
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
 
-from numba.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
+from numba.core.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
 import warnings
 warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
 warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
