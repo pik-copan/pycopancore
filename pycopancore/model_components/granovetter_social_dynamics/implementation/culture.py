@@ -18,6 +18,8 @@ from .. import interface as I
 from numpy import inf
 from numpy.random import exponential
 
+from sympy import ITE
+
 # TODO: uncomment this if you need ref. variables such as B.Culture.individuals:
 from ...base import interface as B
 
@@ -67,9 +69,11 @@ class Culture (I.Culture):
                  Explicit("update number of active individuals",
                           [I.Culture.number_of_active_individuals],
                           # JH: your original specification, using a method:
-                          set_number_of_active_individuals
+                          #set_number_of_active_individuals
                           # JH: equivalent and simpler specification, using a symbolic expression:
-                          #[B.Culture.worlds.individuals.sum.is_active]
+                          [B.Culture.worlds.individuals.sum(
+                              ITE(B.Culture.worlds.individuals.is_active == True, 1, 0)  # sympy.ITE = if ... then ... else ...
+                            )]
                           ),
                  Event("update individuals' activity",
                        [B.Culture.worlds.individuals.is_active],
