@@ -118,6 +118,18 @@ tosave = {
           for v in traj.keys() if v is not "t"
           }
 tosave["t"] = traj["t"]
+if True: # was only used for debugging:
+    for k,v in tosave.items():
+        print(k, type(k), type(v))
+        assert type(k) ==  type("") and type(v) in [type([]), type({})]
+        if type(v) == type({}):
+            for k2,v2 in v.items():
+                assert type(k2) ==  type("") and type(v2) in [type([]), type({})]
+                print(" ", k2, type(k), type(v2))
+                if type(v2) == type([]) and len(v2)>0:
+                    print("  ", v2[0], type(v2[0])) 
+                    for i in v2:
+                        assert type(i) in [type(1.0), type(1), type(True), np.int64, np.bool_, np.float64], str(type(i))
 dump(tosave, open(filename,"wb"))
 print(time()-start, " seconds")
 

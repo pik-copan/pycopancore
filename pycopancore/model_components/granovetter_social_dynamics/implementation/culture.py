@@ -54,13 +54,22 @@ class Culture (I.Culture):
     
     def set_number_of_active_individuals(self, unused_t):
         """get the number of active individuals"""
-        self.number_of_active_individuals = sum([ind.is_active for ind in [B.Culture.worlds.individuals]]) # ATTENTION: only works if we have one world I think
+        # JH: the following does not work since you are attempting to use a symbolic expression (B.Culture.worlds.individuals) in a method.
+        # symbolic expressions are only allowed when specifying formulae directly in processes = [...], not in methods.
+        # Technically, B.Culture.worlds.individuals is not a value but an abstract object of class _DotConstruct, representing a variable.
+        # Instead, you need to access the variable values directly as follows (note the 'self'!):
+#        self.number_of_active_individuals = sum([ind.is_active for ind in [B.Culture.worlds.individuals]]) # ATTENTION: only works if we have one world I think
+        self.number_of_active_individuals = sum([ind.is_active for w in self.worlds for ind in w.individuals]) # ATTENTION: only works if we have one world I think
+        # (alternatively, you could have specified the whole process with a symbolic expression as indicated below)
         print(self.number_of_active_individuals)
 
     processes = [
                  Explicit("update number of active individuals",
                           [I.Culture.number_of_active_individuals],
+                          # JH: your original specification, using a method:
                           set_number_of_active_individuals
+                          # JH: equivalent and simpler specification, using a symbolic expression:
+                          #[B.Culture.worlds.individuals.sum.is_active]
                           ),
                  Event("update individuals' activity",
                        [B.Culture.worlds.individuals.is_active],
