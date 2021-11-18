@@ -28,7 +28,7 @@ ninds = 1000 # no. individuals
 t_1 = 2120
 
 # choose one of two scenarios:
-with_social = 1  # 0 or 1
+with_social = 0  # 0 or 1
 
 # directory to store results:
 dir = "/tmp/";
