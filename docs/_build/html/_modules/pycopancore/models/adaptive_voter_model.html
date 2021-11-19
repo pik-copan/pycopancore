@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>pycopancore.models.adaptive_voter_model &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.models.adaptive_voter_model</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Model class adaptive_voter_model.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="c1">#</span>
+<span class="c1">#  Imports</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">base</span>  <span class="c1"># all models must use the base component</span>
+
+<span class="kn">from</span> <span class="nn">..model_components</span> <span class="kn">import</span> <span class="n">adaptive_voter_opinion_formation</span> <span class="k">as</span> <span class="n">avof</span>
+<span class="kn">from</span> <span class="nn">..model_components</span> <span class="kn">import</span> <span class="n">majority_decision</span> <span class="k">as</span> <span class="n">md</span>
+
+
+<span class="c1"># entity types:</span>
+
+<span class="c1"># NEED TO: compose all needed entity type implementation classes</span>
+<span class="c1"># by mixing the above model components&#39; mixin classes of the same name.</span>
+<span class="c1"># Only compose those entity types and process taxons that the model needs,</span>
+<span class="c1"># delete the templates for the unneeded ones, and add those for missing ones:</span>
+
+<span class="c1"># NEED TO: list all mixin classes needed:</span>
+<div class="viewcode-block" id="World"><a class="viewcode-back" href="../../../_api/pycopancore.models.html#pycopancore.models.adaptive_voter_model.World">[docs]</a><span class="k">class</span> <span class="nc">World</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">World</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;World entity type.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+<span class="c1"># NEED TO: list all mixin classes needed:</span>
+<div class="viewcode-block" id="SocialSystem"><a class="viewcode-back" href="../../../_api/pycopancore.models.html#pycopancore.models.adaptive_voter_model.SocialSystem">[docs]</a><span class="k">class</span> <span class="nc">SocialSystem</span><span class="p">(</span><span class="n">md</span><span class="o">.</span><span class="n">SocialSystem</span><span class="p">,</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">SocialSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;SocialSystem entity type.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+<span class="c1"># NEED TO: list all mixin classes needed:</span>
+<div class="viewcode-block" id="Cell"><a class="viewcode-back" href="../../../_api/pycopancore.models.html#pycopancore.models.adaptive_voter_model.Cell">[docs]</a><span class="k">class</span> <span class="nc">Cell</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">Cell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cell entity type.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+<span class="c1"># NEED TO: list all mixin classes needed:</span>
+<div class="viewcode-block" id="Individual"><a class="viewcode-back" href="../../../_api/pycopancore.models.html#pycopancore.models.adaptive_voter_model.Individual">[docs]</a><span class="k">class</span> <span class="nc">Individual</span><span class="p">(</span><span class="n">avof</span><span class="o">.</span><span class="n">Individual</span><span class="p">,</span>
+                 <span class="n">md</span><span class="o">.</span><span class="n">Individual</span><span class="p">,</span>
+                 <span class="n">base</span><span class="o">.</span><span class="n">Individual</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Individual entity type.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+<span class="c1"># process taxa:</span>
+
+<span class="c1"># NEED TO: do the same for process taxa:</span>
+
+
+<span class="c1"># NEED TO: list all mixin classes needed:</span>
+<span class="c1"># class Environment (</span>
+<span class="c1">#               base.Environment):</span>
+<span class="c1">#     &quot;&quot;&quot;Environment process taxon.&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#     pass</span>
+
+
+<span class="c1"># NEED TO: list all mixin classes needed:</span>
+<span class="c1"># class Metabolism (</span>
+<span class="c1">#                   base.Metabolism):</span>
+<span class="c1">#     &quot;&quot;&quot;Metabolism process taxon.&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#     pass</span>
+
+
+<span class="c1"># NEED TO: list all mixin classes needed:</span>
+<div class="viewcode-block" id="Culture"><a class="viewcode-back" href="../../../_api/pycopancore.models.html#pycopancore.models.adaptive_voter_model.Culture">[docs]</a><span class="k">class</span> <span class="nc">Culture</span><span class="p">(</span><span class="n">avof</span><span class="o">.</span><span class="n">Culture</span><span class="p">,</span> <span class="n">md</span><span class="o">.</span><span class="n">Culture</span><span class="p">,</span>
+              <span class="n">base</span><span class="o">.</span><span class="n">Culture</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Culture process taxon.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+<span class="c1"># Model class:</span>
+
+<span class="c1"># NEED TO: list all used model components:</span>
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../../_api/pycopancore.models.html#pycopancore.models.adaptive_voter_model.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">avof</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">md</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+            <span class="n">base</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class representing the whole model.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Name of the model&quot;&quot;&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Longer description&quot;&quot;&quot;</span>
+
+    <span class="c1"># NEED TO: list all entity types you composed above:</span>
+    <span class="n">entity_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">World</span><span class="p">,</span> <span class="n">SocialSystem</span><span class="p">,</span> <span class="n">Individual</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;List of entity types used in the model&quot;&quot;&quot;</span>
+    <span class="c1"># NEED TO: list all entity types you composed above:</span>
+    <span class="n">process_taxa</span> <span class="o">=</span> <span class="p">[</span><span class="n">Culture</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;List of process taxa used in the model&quot;&quot;&quot;</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

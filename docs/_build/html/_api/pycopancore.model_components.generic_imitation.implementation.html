@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>pycopancore.model_components.generic_imitation.implementation package &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="pycopancore-model-components-generic-imitation-implementation-package">
+<h1>pycopancore.model_components.generic_imitation.implementation package<a class="headerlink" href="#pycopancore-model-components-generic-imitation-implementation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pycopancore.model_components.generic_imitation.implementation.culture">
+<span id="pycopancore-model-components-generic-imitation-implementation-culture-module"></span><h2>pycopancore.model_components.generic_imitation.implementation.culture module<a class="headerlink" href="#module-pycopancore.model_components.generic_imitation.implementation.culture" title="Permalink to this headline">¶</a></h2>
+<p>Culture process taxon mixing class template.</p>
+<dl class="class">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.Culture">
+<em class="property">class </em><code class="sig-prename descclassname">pycopancore.model_components.generic_imitation.implementation.culture.</code><code class="sig-name descname">Culture</code><a class="reference internal" href="../_modules/pycopancore/model_components/generic_imitation/implementation/culture.html#Culture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.Culture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pycopancore.model_components.generic_imitation.html#pycopancore.model_components.generic_imitation.interface.Culture" title="pycopancore.model_components.generic_imitation.interface.Culture"><code class="xref py py-class docutils literal notranslate"><span class="pre">pycopancore.model_components.generic_imitation.interface.Culture</span></code></a></p>
+<p>Culture process taxon mixin implementation class.</p>
+<dl class="method">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.Culture.get_rates">
+<code class="sig-name descname">get_rates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/generic_imitation/implementation/culture.html#Culture.get_rates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.Culture.get_rates" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the total rate of imitation events across all imitation variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.Culture.next_event_time">
+<code class="sig-name descname">next_event_time</code><span class="sig-paren">(</span><em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/generic_imitation/implementation/culture.html#Culture.next_event_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.Culture.next_event_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by runner. Time of next imitation of some variable(s)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.Culture.perform_event">
+<code class="sig-name descname">perform_event</code><span class="sig-paren">(</span><em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/generic_imitation/implementation/culture.html#Culture.perform_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.Culture.perform_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by runner. Choose a (group of) variables and trigger a batch imitation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.Culture.processes">
+<code class="sig-name descname">processes</code><em class="property"> = [imitate some trait(s) on some network(s)]</em><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.Culture.processes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.Culture.trigger_imitation">
+<code class="sig-name descname">trigger_imitation</code><span class="sig-paren">(</span><em class="sig-param">key='*'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/generic_imitation/implementation/culture.html#Culture.trigger_imitation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.Culture.trigger_imitation" title="Permalink to this definition">¶</a></dt>
+<dd><p>(see interface)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.choice">
+<code class="sig-prename descclassname">pycopancore.model_components.generic_imitation.implementation.culture.</code><code class="sig-name descname">choice</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">size=None</em>, <em class="sig-param">replace=True</em>, <em class="sig-param">p=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.choice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a random sample from a given 1-D array</p>
+<blockquote>
+<div><div class="versionadded">
+<p><span class="versionmodified added">New in version 1.7.0.</span></p>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New code should use the <code class="docutils literal notranslate"><span class="pre">choice</span></code> method of a <code class="docutils literal notranslate"><span class="pre">default_rng()</span></code>
+instance instead; see <cite>random-quick-start</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>1-D array-like</em><em> or </em><em>int</em>) – If an ndarray, a random sample is generated from its elements.
+If an int, the random sample is generated as if a were np.arange(a)</p></li>
+<li><p><strong>size</strong> (<em>int</em><em> or </em><em>tuple of ints</em><em>, </em><em>optional</em>) – Output shape.  If the given shape is, e.g., <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n,</span> <span class="pre">k)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">k</span></code> samples are drawn.  Default is None, in which case a
+single value is returned.</p></li>
+<li><p><strong>replace</strong> (<em>boolean</em><em>, </em><em>optional</em>) – Whether the sample is with or without replacement</p></li>
+<li><p><strong>p</strong> (<em>1-D array-like</em><em>, </em><em>optional</em>) – The probabilities associated with each entry in a.
+If not given the sample assumes a uniform distribution over all
+entries in a.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>samples</strong> – The generated random samples</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>single item or ndarray</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If a is an int and less than zero, if a or p are not 1-dimensional,
+    if a is an array-like of size 0, if p is not a vector of
+    probabilities, if a and p have different lengths, or if
+    replace=False and the sample size is greater than the population
+    size</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">randint()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">shuffle()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">permutation()</span></code></p>
+<dl class="simple">
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">Generator.choice()</span></code></dt><dd><p>which should be used in new code</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<p>Generate a uniform random sample from np.arange(5) of size 3:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">array([0, 3, 4]) # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#This is equivalent to np.random.randint(0,5,3)</span>
+</pre></div>
+</div>
+<p>Generate a non-uniform random sample from np.arange(5) of size 3:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">array([3, 3, 0]) # random</span>
+</pre></div>
+</div>
+<p>Generate a uniform random sample from np.arange(5) of size 3 without
+replacement:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">array([3,1,0]) # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#This is equivalent to np.random.permutation(np.arange(5))[:3]</span>
+</pre></div>
+</div>
+<p>Generate a non-uniform random sample from np.arange(5) of size
+3 without replacement:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">array([2, 3, 0]) # random</span>
+</pre></div>
+</div>
+<p>Any of the above can be repeated with an arbitrary array-like
+instead of just integers. For instance:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">aa_milne_arr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pooh&#39;</span><span class="p">,</span> <span class="s1">&#39;rabbit&#39;</span><span class="p">,</span> <span class="s1">&#39;piglet&#39;</span><span class="p">,</span> <span class="s1">&#39;Christopher&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">aa_milne_arr</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
+<span class="go">array([&#39;pooh&#39;, &#39;pooh&#39;, &#39;pooh&#39;, &#39;Christopher&#39;, &#39;piglet&#39;], # random</span>
+<span class="go">      dtype=&#39;&lt;U11&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.exponential">
+<code class="sig-prename descclassname">pycopancore.model_components.generic_imitation.implementation.culture.</code><code class="sig-name descname">exponential</code><span class="sig-paren">(</span><em class="sig-param">scale=1.0</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.exponential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw samples from an exponential distribution.</p>
+<p>Its probability density function is</p>
+<div class="math notranslate nohighlight">
+\[f(x; \frac{1}{\beta}) = \frac{1}{\beta} \exp(-\frac{x}{\beta}),\]</div>
+<p>for <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> and 0 elsewhere. <span class="math notranslate nohighlight">\(\beta\)</span> is the scale parameter,
+which is the inverse of the rate parameter <span class="math notranslate nohighlight">\(\lambda = 1/\beta\)</span>.
+The rate parameter is an alternative, widely used parameterization
+of the exponential distribution <a class="footnote-reference brackets" href="#id6" id="id1">3</a>.</p>
+<p>The exponential distribution is a continuous analogue of the
+geometric distribution.  It describes many common situations, such as
+the size of raindrops measured over many rainstorms <a class="footnote-reference brackets" href="#id4" id="id2">1</a>, or the time
+between page requests to Wikipedia <a class="footnote-reference brackets" href="#id5" id="id3">2</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New code should use the <code class="docutils literal notranslate"><span class="pre">exponential</span></code> method of a <code class="docutils literal notranslate"><span class="pre">default_rng()</span></code>
+instance instead; see <cite>random-quick-start</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scale</strong> (<em>float</em><em> or </em><em>array_like of floats</em>) – The scale parameter, <span class="math notranslate nohighlight">\(\beta = 1/\lambda\)</span>. Must be
+non-negative.</p></li>
+<li><p><strong>size</strong> (<em>int</em><em> or </em><em>tuple of ints</em><em>, </em><em>optional</em>) – Output shape.  If the given shape is, e.g., <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n,</span> <span class="pre">k)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">k</span></code> samples are drawn.  If size is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default),
+a single value is returned if <code class="docutils literal notranslate"><span class="pre">scale</span></code> is a scalar.  Otherwise,
+<code class="docutils literal notranslate"><span class="pre">np.array(scale).size</span></code> samples are drawn.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Drawn samples from the parameterized exponential distribution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray or scalar</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">Generator.exponential()</span></code></dt><dd><p>which should be used for new code.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dd><p>Peyton Z. Peebles Jr., “Probability, Random Variables and
+Random Signal Principles”, 4th ed, 2001, p. 57.</p>
+</dd>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dd><p>Wikipedia, “Poisson process”,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Poisson_process">https://en.wikipedia.org/wiki/Poisson_process</a></p>
+</dd>
+<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id1">3</a></span></dt>
+<dd><p>Wikipedia, “Exponential distribution”,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Exponential_distribution">https://en.wikipedia.org/wiki/Exponential_distribution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.get_entry">
+<code class="sig-prename descclassname">pycopancore.model_components.generic_imitation.implementation.culture.</code><code class="sig-name descname">get_entry</code><span class="sig-paren">(</span><em class="sig-param">spec</em>, <em class="sig-param">my_trait</em>, <em class="sig-param">other_trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/generic_imitation/implementation/culture.html#get_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.get_entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract value for trait pair from specification,
+which, if it is a dict, can either contain the pair
+or the pair with one or both entries replaced by ‘*’, or neither.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.get_entry_or_return_value">
+<code class="sig-prename descclassname">pycopancore.model_components.generic_imitation.implementation.culture.</code><code class="sig-name descname">get_entry_or_return_value</code><span class="sig-paren">(</span><em class="sig-param">spec</em>, <em class="sig-param">me</em>, <em class="sig-param">my_trait</em>, <em class="sig-param">other_trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/generic_imitation/implementation/culture.html#get_entry_or_return_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.get_entry_or_return_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract value for trait pair from specification,
+which, if it is a dict, can either contain the pair
+or the pair with one or both entries replaced by ‘*’, or neither.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.get_spec">
+<code class="sig-prename descclassname">pycopancore.model_components.generic_imitation.implementation.culture.</code><code class="sig-name descname">get_spec</code><span class="sig-paren">(</span><em class="sig-param">spec</em>, <em class="sig-param">key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pycopancore/model_components/generic_imitation/implementation/culture.html#get_spec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.get_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract value for key from specification,
+which can either be a dict with the given key, a dict with key ‘*’, or
+a single value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pycopancore.model_components.generic_imitation.implementation.culture.uniform">
+<code class="sig-prename descclassname">pycopancore.model_components.generic_imitation.implementation.culture.</code><code class="sig-name descname">uniform</code><span class="sig-paren">(</span><em class="sig-param">low=0.0</em>, <em class="sig-param">high=1.0</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pycopancore.model_components.generic_imitation.implementation.culture.uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw samples from a uniform distribution.</p>
+<p>Samples are uniformly distributed over the half-open interval
+<code class="docutils literal notranslate"><span class="pre">[low,</span> <span class="pre">high)</span></code> (includes low, but excludes high).  In other words,
+any value within the given interval is equally likely to be drawn
+by <cite>uniform</cite>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New code should use the <code class="docutils literal notranslate"><span class="pre">uniform</span></code> method of a <code class="docutils literal notranslate"><span class="pre">default_rng()</span></code>
+instance instead; see <cite>random-quick-start</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>low</strong> (<em>float</em><em> or </em><em>array_like of floats</em><em>, </em><em>optional</em>) – Lower boundary of the output interval.  All values generated will be
+greater than or equal to low.  The default value is 0.</p></li>
+<li><p><strong>high</strong> (<em>float</em><em> or </em><em>array_like of floats</em>) – Upper boundary of the output interval.  All values generated will be
+less than high.  The default value is 1.0.</p></li>
+<li><p><strong>size</strong> (<em>int</em><em> or </em><em>tuple of ints</em><em>, </em><em>optional</em>) – Output shape.  If the given shape is, e.g., <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n,</span> <span class="pre">k)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">k</span></code> samples are drawn.  If size is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default),
+a single value is returned if <code class="docutils literal notranslate"><span class="pre">low</span></code> and <code class="docutils literal notranslate"><span class="pre">high</span></code> are both scalars.
+Otherwise, <code class="docutils literal notranslate"><span class="pre">np.broadcast(low,</span> <span class="pre">high).size</span></code> samples are drawn.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Drawn samples from the parameterized uniform distribution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray or scalar</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">randint()</span></code></dt><dd><p>Discrete uniform distribution, yielding integers.</p>
+</dd>
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">random_integers()</span></code></dt><dd><p>Discrete uniform distribution over the closed interval <code class="docutils literal notranslate"><span class="pre">[low,</span> <span class="pre">high]</span></code>.</p>
+</dd>
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">random_sample()</span></code></dt><dd><p>Floats uniformly distributed over <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1)</span></code>.</p>
+</dd>
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">random()</span></code></dt><dd><p>Alias for <cite>random_sample</cite>.</p>
+</dd>
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">rand()</span></code></dt><dd><p>Convenience function that accepts dimensions as input, e.g., <code class="docutils literal notranslate"><span class="pre">rand(2,2)</span></code> would generate a 2-by-2 array of floats, uniformly distributed over <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1)</span></code>.</p>
+</dd>
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">Generator.uniform()</span></code></dt><dd><p>which should be used for new code.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The probability density function of the uniform distribution is</p>
+<div class="math notranslate nohighlight">
+\[p(x) = \frac{1}{b - a}\]</div>
+<p>anywhere within the interval <code class="docutils literal notranslate"><span class="pre">[a,</span> <span class="pre">b)</span></code>, and zero elsewhere.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">high</span></code> == <code class="docutils literal notranslate"><span class="pre">low</span></code>, values of <code class="docutils literal notranslate"><span class="pre">low</span></code> will be returned.
+If <code class="docutils literal notranslate"><span class="pre">high</span></code> &lt; <code class="docutils literal notranslate"><span class="pre">low</span></code>, the results are officially undefined
+and may eventually raise an error, i.e. do not rely on this
+function to behave when passed arguments satisfying that
+inequality condition.</p>
+<p class="rubric">Examples</p>
+<p>Draw samples from the distribution:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>All values are within the given interval:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">s</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Display the histogram of the samples, along with the
+probability density function:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">ignored</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">bins</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pycopancore.model_components.generic_imitation.implementation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pycopancore.model_components.generic_imitation.implementation" title="Permalink to this headline">¶</a></h2>
+<p>Model component implementation subpackage.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_api/pycopancore.model_components.generic_imitation.implementation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/_api/pycopancore.model_components.generic_imitation.implementation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

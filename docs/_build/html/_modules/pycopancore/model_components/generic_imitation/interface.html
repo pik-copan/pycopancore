@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>pycopancore.model_components.generic_imitation.interface &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.generic_imitation.interface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;model component Interface template.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2021 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">networkx</span> <span class="kn">import</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">DiGraph</span>
+
+<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">master_data_model</span> <span class="k">as</span> <span class="n">D</span>
+<span class="kn">from</span> <span class="nn">...data_model.master_data_model</span> <span class="kn">import</span> <span class="n">I</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">Variable</span>
+
+
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.generic_imitation.html#pycopancore.model_components.generic_imitation.interface.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Interface for Model mixin.&quot;&quot;&quot;</span>
+
+    <span class="c1"># metadata:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;generic imitation of traits on networks&quot;</span>
+    <span class="sd">&quot;&quot;&quot;a unique name for the model component&quot;&quot;&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;For each of a list of traits (=combinations of variables), a certain fraction of entities of the variable&#39;s owning type looks at a certain number of fraction of their neighbors on a certain network and imitates their variable values with certain probabilities when certain thresholds are met. &quot;</span> \
+    <span class="s2">&quot;All these specifics are governed by parameters in Culture that can be overridden in imitating entity types by providing respective variables or methods there. &quot;</span> \
+    <span class="s2">&quot;E.g., to override the imitation rate for the trait with key &#39;tax&#39;, the entity type can either define a Variable or method named imi_rate_tax.&quot;</span> \
+    <span class="s2">&quot;To use this component, the model composer must first import model_components.config, then set config.generic_imitation[&#39;variables&#39;] to a list of variables that this component shall act on, and only then import model_components.generic_imitation. &quot;</span> \
+    <span class="s2">&quot;Each entry in config.generic_imitation[&#39;variables&#39;] must be a dot construct starting at base.interface.Culture and leading to the variable in question. &quot;</span> \
+    <span class="s2">&quot;E.g., if the variables Individual.is_environmentally_friendly and SocialSystem.emissions_tax_level shall be imitated, put config.generic_imitation[&#39;variables&#39;] = [base.interface.Culture.individuals.is_environmentally_friendly, base.interface.Culture.social_systems.emissions_tax_level].&quot;</span> 
+    <span class="sd">&quot;&quot;&quot;some longer description&quot;&quot;&quot;</span>
+    <span class="n">requires</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;list of other model components required for this model component to</span>
+<span class="sd">    make sense&quot;&quot;&quot;</span></div>
+
+
+<span class="c1"># process taxa:</span>
+
+
+<div class="viewcode-block" id="Culture"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.generic_imitation.html#pycopancore.model_components.generic_imitation.interface.Culture">[docs]</a><span class="k">class</span> <span class="nc">Culture</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Interface for Culture process taxon mixin.&quot;&quot;&quot;</span>
+
+    <span class="c1"># exogenous variables / parameters:</span>
+        
+    <span class="n">imi_traits</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;imitation traits&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Dict of key: trait. Each trait is a tuple of one or more Variables that shall be imitated together. Each occurring Variable must also be listed in the config variable generic_imitation[&#39;variables&#39;]. See this model component&#39;s Model.description for more information on this. All other imi_* parameters defined in Culture are allowed to be dictionaries keyed with the keys listed here, or with the key &#39;*&#39; for specifying values to be applied to all (other) entries occurring here. For some of them, their values can also be overridden by imitating entity types by providing variables or methods named imi_p_imitate_&lt;key&gt;, imi_p_imitate_&lt;key&gt; etc.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Variable</span><span class="p">]],</span> 
+        <span class="n">default</span><span class="o">=</span><span class="p">{})</span>
+
+    <span class="c1"># settings that cannot be overridden:</span>
+
+    <span class="n">imi_rate</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;imitation rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of) rates at which a batch of entities imitates.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">years</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># NOTE: imitation can also be triggered from other components by calling ...</span>
+            
+    <span class="n">imi_type</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;imitation type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of) string(s) specifying the type(s) of imitation: &quot;</span> \
+        <span class="s2">&quot;&#39;simple&#39; means entities draw one neighbor and imitate it with some probability. &quot;</span> \
+        <span class="s2">&quot;&#39;threshold&#39; means entities draw several neighbors and imitate each observed value occurring above a certain threshold with some probability.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+        <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;nominal&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span> <span class="s1">&#39;threshold&#39;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">)</span>
+
+    <span class="n">imi_batch_n</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;imitation batch size&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of) size(s) of batches imitating at the same time. &quot;</span> \
+        <span class="s2">&quot;Alternatively, imi_p_in_batch can be specified, but not both.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">quantum</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        
+    <span class="n">imi_network</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;imitation network&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of) Variable object(s) containing the network(s) imitation is based on.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Graph</span><span class="p">,</span> <span class="n">DiGraph</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Graph</span><span class="p">,</span> <span class="n">DiGraph</span><span class="p">]]])</span>
+        
+    <span class="n">imi_spreading_direction</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;imitation spreading direction&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of) &#39;forward&#39; or &#39;backward&#39;. Only applicable if network is directed. &quot;</span> \
+        <span class="s2">&quot;If &#39;forward&#39;, nodes imitate their predecessors. &quot;</span> \
+        <span class="s2">&quot;If &#39;backward&#39;, nodes imitate their successors in the directed network&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># parameters that can be overridden by entities:</span>
+
+    <span class="n">imi_p_in_batch</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;probability of being in an imitation batch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of) probability/ies with which entities are selected to be in an imitation batch. Alternatively, imi_batch_n can be specified, but not both. &quot;</span> \
+        <span class="s2">&quot;Can be overridden by imitating entity types by providing variables or methods named imi_p_in_batch_&lt;key&gt; where &lt;key&gt; is a trait key defined in imi_traits.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    
+    <span class="n">imi_p_imitate</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;imitation probability&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of (dict of)) probability/ies to actually imitate the candidate value (in the &#39;simple&#39; case, the value of a randomly drawn neighbor, in the &#39;threshold&#39; case, each value occurring in the drawn neighbors more often than the thresholds say). &quot;</span> \
+        <span class="s2">&quot;If dict of dict, inner dict keys must be of the form (source value, target value), where both source and target values are trait value tuples or might be &#39;*&#39; to indicate that this entry applies to all source or target values. &quot;</span> \
+        <span class="s2">&quot;Can be overridden by imitating entity types by providing a variables or methods named imi_p_imitate_&lt;key&gt; where &lt;key&gt; is a trait key defined in imi_traits. &quot;</span> \
+        <span class="s2">&quot;If overridden by a method, that method must accept the named arguments other=, own_trait=, and other_trait=.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">float</span><span class="p">]]],</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+    <span class="c1"># only applicable to type=&#39;threshold&#39;:</span>
+    
+    <span class="n">imi_n_neighbors_drawn</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;number of neighbors drawn in imitation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of) number of neighbors drawn for each imitating entity. &quot;</span> \
+        <span class="s2">&quot;Only applicable for type=&#39;threshold&#39;. &quot;</span> \
+        <span class="s2">&quot;Alternatively, imi_p_drawn can be specified, but not both. &quot;</span> \
+        <span class="s2">&quot;Can be overridden by imitating entity types by providing a variables or methods named imi_n_neighbors_drawn_&lt;key&gt; where &lt;key&gt; is a trait key defined in imi_traits. &quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">quantum</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">imi_p_neighbor_drawn</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;probability of neighbors being drawn in imitation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of) probability/ies with which each neighbor is drawn. &quot;</span> \
+        <span class="s2">&quot;Only applicable for type=&#39;threshold&#39;. &quot;</span> \
+        <span class="s2">&quot;Alternatively, imi_n_neighbors_drawn can be specified, but not both. &quot;</span> \
+        <span class="s2">&quot;Can be overridden by imitating entity types by providing a variables or methods named imi_p_neighbor_drawn_&lt;key&gt; where &lt;key&gt; is a trait key defined in imi_traits. &quot;</span> \
+        <span class="s2">&quot;If overridden by a method, that method must accept the named argument neighbor=.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">imi_abs_threshold</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;absolute imitation threshold&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of (dict of)) number(s) of drawn neighbors having target value needed for imitation if imitating entity has source value. &quot;</span> \
+        <span class="s2">&quot;Only applicable for type=&#39;threshold&#39;. &quot;</span> \
+        <span class="s2">&quot;Alternatively, imi_rel_threshold can be specified, but not both. &quot;</span> \
+        <span class="s2">&quot;If dict of dict, inner dict keys must be of the form (source value, target value), where both source and target values are trait value tuples or might be &#39;*&#39; to indicate that this entry applies to all source or target values. &quot;</span> \
+        <span class="s2">&quot;Can be overridden by imitating entity types by providing a variables or methods named imi_abs_threshold_&lt;key&gt; where &lt;key&gt; is a trait key defined in imi_traits. &quot;</span> \
+        <span class="s2">&quot;If overridden by a method, that method must accept the named arguments other=, own_trait=, other_trait=.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">]]],</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">quantum</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">imi_rel_threshold</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span>
+        <span class="s2">&quot;relative imitation threshold&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(Dict of (dict of)) fraction(s) of drawn neighbors having target value needed for imitation if imitating entity has source value. &quot;</span> \
+        <span class="s2">&quot;Only applicable for type=&#39;threshold&#39;. &quot;</span> \
+        <span class="s2">&quot;Alternatively, imi_abs_threshold can be specified, but not both. &quot;</span> \
+        <span class="s2">&quot;If dict of dict, inner dict keys must be of the form (source value, target value), where both source and target values are trait value tuples or might be &#39;*&#39; to indicate that this entry applies to all source or target values. &quot;</span> \
+        <span class="s2">&quot;Can be overridden by imitating entity types by providing a variables or methods named imi_rel_threshold_&lt;key&gt; where &lt;key&gt; is a trait key defined in imi_traits. &quot;</span> \
+        <span class="s2">&quot;If overridden by a method, that method must accept the named arguments other=, own_trait=, other_trait=.&quot;</span><span class="p">,</span>
+        <span class="n">datatype</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">float</span><span class="p">]]],</span>
+        <span class="n">unit</span><span class="o">=</span><span class="n">D</span><span class="o">.</span><span class="n">unity</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    
+    
+    <span class="c1"># interface method for triggering imitation:</span>
+    
+<div class="viewcode-block" id="Culture.trigger_imitation"><a class="viewcode-back" href="../../../../_api/pycopancore.model_components.generic_imitation.html#pycopancore.model_components.generic_imitation.interface.Culture.trigger_imitation">[docs]</a>    <span class="k">def</span> <span class="nf">trigger_imitation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trigger the imitation of some (group of) variable(s). </span>
+<span class="sd">        </span>
+<span class="sd">        Will automatically be called at the rates specified in Culture.imi_rate, </span>
+<span class="sd">        but can be called independently to trigger imitation, e.g. based on certain events.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str, optional</span>
+<span class="sd">            Key of the (group of) variable(s) to imitate, as specified in Culture.imi_traits. If &#39;*&#39;, imitate everything in imi_traits</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+        
+    
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

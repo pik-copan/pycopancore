@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture &#8212; pycopancore 0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Culture process taxon mixing class template.</span>
+
+<span class="sd">TODO: adjust or fill in code and documentation wherever marked by &quot;TODO:&quot;,</span>
+<span class="sd">then remove these instructions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># This file is part of pycopancore.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate</span>
+<span class="c1"># Impact Research</span>
+<span class="c1">#</span>
+<span class="c1"># URL: &lt;http://www.pik-potsdam.de/copan/software&gt;</span>
+<span class="c1"># Contact: core@pik-potsdam.de</span>
+<span class="c1"># License: BSD 2-clause license</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">interface</span> <span class="k">as</span> <span class="n">I</span>
+<span class="c1">#from .... import master_data_model as D</span>
+<span class="kn">from</span> <span class="nn">....</span> <span class="kn">import</span> <span class="n">Step</span>
+
+<span class="kn">from</span> <span class="nn">....runners</span> <span class="kn">import</span> <span class="n">Hooks</span>
+
+<span class="kn">from</span> <span class="nn">blist</span> <span class="kn">import</span> <span class="n">sortedlist</span>  <span class="c1"># more performant for large list modifications</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">unique</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+
+<div class="viewcode-block" id="Culture"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture">[docs]</a><span class="k">class</span> <span class="nc">Culture</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">Culture</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Culture process taxon mixin implementation class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># standard methods:</span>
+
+    <span class="n">__nodes_by_opinion</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__nodes</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__filter_by_opinion</span><span class="p">(</span><span class="n">opinion</span><span class="p">,</span> <span class="n">input_list</span><span class="p">):</span> <span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ind</span><span class="p">:</span> <span class="n">ind</span><span class="o">.</span><span class="n">opinion</span> <span class="o">==</span> <span class="n">opinion</span><span class="p">,</span> <span class="n">input_list</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__remove_by_opinion</span><span class="p">(</span><span class="n">opinion</span><span class="p">,</span> <span class="n">input_list</span><span class="p">):</span> <span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ind</span><span class="p">:</span> <span class="n">ind</span><span class="o">.</span><span class="n">opinion</span> <span class="o">!=</span> <span class="n">opinion</span><span class="p">,</span> <span class="n">input_list</span><span class="p">))</span>
+
+    <span class="n">__update_function</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">__configuration</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>  <span class="c1"># keeps the configuration status, whether the updates are done basic or fast, and clusteredd or non-clustered</span>
+        <span class="n">configured</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">process_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">update_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">synchronous_updates</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;configuration status&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Culture.update_modes"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture.update_modes">[docs]</a>    <span class="nd">@unique</span>
+    <span class="k">class</span> <span class="nc">update_modes</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;update modes for the adaptive voter model: basic or fast&quot;&quot;&quot;</span>
+        <span class="n">basic</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">rewiring</span><span class="p">,</span>
+                 <span class="n">opinion_change</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">timestep</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">possible_opinions</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>
+                 <span class="n">active_neighbor_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the unique instance of Culture.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rewiring : float or function</span>
+<span class="sd">            if float: probability of rewiring</span>
+<span class="sd">            if function: decide whether the link between the two individuals is separated and a link to a new individual is created</span>
+<span class="sd">                takes: active_individual, active_individuals_neighbor</span>
+
+<span class="sd">        opinion_change: float or function, optional, default:  1</span>
+<span class="sd">            if float: probability of opinion adaption if there was no rewiring</span>
+<span class="sd">            if function:  decide whether the opinion of the neighbor should be adopted</span>
+<span class="sd">                takes: active_individual, active_individuals_neighbor</span>
+
+<span class="sd">        timestep : float, optional, default: 0.1</span>
+<span class="sd">            interval between opinion updates</span>
+
+<span class="sd">        possible_opinions : set-like, optional, default: {0, 1}</span>
+<span class="sd">            set of possible options the individuals can take</span>
+
+<span class="sd">        active_neighbor_only : bool, optional, default: True</span>
+<span class="sd">            if False: any neighbor of the active individual is chosen randomly</span>
+<span class="sd">            if True: only neighbors with different opinions are chosen randomly (if there is at least one, else nothing is done)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># TODO: ask Jobst, whether this should get the network as input so it</span>
+        <span class="c1"># could be applied to different networks... seems sensible too me but</span>
+        <span class="c1"># might contradict the frameworks idea</span>
+
+        <span class="n">_rewiring</span> <span class="o">=</span> <span class="n">rewiring</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">rewiring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">rewiring</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">def</span> <span class="nf">_rewiring</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">rewiring</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;rewiring_probability should be a float between 0 and 1 or a function&quot;</span>
+
+                <span class="k">def</span> <span class="nf">_rewiring</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">rewiring</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rewiring</span> <span class="o">=</span> <span class="n">_rewiring</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">opinion_change</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">opinion_change</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">def</span> <span class="nf">opinion_change</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_opinion_change</span> <span class="o">=</span> <span class="n">opinion_change</span>
+
+                <span class="k">def</span> <span class="nf">opinion_change</span><span class="p">(</span>
+                    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">_opinion_change</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opinion_change</span> <span class="o">=</span> <span class="n">opinion_change</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">possible_opinions</span> <span class="o">=</span> <span class="n">possible_opinions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_neighbor_only</span> <span class="o">=</span> <span class="n">active_neighbor_only</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next_update_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="n">timestep</span>
+
+    <span class="c1"># process-related methods:</span>
+
+<div class="viewcode-block" id="Culture.analyze_graph"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture.analyze_graph">[docs]</a>    <span class="k">def</span> <span class="nf">analyze_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;analyze the graph so speed-ups can be used later&quot;&quot;&quot;</span>
+        <span class="c1"># TODO: test whether sortedlist or sets are faster for large numbers of</span>
+        <span class="c1"># entries</span>
+        <span class="k">assert</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;This function should be run as a pre-hook of the runner!&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    analyzing the graph ... &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nodes</span> <span class="o">=</span> <span class="n">sortedlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>  <span class="c1"># FIXME: why do you assume entities allow sorting?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nodes_by_opinion</span> <span class="o">=</span> <span class="p">{</span><span class="n">opinion</span><span class="p">:</span> <span class="n">sortedlist</span><span class="p">()</span>
+                                   <span class="k">for</span> <span class="n">opinion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">possible_opinions</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__nodes_by_opinion</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">opinion</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;done (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">))))</span></div>
+
+<div class="viewcode-block" id="Culture.clear_graph_analysis"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture.clear_graph_analysis">[docs]</a>    <span class="k">def</span> <span class="nf">clear_graph_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;clear everything that was created during analyze_graph&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    deleting lists from graph analysis&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nodes</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nodes_by_opinion</span></div>
+
+<div class="viewcode-block" id="Culture.opinion_update_basic"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture.opinion_update_basic">[docs]</a>    <span class="k">def</span> <span class="nf">opinion_update_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;update the aquaintance network following the adaptive voter model prescription by (Holme, Newman - 2006)&quot;&quot;&quot;</span>
+        <span class="c1"># this code is currently only precisely following the model prescription</span>
+        <span class="c1"># without any additional speed-ups</span>
+
+        <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+
+        <span class="n">active_individual</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">active_individual</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_neighbor_only</span><span class="p">:</span>
+            <span class="n">active_neighbors</span> <span class="o">=</span> <span class="n">Culture</span><span class="o">.</span><span class="n">__remove_by_opinion</span><span class="p">(</span>
+                <span class="n">active_individual</span><span class="o">.</span><span class="n">opinion</span><span class="p">,</span> <span class="n">neighbors</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">active_neighbors</span><span class="p">:</span>
+                <span class="k">return</span>  <span class="c1"># nothing to be done</span>
+            <span class="n">active_neighbor</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">active_neighbors</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">active_neighbor</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)</span>
+
+        <span class="c1"># decide whether to rewire or to adopt the opinion</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rewiring</span><span class="p">(</span><span class="n">active_individual</span><span class="p">,</span> <span class="n">active_neighbor</span><span class="p">):</span>
+            <span class="c1"># rewire</span>
+            <span class="n">possible_new_neighbors</span> <span class="o">=</span> <span class="n">Culture</span><span class="o">.</span><span class="n">__filter_by_opinion</span><span class="p">(</span>
+                <span class="n">active_individual</span><span class="o">.</span><span class="n">opinion</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">possible_new_neighbors</span><span class="p">:</span>
+                <span class="k">return</span>  <span class="c1"># can&#39;t find a new one, active_individual is the last one</span>
+            <span class="n">new_neighbor</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">possible_new_neighbors</span><span class="p">)</span>
+            <span class="c1"># new_neighbor = random.choice(list(filter(lambda x: x.opinion == active_individual.opinion, self.acquaintance_network.nodes())))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span>
+                <span class="n">active_individual</span><span class="p">,</span> <span class="n">active_neighbor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">active_individual</span><span class="p">,</span> <span class="n">new_neighbor</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">opinion_change</span><span class="p">(</span><span class="n">active_individual</span><span class="p">,</span> <span class="n">active_neighbor</span><span class="p">):</span>
+            <span class="c1"># adopt opinion</span>
+            <span class="n">active_individual</span><span class="o">.</span><span class="n">opinion</span> <span class="o">=</span> <span class="n">active_neighbor</span><span class="o">.</span><span class="n">opinion</span></div>
+
+<div class="viewcode-block" id="Culture.opinion_update_fast"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture.opinion_update_fast">[docs]</a>    <span class="k">def</span> <span class="nf">opinion_update_fast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;update the aquaintance network following the adaptive voter model prescription by (Holme, Newman - 2006)&quot;&quot;&quot;</span>
+        <span class="c1"># TODO: there are some intuitive speed-ups:</span>
+        <span class="c1">#   1) (done) use a list with references to nodes of the differing opinions so the statement with filter can be avoided</span>
+        <span class="c1">#   2) cluster the updates instead of making every update separately</span>
+        <span class="c1">#       ... this should probably be done as a separate function calling one of the opinion_update_basic/fast functions</span>
+        <span class="c1">#       ... make sure that the rest of the model works on longer time scales if you do that</span>
+        <span class="c1">#       ... introduce a time scale for that</span>
+
+        <span class="c1"># choose only between the active nodes, which are the keys of this</span>
+        <span class="c1"># sortedset</span>
+        <span class="n">active_individual</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nodes</span><span class="p">)</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">active_individual</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_neighbor_only</span><span class="p">:</span>
+            <span class="n">active_neighbors</span> <span class="o">=</span> <span class="n">Culture</span><span class="o">.</span><span class="n">__remove_by_opinion</span><span class="p">(</span>
+                <span class="n">active_individual</span><span class="o">.</span><span class="n">opinion</span><span class="p">,</span> <span class="n">neighbors</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">active_neighbors</span><span class="p">:</span>
+                <span class="k">return</span>  <span class="c1"># nothing to be done</span>
+            <span class="n">active_neighbor</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">active_neighbors</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">active_neighbor</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)</span>
+
+        <span class="c1"># decide whether to rewire or to adopt the opinion</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rewiring</span><span class="p">(</span><span class="n">active_individual</span><span class="p">,</span> <span class="n">active_neighbor</span><span class="p">):</span>
+            <span class="c1"># rewire</span>
+
+            <span class="c1"># find new neighbor with same opinion</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nodes_by_opinion</span><span class="p">[</span><span class="n">active_individual</span><span class="o">.</span><span class="n">opinion</span><span class="p">]:</span>
+                <span class="k">return</span>  <span class="c1"># active_individual is the last one with this opinion and cannot connect to a new one</span>
+            <span class="n">new_neighbor</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__nodes_by_opinion</span><span class="p">[</span><span class="n">active_individual</span><span class="o">.</span><span class="n">opinion</span><span class="p">])</span>
+            <span class="c1"># remove old link</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span>
+                <span class="n">active_individual</span><span class="p">,</span> <span class="n">active_neighbor</span><span class="p">)</span>
+            <span class="c1"># add new link</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">active_individual</span><span class="p">,</span> <span class="n">new_neighbor</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">opinion_change</span><span class="p">(</span><span class="n">active_individual</span><span class="p">,</span> <span class="n">active_neighbor</span><span class="p">):</span>
+            <span class="c1"># adopt opinion</span>
+
+            <span class="c1"># move the active individual to the new opinion list</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__nodes_by_opinion</span><span class="p">[</span><span class="n">active_individual</span><span class="o">.</span><span class="n">opinion</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span>
+                <span class="n">active_individual</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__nodes_by_opinion</span><span class="p">[</span><span class="n">active_neighbor</span><span class="o">.</span><span class="n">opinion</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">active_individual</span><span class="p">)</span>
+            <span class="c1"># set the new opinion</span>
+            <span class="c1"># TODO: ask Jobst, whether this is okai within his framework!</span>
+            <span class="n">active_individual</span><span class="o">.</span><span class="n">opinion</span> <span class="o">=</span> <span class="n">active_neighbor</span><span class="o">.</span><span class="n">opinion</span></div>
+
+    <span class="c1"># test, update opinion for n individuals at the same time</span>
+<div class="viewcode-block" id="Culture.opinion_update_multiple"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture.opinion_update_multiple">[docs]</a>    <span class="k">def</span> <span class="nf">opinion_update_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multiple_updates</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__update_function</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Culture.next_update_time"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture.next_update_time">[docs]</a>    <span class="k">def</span> <span class="nf">next_update_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next_update_time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_update_time</span></div>
+
+<div class="viewcode-block" id="Culture.configure"><a class="viewcode-back" href="../../../../../_api/pycopancore.model_components.adaptive_voter_opinion_formation.implementation.html#pycopancore.model_components.adaptive_voter_opinion_formation.implementation.culture.Culture.configure">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">update_mode</span><span class="p">,</span> <span class="n">synchronous_updates</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;configure the adaptive voter opinion formation model component</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        update_mode : element of Enum Cultur.update_modes</span>
+<span class="sd">            chooses between the basic and the fast update mode. The fast update mode is preferred but needs the nodes of the acquaintance_network to stay the same</span>
+
+<span class="sd">        synchronous_updates : (optional) positive int</span>
+<span class="sd">            how many opinion updates should be done at once</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">synchronous_updates</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">synchronous_updates</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">synchronous_updates</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;can&#39;t do a non-positive number of synchronous updates&quot;</span>
+
+        <span class="k">assert</span> <span class="n">update_mode</span> <span class="ow">in</span> <span class="n">Culture</span><span class="o">.</span><span class="n">update_modes</span><span class="p">,</span> <span class="s2">&quot;choose an update mode from Culture.update_modes Enum&quot;</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">multiple_updates</span> <span class="o">=</span> <span class="n">synchronous_updates</span>
+
+        <span class="n">process_type</span> <span class="o">=</span> <span class="n">Step</span>
+        <span class="n">process_name</span> <span class="o">=</span> <span class="s2">&quot;opinion update&quot;</span>
+        <span class="n">process_variables</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">I</span><span class="o">.</span><span class="n">Culture</span><span class="o">.</span><span class="n">acquaintance_network</span><span class="p">,</span> <span class="n">I</span><span class="o">.</span><span class="n">Individual</span><span class="o">.</span><span class="n">opinion</span><span class="p">]</span>
+        <span class="n">process_time</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">next_update_time</span>
+        <span class="n">process_func</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">opinion_update_multiple</span>
+
+        <span class="c1"># unregister everything</span>
+        <span class="n">Hooks</span><span class="o">.</span><span class="n">unregister_hook</span><span class="p">(</span><span class="n">Hooks</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">pre</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">analyze_graph</span><span class="p">,</span>
+                              <span class="n">I</span><span class="o">.</span><span class="n">Culture</span><span class="p">,</span> <span class="n">error_if_not_registered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">Hooks</span><span class="o">.</span><span class="n">unregister_hook</span><span class="p">(</span><span class="n">Hooks</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">post</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">clear_graph_analysis</span><span class="p">,</span>
+                              <span class="n">I</span><span class="o">.</span><span class="n">Culture</span><span class="p">,</span> <span class="n">error_if_not_registered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">update_mode</span> <span class="ow">is</span> <span class="n">Culture</span><span class="o">.</span><span class="n">update_modes</span><span class="o">.</span><span class="n">basic</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">__update_function</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">opinion_update_basic</span>
+        <span class="k">elif</span> <span class="n">update_mode</span> <span class="ow">is</span> <span class="n">Culture</span><span class="o">.</span><span class="n">update_modes</span><span class="o">.</span><span class="n">fast</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">__update_function</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">opinion_update_fast</span>
+            <span class="c1"># register necessary hooks</span>
+            <span class="n">Hooks</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span><span class="n">Hooks</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">pre</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">analyze_graph</span><span class="p">,</span> <span class="n">I</span><span class="o">.</span><span class="n">Culture</span><span class="p">)</span>
+            <span class="n">Hooks</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span>
+                <span class="n">Hooks</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">post</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">clear_graph_analysis</span><span class="p">,</span> <span class="n">I</span><span class="o">.</span><span class="n">Culture</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unknown update_mode &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">update_mode</span><span class="p">))</span>
+
+        <span class="c1"># set the configuration dictionary</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">__configuration</span><span class="p">[</span><span class="s2">&quot;configured&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">__configuration</span><span class="p">[</span><span class="s2">&quot;process_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">process_type</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">__configuration</span><span class="p">[</span><span class="s2">&quot;update_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_mode</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">__configuration</span><span class="p">[</span><span class="s2">&quot;synchronous_updates&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">synchronous_updates</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">processes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">process_type</span><span class="p">(</span>
+                <span class="n">process_name</span><span class="p">,</span>
+                <span class="n">process_variables</span><span class="p">,</span>
+                <span class="p">[</span><span class="n">process_time</span><span class="p">,</span> <span class="n">process_func</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">]</span></div></div>
+
+
+<span class="c1"># set the default configuration of the model component</span>
+<span class="n">Culture</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">update_mode</span><span class="o">=</span><span class="n">Culture</span><span class="o">.</span><span class="n">update_modes</span><span class="o">.</span><span class="n">fast</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference.html#pycopancore">pycopancore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/all-in-one/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../framework_documentation/index.html">Framework documentation</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, the copan team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
