@@ -152,10 +152,14 @@ class Culture (object):
     
     def trigger_imitation(self, key="*"):
         """Trigger the imitation of some (group of) variable(s). 
+        
         Will automatically be called at the rates specified in Culture.imi_rate, 
         but can be called independently to trigger imitation, e.g. based on certain events.
-        :param key: key of the (group of) variable(s) to imitate, as specified in Culture.imi_traits. If '*', imitate everything in imi_traits.
-        :type key: str, optional
+        
+        Parameters
+        ----------
+        key : str, optional
+            Key of the (group of) variable(s) to imitate, as specified in Culture.imi_traits. If '*', imitate everything in imi_traits
         """
         pass
         

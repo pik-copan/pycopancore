@@ -16,7 +16,8 @@ from .. import config
 try:
     config.generic_imitation['variables']
 except:
-    raise Exception("Before importing generic_imitation, please import its config module and set its attribute 'variables'.")
+    config.generic_imitation = {'variables': []}
+    print("WARNING (model component generic_imitation): Empty list of variables! Before importing generic_imitation in the model definition, you must import config from model_components and set config.generic_imitation['variables'].")
 
 from . import interface
 
