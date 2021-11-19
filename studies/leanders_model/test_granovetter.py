@@ -18,6 +18,11 @@ from pycopancore.runners import Runner
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
 
+from numba.core.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
+import warnings
+warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
+warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
+
 # first thing: set seed so that each execution must return same thing:
 random.seed(10) # 10
 
@@ -28,19 +33,20 @@ nsocs = 5 # no. social_systems #10
 ncells = 100  # no. cells #100
 ninds = 1000 # no. individuals
 
-t_1 = 2050
+t_1 = 2010
 
 filename = "/tmp/granvegano.pickle"
 
 model = M.Model()
 
-is_active = [random.choice([False, True], p=[.8, .2]) for i in range(ninds)]
+is_active = [random.choice([False, True], p=[.6, .4]) for i in range(ninds)]
 
 # instantiate process taxa:
 environment = M.Environment()
 metabolism = M.Metabolism()
 culture = M.Culture(
-                    number_of_active_individuals = len(is_active)
+                    number_of_active_individuals = sum(is_active),
+                    activity_update_rate = 2,
                     )
 
 # generate entities and plug them together at random:
@@ -52,8 +58,9 @@ cells = [M.Cell(social_system=random.choice(social_systems)
          ) for c in range(ncells)]
 individuals = [M.Individual(
                 cell=random.choice(cells),
-                is_active = 
-                    random.choice([False, True], p=[.8, .2]), #True, #False,
+                is_active = is_active[i], 
+                activation_probability = 0.5,
+                deactivation_probability = 0.5,
                 ) 
                for i in range(ninds)]
 
@@ -73,6 +80,13 @@ for index, i in enumerate(individuals):
                 else p_other):
             culture.acquaintance_network.add_edge(i, j)
 #print("degrees:",culture.acquaintance_network.degree())
+# calculate initials
+for index, i in enumerate(individuals):
+    i.number_of_neighbors = culture.acquaintance_network.degree(i)
+    i.number_of_active_neighbors = sum([1 for other in culture.acquaintance_network.neighbors(i) if other.is_active == True])
+    if i.number_of_neighbors > 0:
+        i.share_of_active_neighbors = i.number_of_active_neighbors / i.number_of_neighbors
+    
 
 # TODO: add noise to parameters
 
@@ -118,7 +132,7 @@ tosave = {
           for v in traj.keys() if v is not "t"
           }
 tosave["t"] = traj["t"]
-if True: # was only used for debugging:
+if False: # was only used for debugging:
     for k,v in tosave.items():
         print(k, type(k), type(v))
         assert type(k) ==  type("") and type(v) in [type([]), type({})]
@@ -131,7 +145,7 @@ if True: # was only used for debugging:
                     for i in v2:
                         assert type(i) in [type(1.0), type(1), type(True), np.int64, np.bool_, np.float64], str(type(i))
 dump(tosave, open(filename,"wb"))
-print(time()-start, " seconds")
+print(time()-start, "seconds")
 
 t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())

@@ -21,7 +21,7 @@ from numpy.random import uniform
 from ...base import interface as B
 
 # TODO: import those process types you need:
-from .... import Explicit
+from .... import Explicit, ITE
 
 class Individual (I.Individual):
     """Individual entity type mixin implementation class."""
@@ -48,16 +48,18 @@ class Individual (I.Individual):
 #         super().reactivate()  # must be the first line
 #         # TODO: add custom code here:
 #         pass
-
-    def set_share_of_active_neighbors(self, unused_t):
-        self.share_of_active_neighbors = sum([other.is_active for other in self.culture.acquaintance_network.neighbors(self)]) / self.culture.acquaintance_network.degree(self)
+    def set_number_of_neighbors(self, unused_t):
+        self.number_of_neighbors = self.culture.acquaintance_network.degree(self)
+    
+    def set_number_of_active_neighbors(self, unused_t):
+        self.number_of_active_neighbors = sum([1 for other in self.culture.acquaintance_network.neighbors(self) if other.is_active == True])
     
     def update_activity(self, unused_t):
         """stochastically change activity status.
         
         This method is called by Culture's activity updating process
         """
-        if len(list(self.culture.acquaintance_network.neighbors(self))) > 0:
+        if self.number_of_neighbors > 0:
             r = uniform()
             if self.is_active:
                 if self.share_of_active_neighbors < self.deactivation_threshold:
@@ -69,10 +71,20 @@ class Individual (I.Individual):
                         self.is_active = True
     
     # process-related methods:
-    processes = [
+    processes = [Explicit("number of neighbors",
+                          [I.Individual.number_of_neighbors],
+                          #[B.Individual.culture.acquaintance_network.degree(I.Individual)]
+                          set_number_of_neighbors
+                          ),
+                 Explicit("number of active neighbors",
+                          [I.Individual.number_of_active_neighbors],
+                          set_number_of_active_neighbors
+                          ),
                  Explicit("share of active neighbors",
                           [I.Individual.share_of_active_neighbors],
-                          set_share_of_active_neighbors
-                          )
+                          [ITE(I.Individual.number_of_neighbors > 0, 
+                               I.Individual.number_of_active_neighbors / I.Individual.number_of_neighbors, 
+                               0)
+                          ])
                  ]
     # NOTE: Explicit is called before others, right?

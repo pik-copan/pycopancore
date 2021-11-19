@@ -72,7 +72,7 @@ class Culture (I.Culture):
                           #set_number_of_active_individuals
                           # JH: equivalent and simpler specification, using a symbolic expression:
                           [B.Culture.worlds.individuals.sum(
-                              ITE(B.Culture.worlds.individuals.is_active == True, 1, 0)  # sympy.ITE = if ... then ... else ...
+                              ITE(B.Culture.worlds.individuals.is_active == True, 1, 0)  # sympy.ITE = if ... then ... else ... # FIXME: not sure if this does the job since it is only 1 or 0
                             )]
                           ),
                  Event("update individuals' activity",

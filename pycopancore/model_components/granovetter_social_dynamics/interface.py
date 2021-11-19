@@ -76,23 +76,28 @@ class Individual (object):
     is_active = \
         Variable("is active",
                  """wether the individual is active or not""",
-                 scale="ordinal", levels=[False, True], default=False)
+                 scale="ordinal", levels=[False, True], 
+                 default= True)
     is_certainly_active = \
         Variable("is certainly active",
                  """wether the individual is certainly active or not""",
-                 scale="ordinal", levels=[False, True], default=False)
+                 scale="ordinal", levels=[False, True], 
+                 default=False)
     is_certainly_inactive = \
         Variable("is certainly inactive",
                  """wether the individual is certainly inactive or not""",
-                 scale="ordinal", levels=[False, True], default=False)
+                 scale="ordinal", levels=[False, True], 
+                 default=False)
     is_contingently_active = \
         Variable("is contingently active",
-                 """wether the individual is active or not""",
-                 scale="ordinal", levels=[False, True], default=False)
+                 """wether the individual is contingently active or not""",
+                 scale="ordinal", levels=[False, True], 
+                 default=False)
     is_influencable = \
         Variable("is influencable",
                  """wether the individual is influencable or not""",
-                 scale="ordinal", levels=[False, True], default=True)
+                 scale="ordinal", levels=[False, True], 
+                 default=True)
     # instead of all these definitions we could also just set the 
     # (de)activation thresholds accordingly
     activation_probability = \
@@ -101,20 +106,29 @@ class Individual (object):
                  activation threshold is reached""",
                  unit=D.unity, lower_bound=0, upper_bound=1,
                  is_extensive=False,
-                 default=1)
+                 default=1.)
     deactivation_probability = \
         Variable("deactivation probability",
                  """probability an individual turns inactive once its 
                  deactivation threshold is reached""",
                  unit=D.unity, lower_bound=0, upper_bound=1,
                  is_extensive=False,
-                 default=1)
+                 default=1.)
     share_of_active_neighbors = \
         Variable("share of active neighbors",
                  """fraction of neighbors that is active""",
                  unit=D.unity, lower_bound=0, upper_bound=1,
-                 is_extensive=False,
-                 default=0)
+                 is_extensive=False)
+    number_of_active_neighbors = \
+        Variable("number of active neighbors",
+                 """fraction of neighbors that is active""",
+                 unit=D.unity, lower_bound=0,
+                 is_extensive=True)
+    number_of_neighbors = \
+        Variable("number of neighbors",
+                 """fraction of neighbors that is active""",
+                 unit=D.unity, lower_bound=0,
+                 is_extensive=True)
     
 #
 # Process taxa
@@ -140,5 +154,5 @@ class Culture (object):
         Variable("activity update rate",
                  """rate at which a fraction of individuals update their 
                  activity""",
-                 unit=D.weeks**-1, lower_bound=0, default=1)
+                 unit=D.years**-1, lower_bound=0, default=1)
     
