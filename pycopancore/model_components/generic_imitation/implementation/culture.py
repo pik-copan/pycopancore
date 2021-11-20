@@ -116,7 +116,7 @@ class Culture (I.Culture):
             network = get_spec(self.imi_network, key).get_value(self)  # since imi_networks specifies a Variable holding a network for each culture!
             default_p_imitate_spec = get_spec(self.imi_p_imitate, key)  # this might be a single value or a dict, see below!
 
-            assert itype in ['simple', 'threshold'], "Unknown imitation type "+str(itype)
+            assert itype in ['simple', 'complex'], "Unknown imitation type "+str(itype)
 
             # determine direction if network is directed:
             if isinstance(network, DiGraph):
@@ -141,7 +141,7 @@ class Culture (I.Culture):
                 default_p_imitate_depends_on_source = default_p_imitate_depends_on_target = False
                 default_p_imitate = default_p_imitate_spec
 
-            if itype=='threshold':
+            if itype=='complex':
                 default_n_neighbors_drawn = get_spec(self.imi_n_neighbors_drawn, key)
                 default_p_neighbor_drawn = get_spec(self.imi_p_neighbor_drawn, key)
                 default_abs_threshold_spec = get_spec(self.imi_abs_threshold, key)
@@ -207,7 +207,7 @@ class Culture (I.Culture):
                     if actual_p_imitate == 0:
                         continue  # won't imitate
                     
-                if itype=='threshold':
+                if itype=='complex':
                     
                     # possibly override other parameters by entity's own values:
                                         
@@ -287,7 +287,7 @@ class Culture (I.Culture):
                         # else imitate, see below
                         other_trait = tuple(var.get_value(other) for var in variables)
                     
-                else: # 'threshold':
+                else: # 'complex':
                     
                     # if any of the actual parameters depend on source trait, extract it and them if not done so:
                     if my_trait is None and (actual_abs_threshold_depends_on_source or actual_rel_threshold_depends_on_source):

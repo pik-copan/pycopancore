@@ -1,11 +1,14 @@
 # Makefile for Sphinx documentation
 #
 
+## TODO: automatically include the contents of docs subfolders of model component and model subpackages!
+
 # You can set these variables from the command line.
 SPHINXOPTS    = -E -a
 SPHINXBUILD   = sphinx-build
 PYREVERSE = pyreverse
 APIDOC = sphinx-apidoc
+APIDOCOPTS = -l -d 10 -e -P -M -f -o ./docs/_api 
 SPHINX_APIDOC_OPTIONS=members,undoc-members,private-members,special-members,inherited-members,show-inheritance
 DOT = dot
 PAPER         =
@@ -61,7 +64,7 @@ clean:
 .PHONY: html
 html:
 	@echo "Creating auto-generated documentation from source"
-	cd ..; $(APIDOC) --implicit-namespaces -f -o ./docs/_api ./pycopancore/ ./pycopancore/model_components/base/__init__.py ./pycopancore/model_components/seven_dwarfs/__init__.py
+	cd ..; $(APIDOC) $(APIDOCOPTS) --implicit-namespaces ./pycopancore/ #./pycopancore/model_components/base/__init__.py ./pycopancore/model_components/seven_dwarfs/__init__.py
 	@echo
 	@echo "Sphinx-apidoc is done, building directories"
 	$(SPHINXBUILD) -b html -v $(ALLSPHINXOPTS) $(BUILDDIR)/html
@@ -71,7 +74,7 @@ html:
 .PHONY: api
 api:
 	@echo
-	cd ..; $(APIDOC) -f -o ./docs/_api ./pycopancore/
+	cd ..; $(APIDOC) $(APIDOCOPTS) ./docs/_api ./pycopancore/
 
 .PHONY : uml
 uml:
