@@ -135,6 +135,14 @@ class Culture (object):
         "where <key> is a trait key defined in imi_traits. ",
         datatype = Union[bool, Dict[str, bool]])
 
+    imi_delta = Variable(
+        "imitation evaluation delta",
+        "(Dict of) delta value(s) used in selecting the nominated trait. " \
+        "Can be overridden by imitating entity types by providing " \
+        "variables or methods named imi_delta_<key> " \
+        "where <key> is a trait key defined in imi_traits.",
+        unit=D.unity, lower_bound=0, allow_none=True, default=None)
+    
     imi_p_imitate = Variable(
         "imitation probability",
         "(Dict of (dict of)) probability/ies to actually imitate the candidate value (in the 'simple' case, the value of a randomly drawn neighbor, in the 'threshold' case, each value occurring in the drawn neighbors more often than the thresholds say). " \

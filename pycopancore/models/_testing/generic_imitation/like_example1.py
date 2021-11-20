@@ -15,31 +15,31 @@
 
 import numpy as np
 
-from ... import base  # all models must use the base component
+from .... import base  # all models must use the base component
 
-from ...model_components import copan_global_like_carbon_cycle \
+from ....model_components import copan_global_like_carbon_cycle \
     as cc
-from ...model_components import copan_global_like_production \
+from ....model_components import copan_global_like_production \
     as prod
-from ...model_components import copan_global_like_economic_growth \
+from ....model_components import copan_global_like_economic_growth \
     as growth
-from ...model_components import copan_global_like_population_growth \
+from ....model_components import copan_global_like_population_growth \
     as pop
-from ...model_components import wellbeing_driven_migration \
+from ....model_components import wellbeing_driven_migration \
     as mig
-from ...model_components import environmental_awareness \
+from ....model_components import environmental_awareness \
     as aware
 #from ...model_components import social_learning_of_environmental_friendliness \
 #    as learn
-from ...model_components import voting_on_climate_policy \
+from ....model_components import voting_on_climate_policy \
     as vote
 
-from ...model_components import config
+from ....model_components import config
 config.generic_imitation = {'variables': [base.interface.Culture.individuals.is_environmentally_friendly,
                                           base.interface.Culture.social_systems.has_emissions_tax,
                                           base.interface.Culture.social_systems.emissions_tax_level]}
 
-from ...model_components import generic_imitation as imi
+from ....model_components import generic_imitation as imi
 
 
 # entity types:

@@ -61,7 +61,7 @@ The imitation process works as follows:
         If there is only one candidate trait, that one is nominated.
         If there are several candidate traits, one of them is chosen randomly.
         By default, all candidate traits have the same probability in this.
-        However, if the entity provides a method ``imi_evaluate_<key> (self, other)`` 
+        However, if the entity provides a method ``imi_evaluate_<key> (self, other=None)`` 
         (where ``<key>`` is the respective variable trait's key used in 
         :py:attr:`Culture.imi_traits <interface.Culture.imi_traits>`),
         then the selection probability of a candidate trait is based on the

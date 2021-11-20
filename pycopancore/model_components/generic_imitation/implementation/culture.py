@@ -18,7 +18,7 @@ TODO:
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from numpy import any, array, inf, sum
+from numpy import any, array, inf, sum, mean, where, zeros, exp
 from numpy.random import exponential, uniform, choice
 from networkx import DiGraph
 
@@ -172,9 +172,16 @@ class Culture (I.Culture):
                     default_rel_threshold_depends_on_source = default_rel_threshold_depends_on_target = False
                     default_rel_threshold = default_rel_threshold_spec
 
+            default_imi_include_own_trait = get_spec(self.imi_include_own_trait, key)
+            default_delta = None
+            
             # MAIN LOOP: process each batch member:
                 
             for me in batch:
+
+                use_evaluations = hasattr(me, 'imi_evaluate_'+key)
+                
+                # FIND CANDIDATE TRAITS:
 
                 # get all neighbors of me:
                 neighbors = list(nb_getter(me))
@@ -182,7 +189,13 @@ class Culture (I.Culture):
                 if n_neighbors == 0: 
                     continue  # no other to imitate
 
-                # possibly override default_p_imitate by entity's own p_imitate_<key>:                
+                # possibly override default_imi_include_own_trait and default_p_imitate by entity's own values:                
+                if hasattr(me, 'imi_include_own_trait_'+key):
+                    actual_imi_include_own_trait = getattr(me, 'imi_include_own_trait_'+key)
+                    if hasattr(actual_imi_include_own_trait, '__call__'):
+                        actual_imi_include_own_trait = actual_imi_include_own_trait(me)
+                else:
+                    actual_imi_include_own_trait = default_imi_include_own_trait 
                 if hasattr(me, 'imi_p_imitate_'+key):
                     actual_p_imitate_spec = getattr(me, 'imi_p_imitate_'+key)
                     if hasattr(actual_p_imitate_spec, '__call__'):
@@ -198,10 +211,11 @@ class Culture (I.Culture):
                     actual_p_imitate = default_p_imitate
 
                 # if any of the actual probabilities depend on source trait, extract it:
-                if actual_p_imitate_depends_on_source:
+                if actual_imi_include_own_trait or actual_p_imitate_depends_on_source:
                     my_trait = tuple(var.get_value(me) for var in variables) 
                 else:
                     my_trait = None             
+
                 # already extract parameters that depend on source but not on target trait:
                 if actual_p_imitate_depends_on_source and not actual_p_imitate_depends_on_target:
                     actual_p_imitate = get_entry_or_return_value(
@@ -209,10 +223,17 @@ class Culture (I.Culture):
                     if actual_p_imitate == 0:
                         continue  # won't imitate
                     
-                if itype=='complex':
+                if itype=='simple':
+                    
+                    # just draw one other:
+                    other = choice(neighbors)
+                    others = [other]
+                    candidates = {tuple(var.get_value(other) for var in variables): [other]}
+                    
+                else: # 'complex':
                     
                     # possibly override other parameters by entity's own values:
-                                        
+                                                                
                     if hasattr(me, 'imi_n_neighbors_drawn_'+key):
                         actual_n_neighbors_drawn = getattr(me, 'imi_n_neighbors_drawn_'+key)
                         if hasattr(actual_n_neighbors_drawn, '__call__'):
@@ -221,7 +242,7 @@ class Culture (I.Culture):
                         actual_n_neighbors_drawn = default_n_neighbors_drawn 
                     if actual_n_neighbors_drawn == 0:
                         continue  # no-one to imitate
-                    elif actual_n_neighbors_drawn > n_neighbors:
+                    elif actual_n_neighbors_drawn and actual_n_neighbors_drawn > n_neighbors:
                         actual_n_neighbors_drawn = n_neighbors
 
                     if hasattr(me, 'imi_p_neighbor_drawn_'+key):
@@ -268,32 +289,7 @@ class Culture (I.Culture):
                         if actual_rel_threshold > 1:
                             continue  # won't imitate
                     except: pass
-                    
-                # finally perform the actual imitation:
-                
-                if itype=='simple':
-                    
-                    # draw one other:
-                    other = choice(neighbors)
-                    
-                    # check whether to imitate them:
-                    if actual_p_imitate_depends_on_target: 
-                        other_trait = tuple(var.get_value(other) for var in variables)
-                        actual_p_imitate = get_entry_or_return_value(
-                            actual_p_imitate_spec, other, my_trait, other_trait)
-                        if other_trait == my_trait or actual_p_imitate == 0 \
-                                or (actual_p_imitate < 1 and actual_p_imitate < uniform()):
-                            continue # don't imitate
-                        # else imitate, see below
-                    else:
-                        if actual_p_imitate == 0 or (actual_p_imitate < 1 
-                                                     and actual_p_imitate < uniform()):
-                            continue # don't imitate
-                        # else imitate, see below
-                        other_trait = tuple(var.get_value(other) for var in variables)
-                    
-                else: # 'complex':
-                    
+
                     # if any of the actual parameters depend on source trait, extract it and them if not done so:
                     if my_trait is None and (actual_abs_threshold_depends_on_source 
                                              or actual_rel_threshold_depends_on_source):
@@ -305,7 +301,8 @@ class Culture (I.Culture):
                         actual_rel_threshold = get_entry_or_return_value(
                             actual_rel_threshold_spec, None, my_trait, None)
     
-                    # draw some others:
+                    # now draw some neighbors:
+                        
                     if actual_p_neighbor_drawn is not None:
                         assert actual_n_neighbors_drawn is None, "You cannot specify both imi_p_neighbor_drawn and imi_n_neighbors_drawn for "+str(key)
                         # include each neighbor with probability p_neighbor_drawn:
@@ -320,23 +317,26 @@ class Culture (I.Culture):
                     else:
                         raise Exception("Please specify either imi_n_neighbors_drawn or imi_p_neighbor_drawn for "+str(key))
                     n_others = len(others)
+                    
                     # count frequencies of other traits:
                     freqs = {}
-                    for trait in zip(*[var.get_values(others) for var in variables]):
+                    if use_evaluations: 
+                        carriers = {}
+                    for i,trait in enumerate(zip(*[var.get_values(others) for var in variables])):
                         freqs[trait] = freqs.get(trait, 0) + 1
+                        if use_evaluations: 
+                            c = carriers[trait] = carriers.get(trait, [])
+                            c.append(others[i])
                         
-                    # assemble probability distribution:
-                    targets = []
-                    ps = []
+                    # assemble candidates and average evaluations:
+                    candidates = {}
                     for (other_trait, freq) in freqs.items():
-                        if other_trait == my_trait: 
-                            continue
                         if actual_abs_threshold_depends_on_target: 
                             actual_abs_threshold = get_entry_or_return_value(
-                                actual_abs_threshold_spec, other, my_trait, other_trait)
+                                actual_abs_threshold_spec, None, my_trait, other_trait)
                         if actual_rel_threshold_depends_on_target: 
                             actual_rel_threshold = get_entry_or_return_value(
-                                actual_rel_threshold_spec, other, my_trait, other_trait)
+                                actual_rel_threshold_spec, None, my_trait, other_trait)
                         assert actual_abs_threshold is None or actual_rel_threshold is None, "You cannot specify both imi_abs_threshold and imi_rel_threshold for "+str(key)
                         if ((actual_abs_threshold is not None) and freq >= actual_abs_threshold) \
                             or ((actual_rel_threshold is not None) and freq >= actual_rel_threshold * n_others):
@@ -346,21 +346,50 @@ class Culture (I.Culture):
                                         actual_p_imitate_spec, None, my_trait, other_trait
                                         ) or 0
                                 if actual_p_imitate > 0:
-                                    targets.append(other_trait)
-                                    ps.append(actual_p_imitate)
-                    # complete the probability distribution by adding my_trait with remaining probability:
-                    p_switch = sum(ps)
-                    assert p_switch <= 1, "Impossible combination of thresholds and imitation probabilities!"
-                    if p_switch < 1:
-                        targets.append(my_trait)
-                        ps.append(1 - p_switch)
-                    # finally draw the trait to imitate:
-                    other_trait = targets[choice(len(targets), p=ps)]
-                    if other_trait == my_trait: 
-                        continue # no actual imitation after all
-                    # else imitate, see below
+                                    candidates[other_trait] = carriers[other_trait] if use_evaluations else []
+
+                # add own trait as candidate?
+                if actual_imi_include_own_trait:
+                    c = candidates[my_trait] = candidates.get(my_trait, [])
+                    c.append(me)
+                elif candidates == {}:
+                    continue  # no candidate traits to imitate
+
+                # DRAW THE NOMINATED TRAIT:
+
+                traits = list(candidates.keys())
+
+                if use_evaluations:
+                    imi_evaluate = getattr(me, 'imi_evaluate_'+key)
+                    default_delta = default_delta or get_spec(self.imi_delta, key)
+                    if hasattr(me, 'imi_delta_'+key):
+                        delta = getattr(me, 'imi_delta_'+key)
+                        if hasattr(delta, '__call__'):
+                            delta = delta(me)
+                    else:
+                        delta = default_delta
+                    if delta > 0:
+                        weights = array([
+                            exp(mean([
+                                imi_evaluate(other=other) for other in carriers
+                                ]) / delta)
+                            for trait, carriers in candidates.items()
+                            ])
+                    else:
+                        mean_evaluations = array([
+                            mean([
+                                imi_evaluate(other=other) for other in carriers
+                                ])
+                            for trait, carriers in candidates.items()
+                            ])
+                        weights = zeros(len(traits))
+                        weights[where(mean_evaluations == mean_evaluations.max())] = 1.0                       
+                    nominated_trait = traits[choice(len(traits), p = weights / sum(weights))]
+                else:
+                    nominated_trait = traits[choice(len(traits))]
                     
-                # if we reached this point, me will imitate other_trait:
+                # ACTUALLY IMITATE NOMINATED TRAIT:
+                    
                 if hasattr(me, 'imi_imitate_'+key):
                     # let entity do the actual imitation:
                     getattr(me, 'imi_imitate_'+key)(variables=variables, values=other_trait)
