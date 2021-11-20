@@ -1,5 +1,8 @@
 """Script to run example1 model."""
 
+from pycopancore import config
+config.profile = True
+
 from numpy import random
 # first thing: set seed so that each execution must return same thing:
 random.seed(10)
@@ -25,7 +28,7 @@ ninds = 1000 # no. individuals
 
 ER_p = 0.5
 
-t_1 = 100
+t_1 = 1
 
 dir = "/tmp/";
 
@@ -87,8 +90,18 @@ for list in [social_systems, cells, individuals]:
             if random.uniform() < ER_p:
                 culture.acquaintance_network.add_edge(i, j)
 
-traj = runner.run(t_0=0, t_1=t_1, dt=1)
+# now profile the whole thing:
+
+from pycopancore import profile
+
+@profile
+def doit():
+    return runner.run(t_0=0, t_1=t_1, dt=1)
+
+traj = doit()
 
 print(traj[M.SocialSystem.is_active][social_systems[0]])
 print(traj[M.Cell.an_ordinal_var][cells[0]])
 print(traj[M.Individual.a_dimensional_var][individuals[0]])
+
+profile.print_stats()

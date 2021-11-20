@@ -1,13 +1,14 @@
 """Culture process taxon mixing class template.
 """
 
+from .... import profile
+
 """
 TODO:
 - override attr/fct names end in _key for modularisation
 - dose-response
 - performance --> learning
 """
-
 
 # This file is part of pycopancore.
 #
@@ -75,6 +76,7 @@ class Culture (I.Culture):
 
     # public method declared in interface:
         
+    @profile
     def trigger_imitation(self, key="*"):
         """(see interface)"""
         keys = self.imi_traits if key=="*" else [key]
