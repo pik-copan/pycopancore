@@ -28,7 +28,7 @@ ninds = 1000 # no. individuals
 
 ER_p = 0.5
 
-t_1 = 1
+t_1 = 100
 
 dir = "/tmp/";
 
