@@ -1,8 +1,6 @@
 # Makefile for Sphinx documentation
 #
 
-## TODO: automatically include the contents of docs subfolders of model component and model subpackages!
-
 # You can set these variables from the command line.
 SPHINXOPTS    = -E -a
 SPHINXBUILD   = sphinx-build

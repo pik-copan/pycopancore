@@ -13,6 +13,8 @@
 #  Imports
 #
 
+import numpy as np
+
 from ... import base  # all models must use the base component
 
 from ...model_components import copan_global_like_carbon_cycle \
@@ -73,8 +75,13 @@ class Individual(aware.Individual,
 #                 learn.Individual,
                  base.Individual):
     """Individual entity type."""
-    pass
 
+    def imi_p_imitate_env(self, own_trait=None, other_trait=None): 
+        return 1 / (1 + np.exp(self.relative_weight))
+        
+    def imi_imitate_env(self, variables=None, values=None):
+        for index, var in enumerate(variables):
+            var.set_value(self, values[index])
 
 # process taxa:
 
@@ -99,7 +106,11 @@ class Culture (aware.Culture,
                imi.Culture,
                base.Culture):
     """Culture process taxon"""
-    pass
+
+    imi.Culture.imi_traits.default = {
+        'env': (aware.Individual.is_environmentally_friendly,),
+        'tax': (prod.SocialSystem.has_emissions_tax, prod.SocialSystem.emissions_tax_level)
+        }
 
 
 # Model class:

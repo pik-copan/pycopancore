@@ -67,15 +67,12 @@ culture = M.Culture(
 #    environmental_friendliness_learning_rate = 1 if with_learning else 0,
     max_protected_terrestrial_carbon_share=0,
     terrestrial_carbon_averaging_time=10,
-    imi_traits = {'env': (M.Individual.is_environmentally_friendly,),
-                  'tax': (M.SocialSystem.has_emissions_tax, M.SocialSystem.emissions_tax_level)},
     imi_rate = {'env': 5.0, 'tax': 5.0 },
-    imi_type = {'tax': 'simple', 'env': 'threshold'},
+    imi_type = {'tax': 'simple', 'env': 'complex'},
     imi_p_in_batch = {'env': 0.2},  # ~20% of individuals imitate at once if the individuals don't set their own imi_p_in_batch 
     imi_batch_n = {'tax': 1},  # each social system imitates independently
     imi_network = M.Culture.acquaintance_network,
     imi_n_neighbors_drawn = 2,
-#    imi_abs_threshold = 2,
     imi_rel_threshold = 1e-9,
     imi_p_imitate = {'env': {((True,),(False,)): 0.5, ((False,),(False,)): 1.0 }, 
                      'tax': 1.0}
@@ -108,10 +105,9 @@ individuals = [M.Individual(
                for i in range(ninds)]
 def f(self, other): return 1 / (1 + np.exp(self.relative_weight - other.relative_weight))
 for i in individuals:
-    i.imi_p_in_batch_env = 0
+    i.imi_p_in_batch_env = 0.2
     i.imi_n_neighbors_drawn_env = 3
     i.imi_rel_threshold_env = 0
-    i.imi_p_imitate = f
 
 # initialize block model acquaintance network:
 target_degree = 150

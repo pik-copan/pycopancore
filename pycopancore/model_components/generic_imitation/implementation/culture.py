@@ -43,9 +43,7 @@ def get_entry(spec, my_trait, other_trait):
     """extract value for trait pair from specification, 
     which, if it is a dict, can either contain the pair 
     or the pair with one or both entries replaced by '*', or neither."""
-    if hasattr(spec, '__call__'):
-        return spec(own_trait=my_trait, other_trait=other_trait)
-    elif isinstance(spec, dicttype):
+    if isinstance(spec, dicttype):
         if (my_trait, other_trait) in spec.keys(): return spec[(my_trait, other_trait)]
         if (my_trait, '*') in spec.keys(): return spec[(my_trait, '*')]
         if ('*', other_trait) in spec.keys(): return spec[('*', other_trait)]
@@ -54,12 +52,15 @@ def get_entry(spec, my_trait, other_trait):
     else:
         return spec
 
-def get_entry_or_return_value(spec, me, my_trait, other_trait):
+def get_entry_or_return_value(spec, other, my_trait, other_trait):
     """extract value for trait pair from specification, 
     which, if it is a dict, can either contain the pair 
     or the pair with one or both entries replaced by '*', or neither."""
     if hasattr(spec, '__call__'):
-        return spec(me, own_trait=my_trait, other_trait=other_trait)
+        if other:
+            return spec(other=other, own_trait=my_trait, other_trait=other_trait)
+        else:
+            return spec(own_trait=my_trait, other_trait=other_trait)
     elif isinstance(spec, dicttype):
         if (my_trait, other_trait) in spec.keys(): return spec[(my_trait, other_trait)]
         if (my_trait, '*') in spec.keys(): return spec[(my_trait, '*')]
@@ -183,7 +184,7 @@ class Culture (I.Culture):
 
                 # possibly override default_p_imitate by entity's own p_imitate_<key>:                
                 if hasattr(me, 'imi_p_imitate_'+key):
-                    actual_p_imitate_spec = getattr(e, 'imi_p_imitate_'+key)
+                    actual_p_imitate_spec = getattr(me, 'imi_p_imitate_'+key)
                     if hasattr(actual_p_imitate_spec, '__call__'):
                         actual_p_imitate_depends_on_source = actual_p_imitate_depends_on_target = True
                         actual_p_imitate = None
@@ -203,7 +204,8 @@ class Culture (I.Culture):
                     my_trait = None             
                 # already extract parameters that depend on source but not on target trait:
                 if actual_p_imitate_depends_on_source and not actual_p_imitate_depends_on_target:
-                    actual_p_imitate = get_entry_or_return_value(actual_p_imitate_spec, me, my_trait, None)
+                    actual_p_imitate = get_entry_or_return_value(
+                        actual_p_imitate_spec, None, my_trait, None)
                     if actual_p_imitate == 0:
                         continue  # won't imitate
                     
@@ -212,7 +214,7 @@ class Culture (I.Culture):
                     # possibly override other parameters by entity's own values:
                                         
                     if hasattr(me, 'imi_n_neighbors_drawn_'+key):
-                        actual_n_neighbors_drawn = getattr(e, 'imi_n_neighbors_drawn_'+key)
+                        actual_n_neighbors_drawn = getattr(me, 'imi_n_neighbors_drawn_'+key)
                         if hasattr(actual_n_neighbors_drawn, '__call__'):
                             actual_n_neighbors_drawn = actual_n_neighbors_drawn(me)
                     else:
@@ -223,7 +225,7 @@ class Culture (I.Culture):
                         actual_n_neighbors_drawn = n_neighbors
 
                     if hasattr(me, 'imi_p_neighbor_drawn_'+key):
-                        actual_p_neighbor_drawn = getattr(e, 'imi_p_neighbor_drawn_'+key)
+                        actual_p_neighbor_drawn = getattr(me, 'imi_p_neighbor_drawn_'+key)
                         actual_p_neighbor_drawn_depends_on_neighbor = hasattr(actual_p_neighbor_drawn, '__call__')
                     else:
                         actual_p_neighbor_drawn = default_p_neighbor_drawn 
@@ -232,7 +234,7 @@ class Culture (I.Culture):
                         continue  # no-one to imitate
    
                     if hasattr(me, 'imi_abs_threshold_'+key):
-                        actual_abs_threshold_spec = getattr(e, 'imi_abs_threshold_'+key)
+                        actual_abs_threshold_spec = getattr(me, 'imi_abs_threshold_'+key)
                         if hasattr(actual_abs_threshold_spec, '__call__'):
                             actual_abs_threshold_depends_on_source = actual_abs_threshold_depends_on_target = True
                             actual_abs_threshold = None
@@ -250,7 +252,7 @@ class Culture (I.Culture):
                     except: pass
 
                     if hasattr(me, 'imi_rel_threshold_'+key):
-                        actual_rel_threshold_spec = getattr(e, 'imi_rel_threshold_'+key)
+                        actual_rel_threshold_spec = getattr(me, 'imi_rel_threshold_'+key)
                         if hasattr(actual_rel_threshold_spec, '__call__'):
                             actual_rel_threshold_depends_on_source = actual_rel_threshold_depends_on_target = True
                             actual_rel_threshold = None
@@ -277,12 +279,15 @@ class Culture (I.Culture):
                     # check whether to imitate them:
                     if actual_p_imitate_depends_on_target: 
                         other_trait = tuple(var.get_value(other) for var in variables)
-                        actual_p_imitate = get_entry_or_return_value(actual_p_imitate_spec, me, my_trait, other_trait)
-                        if other_trait == my_trait or actual_p_imitate == 0 or (actual_p_imitate < 1 and actual_p_imitate < uniform()):
+                        actual_p_imitate = get_entry_or_return_value(
+                            actual_p_imitate_spec, other, my_trait, other_trait)
+                        if other_trait == my_trait or actual_p_imitate == 0 \
+                                or (actual_p_imitate < 1 and actual_p_imitate < uniform()):
                             continue # don't imitate
                         # else imitate, see below
                     else:
-                        if actual_p_imitate == 0 or (actual_p_imitate < 1 and actual_p_imitate < uniform()):
+                        if actual_p_imitate == 0 or (actual_p_imitate < 1 
+                                                     and actual_p_imitate < uniform()):
                             continue # don't imitate
                         # else imitate, see below
                         other_trait = tuple(var.get_value(other) for var in variables)
@@ -290,12 +295,15 @@ class Culture (I.Culture):
                 else: # 'complex':
                     
                     # if any of the actual parameters depend on source trait, extract it and them if not done so:
-                    if my_trait is None and (actual_abs_threshold_depends_on_source or actual_rel_threshold_depends_on_source):
+                    if my_trait is None and (actual_abs_threshold_depends_on_source 
+                                             or actual_rel_threshold_depends_on_source):
                         my_trait = tuple(var.get_value(me) for var in variables) 
                     if actual_abs_threshold_depends_on_source and not actual_abs_threshold_depends_on_target:
-                        actual_abs_threshold = get_entry_or_return_value(actual_abs_threshold_spec, me, my_trait, None)
+                        actual_abs_threshold = get_entry_or_return_value(
+                            actual_abs_threshold_spec, None, my_trait, None)
                     if actual_rel_threshold_depends_on_source and not actual_rel_threshold_depends_on_target:
-                        actual_rel_threshold = get_entry_or_return_value(actual_rel_threshold_spec, me, my_trait, None)
+                        actual_rel_threshold = get_entry_or_return_value(
+                            actual_rel_threshold_spec, None, my_trait, None)
     
                     # draw some others:
                     if actual_p_neighbor_drawn is not None:
@@ -324,15 +332,19 @@ class Culture (I.Culture):
                         if other_trait == my_trait: 
                             continue
                         if actual_abs_threshold_depends_on_target: 
-                            actual_abs_threshold = get_entry_or_return_value(actual_abs_threshold_spec, me, my_trait, other_trait)
+                            actual_abs_threshold = get_entry_or_return_value(
+                                actual_abs_threshold_spec, other, my_trait, other_trait)
                         if actual_rel_threshold_depends_on_target: 
-                            actual_rel_threshold = get_entry_or_return_value(actual_rel_threshold_spec, me, my_trait, other_trait)
+                            actual_rel_threshold = get_entry_or_return_value(
+                                actual_rel_threshold_spec, other, my_trait, other_trait)
                         assert actual_abs_threshold is None or actual_rel_threshold is None, "You cannot specify both imi_abs_threshold and imi_rel_threshold for "+str(key)
                         if ((actual_abs_threshold is not None) and freq >= actual_abs_threshold) \
                             or ((actual_rel_threshold is not None) and freq >= actual_rel_threshold * n_others):
                                 # me potentially imitates this trait, so register it;
                                 if actual_p_imitate_depends_on_target: 
-                                    actual_p_imitate = get_entry_or_return_value(actual_p_imitate_spec, me, my_trait, other_trait) or 0
+                                    actual_p_imitate = get_entry_or_return_value(
+                                        actual_p_imitate_spec, None, my_trait, other_trait
+                                        ) or 0
                                 if actual_p_imitate > 0:
                                     targets.append(other_trait)
                                     ps.append(actual_p_imitate)
@@ -349,8 +361,13 @@ class Culture (I.Culture):
                     # else imitate, see below
                     
                 # if we reached this point, me will imitate other_trait:
-                for index, var in enumerate(variables):
-                    var.set_value(me, other_trait[index])
+                if hasattr(me, 'imi_imitate_'+key):
+                    # let entity do the actual imitation:
+                    getattr(me, 'imi_imitate_'+key)(variables=variables, values=other_trait)
+                else:
+                    # just copy the variable values:
+                    for index, var in enumerate(variables):
+                        var.set_value(me, other_trait[index])
                     
     # other process-related methods:
 

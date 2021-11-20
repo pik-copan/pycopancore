@@ -72,14 +72,14 @@ The imitation process works as follows:
         :py:attr:`Culture.imi_delta <interface.Culture.imi_delta>`. 
         The smaller *delta*, the more likely the trait with the largest average
         evaluation will be nominated. The larger *delta*, the less influence
-        have the evaluations on the nomination.   
+        the evaluations have on the nomination.   
     
     *   Finally, the entity imitates the nominated trait (i.e. adopts the 
         respective variable values) with a certain probability (given by
         :py:attr:`Culture.imi_p_imitate <interface.Culture.imi_p_imitate>`).
         By default, the variable values are copied exactly.
         However, if the entity provides a method 
-        ``imi_imitate_<key> (self, other)``,
+        ``imi_imitate_<key> (self, variables=None, values=None)``,
         then this method is called instead. This can be used to copy values
         only with some random error.
         
@@ -124,6 +124,9 @@ To achieve this, put ``imi_type = 'simple'``, ``imi_include_own_trait = True``,
 ``imi_p_imitate = 1.0``, choose some ``imi_delta`` larger than zero, 
 and define the following method in the respective entity type::
     def imi_evaluate_<key> (self, other): return other.<variable>
+The latter method definition can either be put into another model component,
+or directly into the model definition module where the final entity type class
+is composed.
 
 'Meet two' complex contagion
 ============================
