@@ -20,12 +20,12 @@ class SocialSystem(other.SocialSystem, base.SocialSystem):
     pass
 
 class Cell(other.Cell, base.Cell): 
-    def imi_evaluate_ord (self, other=None):
-        return other.a_criterion
+    def imi_p_imitate_ord(self, own_trait=None, other_trait=None): 
+        return 1.0 if np.abs(other_trait[0] - own_trait[0]) <= 2 else 0.0
 
 class Individual(other.Individual, base.Individual):
-    def imi_p_imitate_pair(self, own_trait=None, other_trait=None): 
-        return 1.0 if other_trait[0]==own_trait[0] else 0.1
+    def imi_evaluate_pair(self, other=None):
+        return other.a_criterion
 
 
 class Culture (imi.Culture, base.Culture):

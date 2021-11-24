@@ -19,8 +19,9 @@ TODO:
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
+from random import randrange, sample
 from numpy import any, array, inf, sum, mean, where, zeros, exp
-from numpy.random import exponential, uniform, choice
+from numpy.random import exponential, uniform, choice, shuffle
 from networkx import DiGraph
 
 from .... import Event
@@ -74,11 +75,18 @@ def get_entry_or_return_value(spec, other, my_trait, other_trait):
 class Culture (I.Culture):
     """Culture process taxon mixin implementation class."""
 
+    # data useable for debugging:
+    imi_event_counter = 0
+    imi_trigger_counter = 0
+    imi_update_counter = 0
+    imi_imitate_counter = 0
+
     # public method declared in interface:
         
     @profile
     def trigger_imitation(self, key="*"):
         """(see interface)"""
+        self.imi_trigger_counter += 1
         keys = self.imi_traits if key=="*" else [key]
         feasible_vars = [expr.target_variable for expr in config.generic_imitation['variables']]
         
@@ -107,9 +115,9 @@ class Culture (I.Culture):
                 batch = [e for e,p in pairs2 if p == 1 or (p > 0 and p > uniform())]
             elif batch_n is not None:
                 # draw exactly batch_n many entities (or all, if there are fewer):
-                batch = [] if batch_n == 0 else \
-                        entities if len(entities) <= batch_n else \
-                        [entities[i] for i in choice(len(entities), size=batch_n, replace=False)]
+                batch = ([] if batch_n == 0 else
+                         entities if len(entities) <= batch_n else
+                         sample(entities, batch_n))
             else:
                 raise Exception("Please specify either imi_p_in_batch or imi_batch_n for "+str(key))
 
@@ -179,9 +187,11 @@ class Culture (I.Culture):
             default_imi_include_own_trait = get_spec(self.imi_include_own_trait, key)
             default_delta = None
             
-            # MAIN LOOP: process each batch member:
+            # MAIN LOOP: process batch members in random order:
                 
+            shuffle(batch)
             for me in batch:
+                self.imi_update_counter += 1
 
                 use_evaluations = hasattr(me, 'imi_evaluate_'+key)
                 
@@ -230,9 +240,9 @@ class Culture (I.Culture):
                 if itype=='simple':
                     
                     # just draw one other:
-                    other = choice(neighbors)
+                    other = neighbors[randrange(0,len(neighbors))]
                     others = [other]
-                    candidates = {tuple(var.get_value(other) for var in variables): [other]}
+                    candidates = {tuple(var.get_value(other) for var in variables): others}
                     
                 else: # 'complex':
                     
@@ -310,34 +320,35 @@ class Culture (I.Culture):
                     if actual_p_neighbor_drawn is not None:
                         assert actual_n_neighbors_drawn is None, "You cannot specify both imi_p_neighbor_drawn and imi_n_neighbors_drawn for "+str(key)
                         # include each neighbor with probability p_neighbor_drawn:
-                        others = [e for e in neighbors 
-                                  if uniform() < (actual_p_neighbor_drawn(me, neighbor=e) 
-                                                  if actual_p_neighbor_drawn_depends_on_neighbor 
-                                                  else actual_p_neighbor_drawn)]
+                        random_values = uniform(size=len(neighbors))
+                        others = [e for i,e in enumerate(neighbors) 
+                                  if random_values[i] < 
+                                        (actual_p_neighbor_drawn(me, neighbor=e) 
+                                         if actual_p_neighbor_drawn_depends_on_neighbor 
+                                         else actual_p_neighbor_drawn)]
                     elif actual_n_neighbors_drawn is not None:
                         # draw exactly n_neighbors_drawn many neighbors (or all, if there are fewer):
-                        others = neighbors if len(neighbors) <= actual_n_neighbors_drawn \
-                                 else [neighbors[i] 
-                                       for i in choice(len(neighbors), size=actual_n_neighbors_drawn, replace=False)]
+                        others = (neighbors if len(neighbors) <= actual_n_neighbors_drawn 
+                                  else sample(neighbors, actual_n_neighbors_drawn))
                     else:
                         raise Exception("Please specify either imi_n_neighbors_drawn or imi_p_neighbor_drawn for "+str(key))
                     n_others = len(others)
                     
-                    # count frequencies of other traits:
-                    freqs = {}
+                    # count counts of other traits:
+                    counts = {}
                     if use_evaluations: 
                         carriers = {}
                     if len(variables) == 1:
                         for i,value in enumerate(variables[0].get_values(others)):
                             trait = (value,)
-                            freqs[trait] = freqs.get(trait, 0) + 1
+                            counts[trait] = counts.get(trait, 0) + 1
                             if use_evaluations: 
                                 c = carriers[trait] = carriers.get(trait, [])
                                 c.append(others[i])
                     else:
                         # somewhat slower due to zip:
                         for i,trait in enumerate(zip(*[var.get_values(others) for var in variables])):
-                            freqs[trait] = freqs.get(trait, 0) + 1
+                            counts[trait] = counts.get(trait, 0) + 1
                             if use_evaluations: 
                                 c = carriers[trait] = carriers.get(trait, [])
                                 c.append(others[i])
@@ -348,8 +359,8 @@ class Culture (I.Culture):
                         # this is the faster case
                         assert actual_abs_threshold is None or actual_rel_threshold is None, "You cannot specify both imi_abs_threshold and imi_rel_threshold for "+str(key)
                         if actual_abs_threshold is not None:
-                            for (other_trait, freq) in freqs.items():
-                                if freq >= actual_abs_threshold:
+                            for (other_trait, count) in counts.items():
+                                if count >= actual_abs_threshold:
                                     # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
@@ -359,8 +370,8 @@ class Culture (I.Culture):
                                         candidates[other_trait] = carriers[other_trait] if use_evaluations else []                            
                         elif actual_rel_threshold is not None:
                             threshold = actual_rel_threshold * n_others
-                            for (other_trait, freq) in freqs.items():
-                                if freq >= threshold:
+                            for (other_trait, count) in counts.items():
+                                if count >= threshold:
                                     # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
@@ -370,7 +381,7 @@ class Culture (I.Culture):
                                         candidates[other_trait] = carriers[other_trait] if use_evaluations else []
                     else:
                         # this is the slower case
-                        for (other_trait, freq) in freqs.items():
+                        for (other_trait, count) in counts.items():
                             if actual_abs_threshold_depends_on_target: 
                                 actual_abs_threshold = get_entry_or_return_value(
                                     actual_abs_threshold_spec, None, my_trait, other_trait)
@@ -378,8 +389,8 @@ class Culture (I.Culture):
                                 actual_rel_threshold = get_entry_or_return_value(
                                     actual_rel_threshold_spec, None, my_trait, other_trait)
                             assert actual_abs_threshold is None or actual_rel_threshold is None, "You cannot specify both imi_abs_threshold and imi_rel_threshold for "+str(key)
-                            if ((actual_abs_threshold is not None) and freq >= actual_abs_threshold) \
-                                or ((actual_rel_threshold is not None) and freq >= actual_rel_threshold * n_others):
+                            if ((actual_abs_threshold is not None) and count >= actual_abs_threshold) \
+                                or ((actual_rel_threshold is not None) and count >= actual_rel_threshold * n_others):
                                     # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
@@ -413,30 +424,33 @@ class Culture (I.Culture):
                             exp(mean([
                                 imi_evaluate(other=other) for other in carriers
                                 ]) / delta)
-                            for trait, carriers in candidates.items()
+                            for carriers in candidates.values()
                             ])
                     else:
                         mean_evaluations = array([
                             mean([
                                 imi_evaluate(other=other) for other in carriers
                                 ])
-                            for trait, carriers in candidates.items()
+                            for carriers in candidates.values()
                             ])
                         weights = zeros(len(traits))
                         weights[where(mean_evaluations == mean_evaluations.max())] = 1.0                       
                     nominated_trait = traits[choice(len(traits), p = weights / sum(weights))]
                 else:
-                    nominated_trait = traits[choice(len(traits))]
+                    nominated_trait = traits[randrange(0, len(traits))]
                     
                 # ACTUALLY IMITATE NOMINATED TRAIT:
-                    
-                if hasattr(me, 'imi_imitate_'+key):
-                    # let entity do the actual imitation:
-                    getattr(me, 'imi_imitate_'+key)(variables=variables, values=other_trait)
-                else:
-                    # just copy the variable values:
-                    for index, var in enumerate(variables):
-                        var.set_value(me, other_trait[index])
+
+                if (nominated_trait != my_trait):
+                    self.imi_imitate_counter += 1
+                        
+                    if hasattr(me, 'imi_imitate_'+key):
+                        # let entity do the actual imitation:
+                        getattr(me, 'imi_imitate_'+key)(variables=variables, values=nominated_trait)
+                    else:
+                        # just copy the variable values:
+                        for index, var in enumerate(variables):
+                            var.set_value(me, nominated_trait[index])
                     
     # other process-related methods:
 
@@ -448,6 +462,7 @@ class Culture (I.Culture):
 
     def perform_event(self, t):
         """Called by runner. Choose a (group of) variables and trigger a batch imitation"""
+        self.imi_event_counter += 1
         rate_list, total_rate = self.get_rates()
         key = choice(list(self.imi_traits.keys()), p = array(rate_list) / total_rate)  
         print("      trait key:", key)       

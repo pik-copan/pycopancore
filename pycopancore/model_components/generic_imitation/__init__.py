@@ -156,7 +156,16 @@ To achieve this, put ``imi_type = 'complex'``,
 ``imi_include_own_trait = False``, and ``imi_p_imitate = <p>``. 
 In this, the entry ``'*': inf`` means that all other transitions except
 from 'inactive' to 'active' require an infinite threshold and are thus impossible.
- 
+
+
+*****************
+Performance notes
+*****************
+Typically, the simulation time needed for one update event is below 1 ms times the batch size.
+It is generally faster to use few update events with large batches than many update events with small batches.
+It is also faster if thresholds and imitation probabilities do not depend on the actual trait values,
+and if parameter values are not overridden by entities.
+
 """
 
 # This file is part of pycopancore.

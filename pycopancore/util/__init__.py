@@ -4,7 +4,6 @@ from .functions import *
 
 # profiling:
     
-config.profile = False
 try:
     from line_profiler import LineProfiler
     class _Profile (object):

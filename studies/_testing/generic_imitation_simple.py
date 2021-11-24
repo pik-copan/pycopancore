@@ -1,13 +1,15 @@
 """Script to run example1 model."""
 
 from pycopancore import config
-config.profile = True
+config.profile = False
 
+from time import time
 from numpy import random
 # first thing: set seed so that each execution must return same thing:
-random.seed(10)
+#random.seed(10)
 
 import numpy as np
+import pylab as plt
 
 import pycopancore.models._testing.generic_imitation.simple as M
 from pycopancore import master_data_model as D
@@ -21,14 +23,14 @@ warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
 
 # parameters:
 
-nworlds = 1  # no. worlds
-nsocs = 10 # no. social_systems
+nworlds = 1 # no. worlds
+nsocs = 100 # no. social_systems
 ncells = 100  # no. cells
-ninds = 1000 # no. individuals
+ninds = 100 # no. individuals
 
 ER_p = 0.5
 
-t_1 = 100
+t_1 = 1
 
 dir = "/tmp/";
 
@@ -38,28 +40,33 @@ runner = Runner(model=model)
 
 """
 'bool': Granovetter-style activation
-'ord': 'take the best' learning
-'pair' 'meet two' complex contagion
+'ord': 'meet two' complex contagion
+'pair': 'take the best' learning 
 """
 culture = M.Culture(
-    imi_rate = 1.0,
+    imi_rate = {
+        'bool': 10000,   # -> 10000 updates
+        'ord': 1000,  # *10 in batch -> 10000 updates
+        'pair': 200, # *~50 in batch -> 10000 updates
+        '*': 0,
+        },
     imi_type = 'complex',
-    imi_batch_n = {'bool': 1, 'ord': 2},
+    imi_batch_n = {'bool': 1, 'ord': 10},
     imi_p_in_batch = {'pair': 0.5},
     imi_network = M.Culture.acquaintance_network,
-    imi_p_neighbor_drawn = {'bool': 1.0, 'ord': 1.0},
-    imi_n_neighbors_drawn = {'pair': 2},
+    imi_p_neighbor_drawn = {'bool': 1.0, 'pair': 1.0},
+    imi_n_neighbors_drawn = {'ord': 20},
     imi_rel_threshold = {'bool': { 
             ((False,),(True,)): 0.4, 
             ((True,),(False,)): 0.8
         }},
-    imi_abs_threshold = {'pair': 2, 'ord': 0},
-    imi_include_own_trait = {'ord': True, '*': False},
-    imi_delta = {'ord': 0.0},  # evaluation will be done by Cell.imi_evaluate_ord
-    imi_p_imitate = {'ord': 1.0, 'bool': {
+    imi_abs_threshold = {'ord': 2, 'pair': 0},
+    imi_include_own_trait = {'pair': True, '*': False},
+    imi_delta = {'pair': 10.0},  # evaluation will be done by Individual.imi_evaluate_pair
+    imi_p_imitate = {'pair': 1.0, 'bool': {
             ((False,),(True,)): 0.9, 
             ((True,),(False,)): 0.7
-        }}  # for 'pair', the value is set by Individual.imi_p_imitate_pair
+        }}  # for 'ord', the value is set by Cell.imi_p_imitate_ord
     )
 
 worlds = [M.World(culture=culture) for w in range(nworlds)]
@@ -67,14 +74,13 @@ worlds = [M.World(culture=culture) for w in range(nworlds)]
 social_systems = [
     M.SocialSystem(
         world=random.choice(worlds),
-        is_active=random.choice([False, True], p=[0.9,0.1]),
+        is_active=random.choice([False, True], p=[0.65,0.35]),
     ) for s in range(nsocs)]
 
 cells = [
     M.Cell(
         social_system=random.choice(social_systems),
         an_ordinal_var=random.choice(M.Cell.an_ordinal_var.levels),
-        a_criterion=random.normal(),
     ) for c in range(ncells)]
 
 individuals = [
@@ -82,6 +88,7 @@ individuals = [
         cell=random.choice(cells),
         a_nominal_var=random.choice(M.Individual.a_nominal_var.levels),
         a_dimensional_var=random.normal(),
+        a_criterion=random.normal(),
         ) for i in range(ninds)]
 
 for list in [social_systems, cells, individuals]:
@@ -94,14 +101,35 @@ for list in [social_systems, cells, individuals]:
 
 from pycopancore import profile
 
-@profile
+#@profile
 def doit():
-    return runner.run(t_0=0, t_1=t_1, dt=1)
-
+    start = time()
+    res = runner.run(t_0=0, t_1=t_1, dt=1)
+    end = time()
+    print(end-start, "seconds")
+    return res
+    
 traj = doit()
 
-print(traj[M.SocialSystem.is_active][social_systems[0]])
-print(traj[M.Cell.an_ordinal_var][cells[0]])
-print(traj[M.Individual.a_dimensional_var][individuals[0]])
+print(culture.imi_event_counter, culture.imi_trigger_counter, culture.imi_update_counter, culture.imi_imitate_counter)
+
+t = traj['t']
+
+plt.plot(t, np.sum([l for e,l in traj[M.SocialSystem.is_active].items()], axis = 0),
+         label="# SocialSystem.is_active")
+
+for level in M.Cell.an_ordinal_var.levels:
+    plt.plot(t, np.sum([[v==level for v in l] for e,l in traj[M.Cell.an_ordinal_var].items()], axis = 0), "-.",
+    label="# Cell.an_ordinal_var="+str(level))
+
+for level in M.Individual.a_nominal_var.levels:
+    plt.plot(t, np.sum([[v==level for v in l] for e,l in traj[M.Individual.a_nominal_var].items()], axis = 0), ".", 
+    label="# Individual.a_nominal_var="+str(level))
+
+plt.plot(t, np.mean([l for e,l in traj[M.Individual.a_dimensional_var].items()], axis = 0), "-",
+         label="mean Individual.a_dimensional_var")
+    
+plt.legend()
+plt.show()
 
 profile.print_stats()

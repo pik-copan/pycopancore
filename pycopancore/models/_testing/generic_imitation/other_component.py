@@ -11,8 +11,6 @@ class ICell (object):
     an_ordinal_var = Variable(
         "an ordinal variable", "e.g., a Likert scale", scale='ordinal', datatype=int,
         levels=[1, 2, 3, 4, 5]) 
-    a_criterion = Variable(
-        "a fitness criterion", "e.g. income")
 
 class IIndividual (object):
     a_nominal_var = Variable(
@@ -20,6 +18,8 @@ class IIndividual (object):
         levels=['a', 'b', 'c'])
     a_dimensional_var = Variable(
         "a dimensional variable", "", unit=D.dollars)
+    a_criterion = Variable(
+        "a fitness criterion", "e.g. income")
 
 class IModel (object):
     name = "other component"
