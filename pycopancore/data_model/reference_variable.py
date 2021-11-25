@@ -68,7 +68,7 @@ class ReferenceVariable(Variable):
         r = "read-only " if self.readonly else ""
         r += "extensive " if self.is_extensive else ""
         r += "intensive " if self.is_intensive else ""
-        r += "reference variable " + self.codename + ': ' + self.name + ""
+        r += "reference variable " + str(self.codename) + ': ' + self.name + ""
         if self.desc not in ("", None):
             r += " (" + self.desc + ")"
         if self.ref is not None:

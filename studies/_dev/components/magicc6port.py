@@ -39,18 +39,22 @@ runner = Runner(model=model)
     
 # initial stocks:
 A0 = 1
-P0 = 1
-H0 = 2
-S0 = 3
+P0 = 2
+H0 = 3
+S0 = 4
 
 # initial flows:
 L0 = 4
 Q0 = 5
 U0 = 6
 
-environment = M.Environment ( )
+environment = M.Environment ( 
+    fertilization_parameter = 1.5,
+    )
 
 world = M.World (environment=environment,
+    preindustrial_carbon_stock_atmospheric_CO2 = 0.5,
+    preindustrial_carbon_flow_net_primary_production = 1,
     carbon_stock_atmospheric_CO2 = A0,
     carbon_stock_living_plants = P0,
     carbon_stock_detritus = H0,

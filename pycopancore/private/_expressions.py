@@ -231,10 +231,16 @@ class _DotConstruct(sp.AtomicExpr):
 #            print("repeated _DotConstruct.__init__ of",self,"skipped")
             pass
 
+    def _dummy_eval_whatever(self, **kwargs):
+        """needed to keep sympy happy"""
+        return self
+        
     def __getattr__(self, name):
         """accessing an attribute of a _DotConstruct basically
         returns a new _DotConstruct that is extended by the name of this
         attribute, giving special treatment to aggregations"""
+        if name.startswith("_eval_"): # needed to keep sympy happy
+            return self._dummy_eval_whatever
         if name == "__qualname__":  # needed to make sphinx happy
             return "DUMMY"  # FIXME!
 #        print("_DotConstruct.__getattr__(", self, ",", name, ")")
