@@ -42,9 +42,6 @@ class Environment (I.Environment, abstract.Environment):
         self.geographic_network = geographic_network
         self._worlds = set()
 
-        # make sure all variable values are valid:
-        self.assert_valid()
-
     @property  # read-only
     def worlds(self):
         """Get the set of Worlds on this Environment."""

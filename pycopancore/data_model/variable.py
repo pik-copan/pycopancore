@@ -36,7 +36,7 @@ class Variable(Symbol):
     symbol = None
     """mathematical symbol or abbrev. to be used as a short label"""
     ref = None
-    """some URI, e.g. a wikipedia page"""
+    """some URL, e.g. a wikipedia page or doi"""
 
     scale = None
     """level of measurement: "ratio" (default), "interval", "ordinal",
@@ -273,7 +273,7 @@ class Variable(Symbol):
         r = "read-only " if self.readonly else ""
         r += "extensive " if self.is_extensive else ""
         r += "intensive " if self.is_intensive else ""
-        r += "variable '" + self.name + "'"
+        r += "variable " + self.codename + ': ' + self.name + ""
         if self.desc not in ("", None):
             r += " (" + self.desc + ")"
         if self.ref is not None:
@@ -321,7 +321,10 @@ class Variable(Symbol):
     def _check_valid(self, v):
         """check validity of candidate value"""
 
-        assert v is not private.unset, str(self) + " has no value set"
+        if v is private.unset:
+            return False, \
+                str(self) + " has no value set"
+#        assert v is not private.unset, str(self) + " has no value set"
 
         if self.array_shape is not None:
             if not v.shape == self.array_shape:
@@ -389,6 +392,12 @@ class Variable(Symbol):
         """Make sure by assertion that value is valid"""
         res = self._check_valid(value)
         assert res is True, res[1]
+
+    def all_valid(self):
+        """Check whether all variable values are valid"""
+        for v in self.get_values(self.owning_class.instances):
+            if not self.is_valid(v): return False
+        return True
 
     # "getters" and "setters":
 
@@ -607,9 +616,10 @@ class Variable(Symbol):
     def get_value(self, instance, unit=None):
         """Get value."""
         v = getattr(instance, self.codename)
-        assert not isinstance(v, Variable), \
-            "Variable " + str(self) + " uninitialized at instance " \
-            + str(instance)
+        if isinstance(v, Variable): return private.unset
+#        assert not isinstance(v, Variable), \
+#            "Variable " + str(self) + " uninitialized at instance " \
+#            + str(instance)
         return v if unit is None else self.unit.convert(v, unit)
     
     def get_values(self, instances, unit=None):

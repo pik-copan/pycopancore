@@ -63,9 +63,10 @@ class SetVariable(Variable):
         return True
 
     def __str__(self):
-        return (self.owning_class.__name__ + "." + self.codename) \
-                if self.owning_class \
-                else self.name + "(uid=" + self._uid + ")"
+        return self.__repr__()
+#        return (self.owning_class.__name__ + "." + self.codename) \
+#                if self.owning_class \
+#                else self.name + "(uid=" + self._uid + ")"
 
     def __repr__(self):
         if self.owning_class:
@@ -73,7 +74,7 @@ class SetVariable(Variable):
         r = "read-only " if self.readonly else ""
         r += "extensive " if self.is_extensive else ""
         r += "intensive " if self.is_intensive else ""
-        r += "set variable '" + self.name + "'"
+        r += "set variable " + self.codename + ': ' + self.name + ""
         if self.desc not in ("", None):
             r += " (" + self.desc + ")"
         if self.ref is not None:

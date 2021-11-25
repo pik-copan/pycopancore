@@ -257,6 +257,10 @@ class Runner(_AbstractRunner):
         # Initialize running time variable to starting time:
         t = t_0
 
+        # Make sure all variables contain valid values:
+        if not self.model.all_valid(verbose=True):
+            print("WARNING: Model state has invalid or unset values!")
+
         # For performance reasons, convert all variable values to standard
         # units, so that no DimensionalQuantities are left in variable values:
         self.model.convert_to_standard_units()
@@ -462,8 +466,9 @@ class Runner(_AbstractRunner):
                     var._from = froms[i]
                     var._to = tos[i]
                     # get initial values from instances and store in array:
-                    initial_array_ode[froms[i]:tos[i]] = \
-                        var.eval(instances=var.owning_class.instances)
+                    values = var.eval(instances=var.owning_class.instances)
+                    initial_array_ode[froms[i]:tos[i]] = values
+                        
                 # store slice indices also in targets:
                 for target in self.model.ODE_targets:
                     var = target.target_variable

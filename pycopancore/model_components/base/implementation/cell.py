@@ -54,9 +54,6 @@ class Cell (I.Cell, abstract.Cell):
             self.world = world
         self.social_system = social_system  # this line must occur after setting world!
 
-        # make sure all variable values are valid:
-        self.assert_valid()
-
         # init other caches:
         self._individuals = set()
 

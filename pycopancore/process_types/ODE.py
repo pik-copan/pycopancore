@@ -37,7 +37,8 @@ class ODE(_AbstractProcess):
                  targets,
                  specification,
                  *,
-                 smoothness=1
+                 smoothness=1,
+                 **kwargs
                 ):
         """Instantiate an instance of an ODE process.
 
@@ -53,7 +54,7 @@ class ODE(_AbstractProcess):
             RHS of the equation(s)
         smoothness
         """
-        super().__init__(name)
+        super().__init__(name, **kwargs)
 
         self.targets = targets
         self.specification = specification

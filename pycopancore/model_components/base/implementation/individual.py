@@ -49,9 +49,6 @@ class Individual (I.Individual, abstract.Individual):
         self._cell = None
         self.cell = cell
 
-        # make sure all variable values are valid:
-        self.assert_valid()
-
         # register with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)

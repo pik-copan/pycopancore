@@ -183,9 +183,9 @@ class ModelLogics (object):
                             # store codename in Variable object for convenience:
                             v.codename = k
                             variable_pool.add(v)
-                            print("        Variable ", v)
+                            print("       ", v)
                         else:  # same Var. has been registered in another component or mixin already:
-                            print("        Variable ", v)
+                            print("       ", v)
                             # make sure all mixins use the same codename
                             # for this Var.:
                             assert v.codename == k, \
@@ -237,7 +237,7 @@ class ModelLogics (object):
                     # local abbreviations for lengthy variable names in
                     # implementation classes. therefore also the following:
                     if v.codename == k:
-                        print("    Variable ", v)
+                        print("   ", v)
                         cls.variables.add(v)
                         composed_class.variables.add(v)
                         assert v.owning_class is None  # since it is only set here!
@@ -412,7 +412,7 @@ class ModelLogics (object):
                         else:
                             raise Exception("unsupported process type")
 
-        print("\nTargets affected by some process:", cls.process_targets)
+        print("\nTargets affected by some process:", list(cls.process_targets))
 
         # analyse dependency structure between variables to determine
         # correct order of process evaluation:
@@ -493,6 +493,15 @@ class ModelLogics (object):
 
         print("\n(End of model configuration)")
 
+    def all_valid(self, verbose=False):
+        """Check whether all variable values are valid"""
+        for v in self.variables:
+            if not v.all_valid(): 
+                if verbose:
+                    print(v, "has one or more invalid or missing value(s).")
+                return False
+        return True
+        
     def convert_to_standard_units(self):
         """Replace all variable values of type DimensionalQuantity to float.
 
@@ -502,7 +511,8 @@ class ModelLogics (object):
             v.convert_to_standard_units()
 
     def reset(self):
-        """Reset all varaibles back to default values."""
+        """Reset all variables back to default values."""
+        # TODO: I believe this is nonsense, need to check!!
         # First set all variables to default:
         # print("\n", 'self.variables',self.variables)
         obj_to_delete = [obj for obj in gc.get_objects()

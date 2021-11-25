@@ -35,7 +35,8 @@ class Explicit(_AbstractProcess):
                  name,
                  targets,
                  specification,
-                 smoothness=0
+                 smoothness=0,
+                 **kwargs
                  ):
         """Instantiate an instance of an explicit process.
 
@@ -47,7 +48,7 @@ class Explicit(_AbstractProcess):
             function(self,t)
         smoothness :
         """
-        super().__init__(name)
+        super().__init__(name, **kwargs)
 
         self.targets = targets
         self.specification = specification

@@ -29,6 +29,11 @@ class _AbstractProcess(object):
 
     name = None
     """short human-readable name"""
+    desc = None
+    """a longer description"""    
+    ref = None
+    """some URL, e.g. a wikipedia page or doi, and/or a page/line/equation number"""
+  
     type = None
     """mathematical type (ODE, Explicit, ...)"""
     timetype = None
@@ -39,9 +44,11 @@ class _AbstractProcess(object):
     owning_class = None
     """the class (entity-type or process taxon) owning the process"""
 
-    def __init__(self, name=""):
+    def __init__(self, name="", desc="", ref=""):
         """Initialize an _AbstractProcess instance."""
         self.name = name
+        self.desc = desc
+        self.ref = ref
         self.owning_class = None
 
     def __repr__(self):

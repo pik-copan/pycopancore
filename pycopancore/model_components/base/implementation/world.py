@@ -52,16 +52,13 @@ class World (I.World, abstract.World):
         super().__init__(**kwargs)  # must be the first line
 
         self._environment = None
-        self.environment = environment
+        if environment: self.environment = environment
         self._metabolism = None
-        self.metabolism = metabolism
+        if metabolism: self.metabolism = metabolism
         self._culture = None
-        self.culture = culture
+        if culture: self.culture = culture
         self._social_systems = set()
         self._cells = set()
-
-        # make sure all variable values are valid:
-        self.assert_valid()
 
     # getters and setters:
     @property
