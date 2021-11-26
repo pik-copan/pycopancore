@@ -41,56 +41,56 @@ class World (object):
 
     # initial, preindustrial, or special values of endogenous variables:
 
-    preindustrial_carbon_stock_atmospheric_CO2 = Variable(
-        "Preindustrial atmospheric carbon stored as CO2", "",  
+    preind_cstock_atmo_CO2 = Variable(
+        "preindustrial atmospheric carbon stored as CO2", "",  
         symbol="C0", CF=None, AMIP=None,
         unit=ppmvCO2, strict_lower_bound=0, is_extensive=True)
 
-    preindustrial_carbon_flow_net_primary_production = Variable(
-        "Preindustrial net primary production", "",  
+    preind_cflow_net_primary_prod = Variable(
+        "preindustrial net primary production", "",  
         symbol="NPP0", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True)
 
-    initial_carbon_flow_litter_production = Variable(
+    initial_cflow_litter_prod = Variable(
         "Initial litter production", "Note: this is needed for (A12)",  
         symbol="L0", CF=None, AMIP=None,
         unit=GtC/yr, strict_lower_bound=0, is_extensive=True)
 
-    initial_carbon_flow_detritus_decay = Variable(
+    initial_cflow_detritus_decay = Variable(
         "Initial decay of detritus", "Note: this is needed for (A13)",  
         symbol="Q0", CF=None, AMIP=None,
         unit=GtC/yr, strict_lower_bound=0, is_extensive=True)
 
-    initial_carbon_flow_soils_oxidization = Variable(
+    initial_cflow_soils_oxid = Variable(
         "Initial soils sink due to non-landuse related oxidization", "Note: this is needed for (A14)",  
         symbol="U0", CF=None, AMIP=None,
         unit=GtC/yr, strict_lower_bound=0, is_extensive=True)
 
     # carbon emissions:
 
-    carbon_flow_CO2_emissions_fossil_industrial = Variable(
+    cflow_CO2_emiss_fossil_industrial = Variable(
         "CO2 emissions from fossil and industrial sources", "",  
         symbol="Efoss", CF=None, AMIP=None,
         unit=GtC/yr, is_extensive=True, default=0)
     
-    carbon_flow_emissions_flow_methane_fuel = Variable(
+    cflow_emiss_flow_methane_fuel = Variable(
         "Contribution from oxidized methane of fossil fuel origin", "",  
         symbol="EfCH4", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
 
-    carbon_flow_gross_deforestation_living_plants = Variable(
+    cflow_gross_deforest_plants = Variable(
         "Gross deforestation, living plants part", "",  
         symbol="DPgross", CF=None, AMIP=None,
         unit=GtC/yr, is_extensive=True, default=0)
     # TODO: verify this is not exogenous!
 
-    carbon_flow_gross_deforestation_detritus = Variable(
+    cflow_gross_deforest_detritus = Variable(
         "Gross deforestation, detritus part", "",  
         symbol="DHgross", CF=None, AMIP=None,
         unit=GtC/yr, is_extensive=True, default=0)
     # TODO: verify this is not exogenous!
 
-    carbon_flow_gross_deforestation_soils = Variable(
+    cflow_gross_deforest_soils = Variable(
         "Gross deforestation, soils part", "",  
         symbol="DSgross", CF=None, AMIP=None,
         unit=GtC/yr, is_extensive=True, default=0)
@@ -101,18 +101,18 @@ class World (object):
 
     # A1 The Carbon cycle
 
-    carbon_stock_atmospheric_CO2 = Variable(
+    cstock_atmo_CO2 = Variable(
         "atmospheric carbon stored as CO2", "Note: in the paper this was called 'mixing ratio' with symbol 'χCO2', in the wiki 'concentration' with symbol 'C', but units suggest it is actually a carbon *stock*",  
         symbol="C", CF=None, AMIP=None,
         unit=GtC, strict_lower_bound=0, is_extensive=True)
     # Note: we are *not* using D.World.atmospheric_carbon since the latter is meant to contain non-CO2 carbon with respective multipliers related to CO2-equivalents, while this here is really just the C stored in CO2.
         
-    carbon_flow_uptake_ocean = Variable(
+    cflow_uptake_ocean = Variable(
         "Flux due to ocean carbon uptake", "Note: Despite the word 'flux', this is *not* per-area.",  
         symbol="Focn", CF=None, AMIP=None,
         unit=GtC/yr, is_extensive=True, default=0)
 
-    carbon_flow_uptake_biosphere = Variable(
+    cflow_uptake_biosphere = Variable(
         "Net non-‘directly human-induced’ carbon uptake or release by the terrestrial biosphere "
         "due to CO2 fertilization and climate feedbacks", "",  
         symbol="Fterr", CF=None, AMIP=None,
@@ -122,35 +122,35 @@ class World (object):
 
     # stocks:
         
-    carbon_stock_living_plants = Variable(
+    cstock_plants = Variable(
         "Living plants", "Woody material, leaves/needles, grass, and roots, but not the rapid turnover part of living biomass, which can be assumed to have a zero lifetime on the timescales of interest here",  
         symbol="P", CF=None, AMIP=None,
         unit=GtC, strict_lower_bound=0, is_extensive=True)
 
-    carbon_stock_detritus = Variable(
+    cstock_detritus = Variable(
         "Detritus", "",  
         symbol="H", CF=None, AMIP=None,
         unit=GtC, strict_lower_bound=0, is_extensive=True)
 
-    carbon_stock_soils = Variable(
+    cstock_soils = Variable(
         "Organic matter in soils", "",  
         symbol="S", CF=None, AMIP=None,
         unit=GtC, strict_lower_bound=0, is_extensive=True)
 
     # flows:
         
-    carbon_flow_net_primary_production = Variable(
+    cflow_net_primary_prod = Variable(
         "Net primary production", "Note: In (A16), NPP is instead denoted N",  
         symbol="NPP", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
     # TODO: verify that N=NPP
 
-    carbon_flow_CO2_emissions_human_biosphere = Variable(
+    cflow_CO2_emiss_human_biosphere = Variable(
         "Other directly human-induced CO2 emissions from or removals to the terrestrial biosphere", "",  
         symbol="Elu", CF=None, AMIP=None,
         unit=GtC/yr, is_extensive=True, default=0)
 
-    carbon_flow_heterotrophic_respiration = Variable(
+    cflow_het_respiration = Variable(
         "Heterotrophic_respiration", "",  
         symbol="R", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
@@ -158,7 +158,7 @@ class World (object):
 
     # turnover times determinining main decay flows:
             
-    turnover_time_living_plants = Variable(
+    turnover_time_plants = Variable(
         "Turnover time of living plants", "Inverse of decay rate, should be initially P/L",  
         symbol="τP", CF=None, AMIP=None,
         unit=yr, strict_lower_bound=0, is_extensive=False)
@@ -175,29 +175,29 @@ class World (object):
 
     # main decays flows:
             
-    carbon_flow_litter_production = Variable(
+    cflow_litter_prod = Variable(
         "Litter production", "",  
         symbol="L", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
 
-    carbon_flow_soils_oxidization = Variable(
+    cflow_soils_oxid = Variable(
         "Soils sink due to non-landuse related oxidization", "",  
         symbol="U", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
 
-    carbon_flow_detritus_decay = Variable(
+    cflow_detritus_decay = Variable(
         "Decay of detritus", "Note: this is assumed to be the sum of QA and QS",  
         symbol="Q", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
 
     # parts of Q (how are they determined?):
         
-    carbon_flow_detritus_oxidization = Variable(
+    cflow_detritus_oxid = Variable(
         "Detritus sink to the atmosphere due to non-landuse related oxidization", "",  
         symbol="QA", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
 
-    carbon_flow_detritus_to_soil = Variable(
+    cflow_detritus_to_soil = Variable(
         "Detritus sink to the soils", "",  
         symbol="QS", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
@@ -206,15 +206,15 @@ class World (object):
 
     # flows related to landuse (net? how do they relate to their gross versions?):
 
-    # TODO: do we also have a carbon_flow_living_plants_landuse (DPlu) ?
+    # TODO: do we also have a cflow_plants_landuse (DPlu) ?
     
-    carbon_flow_detritus_landuse = Variable(
+    cflow_detritus_landuse = Variable(
         "Detritus sink to the atmosphere due to landuse", "",  
         symbol="DHlu", CF=None, AMIP=None,
         unit=GtC/yr, is_extensive=True, default=0)
     # TODO: verify this is not exogenous!
 
-    carbon_flow_soils_landuse = Variable(
+    cflow_soils_landuse = Variable(
         "Soils sink to the atmosphere due to landuse", "",  
         symbol="DSlu", CF=None, AMIP=None,
         unit=GtC/yr, is_extensive=True, default=0)
@@ -222,24 +222,24 @@ class World (object):
 
     # regrowth:
         
-    carbon_flow_regrowth_living_plants = Variable(
+    cflow_regrowth_plants = Variable(
         "Regrowth of living plants", "",  
         symbol="GP", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
         
-    carbon_flow_regrowth_detritus = Variable(
+    cflow_regrowth_detritus = Variable(
         "Regrowth of detritus", "",  
         symbol="GH", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
         
-    carbon_flow_regrowth_soils = Variable(
+    cflow_regrowth_soils = Variable(
         "Regrowth of soils", "",  
         symbol="GS", CF=None, AMIP=None,
         unit=GtC/yr, lower_bound=0, is_extensive=True, default=0)
         
     # carbon fertilization:
         
-    effective_carbon_fertilization_factor = Variable(
+    effective_carbon_fertil_factor = Variable(
         "Effective carbon fertilization factor", "",  
         symbol="βeff", CF=None, AMIP=None,
         unit=unity, lower_bound=0, is_extensive=False, default=0)
@@ -262,12 +262,12 @@ class Environment (object):
 
     # EXOGENOUS PARAMETERS:      
 
-    NPP_zero_carbon_stock_atmospheric_CO2 = Variable(
+    NPP_zero_cstock_atmo_CO2 = Variable(
         "Atmospheric carbon stored as CO2 at which NPP is zero", "",  
         symbol="Cb", CF=None, AMIP=None,
         unit=ppmvCO2, strict_lower_bound=0, is_extensive=True, default=31*ppmvCO2)
 
-    NPP_fraction_to_living_plants = Variable(
+    NPP_fraction_to_plants = Variable(
         "NPP flux: carbon fluxes to the remainder plant box", "Note: this is actually not a flux but simply a fraction",  
         symbol="gP", CF=None, AMIP=None,
         unit=unity, lower_bound=0, upper_bound=1, is_extensive=True, default=0.35)
@@ -287,12 +287,12 @@ class Environment (object):
         symbol="ψ", CF=None, AMIP=None,
         unit=unity, lower_bound=0, upper_bound=1, is_extensive=True, default=0)
 
-    fraction_net_landuse_emissions_living_plants = Variable(
+    fraction_net_landuse_emiss_plants = Variable(
         "Fraction of net landuse emissions related to living plants", "Note: dP does not seem to have a name in MAGICC",  
         symbol="dP", CF=None, AMIP=None,
         unit=unity, lower_bound=0, upper_bound=1, is_extensive=True, default=0)
 
-    fraction_net_landuse_emissions_detritus = Variable(
+    fraction_net_landuse_emiss_detritus = Variable(
         "Fraction of net landuse emissions related to detritus", "Note: dH does not seem to have a name in MAGICC",  
         symbol="dH", CF=None, AMIP=None,
         unit=unity, lower_bound=0, upper_bound=1, is_extensive=True, default=0)
@@ -313,7 +313,7 @@ class Environment (object):
         "NPP flux: carbon fluxes to the soil box", "Note: this is actually not a flux but simply a fraction",  
         symbol="gS", CF=None, AMIP=None,
         unit=unity, lower_bound=0, upper_bound=1, is_extensive=True, default=0.05)
-    # calculated as 1 - NPP_fraction_to_living_plants - NPP_fraction_to_detritus
+    # calculated as 1 - NPP_fraction_to_plants - NPP_fraction_to_detritus
 
     litter_fraction_to_soils = Variable(
         "Fraction of litter production going to soils", "",  
@@ -321,11 +321,11 @@ class Environment (object):
         unit=unity, lower_bound=0, upper_bound=1, is_extensive=True, default=0.02)
     # calculated as 1 - litter_fraction_to_detritus
 
-    fraction_net_landuse_emissions_soils = Variable(
+    fraction_net_landuse_emiss_soils = Variable(
         "Fraction of net landuse emissions related to soils", "Note: dS does not seem to have a name in MAGICC",  
         symbol="dS", CF=None, AMIP=None,
         unit=unity, lower_bound=0, upper_bound=1, is_extensive=True, default=0)
-    # calculated as 1 - fraction_net_landuse_emissions_living_plants - fraction_net_landuse_emissions_detritus 
+    # calculated as 1 - fraction_net_landuse_emiss_plants - fraction_net_landuse_emiss_detritus 
 
     # CONSTANTS:
     # TODO: provide a class Const for this? 

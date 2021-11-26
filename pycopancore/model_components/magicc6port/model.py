@@ -4,7 +4,7 @@ The 'Model for the Assessment of Greenhouse Gas Induced Climate Change' (MAGICC)
 
 This port is a direct implementation of the equations given in the Appendix of Meinshausen et al. 2008 as a single pycopancore model component that uses only the entity type World and the process taxon Environment. Wherever possible, Variables, Dimensions and Units from the master_data_model have been used. For now, the master_data_model has not been extended to include further variables or units from MAGICC. A future version might do this.
 
-Variables' 'name' and 'symbol' attributes contain the name and symbol used in Meinshausen et al. 2008, possibly modified slightly to improve clarity. Their 'desc', 'CF', and 'AMIP' attributes are left empty for now but should be filled where possible soon. 
+Variables' 'name' and 'symbol' attributes contain the name and symbol used in Meinshausen et al. 2008, modified to improve clarity. In particular, carbon stocks and flows contain 'cstock' or 'cflow' in their name. Their 'desc', 'CF', and 'AMIP' attributes are left empty for now but should be filled where possible soon. 
 
 Processes' 'desc' attribute contain relevant text copied from Meinshausen et al. 2008 or the MAGICC wiki page, their 'ref' contains the respective equation numbers from Meinshausen et al. 2008 and a link to a related MAGICC wiki page. 
 
