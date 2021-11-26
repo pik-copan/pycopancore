@@ -18,15 +18,15 @@ class Environment (E):
             
         Explicit ("NPP fraction to soils",
                   [E.NPP_fraction_to_soils],
-                  [1.0 - E.NPP_fraction_to_living_plants - E.NPP_fraction_to_detritus]),
+                  [1.0 - E.NPP_fraction_to_plants - E.NPP_fraction_to_detritus]),
     
         Explicit ("Fraction of litter production going to soils",
                   [E.litter_fraction_to_soils],
                   [1.0 - E.litter_fraction_to_detritus]),
     
         Explicit ("Fraction of net landuse emissions related to soils",
-                  [E.fraction_net_landuse_emissions_soils],
-                  [1.0 - E.fraction_net_landuse_emissions_living_plants - E.fraction_net_landuse_emissions_detritus]),
+                  [E.fraction_net_landuse_emiss_soils],
+                  [1.0 - E.fraction_net_landuse_emiss_plants - E.fraction_net_landuse_emiss_detritus]),
     
     ]
 

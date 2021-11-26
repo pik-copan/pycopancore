@@ -9,6 +9,11 @@
 
 from .. import base
 
+from ..model_components import config
+config.magicc6port = { 
+    'parameters': [], 
+    'emissions': None
+    }
 from ..model_components import magicc6port as m
 
 # entity types:

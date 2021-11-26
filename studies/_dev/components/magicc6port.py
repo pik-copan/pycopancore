@@ -49,22 +49,22 @@ Q0 = 5
 U0 = 6
 
 environment = M.Environment ( 
-    fertilization_parameter = 1.5,
+    fertil_parameter = 1.5,
     )
 
 world = M.World (environment=environment,
-    preindustrial_carbon_stock_atmospheric_CO2 = 0.5,
-    preindustrial_carbon_flow_net_primary_production = 1,
-    carbon_stock_atmospheric_CO2 = A0,
-    carbon_stock_living_plants = P0,
-    carbon_stock_detritus = H0,
-    carbon_stock_soils = S0,
-    initial_carbon_flow_litter_production = L0,
-    initial_carbon_flow_detritus_decay = Q0,
-    initial_carbon_flow_soils_oxidization = U0,
-    turnover_time_living_plants = P0 / L0, # (A5) http://wiki.magicc.org/index.php?title=The_Carbon_Cycle#Terrestrial_carbon_cycle
-    turnover_time_detritus = H0 / Q0, # (A6) http://wiki.magicc.org/index.php?title=The_Carbon_Cycle#Terrestrial_carbon_cycle
-    turnover_time_soils = S0 / U0, # (A7) http://wiki.magicc.org/index.php?title=The_Carbon_Cycle#Terrestrial_carbon_cycle
+    preind_cstock_atmo_CO2 = 0.5,
+    preind_cflow_net_primary_prod = 1,
+    cstock_atmo_CO2 = A0,
+    cstock_plants = P0,
+    cstock_detritus = H0,
+    cstock_soils = S0,
+    initial_cflow_litter_prod = L0,
+    initial_cflow_detritus_decay = Q0,
+    initial_cflow_soils_oxid = U0,
+    turnover_time_plants = P0 / L0, # (A5) http://wiki.magicc.org/index.php?title=The_cCycle#Terrestrial_ccycle
+    turnover_time_detritus = H0 / Q0, # (A6) http://wiki.magicc.org/index.php?title=The_cCycle#Terrestrial_ccycle
+    turnover_time_soils = S0 / U0, # (A7) http://wiki.magicc.org/index.php?title=The_cCycle#Terrestrial_ccycle
     )
 
 start = time()

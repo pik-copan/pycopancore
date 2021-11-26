@@ -3,6 +3,8 @@
 Open questions
 ==============
 
+* Are the equations (A5-7) meant to hold for all t, with a time-dependent tau given by (A12-14)?
+
 * How are Q, QA, and QS related? Q seems to be governed by H and tauH via (A6). Is Q = QA + QS? If so, are QA, QS fixed fractions of Q?
 
 * How is R determined, and what role do the quantities \sum R and Ua in the text below (A20) play?
@@ -11,7 +13,7 @@ Open questions
 
 * Is it really DPgross in (A2) but DHlu and DSlu in (A3,A4)? The text below (A21) suggests that it should be DHgross and DSgross instead.
 
-* How are GP, GH, GS determined?
+* How are GP, GH, GS determined and why do they not appear in Fig. 2?
 
 * Is N in (A16) the same as NPP?
 
@@ -19,6 +21,11 @@ Open questions
 
 * (A21) suggests there are two versions (plain and feedback-adjusted) of the quantities NPP, R, Q, and U. In which of the earlier equations (A2–A16) do we use the plain versions and in which do we use the feedback-adjusted versions? Is it correct to use first calculate the plain versions from (A16), (A??), (A6), and (A7), then calculate the feedback-adjusted ones via (A21), and then use these feedback-adjusted versions in (A2,A3,A4)? 
 
+* What is the correct conversion factor between GtC and ppmvCO2? 2.12, 2.13, 2.14?
+
+* Should we use MAGICC version 6 or 7?
+
+* What is the difference between the emissions- and the concentration-driven mode? 
 """
 
 # This file is part of pycopancore.
@@ -30,6 +37,7 @@ Open questions
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
+import numpy as np
 import sympy as sp
 
 from ...base import interface as B
@@ -38,10 +46,19 @@ from ..interface import World as W, ppmvCO2
 
 from .... import Explicit, ODE
 
+from ..util.files import get_external_emissions_variables
+
 E = B.World.environment
 
 class World (W):
     """World entity type mixin implementation class."""
+
+    # methods used for external input:
+
+    def set_emissions(self, t):
+        """Set externally driven emissions variables"""
+        # TODO: read values for surrounding time points from file(s), calculate and set interpolated value. 
+        self.SAMPLE_VARIABLE = 1.0         
 
     # auxiliary quantities:
     
@@ -67,6 +84,12 @@ class World (W):
     # processes:    
     
     processes = [
+    
+        # emissions from external emissions scenario files:
+            
+        Explicit ("Externally controlled emissions",
+                  get_external_emissions_variables(),  # TODO: list variables contained in one of the files from config.magicc6port['emissions']
+                  set_emissions),
     
         # A1 The Carbon cycle
             
@@ -141,12 +164,12 @@ class World (W):
             
         Explicit ("Effective carbon fertilization factor",
                   [W.effective_carbon_fertil_factor],
-                  [(2 - E.fertilization_parameter) * (
+                  [(2 - E.fertil_parameter) * (
                         # βlog (A15):
                         1 + E.NPP_enhancement_340_to_680_ppm 
                             * sp.log(W.cstock_atmo_CO2 / W.preind_cstock_atmo_CO2)
                    ) 
-                   + (E.fertilization_parameter - 1) * (
+                   + (E.fertil_parameter - 1) * (
                         # βsig (A19):
                         (1 / (W.preind_cstock_atmo_CO2 - E.NPP_zero_cstock_atmo_CO2) + b)
                         / (1 / (W.cstock_atmo_CO2 - E.NPP_zero_cstock_atmo_CO2) + b)

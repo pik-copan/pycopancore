@@ -64,6 +64,8 @@ class Variable(Symbol):
     CETS = None
     """corresponding World Bank CETS code
     (https://databank.worldbank.org/data/download/site-content/WDI_CETS.xls)"""
+    codes = {}
+    """dict of other codes, keyed by classification code, e.g., 'MAGICC':'CO2_TEMPFEEDBACK_SWITCH'"""
 
     # data type and constraints:
 
@@ -147,6 +149,7 @@ class Variable(Symbol):
                  AMIP=None,
                  IAMC=None,
                  CETS=None,
+                 codes={},
                  datatype=float,
                  array_shape=None,
                  allow_none=False,
@@ -181,6 +184,7 @@ class Variable(Symbol):
         self.AMIP = AMIP
         self.IAMC = IAMC
         self.CETS = CETS
+        self.codes = codes
 
         self.datatype = datatype
         self.array_shape = array_shape
@@ -225,6 +229,7 @@ class Variable(Symbol):
                 "AMIP": self.AMIP,
                 "IAMC": self.IAMC,
                 "CETS": self.CETS,
+                "codes": self.codes,
                 "datatype": self.datatype,
                 "array_shape": self.array_shape,
                 "allow_none": self.allow_none,
@@ -286,6 +291,8 @@ class Variable(Symbol):
             r += ", IAMC=" + self.IAMC
         if self.CETS is not None:
             r += ", CETS=" + self.CETS
+        if self.codes is not None:
+            r += ", codes=" + str(self.codes)
         if self.symbol not in ("", None):
             r += ", symbol=" + self.symbol
         if self.allow_none is False:
