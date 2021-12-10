@@ -21,7 +21,7 @@ class SocialSystem(other.SocialSystem, base.SocialSystem):
 
 class Cell(other.Cell, base.Cell): 
     def imi_p_imitate_ord(self, own_trait=None, other_trait=None): 
-        return 1.0 if np.abs(other_trait[0] - own_trait[0]) <= 2 else 0.0
+        return 1.0 if np.abs(other_trait[0] - own_trait[0]) <= 1 else 0.1
 
 class Individual(other.Individual, base.Individual):
     def imi_evaluate_pair(self, other=None):

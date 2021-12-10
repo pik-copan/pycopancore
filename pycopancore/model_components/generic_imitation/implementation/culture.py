@@ -355,30 +355,33 @@ class Culture (I.Culture):
                         
                     # assemble candidates and average evaluations:
                     candidates = {}
+                    actual_p_imitates = {}
                     if not (actual_abs_threshold_depends_on_target or actual_rel_threshold_depends_on_target):
                         # this is the faster case
                         assert actual_abs_threshold is None or actual_rel_threshold is None, "You cannot specify both imi_abs_threshold and imi_rel_threshold for "+str(key)
                         if actual_abs_threshold is not None:
                             for (other_trait, count) in counts.items():
                                 if count >= actual_abs_threshold:
-                                    # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
                                             actual_p_imitate_spec, None, my_trait, other_trait
                                             ) or 0
                                     if actual_p_imitate > 0:
+                                        # me potentially imitates this trait, so register it;
                                         candidates[other_trait] = carriers[other_trait] if use_evaluations else []                            
+                                        actual_p_imitates[other_trait] = actual_p_imitate
                         elif actual_rel_threshold is not None:
                             threshold = actual_rel_threshold * n_others
                             for (other_trait, count) in counts.items():
                                 if count >= threshold:
-                                    # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
                                             actual_p_imitate_spec, None, my_trait, other_trait
                                             ) or 0
                                     if actual_p_imitate > 0:
+                                        # me potentially imitates this trait, so register it;
                                         candidates[other_trait] = carriers[other_trait] if use_evaluations else []
+                                        actual_p_imitates[other_trait] = actual_p_imitate
                     else:
                         # this is the slower case
                         for (other_trait, count) in counts.items():
@@ -391,18 +394,20 @@ class Culture (I.Culture):
                             assert actual_abs_threshold is None or actual_rel_threshold is None, "You cannot specify both imi_abs_threshold and imi_rel_threshold for "+str(key)
                             if ((actual_abs_threshold is not None) and count >= actual_abs_threshold) \
                                 or ((actual_rel_threshold is not None) and count >= actual_rel_threshold * n_others):
-                                    # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
                                             actual_p_imitate_spec, None, my_trait, other_trait
                                             ) or 0
                                     if actual_p_imitate > 0:
+                                        # me potentially imitates this trait, so register it;
                                         candidates[other_trait] = carriers[other_trait] if use_evaluations else []
+                                        actual_p_imitates[other_trait] = actual_p_imitate
 
                 # add own trait as candidate?
                 if actual_imi_include_own_trait:
                     c = candidates[my_trait] = candidates.get(my_trait, [])
                     c.append(me)
+                    actual_p_imitates[my_trait] = 0  # won't imitate own trait
                 elif candidates == {}:
                     continue  # no candidate traits to imitate
 
@@ -439,9 +444,9 @@ class Culture (I.Culture):
                 else:
                     nominated_trait = traits[randrange(0, len(traits))]
                     
-                # ACTUALLY IMITATE NOMINATED TRAIT:
+                # ACTUALLY IMITATE NOMINATED TRAIT WITH SOME PROBABILITY:
 
-                if (nominated_trait != my_trait):
+                if (nominated_trait != my_trait) and uniform() < actual_p_imitates[nominated_trait]:
                     self.imi_imitate_counter += 1
                         
                     if hasattr(me, 'imi_imitate_'+key):
