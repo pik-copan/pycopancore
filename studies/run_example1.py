@@ -7,6 +7,7 @@ import numpy as np
 import pycopancore.models.example1 as M
 from pycopancore import master_data_model as D
 from pycopancore.runners import Runner
+import pycopancore as pcc
 
 from pylab import plot, gca, show, figure, subplot, gca, semilogy, legend
 
@@ -16,7 +17,7 @@ warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
 warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
 
 # first thing: set seed so that each execution must return same thing:
-random.seed(10)
+pcc.set_seed(10)
 
 # parameters:
 
