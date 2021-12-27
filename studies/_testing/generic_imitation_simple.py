@@ -43,30 +43,32 @@ runner = Runner(model=model)
 'ord': 'meet two' complex contagion
 'pair': 'take the best' learning 
 """
+
 culture = M.Culture(
     imi_rate = {
-        'bool': 10000,   # -> 10000 updates
-        'ord': 1000,  # *10 in batch -> 10000 updates
-        'pair': 200, # *~50 in batch -> 10000 updates
+        'bool': 10,   # -> 10000 updates
+        'ord': 100,  # *10 in batch -> 10000 updates
+        'pair': 10, # *~50 in batch -> 10000 updates
         '*': 0,
         },
-    imi_type = 'complex',
-    imi_batch_n = {'bool': 1, 'ord': 10},
+    imi_type = 'simple', #'complex',
+    imi_batch_n = {'bool': 2, 'ord': 10},
     imi_p_in_batch = {'pair': 0.5},
     imi_network = M.Culture.acquaintance_network,
-    imi_p_neighbor_drawn = {'bool': 1.0, 'pair': 1.0},
-    imi_n_neighbors_drawn = {'ord': 20},
+    imi_p_neighbor_drawn = {'pair': 1.0},
+    imi_n_neighbors_drawn = {'bool': 10, 'ord': 20},
     imi_rel_threshold = {'bool': { 
-            ((False,),(True,)): 0.4, 
-            ((True,),(False,)): 0.8
+            ((False,),(True,)): 0.0, 
+            ((True,),(False,)): 0.0
         }},
     imi_abs_threshold = {'ord': 2, 'pair': 0},
     imi_include_own_trait = {'pair': True, '*': False},
     imi_delta = {'pair': 10.0},  # evaluation will be done by Individual.imi_evaluate_pair
-    imi_p_imitate = {'pair': 1.0, 'bool': {
-            ((False,),(True,)): 0.9, 
-            ((True,),(False,)): 0.7
-        }}  # for 'ord', the value is set by Cell.imi_p_imitate_ord
+    imi_p_imitate = {'ord': 0.5, # for 'ord', this value is overridden by Cell.imi_p_imitate_ord
+                     'pair': 0.6, 
+                     'bool': {((True,),(False,)):0.1, ((True,),'*'):0.2, ((False,),(True,)):0.7, ('*',(True,)):0.8, '*':0.3},
+                     '*': 0.4
+                     } 
     )
 
 worlds = [M.World(culture=culture) for w in range(nworlds)]
@@ -130,6 +132,6 @@ plt.plot(t, np.mean([l for e,l in traj[M.Individual.a_dimensional_var].items()],
          label="mean Individual.a_dimensional_var")
     
 plt.legend()
-plt.show()
+#plt.show()
 
 profile.print_stats()

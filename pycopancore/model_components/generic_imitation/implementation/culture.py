@@ -30,18 +30,20 @@ from .. import interface as I
 
 dicttype = type({})
 
-def get_spec(spec, key):
+def get_spec(spec, key, default):
     """extract value for key from specification, 
     which can either be a dict with the given key, a dict with key '*', or
     a single value."""
     if isinstance(spec, dicttype):
         if key in spec.keys(): return spec[key]
         if '*' in spec.keys(): return spec['*']
-        return None
-    else:
+        return default
+    elif spec is not None:
         return spec
+    else:
+        return default
 
-def get_entry(spec, my_trait, other_trait):
+def get_entry(spec, my_trait, other_trait, default):
     """extract value for trait pair from specification, 
     which, if it is a dict, can either contain the pair 
     or the pair with one or both entries replaced by '*', or neither."""
@@ -50,11 +52,14 @@ def get_entry(spec, my_trait, other_trait):
         if (my_trait, '*') in spec.keys(): return spec[(my_trait, '*')]
         if ('*', other_trait) in spec.keys(): return spec[('*', other_trait)]
         if ('*', '*') in spec.keys(): return spec[('*', '*')]
-        return None
-    else:
+        if '*' in spec.keys(): return spec['*']
+        return default
+    elif spec is not None:
         return spec
+    else:
+        return default
 
-def get_entry_or_return_value(spec, other, my_trait, other_trait):
+def get_entry_or_return_value(spec, other, my_trait, other_trait, default):
     """extract value for trait pair from specification, 
     which, if it is a dict, can either contain the pair 
     or the pair with one or both entries replaced by '*', or neither."""
@@ -68,9 +73,12 @@ def get_entry_or_return_value(spec, other, my_trait, other_trait):
         if (my_trait, '*') in spec.keys(): return spec[(my_trait, '*')]
         if ('*', other_trait) in spec.keys(): return spec[('*', other_trait)]
         if ('*', '*') in spec.keys(): return spec[('*', '*')]
-        return None
-    else:
+        if '*' in spec.keys(): return spec['*']
+        return default
+    elif spec is not None:
         return spec
+    else:
+        return default
 
 class Culture (I.Culture):
     """Culture process taxon mixin implementation class."""
@@ -104,8 +112,8 @@ class Culture (I.Culture):
 
             # draw a batch of entities:
 
-            p_in_batch = get_spec(self.imi_p_in_batch, key)
-            batch_n = get_spec(self.imi_batch_n, key)
+            p_in_batch = get_spec(self.imi_p_in_batch, key, I.Culture.imi_p_in_batch.default)
+            batch_n = get_spec(self.imi_batch_n, key, I.Culture.imi_batch_n.default)
             if p_in_batch is not None:
                 assert batch_n is None, "You cannot specify both imi_p_in_batch and imi_batch_n for "+str(key)
                 # include each entity with probability p_in_batch or with its own imi_p_in_batch_<key>:
@@ -125,15 +133,15 @@ class Culture (I.Culture):
             # at each time point and for each entity, source trait and target trait,
             # the correct imitation parameters are used.
 
-            itype = get_spec(self.imi_type, key)
-            network = get_spec(self.imi_network, key).get_value(self)  # since imi_networks specifies a Variable holding a network for each culture!
-            default_p_imitate_spec = get_spec(self.imi_p_imitate, key)  # this might be a single value or a dict, see below!
+            itype = get_spec(self.imi_type, key, I.Culture.imi_type.default)
+            network = get_spec(self.imi_network, key, I.Culture.imi_network.default).get_value(self)  # since imi_networks specifies a Variable holding a network for each culture!
+            default_p_imitate_spec = get_spec(self.imi_p_imitate, key, I.Culture.imi_p_imitate.default)  # this might be a single value or a dict, see below!
 
             assert itype in ['simple', 'complex'], "Unknown imitation type "+str(itype)
 
             # determine direction if network is directed:
             if isinstance(network, DiGraph):
-                direction = get_spec(self.imi_spreading_direction, key)
+                direction = get_spec(self.imi_spreading_direction, key, I.Culture.imi_spreading_direction.default)
                 assert direction is not None, "since network is directed, please specify imi_spreading_direction"
                 nb_getter = network.predecessors if direction=='forward' else network.successors
             else:
@@ -144,10 +152,10 @@ class Culture (I.Culture):
             if isinstance(default_p_imitate_spec, dicttype):
                 # imitation probabilities may depend on source and target
                 p_imitate_keys = default_p_imitate_spec.keys()
-                default_p_imitate_depends_on_source = any([source != '*' for (source, target) in p_imitate_keys])
-                default_p_imitate_depends_on_target = any([target != '*' for (source, target) in p_imitate_keys])
+                default_p_imitate_depends_on_source = any([pair[0] != '*' for pair in p_imitate_keys if isinstance(pair, tuple)])
+                default_p_imitate_depends_on_target = any([pair[1] != '*' for pair in p_imitate_keys if isinstance(pair, tuple)])
                 if not (default_p_imitate_depends_on_source or default_p_imitate_depends_on_target):
-                    default_p_imitate = get_entry(default_p_imitate_spec, None, None)
+                    default_p_imitate = get_entry(default_p_imitate_spec, None, None, I.Culture.imi_p_imitate.default)
                 else:
                     default_p_imitate = None
             else:
@@ -155,17 +163,17 @@ class Culture (I.Culture):
                 default_p_imitate = default_p_imitate_spec
 
             if itype=='complex':
-                default_n_neighbors_drawn = get_spec(self.imi_n_neighbors_drawn, key)
-                default_p_neighbor_drawn = get_spec(self.imi_p_neighbor_drawn, key)
-                default_abs_threshold_spec = get_spec(self.imi_abs_threshold, key)
-                default_rel_threshold_spec = get_spec(self.imi_rel_threshold, key)
+                default_n_neighbors_drawn = get_spec(self.imi_n_neighbors_drawn, key, I.Culture.imi_n_neighbors_drawn.default)
+                default_p_neighbor_drawn = get_spec(self.imi_p_neighbor_drawn, key, I.Culture.imi_p_neighbor_drawn.default)
+                default_abs_threshold_spec = get_spec(self.imi_abs_threshold, key, I.Culture.imi_abs_threshold.default)
+                default_rel_threshold_spec = get_spec(self.imi_rel_threshold, key, I.Culture.imi_rel_threshold.default)
 
                 if isinstance(default_abs_threshold_spec, dicttype):
                     default_abs_threshold_keys = default_abs_threshold_spec.keys()
-                    default_abs_threshold_depends_on_source = any([source != '*' for (source, target) in default_abs_threshold_keys])
-                    default_abs_threshold_depends_on_target = any([target != '*' for (source, target) in default_abs_threshold_keys])
+                    default_abs_threshold_depends_on_source = any([pair[0] != '*' for pair in default_abs_threshold_keys if isinstance(pair, tuple)])
+                    default_abs_threshold_depends_on_target = any([pair[1] != '*' for pair in default_abs_threshold_keys if isinstance(pair, tuple)])
                     if not (default_abs_threshold_depends_on_source or default_abs_threshold_depends_on_target):
-                        default_abs_threshold = get_entry(default_abs_threshold_spec, None, None)
+                        default_abs_threshold = get_entry(default_abs_threshold_spec, None, None, I.Culture.imi_abs_threshold.default)
                     else:
                         default_abs_threshold = None
                 else:
@@ -174,17 +182,17 @@ class Culture (I.Culture):
 
                 if isinstance(default_rel_threshold_spec, dicttype):
                     default_rel_threshold_keys = default_rel_threshold_spec.keys()
-                    default_rel_threshold_depends_on_source = any([source != '*' for (source, target) in default_rel_threshold_keys])
-                    default_rel_threshold_depends_on_target = any([target != '*' for (source, target) in default_rel_threshold_keys])
+                    default_rel_threshold_depends_on_source = any([pair[0] != '*' for pair in default_rel_threshold_keys if isinstance(pair, tuple)])
+                    default_rel_threshold_depends_on_target = any([pair[1] != '*' for pair in default_rel_threshold_keys if isinstance(pair, tuple)])
                     if not (default_rel_threshold_depends_on_source or default_rel_threshold_depends_on_target):
-                        default_rel_threshold = get_entry(default_rel_threshold_spec, None, None)
+                        default_rel_threshold = get_entry(default_rel_threshold_spec, None, None, I.Culture.imi_rel_threshold.default)
                     else:
                         default_rel_threshold = None
                 else:
                     default_rel_threshold_depends_on_source = default_rel_threshold_depends_on_target = False
                     default_rel_threshold = default_rel_threshold_spec
 
-            default_imi_include_own_trait = get_spec(self.imi_include_own_trait, key)
+            default_imi_include_own_trait = get_spec(self.imi_include_own_trait, key, I.Culture.imi_include_own_trait.default)
             default_delta = None
             
             # MAIN LOOP: process batch members in random order:
@@ -233,7 +241,7 @@ class Culture (I.Culture):
                 # already extract parameters that depend on source but not on target trait:
                 if actual_p_imitate_depends_on_source and not actual_p_imitate_depends_on_target:
                     actual_p_imitate = get_entry_or_return_value(
-                        actual_p_imitate_spec, None, my_trait, None)
+                        actual_p_imitate_spec, None, my_trait, None, I.Culture.imi_p_imitate.default)
                     if actual_p_imitate == 0:
                         continue  # won't imitate
                     
@@ -243,6 +251,17 @@ class Culture (I.Culture):
                     other = neighbors[randrange(0,len(neighbors))]
                     others = [other]
                     candidates = {tuple(var.get_value(other) for var in variables): others}
+                    if actual_p_imitate_depends_on_target or actual_p_imitate_depends_on_source: 
+                        actual_p_imitates = {
+                            other_trait: get_entry_or_return_value(
+                                actual_p_imitate_spec, None, my_trait, other_trait, I.Culture.imi_p_imitate.default) 
+                            for other_trait in candidates
+                            }
+                    else:
+                        actual_p_imitates = {
+                            other_trait: actual_p_imitate
+                            for other_trait in candidates
+                            }
                     
                 else: # 'complex':
                     
@@ -310,10 +329,10 @@ class Culture (I.Culture):
                         my_trait = tuple(var.get_value(me) for var in variables) 
                     if actual_abs_threshold_depends_on_source and not actual_abs_threshold_depends_on_target:
                         actual_abs_threshold = get_entry_or_return_value(
-                            actual_abs_threshold_spec, None, my_trait, None)
+                            actual_abs_threshold_spec, None, my_trait, None, I.Culture.imi_abs_threshold.default)
                     if actual_rel_threshold_depends_on_source and not actual_rel_threshold_depends_on_target:
                         actual_rel_threshold = get_entry_or_return_value(
-                            actual_rel_threshold_spec, None, my_trait, None)
+                            actual_rel_threshold_spec, None, my_trait, None, I.Culture.imi_rel_threshold.default)
     
                     # now draw some neighbors:
                         
@@ -355,54 +374,57 @@ class Culture (I.Culture):
                         
                     # assemble candidates and average evaluations:
                     candidates = {}
+                    actual_p_imitates = {}
                     if not (actual_abs_threshold_depends_on_target or actual_rel_threshold_depends_on_target):
                         # this is the faster case
                         assert actual_abs_threshold is None or actual_rel_threshold is None, "You cannot specify both imi_abs_threshold and imi_rel_threshold for "+str(key)
                         if actual_abs_threshold is not None:
                             for (other_trait, count) in counts.items():
                                 if count >= actual_abs_threshold:
-                                    # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
-                                            actual_p_imitate_spec, None, my_trait, other_trait
-                                            ) or 0
+                                            actual_p_imitate_spec, None, my_trait, other_trait, I.Culture.imi_p_imitate.default)
                                     if actual_p_imitate > 0:
+                                        # me potentially imitates this trait, so register it;
                                         candidates[other_trait] = carriers[other_trait] if use_evaluations else []                            
+                                        actual_p_imitates[other_trait] = actual_p_imitate
                         elif actual_rel_threshold is not None:
                             threshold = actual_rel_threshold * n_others
                             for (other_trait, count) in counts.items():
                                 if count >= threshold:
-                                    # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
-                                            actual_p_imitate_spec, None, my_trait, other_trait
-                                            ) or 0
+                                            actual_p_imitate_spec, None, my_trait, other_trait, I.Culture.imi_p_imitate.default)
                                     if actual_p_imitate > 0:
+                                        # me potentially imitates this trait, so register it;
                                         candidates[other_trait] = carriers[other_trait] if use_evaluations else []
+                                        actual_p_imitates[other_trait] = actual_p_imitate
                     else:
                         # this is the slower case
                         for (other_trait, count) in counts.items():
                             if actual_abs_threshold_depends_on_target: 
                                 actual_abs_threshold = get_entry_or_return_value(
-                                    actual_abs_threshold_spec, None, my_trait, other_trait)
+                                    actual_abs_threshold_spec, None, my_trait, other_trait, I.Culture.imi_abs_threshold.default)
                             if actual_rel_threshold_depends_on_target: 
                                 actual_rel_threshold = get_entry_or_return_value(
-                                    actual_rel_threshold_spec, None, my_trait, other_trait)
+                                    actual_rel_threshold_spec, None, my_trait, other_trait, I.Culture.imi_rel_threshold.default)
                             assert actual_abs_threshold is None or actual_rel_threshold is None, "You cannot specify both imi_abs_threshold and imi_rel_threshold for "+str(key)
                             if ((actual_abs_threshold is not None) and count >= actual_abs_threshold) \
                                 or ((actual_rel_threshold is not None) and count >= actual_rel_threshold * n_others):
-                                    # me potentially imitates this trait, so register it;
                                     if actual_p_imitate_depends_on_target: 
                                         actual_p_imitate = get_entry_or_return_value(
-                                            actual_p_imitate_spec, None, my_trait, other_trait
+                                            actual_p_imitate_spec, None, my_trait, other_trait, I.Culture.imi_p_imitate.default
                                             ) or 0
                                     if actual_p_imitate > 0:
+                                        # me potentially imitates this trait, so register it;
                                         candidates[other_trait] = carriers[other_trait] if use_evaluations else []
+                                        actual_p_imitates[other_trait] = actual_p_imitate
 
                 # add own trait as candidate?
                 if actual_imi_include_own_trait:
                     c = candidates[my_trait] = candidates.get(my_trait, [])
                     c.append(me)
+                    actual_p_imitates[my_trait] = 0  # won't imitate own trait
                 elif candidates == {}:
                     continue  # no candidate traits to imitate
 
@@ -412,7 +434,7 @@ class Culture (I.Culture):
 
                 if use_evaluations:
                     imi_evaluate = getattr(me, 'imi_evaluate_'+key)
-                    default_delta = default_delta or get_spec(self.imi_delta, key)
+                    default_delta = default_delta or get_spec(self.imi_delta, key, I.Culture.imi_delta.default)
                     if hasattr(me, 'imi_delta_'+key):
                         delta = getattr(me, 'imi_delta_'+key)
                         if hasattr(delta, '__call__'):
@@ -439,9 +461,10 @@ class Culture (I.Culture):
                 else:
                     nominated_trait = traits[randrange(0, len(traits))]
                     
-                # ACTUALLY IMITATE NOMINATED TRAIT:
+                # ACTUALLY IMITATE NOMINATED TRAIT WITH SOME PROBABILITY:
 
-                if (nominated_trait != my_trait):
+                p = actual_p_imitates[nominated_trait]
+                if (nominated_trait != my_trait) and p > 0 and uniform() < p:
                     self.imi_imitate_counter += 1
                         
                     if hasattr(me, 'imi_imitate_'+key):
@@ -478,6 +501,6 @@ class Culture (I.Culture):
     
     def get_rates(self):
         """return the total rate of imitation events across all imitation variables"""
-        rate_list = [get_spec(self.imi_rate, key) for key in self.imi_traits.keys()]
+        rate_list = [get_spec(self.imi_rate, key, I.Culture.imi_rate.default) for key in self.imi_traits.keys()]
         return rate_list, sum(rate_list)
         
