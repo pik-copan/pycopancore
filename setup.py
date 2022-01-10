@@ -2,7 +2,7 @@
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2016-2019 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
@@ -17,16 +17,21 @@ from setuptools import setup, find_packages
 
 setup(name="pycopancore",
       version="0.0.0",
-      description="to be added",
-      url="to be added",
-      author="Copan-group @ PIK",
-      author_email="to be added",
-      license="to be added",
-      packages=find_packages(), #["pycopancore"],
+      description=("Reference implementation of the copan:CORE World-Earth "
+                   "modelling framework"),
+      url="https://github.com/pik-copan/pycopancore",
+      author="copan group @ PIK",
+      author_email="copan:CORE maintainers <core@pik-potsdam.de>",
+      license="BSD 2-clause",
+      packages=find_packages(),
       install_requires=[
           "numpy>=1.11.0",
           "scipy>=0.17.0",
           "sympy>=1.0",
+          "matplotlib>=3.0",
+          "plotly>=3.10",
+          "h5py>=2.9",
+          "networkx>=2.3",
           "blist>=1.3.6",
           "python-louvain>=0.9",
           "profilehooks",
