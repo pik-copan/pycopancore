@@ -10,7 +10,7 @@ and *model components* (TODO reference) are arranged in inheriting classes.
 The basic structure of this file can be examined in the *_template* (reference TODO).
 
 In the following a step-by-step tutorial, based on the exemplary
-:doc:`seven dwarfs model <../_api/pycopancore.models>`, is provided.
+:doc:`seven dwarfs model <../api/pycopancore/pycopancore.models>`, is provided.
 
 Import of model components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,4 +1,6 @@
-"""Model class seven_dwarfs."""
+"""
+Model class seven_dwarfs.
+"""
 
 # This file is part of pycopancore.
 #

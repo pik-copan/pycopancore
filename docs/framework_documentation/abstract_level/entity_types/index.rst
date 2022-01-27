@@ -22,7 +22,7 @@ can be modelled as attributes of the world entity.
 
 In addition to the entity-type :doc:`"world"<world>`,
 the copan\:CORE base model currently provides the three main entity-types 
-:doc:`"cell"<cell>`, :doc:`"social system"<social system>`, and :doc:`"individual"<individual>`
+:doc:`"cell"<cell>`, :doc:`"social system"<social_system>`, and :doc:`"individual"<individual>`
 that are meant to be the main subjects and objects
 of the three process taxons 
 :doc:`"environment"<../process_taxonomy/environment>`, 

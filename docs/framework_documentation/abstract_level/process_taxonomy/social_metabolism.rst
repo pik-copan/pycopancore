@@ -9,7 +9,7 @@ material subsystems with non-negligible human-targeted physical imprints
 and those of their parameters which cannot easily be attached to specific entity-types
 (e.g. a globally constant "carbon content of fossil fuels" coefficient).
 We expect most social-metabolic processes to deal primarily with the entity-types 
-:doc:`"social system"<../entity_types/social system>` (e.g., processes described at national or urban level),
+:doc:`"social system"<../entity_types/social_system>` (e.g., processes described at national or urban level),
 :doc:`"cell"<../entity_types/cell>` 
 ("local" social-metabolic processes described with additional spatial resolution for easier coupling to environmental processes)
 and :doc:`"world"<../entity_types/world>` ("global" social-metabolic processes such as international trade),

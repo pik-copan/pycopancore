@@ -1,6 +1,6 @@
 """Base model module.
 
-It only import components of the base mixins
+It only imports components of the base mixins
 """
 
 # This file is part of pycopancore.

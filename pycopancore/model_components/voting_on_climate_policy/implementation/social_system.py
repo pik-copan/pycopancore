@@ -16,7 +16,6 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 from .... import Event
-from numpy import array
 from numpy.random import uniform
 
 class SocialSystem (I.SocialSystem):

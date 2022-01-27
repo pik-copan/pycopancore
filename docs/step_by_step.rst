@@ -20,9 +20,9 @@ to die.
 Entities and process taxa
 -------------------------
 In order to conceptualize a model from this story, we follow the procedure
-described in :doc:`model component developers <./model_component_developers>`,
-:doc:`model composers <./model_composers>`, and
-:doc:`model end users <./model_end_users>`.
+described in :doc:`model component developers <./tutorials/model_component_developers>`,
+:doc:`model composers <./tutorials/model_composers>`, and
+:doc:`model end users <./tutorials/model_end_users>`.
 
 At first, we identify the necessary entities and process taxa. We model the
 seven dwarfs as ``Individuals`` in the CORE:framework, because they are
@@ -40,7 +40,7 @@ Processes
 There are various ways to start implementing our model. In this tutorial we
 start by considering the processes involved in our story. There are four of
 them (which for the instructiveness of this tutorial are the
-:doc:`four processes <../framework_documentation/process_types_index>`
+:doc:`four processes <../framework_documentation/process_types/index>`
 provided by the CORE:framework):
 
 - Aging, a ``Step`` process

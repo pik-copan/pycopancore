@@ -1,4 +1,6 @@
-"""jobsts_prototype_1 model."""
+"""
+jobsts_prototype_1 model.
+"""
 
 # This file is part of pycopancore.
 #

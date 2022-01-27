@@ -9,5 +9,5 @@ and those of their parameters which cannot easily be attached to specific entity
 We expect most environmental processes to deal primarily with the entity-types 
 :doc:`"cell"<../entity_types/cell>` ("local" processes described with spatial resolution)
 and :doc:`"world"<../entity_types/world>` ("global" processes described without spatial resolution)
-and sometimes :doc:`"social system"<../entity_types/social system>` 
+and sometimes :doc:`"social system"<../entity_types/social_system>`
 ("mesoscopic" processes described at the level of a social system's territory). 

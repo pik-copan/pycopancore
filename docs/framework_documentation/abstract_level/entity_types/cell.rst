@@ -33,11 +33,11 @@ In addition, a cell may...
  
 -  have several resident :doc:`individuals<individual>` and :doc:`households<household>` 
 
--  belong to the territory of a single or a hierarchy of :doc:`social systems<social system>` 
+-  belong to the territory of a single or a hierarchy of :doc:`social systems<social_system>`
 
 -  be owned by some :doc:`individual<individual>` or :doc:`firm<firm>` (e.g. for modeling land use)
 
--  contain the capital or headquarters of a :doc:`social systems<social system>` or some :doc:`groups<group>` or :doc:`firms<firm>` 
+-  contain the capital or headquarters of a :doc:`social systems<social_system>` or some :doc:`groups<group>` or :doc:`firms<firm>`
 
 -  be the place of business of some :doc:`firms<firm>` 
 

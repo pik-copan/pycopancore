@@ -7,19 +7,6 @@ Introduction
 ..
     Python copan:CORE World-Earth modeling framework release version [...]
 
-Table of Contents:
-------------------
-
-1. :ref:`intro`
-2. :ref:`disclaimer`
-3. :ref:`quickstart`
-    * :ref:`installation`
-    * :ref:`running`
-    * :ref:`docu`
-    * :ref:`CoC`
-    * :ref:`test`
-4. :ref:`licence`
-
 .. _intro:
 
 Introduction

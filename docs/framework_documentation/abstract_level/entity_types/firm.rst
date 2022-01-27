@@ -24,7 +24,7 @@ Basic relationships to other entity-types
 
 A firm will usually...
 
--  have their legal headquarters in some :doc:`social systems<social system>`
+-  have their legal headquarters in some :doc:`social systems<social_system>`
 
 In addition, a firm may...
 
