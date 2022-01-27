@@ -1,6 +1,11 @@
 Global production
 =====================================================================
 
+.. automodule:: pycopancore.model_components.copan_global_like_production
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
 -----------
 
@@ -26,10 +31,4 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.copan_global_like_production
-   :members:
-   :undoc-members:
-   :show-inheritance:

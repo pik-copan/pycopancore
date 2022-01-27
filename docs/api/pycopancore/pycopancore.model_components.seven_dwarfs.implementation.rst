@@ -1,6 +1,11 @@
 Seven dwarfs: Implementation
 ==================================================================
 
+.. automodule:: pycopancore.model_components.seven_dwarfs.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Cell
 ----------------------------------------------------------------------
 
@@ -41,10 +46,4 @@ World
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.seven_dwarfs.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:

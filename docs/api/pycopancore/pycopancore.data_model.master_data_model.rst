@@ -1,6 +1,11 @@
 Master Data Model
 ===================================================
 
+.. automodule:: pycopancore.data_model.master_data_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Cell
 -------------------------------------------------------
 
@@ -65,10 +70,4 @@ World
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.data_model.master_data_model
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,6 +1,10 @@
 Environmental awareness: Implementation
 =============================================================================
 
+.. automodule:: pycopancore.model_components.environmental_awareness.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Cell
 ---------------------------------------------------------------------------------
@@ -34,10 +38,4 @@ Social system
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.environmental_awareness.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,6 +1,11 @@
 Data Model
 ===============================
 
+.. automodule:: pycopancore.data_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 For master data model, see:
 
 .. toctree::
@@ -64,10 +69,4 @@ Variable
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.data_model
-   :members:
-   :undoc-members:
-   :show-inheritance:

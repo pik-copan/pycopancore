@@ -1,6 +1,10 @@
 Runners
 ===========================
 
+.. automodule:: pycopancore.runners
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Hooks
 --------------------------------
@@ -18,10 +22,4 @@ Runner
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.runners
-   :members:
-   :undoc-members:
-   :show-inheritance:

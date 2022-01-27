@@ -1,6 +1,11 @@
 Social learning of environmental friendliness
 =======================================================================================
 
+.. automodule:: pycopancore.model_components.social_learning_of_environmental_friendliness
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
 -----------
 
@@ -27,10 +32,4 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.social_learning_of_environmental_friendliness
-   :members:
-   :undoc-members:
-   :show-inheritance:

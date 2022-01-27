@@ -1,6 +1,11 @@
 Abstract
 ==============================================
 
+.. automodule:: pycopancore.model_components.abstract
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Abstract cell
 --------------------------------------------------
 
@@ -61,14 +66,6 @@ Abstract world
 ---------------------------------------------------
 
 .. automodule:: pycopancore.model_components.abstract.world
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: pycopancore.model_components.abstract
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,6 +1,11 @@
 Majority decision
 ========================================================
 
+.. automodule:: pycopancore.model_components.majority_decision
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
 -----------
 
@@ -26,10 +31,4 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.majority_decision
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,5 +1,10 @@
-Process types
+Process Types
 ==================================
+
+.. automodule:: pycopancore.process_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 ODE
 -------------------------------------
@@ -41,10 +46,4 @@ Step
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.process_types
-   :members:
-   :undoc-members:
-   :show-inheritance:

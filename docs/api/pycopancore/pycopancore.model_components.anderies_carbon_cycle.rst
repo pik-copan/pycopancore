@@ -1,6 +1,11 @@
 Anderies carbon cycle
 =============================================================
 
+.. automodule:: pycopancore.model_components.anderies_carbon_cycle
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
 --------------
 
@@ -26,10 +31,4 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.anderies_carbon_cycle
-   :members:
-   :undoc-members:
-   :show-inheritance:

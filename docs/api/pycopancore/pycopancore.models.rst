@@ -1,6 +1,11 @@
 Models
 ==========================
 
+.. automodule:: pycopancore.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Adaptive voter
 ------------------------------------------------
 
@@ -81,10 +86,4 @@ Seven dwarfs
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.models
-   :members:
-   :undoc-members:
-   :show-inheritance:

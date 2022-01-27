@@ -1,7 +1,10 @@
 Model Components
 =====================================
 
-currently include:
+.. automodule:: pycopancore.model_components
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 .. toctree::
    :maxdepth: 1
@@ -27,10 +30,4 @@ currently include:
    pycopancore.model_components.voting_on_climate_policy
    pycopancore.model_components.wellbeing_driven_migration
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,6 +1,11 @@
 Voting on climate policy
 =================================================================
 
+.. automodule:: pycopancore.model_components.voting_on_climate_policy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
 -----------
 
@@ -27,10 +32,4 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.voting_on_climate_policy
-   :members:
-   :undoc-members:
-   :show-inheritance:

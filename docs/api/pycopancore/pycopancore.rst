@@ -1,6 +1,11 @@
 API reference --> to delete?
 ===================
 
+.. automodule:: pycopancore
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. toctree::
    :maxdepth: 1
    :titlesonly:
@@ -13,10 +18,4 @@ API reference --> to delete?
    pycopancore.util
    pycopancore.private
 
-Module contents
----------------
 
-.. automodule:: pycopancore
-   :members:
-   :undoc-members:
-   :show-inheritance:

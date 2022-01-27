@@ -1,6 +1,10 @@
 Exodus: Implementation
 ===========================================================
 
+.. automodule:: pycopancore.model_components.exodus.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Cell
 ---------------------------------------------------------------
@@ -50,10 +54,4 @@ World
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.exodus.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:

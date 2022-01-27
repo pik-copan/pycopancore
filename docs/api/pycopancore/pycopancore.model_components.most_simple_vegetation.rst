@@ -1,6 +1,12 @@
 Most simple vegetation
 ==============================================================
 
+.. automodule:: pycopancore.model_components.most_simple_vegetation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 Implementation
 -----------
 
@@ -26,10 +32,3 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
-
-.. automodule:: pycopancore.model_components.most_simple_vegetation
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,7 +1,10 @@
 Majority decision: Implementation
 =======================================================================
 
-
+.. automodule:: pycopancore.model_components.majority_decision.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Culture
 ------------------------------------------------------------------------------
@@ -27,10 +30,4 @@ Social system
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.majority_decision.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,6 +1,11 @@
 Adaptive voter opinion formation: Implementation
 ========================================================================================
 
+.. automodule:: pycopancore.model_components.adaptive_voter_opinion_formation.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Culture
 -----------------------------------------------------------------------------------------------
 
@@ -17,10 +22,3 @@ Individual
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
-
-.. automodule:: pycopancore.model_components.adaptive_voter_opinion_formation.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:

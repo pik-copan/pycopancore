@@ -1,6 +1,11 @@
 Carbon voters
 ===================================================================
 
+.. automodule:: pycopancore.model_components.carbon_voters.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Culture
 --------------------------------------------------------------------------
 
@@ -25,10 +30,4 @@ World
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.carbon_voters.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:

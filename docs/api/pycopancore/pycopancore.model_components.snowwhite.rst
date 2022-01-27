@@ -1,8 +1,13 @@
 Snowwhite
 ===============================================
 
+.. automodule:: pycopancore.model_components.snowwhite
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
------------
+--------------
 
 .. toctree::
    :maxdepth: 1
@@ -27,10 +32,4 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.snowwhite
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,6 +1,11 @@
 Global economic growth
 ===========================================================================
 
+.. automodule:: pycopancore.model_components.copan_global_like_economic_growth
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
 -----------
 
@@ -22,14 +27,6 @@ Model
 --------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.copan_global_like_economic_growth.model
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: pycopancore.model_components.copan_global_like_economic_growth
    :members:
    :undoc-members:
    :show-inheritance:

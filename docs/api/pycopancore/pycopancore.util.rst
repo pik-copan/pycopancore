@@ -1,6 +1,11 @@
 Util
 ========================
 
+.. automodule:: pycopancore.util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Functions
 ---------------------------------
 
@@ -17,10 +22,4 @@ Seeding
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.util
-   :members:
-   :undoc-members:
-   :show-inheritance:

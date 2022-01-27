@@ -1,6 +1,11 @@
 Simple extraction: Implementation
 =======================================================================
 
+.. automodule:: pycopancore.model_components.simple_extraction.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Cell
 ---------------------------------------------------------------------------
 
@@ -17,10 +22,4 @@ Individual
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.simple_extraction.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:

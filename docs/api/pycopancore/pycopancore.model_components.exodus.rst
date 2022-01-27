@@ -1,6 +1,11 @@
 Exodus
 ============================================
 
+.. automodule:: pycopancore.model_components.exodus
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
 -----------
 
@@ -26,10 +31,4 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.exodus
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,8 +1,13 @@
 Global population growth
 =============================================================================
 
+.. automodule:: pycopancore.model_components.copan_global_like_population_growth
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Implementation
------------
+--------------
 
 .. toctree::
    :maxdepth: 1
@@ -26,10 +31,4 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.copan_global_like_population_growth
-   :members:
-   :undoc-members:
-   :show-inheritance:

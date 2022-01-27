@@ -1,6 +1,11 @@
 Snowwhite: Implementation
 ==============================================================
 
+.. automodule:: pycopancore.model_components.snowwhite.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Cell
 ------------------------------------------------------------------
 
@@ -9,10 +14,4 @@ Cell
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.snowwhite.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:

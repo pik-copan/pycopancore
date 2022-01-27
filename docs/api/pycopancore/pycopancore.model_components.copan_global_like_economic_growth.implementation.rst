@@ -1,6 +1,10 @@
 Global economic growth: Implementation
 ==========================================================================================
 
+.. automodule:: pycopancore.model_components.copan_global_like_economic_growth.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Metabolism
 ----------------------------------------------------------------------------------------------------
@@ -26,10 +30,4 @@ World
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: pycopancore.model_components.copan_global_like_economic_growth.implementation
-   :members:
-   :undoc-members:
-   :show-inheritance:
