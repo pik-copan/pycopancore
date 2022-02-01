@@ -37,7 +37,7 @@ In addition, an individual may...
 -  act as the head of some :doc:`household<household>`, 
    leader of some :doc:`groups<group>`, 
    CEO of some :doc:`firms<firm>`, 
-   or head of government of some :doc:`social systems<social system>`
+   or head of government of some :doc:`social systems<social_system>`
 
 -  be related to others via a network of acquaintances owned by the :doc:`culture<../process_taxonomy/culture>` taxon
 

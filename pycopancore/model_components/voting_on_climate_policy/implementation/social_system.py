@@ -1,6 +1,6 @@
 """SocialSystem entity type mixing class template.
 
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
+TODO: adjust or fill in code and documentation wherever marked by "TODO:"
 then remove these instructions
 """
 

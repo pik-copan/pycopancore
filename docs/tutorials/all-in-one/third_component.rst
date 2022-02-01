@@ -123,7 +123,7 @@ As you see, the variable ``Culture.acquaintance_network`` that is provided in
 the master data model, contains a network whose nodes are ``Individual`` s.
 The data type of ``Culture.acquaintance_network`` is ``networkx.Graph``, as
 you can see in the API documentation of the master data model
-(:doc:`../../_api/pycopancore.data_model.master_data_model`), 
+(:doc:`../../api/pycopancore/pycopancore.data_model.master_data_model`),
 where it says:
 
     **acquaintance_network** = *variable 'acquaintance network' 

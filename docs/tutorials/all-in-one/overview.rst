@@ -86,7 +86,7 @@ which mainly contains ...
 - a file ``model.py`` that defines which entity-types and process taxa the 
   component uses.
 
-- a further subpackage called ``interface``that contains the 
+- a further subpackage called ``interface`` that contains the
   *interface classes* for all these entity-types and process taxa,
   describing what variables the component reads and writes;
   

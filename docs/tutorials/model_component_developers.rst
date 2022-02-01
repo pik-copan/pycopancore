@@ -15,8 +15,8 @@ Entities and process taxonomy
 -----------------------------
 
 Determine necessary
-:doc:`entity types<../framework_documentation/entity_types/index>` and
-:doc:`process taxa <../framework_documentation/process_taxonomy/index>`
+:doc:`entity types<../framework_documentation/abstract_level/entity_types/index>` and
+:doc:`process taxa <../framework_documentation/abstract_level/process_taxonomy/index>`
 
 Create model component files from template
 ------------------------------------------
@@ -173,7 +173,7 @@ Specifying processes
 --------------------
 
 At the end of the taxon file, the relevant
-:doc:`processes <../framework_documentation/process_types/index>`
+:doc:`processes <../framework_documentation/abstract_level/process_types/index>`
 need to be specified.
 
 In the EXPLOIT example, there is only one process implemented in the culture

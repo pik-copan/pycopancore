@@ -40,7 +40,7 @@ Processes
 There are various ways to start implementing our model. In this tutorial we
 start by considering the processes involved in our story. There are four of
 them (which for the instructiveness of this tutorial are the
-:doc:`four processes <../framework_documentation/process_types/index>`
+:doc:`four processes <../framework_documentation/abstract_level/process_types/index>`
 provided by the CORE:framework):
 
 - Aging, a ``Step`` process
