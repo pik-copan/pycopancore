@@ -1,4 +1,4 @@
-Model components base: Implementation
+Base: Implementation
 =========================================================
 
 .. automodule:: pycopancore.model_components.base.implementation
@@ -46,7 +46,7 @@ Metabolism
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 -----------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.base.implementation.social_system

@@ -1,4 +1,4 @@
-Global carbon cycle
+Global-like carbon cycle
 ========================================================================
 
 .. automodule:: pycopancore.model_components.copan_global_like_carbon_cycle
@@ -30,5 +30,3 @@ Model
    :members:
    :undoc-members:
    :show-inheritance:
-
-

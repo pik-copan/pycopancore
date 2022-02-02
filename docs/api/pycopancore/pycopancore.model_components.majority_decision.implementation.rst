@@ -22,12 +22,10 @@ Individual
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 -------------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.majority_decision.implementation.social_system
    :members:
    :undoc-members:
    :show-inheritance:
-
-

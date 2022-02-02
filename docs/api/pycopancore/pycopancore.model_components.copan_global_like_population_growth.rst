@@ -1,4 +1,4 @@
-Global population growth
+Global-like population growth
 =============================================================================
 
 .. automodule:: pycopancore.model_components.copan_global_like_population_growth
@@ -30,5 +30,3 @@ Model
    :members:
    :undoc-members:
    :show-inheritance:
-
-

@@ -1,4 +1,4 @@
-Global population growth: Implementation
+Global-like population growth: Implementation
 ============================================================================================
 
 .. automodule:: pycopancore.model_components.copan_global_like_population_growth.implementation
@@ -14,13 +14,10 @@ Metabolism
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 ----------------------------------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.copan_global_like_population_growth.implementation.social_system
    :members:
    :undoc-members:
    :show-inheritance:
-
-
-

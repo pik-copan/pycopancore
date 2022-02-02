@@ -22,7 +22,7 @@ Culture
    :undoc-members:
    :show-inheritance:
 
-Dimensions and units
+DimensionsAndUnits
 -------------------------------------------------------------------------
 
 .. automodule:: pycopancore.data_model.master_data_model.dimensions_and_units
@@ -54,7 +54,7 @@ Metabolism
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 -----------------------------------------------------------------
 
 .. automodule:: pycopancore.data_model.master_data_model.social_system
@@ -69,5 +69,3 @@ World
    :members:
    :undoc-members:
    :show-inheritance:
-
-

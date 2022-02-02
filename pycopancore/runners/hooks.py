@@ -181,5 +181,8 @@ class Hooks(object):
                                 hook(instance, t)
 
     def __new__(cls, *args, **kwargs):
-        """raises an error because this class should not be instantiated"""
+        """raises an error because this class should not be instantiated
+
+        :meta private:
+        """
         raise HooksError("This class should not be instantiated.")

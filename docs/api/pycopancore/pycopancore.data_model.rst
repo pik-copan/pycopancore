@@ -21,7 +21,7 @@ Dimension
    :undoc-members:
    :show-inheritance:
 
-Quantity
+DimensionalQuantity
 ----------------------------------------------------
 
 .. automodule:: pycopancore.data_model.dimensional_quantity
@@ -29,7 +29,7 @@ Quantity
    :undoc-members:
    :show-inheritance:
 
-Ordered set
+OrderedSet
 -------------------------------------------
 
 .. automodule:: pycopancore.data_model.ordered_set
@@ -37,7 +37,7 @@ Ordered set
    :undoc-members:
    :show-inheritance:
 
-Reference variable
+ReferenceVariable
 --------------------------------------------------
 
 .. automodule:: pycopancore.data_model.reference_variable
@@ -45,7 +45,7 @@ Reference variable
    :undoc-members:
    :show-inheritance:
 
-Set variable
+SetVariable
 --------------------------------------------
 
 .. automodule:: pycopancore.data_model.set_variable
@@ -68,5 +68,3 @@ Variable
    :members:
    :undoc-members:
    :show-inheritance:
-
-

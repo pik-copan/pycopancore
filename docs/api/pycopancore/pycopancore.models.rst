@@ -62,7 +62,7 @@ Exploit
    :undoc-members:
    :show-inheritance:
 
-Global carbon cycle
+Global-like carbon cycle
 ------------------------------------------------------------------
 
 .. automodule:: pycopancore.models.only_copan_global_like_carbon_cycle
@@ -85,5 +85,3 @@ Seven dwarfs
    :members:
    :undoc-members:
    :show-inheritance:
-
-

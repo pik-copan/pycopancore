@@ -22,7 +22,7 @@ Environment
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 ------------------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.anderies_carbon_cycle.implementation.social_system
@@ -37,5 +37,3 @@ World
    :members:
    :undoc-members:
    :show-inheritance:
-
-

@@ -16,7 +16,7 @@ Implementation
 
 
 
-Iterface
+Interface
 ---------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.wellbeing_driven_migration.interface
@@ -31,5 +31,3 @@ Model
    :members:
    :undoc-members:
    :show-inheritance:
-
-

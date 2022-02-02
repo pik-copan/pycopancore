@@ -15,7 +15,7 @@ Metabolism
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 -----------------------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.wellbeing_driven_migration.implementation.social_system

@@ -30,7 +30,7 @@ Individual
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 --------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.seven_dwarfs.implementation.social_system
@@ -45,5 +45,3 @@ World
    :members:
    :undoc-members:
    :show-inheritance:
-
-

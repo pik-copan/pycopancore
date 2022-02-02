@@ -13,6 +13,7 @@ Hooks
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: '__new__'
 
 Runner
 ---------------------------------

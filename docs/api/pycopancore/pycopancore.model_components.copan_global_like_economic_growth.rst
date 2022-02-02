@@ -1,4 +1,4 @@
-Global economic growth
+Global-like economic growth
 ===========================================================================
 
 .. automodule:: pycopancore.model_components.copan_global_like_economic_growth

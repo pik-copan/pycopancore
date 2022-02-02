@@ -1,4 +1,4 @@
-Model components base
+Base
 ==========================================
 
 .. automodule:: pycopancore.model_components.base
@@ -31,7 +31,7 @@ Model
    :undoc-members:
    :show-inheritance:
 
-Model logics
+ModelLogics
 -------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.base.model_logics

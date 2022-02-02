@@ -6,7 +6,7 @@ Voting on climate policy: Implementation
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 ----------------------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.voting_on_climate_policy.implementation.social_system

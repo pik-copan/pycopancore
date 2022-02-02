@@ -1,4 +1,4 @@
-Global production
+Global-like production
 =====================================================================
 
 .. automodule:: pycopancore.model_components.copan_global_like_production
@@ -30,5 +30,3 @@ Model
    :members:
    :undoc-members:
    :show-inheritance:
-
-

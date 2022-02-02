@@ -1,4 +1,4 @@
-Global economic growth: Implementation
+Global-like economic growth: Implementation
 ==========================================================================================
 
 .. automodule:: pycopancore.model_components.copan_global_like_economic_growth.implementation
@@ -14,7 +14,7 @@ Metabolism
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 --------------------------------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.copan_global_like_economic_growth.implementation.social_system
@@ -29,5 +29,3 @@ World
    :members:
    :undoc-members:
    :show-inheritance:
-
-

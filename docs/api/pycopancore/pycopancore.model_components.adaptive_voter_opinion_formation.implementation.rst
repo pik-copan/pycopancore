@@ -21,4 +21,3 @@ Individual
    :members:
    :undoc-members:
    :show-inheritance:
-

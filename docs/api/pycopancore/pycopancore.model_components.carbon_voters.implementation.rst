@@ -14,7 +14,7 @@ Culture
    :undoc-members:
    :show-inheritance:
 
-Social system
+SocialSystem
 ---------------------------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.carbon_voters.implementation.social_system
@@ -29,5 +29,3 @@ World
    :members:
    :undoc-members:
    :show-inheritance:
-
-

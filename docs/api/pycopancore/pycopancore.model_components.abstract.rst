@@ -6,7 +6,7 @@ Abstract
    :undoc-members:
    :show-inheritance:
 
-Abstract cell
+Cell
 --------------------------------------------------
 
 .. automodule:: pycopancore.model_components.abstract.cell
@@ -14,7 +14,7 @@ Abstract cell
    :undoc-members:
    :show-inheritance:
 
-Abstract culture
+Culture
 -----------------------------------------------------
 
 .. automodule:: pycopancore.model_components.abstract.culture
@@ -22,7 +22,7 @@ Abstract culture
    :undoc-members:
    :show-inheritance:
 
-Abstract environment
+Environment
 ---------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.abstract.environment
@@ -38,7 +38,7 @@ Abstract individual
    :undoc-members:
    :show-inheritance:
 
-Abstract metabolism
+Metabolism
 --------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.abstract.metabolism
@@ -54,7 +54,7 @@ Abstract model
    :undoc-members:
    :show-inheritance:
 
-Abstract social system
+SocialSystem
 ------------------------------------------------------------
 
 .. automodule:: pycopancore.model_components.abstract.social_system
@@ -62,7 +62,7 @@ Abstract social system
    :undoc-members:
    :show-inheritance:
 
-Abstract world
+World
 ---------------------------------------------------
 
 .. automodule:: pycopancore.model_components.abstract.world
