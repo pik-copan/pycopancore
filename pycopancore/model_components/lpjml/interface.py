@@ -87,14 +87,16 @@ class Environment (object):
 
     # exogenous variables / parameters:
     dt = Variable("time step",
-                  """#time step has to be given in study script
-                  """)
+                  """time step has to be given in study script""")
     
-    end_year = Variable("copan_start_year", """start year of the copan run given by end year of lpjml spinup""")              
+    end_year = Variable("copan_start_year", 
+                        """start year of the copan run given by end year of lpjml spinup""")              
     
     # @Jobst: funktioniert das so wie im imitation component?
-    in_dict = Variable("input to lpjml", """input dictionary to lpjml with values on e.g. land use""")                      
-    out_dict = Variable("output from lpjml", """output dictionary from lpjml, like e.g. cftfrac""")
+    in_dict = Variable("input to lpjml", 
+                       """input dictionary to lpjml with values on e.g. land use""")                      
+    out_dict = Variable("output from lpjml", 
+                        """output dictionary from lpjml, like e.g. cftfrac""")
     # TODO: make generic
     # INPUT_VARIABLE_OF_INTEREST = ...
     # OUTPUT_VARIABLE_OF_INTEREST = ...
