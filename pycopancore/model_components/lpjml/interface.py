@@ -23,6 +23,8 @@ from ...data_model import Dimension, Unit #TODO: what else do we need from the d
 # TODO: uncomment and adjust only if you really need other variables:
 from ... import Variable
 
+import numpy as np
+
 
 class Model (object):
     """Interface for Model mixin."""
@@ -64,6 +66,17 @@ class Cell (object):
     # PERSONALCELLVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
+    landuse = Variable(
+        "landuse bands",
+        "array of landuse bands",
+        datatype = np.array,
+        array_shape = (64, ))
+    
+    cftfrac = Variable(
+        "cftfrac bands",
+        "array of cftfrac bands",
+        datatype = np.array,
+        array_shape = (32, ))
 
 
 #
@@ -94,9 +107,11 @@ class Environment (object):
     
     # @Jobst: funktioniert das so wie im imitation component?
     in_dict = Variable("input to lpjml", 
-                       """input dictionary to lpjml with values on e.g. land use""")                      
+                       """input dictionary to lpjml with values on e.g. land use""",
+                       datatype = Dict[str, np.ndarray])                      
     out_dict = Variable("output from lpjml", 
-                        """output dictionary from lpjml, like e.g. cftfrac""")
+                        """output dictionary from lpjml, like e.g. cftfrac""",
+                       datatype = Dict[str, np.ndarray])                     
     # TODO: make generic
     # INPUT_VARIABLE_OF_INTEREST = ...
     # OUTPUT_VARIABLE_OF_INTEREST = ...

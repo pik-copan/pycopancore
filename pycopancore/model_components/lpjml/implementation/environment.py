@@ -14,7 +14,7 @@ from matplotlib.pyplot import step
 from .. import interface as I
 
         #how to solve this? need this methods?
-from pycoupler.coupler import Coupler
+#from pycoupler.coupler import Coupler
 
 # from .... import master_data_model as D
 
@@ -45,18 +45,22 @@ class Environment (I.Environment):
     
     def LPJmL_copanCORE_coupling(self, t):
         
-        input_data = self.IN_DICT #or skip this and directly write below
+        input_data = self.in_dict #or skip this and directly write below
         year = self.end_year + t
         
         ###need to make sure that copan core waits -> python works serial
            
         # send input data to lpjml
-        self.coupler.send_inputs(input_data, year)
+        #self.coupler.send_inputs(input_data, year)
  
-        # read output data from lpjml
-        outputs = self.coupler.read_outputs(year)
+        #read output data from lpjml
+        #outputs = self.coupler.read_outputs(year)
         
-        self.OUT_DICT = outputs
+        outputs = self.out_dict
+        print(out_dict)
+        outputs["cftfrac"] = np.ones(1, 32) * input_data["landuse"][0,0]
+        
+        self.out_dict = outputs
     
 
 
@@ -66,7 +70,7 @@ class Environment (I.Environment):
     # allgemein eventuell too much (variable aus dict-key...) 
     # wir wissen ja, was von LPJmL kommt :) 
 
-    processes = [step("coupling step",
-        [I.Cell.OUT_DICT], 
+    processes = [step("coupling step", 
+        [I.Environment.out_dict], 
         [next_update_step, LPJmL_copanCORE_coupling])
     ]  # TODO: instantiate and list process objects here

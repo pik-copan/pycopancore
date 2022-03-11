@@ -15,10 +15,10 @@ from .. import interface as I
 # from .... import master_data_model as D
 
 # TODO: uncomment this if you need ref. variables such as B.Cell.individuals:
-#from ...base import interface as B
+from ...base import interface as B
 
 # TODO: import those process types you need:
-# from .... import Explicit, ODE, Event, Step
+from .... import Explicit
 
 class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
@@ -47,7 +47,19 @@ class Cell (I.Cell):
 #         pass
 
     # process-related methods:
+    def read_cftfrac(self, unused_t):
+        self.cftfrac = B.Cell.environment.out_dict["cftfrac"][0]
+    
+    def write_landuse(self, unused_t):
+        B.Cell.environment.in_dict["landuse"][0] = self.landuse
 
     # TODO: add some if needed...
 
-    processes = []  # TODO: instantiate and list process objects here
+    processes = [
+        Explicit("cftfrac",
+                 [I.Cell.cftfrac],
+                 read_cftfrac),
+        Explicit("landuse",
+                 [B.Cell.environment.in_dict],
+                 write_landuse)
+        ]# TODO: instantiate and list process objects here
