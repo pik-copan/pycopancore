@@ -73,6 +73,12 @@ class Culture (object):
     worlds = SetVariable("worlds",
                          "Set of Worlds governed by this Culture",
                          readonly=True)
+    social_systems = SetVariable("social systems",
+                                 "Set of all SocialSystems governed by this Culture",
+                                 readonly=True)
+    individuals = SetVariable("individuals",
+                              "Set of Individuals governed by this Culture",
+                              readonly=True)
 
 # entity types:
 
@@ -184,6 +190,7 @@ SocialSystem.next_higher_social_system.type = SocialSystem
 SocialSystem.higher_social_systems.type = SocialSystem
 SocialSystem.next_lower_social_systems.type = SocialSystem
 SocialSystem.lower_social_systems.type = SocialSystem
+Culture.social_systems.type = SocialSystem
 World.social_systems.type = SocialSystem
 World.top_level_social_systems.type = SocialSystem
 
@@ -284,6 +291,7 @@ class Individual (object, metaclass=_MixinType):
 
 # specified only now to avoid recursion:
 World.individuals.type = Individual
+Culture.individuals.type = Individual
 SocialSystem.direct_individuals.type = Individual
 SocialSystem.individuals.type = Individual
 Cell.individuals.type = Individual
