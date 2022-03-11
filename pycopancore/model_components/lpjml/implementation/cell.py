@@ -20,6 +20,8 @@ from ...base import interface as B
 # TODO: import those process types you need:
 from .... import Explicit
 
+import numpy as np
+
 class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
 
@@ -47,11 +49,12 @@ class Cell (I.Cell):
 #         pass
 
     # process-related methods:
-    def read_cftfrac(self, unused_t):
-        self.cftfrac = B.Cell.environment.out_dict["cftfrac"][0]
+    def read_cftfrac(self, t):
+        self.cftfrac = np.sum((np.ceil(t)-t)*self.social_system.world.environment.old_out_dict["cftfrac"][self.lpjml_grid_cell_ids] + (t-np.floor(t))*self.social_system.world.environment.out_dict["cftfrac"][self.lpjml_grid_cell_ids]) # TODO: define lpjml_cell_id, or do all cells in environment, double-think about dimensions and units
     
     def write_landuse(self, unused_t):
-        B.Cell.environment.in_dict["landuse"][0] = self.landuse
+        for i in self.lpjml_grid_cell_ids:
+            self.environment.in_dict["landuse"][i] = self.landuse # TODO: move to environment loop because we don't need to do this continuosly
 
     # TODO: add some if needed...
 

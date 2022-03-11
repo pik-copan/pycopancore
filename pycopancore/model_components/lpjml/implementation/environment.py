@@ -10,7 +10,6 @@ the "TODO" flag.
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 
-from matplotlib.pyplot import step
 from .. import interface as I
 
         #how to solve this? need this methods?
@@ -24,11 +23,14 @@ from .. import interface as I
 # TODO: import those process types you need:
 from .... import Step
 
+import numpy as np
+
 class Environment (I.Environment):
     """Environment process taxon mixin implementation class."""
 
     # standard methods:
-    # TODO: remove those that you don't use
+    # TODO: remove those that you don't use 
+    # TODO: use for initializing coupling
 
 #     def __init__(self,
 #                  # *,  # TODO: uncomment when adding named args after this
@@ -41,12 +43,12 @@ class Environment (I.Environment):
     # process-related methods: 
     
     def next_update_step(self, t):
-        return t + self.dt #given in study script?
+        return t + self.delta_t #given in study script?
     
     def LPJmL_copanCORE_coupling(self, t):
         
         input_data = self.in_dict #or skip this and directly write below
-        year = self.end_year + t
+        year = self.end_year + t # TODO: check what t and year are and need to be
         
         ###need to make sure that copan core waits -> python works serial
            
@@ -56,11 +58,16 @@ class Environment (I.Environment):
         #read output data from lpjml
         #outputs = self.coupler.read_outputs(year)
         
-        outputs = self.out_dict
-        print(out_dict)
-        outputs["cftfrac"] = np.ones(1, 32) * input_data["landuse"][0,0]
+        # TODO: check when input is set and what time output refers to,
+        # beginning or end of year
+        # beginning: prediction for whole year enables smoothing instead of annual jumps
         
-        self.out_dict = outputs
+        outputs = self.out_dict
+        print(self.out_dict)
+        outputs["cftfrac"] = np.ones((1, 32)) * input_data["landuse"][0,0]
+        
+        self.old_out_dict = self.out_dict
+        self.out_dict = outputs # TODO: could be lpjml state at the end of the year, and old as beginning and then interpolate in cells
     
 
 
@@ -70,7 +77,7 @@ class Environment (I.Environment):
     # allgemein eventuell too much (variable aus dict-key...) 
     # wir wissen ja, was von LPJmL kommt :) 
 
-    processes = [step("coupling step", 
+    processes = [Step("coupling step", 
         [I.Environment.out_dict], 
         [next_update_step, LPJmL_copanCORE_coupling])
     ]  # TODO: instantiate and list process objects here

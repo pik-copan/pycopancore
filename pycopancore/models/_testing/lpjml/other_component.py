@@ -1,7 +1,8 @@
 from .... import master_data_model as D
-from .lpjml import interface as L
+from ....model_components.lpjml import interface as L
+from ....model_components.base import interface as B
 from .... import Variable
-from .... import Explicit
+from .... import Event
 
 import numpy as np
 
@@ -55,11 +56,11 @@ class Environment (IEnvironment):
                     c.update_landuse()
 
     processes = [
-        Event("update fishing efforts",
-               [B.Environment.worlds.individuals.landuse],
-               ["time",
-                next_landuse_update_time,
-                update_landuse])
+        Event("update landuse",
+              [B.Environment.worlds.cells.landuse],
+              ["time",
+              next_landuse_update_time,
+              update_landuse])]
 
 class Model (IModel):
     entity_types = [Cell]

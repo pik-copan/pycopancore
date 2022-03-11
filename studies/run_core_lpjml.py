@@ -61,7 +61,7 @@ sim_years = range(start_year, end_year+1)
 
 # simulation parameters:
 
-dt = 1  # desired temporal resolution of the resulting output.
+delta_t = 1  # desired temporal resolution of the resulting output.
  
 # TODO ? dt_lpjml = dt*12 #adjust temporal scales?
  
@@ -70,15 +70,16 @@ test_dict_in = {"landuse": np.random.rand(1, 64),"fertilizer_nr": np.random.rand
 test_dict_out = {"cftfrac": np.random.rand(1, 32),"pft_harvestc": np.random.rand(1, 32),"pft_harvestn": np.random.rand(1, 32)}
 
 t_max = 100  # interval for which the model will be simulated
-# dt = 0.1  # desired temporal resolution of the resulting output.
+dt = 0.1  # desired temporal resolution of the resulting output.
 
 
 # instantiate process taxa:
 env = M.Environment(
-    dt = dt, #dt should be given to environment probably
+    delta_t = delta_t, #dt should be given to environment probably
     end_year = end_year, #our starting point
     in_dict = test_dict_in,
-    out_dict = test_dict_out
+    out_dict = test_dict_out,
+    old_out_dict = test_dict_out
     )
 met = M.Metabolism(
     )
@@ -96,7 +97,7 @@ world = M.World(
 soc = M.SocialSystem(world = world)
 cell = M.Cell(
     social_system = soc,
-    cftfrac = test_dict_out["cftfrac"][0],
+    #cftfrac = test_dict_out["cftfrac"][0],
     landuse = test_dict_in["landuse"][0]
     )
 ind = M.Individual(cell = cell)

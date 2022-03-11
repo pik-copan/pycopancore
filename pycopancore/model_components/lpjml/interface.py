@@ -13,6 +13,9 @@ remove these instructions.
 
 # Use variables from the master data model wherever possible
 # from tkinter import Variable #TODO what is this?
+
+from typing import List, Dict
+
 from ... import master_data_model as D
 from ...data_model import Dimension, Unit #TODO: what else do we need from the data model?
 
@@ -53,17 +56,17 @@ class Cell (object):
     """Interface for Cell entity type mixin."""
 
     # endogenous variables:
-
-    # TODO: use variables from the master data model wherever possible
-    # wherever possible!:
-    # ONECELLVARIABLE = master_data_model.Cell.ONECELLVARIABLE
-
-    # TODO: uncomment and adjust if you need further variables from another
-    # model component:
-    # ANOTHERCELLVARIABLE= MODEL_COMPONENT.Cell.ANOTHERCELLVARIABLE
-
-    # TODO: uncomment and adjust only if you really need other variables:
-    # PERSONALCELLVARIABLE = Variable("name", "desc", unit=..., ...)
+    lpjml_grid_cell_ids = Variable(
+        "LPJmL grid cell ids",
+        "List of ids of LPJmL cells that belong to this macro cell",
+        datatype = List[int],
+        default = [])
+    
+    cftfrac = Variable(
+        "cftfrac bands",
+        "array of cftfrac bands",
+        datatype = np.array,
+        array_shape = (32, ))
 
     # exogenous variables / parameters:
     landuse = Variable(
@@ -71,12 +74,6 @@ class Cell (object):
         "array of landuse bands",
         datatype = np.array,
         array_shape = (64, ))
-    
-    cftfrac = Variable(
-        "cftfrac bands",
-        "array of cftfrac bands",
-        datatype = np.array,
-        array_shape = (32, ))
 
 
 #
@@ -86,33 +83,30 @@ class Environment (object):
     """Interface for Environment process taxon mixin."""
 
     # endogenous variables:
-
-    # TODO: use variables from the master data model wherever possible
-    # wherever possible!:
-    # ONEENVIRONMENTVARIABLE = master_data_model.Environment.ONEENVIRONMENTVARIABLE
-
-    # TODO: uncomment and adjust if you need further variables from another
-    # model component:
-    # ANOTHERENVIROMENTVARIABLE= MODEL_COMPONENT.Environment.ANOTHERENVIROMENTVARIABLE
-
-    # TODO: uncomment and adjust only if you really need other variables:
-    # PERSONALENVIROMENTVARIABLE = Variable("name", "desc", unit=..., ...)
+    old_out_dict = Variable(
+        "old output from lpjml", 
+        """output dictionary from lpjml, like e.g. cftfrac""",
+        datatype = Dict[str, np.ndarray])    # TODO: make generic
+    
+    out_dict = Variable(
+        "output from lpjml", 
+        """output dictionary from lpjml, like e.g. cftfrac""",
+        datatype = Dict[str, np.ndarray])    # TODO: make generic
+    
 
     # exogenous variables / parameters:
-    dt = Variable("time step",
-                  """time step has to be given in study script""")
+    delta_t = Variable(
+        "time step",
+        """time step has to be given in study script""")
     
-    end_year = Variable("copan_start_year", 
-                        """start year of the copan run given by end year of lpjml spinup""")              
+    end_year = Variable(
+        "copan_start_year", 
+        """start year of the copan run given by end year of lpjml spinup""")
     
-    # @Jobst: funktioniert das so wie im imitation component?
-    in_dict = Variable("input to lpjml", 
-                       """input dictionary to lpjml with values on e.g. land use""",
-                       datatype = Dict[str, np.ndarray])                      
-    out_dict = Variable("output from lpjml", 
-                        """output dictionary from lpjml, like e.g. cftfrac""",
-                       datatype = Dict[str, np.ndarray])                     
-    # TODO: make generic
+    in_dict = Variable(
+        "input to lpjml", 
+        """input dictionary to lpjml with values on e.g. land use""",
+        datatype = Dict[str, np.ndarray])
     # INPUT_VARIABLE_OF_INTEREST = ...
     # OUTPUT_VARIABLE_OF_INTEREST = ...
 
