@@ -1,12 +1,8 @@
-"""Model mixing class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
-"""
+"""Model mixin class for the LPJmL coupling component."""
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2022 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
@@ -25,7 +21,7 @@ class Model (I.Model):
 
     # mixins provided by this model component:
 
-    entity_types = [Cell]  # TODO: adjust!
+    entity_types = [Cell]
     """list of entity types augmented by this component"""
-    process_taxa = [Environment]  # TODO: adjust!
+    process_taxa = [Environment]
     """list of process taxa augmented by this component"""

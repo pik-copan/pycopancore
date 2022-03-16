@@ -1,3 +1,12 @@
+"""Other model component to test LPJmL coupling"""
+
+# This file is part of pycopancore.
+#
+# Copyright (C) 2022 by COPAN team at Potsdam Institute for Climate
+# Impact Research
+#
+# URL: <http://www.pik-potsdam.de/copan/software>
+
 from .... import master_data_model as D
 from ....model_components.lpjml import interface as L
 from ....model_components.base import interface as B
@@ -5,6 +14,7 @@ from .... import Variable
 from .... import Event
 
 import numpy as np
+from numpy.random import exponential, uniform
 
 # INTERFACE
 
@@ -12,7 +22,7 @@ class ICell (object):
     landuse = L.Cell.landuse
     cftfrac = L.Cell.cftfrac
     
-class IEnvironment (object):
+class IMetabolism (object):
     landuse_update_rate = Variable(
         "landuse update rate",
         """average number of time points per time where some cells
@@ -34,7 +44,7 @@ class IModel (object):
             
 class interface:
     Cell = ICell
-    Environment = IEnvironment
+    Metabolism = IMetabolism
     Model = IModel
 
 # IMPLEMENTATION:
@@ -42,10 +52,10 @@ class interface:
 class Cell (ICell):
     
     def update_landuse(self, unused_t):
-        self.landuse = self.cftfrac * self.landuse
+        self.landuse = np.ones((1, 64))
     processes = []
 
-class Environment (IEnvironment):
+class Metabolism (IMetabolism):
     def next_landuse_update_time(self, t):
         return t + exponential(1 / self.landuse_update_rate)
 
@@ -53,15 +63,15 @@ class Environment (IEnvironment):
         for w in self.worlds:
             for c in w.cells:
                 if uniform() < self.landuse_update_prob:
-                    c.update_landuse()
+                    c.update_landuse(unused_t)
 
     processes = [
         Event("update landuse",
-              [B.Environment.worlds.cells.landuse],
+              [B.Metabolism.worlds.cells.landuse],
               ["time",
               next_landuse_update_time,
               update_landuse])]
 
 class Model (IModel):
     entity_types = [Cell]
-    process_taxa = [Environment]
+    process_taxa = [Metabolism]

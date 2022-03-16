@@ -1,23 +1,15 @@
-"""
-Cell entity type mixing class template.
+"""Cell entity for LPJmL coupling component."""
 
-TODO: adjust, uncomment or fill in code and documentation wherever marked by
-the "TODO" flag.
-"""
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2022 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 from .. import interface as I
-# from .... import master_data_model as D
-
-# TODO: uncomment this if you need ref. variables such as B.Cell.individuals:
 from ...base import interface as B
 
-# TODO: import those process types you need:
 from .... import Explicit
 
 import numpy as np
@@ -27,6 +19,7 @@ class Cell (I.Cell):
 
     # standard methods:
     # TODO: only uncomment when adding custom code inside!
+    # NOTE: This can be used for initial coupling!
 
 #     def __init__(self,
 #                  # *,  # TODO: uncomment when adding named args behind here
@@ -50,13 +43,14 @@ class Cell (I.Cell):
 
     # process-related methods:
     def read_cftfrac(self, t):
-        self.cftfrac = np.sum((np.ceil(t)-t)*self.social_system.world.environment.old_out_dict["cftfrac"][self.lpjml_grid_cell_ids] + (t-np.floor(t))*self.social_system.world.environment.out_dict["cftfrac"][self.lpjml_grid_cell_ids]) # TODO: define lpjml_cell_id, or do all cells in environment, double-think about dimensions and units
+        self.cftfrac = np.sum((np.ceil(t)-t)*self.social_system.world.environment.old_out_dict["cftfrac"][self.lpjml_grid_cell_ids] + (t-np.floor(t))*self.social_system.world.environment.out_dict["cftfrac"][self.lpjml_grid_cell_ids]) # extrapolation over the year and summation over grid cells
+        # TODO: define lpjml_cell_ids, or do all cells in environment, double-think about dimensions, units and the points in time our data is about
+    
+    # TODO: if possible (and reasonable), make one method that loops over all keys (output variables) and reads them into the corresponding CORE variables
     
     def write_landuse(self, unused_t):
         for i in self.lpjml_grid_cell_ids:
-            self.environment.in_dict["landuse"][i] = self.landuse # TODO: move to environment loop because we don't need to do this continuosly
-
-    # TODO: add some if needed...
+            self.environment.in_dict["landuse"][i] = self.landuse # TODO: move to become an environment step process because we only need to write this once a year
 
     processes = [
         Explicit("cftfrac",
@@ -65,4 +59,4 @@ class Cell (I.Cell):
         Explicit("landuse",
                  [B.Cell.environment.in_dict],
                  write_landuse)
-        ]# TODO: instantiate and list process objects here
+        ]

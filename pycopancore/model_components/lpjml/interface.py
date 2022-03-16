@@ -1,29 +1,17 @@
-"""Interface for lpjml coupler on CORE-side.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", then
-remove these instructions.
-"""
+"""Interface for lpjml coupler on CORE-side."""
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2022 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 
-# Use variables from the master data model wherever possible
-# from tkinter import Variable #TODO what is this?
-
 from typing import List, Dict
 
 from ... import master_data_model as D
-from ...data_model import Dimension, Unit #TODO: what else do we need from the data model?
+from ...data_model import Dimension, Unit
 
-# TODO: uncomment and adjust to use variables from other pycopancore model
-# components:
-# from ..MODEL_COMPONENT import interface as MODEL_COMPONENT
-
-# TODO: uncomment and adjust only if you really need other variables:
 from ... import Variable
 
 import numpy as np
@@ -45,13 +33,10 @@ class Model (object):
     # - implementation.Model lists these entity-types and process taxons
 
 
+# TODO: For the following variables set default, boundaries, types and other properties (see doc)
 #
 # Entity types
 #
-
-
-
-
 class Cell (object):
     """Interface for Cell entity type mixin."""
 
@@ -82,16 +67,16 @@ class Cell (object):
 class Environment (object):
     """Interface for Environment process taxon mixin."""
 
-    # endogenous variables:
-    old_out_dict = Variable(
-        "old output from lpjml", 
-        """output dictionary from lpjml, like e.g. cftfrac""",
-        datatype = Dict[str, np.ndarray])    # TODO: make generic
-    
+    # endogenous variables:    
     out_dict = Variable(
         "output from lpjml", 
         """output dictionary from lpjml, like e.g. cftfrac""",
-        datatype = Dict[str, np.ndarray])    # TODO: make generic
+        datatype = Dict[str, np.ndarray])
+    
+    old_out_dict = Variable(
+        "old output from lpjml", 
+        """output dictionary from lpjml, like e.g. cftfrac""",
+        datatype = Dict[str, np.ndarray])
     
 
     # exogenous variables / parameters:
@@ -107,7 +92,5 @@ class Environment (object):
         "input to lpjml", 
         """input dictionary to lpjml with values on e.g. land use""",
         datatype = Dict[str, np.ndarray])
-    # INPUT_VARIABLE_OF_INTEREST = ...
-    # OUTPUT_VARIABLE_OF_INTEREST = ...
 
 

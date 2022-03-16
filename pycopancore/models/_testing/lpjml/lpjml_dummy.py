@@ -1,6 +1,8 @@
+"""Dummy model for LPJmL coupling"""
+
 # This file is part of pycopancore.
 #
-# Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2022 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
@@ -39,7 +41,8 @@ class Environment(lpj.Environment,
     """Environment process taxon."""
     pass
 
-class Metabolism(base.Metabolism):
+class Metabolism(other.Metabolism,
+                 base.Metabolism):
     """Metabolism process taxon."""
     pass
 
