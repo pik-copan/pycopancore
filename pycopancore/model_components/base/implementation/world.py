@@ -114,20 +114,6 @@ class World (I.World, abstract.World):
             c._worlds.add(self)
         self._culture = c
 
-    @property
-    def culture(self):
-        """Get the Culture acting in this World."""
-        return self._culture
-
-    @culture.setter
-    def culture(self, c):
-        """Set the World the SocialSystem is part of."""
-        if self._culture is not None:
-            self._culture._worlds.remove(self)
-        assert isinstance(c, I.Culture), "culture must be of taxon type Culture"
-        c._worlds.add(self)
-        self._culture = c
-
     @property  # read-only
     def social_systems(self):
         """Get the set of all SocialSystems on this World."""

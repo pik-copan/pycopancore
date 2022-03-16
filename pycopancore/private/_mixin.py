@@ -124,7 +124,7 @@ class _Mixin(object, metaclass=_MixinType):
                 if isinstance(clsattr, variable.Variable):
                     varvals[clsattr] = val
                     continue
-            print("unexpected (misspelled?) keyword argument",key,"=",val)
+            print("unexpected (misspelled?) keyword argument",key,"=",val," (was this variable properly defined in the model?)")
             nonvarkwargs[key] = val
         # pass other kwargs to super:
         super().__init__(**nonvarkwargs)

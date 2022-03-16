@@ -24,7 +24,7 @@ class DimensionsAndUnits:
     decimeters = (meters / 10).named("decimeters", symbol="dm")
     
     time = Dimension("time", "time")
-    time.default_unit = a = yr = years = Unit("years", "years", symbol="a")
+    time.default_unit = a = yr = years = Unit("years", "years", symbol="yr")
     s = seconds = (years / 31556952).named("seconds", symbol="s")
     minutes = (seconds * 60).named("minutes", symbol="min")
     h = hours = (minutes * 60).named("hours", symbol="h")
@@ -49,10 +49,9 @@ class DimensionsAndUnits:
     
     # other base dimensions and units:
     
-    # TODO: maybe rename to monetary monetary_value:
-    monetary_value = \
-        Dimension("monetary_value",
-                  "inflation-adjusted monetary monetary_value of goods, services etc.")
+    money = monetary_value = \
+        Dimension("money or monetary value",
+                  "inflation-adjusted money or monetary value of goods, services etc.")
     monetary_value.default_unit = dollars = US_dollars_2005 = \
         Unit("dollars",
              "inflation-adjusted 2005 US dollars", symbol="$")
@@ -80,12 +79,11 @@ class DimensionsAndUnits:
     #energy = (mass * velocity**2).named("energy")
     #joules = kilograms * meters**2 / seconds**2
     # but:
-    energy = Dimension("energy", "(not convertible to mass velocity²)")
+    heat = energy = Dimension("energy", "(not convertible to mass velocity²)")
     J = joules = Unit("joules", "(not convertible to kg m²/s²)",
                       symbol="J", dimension=energy)
     energy.default_unit = GJ = gigajoules = \
         (joules * 1e9).named("gigajoules", symbol="GJ")
-    # TODO: provide other common units: Btu, kcal., MWh, etc.
     Btu = british_thermal_units = (GJ * 0.10550559e-5
                                    ).named("British thermal units", symbol="Btu")
     GWh = gigawatt_hours = (GJ * 3600
@@ -94,13 +92,15 @@ class DimensionsAndUnits:
                                 ).named("gigacalories (thermochemical)", 
                                         symbol="Gcalth")
     
-    # derived flow dimensions:
+    # derived flow dimensions and units:
     
-    value_flow = (monetary_value / time).named("monetary_value flow")
+    monetary_flow = (monetary_value / time).named("monetary flow")
     carbon_flow = (carbon / time).named("carbon flow")
     human_flow = (humans / time).named("human flow")
-    
+
+    power = energy_flow = heat_flow = (energy / time).named("energy flow")
     GW = gigawatts = (GWh / h).named("gigawatts", symbol="GW")
+    W = watts = (GW / 1e9).named("watts", symbol="W")
     
     # other derived dimensions and units:
     
@@ -114,8 +114,10 @@ class DimensionsAndUnits:
     litres = (decimeters**3).named("litres", symbol="l") 
     
     velocity = (length / time).named("velocity")
-    
     acceleration = (velocity / time).named("acceleration")
 
     person_hours = (people * hours).named("person hours")
     person_months = (people * months).named("person months")
+
+    heat_flux = (heat_flow / area).named("heat flux")
+    
