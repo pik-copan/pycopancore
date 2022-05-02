@@ -288,3 +288,57 @@ SocialSystem.direct_individuals.type = Individual
 SocialSystem.individuals.type = Individual
 Cell.individuals.type = Individual
 Individual.acquaintances.type = Individual
+
+
+
+class Group (object, metaclass=_MixinType):
+    """Basic Group interface.
+
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # references:
+    socialsystem = ReferenceVariable("socialsystem", "", type=SocialSystem)
+    next_higher_group = ReferenceVariable("next higher group", "optional",
+                                            allow_none=True)  # type is Group, hence it can only be specified after class Group is defined, see below
+
+
+    # read-only attributes storing redundant information:
+    environment = ReferenceVariable("environment", "", type=Environment,
+                               readonly=True)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
+                                   readonly=True)
+    culture = ReferenceVariable("culture", "", type=Culture,
+                                readonly=True)
+    higher_groups = SetVariable(
+        "higher groups",
+        "upward list of (in)direct super-Groups",
+        readonly=True)
+    next_lower_groups = SetVariable(
+        "next lower groups",
+        "set of sub-Groups of next lower level",
+        readonly=True)
+    lower_groups = SetVariable(
+        "lower groups",
+        "set of all direct and indirect sub-Groups",
+        readonly=True)
+    direct_cells = SetVariable("direct cells", "set of direct territory Cells",
+                               readonly=True)
+    cells = SetVariable("cells", "set of direct and indirect territory Cells",
+                        readonly=True)
+    direct_individuals = SetVariable(
+        "direct individuals",
+        "set of resident Individuals not in subgroups",
+        readonly=True)
+    individuals = SetVariable("individuals",
+                              "set of direct or indirect resident Individuals",
+                              readonly=True)
+
+
+# specified only now to avoid recursion errors:
+Group.next_higher_group.type = Group
+Group.higher_groups.type = Group
+Group.next_lower_groups.type = Group
+Group.lower_groups.type = Group
+#Group.groups.type = Group
+#SocialSystem.top_level_groups.type = Group
