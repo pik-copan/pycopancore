@@ -2,15 +2,22 @@
 
 """https://github.com/pik-copan/pycopancore/blob/master/docs/framework_documentation/abstract_level/entity_types/group.rst"""
 
-#from . import MET
 from .. import Variable
 
+from networkx import Graph
 
 class Group:
 
     #TODO: add a group network possibility (in culture.py (?))
 
-    
+    group_network = \
+        Variable("group network",
+                 """Basic undirected social network between
+                 Groups.""",
+                 ref="https://en.wikipedia.org/wiki/Social_network#Meso_level",
+                 scale='nominal',
+                 datatype=Graph)    
+
     has_leader = \
         Variable("has a leader",
                  "whether the group has a leader",
