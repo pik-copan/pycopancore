@@ -55,7 +55,7 @@ class Cell (ICell):
     
     def update_landuse(self, unused_t):
         # self.landuse = np.ones((1, 64))
-        self.with_tillage = np.ones((1, 64))
+        self.with_tillage = np.ones((1, 1))
     processes = []
 
 class Metabolism (IMetabolism):
