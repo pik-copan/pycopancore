@@ -54,11 +54,17 @@ class Cell (object):
         array_shape = (32, ))
 
     # exogenous variables / parameters:
-    landuse = Variable(
+    '''landuse = Variable(
         "landuse bands",
         "array of landuse bands",
         datatype = np.array,
-        array_shape = (64, ))
+        array_shape = (64, ))'''
+    
+    with_tillage = Variable(
+        "landuse bands",
+        "array of landuse bands",
+        datatype = np.array,
+        array_shape = (1, ))
 
 
 #

@@ -50,13 +50,18 @@ class Cell (I.Cell):
     
     def write_landuse(self, unused_t):
         for i in self.lpjml_grid_cell_ids:
-            self.environment.in_dict["landuse"][i] = self.landuse # TODO: move to become an environment step process because we only need to write this once a year
+            # self.environment.in_dict["landuse"][i] = self.landuse # TODO: move to become an environment step process because we only need to write this once a year
+            self.environment.in_dict["with_tillage"][i] = self.with_tillage # TODO: move to become an environment step process because we only need to write this once a year
+
 
     processes = [
         Explicit("cftfrac",
                  [I.Cell.cftfrac],
                  read_cftfrac),
-        Explicit("landuse",
+        # Explicit("landuse",
+                 # [B.Cell.environment.in_dict],
+                 # write_landuse)'''
+        Explicit("with_tillage",
                  [B.Cell.environment.in_dict],
                  write_landuse)
         ]

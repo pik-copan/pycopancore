@@ -53,7 +53,7 @@ class Environment (I.Environment):
         
         print(self.out_dict)
         outputs = self.out_dict
-        outputs["cftfrac"] = np.ones((1, 32)) * input_data["landuse"][0,0]
+        outputs["cftfrac"] = np.ones((1, 32)) * input_data["with_tillage"][0,0]
         
         self.old_out_dict = self.out_dict # save for interpolation of variables in cell or environment
         self.out_dict = outputs

@@ -57,8 +57,15 @@ delta_t = 1  # desired temporal resolution of the resulting output.
 # TODO ? dt_lpjml = dt*12 #adjust temporal scales?
  
 end_year = 2005
-test_dict_in = {"landuse": np.zeros((1, 64)),"fertilizer_nr": np.zeros((1, 32))}
-test_dict_out = {"cftfrac": np.zeros((1, 32)),"pft_harvestc": np.zeros((1, 32)),"pft_harvestn": np.zeros((1, 32))}
+# test_dict_in = {"landuse": np.zeros((1, 64)),"fertilizer_nr": np.zeros((1, 32))}
+# test_dict_out = {"cftfrac": np.zeros((1, 32)),"pft_harvestc": np.zeros((1, 32)),"pft_harvestn": np.zeros((1, 32))}
+
+
+# exchange for tillage variable
+# adjust reading and writing as in Jannes' test script
+# fkt die output auf hohem level als argument entgegennimmt
+test_dict_in = {"with_tillage": np.zeros((1, 1))}
+test_dict_out = {"cftfrac": np.zeros((1, 32)), "pft_harvestc": np.zeros((1, 32))}
 
 landuse_update_rate = 10
 landuse_update_prob = 1.
@@ -94,7 +101,8 @@ soc = M.SocialSystem(world = world)
 cell = M.Cell(
     social_system = soc,
     lpjml_grid_cell_ids = [0],
-    landuse = test_dict_in["landuse"][0]
+    # landuse = test_dict_in["landuse"][0]
+    with_tillage = test_dict_in["with_tillage"][0],
     )
 ind = M.Individual(cell = cell)
 

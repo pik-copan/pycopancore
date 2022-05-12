@@ -19,7 +19,9 @@ from numpy.random import exponential, uniform
 # INTERFACE
 
 class ICell (object):
-    landuse = L.Cell.landuse
+    # landuse = L.Cell.landuse
+    # TODO is with_tillage really to be found in L.Cell?
+    with_tillage = L.Cell.with_tillage
     cftfrac = L.Cell.cftfrac
     
 class IMetabolism (object):
@@ -52,12 +54,14 @@ class interface:
 class Cell (ICell):
     
     def update_landuse(self, unused_t):
-        self.landuse = np.ones((1, 64))
+        # self.landuse = np.ones((1, 64))
+        self.with_tillage = np.ones((1, 64))
     processes = []
 
 class Metabolism (IMetabolism):
     def next_landuse_update_time(self, t):
         return t + exponential(1 / self.landuse_update_rate)
+
 
     def update_landuse(self, unused_t):
         for w in self.worlds:
@@ -67,7 +71,8 @@ class Metabolism (IMetabolism):
 
     processes = [
         Event("update landuse",
-              [B.Metabolism.worlds.cells.landuse],
+              # [B.Metabolism.worlds.cells.landuse],
+              [B.Metabolism.worlds.cells.with_tillage],
               ["time",
               next_landuse_update_time,
               update_landuse])]
