@@ -29,7 +29,7 @@ class Group (I.Group, abstract.Group):
 
     def __init__(self,
                  *,
-                 socialsystem,
+                 social_system,
                  next_higher_group=None,
                  **kwargs
                  ):
@@ -47,31 +47,33 @@ class Group (I.Group, abstract.Group):
         """
         super().__init__(**kwargs)  # must be the first line
 
+        # init and set variables implemented via properties:
+        self._social_system = None
+        self.social_system = social_system
+        self._next_higher_group = None
+        self.next_higher_group = next_higher_group
+
         # init caches:
         self._next_lower_group = set()
         self._direct_cells = set()
 
-        # init and set variables implemented via properties:
-        self._socialsystem = None
-        self.socialsystem = socialsystem
-        self._next_higher_group = None
-        self.next_higher_group = next_higher_group
+
 
     # getters and setters for references:
 
     @property
-    def socialsystem(self):
+    def social_system(self):
         """Get the World the SocialSystem is part of."""
-        return self._socialsystem
+        return self._social_system
 
-    @socialsystem.setter
-    def socialsystem(self, w):
+    @social_system.setter
+    def social_system(self, s):
         """Set the World the SocialSystem is part of."""
-        if self._socialsystem is not None:
-            self._socialsystem._groups.remove(self)
-        assert isinstance(w, I.SocialSystem), "socialsystem must be of entity type SocialSystem"
-        w._groups.add(self)
-        self._socialsystem = w
+        if self._social_system is not None:
+            self._social_system._groups.remove(self)
+        assert isinstance(s, I.SocialSystem), "socialsystem must be of entity type SocialSystem"
+        s._groups.add(self)
+        self._social_system = s
 
     @property
     def next_higher_group(self):
