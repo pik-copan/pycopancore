@@ -46,6 +46,8 @@ class Cell (I.Cell):
         self.cftfrac = np.sum((np.ceil(t)-t)*self.social_system.world.environment.old_out_dict["cftfrac"][self.lpjml_grid_cell_ids] + (t-np.floor(t))*self.social_system.world.environment.out_dict["cftfrac"][self.lpjml_grid_cell_ids]) # extrapolation over the year and summation over grid cells
         # TODO: define lpjml_cell_ids, or do all cells in environment, double-think about dimensions, units and the points in time our data is about
     
+    def read_pft_harvestc(self, t):
+        self.pft_harvestc = self.social_system.world.environment.old_out_dict["pft_harvestc"][self.lpjml_grid_cell_ids]
     # TODO: if possible (and reasonable), make one method that loops over all keys (output variables) and reads them into the corresponding CORE variables
     
     def write_landuse(self, unused_t):
@@ -58,6 +60,9 @@ class Cell (I.Cell):
         Explicit("cftfrac",
                  [I.Cell.cftfrac],
                  read_cftfrac),
+        Explicit("pft_harvestc",
+                 [I.Cell.pft_harvestc],
+                 read_pft_harvestc),
         # Explicit("landuse",
                  # [B.Cell.environment.in_dict],
                  # write_landuse)'''

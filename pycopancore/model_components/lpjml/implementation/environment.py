@@ -42,18 +42,19 @@ class Environment (I.Environment):
         year = self.end_year + t # TODO: check what t and year are and need to be, t should already be the year
            
         # send input data to lpjml
-        #self.coupler.send_inputs(input_data, year)
+        self.coupler.send_inputs(input_data, year)
  
         #read output data from lpjml
-        #outputs = self.coupler.read_outputs(year)
-        
+        outputs = self.coupler.read_outputs(year)
         # TODO: check when input is set and what time output refers to,
         # beginning or end of year
         # beginning: prediction for whole year enables smoothing/interpolation instead of annual jumps
         
-        print(self.out_dict)
-        outputs = self.out_dict
-        outputs["cftfrac"] = np.ones((1, 32)) * input_data["with_tillage"][0,0]
+        # or: print(self.out_dict)
+        print(outputs)
+        # note: below was just to be able to see something in the coupling step
+        # outputs = self.out_dict
+        # outputs["cftfrac"] = np.ones((1, 32)) * input_data["with_tillage"][0,0]
         
         self.old_out_dict = self.out_dict # save for interpolation of variables in cell or environment
         self.out_dict = outputs
@@ -61,6 +62,7 @@ class Environment (I.Environment):
 
     # TODO: design decision: add read-out into cells already here, could be computationally more efficient, but less readable
     # TODO: add write-in already here
+    # TODO coupler.close_channel()
 
     processes = [Step("coupling step", 
         [I.Environment.out_dict], 

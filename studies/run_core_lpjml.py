@@ -22,16 +22,21 @@ import pylab as plt  # to plot stuff
 # instantiate the model and have it analyse its own structure:
 model = M.Model()
 
+print("te")
 
 # TODO: initial coupling
 
 #include config of LPJmL (maybe in own .py)    
-#from pycoupler.coupler import Coupler
-#from pycoupler.data import supply_inputs, preprocess_inputs
+from pycoupler.coupler import Coupler
+from pycoupler.data import supply_inputs, preprocess_inputs
  
  
 # paths
+# TODO add other requirements for pycoupler
+model_location = "<INSERT_MODEL_LOCATION>"
 base_path = "/p/projects/open/Jannes/copan_core/lpjml_test"
+model_path = f"{model_location}/LPJmL_internal"
+config_historic_fn = f"{base_path}/config_historic.json"
 config_coupled_fn = f"{base_path}/config_coupled.json"
  
 # coupled simulation years
@@ -40,29 +45,30 @@ end_year = 2005
 sim_years = range(start_year, end_year+1)
  
 # initiate coupler after run_lpjml on LOGIN NODE 1
-#coupler = Coupler(config_file=config_coupled_fn)
+coupler = Coupler(config_file=config_coupled_fn)
  
 # get and process initial inputs
-#inputs = supply_inputs(config_file=config_coupled_fn,
-                       #historic_config_file=config_historic_fn,
-                       #input_path=f"{base_path}/input",
-                       #model_path=model_path,
-                       #start_year=start_year, end_year=start_year)
-#input_data = preprocess_inputs(inputs, grid=coupler.grid, time=start_year)
+inputs = supply_inputs(config_file=config_coupled_fn,
+                       historic_config_file=config_historic_fn,
+                       input_path=f"{base_path}/input",
+                       model_path=model_path,
+                       start_year=start_year, end_year=start_year)
+input_data = preprocess_inputs(inputs, grid=coupler.grid, time=start_year)
 
 # simulation parameters:
 
+
+
 delta_t = 1  # desired temporal resolution of the resulting output.
  
-# TODO ? dt_lpjml = dt*12 #adjust temporal scales?
  
-end_year = 2005
+
 # test_dict_in = {"landuse": np.zeros((1, 64)),"fertilizer_nr": np.zeros((1, 32))}
 # test_dict_out = {"cftfrac": np.zeros((1, 32)),"pft_harvestc": np.zeros((1, 32)),"pft_harvestn": np.zeros((1, 32))}
 
 
-# exchange for tillage variable
 # adjust reading and writing as in Jannes' test script
+# erst mal benötigt als pre-struktur, kommt dann quasi weg, wenn lpjml output da ist
 # fkt die output auf hohem level als argument entgegennimmt
 test_dict_in = {"with_tillage": np.zeros((1, 1))}
 test_dict_out = {"cftfrac": np.zeros((1, 32)), "pft_harvestc": np.zeros((1, 32))}
