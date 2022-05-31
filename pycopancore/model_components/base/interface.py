@@ -298,7 +298,7 @@ class Group (object, metaclass=_MixinType):
     """
 
     # references:
-    socialsystem = ReferenceVariable("socialsystem", "", type=SocialSystem)
+    #social_system = ReferenceVariable("socialsystem", "", type=SocialSystem)
     next_higher_group = ReferenceVariable("next higher group", "optional",
                                             allow_none=True)  # type is Group, hence it can only be specified after class Group is defined, see below
 

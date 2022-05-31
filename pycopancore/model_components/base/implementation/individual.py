@@ -16,6 +16,7 @@ from ....private import unknown
 
 from .. import interface as I
 
+#TODO: set variable membership
 
 class Individual (I.Individual, abstract.Individual):
     """Individual entity type mixin implementation class.

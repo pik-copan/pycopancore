@@ -29,7 +29,7 @@ class Group (I.Group, abstract.Group):
 
     def __init__(self,
                  *,
-                 social_system,
+                 social_system=None,
                  next_higher_group=None,
                  **kwargs
                  ):
@@ -179,6 +179,8 @@ class Group (I.Group, abstract.Group):
         if self.next_higher_social_system is not None:
             self.next_higher_social_system.cells = unknown
 
+    #TODO: direct_inds to members
+    
     _direct_individuals = unknown
     """cache, depends on _direct_cells, directcell.individuals"""
     @property  # read-only
