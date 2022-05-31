@@ -8,7 +8,9 @@ from networkx import Graph
 
 class Group:
 
-    #TODO: add a group network possibility (in culture.py (?))
+    #TODO: add a group network possibility (in culture.py (!))
+    #TODO: inter/intra group network
+    #TODO: specify edges
 
     group_network = \
         Variable("group network",
