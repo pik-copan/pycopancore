@@ -29,7 +29,7 @@ class Group (I.Group, abstract.Group):
 
     def __init__(self,
                  *,
-                 social_system=None,
+                 culture=None,
                  next_higher_group=None,
                  **kwargs
                  ):
@@ -48,8 +48,10 @@ class Group (I.Group, abstract.Group):
         super().__init__(**kwargs)  # must be the first line
 
         # init and set variables implemented via properties:
-        self._social_system = None
-        self.social_system = social_system
+        self._culture = None
+        self.culture = culture
+        # self._social_system = None
+        # self.social_system = social_system
         self._next_higher_group = None
         self.next_higher_group = next_higher_group
 
@@ -57,23 +59,48 @@ class Group (I.Group, abstract.Group):
         self._next_lower_group = set()
         self._direct_cells = set()
 
+        if self.culture:
+            self.culture.group_membership_network.add_node(self)
+
+    def deactivate(self):
+        """Deactivate an individual.
+
+        In particular, deregister from all networks.
+
+        """
+        # deregister from all networks:
+        if self.culture:
+            self.culture.group_membership_network.remove_node(self)
+        super().deactivate()  # must be the last line
+
+    def reactivate(self):
+        """Reactivate an individual.
+
+        In particular, deregister with all mandatory networks.
+
+        """
+        super().reactivate()  # must be the first line
+        # reregister with all mandatory networks:
+        if self.culture:
+            self.culture.group_membership_network.add_node(self)
 
 
     # getters and setters for references:
 
-    @property
-    def social_system(self):
-        """Get the World the SocialSystem is part of."""
-        return self._social_system
 
-    @social_system.setter
-    def social_system(self, s):
-        """Set the World the SocialSystem is part of."""
-        if self._social_system is not None:
-            self._social_system._groups.remove(self)
-        assert isinstance(s, I.SocialSystem), "socialsystem must be of entity type SocialSystem"
-        s._groups.add(self)
-        self._social_system = s
+    # @property
+    # def social_system(self):
+    #     """Get the SocialSystem the Group is part of."""
+    #     return self._social_system
+
+    # @social_system.setter
+    # def social_system(self, s):
+    #     """Set the SocialSystem the Group is part of."""
+    #     if self._social_system is not None:
+    #         self._social_system._groups.remove(self)
+    #     assert isinstance(s, I.SocialSystem), "socialsystem must be of entity type SocialSystem"
+    #     s._groups.add(self)
+    #     self._social_system = s
 
     @property
     def next_higher_group(self):
@@ -109,10 +136,22 @@ class Group (I.Group, abstract.Group):
         """Get the Metabolism of which the Group is a part."""
         return self._world.metabolism
 
-    @property  # read-only
+    @property
     def culture(self):
-        """Get the Culture of which the Group is a part."""
-        return self._world.culture
+        """Get groups's culture."""
+        return self._culture
+
+    @culture.setter
+    def culture(self, c):
+        """Set groups's culture."""
+        if self._culture is not None:
+            # first deregister from previous culture's list of worlds:
+            self._culture.groups.remove(self)
+        if c is not None:
+            assert isinstance(c, I.Culture), \
+                "Culture must be taxon type Culture"
+            c._groups.add(self)
+        self._culture = c
 
     _higher_groups = unknown
     """cache, depends on self.next_higher_group
@@ -152,74 +191,11 @@ class Group (I.Group, abstract.Group):
             l.update(s.lower_groups)
         return l
 
-    @property  # read-only
-    def direct_cells(self):
-        """Get cells that directly belong to the SocialSystem."""
-        return self._direct_cells
+    @property
+    def group_members(self):
+        """Get the set of Individuals associated with this Group."""
+        return self.culture.group_membership_network.predecessors(self) # .predeccessors as network is directed from inds to groups
 
-    _cells = unknown
-    """cache, depends on self.direct_cells, self._next_lower_social_systems,
-    and lowersocial_system.cells"""
-    @property  # read-only
-    def cells(self):
-        """Get cells that directly abd indirectly belong to the SocialSystem."""
-        if self._cells is unknown:
-            # aggregate recursively:
-            self._cells = self.direct_cells
-            for s in self._next_lower_social_systems:
-                self._cells.update(s.cells)
-        return self._cells
-
-    @cells.setter
-    def cells(self, u):
-        """Set cells that directly and indirectly belong to the SocialSystem."""
-        assert u == unknown, "setter can only be used to reset cache"
-        self._cells = unknown
-        # reset dependent caches:
-        if self.next_higher_social_system is not None:
-            self.next_higher_social_system.cells = unknown
-
-    #TODO: direct_inds to members
-    
-    _direct_individuals = unknown
-    """cache, depends on _direct_cells, directcell.individuals"""
-    @property  # read-only
-    def direct_individuals(self):
-        """Get resident Individuals not in subsocial_systems."""
-        if self._direct_individuals is unknown:
-            # aggregate from direct_cells:
-            self._direct_individuals = set()
-            for c in self._direct_cells:
-                self._direct_individuals.update(c.individuals)
-        return self._direct_individuals
-
-    @direct_individuals.setter
-    def direct_individuals(self, u):
-        """Set resident Individuals not in subsocial_systems."""
-        assert u == unknown, "setter can only be used to reset cache"
-        self._direct_individuals = unknown
-        # reset dependent caches:
-        pass
-
-    _individuals = unknown
-    """cache, depends on self.cells, cell.individuals"""
-    @property  # read-only
-    def individuals(self):
-        """Get direct and indirect resident Individuals."""
-        if self._individuals is unknown:
-            # aggregate from cells:
-            self._individuals = set()
-            for c in self.cells:
-                self._individuals.update(c.individuals)
-        return self._individuals
-
-    @individuals.setter
-    def individuals(self, u):
-        """Set direct and indirect resident Individuals."""
-        assert u == unknown, "setter can only be used to reset cache"
-        self._individuals = unknown
-        # reset dependent caches:
-        pass
 
     # TODO: helper methods for mergers, splits, etc.
 
