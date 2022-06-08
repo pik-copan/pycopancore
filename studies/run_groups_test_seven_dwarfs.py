@@ -15,6 +15,7 @@ and 'cell'.
 # License: BSD 2-clause license
 
 import numpy as np
+from numpy.random import uniform
 from time import time
 import datetime as dt
 
@@ -33,7 +34,7 @@ timeinterval = 10
 # setting time step to hand to 'Runner.run()'
 timestep = .1
 nc = 1  # number of caves
-dwarfs = 7  # number of dwarfs
+dwarfs = 10  # number of dwarfs
 
 # instantiate model M (needs to be done in the beginning of each script).
 # This configures the model M through 'ModelLogics' in module
@@ -75,8 +76,8 @@ print("\n \n")
 # initializing the individuals in 'base.Individuals' with the 'cell' method
 
 #instantiate groups
-ng = 5 #number of groups
-groups = [M.Group(culture=culture) for i in range (ng)]
+ng = 10 #number of groups
+groups = [M.Group(world=world) for i in range (ng)]
 
 print("\n The groups: \n")
 print(groups)
@@ -89,8 +90,16 @@ print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 print('\n runner starting')
 
 # first test for group network
-nx.draw(culture.group_membership_network)
+#nx.draw(culture.group_membership_network)
+#plt.show()
 
+
+# initialize some network:
+for i in enumerate(individuals):
+    for j in enumerate(groups):
+        culture.group_membership_network.add_edge(i, j)
+
+nx.draw(culture.group_membership_network)
 plt.show()
 
 # Define termination signals as list [ signal_method, object_method_works_on ]

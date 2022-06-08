@@ -122,6 +122,9 @@ class World (object, metaclass=_MixinType):
     individuals = SetVariable("individuals",
                               "Set of Individuals residing on this world",
                               readonly=True)
+    groups = SetVariable("groups",
+                         "Set of Groups existing on this world",
+                         readonly=True)
 
 
 # specified only now to avoid recursion errors:
@@ -306,8 +309,8 @@ class Group (object, metaclass=_MixinType):
 
     # references:
     #social_system = ReferenceVariable("socialsystem", "", type=SocialSystem)
-    next_higher_group = ReferenceVariable("next higher group", "optional",
-                                            allow_none=True)  # type is Group, hence it can only be specified after class Group is defined, see below
+    # next_higher_group = ReferenceVariable("next higher group", "optional",
+    #                                         allow_none=True)  # type is Group, hence it can only be specified after class Group is defined, see below
 
 
     # read-only attributes storing redundant information:
@@ -317,18 +320,18 @@ class Group (object, metaclass=_MixinType):
                                    readonly=True)
     culture = ReferenceVariable("culture", "", type=Culture,
                                 readonly=True)
-    higher_groups = SetVariable(
-        "higher groups",
-        "upward list of (in)direct super-Groups",
-        readonly=True)
-    next_lower_groups = SetVariable(
-        "next lower groups",
-        "set of sub-Groups of next lower level",
-        readonly=True)
-    lower_groups = SetVariable(
-        "lower groups",
-        "set of all direct and indirect sub-Groups",
-        readonly=True)
+    # higher_groups = SetVariable(
+    #     "higher groups",
+    #     "upward list of (in)direct super-Groups",
+    #     readonly=True)
+    # next_lower_groups = SetVariable(
+    #     "next lower groups",
+    #     "set of sub-Groups of next lower level",
+    #     readonly=True)
+    # lower_groups = SetVariable(
+    #     "lower groups",
+    #     "set of all direct and indirect sub-Groups",
+    #     readonly=True)
 
     group_members = SetVariable(
         "group members",
@@ -339,10 +342,10 @@ class Group (object, metaclass=_MixinType):
 
 
 # specified only now to avoid recursion errors:
-Group.next_higher_group.type = Group
-Group.higher_groups.type = Group
-Group.next_lower_groups.type = Group
-Group.lower_groups.type = Group
+# Group.next_higher_group.type = Group
+# Group.higher_groups.type = Group
+# Group.next_lower_groups.type = Group
+# Group.lower_groups.type = Group
 # Individual.group_memberships.type = Group # TODO: assert this is at the right place
 # Group.group_members.type = Individual
 #Group.groups.type = Group
