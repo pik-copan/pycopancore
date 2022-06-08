@@ -29,7 +29,8 @@ class Group (I.Group, abstract.Group):
 
     def __init__(self,
                  *,
-                 culture=None,
+                 world,
+                 # culture=None,
                  next_higher_group=None,
                  **kwargs
                  ):
@@ -48,8 +49,11 @@ class Group (I.Group, abstract.Group):
         super().__init__(**kwargs)  # must be the first line
 
         # init and set variables implemented via properties:
-        self._culture = None
-        self.culture = culture
+        # self._culture = None
+        # self.culture = culture
+        self._world = None
+        self.world = world
+
         # self._social_system = None
         # self.social_system = social_system
         self._next_higher_group = None
@@ -87,6 +91,19 @@ class Group (I.Group, abstract.Group):
 
     # getters and setters for references:
 
+    @property
+    def world(self):
+        """Get the World the Group is part of."""
+        return self._world
+
+    @world.setter
+    def world(self, w):
+        """Set the World the Group is part of."""
+        if self._world is not None:
+            self._world._social_systems.remove(self)
+        assert isinstance(w, I.World), "world must be of entity type World"
+        w._social_systems.add(self)
+        self._world = w
 
     # @property
     # def social_system(self):
@@ -102,27 +119,27 @@ class Group (I.Group, abstract.Group):
     #     s._groups.add(self)
     #     self._social_system = s
 
-    @property
-    def next_higher_group(self):
-        """Get next higher group."""
-        return self._next_higher_group
+    # @property
+    # def next_higher_group(self):
+    #     """Get next higher group."""
+    #     return self._next_higher_group
 
-    @next_higher_group.setter
-    def next_higher_group(self, s):
-        """Set next higher group."""
-        if self._next_higher_group is not None:
-            self._next_higher_group._next_lower_groups.remove(self)
-            # reset dependent cache:
-            self._next_higher_group.cells = unknown
-        if s is not None:
-            assert isinstance(s, I.Group), \
-                "next_higher_group must be of entity type group"
-            s._next_lower_groups.add(self)
-            # reset dependent cache:
-            s.cells = unknown
-        self._next_higher_group = s
+    # @next_higher_group.setter
+    # def next_higher_group(self, s):
+    #     """Set next higher group."""
+    #     if self._next_higher_group is not None:
+    #         self._next_higher_group._next_lower_groups.remove(self)
+    #         reset dependent cache:
+            # self._next_higher_group.cells = unknown
+        # if s is not None:
+        #     assert isinstance(s, I.Group), \
+        #         "next_higher_group must be of entity type group"
+        #     s._next_lower_groups.add(self)
+        #     reset dependent cache:
+        #     s.cells = unknown
+        # self._next_higher_group = s
         # reset dependent caches:
-        self.higher_groups = unknown
+        # self.higher_groups = unknown
 
     # getters for backwards references and convenience variables:
 
@@ -136,60 +153,60 @@ class Group (I.Group, abstract.Group):
         """Get the Metabolism of which the Group is a part."""
         return self._world.metabolism
 
-    @property
-    def culture(self):
-        """Get groups's culture."""
-        return self._culture
+    # @property
+    # def culture(self):
+    #     """Get groups's culture."""
+    #     return self._culture
 
-    @culture.setter
-    def culture(self, c):
-        """Set groups's culture."""
-        if self._culture is not None:
-            # first deregister from previous culture's list of worlds:
-            self._culture.groups.remove(self)
-        if c is not None:
-            assert isinstance(c, I.Culture), \
-                "Culture must be taxon type Culture"
-            c._groups.add(self)
-        self._culture = c
+    # @culture.setter
+    # def culture(self, c):
+    #     """Set groups's culture."""
+    #     if self._culture is not None:
+    #         first deregister from previous culture's list of worlds:
+            # self._culture.groups.remove(self)
+        # if c is not None:
+        #     assert isinstance(c, I.Culture), \
+        #         "Culture must be taxon type Culture"
+        #     c._groups.add(self)
+        # self._culture = c
 
-    _higher_groups = unknown
+    # _higher_groups = unknown
     """cache, depends on self.next_higher_group
     and self.next_higher_group.higher_groups"""
-    @property  # read-only
-    def higher_groups(self):
-        """Get higher groups."""
-        if self._higher_groups is unknown:
+    # @property  # read-only
+    # def higher_groups(self):
+    #     """Get higher groups."""
+    #     if self._higher_groups is unknown:
             # find recursively:
-            self._higher_groups = [] if self.next_higher_group is None \
-                else ([self.next_higher_group]
-                      + self.next_higher_group.groups)
-        return self._higher_groups
+            # self._higher_groups = [] if self.next_higher_group is None \
+            #     else ([self.next_higher_group]
+            #           + self.next_higher_group.groups)
+        # return self._higher_groups
 
-    @higher_groups.setter
-    def higher_groups(self, u):
-        """Set higher groups."""
-        assert u == unknown, "setter can only be used to reset cache"
-        self._higher_groups = unknown
+    # @higher_groups.setter
+    # def higher_groups(self, u):
+    #     """Set higher groups."""
+    #     assert u == unknown, "setter can only be used to reset cache"
+    #     self._higher_groups = unknown
         # reset dependent caches:
-        for s in self._next_lower_groups:
-            s.higher_groups = unknown
-        for c in self._direct_cells:
-            c.groups = unknown
+        # for s in self._next_lower_groups:
+        #     s.higher_groups = unknown
+        # for c in self._direct_cells:
+        #     c.groups = unknown
 
-    @property  # read-only
-    def next_lower_groups(self):
-        """Get next lower groups."""
-        return self._next_lower_groups
+    # @property  # read-only
+    # def next_lower_groups(self):
+    #     """Get next lower groups."""
+    #     return self._next_lower_groups
 
-    @property  # read-only
-    def lower_groups(self):
-        """Get lower groups."""
+    # @property  # read-only
+    # def lower_groups(self):
+    #     """Get lower groups."""
         # aggregate recursively:
-        l = self._next_lower_groups
-        for s in self._next_lower_groups:
-            l.update(s.lower_groups)
-        return l
+        # l = self._next_lower_groups
+        # for s in self._next_lower_groups:
+        #     l.update(s.lower_groups)
+        # return l
 
     @property
     def group_members(self):
