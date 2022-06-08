@@ -67,22 +67,31 @@ individuals = [M.Individual(cell=cells[0],
                             ) for i in range(dwarfs)
                ]
 
+print("\n The individuals: \n")
+print(individuals)
+print("\n \n")
+
 # assigning individuals to cell is not necessary since it is done by
 # initializing the individuals in 'base.Individuals' with the 'cell' method
 
 #instantiate groups
-ng = 2 #number of groups (group 1 hates snowwhite, group 2 loves her)
-groups = [M.Group(social_system=social_system)
-          for i in range (ng)
-          ]
+ng = 5 #number of groups
+groups = [M.Group(culture=culture) for i in range (ng)]
 
-
+print("\n The groups: \n")
+print(groups)
+print("\n \n")
 
 start = time()
 
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 print('\n runner starting')
+
+# first test for group network
+nx.draw(culture.group_membership_network)
+
+plt.show()
 
 # Define termination signals as list [ signal_method, object_method_works_on ]
 # the termination method 'check_for_extinction' must return a boolean
@@ -111,83 +120,3 @@ t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())
 
 
-# proceeding for plotting
-
-# Create List of all dwarfes, not only the ones instantiated before the run,
-# but also the one created during the run.
-
-if M.Individual.idle_entities:
-    all_dwarfs = M.Individual.instances + M.Individual.idle_entities
-else:
-    all_dwarfs = M.Individual.instances
-
-individuals_age = np.array([traj[M.Individual.age][dwarf]
-                                 for dwarf in all_dwarfs])
-
-
-individuals_beard_length = np.array([traj[M.Individual.beard_length][dwarf]
-                                 for dwarf in all_dwarfs])
-
-cell_stock = np.array(traj[M.Cell.eating_stock][cells[0]])
-
-t = np.array(traj['t'])
-
-data_age = []
-print('data age', data_age)
-for i, dwarf in enumerate(all_dwarfs):
-    data_age.append(go.Scatter(
-        x=t,
-        y=individuals_age[i],
-        mode="lines",
-        name="age of dwarf no. {}".format(i),
-        line=dict(
-            color="green",
-            width=4
-        )
-    ))
-
-data_beard_length = []
-print('data beard', data_beard_length)
-for i, dwarf in enumerate(all_dwarfs):
-    data_beard_length.append(go.Scatter(
-        x=t,
-        y=individuals_beard_length[i],
-        mode="lines",
-        name="beard length of dwarf no. {}".format(i),
-        line=dict(
-            color="red",
-            width=4
-        )
-    ))
-
-data_stock = []
-data_stock.append(go.Scatter(
-    x=t,
-    y=cell_stock,
-    mode="lines",
-    name="stock of cell",
-    line=dict(color="blue",
-              width=4
-              )
-      ))
-
-
-layout = dict(title='seven dwarfs',
-              xaxis=dict(title='time [yr]'),
-              yaxis=dict(title='value'),
-              )
-
-
-# getting plots of two dwarfs:
-fig = dict(data=[data_age[0], data_beard_length[0], data_stock[0]],
-           layout=layout)
-py.plot(fig, filename="our-model-result{}.html".format(0))
-
-fig = dict(data=[data_age[5], data_beard_length[5], data_stock[0]],
-           layout=layout)
-py.plot(fig, filename="our-model-result{}.html".format(5))
-
-#nx.draw(traj[M.Culture.acquaintance_network][culture][1])
-#plt.show()
-for i in range(len(traj['t'])):
-    print(list(traj[M.Culture.acquaintance_network][culture][i].nodes()))

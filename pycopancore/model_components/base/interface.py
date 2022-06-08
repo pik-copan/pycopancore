@@ -69,6 +69,8 @@ class Culture (object):
 
     acquaintance_network = CUL.acquaintance_network
 
+    group_membership_network = CUL.group_membership_network
+
     # read-only attributes storing redundant information:
     worlds = SetVariable("worlds",
                          "Set of Worlds governed by this Culture",
@@ -271,6 +273,10 @@ class Individual (object, metaclass=_MixinType):
                     "set of Individuals this one is acquainted with",
                     readonly=True)
 
+    group_memberships = SetVariable("group memberships",
+                                    "set of Groups this one is associated with",
+                                    readonly=True)
+
     # TODO: specify Variable objects for the following:
     population_share = None
     """share of social_system's direct population represented by this individual"""
@@ -288,6 +294,7 @@ SocialSystem.direct_individuals.type = Individual
 SocialSystem.individuals.type = Individual
 Cell.individuals.type = Individual
 Individual.acquaintances.type = Individual
+
 
 
 
@@ -322,17 +329,13 @@ class Group (object, metaclass=_MixinType):
         "lower groups",
         "set of all direct and indirect sub-Groups",
         readonly=True)
-    direct_cells = SetVariable("direct cells", "set of direct territory Cells",
-                               readonly=True)
-    cells = SetVariable("cells", "set of direct and indirect territory Cells",
-                        readonly=True)
-    direct_individuals = SetVariable(
-        "direct individuals",
-        "set of resident Individuals not in subgroups",
-        readonly=True)
-    individuals = SetVariable("individuals",
-                              "set of direct or indirect resident Individuals",
-                              readonly=True)
+
+    group_members = SetVariable(
+        "group members",
+        "set of all individuals associated with the group",
+        readonly=True
+    )
+
 
 
 # specified only now to avoid recursion errors:
@@ -340,5 +343,7 @@ Group.next_higher_group.type = Group
 Group.higher_groups.type = Group
 Group.next_lower_groups.type = Group
 Group.lower_groups.type = Group
+# Individual.group_memberships.type = Group # TODO: assert this is at the right place
+# Group.group_members.type = Individual
 #Group.groups.type = Group
 #SocialSystem.top_level_groups.type = Group
