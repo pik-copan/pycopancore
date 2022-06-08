@@ -14,8 +14,7 @@ from ... import abstract
 
 from .. import interface as I
 
-from networkx import Graph
-
+from networkx import Graph, DiGraph
 
 class Culture (I.Culture, abstract.Culture):
     """Culture process taxon mixin implementation class."""
@@ -25,6 +24,7 @@ class Culture (I.Culture, abstract.Culture):
     def __init__(self,
                  *,
                  acquaintance_network=None,
+                 group_membership_network=None,
                  **kwargs):
         """Initialize the unique instance of Culture.
 
@@ -33,6 +33,9 @@ class Culture (I.Culture, abstract.Culture):
         acquaintance_network: Graph
             The Network of acquaintances which is managed by Culture
             (default is None)
+        group_membership_network: DiGraph
+            The Network between Individiuals and groups, which is managed
+            by Culture (default is None)
         **kwargs
             keyword arguments passed to super()
 
@@ -43,6 +46,12 @@ class Culture (I.Culture, abstract.Culture):
             acquaintance_network = Graph()
         assert isinstance(acquaintance_network, Graph)
         self.acquaintance_network = acquaintance_network
+
+        if group_membership_network is None:
+            group_membership_network = DiGraph()
+        assert isinstance(group_membership_network, DiGraph)
+        self.group_membership_network = group_membership_network
+
         self._worlds = set()
 
         # make sure all variable values are valid:

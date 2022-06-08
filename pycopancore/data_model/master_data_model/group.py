@@ -8,15 +8,12 @@ from networkx import Graph
 
 class Group:
 
-    #TODO: add a group network possibility (in culture.py (!))
-    #TODO: inter/intra group network
     #TODO: specify edges
 
-    group_network = \
-        Variable("group network",
+    intra_group_network = \
+        Variable("intra group network",
                  """Basic undirected social network between
-                 Groups.""",
-                 ref="https://en.wikipedia.org/wiki/Social_network#Meso_level",
+                 Group members.""",
                  scale='nominal',
                  datatype=Graph)    
 
