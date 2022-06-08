@@ -100,9 +100,9 @@ class Group (I.Group, abstract.Group):
     def world(self, w):
         """Set the World the Group is part of."""
         if self._world is not None:
-            self._world._social_systems.remove(self)
+            self._world._groups.remove(self)
         assert isinstance(w, I.World), "world must be of entity type World"
-        w._social_systems.add(self)
+        w._groups.add(self)
         self._world = w
 
     # @property
