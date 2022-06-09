@@ -95,12 +95,20 @@ print('\n runner starting')
 
 
 # initialize some network:
-for i in enumerate(individuals):
+for i in individuals:
     for j in enumerate(groups):
         culture.group_membership_network.add_edge(i, j)
 
 nx.draw(culture.group_membership_network)
 plt.show()
+
+# print("Group Members: \n")
+# for i in groups:
+#     print(i.group_members)
+print("Individual 1 Group Memberships: \n")
+print(list(individuals[0].group_memberships))
+# for i in individuals:
+#     print(i.group_memberships)
 
 # Define termination signals as list [ signal_method, object_method_works_on ]
 # the termination method 'check_for_extinction' must return a boolean
