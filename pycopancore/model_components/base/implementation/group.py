@@ -38,8 +38,8 @@ class Group (I.Group, abstract.Group):
 
         Parameters
         ----------
-        socialsystem: obj
-            SocialSystem the Group belongs to (default is None)
+        world: obj
+            World the Group belongs to
         next_higher_group: obj
             Optional Group the Group belongs to (default is None)
         **kwargs
@@ -67,7 +67,7 @@ class Group (I.Group, abstract.Group):
             self.culture.group_membership_network.add_node(self)
 
     def deactivate(self):
-        """Deactivate an individual.
+        """Deactivate a group.
 
         In particular, deregister from all networks.
 
@@ -78,7 +78,7 @@ class Group (I.Group, abstract.Group):
         super().deactivate()  # must be the last line
 
     def reactivate(self):
-        """Reactivate an individual.
+        """Reactivate a group.
 
         In particular, deregister with all mandatory networks.
 
@@ -87,6 +87,12 @@ class Group (I.Group, abstract.Group):
         # reregister with all mandatory networks:
         if self.culture:
             self.culture.group_membership_network.add_node(self)
+
+    def member_mean(self, state):
+        """
+        Calculate the arithmetic mean of a state of all members of a groups.
+        """
+
 
 
     # getters and setters for references:
@@ -211,10 +217,11 @@ class Group (I.Group, abstract.Group):
     @property
     def group_members(self):
         """Get the set of Individuals associated with this Group."""
-        return self.culture.group_membership_network.predecessors(self) # .predeccessors as network is directed from inds to groups
+        return self.culture.group_membership_network.neighbors(self) # .predeccessors as network is directed from inds to groups
 
 
-    # TODO: helper methods for mergers, splits, etc.
+
+
 
     # no process-related methods
 

@@ -161,7 +161,7 @@ class Individual (I.Individual, abstract.Individual):
     @property
     def group_memberships(self):
         """Get the set of Groups the Individual is associated with."""
-        return self.culture.group_membership_network.successors(self) # .successors as network is directed from inds to groups
+        return self.culture.group_membership_network.neighbors(self) # .successors as network is directed from inds to groups
 
     # no process-related methods
 
