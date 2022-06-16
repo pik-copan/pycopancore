@@ -20,6 +20,7 @@ from time import time
 import datetime as dt
 
 import networkx as nx
+from networkx.algorithms import bipartite
 import matplotlib.pyplot as plt
 
 import plotly.offline as py
@@ -77,7 +78,7 @@ print("\n \n")
 
 #instantiate groups
 ng = 10 #number of groups
-groups = [M.Group(world=world) for i in range (ng)]
+groups = [M.Group(culture=culture) for i in range (ng)]
 
 print("\n The groups: \n")
 print(groups)
@@ -96,9 +97,8 @@ print('\n runner starting')
 
 # initialize some network:
 for i in individuals:
-    for j in enumerate(groups):
-        culture.group_membership_network.add_edge(i, j)
-
+    for g in groups:
+        culture.group_membership_network.add_edge(i, g)
 
 print("Individual 1 Group Memberships:")
 print(list(individuals[0].group_memberships))
@@ -106,13 +106,41 @@ print("\n")
 
 print("Group Members:")
 print(groups[0])
-# print(groups[0].group_members)
+print(list(groups[0].group_members))
 print("\n")
 
 #draw network of one group
-nx.draw(individuals[0].culture.group_membership_network)
+# nx.draw(individuals[0].culture.group_membership_network)
+# plt.show()
 
-nx.draw(culture.group_membership_network)
+GM = culture.group_membership_network
+
+print(GM.nodes.data())
+
+
+color_map = []
+shape_map = []
+for node in list(GM.nodes):
+    print(node)
+    print(GM.nodes[node])
+    color_map.append(GM.nodes[node]["color"])
+
+    if GM.nodes[node]["type"] == "Group":
+        shape_map.append("o")
+    else:
+        shape_map.append("^")
+
+
+
+top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
+bottom_nodes = set(GM) - top_nodes
+
+print(list(top_nodes))
+
+nx.draw(GM, node_color=color_map, with_labels=True,
+        pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4/1))
+
+# nx.draw(culture.group_membership_network)
 plt.show()
 
 
