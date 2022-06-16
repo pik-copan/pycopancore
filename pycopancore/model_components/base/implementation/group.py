@@ -29,8 +29,7 @@ class Group (I.Group, abstract.Group):
 
     def __init__(self,
                  *,
-                 world,
-                 # culture=None,
+                 culture,
                  next_higher_group=None,
                  **kwargs
                  ):
@@ -38,8 +37,8 @@ class Group (I.Group, abstract.Group):
 
         Parameters
         ----------
-        world: obj
-            World the Group belongs to
+        culture: obj
+            Culture the Group belongs to
         next_higher_group: obj
             Optional Group the Group belongs to (default is None)
         **kwargs
@@ -49,10 +48,10 @@ class Group (I.Group, abstract.Group):
         super().__init__(**kwargs)  # must be the first line
 
         # init and set variables implemented via properties:
-        # self._culture = None
-        # self.culture = culture
-        self._world = None
-        self.world = world
+        self._culture = None
+        self.culture = culture
+        # self._world = None
+        # self.world = world
 
         # self._social_system = None
         # self.social_system = social_system
@@ -64,7 +63,7 @@ class Group (I.Group, abstract.Group):
         self._direct_cells = set()
 
         if self.culture:
-            self.culture.group_membership_network.add_node(self)
+            self.culture.group_membership_network.add_node(self, type="Group", color="green")
 
     def deactivate(self):
         """Deactivate a group.
@@ -86,7 +85,7 @@ class Group (I.Group, abstract.Group):
         super().reactivate()  # must be the first line
         # reregister with all mandatory networks:
         if self.culture:
-            self.culture.group_membership_network.add_node(self)
+            self.culture.group_membership_network.add_node(self, type="Group", color="green")
 
     def member_mean(self, state):
         """
@@ -159,22 +158,22 @@ class Group (I.Group, abstract.Group):
         """Get the Metabolism of which the Group is a part."""
         return self._world.metabolism
 
-    # @property
-    # def culture(self):
-    #     """Get groups's culture."""
-    #     return self._culture
+    @property
+    def culture(self):
+        """Get culture group is part of."""
+        return self._culture
 
-    # @culture.setter
-    # def culture(self, c):
-    #     """Set groups's culture."""
-    #     if self._culture is not None:
-    #         first deregister from previous culture's list of worlds:
-            # self._culture.groups.remove(self)
-        # if c is not None:
-        #     assert isinstance(c, I.Culture), \
-        #         "Culture must be taxon type Culture"
-        #     c._groups.add(self)
-        # self._culture = c
+    @culture.setter
+    def culture(self, c):
+        """Set culture group is part of."""
+        if self._culture is not None:
+            # first deregister from previous culture's list of worlds:
+            self._culture.groups.remove(self)
+        if c is not None:
+            assert isinstance(c, I.Culture), \
+                "Culture must be taxon type Culture"
+            c._groups.add(self)
+        self._culture = c
 
     # _higher_groups = unknown
     """cache, depends on self.next_higher_group
@@ -217,7 +216,8 @@ class Group (I.Group, abstract.Group):
     @property
     def group_members(self):
         """Get the set of Individuals associated with this Group."""
-        return self.culture.group_membership_network.neighbors(self) # .predeccessors as network is directed from inds to groups
+        # return self.culture.group_membership_network.neighbors(self)
+        return self.culture.group_membership_network.predecessors(self) # .predecessors as network is directed from inds to groups
 
 
 

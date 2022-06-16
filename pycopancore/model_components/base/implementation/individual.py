@@ -54,7 +54,7 @@ class Individual (I.Individual, abstract.Individual):
         # register with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
-            self.culture.group_membership_network.add_node(self) # TODO: does this work with DiGraph?
+            self.culture.group_membership_network.add_node(self, type="Individual", color="yellow")
 
     def deactivate(self):
         """Deactivate an individual.
@@ -78,7 +78,7 @@ class Individual (I.Individual, abstract.Individual):
         # reregister with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
-            self.culture.group_membership_network.add_node(self)
+            self.culture.group_membership_network.add_node(self, type="Individual", color="yellow")
 
     # getters and setters for references:
 

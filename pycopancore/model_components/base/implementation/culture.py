@@ -53,6 +53,7 @@ class Culture (I.Culture, abstract.Culture):
         self.group_membership_network = group_membership_network
 
         self._worlds = set()
+        self._groups = set()
 
         # make sure all variable values are valid:
         self.assert_valid()
@@ -62,6 +63,11 @@ class Culture (I.Culture, abstract.Culture):
     def worlds(self):
         """Get the set of all Worlds this Culture acts in."""
         return self._worlds
+
+    @property  # read-only
+    def groups(self):
+        """Get the set of all Groups in this Culture."""
+        return self._groups
 
     # no process-related methods
 

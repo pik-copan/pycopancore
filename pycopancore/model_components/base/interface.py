@@ -78,6 +78,9 @@ class Culture (object):
 
 # entity types:
 
+    groups = SetVariable("groups",
+                         "Set of Groups existing on this world",
+                         readonly=True)
 
 # TODO: clarify whether it is necessary to specify the metaclass here!
 class World (object, metaclass=_MixinType):
@@ -122,9 +125,7 @@ class World (object, metaclass=_MixinType):
     individuals = SetVariable("individuals",
                               "Set of Individuals residing on this world",
                               readonly=True)
-    groups = SetVariable("groups",
-                         "Set of Groups existing on this world",
-                         readonly=True)
+
 
 
 # specified only now to avoid recursion errors:
@@ -339,7 +340,7 @@ class Group (object, metaclass=_MixinType):
         readonly=True
     )
 
-
+Culture.groups.type = Group
 
 # specified only now to avoid recursion errors:
 # Group.next_higher_group.type = Group
