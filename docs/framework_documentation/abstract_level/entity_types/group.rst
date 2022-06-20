@@ -11,7 +11,7 @@ may not be sufficient and a distinction of social strata or other social groups 
 "indigenous people", "social democrats", a certain NGO, ...)
 that is transverse to the former partitioning is helpful in addition.
 
-For this, we will in the future provide an entity-type "group" 
+For this, the entity-type "group" is provided
 which is meant to represent any grouping of individuals (that may come from one or several social systems) 
 by meaningful cultural or social-metabolic aspects.
 
@@ -33,19 +33,24 @@ Basic relationships to other entity-types
 
 A group will usually...
 
--  have several member :doc:`individuals<individual>`
+-  have several members :doc:`individuals<individual>`,
+   which is represented by a group membership directed network owned by the culture taxon
 
 In addition, a group may...
 
--  have one or several "leader" :doc:`individuals<individual>`, 
-   of which one may be the dominant leader
+-  have an "intra" group network between members :doc:`individuals<individual>`
+   (this feature is not completely implemented yet)
 
--  have a "headquarters" :doc:`cell<cell>`
+-  have one or several "leader" :doc:`individuals<individual>`,
+   of which one may be the dominant leader (this feature is not implemented yet)
 
--  be related to other groups via some network owned by the culture taxon 
+-  have a "headquarters" :doc:`cell<cell>` (this feature is not implemented yet)
+
+-  be related to other groups via an "inter" network owned by the culture taxon
    (which will typically interact with the network of personal acquaintance between member individuals)
+   - (this feature is not completely implemented yet)
 
--  act as the current "elite" in some :doc:`social system<social system>`
+-  act as the current "elite" in some :doc:`social system<social system>` (this feature is not implemented yet)
 
 All these relationships may be dynamic.
 
@@ -53,5 +58,5 @@ Finally, a group may...
 
 -  be a permanent subgroup of a larger group or :doc:`social system<social system>` *by definition* 
    (rather than by coincidence, e.g., "scientists" are by definition a subgroup of the group "academics",
-   and "German workers" may be by definition a subgroup of the social system "Germany")
+   and "German workers" may be by definition a subgroup of the social system "Germany") - (this feature is not implemented yet)
 
