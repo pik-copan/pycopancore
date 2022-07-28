@@ -30,6 +30,7 @@ class Group (I.Group, abstract.Group):
     def __init__(self,
                  *,
                  culture,
+                 world,
                  next_higher_group=None,
                  **kwargs
                  ):
@@ -39,6 +40,8 @@ class Group (I.Group, abstract.Group):
         ----------
         culture: obj
             Culture the Group belongs to
+        world: obj
+            World the Group belongs to (to bypass AttributeErrors for now)
         next_higher_group: obj
             Optional Group the Group belongs to (default is None)
         **kwargs
@@ -50,17 +53,17 @@ class Group (I.Group, abstract.Group):
         # init and set variables implemented via properties:
         self._culture = None
         self.culture = culture
-        # self._world = None
-        # self.world = world
+        self._world = None
+        self.world = world
 
         # self._social_system = None
         # self.social_system = social_system
-        self._next_higher_group = None
-        self.next_higher_group = next_higher_group
+        # self._next_higher_group = None
+        # self.next_higher_group = next_higher_group
 
         # init caches:
-        self._next_lower_group = set()
-        self._direct_cells = set()
+        # self._next_lower_group = set()
+        # self._direct_cells = set()
 
         if self.culture:
             self.culture.group_membership_network.add_node(self, type="Group", color="green")
@@ -87,14 +90,26 @@ class Group (I.Group, abstract.Group):
         if self.culture:
             self.culture.group_membership_network.add_node(self, type="Group", color="green")
 
-    def member_mean(self, state):
-        """
-        Calculate the arithmetic mean of a state of all members of a groups.
-        """
-
-
 
     # getters and setters for references:
+
+    #culture needs to be before world, as group gets its world etc. over its culture
+    @property
+    def culture(self):
+        """Get culture group is part of."""
+        return self._culture
+
+    @culture.setter
+    def culture(self, c):
+        """Set culture group is part of."""
+        if self._culture is not None:
+            # first deregister from previous culture's list of worlds:
+            self._culture.groups.remove(self)
+        if c is not None:
+            assert isinstance(c, I.Culture), \
+                "Culture must be taxon type Culture"
+            c._groups.add(self)
+        self._culture = c
 
     @property
     def world(self):
@@ -105,7 +120,8 @@ class Group (I.Group, abstract.Group):
     def world(self, w):
         """Set the World the Group is part of."""
         if self._world is not None:
-            self._world._groups.remove(self)
+            # first deregister from previous world's list of cells:
+            self._world.groups.remove(self)
         assert isinstance(w, I.World), "world must be of entity type World"
         w._groups.add(self)
         self._world = w
@@ -157,23 +173,6 @@ class Group (I.Group, abstract.Group):
     def metabolism(self):
         """Get the Metabolism of which the Group is a part."""
         return self._world.metabolism
-
-    @property
-    def culture(self):
-        """Get culture group is part of."""
-        return self._culture
-
-    @culture.setter
-    def culture(self, c):
-        """Set culture group is part of."""
-        if self._culture is not None:
-            # first deregister from previous culture's list of worlds:
-            self._culture.groups.remove(self)
-        if c is not None:
-            assert isinstance(c, I.Culture), \
-                "Culture must be taxon type Culture"
-            c._groups.add(self)
-        self._culture = c
 
     # _higher_groups = unknown
     """cache, depends on self.next_higher_group

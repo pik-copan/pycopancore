@@ -83,7 +83,7 @@ class Model(sd.Model,
     description = "Tutorial model"
     """Longer description"""
 
-    entity_types = [World, SocialSystem, Cell, Individual]
+    entity_types = [World, SocialSystem, Cell, Individual, Group]
     """List of entity types used in the model"""
     process_taxa = [Culture]
     """List of process taxa used in the model"""

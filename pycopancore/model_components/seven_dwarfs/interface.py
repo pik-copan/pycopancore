@@ -98,3 +98,10 @@ class SocialSystem(object):
 class Culture (object):
     """Interface for Culture mixin"""
     pass
+
+class Group(object):
+    """Interface for Group mixin"""
+
+    having_members = ("test", """test""")
+
+    pass
