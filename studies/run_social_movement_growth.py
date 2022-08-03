@@ -30,6 +30,7 @@ from pycopancore import master_data_model as D
 import numpy as np  # which is usually needed
 # to generate random initial conditions
 from numpy.random import choice, uniform
+import random
 
 #import pylab as plt  # to plot stuff
 import matplotlib.pyplot as plt
@@ -101,7 +102,9 @@ inds = [M.Individual(
     cell = cell,
     engagement_level = 'inactive'
     ) for j in range(ninds_inactive)]
-    
+
+# shuffle for later network initialization
+random.shuffle(inds)
 
 # set some further variables:
 
@@ -127,6 +130,22 @@ for i in range(m0, N):
         edges.append((inds[i], node))
 
 cul.acquaintance_network.add_edges_from(edges)
+core, base, support, inactive = ([] for _ in range(4))
+for i in inds:
+    if i.engagement_level == "core":
+        core.append(cul.acquaintance_network.degree(i))
+    elif i.engagement_level == "base":
+        base.append(cul.acquaintance_network.degree(i))
+    elif i.engagement_level == "support":
+        support.append(cul.acquaintance_network.degree(i))
+    elif i.engagement_level == "inactive":
+        inactive.append(cul.acquaintance_network.degree(i))
+print(core)
+print(base)
+print(support)
+print(inactive)
+    
+sys.exit()
 
 #
 # Run the model
