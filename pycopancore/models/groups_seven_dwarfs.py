@@ -59,7 +59,8 @@ class SocialSystem(sd.SocialSystem,
 
     pass
 
-class Group(base.Group):
+class Group(sd.Group,
+            base.Group):
     """Groups entity type"""
 
 # process taxa:

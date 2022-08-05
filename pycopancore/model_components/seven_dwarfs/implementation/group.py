@@ -17,7 +17,7 @@ from .. import interface as I
 # from .... import master_data_model as D
 
 # TODO: uncomment this if you need ref. variables such as B.Individual.cell:
-#from ...base import interface as B
+from ...base import interface as B
 
 # TODO: import those process types you need:
 from .... import Explicit
@@ -52,8 +52,12 @@ class Group (I.Group):
 
     def check_if_member(self, unused_t):
         """Check if dwarf 1 is member of any group."""
-        for w in self.worlds:
-            return w.individuals[0].group_memberships
+        group_members = list(self.group_members)
+        i_0 = list(self.world.individuals)[0]
+        if i_0 in group_members:
+            self.having_members = True
+        else:
+            self.having_members = False
 
 
 

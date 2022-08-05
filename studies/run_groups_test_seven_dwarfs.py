@@ -29,9 +29,9 @@ import plotly.graph_objs as go
 import pycopancore.models.groups_seven_dwarfs as M
 from pycopancore.runners.runner import Runner
 
-from studies import plot_multilayer as pm
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Line3DCollection
+# from studies import plot_multilayer as pm
+# from mpl_toolkits.mplot3d import Axes3D
+# from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 
 # setting timeinterval for run method 'Runner.run()'
@@ -114,8 +114,8 @@ print(list(groups[0].group_members))
 print("\n")
 
 #draw network of one group
-# nx.draw(individuals[0].culture.group_membership_network)
-# plt.show()
+nx.draw(individuals[0].culture.group_membership_network)
+plt.show()
 
 GM = culture.group_membership_network
 
@@ -143,9 +143,10 @@ print(list(top_nodes))
 
 nx.draw(GM, node_color=color_map, with_labels=False,
         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4/1))
+plt.show()
 
-# nx.draw(culture.group_membership_network)
-# plt.show()
+nx.draw(culture.group_membership_network)
+plt.show()
 
 
 
@@ -158,7 +159,7 @@ termination_signal = [M.Culture.check_for_extinction,
 termination_callables = [termination_signal]
 
 nx.draw(culture.acquaintance_network)
-# plt.show()
+plt.show()
 
 # Runner is instantiated
 r = Runner(model=model,
@@ -175,7 +176,8 @@ print('runtime: {runtime}'.format(**locals()))
 t = np.array(traj['t'])
 print("max. time step", (t[1:]-t[:-1]).max())
 
-#save and print membership
-membercheck = np.array(traj['check_if_member'])
+# save and print membership
 
-
+membercheck = traj[M.Group.having_members]
+plt.plot(t, membercheck[groups[0]]) # plot if dwarf 0 was member of group 0
+plt.show()

@@ -90,7 +90,6 @@ class Individual (object):
                                 "eating speed of dwarf",
                                 default=1)
 
-
 class SocialSystem(object):
     """Interface for SocialSystem mixin"""
     pass
@@ -102,6 +101,8 @@ class Culture (object):
 class Group(object):
     """Interface for Group mixin"""
 
-    having_members = ("test", """test""")
+    having_members = Variable("test",
+                      "test",
+                      default=True)
 
     pass
