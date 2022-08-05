@@ -40,10 +40,10 @@ class Culture (I.Culture):
         # Step (1)
         if self.group_membership_network.neighbors(agent_i):
             group_j = np.random.choice(list(agent_i.group_memberships))
-            mean_opinion_j = group_j.group_mean_opinion
+            mean_opinion_j = group_j.mean_group_opinion
             # Step (2): Compare strategies of i and j:
-            # If they are the same, do nothing. Else change i's strategy.
-            if agent_i.strategy != mean_opinion_j:
+            # If they are the same, do nothing. Else change i's behaviour.
+            if agent_i.behaviour != mean_opinion_j:
                 self.change_strategy(agent_i, mean_opinion_j)
 
         # Step (3)
@@ -56,8 +56,8 @@ class Culture (I.Culture):
     #     """Reconnect agent_i from agent_j and connect it to k.
     #
     #     Disconnect agent_i from agent_j and connect agent_i
-    #     to a randomly chosen agent_k with the same strategy,
-    #     agent_i.strategy == agent_k.strategy.
+    #     to a randomly chosen agent_k with the same behaviour,
+    #     agent_i.behaviour == agent_k.behaviour.
     #
     #     Parameters
     #     ----------
@@ -68,16 +68,16 @@ class Culture (I.Culture):
     #     -------
     #
     #     """
-        # Find a random stranger agent_k with same strategy as agent_i
+        # Find a random stranger agent_k with same behaviour as agent_i
     #     all_non_neighbors = \
     #         list(set(self.group_membership_network.nodes(type=Group)) #geht das
     #              - set(self.group_membership_network.neighbors(agent_i)))
-    #     strategy_i = agent_i.strategy
+    #     strategy_i = agent_i.behaviour
     #     for stranger in all_non_neighbors:
-    #         if stranger.strategy != strategy_i:
+    #         if stranger.behaviour != strategy_i:
     #             all_non_neighbors.remove(stranger)
     #     if not all_non_neighbors:
-    #         print('No possible neighbors with different strategy.')
+    #         print('No possible neighbors with different behaviour.')
     #     else:
             # Disconnect agent_i and agent_j
             # self.acquaintance_network.remove_edge(agent_i, agent_j)
@@ -86,18 +86,18 @@ class Culture (I.Culture):
             # self.acquaintance_network.add_edge(agent_i, agent_k)
 
     def change_strategy(self, agent_i, mean_opinion_j):
-        """Change strategy of agent_i to agent_j's.
+        """Change behaviour of agent_i to agent_j's.
 
-        Change the strategy of agent_i to the strategy of agent_j
+        Change the behaviour of agent_i to the behaviour of agent_j
         depending on their respective harvest rates and the imitation tendency
         according to a sigmoidal function.
 
         Parameters
         ----------
         agent_i : Agent (Individual or SocialSystem)
-            Agent i whose strategy is to be changed to agent j's strategy
+            Agent i whose behaviour is to be changed to agent j's behaviour
         agent_j : Agent (Individual or SocialSystem)
-            Agent j whose strategy is imitated
+            Agent j whose behaviour is imitated
         Returns
         -------
 
@@ -106,7 +106,7 @@ class Culture (I.Culture):
                            #         (agent_j.get_harvest_rate() -
                              #        agent_i.get_harvest_rate()) + 1)
         if np.random.random() < probability:
-            agent_i.strategy = mean_opinion_j
+            agent_i.behaviour = mean_opinion_j
 
     def get_update_agent(self):
         """Return the agent with the closest waiting time.
@@ -146,9 +146,9 @@ class Culture (I.Culture):
         """Check if the model has run into a consensus state.
 
         The model is in a consensus state if in each connected component
-        all agents use the same strategy. In this case, there will be no more
+        all agents use the same behaviour. In this case, there will be no more
         change of strategies since the agents are only connected to agents
-        with the same strategy.
+        with the same behaviour.
 
         Returns
         -------
@@ -161,13 +161,13 @@ class Culture (I.Culture):
             # iterate through all agents in this component
             # stratlist = []
             # for j in component:
-                # check if all agents of component have the same strategy
-                # stratlist.append(j.strategy)
+                # check if all agents of component have the same behaviour
+                # stratlist.append(j.behaviour)
             # if stratlist.count(stratlist[0]) != len(stratlist):
             #     self.consensus = False
             #     return self.consensus
 
-        # If in each component, all agents have the same strategy, then a
+        # If in each component, all agents have the same behaviour, then a
         # consensus state is reached
         # self.consensus = True
         # return self.consensus
@@ -202,5 +202,5 @@ class Culture (I.Culture):
 
     processes = [Step('Social Update is a step function',
                       [I.Culture.acquaintance_network,
-                       B.Culture.worlds.individuals.strategy, B.Culture.worlds.individuals.update_time],
+                       B.Culture.worlds.individuals.behaviour, B.Culture.worlds.individuals.update_time],
                       [step_timing, conformist_transmission])]

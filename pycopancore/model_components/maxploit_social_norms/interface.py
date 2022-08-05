@@ -35,8 +35,8 @@ class Model(object):
 class Individual(object):
     """Interface for Individual."""
 
-    strategy = Variable("harvesting strategy",
-                        """harvesting strategy of individual, if = 0 -> sustainable""")
+    behaviour = Variable("harvesting behaviour",
+                        """harvesting behaviour of individual, if = 0 -> sustainable""")
     opinion = Variable("harvesting opinion",
                        """Opinion on how one should be harvesting.""")
     imitation_tendency = Variable('imitation tendency', 'former rationality')
@@ -51,8 +51,13 @@ class Group(object):
 
     mean_group_opinion = Variable(
         "mean opinion of group",
-        "the mean of opinion, i.e. strategy of all of a groups members",
-        default=True)
+        "the mean of opinion on how to harvest of all of a groups members"
+    )
+
+    mean_group_behaviour = Variable(
+        "mean behaviour of group",
+        "the mean of behaviour of all of a groups members"
+    )
 
 class Culture(object):
     """Define Interface for Culture."""

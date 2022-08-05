@@ -21,16 +21,27 @@ class Group(I.Group):
 
     # process-related methods:
 
-    def mean_group_opinion(self):
+    def get_mean_group_opinion(self, unused_t):
         """Calculate the mean opinion of individuals in a group."""
-        N = 0
         n = 0
-        for N, i in enumerate(B.Group.group_members):
+        for i in self.group_members:
             if i.opinion:
                 n += 1
-        mean_opinion = n/N
-        return mean_opinion
+        N = len(list(self.group_members))
+        mean_group_opinion = n/N
+        return mean_group_opinion
+
+    def get_mean_group_behaviour(self, unused_t):
+        """Calculate the mean behaviour of individuals in a group."""
+        n = 0
+        for i in self.group_members:
+            if i.behaviour:
+                n += 1
+        N = len(list(self.group_members))
+        mean_group_behaviour = n/N
+        return mean_group_behaviour
 
     processes = [
-        Explicit("mean opinion in group", [I.Group.mean_group_opinion], mean_group_opinion)
+        Explicit("mean opinion in group", [I.Group.mean_group_opinion], get_mean_group_opinion),
+        Explicit("mean behaviour in group", [I.Group.mean_group_behaviour], get_mean_group_behaviour),
     ]
