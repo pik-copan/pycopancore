@@ -10,7 +10,9 @@
 from .. import interface as I
 
 # TODO: implement actual coupling
-#from pycoupler.coupler import Coupler
+from pycoupler.coupler import Coupler
+from pycoupler.data import supply_inputs, preprocess_inputs
+# coupler = Coupler(config_file=config_coupled_fn)
 
 from .... import Step
 
@@ -23,24 +25,24 @@ class Environment (I.Environment):
     # TODO: remove those that you don't use 
     # NOTE: can be used for initial coupling
 
-#     def __init__(self,
-#                  # *,  # TODO: uncomment when adding named args after this
-#                  **kwargs):
-#         """Initialize the unique instance of Environment."""
-#         super().__init__(**kwargs)  # must be the first line
-#         # TODO: add custom code here
-#         pass
+     def __init__(self,
+                  *,
+                  coupler = None  # TODO: uncomment when adding named args after this
+                  **kwargs):
+        """Initialize the unique instance of Environment."""
+         super().__init__(**kwargs)  # must be the first line
+         # TODO: add custom code here
+         pass
 
     # process-related methods: 
-    
     def next_update_step(self, t):
         return t + self.delta_t
     
     def LPJmL_copanCORE_coupling(self, t):
         
         input_data = self.in_dict #or skip this and directly write below
-        year = self.end_year + t # TODO: check what t and year are and need to be, t should already be the year
-           
+        year = self.start_year + t # TODO: check what t and year are and need to be, t should already be the year
+
         # send input data to lpjml
         self.coupler.send_inputs(input_data, year)
  

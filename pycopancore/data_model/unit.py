@@ -112,7 +112,7 @@ class Unit (object):
             assert dimension is None, \
                 "dimension of non-base unit is derived automatically"
 
-    def named(self, name, desc=None, *, symbol=None):
+    def named(self, name, *, desc=None, symbol=None):
         return Unit(is_base=self.is_base, name=name,
                     symbol=self.symbol if symbol is None else symbol,
                     desc=self.desc if desc is None else desc,

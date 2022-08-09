@@ -33,8 +33,8 @@ from pycoupler.data import supply_inputs, preprocess_inputs
  
 # paths
 # TODO add other requirements for pycoupler
-model_location = "<INSERT_MODEL_LOCATION>"
-base_path = "/p/projects/open/Jannes/copan_core/lpjml_test"
+model_location = "/home/lschwarz/kopplung"
+base_path = "/p/projects/copan/users/lschwarz/lpjml/data"
 model_path = f"{model_location}/LPJmL_internal"
 config_historic_fn = f"{base_path}/config_historic.json"
 config_coupled_fn = f"{base_path}/config_coupled.json"
@@ -55,8 +55,25 @@ inputs = supply_inputs(config_file=config_coupled_fn,
                        start_year=start_year, end_year=start_year)
 input_data = preprocess_inputs(inputs, grid=coupler.grid, time=start_year)
 
+# input_data["with_tillage"] = input_data["with_tillage"].astype("int32")
+
+
+
 # simulation parameters:
 
+# coupled simulation years
+# years = range(1981, 2006)
+# #  The following could be your model/program/script
+# for year in years:
+#     # send input data to lpjml
+#     print(f"year: {year}")
+#     coupler.send_inputs(input_data, year)
+#     # read output data
+#     outputs = coupler.read_outputs(year)
+#     print(outputs)
+#     # generate some results based on lpjml outputs
+#     # ....
+# coupler.close_channel()
 
 
 delta_t = 1  # desired temporal resolution of the resulting output.
@@ -70,24 +87,24 @@ delta_t = 1  # desired temporal resolution of the resulting output.
 # adjust reading and writing as in Jannes' test script
 # erst mal benötigt als pre-struktur, kommt dann quasi weg, wenn lpjml output da ist
 # fkt die output auf hohem level als argument entgegennimmt
-test_dict_in = {"with_tillage": np.zeros((1, 1))}
+test_dict_in = {"with_tillage": np.zeros((1, 1), dtype=int)}
 test_dict_out = {"cftfrac": np.zeros((1, 32)), "pft_harvestc": np.zeros((1, 32))}
 
 landuse_update_rate = 10
 landuse_update_prob = 1.
 
-t_max = 2008  # interval for which the model will be simulated
+
 dt = 0.1  # desired temporal resolution of the resulting output.
 
 
 # instantiate process taxa:
 env = M.Environment(
-    delta_t = delta_t, #dt should be given to environment probably
-    end_year = end_year, #our starting point
-    in_dict = test_dict_in,
-    out_dict = test_dict_out,
-    old_out_dict = test_dict_out
-    
+    delta_t=delta_t,  # dt should be given to environment probably
+    start_year=start_year,  # our starting point
+    in_dict=test_dict_in,
+    out_dict=test_dict_out,
+    old_out_dict=test_dict_out,
+    coupler=coupler
     )
 met = M.Metabolism(
     landuse_update_rate = landuse_update_rate,
@@ -116,8 +133,10 @@ ind = M.Individual(cell = cell)
 #
 
 runner = Runner(model=model)
-traj = runner.run(t_0=2005, t_1=t_max, dt=dt)
+traj = runner.run(t_0=start_year, t_1=t_max, dt=dt)
 
 # TODO: Add some further analysis such as plotting or saving
 # plt.plot(traj['t'], traj[M.SocialSystem.population][socs[0]])
 # plt.show()
+
+coupler.close_channel()

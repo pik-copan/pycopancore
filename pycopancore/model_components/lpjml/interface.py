@@ -68,6 +68,11 @@ class Cell (object):
         datatype = np.array,
         array_shape = (1, ))
 
+    pft_harvestc = Variable(
+        "yields of different pfts",
+        "array of pft_harvest bands",
+        datatype = np.array,
+        array_shape = (32, ))
 
 #
 # Process taxa
@@ -81,6 +86,9 @@ class Environment (object):
         """output dictionary from lpjml, like e.g. cftfrac""",
         datatype = Dict[str, np.ndarray])
     
+    # TODO does this work?
+    # coupler = Coupler(config_file=config_coupled_fn)
+    
     old_out_dict = Variable(
         "old output from lpjml", 
         """output dictionary from lpjml, like e.g. cftfrac""",
@@ -92,13 +100,18 @@ class Environment (object):
         "time step",
         """time step has to be given in study script""")
     
+    start_year = Variable(
+        "coupled start year",
+        """"start year of the coupled simulation, given by end year of lpjml spinup""")
+
     end_year = Variable(
-        "copan_start_year", 
-        """start year of the copan run given by end year of lpjml spinup""")
+        "coupled end year", 
+        """end year of coupled simulation""")
     
     in_dict = Variable(
         "input to lpjml", 
         """input dictionary to lpjml with values on e.g. land use""",
         datatype = Dict[str, np.ndarray])
+
 
 

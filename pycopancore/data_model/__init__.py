@@ -22,7 +22,7 @@ dimension clear in the following fashion:
   of dimension `temperature` and default unit `kelvins`.
   
 * Variables that represent a stock per surface area, volume, or mass should be
-  called **densities**, e.g., `vegetation_carbon_density` in `GtC/m²` or
+  called **densities**, e.g., `vegetation_carbon_density` in `GtC/m2` or
   `energy_density_of_wood` in `MJ/kg`.
   
 * Variables that represent (changes of) stocks per time or time derivatives of stocks
@@ -32,7 +32,7 @@ dimension clear in the following fashion:
   
 * Variables that represent flows per surface area should be called **fluxes**,
   e.g. `sensible_heat_flux` of dimension `energy/time/area` and default unit
-  `W/m²`.
+  `W/m^2`.
   
 * Variables of dimension `time` that represent specific unique time points
   should be called **time_points** or **dates**, e.g., `net_zero_date`.
