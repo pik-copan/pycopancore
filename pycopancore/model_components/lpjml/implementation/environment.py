@@ -12,7 +12,6 @@ from .. import interface as I
 # TODO: implement actual coupling
 from pycoupler.coupler import Coupler
 from pycoupler.data import supply_inputs, preprocess_inputs
-# coupler = Coupler(config_file=config_coupled_fn)
 
 from .... import Step
 
@@ -25,28 +24,30 @@ class Environment (I.Environment):
     # TODO: remove those that you don't use 
     # NOTE: can be used for initial coupling
 
-     def __init__(self,
-                  *,
-                  coupler = None  # TODO: uncomment when adding named args after this
-                  **kwargs):
+    def __init__(self, *, coupler=None, **kwargs):
         """Initialize the unique instance of Environment."""
-         super().__init__(**kwargs)  # must be the first line
-         # TODO: add custom code here
-         pass
+        super().__init__(**kwargs)  # must be the first line
+        self.coupler = coupler
 
     # process-related methods: 
     def next_update_step(self, t):
+        print("t right in the beginning: ", t)
         return t + self.delta_t
     
     def LPJmL_copanCORE_coupling(self, t):
-        
-        input_data = self.in_dict #or skip this and directly write below
-        year = self.start_year + t # TODO: check what t and year are and need to be, t should already be the year
-
+        print("start coupling year", t)
+        input_data = self.in_dict  # or skip this and directly write below
+        # idea: t should already be the year
+        # currently dirty fix (t-1), as t apparently is already incremented
+        # by the next_update_step process
+        # TODO find a nicer way of doing this
+        year = t-1
+        print("running coupling year: ", year)
         # send input data to lpjml
         self.coupler.send_inputs(input_data, year)
+        print("current year input values: ", input_data)
  
-        #read output data from lpjml
+        # read output data from lpjml
         outputs = self.coupler.read_outputs(year)
         # TODO: check when input is set and what time output refers to,
         # beginning or end of year
