@@ -40,7 +40,7 @@ class Culture (I.Culture):
         # Step (1)
         if self.group_membership_network.neighbors(agent_i):
             group_j = np.random.choice(list(agent_i.group_memberships))
-            mean_opinion_j = group_j.mean_group_opinion
+            mean_opinion_j = group_j.mean_group_opinion #or mean_group_opinion
             # Step (2): Compare strategies of i and j:
             # If they are the same, do nothing. Else change i's behaviour.
             if agent_i.behaviour != mean_opinion_j:

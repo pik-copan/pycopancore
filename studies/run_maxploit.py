@@ -56,8 +56,8 @@ individuals = [M.Individual(behaviour=0, opinion=0, imitation_tendency=0,
                  for i in range(ni_sust)]
 
 # instantiate groups
-ng_sust = 1  # number of groups
-ng_nonsust = 1
+ng_sust = 2  # number of groups
+ng_nonsust = 2
 groups = [M.Group(culture=culture, world=world, mean_group_opinion=1) for i in range(ng_sust)] + \
          [M.Group(culture=culture, world=world, mean_group_opinion=0) for i in range(ng_nonsust)]
 
@@ -143,7 +143,9 @@ print('keys:', np.array(traj.keys()))
 #     print([traj[M.Individual.behaviour][ind]])
 individuals_behaviours = np.array([traj[M.Individual.behaviour][ind]
                                    for ind in individuals])
+individuals_behaviours_dict=traj[M.Individual.behaviour]
 groups_opinions = traj[M.Group.mean_group_opinion]
+# groups_opinions_fixed = traj[M.Group.group_opinion]
 
 # for ind in individuals:
 #     print([traj[M.Individual.opinion][ind]])
@@ -187,12 +189,23 @@ layout = dict(title='Maxploit Model',
 fig = dict(data=[data_behav0, data_behav1], layout=layout)
 # py.plot(fig, filename="maxlpoit_model.html")
 
-print(groups_opinions)
+# print(groups_opinions)
+# print(groups_opinions[groups[0]])
+# print(groups_opinions[groups[0]][0])
+# print(groups_opinions_fixed)
+# print(groups_opinions_fixed[groups[0]])
+# print(groups_opinions_fixed[groups[0]][0])
+# print(individuals_behaviours_dict)
+# print(individuals_behaviours_dict[individuals[0]])
+# print(individuals_behaviours_dict[individuals[0]][0])
 
-for time in t:
+import os
+my_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\volatile_group_opinion"
+
+for i in range(len(t)):
     color_map = []
-    unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_opinions[n][time])
-                    or (d["type"] == "Individual" and individuals_behaviours[n][time])}
+    unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_opinions[n][i])
+                    or (d["type"] == "Individual" and individuals_behaviours_dict[n][i])}
     # sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_opinion)
     #               or (d["type"] == "Individual" and not n.opinion)}
     for node in list(GM.nodes):
@@ -200,9 +213,12 @@ for time in t:
             color_map.append("red")
         else:
             color_map.append("blue")
+    fig = plt.figure()
     nx.draw(GM, node_color=color_map, with_labels=False,
             pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-    plt.show()
+    my_file = f'network_{i}.png'
+    fig.savefig(os.path.join(my_path, my_file))
+    plt.close(fig)
 
 # color_map = []
 # for node in list(GM.nodes):

@@ -49,6 +49,11 @@ class Individual(object):
 class Group(object):
     """Interface for Group."""
 
+    group_opinion = Variable(
+        "fixed opinion",
+        "the fixed opinion on how to harvest of all of a groups members"
+    )
+
     mean_group_opinion = Variable(
         "mean opinion of group",
         "the mean of opinion on how to harvest of all of a groups members"
