@@ -28,18 +28,25 @@ class Group(I.Group):
             if i.opinion:
                 n += 1
         N = len(list(self.group_members))
-        mean_group_opinion = n/N
-        return mean_group_opinion
+        mean = n/N
+        if mean > self.culture.majority_threshold:
+            self.mean_group_opinion = 1
+        else:
+            self.mean_group_opinion = 0
 
     def get_mean_group_behaviour(self, unused_t):
         """Calculate the mean behaviour of individuals in a group."""
+
         n = 0
         for i in self.group_members:
             if i.behaviour:
                 n += 1
         N = len(list(self.group_members))
-        mean_group_behaviour = n/N
-        return mean_group_behaviour
+        mean = n/N
+        if mean > self.culture.majority_threshold:
+            self.mean_group_behaviour = 1
+        else:
+            self.mean_group_behaviour = 0
 
     processes = [
         Explicit("mean opinion in group", [I.Group.mean_group_opinion], get_mean_group_opinion),

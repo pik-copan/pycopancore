@@ -62,6 +62,10 @@ class Group(object):
 class Culture(object):
     """Define Interface for Culture."""
 
+    majority_threshold = Variable('Treshold for majority',
+                                 """Trehshold for a majority opinion in a group being considered group opinion""",
+                                 default=0.5)
+
     group_membership_network = D.CUL.group_membership_network
     acquaintance_network = D.CUL.acquaintance_network
     last_execution_time = Variable('last exec.time',

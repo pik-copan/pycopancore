@@ -1,8 +1,6 @@
-"""Test Study for the exploit model.
+"""Test Study for the maxploit model.
 
-A study to test the runner with the exploit model.
-It includes the module components exploit_social_learning,
-most_simple_vegetation and simple_extraction.
+A study to test the runner with the maxploit model.
 """
 
 # This file is part of pycopancore.
@@ -20,6 +18,8 @@ import datetime as dt
 from numpy import random
 import argparse
 
+import networkx as nx
+import matplotlib.pyplot as plt
 import plotly.offline as py
 import plotly.graph_objs as go
 
@@ -27,10 +27,10 @@ import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
 
 # parameters:
-timeinterval = 100
+timeinterval = 2
 timestep = 0.1
-ni_sust = 50  # number of agents with sustainable behaviour 1
-ni_nonsust = 50  # number of agents with unsustainable behaviour 0
+ni_sust = 10  # number of agents with sustainable behaviour 1
+ni_nonsust = 10  # number of agents with unsustainable behaviour 0
 nindividuals = ni_sust + ni_nonsust
 nc = nindividuals  # number of cells
 p = 0.4  # link density
@@ -56,8 +56,10 @@ individuals = [M.Individual(behaviour=0, opinion=0, imitation_tendency=0,
                  for i in range(ni_sust)]
 
 # instantiate groups
-ng = 10  # number of groups
-groups = [M.Group(culture=culture, world=world) for i in range(ng)]
+ng_sust = 1  # number of groups
+ng_nonsust = 1
+groups = [M.Group(culture=culture, world=world, mean_group_opinion=1) for i in range(ng_sust)] + \
+         [M.Group(culture=culture, world=world, mean_group_opinion=0) for i in range(ng_nonsust)]
 
 for (i, c) in enumerate(cells):
     c.individual = individuals[i]
@@ -82,12 +84,44 @@ print("erdosrenyifying the graph ... ", end="", flush=True)
 start = time()
 erdosrenyify(culture.acquaintance_network, p=p)
 
+# nx.draw(culture.acquaintance_network)
+# plt.show()
+
+
+GM = culture.group_membership_network
 # initialize group_membership network
 interlink_density = 0.5
 for i in individuals:
     for g in groups:
         if np.random.uniform() < interlink_density:
-            culture.group_membership_network.add_edge(i, g)
+            GM.add_edge(i, g)
+# make sure each individual is member of at least one group
+    if not list(i.group_memberships): #i.e. list is empty
+        GM.add_edge(i, np.random.choice(groups))
+
+color_map = []
+for node in list(GM.nodes):
+    color_map.append(GM.nodes[node]["color"])
+top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
+bottom_nodes = set(GM) - top_nodes
+nx.draw(GM, node_color=color_map, with_labels=False,
+        pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+plt.show()
+
+color_map = []
+unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and n.mean_group_opinion)
+                or (d["type"] == "Individual" and n.behaviour)}
+# sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_opinion)
+#               or (d["type"] == "Individual" and not n.opinion)}
+for node in list(GM.nodes):
+    if node in unsust_nodes:
+        color_map.append("red")
+    else:
+        color_map.append("blue")
+nx.draw(GM, node_color=color_map, with_labels=False,
+        pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+plt.show()
+
 
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
@@ -101,37 +135,44 @@ print('runtime: {runtime}'.format(**locals()))
 
 t = np.array(traj['t'])
 print("max. time step", (t[1:] - t[:-1]).max())
-# print('keys:', np.array(traj.keys()))
+print('keys:', np.array(traj.keys()))
 # print('completeDict: ', traj)
 
+
+# for ind in individuals:
+#     print([traj[M.Individual.behaviour][ind]])
 individuals_behaviours = np.array([traj[M.Individual.behaviour][ind]
                                    for ind in individuals])
-individuals_opinions = np.array([traj[M.Individual.opinion][ind]
-                                 for ind in individuals])
+groups_opinions = traj[M.Group.mean_group_opinion]
+
+# for ind in individuals:
+#     print([traj[M.Individual.opinion][ind]])
+# individuals_opinions = np.array([traj[M.Individual.opinion][ind]
+#                                  for ind in individuals])
 
 nbehav1_list = np.sum(individuals_behaviours, axis=0) / nindividuals
 nbehav0_list = 1 - nbehav1_list
 
-nopinion1_list = np.sum(individuals_opinionss, axis=0) / nindividuals
-nopinion0_list = 1 - nopinion1_list
+# nopinion1_list = np.sum(individuals_opinions, axis=0) / nindividuals
+# nopinion0_list = 1 - nopinion1_list
 
 # everything below is just plotting commands for plotly
 
-data_opinion0 = go.Scatter(
+data_behav0 = go.Scatter(
     x=t,
-    y=nopinion0_list,
+    y=nbehav0_list,
     mode="lines",
-    name="relative amount behaviour 0",
+    name="relative amount behaviour 0 (nonsus)",
     line=dict(
         color="lightblue",
         width=2
     )
 )
-data_opinion1 = go.Scatter(
+data_behav1 = go.Scatter(
     x=t,
-    y=nopinion1_list,
+    y=nbehav1_list,
     mode="lines",
-    name="relative amount behaviour 1",
+    name="relative amount behaviour 1 (sus)",
     line=dict(
         color="orange",
         width=2
@@ -143,5 +184,31 @@ layout = dict(title='Maxploit Model',
               yaxis=dict(title='relative behaviour amounts'),
               )
 
-fig = dict(data=[data_opinion0, data_opinion1], layout=layout)
-py.plot(fig, filename="exlpoit_model.html")
+fig = dict(data=[data_behav0, data_behav1], layout=layout)
+# py.plot(fig, filename="maxlpoit_model.html")
+
+print(groups_opinions)
+
+for time in t:
+    color_map = []
+    unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_opinions[n][time])
+                    or (d["type"] == "Individual" and individuals_behaviours[n][time])}
+    # sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_opinion)
+    #               or (d["type"] == "Individual" and not n.opinion)}
+    for node in list(GM.nodes):
+        if node in unsust_nodes:
+            color_map.append("red")
+        else:
+            color_map.append("blue")
+    nx.draw(GM, node_color=color_map, with_labels=False,
+            pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+    plt.show()
+
+# color_map = []
+# for node in list(GM.nodes):
+#     color_map.append(GM.nodes[node]["color"])
+# top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
+# bottom_nodes = set(GM) - top_nodes
+# nx.draw(GM, node_color=color_map, with_labels=False,
+#         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+# plt.show()

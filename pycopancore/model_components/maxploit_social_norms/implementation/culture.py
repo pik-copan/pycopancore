@@ -49,8 +49,8 @@ class Culture (I.Culture):
         # Step (3)
         self.set_new_update_time(agent_i)
 
-        if self.check_for_consensus():
-            print('Consensus! time ', t)
+        # if self.check_for_consensus():
+        #     print('Consensus! time ', t)
 
     # def reconnect(self, agent_i, group_j):
     #     """Reconnect agent_i from agent_j and connect it to k.
