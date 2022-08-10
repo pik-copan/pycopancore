@@ -1,8 +1,4 @@
-"""This is the test script for the seven dwarfs step by step tutorial.
-
-In this version only the Step-process 'aging' of entitytype 'Individual' is
-implemented, such that the only relevant attributes of 'Individual' are 'age'
-and 'cell'.
+"""This is an illustration script for some of the features that come with the group entity based on the seven dwarfs model.
 """
 
 # This file is part of pycopancore.
@@ -73,7 +69,7 @@ individuals = [M.Individual(cell=cells[0],
                             ) for i in range(dwarfs)
                ]
 
-print("\n The individuals: \n")
+print("\n The individuals:")
 print(individuals)
 print("\n \n")
 
@@ -84,7 +80,7 @@ print("\n \n")
 ng = 10 #number of groups
 groups = [M.Group(culture=culture, world=world) for i in range (ng)]
 
-print("\n The groups: \n")
+print("\n The groups:")
 print(groups)
 print("\n \n")
 
@@ -99,29 +95,34 @@ print('\n runner starting')
 #plt.show()
 
 
-# initialize some network:
+# initialize the network:
 for i in individuals:
     for g in groups:
         culture.group_membership_network.add_edge(i, g)
 
-print("Individual 1 Group Memberships:")
+print("\n Individual 1 Group Memberships:")
 print(list(individuals[0].group_memberships))
 print("\n")
 
-print("Group Members:")
-print(groups[0])
+print("\n Group Members:")
 print(list(groups[0].group_members))
 print("\n")
 
 #draw network of one group
-nx.draw(individuals[0].culture.group_membership_network)
-plt.show()
+# nx.draw(individuals[0].culture.group_membership_network)
+# plt.show()
 
 GM = culture.group_membership_network
 
+print("\n The data structure in gm network:")
 print(GM.nodes.data())
+print("\n")
 
+# How networkx would classicaly plot the network
+nx.draw(culture.group_membership_network)
+plt.show()
 
+# How to plot more intuitively using the type and color information
 color_map = []
 shape_map = []
 for node in list(GM.nodes):
@@ -133,22 +134,11 @@ for node in list(GM.nodes):
         shape_map.append("o")
     else:
         shape_map.append("^")
-
-
-
 top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
 bottom_nodes = set(GM) - top_nodes
-
-print(list(top_nodes))
-
 nx.draw(GM, node_color=color_map, with_labels=False,
         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4/1))
 plt.show()
-
-nx.draw(culture.group_membership_network)
-plt.show()
-
-
 
 # Define termination signals as list [ signal_method, object_method_works_on ]
 # the termination method 'check_for_extinction' must return a boolean
@@ -158,8 +148,8 @@ termination_signal = [M.Culture.check_for_extinction,
 # Define termination_callables as list of all signals
 termination_callables = [termination_signal]
 
-nx.draw(culture.acquaintance_network)
-plt.show()
+# nx.draw(culture.acquaintance_network)
+# plt.show()
 
 # Runner is instantiated
 r = Runner(model=model,
