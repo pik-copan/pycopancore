@@ -76,7 +76,7 @@ print("\n \n")
 # assigning individuals to cell is not necessary since it is done by
 # initializing the individuals in 'base.Individuals' with the 'cell' method
 
-#instantiate groups
+# instantiate groups
 ng = 10 #number of groups
 groups = [M.Group(culture=culture, world=world) for i in range (ng)]
 
