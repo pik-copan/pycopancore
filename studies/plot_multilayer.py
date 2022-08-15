@@ -1,7 +1,8 @@
 
 """
 Plot multi-graphs in 3D.
-https://stackoverflow.com/questions/60392940/multi-layer-graph-in-networkx
+Based upon https://stackoverflow.com/questions/60392940/multi-layer-graph-in-networkx
+and adjusted for personal needs.
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,19 +14,25 @@ from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 class LayeredNetworkGraph(object):
 
-    def __init__(self, graphs, node_labels=None, layout=nx.spring_layout, ax=None):
+    def __init__(self, graphs, connecting_graphs, node_labels=None, layout=nx.spring_layout, ax=None):
         """Given an ordered list of graphs [g1, g2, ..., gn] that represent
         different layers in a multi-layer network, plot the network in
         3D with the different layers separated along the z-axis.
 
         Within a layer, the corresponding graph defines the connectivity.
+
         Between layers, nodes in subsequent layers are connected if
-        they have the same node ID.
+        they share an edge in the connecting graph i1.
+
+        E.g. LayeredNetworkGraph([g1, g2], [i1])
 
         Arguments:
         ----------
-        graphs : list of networkx.Graph objects
+        graphs : list of N networkx.Graph objects
             List of graphs, one for each layer.
+
+        interconnecting graphs: list of N-1 networkx.Graph objects
+            List of graphs, one for each layer connection.
 
         node_labels : dict node ID : str label or None (default None)
             Dictionary mapping nodes to labels.
@@ -41,6 +48,7 @@ class LayeredNetworkGraph(object):
 
         # book-keeping
         self.graphs = graphs
+        self.connecting_graphs = connecting_graphs
         self.total_layers = len(graphs)
 
         self.node_labels = node_labels
@@ -77,15 +85,17 @@ class LayeredNetworkGraph(object):
 
 
     def get_edges_between_layers(self):
-        """Determine edges between layers. Nodes in subsequent layers are
-        thought to be connected if they have the same ID."""
+        """Determine edges between layers. Nodes in subsequent layers (e.g. g1, g2) are
+        thought to be connected if they share an edge in the connecting graph (i1)."""
         self.edges_between_layers = []
         for z1, g in enumerate(self.graphs[:-1]):
             z2 = z1 + 1
             h = self.graphs[z2]
-            shared_nodes = set(g.nodes()) & set(h.nodes())
-            self.edges_between_layers.extend([((node, z1), (node, z2)) for node in shared_nodes])
-
+            i = self.connecting_graphs[z1]
+            for n1 in g:
+                for n2 in h:
+                    if n2 in list(i.successors(n1)):
+                        self.edges_between_layers.extend([((n1, z1), (n2, z2))])
 
     def get_node_positions(self, *args, **kwargs):
         """Get the node positions in the layered layout."""
@@ -93,14 +103,15 @@ class LayeredNetworkGraph(object):
         # However, networkx layout functions are not implemented for the multi-dimensional case.
         # Futhermore, even if there was such a layout function, there probably would be no straightforward way to
         # specify the planarity requirement for nodes within a layer.
-        # Therefor, we compute the layout for the full network in 2D, and then apply the
+        # Therefore, we compute the layout for the full network in 2D, and then apply the
         # positions to the nodes in all planes.
         # For a force-directed layout, this will approximately do the right thing.
         # TODO: implement FR in 3D with layer constraints.
 
         composition = self.graphs[0]
-        for h in self.graphs[1:]:
+        for index, h in enumerate(self.graphs[1:]):
             composition = nx.compose(composition, h)
+            composition = nx.compose(composition, self.connecting_graphs[index])
 
         pos = self.layout(composition, *args, **kwargs)
 

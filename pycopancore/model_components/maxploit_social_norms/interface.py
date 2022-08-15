@@ -51,7 +51,7 @@ class Group(object):
 
     group_opinion = Variable(
         "fixed opinion",
-        "the fixed opinion on how to harvest of all of a groups members"
+        "the group opinion on how to harvest"
     )
 
     mean_group_opinion = Variable(
@@ -61,14 +61,27 @@ class Group(object):
 
     mean_group_behaviour = Variable(
         "mean behaviour of group",
-        "the mean of behaviour of all of a groups members"
+        "the mean of behaviour of all of a groups members",
+        default=0
+    )
+
+    group_meeting_interval = Variable(
+        "timestep for meeting",
+        """gives the time interval for group meetings in which opinions can change""",
+        default=1
+    )
+
+    group_update_probability = Variable(
+        "probability for an update",
+        """the probability that a group will consider updating their opinion""",
+        default=1
     )
 
 class Culture(object):
     """Define Interface for Culture."""
 
     majority_threshold = Variable('Treshold for majority',
-                                 """Trehshold for a majority opinion in a group being considered group opinion""",
+                                 """Trehshold for a majority of individual opinions in a group being considered group opinion""",
                                  default=0.5)
 
     group_membership_network = D.CUL.group_membership_network

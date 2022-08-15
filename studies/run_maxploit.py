@@ -23,14 +23,16 @@ import matplotlib.pyplot as plt
 import plotly.offline as py
 import plotly.graph_objs as go
 
+from plot_multilayer import LayeredNetworkGraph
+
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
 
 # parameters:
-timeinterval = 2
+timeinterval = 5
 timestep = 0.1
-ni_sust = 10  # number of agents with sustainable behaviour 1
-ni_nonsust = 10  # number of agents with unsustainable behaviour 0
+ni_sust = 5  # number of agents with sustainable behaviour 1
+ni_nonsust = 5  # number of agents with unsustainable behaviour 0
 nindividuals = ni_sust + ni_nonsust
 nc = nindividuals  # number of cells
 p = 0.4  # link density
@@ -56,10 +58,14 @@ individuals = [M.Individual(behaviour=0, opinion=0, imitation_tendency=0,
                  for i in range(ni_sust)]
 
 # instantiate groups
-ng_sust = 2  # number of groups
-ng_nonsust = 2
-groups = [M.Group(culture=culture, world=world, mean_group_opinion=1) for i in range(ng_sust)] + \
-         [M.Group(culture=culture, world=world, mean_group_opinion=0) for i in range(ng_nonsust)]
+ng_total = 2
+ng_sust = 1  # number of groups
+ng_nonsust = ng_total - ng_sust
+group_meeting_interval = 1
+groups = [M.Group(culture=culture, world=world, group_opinion=1,
+                  group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
+         [M.Group(culture=culture, world=world, group_opinion=0,
+                  group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
 
 for (i, c) in enumerate(cells):
     c.individual = individuals[i]
@@ -108,8 +114,21 @@ nx.draw(GM, node_color=color_map, with_labels=False,
         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
 plt.show()
 
+#get a preliminary intergroup network for plotting multilayer
+inter_group_network = nx.Graph()
+for g in groups:
+    inter_group_network.add_node(g)
+for index, g in enumerate(groups):
+    for j in groups[:index]:
+        inter_group_network.add_edge(g, j)
+
+
+# try to plot a nice multilayer network
+LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network])
+plt.show()
+
 color_map = []
-unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and n.mean_group_opinion)
+unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and n.group_opinion)
                 or (d["type"] == "Individual" and n.behaviour)}
 # sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_opinion)
 #               or (d["type"] == "Individual" and not n.opinion)}
@@ -134,8 +153,8 @@ runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
 t = np.array(traj['t'])
-print("max. time step", (t[1:] - t[:-1]).max())
-print('keys:', np.array(traj.keys()))
+# print("max. time step", (t[1:] - t[:-1]).max())
+# print('keys:', np.array(traj.keys()))
 # print('completeDict: ', traj)
 
 
@@ -144,8 +163,13 @@ print('keys:', np.array(traj.keys()))
 individuals_behaviours = np.array([traj[M.Individual.behaviour][ind]
                                    for ind in individuals])
 individuals_behaviours_dict=traj[M.Individual.behaviour]
-groups_opinions = traj[M.Group.mean_group_opinion]
+groups_opinions = traj[M.Group.group_opinion]
+mean_groups_behaviours = traj[M.Group.mean_group_behaviour]
 # groups_opinions_fixed = traj[M.Group.group_opinion]
+
+# print(mean_groups_behaviours)
+# plt.plot(t, mean_groups_behaviours[groups[0]])
+# plt.show()
 
 # for ind in individuals:
 #     print([traj[M.Individual.opinion][ind]])
@@ -200,14 +224,13 @@ fig = dict(data=[data_behav0, data_behav1], layout=layout)
 # print(individuals_behaviours_dict[individuals[0]][0])
 
 import os
-my_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\volatile_group_opinion"
+my_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\group_opinion1"
+
 
 for i in range(len(t)):
     color_map = []
     unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_opinions[n][i])
                     or (d["type"] == "Individual" and individuals_behaviours_dict[n][i])}
-    # sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_opinion)
-    #               or (d["type"] == "Individual" and not n.opinion)}
     for node in list(GM.nodes):
         if node in unsust_nodes:
             color_map.append("red")
