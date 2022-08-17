@@ -14,6 +14,7 @@ from .. import interface as I
 from .... import Step
 
 import numpy as np
+from scipy.special import expit
 import networkx as nx
 
 
@@ -22,91 +23,42 @@ class Culture (I.Culture):
 
     # process-related methods:
 
-    def conformist_transmission(self, t):
-        """Execute the social update in relation to group membership, here by conformist transmission.
+    def individual_update(self, t):
 
-        Parameters
-        ----------
-        t : float
-            time
-
-        Returns
-        -------
-
-        """
         self.last_execution_time = t
         agent_i = self.get_update_agent()
 
+        # book keeping
+        opinion = agent_i.opinion
+        behaviour = agent_i.behaviour
+        group_j = list(agent_i.group_memberships)[0] # should be only one
+        injunction = group_j.group_opinion
+
         # Step (1)
-        if self.group_membership_network.neighbors(agent_i):
-            group_j = np.random.choice(list(agent_i.group_memberships))
-            mean_opinion_j = group_j.mean_group_behaviour #or mean_group_opinion
-            # Step (2): Compare strategies of i and j:
-            # If they are the same, do nothing. Else change i's behaviour.
-            if agent_i.behaviour != mean_opinion_j:
-                self.change_strategy(agent_i, mean_opinion_j)
-
+        assert (self.acquaintance_network.neighbors(agent_i)
+                and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
+        # Step (2)
+        # self.individual_behaviour_switch()
         # Step (3)
-        self.set_new_update_time(agent_i)
+        # self.individual_opinion_switch()
+        # Step (4)
+        # self.set_new_update_time(agent_i)
 
-        # if self.check_for_consensus():
-        #     print('Consensus! time ', t)
+    def individual_behaviour_switch(self, agent_i):
+        """Apply a switch of individuals behaviour, informed by individuals own opinion (cognitive dissonance),
+         neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
+        # x = 1
+        # probability = expit(x)
+        # if np.random.random() < probability:
+        #     agent_i.behaviour = mean_opinion_j
 
-    # def reconnect(self, agent_i, group_j):
-    #     """Reconnect agent_i from agent_j and connect it to k.
-    #
-    #     Disconnect agent_i from agent_j and connect agent_i
-    #     to a randomly chosen agent_k with the same behaviour,
-    #     agent_i.behaviour == agent_k.behaviour.
-    #
-    #     Parameters
-    #     ----------
-    #     agent_i : Agent (Individual or SocialSystem)
-    #     agent_j : Agent (Individual or SocialSystem)
-    #
-    #     Returns
-    #     -------
-    #
-    #     """
-        # Find a random stranger agent_k with same behaviour as agent_i
-    #     all_non_neighbors = \
-    #         list(set(self.group_membership_network.nodes(type=Group)) #geht das
-    #              - set(self.group_membership_network.neighbors(agent_i)))
-    #     strategy_i = agent_i.behaviour
-    #     for stranger in all_non_neighbors:
-    #         if stranger.behaviour != strategy_i:
-    #             all_non_neighbors.remove(stranger)
-    #     if not all_non_neighbors:
-    #         print('No possible neighbors with different behaviour.')
-    #     else:
-            # Disconnect agent_i and agent_j
-            # self.acquaintance_network.remove_edge(agent_i, agent_j)
-            # Connect agent_i and agent_k
-            # agent_k = np.random.choice(all_non_neighbors)
-            # self.acquaintance_network.add_edge(agent_i, agent_k)
+    def individual_opinion_switch(self, agent_i):
+        """Apply a switch of individuals opinion, informed by individuals own behaviour (cognitive dissonance),
+         neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
 
-    def change_strategy(self, agent_i, mean_opinion_j):
-        """Change behaviour of agent_i to agent_j's.
-
-        Change the behaviour of agent_i to the behaviour of agent_j
-        depending on their respective harvest rates and the imitation tendency
-        according to a sigmoidal function.
-
-        Parameters
-        ----------
-        agent_i : Agent (Individual or SocialSystem)
-            Agent i whose behaviour is to be changed to agent j's behaviour
-        agent_j : Agent (Individual or SocialSystem)
-            Agent j whose behaviour is imitated
-        Returns
-        -------
-
-        """
-        probability = 0.5 # * np.tanh(agent_i.conformity_tendency *
-                           #         (agent_j.get_harvest_rate() -
-                             #        agent_i.get_harvest_rate()) + 1)
-        if np.random.random() < probability:
-            agent_i.behaviour = mean_opinion_j
+    # def group_opinion_switch(self, unused_t):
+    #     """Apply a switch of groups opinion, informed by ?."""
+    # for now situated in group.py
 
     def get_update_agent(self):
         """Return the agent with the closest waiting time.
@@ -142,38 +94,7 @@ class Culture (I.Culture):
         new_update_time = np.random.exponential(agent.average_waiting_time)
         agent.update_time += new_update_time
 
-    # def check_for_consensus(self):
-        """Check if the model has run into a consensus state.
-
-        The model is in a consensus state if in each connected component
-        all agents use the same behaviour. In this case, there will be no more
-        change of strategies since the agents are only connected to agents
-        with the same behaviour.
-
-        Returns
-        -------
-        consensus : bool
-            True if model is into consensus state, otherwise False
-        """
-        # cc = nx.connected_components(self.acquaintance_network)
-        # iterate through all connected components
-        # for component in cc:
-            # iterate through all agents in this component
-            # stratlist = []
-            # for j in component:
-                # check if all agents of component have the same behaviour
-                # stratlist.append(j.behaviour)
-            # if stratlist.count(stratlist[0]) != len(stratlist):
-            #     self.consensus = False
-            #     return self.consensus
-
-        # If in each component, all agents have the same behaviour, then a
-        # consensus state is reached
-        # self.consensus = True
-        # return self.consensus
-
-    def step_timing_conformission(self,
-                    t):
+    def step_timing(self, t):
         """Return the next time step is to be called.
 
         This function is used to get to know when the step function is
@@ -202,5 +123,7 @@ class Culture (I.Culture):
 
     processes = [Step('Social Update is a step function',
                       [I.Culture.acquaintance_network,
-                       B.Culture.worlds.individuals.behaviour, B.Culture.worlds.individuals.update_time],
-                      [step_timing_conformission, conformist_transmission])]
+                       B.Culture.worlds.individuals.behaviour,
+                       B.Culture.worlds.individuals.opinion,
+                       B.Culture.worlds.individuals.update_time],
+                      [step_timing, individual_update])]

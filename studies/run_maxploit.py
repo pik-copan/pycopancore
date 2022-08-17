@@ -3,6 +3,8 @@
 A study to test the runner with the maxploit model.
 """
 
+# expit() scipy
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
@@ -52,7 +54,7 @@ cells = [M.Cell(stock=1, capacity=1, growth_rate=1, social_system=social_system)
 individuals = [M.Individual(behaviour=0, opinion=0, imitation_tendency=0,
                             rewiring_prob=0.5,
                             cell=cells[i]) for i in range(ni_nonsust)] \
-              + [M.Individual(behaviour=1, opinion=0, imitation_tendency=0,
+              + [M.Individual(behaviour=1, opinion=1, imitation_tendency=0,
                               rewiring_prob=0.5,
                               cell=cells[i + ni_nonsust])
                  for i in range(ni_sust)]
@@ -96,14 +98,19 @@ erdosrenyify(culture.acquaintance_network, p=p)
 
 GM = culture.group_membership_network
 # initialize group_membership network
-interlink_density = 0.5
-for i in individuals:
-    for g in groups:
-        if np.random.uniform() < interlink_density:
-            GM.add_edge(i, g)
+# interlink_density = 0.5
+# for i in individuals:
+#     for g in groups:
+#         if np.random.uniform() < interlink_density:
+#             GM.add_edge(i, g)
 # make sure each individual is member of at least one group
-    if not list(i.group_memberships): #i.e. list is empty
-        GM.add_edge(i, np.random.choice(groups))
+#     if not list(i.group_memberships): #i.e. list is empty
+#         GM.add_edge(i, np.random.choice(groups))
+
+# group_membership network with only one group membership for now
+for i in individuals:
+    GM.add_edge(i, np.random.choice(groups))
+
 
 color_map = []
 for node in list(GM.nodes):
@@ -124,7 +131,16 @@ for index, g in enumerate(groups):
 
 
 # try to plot a nice multilayer network
-LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], )
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], ax=ax)
+ax.view_init(90, 0)
+plt.show()
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], ax=ax)
+ax.view_init(40, 40)
 plt.show()
 
 color_map = []
@@ -223,7 +239,7 @@ fig = dict(data=[data_behav0, data_behav1], layout=layout)
 # print(individuals_behaviours_dict[individuals[0]][0])
 
 import os
-my_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\layered"
+my_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\layered_20_4"
 
 v_array1 = []
 v_array2 = []
@@ -253,13 +269,12 @@ for t in range(100):
     v_array = [v_array1, v_array2]
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.view_init(40, 40)
+    ax.view_init(40+0.05*t, 40+0.05*t)
     LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network],
                         v_array, ax=ax, layout=nx.spring_layout, node_positions=node_positions)
     my_file = f'layered_network_{t}.png'
     fig.savefig(os.path.join(my_path, my_file))
     plt.close(fig)
-
 """
 for i in range(len(t)):
     color_map = []
@@ -284,4 +299,6 @@ for i in range(len(t)):
 # bottom_nodes = set(GM) - top_nodes
 # nx.draw(GM, node_color=color_map, with_labels=False,
 #         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-# plt.show()
+# plt.show()#
+
+plt.close('all')
