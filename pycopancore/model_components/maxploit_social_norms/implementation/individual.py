@@ -11,7 +11,9 @@
 
 from .. import interface as I
 import numpy as np
+from pycopancore.model_components.base import interface as B
 
+from .... import Step
 
 class Individual(I.Individual):
     """Define properties of exploit_social_learning individual."""
@@ -53,7 +55,5 @@ class Individual(I.Individual):
         super().reactivate()  # must be the first line
         # TODO: add custom code here:
         pass
-
-    # process-related methods:
 
     processes = []

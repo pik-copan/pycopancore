@@ -31,11 +31,11 @@ from pycopancore.runners.runner import Runner
 # parameters:
 timeinterval = 5
 timestep = 0.1
-ni_sust = 5  # number of agents with sustainable behaviour 1
-ni_nonsust = 5  # number of agents with unsustainable behaviour 0
+ni_sust = 10  # number of agents with sustainable behaviour 1
+ni_nonsust = 10 # number of agents with unsustainable behaviour 0
 nindividuals = ni_sust + ni_nonsust
 nc = nindividuals  # number of cells
-p = 0.4  # link density
+p = 0.5  # link density
 
 # New Order of instantiating things !!!!!
 # instantiate model
@@ -58,8 +58,8 @@ individuals = [M.Individual(behaviour=0, opinion=0, imitation_tendency=0,
                  for i in range(ni_sust)]
 
 # instantiate groups
-ng_total = 2
-ng_sust = 1  # number of groups
+ng_total = 4
+ng_sust = 2 # number of groups
 ng_nonsust = ng_total - ng_sust
 group_meeting_interval = 1
 groups = [M.Group(culture=culture, world=world, group_opinion=1,
@@ -124,7 +124,7 @@ for index, g in enumerate(groups):
 
 
 # try to plot a nice multilayer network
-LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network])
+LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], )
 plt.show()
 
 color_map = []
@@ -140,7 +140,6 @@ for node in list(GM.nodes):
 nx.draw(GM, node_color=color_map, with_labels=False,
         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
 plt.show()
-
 
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
@@ -224,9 +223,44 @@ fig = dict(data=[data_behav0, data_behav1], layout=layout)
 # print(individuals_behaviours_dict[individuals[0]][0])
 
 import os
-my_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\group_opinion1"
+my_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\layered"
 
+v_array1 = []
+v_array2 = []
+for i in individuals:
+    v_array1.append(individuals_behaviours_dict[i][0])
+for index, g in enumerate(groups):
+    v_array2.append(groups_opinions[g][0])
+v_array = [v_array1, v_array2]
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.set_proj_type('ortho')
+LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], v_array, ax=ax)
+plt.show()
 
+multilayer = LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network],
+                    v_array, ax=ax, layout=nx.spring_layout)
+node_positions = multilayer.save_node_positions() # to get node positions
+
+for t in range(100):
+    fig = plt.figure()
+    v_array1 = []
+    v_array2 = []
+    for i in individuals:
+        v_array1.append(individuals_behaviours_dict[i][t])
+    for index, g in enumerate(groups):
+        v_array2.append(groups_opinions[g][t])
+    v_array = [v_array1, v_array2]
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.view_init(40, 40)
+    LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network],
+                        v_array, ax=ax, layout=nx.spring_layout, node_positions=node_positions)
+    my_file = f'layered_network_{t}.png'
+    fig.savefig(os.path.join(my_path, my_file))
+    plt.close(fig)
+
+"""
 for i in range(len(t)):
     color_map = []
     unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_opinions[n][i])
@@ -242,7 +276,7 @@ for i in range(len(t)):
     my_file = f'network_{i}.png'
     fig.savefig(os.path.join(my_path, my_file))
     plt.close(fig)
-
+"""
 # color_map = []
 # for node in list(GM.nodes):
 #     color_map.append(GM.nodes[node]["color"])

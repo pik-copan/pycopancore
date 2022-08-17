@@ -172,7 +172,7 @@ class Culture (I.Culture):
         # self.consensus = True
         # return self.consensus
 
-    def step_timing(self,
+    def step_timing_conformission(self,
                     t):
         """Return the next time step is to be called.
 
@@ -203,4 +203,4 @@ class Culture (I.Culture):
     processes = [Step('Social Update is a step function',
                       [I.Culture.acquaintance_network,
                        B.Culture.worlds.individuals.behaviour, B.Culture.worlds.individuals.update_time],
-                      [step_timing, conformist_transmission])]
+                      [step_timing_conformission, conformist_transmission])]

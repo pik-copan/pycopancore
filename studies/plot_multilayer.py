@@ -14,7 +14,8 @@ from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 class LayeredNetworkGraph(object):
 
-    def __init__(self, graphs, connecting_graphs, node_labels=None, layout=nx.spring_layout, ax=None):
+    def __init__(self, graphs, connecting_graphs, value_arrays=None, node_labels=None,
+                 layout=nx.spring_layout, ax=None, node_positions=None):
         """Given an ordered list of graphs [g1, g2, ..., gn] that represent
         different layers in a multi-layer network, plot the network in
         3D with the different layers separated along the z-axis.
@@ -34,6 +35,9 @@ class LayeredNetworkGraph(object):
         interconnecting graphs: list of N-1 networkx.Graph objects
             List of graphs, one for each layer connection.
 
+        value_arrays: array of N arrays for each N graphs (not interconnecting !)
+            with binary values that can be used for state plotting
+
         node_labels : dict node ID : str label or None (default None)
             Dictionary mapping nodes to labels.
             If None is provided, nodes are not labelled.
@@ -44,15 +48,17 @@ class LayeredNetworkGraph(object):
         ax : mpl_toolkits.mplot3d.Axes3d instance or None (default None)
             The axis to plot to. If None is given, a new figure and a new axis are created.
 
+        node_posistions: in case they should stay the same
         """
 
         # book-keeping
         self.graphs = graphs
         self.connecting_graphs = connecting_graphs
         self.total_layers = len(graphs)
-
+        self.value_arrays = value_arrays
         self.node_labels = node_labels
         self.layout = layout
+        self.node_positions = node_positions
 
         if ax:
             self.ax = ax
@@ -66,7 +72,8 @@ class LayeredNetworkGraph(object):
         self.get_edges_between_layers()
 
         # compute layout and plot
-        self.get_node_positions()
+        if not self.node_positions:
+            self.get_node_positions()
         self.draw()
 
 
@@ -119,6 +126,8 @@ class LayeredNetworkGraph(object):
         for z, g in enumerate(self.graphs):
             self.node_positions.update({(node, z) : (*pos[node], z) for node in g.nodes()})
 
+    def save_node_positions(self):
+        return self.node_positions
 
     def draw_nodes(self, nodes, *args, **kwargs):
         x, y, z = zip(*[self.node_positions[node] for node in nodes])
@@ -163,7 +172,16 @@ class LayeredNetworkGraph(object):
 
         for z in range(self.total_layers):
             self.draw_plane(z, alpha=0.2, zorder=1)
-            self.draw_nodes([node for node in self.nodes if node[1]==z], s=300, zorder=3)
+            if self.value_arrays:
+                color_map = []
+                for v in self.value_arrays[z]:
+                    if v:
+                        color_map.append("crimson")
+                    else:
+                        color_map.append("navy")
+                self.draw_nodes([node for node in self.nodes if node[1] == z], color=color_map, s=300, zorder=3)
+            else:
+                self.draw_nodes([node for node in self.nodes if node[1] == z], s=300, zorder=3)
 
         if self.node_labels:
             self.draw_node_labels(self.node_labels,
