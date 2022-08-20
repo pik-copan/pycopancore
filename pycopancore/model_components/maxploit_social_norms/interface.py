@@ -39,6 +39,8 @@ class Individual(object):
                         """harvesting behaviour of individual, if = 0 -> sustainable""")
     opinion = Variable("harvesting opinion",
                        """Opinion on how one should be harvesting.""")
+    descriptive_norm = Variable("descriptive norm",
+                                """mean behaviour in acquaintance network of individual""")
     imitation_tendency = Variable('imitation tendency', 'former rationality')
     rewiring_prob = Variable('rewiring probability', 'rew. prob.')
     imitation_prob = Variable("imitation probability",

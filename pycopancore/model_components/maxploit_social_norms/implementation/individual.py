@@ -13,7 +13,7 @@ from .. import interface as I
 import numpy as np
 from pycopancore.model_components.base import interface as B
 
-from .... import Step
+from .... import Explicit
 
 class Individual(I.Individual):
     """Define properties of exploit_social_learning individual."""
@@ -56,4 +56,18 @@ class Individual(I.Individual):
         # TODO: add custom code here:
         pass
 
-    processes = []
+    def get_descriptive_norm(self):
+        """Calculate the mean behaviour of neighbouring individuals."""
+
+        n = 0
+        for i in B.Culture.acquaintance_network.neighbors(self):
+            if i.behaviour:
+                n += 1
+        N = len(list(B.Culture.acquaintance_network.neighbors(self)))
+        if n/N > 0.5:
+            self.descriptive_norm = 1
+        else:
+            self.descriptive_norm = 0
+
+
+    processes = [Explicit("descriptive norm", [I.Individual.descriptive_norm], get_descriptive_norm)]

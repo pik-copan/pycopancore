@@ -29,7 +29,7 @@ class Culture (I.Culture):
         agent_i = self.get_update_agent()
 
         # book keeping
-        opinion = agent_i.opinion
+        # opinion = agent_i.opinion
         behaviour = agent_i.behaviour
         group_j = list(agent_i.group_memberships)[0] # should be only one
         injunction = group_j.group_opinion
@@ -38,11 +38,11 @@ class Culture (I.Culture):
         assert (self.acquaintance_network.neighbors(agent_i)
                 and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
         # Step (2)
-        # self.individual_behaviour_switch()
+        self.individual_behaviour_switch(agent_i)
         # Step (3)
-        # self.individual_opinion_switch()
+        # self.individual_opinion_switch(agent_i)
         # Step (4)
-        # self.set_new_update_time(agent_i)
+        self.set_new_update_time(agent_i)
 
     def individual_behaviour_switch(self, agent_i):
         """Apply a switch of individuals behaviour, informed by individuals own opinion (cognitive dissonance),
@@ -52,9 +52,9 @@ class Culture (I.Culture):
         # if np.random.random() < probability:
         #     agent_i.behaviour = mean_opinion_j
 
-    def individual_opinion_switch(self, agent_i):
-        """Apply a switch of individuals opinion, informed by individuals own behaviour (cognitive dissonance),
-         neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
+    # def individual_opinion_switch(self, agent_i):
+    #     """Apply a switch of individuals opinion, informed by individuals own behaviour (cognitive dissonance),
+    #      neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
 
     # def group_opinion_switch(self, unused_t):
     #     """Apply a switch of groups opinion, informed by ?."""
