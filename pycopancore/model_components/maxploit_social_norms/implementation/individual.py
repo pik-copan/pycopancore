@@ -56,18 +56,18 @@ class Individual(I.Individual):
         # TODO: add custom code here:
         pass
 
-    def get_descriptive_norm(self):
-        """Calculate the mean behaviour of neighbouring individuals."""
+    def get_descriptive_norms(self, unused_t):
+        """Calculate the mean behaviour of neighbouring individuals, which is taken to represent a descriptive norm."""
 
         n = 0
-        for i in B.Culture.acquaintance_network.neighbors(self):
+        for i in list(self.acquaintances):
             if i.behaviour:
                 n += 1
-        N = len(list(B.Culture.acquaintance_network.neighbors(self)))
-        if n/N > 0.5:
-            self.descriptive_norm = 1
+        N = len(list(self.acquaintances))
+        self.descriptive_norm = n/N
+        if n/N > I.Culture.majority_threshold:
+            self.descriptive_norm_binary = 1
         else:
-            self.descriptive_norm = 0
+            self.descriptive_norm_binary = 0
 
-
-    processes = [Explicit("descriptive norm", [I.Individual.descriptive_norm], get_descriptive_norm)]
+    processes = [Explicit("descriptive norm", [I.Individual.descriptive_norm], get_descriptive_norms)]

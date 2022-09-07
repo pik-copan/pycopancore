@@ -30,11 +30,14 @@ from plot_multilayer import LayeredNetworkGraph
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
 
+# first thing: set seed so that each execution must return same thing:
+random.seed(1)
+
 # parameters:
-timeinterval = 5
+timeinterval = 1
 timestep = 0.1
-ni_sust = 10  # number of agents with sustainable behaviour 1
-ni_nonsust = 10 # number of agents with unsustainable behaviour 0
+ni_sust = 50  # number of agents with sustainable behaviour 1
+ni_nonsust = 50 # number of agents with unsustainable behaviour 0
 nindividuals = ni_sust + ni_nonsust
 nc = nindividuals  # number of cells
 p = 0.5  # link density
@@ -60,8 +63,8 @@ individuals = [M.Individual(behaviour=0, opinion=0, imitation_tendency=0,
                  for i in range(ni_sust)]
 
 # instantiate groups
-ng_total = 4
-ng_sust = 2 # number of groups
+ng_total = 10
+ng_sust = 5 # number of groups
 ng_nonsust = ng_total - ng_sust
 group_meeting_interval = 1
 groups = [M.Group(culture=culture, world=world, group_opinion=1,
@@ -112,14 +115,14 @@ for i in individuals:
     GM.add_edge(i, np.random.choice(groups))
 
 
-color_map = []
-for node in list(GM.nodes):
-    color_map.append(GM.nodes[node]["color"])
-top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
-bottom_nodes = set(GM) - top_nodes
-nx.draw(GM, node_color=color_map, with_labels=False,
-        pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-plt.show()
+# color_map = []
+# for node in list(GM.nodes):
+#     color_map.append(GM.nodes[node]["color"])
+# top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
+# bottom_nodes = set(GM) - top_nodes
+# nx.draw(GM, node_color=color_map, with_labels=False,
+#         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+# plt.show()
 
 #get a preliminary intergroup network for plotting multilayer
 inter_group_network = nx.Graph()
@@ -131,31 +134,31 @@ for index, g in enumerate(groups):
 
 
 # try to plot a nice multilayer network
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], ax=ax)
-ax.view_init(90, 0)
-plt.show()
+# fig = plt.figure()
+# ax = fig.add_subplot(111, projection='3d')
+# LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], ax=ax)
+# ax.view_init(90, 0)
+# plt.show()
+#
+# fig = plt.figure()
+# ax = fig.add_subplot(111, projection='3d')
+# LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], ax=ax)
+# ax.view_init(40, 40)
+# plt.show()
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], ax=ax)
-ax.view_init(40, 40)
-plt.show()
-
-color_map = []
-unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and n.group_opinion)
-                or (d["type"] == "Individual" and n.behaviour)}
+# color_map = []
+# unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and n.group_opinion)
+#                 or (d["type"] == "Individual" and n.behaviour)}
 # sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_opinion)
 #               or (d["type"] == "Individual" and not n.opinion)}
-for node in list(GM.nodes):
-    if node in unsust_nodes:
-        color_map.append("red")
-    else:
-        color_map.append("blue")
-nx.draw(GM, node_color=color_map, with_labels=False,
-        pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-plt.show()
+# for node in list(GM.nodes):
+#     if node in unsust_nodes:
+#         color_map.append("red")
+#     else:
+#         color_map.append("blue")
+# nx.draw(GM, node_color=color_map, with_labels=False,
+#         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+# plt.show()
 
 print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
@@ -166,6 +169,52 @@ start = time()
 traj = r.run(t_1=timeinterval, dt=timestep)
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
+
+import os
+os_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit"
+
+import datetime
+current_time = datetime.datetime.now()
+current = [current_time.month, current_time.day, current_time.hour, current_time.minute, current_time.second]
+time_string = f"{current_time.year}"
+for i in current:
+    if i < 10:
+        time_string += f"_0{i}"
+    else:
+        time_string += f"_{i}"
+
+# save_time = f"{current_time.year}_" + f"{current_time.month}_" + f"{current_time.day}_" \
+#             + f"{current_time.hour}_" + f"{current_time.minute}_" + f"{current_time.second}"
+
+# Directory
+directory = f"Run_{time_string}"
+
+# Path
+my_path = os.path.join(os_path, directory)
+
+# Create the directory
+# 'GeeksForGeeks' in
+# '/home / User / Documents'
+os.mkdir(my_path)
+print(f"Directory {directory} created @ {my_path}")
+
+# saving traj
+# load pickle module
+from pickle import dump
+# create a binary pickle file
+f = open(my_path + "traj_dic.pickle", "wb")
+
+tosave = {
+          f"{v.owning_class.__name__}" + "."
+          + v.codename: {str(e): traj[v][e]
+                         for e in traj[v].keys()
+                         }
+          for v in traj.keys() if v is not "t"
+          }
+tosave["t"] = traj["t"]
+dump(tosave, f)
+# close file
+f.close()
 
 t = np.array(traj['t'])
 # print("max. time step", (t[1:] - t[:-1]).max())
@@ -238,9 +287,6 @@ fig = dict(data=[data_behav0, data_behav1], layout=layout)
 # print(individuals_behaviours_dict[individuals[0]])
 # print(individuals_behaviours_dict[individuals[0]][0])
 
-import os
-my_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\layered_20_4"
-
 v_array1 = []
 v_array2 = []
 for i in individuals:
@@ -258,21 +304,21 @@ multilayer = LayeredNetworkGraph([culture.acquaintance_network, inter_group_netw
                     v_array, ax=ax, layout=nx.spring_layout)
 node_positions = multilayer.save_node_positions() # to get node positions
 
-for t in range(100):
+for t_index in range(len(t)):
     fig = plt.figure()
     v_array1 = []
     v_array2 = []
     for i in individuals:
-        v_array1.append(individuals_behaviours_dict[i][t])
+        v_array1.append(individuals_behaviours_dict[i][t_index])
     for index, g in enumerate(groups):
-        v_array2.append(groups_opinions[g][t])
+        v_array2.append(groups_opinions[g][t_index])
     v_array = [v_array1, v_array2]
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.view_init(40+0.05*t, 40+0.05*t)
+    ax.view_init(40+0.075*t_index, 40-0.075*t_index)
     LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network],
                         v_array, ax=ax, layout=nx.spring_layout, node_positions=node_positions)
-    my_file = f'layered_network_{t}.png'
+    my_file = f'layered_network_{t_index}.png'
     fig.savefig(os.path.join(my_path, my_file))
     plt.close(fig)
 """
@@ -302,3 +348,6 @@ for i in range(len(t)):
 # plt.show()#
 
 plt.close('all')
+
+# TODO: grit entfernen
+

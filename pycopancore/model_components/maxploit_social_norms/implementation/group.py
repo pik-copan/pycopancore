@@ -28,7 +28,7 @@ class Group(I.Group):
 
     def update_group_opinion(self, unused_t):
         """Update a groups opinion based on the mean_group_behaviour."""
-        if self.mean_group_behaviour <= 0.5: # get the mean in terms of true/false for adjusting the global opinion later
+        if self.mean_group_behaviour <= I.Culture.majority_threshold: # get the mean in terms of true/false for adjusting the global opinion later
             mean_group_opinion_binary = 0
         else:
             mean_group_opinion_binary = 1

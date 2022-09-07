@@ -41,6 +41,8 @@ class Individual(object):
                        """Opinion on how one should be harvesting.""")
     descriptive_norm = Variable("descriptive norm",
                                 """mean behaviour in acquaintance network of individual""")
+    descriptive_norm_binary = Variable("descriptive norm binary",
+                                """mean behaviour in acquaintance network of individual coded as binary""")
     imitation_tendency = Variable('imitation tendency', 'former rationality')
     rewiring_prob = Variable('rewiring probability', 'rew. prob.')
     imitation_prob = Variable("imitation probability",
@@ -81,6 +83,17 @@ class Group(object):
 
 class Culture(object):
     """Define Interface for Culture."""
+
+    #parameters for the logit
+    weight_injunctive = Variable('Weight for Injunction',
+                                 """Weight for the injuctive Norm influence""",
+                                 default=0.5)
+    weight_descriptive = Variable('Weight for Descriptive Norm',
+                                 """Weight for the descriptive Norm influence""",
+                                 default=0.5)
+    weight_dissonance =  Variable('Weight for Cognitive Dissonance',
+                                 """Weight for the Cognitive Dissonance influence""",
+                                 default=0.5)
 
     majority_threshold = Variable('Treshold for majority',
                                  """Trehshold for a majority of individual opinions in a group being considered group opinion""",

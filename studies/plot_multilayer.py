@@ -11,6 +11,9 @@ import networkx as nx
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
+# TODO: get groups to be plotted in middle of inds for looks
+# TODO: label the layers, make dots smaller and maybe different shapes for groups/inds?
+# TODO: think about illustrating cognitive dissonance
 
 class LayeredNetworkGraph(object):
 
@@ -155,7 +158,7 @@ class LayeredNetworkGraph(object):
         u = np.linspace(xmin, xmax, 10)
         v = np.linspace(ymin, ymax, 10)
         U, V = np.meshgrid(u ,v)
-        W = z * np.ones_like(U)
+        W = z * np.ones_like(U) * 0.1
         self.ax.plot_surface(U, V, W, *args, **kwargs)
 
 
@@ -170,6 +173,10 @@ class LayeredNetworkGraph(object):
         self.draw_edges(self.edges_within_layers,  color='k', alpha=0.3, linestyle='-', zorder=2)
         self.draw_edges(self.edges_between_layers, color='k', alpha=0.3, linestyle='--', zorder=2)
 
+        # for different plotstyles for different layers:
+        marker_map = ["^", "o"]
+        size_map = [150, 300]
+
         for z in range(self.total_layers):
             self.draw_plane(z, alpha=0.2, zorder=1)
             if self.value_arrays:
@@ -179,9 +186,9 @@ class LayeredNetworkGraph(object):
                         color_map.append("crimson")
                     else:
                         color_map.append("navy")
-                self.draw_nodes([node for node in self.nodes if node[1] == z], color=color_map, s=300, zorder=3)
+                self.draw_nodes([node for node in self.nodes if node[1] == z], color=color_map, s=size_map[z], zorder=3, marker=marker_map[z])
             else:
-                self.draw_nodes([node for node in self.nodes if node[1] == z], s=300, zorder=3)
+                self.draw_nodes([node for node in self.nodes if node[1] == z], s=200, zorder=3)
 
         if self.node_labels:
             self.draw_node_labels(self.node_labels,

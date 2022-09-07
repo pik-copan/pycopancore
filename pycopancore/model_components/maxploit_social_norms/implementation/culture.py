@@ -32,25 +32,32 @@ class Culture (I.Culture):
         # opinion = agent_i.opinion
         behaviour = agent_i.behaviour
         group_j = list(agent_i.group_memberships)[0] # should be only one
-        injunction = group_j.group_opinion
 
         # Step (1)
         assert (self.acquaintance_network.neighbors(agent_i)
                 and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
         # Step (2)
-        self.individual_behaviour_switch(agent_i)
+        self.individual_behaviour_switch(agent_i, group_j)
         # Step (3)
         # self.individual_opinion_switch(agent_i)
         # Step (4)
         self.set_new_update_time(agent_i)
 
-    def individual_behaviour_switch(self, agent_i):
+    def individual_behaviour_switch(self, agent_i, group_j):
         """Apply a switch of individuals behaviour, informed by individuals own opinion (cognitive dissonance),
          neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
-        # x = 1
-        # probability = expit(x)
-        # if np.random.random() < probability:
-        #     agent_i.behaviour = mean_opinion_j
+        injunctive_norm = group_j.group_opinion
+        if injunctive_norm == 0: # for right probabilities in the logit
+            injunctive_norm = -1
+        descriptive_norm = agent_i.descriptive_norm_binary
+        if descriptive_norm == 0:
+            descriptive_norm = -1
+        x = self.weight_descriptive * descriptive_norm + self.weight_injunctive * injunctive_norm
+        k = 2 # factoring
+        probability = expit(k*x)
+        print(injunctive_norm, descriptive_norm, probability)
+        if np.random.random() < probability:
+            agent_i.behaviour = int(not agent_i.behaviour)
 
     # def individual_opinion_switch(self, agent_i):
     #     """Apply a switch of individuals opinion, informed by individuals own behaviour (cognitive dissonance),
