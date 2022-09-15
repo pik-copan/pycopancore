@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 import plotly.offline as py
 import plotly.graph_objs as go
 
-from plot_multilayer import LayeredNetworkGraph
+# from plot_multilayer import LayeredNetworkGraph
 
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
@@ -198,23 +198,39 @@ my_path = os.path.join(os_path, directory)
 os.mkdir(my_path)
 print(f"Directory {directory} created @ {my_path}")
 
+# import json
+# f = open(my_path + "_traj_dic.json", "wb")
+# json.dump(traj, f)
+
 # saving traj
 # load pickle module
 from pickle import dump
 # create a binary pickle file
-f = open(my_path + "traj_dic.pickle", "wb")
+f = open(my_path +"\\" + f"{directory}_traj_dic.pickle", "wb")
 
 tosave = {
-          f"{v.owning_class.__name__}" + "."
+          v.owning_class.__name__ + "."
           + v.codename: {str(e): traj[v][e]
                          for e in traj[v].keys()
                          }
           for v in traj.keys() if v is not "t"
           }
+
+del tosave["Culture.group_membership_network"]
+del tosave["Culture.acquaintance_network"]
+
+network_list = [culture.acquaintance_network, culture.group_membership_network]
+for n in network_list:
+    tosave[f"{n}"] = nx.to_dict_of_dicts(n)
+
 tosave["t"] = traj["t"]
 dump(tosave, f)
 # close file
 f.close()
+
+
+
+
 
 t = np.array(traj['t'])
 # print("max. time step", (t[1:] - t[:-1]).max())

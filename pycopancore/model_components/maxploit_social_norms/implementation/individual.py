@@ -65,7 +65,7 @@ class Individual(I.Individual):
                 n += 1
         N = len(list(self.acquaintances))
         self.descriptive_norm = n/N
-        if n/N > I.Culture.majority_threshold:
+        if n/N > self.culture.majority_threshold:
             self.descriptive_norm_binary = 1
         else:
             self.descriptive_norm_binary = 0

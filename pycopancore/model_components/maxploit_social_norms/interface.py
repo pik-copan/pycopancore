@@ -40,7 +40,8 @@ class Individual(object):
     opinion = Variable("harvesting opinion",
                        """Opinion on how one should be harvesting.""")
     descriptive_norm = Variable("descriptive norm",
-                                """mean behaviour in acquaintance network of individual""")
+                                """mean behaviour in acquaintance network of individual""",
+                                default=0)
     descriptive_norm_binary = Variable("descriptive norm binary",
                                 """mean behaviour in acquaintance network of individual coded as binary""")
     imitation_tendency = Variable('imitation tendency', 'former rationality')
@@ -60,7 +61,8 @@ class Group(object):
 
     mean_group_opinion = Variable(
         "mean opinion of group",
-        "the mean of opinion on how to harvest of all of a groups members"
+        "the mean of opinion on how to harvest of all of a groups members",
+        default=0
     )
 
     mean_group_behaviour = Variable(
@@ -80,6 +82,7 @@ class Group(object):
         """the probability that a group will consider updating their opinion""",
         default=1
     )
+
 
 class Culture(object):
     """Define Interface for Culture."""

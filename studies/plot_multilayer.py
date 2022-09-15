@@ -196,3 +196,6 @@ class LayeredNetworkGraph(object):
                                   horizontalalignment='center',
                                   verticalalignment='center',
                                   zorder=100)
+
+        self.ax.grid(False)
+        # self.ax.set_xlabel("")
