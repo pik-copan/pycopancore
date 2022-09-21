@@ -3,8 +3,6 @@
 A study to test the runner with the maxploit model.
 """
 
-# expit() scipy
-
 # This file is part of pycopancore.
 #
 # Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
@@ -19,30 +17,72 @@ from time import time
 import datetime as dt
 from numpy import random
 import argparse
-
+import json
 import networkx as nx
 import matplotlib.pyplot as plt
 import plotly.offline as py
 import plotly.graph_objs as go
 
-# from plot_multilayer import LayeredNetworkGraph
+from plot_multilayer import LayeredNetworkGraph
 
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
 
-# first thing: set seed so that each execution must return same thing:
-random.seed(1)
+#---configuration---
 
-# parameters:
-timeinterval = 10
+# seed
+seed = 1
+
+# runner
+timeinterval = 1
 timestep = 0.1
+
+# individuals
 ni_sust = 50  # number of agents with sustainable behaviour 1
 ni_nonsust = 50 # number of agents with unsustainable behaviour 0
 nindividuals = ni_sust + ni_nonsust
-nc = nindividuals  # number of cells
-p = 0.5  # link density
 
-# New Order of instantiating things !!!!!
+# cells:
+cell_stock=1
+cell_capacity=1
+cell_growth_rate=1
+nc = nindividuals  # number of cells
+
+#groups:
+ng_total = 10 # number of total groups
+ng_sust = 5 # number of sustainable groups
+ng_nonsust = ng_total - ng_sust
+group_meeting_interval = 1
+
+#networks
+acquaintance_network_type = "Erdos-Renyi"
+group_membership_network_type = "Erdos-Renyi"
+p = 0.5  # link density for random networks
+
+#---write into dic---
+configuration = {
+    "seed": seed,
+    "timeinterval": timeinterval,
+    "timestep" : timestep,
+    "ni_sust" : ni_sust,
+    "ni_nonsust" : ni_nonsust,
+    "nindividuals" : nindividuals,
+    "cell_stock": cell_stock,
+    "cell_capacity": cell_capacity,
+    "cell_growth_rate": cell_growth_rate,
+    "nc" : nc,
+    "ng_total" : ng_total,
+    "ng_sust" : ng_sust,
+    "ng_nonsust" : ng_nonsust,
+    "group_meeting_interval" : group_meeting_interval,
+    "acquaintance_network_type" : acquaintance_network_type,
+    "group_membership_network_type" : group_membership_network_type,
+    "p" : p
+}
+
+# first thing: set seed so that each execution must return same thing:
+random.seed(seed)
+
 # instantiate model
 model = M.Model()
 
@@ -63,10 +103,6 @@ individuals = [M.Individual(behaviour=0, opinion=0, imitation_tendency=0,
                  for i in range(ni_sust)]
 
 # instantiate groups
-ng_total = 10
-ng_sust = 5 # number of groups
-ng_nonsust = ng_total - ng_sust
-group_meeting_interval = 1
 groups = [M.Group(culture=culture, world=world, group_opinion=1,
                   group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
          [M.Group(culture=culture, world=world, group_opinion=0,
@@ -94,10 +130,6 @@ def erdosrenyify(graph, p=0.5):
 print("erdosrenyifying the graph ... ", end="", flush=True)
 start = time()
 erdosrenyify(culture.acquaintance_network, p=p)
-
-# nx.draw(culture.acquaintance_network)
-# plt.show()
-
 
 
 GM = culture.group_membership_network
@@ -171,18 +203,24 @@ runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
 import os
-os_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit"
+os_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\maxploit"
 
 import datetime
 current_time = datetime.datetime.now()
 current = [current_time.month, current_time.day, current_time.hour, current_time.minute, current_time.second]
 time_string = f"{current_time.year}"
+parent_directory_name = f"{current_time.year}"
 for i in current:
     if i < 10:
         time_string += f"_0{i}"
     else:
         time_string += f"_{i}"
 
+for i in current[:2]:
+    if i < 10:
+        parent_directory_name += f"_0{i}"
+    else:
+        parent_directory_name += f"_{i}"
 # save_time = f"{current_time.year}_" + f"{current_time.month}_" + f"{current_time.day}_" \
 #             + f"{current_time.hour}_" + f"{current_time.minute}_" + f"{current_time.second}"
 
@@ -190,11 +228,16 @@ for i in current:
 directory = f"Run_{time_string}"
 
 # Path
-my_path = os.path.join(os_path, directory)
+my_path = os.path.join(os_path, parent_directory_name)
 
 # Create the directory
 # 'GeeksForGeeks' in
 # '/home / User / Documents'
+if not os.path.exists(my_path):
+    os.mkdir(my_path)
+    print(f"Directory {parent_directory_name} created @ {my_path}")
+
+my_path = os.path.join(my_path, directory)
 os.mkdir(my_path)
 print(f"Directory {directory} created @ {my_path}")
 
@@ -202,11 +245,17 @@ print(f"Directory {directory} created @ {my_path}")
 # f = open(my_path + "_traj_dic.json", "wb")
 # json.dump(traj, f)
 
+# saving things after succesfull run
+# saving config
+#---save json file---
+f = open(my_path+"\\"+"configuration.json", "w+")
+json.dump(configuration, f, indent=4)
+
 # saving traj
 # load pickle module
 from pickle import dump
 # create a binary pickle file
-f = open(my_path +"\\" + f"{directory}_traj_dic.pickle", "wb")
+f = open(my_path +"\\" + "traj.pickle", "wb")
 
 tosave = {
           v.owning_class.__name__ + "."
@@ -301,7 +350,20 @@ plt.plot(t, total_stock, 'g', label="stock")
 plt.legend()
 plt.show()
 
-stock_cell1 = traj[M.Cell.stock][0]
+stock_cell_0 = stock[cells[0]]
+behaviour_ind_0 = individuals_behaviours[individuals[0]] #first unsus ind living in cell 0
+stock_cell_50 = stock[cells[50]]
+behaviour_ind_50 = individuals_behaviours[individuals[50]] #first sus ind living in cell 50
+
+plt.plot(t, stock_cell_0, 'darkgreen', label="stock cell 0")
+plt.plot(t, behaviour_ind_0, 'orange', label="corresponding behaviour ind 0 (starts unsustainable)")
+plt.legend()
+plt.show()
+
+plt.plot(t, stock_cell_50, 'darkgreen', label="stock cell 50")
+plt.plot(t, behaviour_ind_50, 'orange', label="corresponding behaviour ind 50 (starts sustainable)")
+plt.legend()
+plt.show()
 
 # print(groups_opinions)
 # print(groups_opinions[groups[0]])

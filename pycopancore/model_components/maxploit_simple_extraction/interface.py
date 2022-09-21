@@ -13,7 +13,7 @@
 # from ... import master_data_model as D
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
-from ..maxploit_simple_extraction import interface as EX
+from ..maxploit_most_simple_vegetation import interface as VEG
 # from ..maxploit_social_norms import Individual as MSNIndividual # this is slowwww
 from ..maxploit_social_norms import interface as SN
 # TODO: uncomment and adjust only if you really need other variables:
@@ -44,5 +44,6 @@ class Individual(object):
 class Cell(object):
     """Interface for Cell."""
 
-    stock = EX.Cell.stock
-    growth_rate = Variable('growth rate', 'growth rate of resource')
+    stock = VEG.Cell.stock
+    growth_rate = VEG.Cell.growth_rate.copy()
+    capacity = VEG.Cell.capacity.copy()

@@ -10,7 +10,7 @@
 # License: BSD 2-clause license
 
 from pycopancore import ODE
-from pycopancore.model_components.simple_extraction import interface as I
+from .. import interface as I
 
 
 class Cell(I.Cell):
@@ -18,30 +18,27 @@ class Cell(I.Cell):
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 stock=1,
-                 growth_rate=1,
-                 **kwargs
-                 ):
-        """Initialize an instance of Cell."""
-        super().__init__(**kwargs)
+    # def __init__(self,
+    #              *,
+    #              stock=1,
+    #              growth_rate=1,
+    #              **kwargs
+    #              ):
+    #     """Initialize an instance of Cell."""
+    #     super().__init__(**kwargs)
+    #
+    #     self.stock = stock
+    #     self.growth_rate = growth_rate
 
-        self.stock = stock
-        self.growth_rate = growth_rate
+    # def deactivate(self):
+    #     """Deactivate a cell."""
+    #     TODO: add custom code here:
+    #     super().deactivate()  # must be the last line
 
-
-    def deactivate(self):
-        """Deactivate a cell."""
-        # TODO: add custom code here:
-
-        super().deactivate()  # must be the last line
-
-    def reactivate(self):
-        """Reactivate a cell."""
-        super().reactivate()  # must be the first line
-        # TODO: add custom code here:
-
+    # def reactivate(self):
+    #     """Reactivate a cell."""
+    #     super().reactivate()  # must be the first line
+    #     TODO: add custom code here:
     # process-related methods:
 
     def harvest(self, t):

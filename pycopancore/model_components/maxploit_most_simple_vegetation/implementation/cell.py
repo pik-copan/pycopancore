@@ -18,33 +18,33 @@ class Cell(I.Cell):
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 stock=1,
-                 capacity=1,
-                 growth_rate=1,
-                 **kwargs
-                 ):
-        """Initialize an instance of Cell."""
-        super().__init__(**kwargs)
+    # def __init__(self,
+    #              *,
+    #              stock=1,
+    #              capacity=1,
+    #              growth_rate=1,
+    #              **kwargs
+    #              ):
+    #     """Initialize an instance of Cell."""
+    #     super().__init__(**kwargs)
+    #
+    #     self.stock = stock
+    #     self.capacity = capacity
+    #     self.growth_rate = growth_rate
+    #
+    #     pass
+    #
+    # def deactivate(self):
+    #     """Deactivate a cell."""
+    #     TODO: add custom code here:
+    #     pass
+    #     super().deactivate()  # must be the last line
 
-        self.stock = stock
-        self.capacity = capacity
-        self.growth_rate = growth_rate
-
-        pass
-
-    def deactivate(self):
-        """Deactivate a cell."""
-        # TODO: add custom code here:
-        pass
-        super().deactivate()  # must be the last line
-
-    def reactivate(self):
-        """Reactivate a cell."""
-        super().reactivate()  # must be the first line
-        # TODO: add custom code here:
-        pass
+    # def reactivate(self):
+    #     """Reactivate a cell."""
+    #     super().reactivate()  # must be the first line
+    #     TODO: add custom code here:
+    #     pass
 
     # process-related methods:
 

@@ -17,30 +17,28 @@ class Individual(I.Individual):
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 behaviour=0,
-                 **kwargs
-                 ):
-        """Initialize an instance of Individual."""
-        super().__init__(**kwargs)  # must be the first line
-        self.behaviour = behaviour
-
+    # def __init__(self,
+    #              *,
+    #              behaviour=0,
+    #              **kwargs
+    #              ):
+    #     """Initialize an instance of Individual."""
+    #     super().__init__(**kwargs)  # must be the first line
+    #     self.behaviour = behaviour
 
     def __lt__(self, other):
         """Make objects sortable."""
         return self._uid < other._uid
 
-    def deactivate(self):
-        """Deactivate an individual."""
-        # TODO: add custom code here:
+    # def deactivate(self):
+    #     """Deactivate an individual."""
+    #     TODO: add custom code here:
+    #     super().deactivate()  # must be the last line
 
-        super().deactivate()  # must be the last line
-
-    def reactivate(self):
-        """Reactivate an individual."""
-        super().reactivate()  # must be the first line
-        # TODO: add custom code here:
+    # def reactivate(self):
+    #     """Reactivate an individual."""
+    #     super().reactivate()  # must be the first line
+    #     TODO: add custom code here:
 
 
     # process-related methods:
