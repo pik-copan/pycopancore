@@ -22,8 +22,8 @@ It is based on the cython implementation cyexploit
 #
 
 import pycopancore.model_components.base as base
-import pycopancore.model_components.most_simple_vegetation as vegetation
-import pycopancore.model_components.simple_extraction as extraction
+import pycopancore.model_components.maxploit_most_simple_vegetation as vegetation
+import pycopancore.model_components.maxploit_simple_extraction as extraction
 # import pycopancore.model_components.maxploit_individual_layer as individual_layer
 import pycopancore.model_components.maxploit_social_norms as social_norms
 

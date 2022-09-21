@@ -34,7 +34,7 @@ from pycopancore.runners.runner import Runner
 random.seed(1)
 
 # parameters:
-timeinterval = 1
+timeinterval = 10
 timestep = 0.1
 ni_sust = 50  # number of agents with sustainable behaviour 1
 ni_nonsust = 50 # number of agents with unsustainable behaviour 0
@@ -99,6 +99,7 @@ erdosrenyify(culture.acquaintance_network, p=p)
 # plt.show()
 
 
+
 GM = culture.group_membership_network
 # initialize group_membership network
 # interlink_density = 0.5
@@ -113,7 +114,6 @@ GM = culture.group_membership_network
 # group_membership network with only one group membership for now
 for i in individuals:
     GM.add_edge(i, np.random.choice(groups))
-
 
 # color_map = []
 # for node in list(GM.nodes):
@@ -219,18 +219,20 @@ tosave = {
 del tosave["Culture.group_membership_network"]
 del tosave["Culture.acquaintance_network"]
 
-network_list = [culture.acquaintance_network, culture.group_membership_network]
-for n in network_list:
-    tosave[f"{n}"] = nx.to_dict_of_dicts(n)
-
 tosave["t"] = traj["t"]
 dump(tosave, f)
 # close file
 f.close()
 
-
-
-
+# save networks
+os.mkdir(my_path + "\\networks")
+print(f"Directory networks created @ {my_path}")
+network_list = [culture.acquaintance_network, culture.group_membership_network]
+network_names = ["culture.acquaintance_network", "culture.group_membership_network"]
+for counter, n in enumerate(network_list):
+    f = open(my_path +f"\\networks\\{network_names[counter]}.pickle", "wb")
+    save_nx = nx.relabel_nodes(n, lambda x: str(x))
+    dump(save_nx, f)
 
 t = np.array(traj['t'])
 # print("max. time step", (t[1:] - t[:-1]).max())
@@ -291,7 +293,15 @@ layout = dict(title='Maxploit Model',
               )
 
 fig = dict(data=[data_behav0, data_behav1], layout=layout)
-# py.plot(fig, filename="maxlpoit_model.html")
+py.plot(fig, filename="maxlpoit_model.html")
+
+stock = traj[M.Cell.stock]
+total_stock = np.sum([stock[c] for c in cells], axis=0)
+plt.plot(t, total_stock, 'g', label="stock")
+plt.legend()
+plt.show()
+
+stock_cell1 = traj[M.Cell.stock][0]
 
 # print(groups_opinions)
 # print(groups_opinions[groups[0]])
