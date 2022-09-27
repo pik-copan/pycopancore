@@ -19,11 +19,8 @@ from numpy import random
 import argparse
 import json
 import networkx as nx
-import matplotlib.pyplot as plt
-import plotly.offline as py
-import plotly.graph_objs as go
 
-from plot_multilayer import LayeredNetworkGraph
+
 
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
@@ -34,7 +31,7 @@ from pycopancore.runners.runner import Runner
 seed = 1
 
 # runner
-timeinterval = 1
+timeinterval = 100
 timestep = 0.1
 
 # individuals
@@ -56,7 +53,7 @@ group_meeting_interval = 1
 
 #networks
 acquaintance_network_type = "Erdos-Renyi"
-group_membership_network_type = "Erdos-Renyi"
+group_membership_network_type = "1-random-Edge"
 p = 0.5  # link density for random networks
 
 #---write into dic---
@@ -159,10 +156,10 @@ for i in individuals:
 #get a preliminary intergroup network for plotting multilayer
 inter_group_network = nx.Graph()
 for g in groups:
-    inter_group_network.add_node(g)
-for index, g in enumerate(groups):
-    for j in groups[:index]:
-        inter_group_network.add_edge(g, j)
+    inter_group_network.add_node(g) # groups have no interaction so far
+# for index, g in enumerate(groups):
+#     for j in groups[:index]:
+#         inter_group_network.add_edge(g, j)
 
 
 # try to plot a nice multilayer network
@@ -276,166 +273,13 @@ f.close()
 # save networks
 os.mkdir(my_path + "\\networks")
 print(f"Directory networks created @ {my_path}")
-network_list = [culture.acquaintance_network, culture.group_membership_network]
-network_names = ["culture.acquaintance_network", "culture.group_membership_network"]
+network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
+network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
 for counter, n in enumerate(network_list):
     f = open(my_path +f"\\networks\\{network_names[counter]}.pickle", "wb")
     save_nx = nx.relabel_nodes(n, lambda x: str(x))
     dump(save_nx, f)
 
-t = np.array(traj['t'])
-# print("max. time step", (t[1:] - t[:-1]).max())
-# print('keys:', np.array(traj.keys()))
-# print('completeDict: ', traj)
-
-
-# for ind in individuals:
-#     print([traj[M.Individual.behaviour][ind]])
-individuals_behaviours = np.array([traj[M.Individual.behaviour][ind]
-                                   for ind in individuals])
-individuals_behaviours_dict=traj[M.Individual.behaviour]
-groups_opinions = traj[M.Group.group_opinion]
-mean_groups_behaviours = traj[M.Group.mean_group_behaviour]
-# groups_opinions_fixed = traj[M.Group.group_opinion]
-
-# print(mean_groups_behaviours)
-# plt.plot(t, mean_groups_behaviours[groups[0]])
-# plt.show()
-
-# for ind in individuals:
-#     print([traj[M.Individual.opinion][ind]])
-# individuals_opinions = np.array([traj[M.Individual.opinion][ind]
-#                                  for ind in individuals])
-
-nbehav1_list = np.sum(individuals_behaviours, axis=0) / nindividuals
-nbehav0_list = 1 - nbehav1_list
-
-# nopinion1_list = np.sum(individuals_opinions, axis=0) / nindividuals
-# nopinion0_list = 1 - nopinion1_list
-
-# everything below is just plotting commands for plotly
-
-data_behav0 = go.Scatter(
-    x=t,
-    y=nbehav0_list,
-    mode="lines",
-    name="relative amount behaviour 0 (nonsus)",
-    line=dict(
-        color="lightblue",
-        width=2
-    )
-)
-data_behav1 = go.Scatter(
-    x=t,
-    y=nbehav1_list,
-    mode="lines",
-    name="relative amount behaviour 1 (sus)",
-    line=dict(
-        color="orange",
-        width=2
-    )
-)
-
-layout = dict(title='Maxploit Model',
-              xaxis=dict(title='time'),
-              yaxis=dict(title='relative behaviour amounts'),
-              )
-
-fig = dict(data=[data_behav0, data_behav1], layout=layout)
-py.plot(fig, filename="maxlpoit_model.html")
-
-stock = traj[M.Cell.stock]
-total_stock = np.sum([stock[c] for c in cells], axis=0)
-plt.plot(t, total_stock, 'g', label="stock")
-plt.legend()
-plt.show()
-
-stock_cell_0 = stock[cells[0]]
-behaviour_ind_0 = individuals_behaviours[individuals[0]] #first unsus ind living in cell 0
-stock_cell_50 = stock[cells[50]]
-behaviour_ind_50 = individuals_behaviours[individuals[50]] #first sus ind living in cell 50
-
-plt.plot(t, stock_cell_0, 'darkgreen', label="stock cell 0")
-plt.plot(t, behaviour_ind_0, 'orange', label="corresponding behaviour ind 0 (starts unsustainable)")
-plt.legend()
-plt.show()
-
-plt.plot(t, stock_cell_50, 'darkgreen', label="stock cell 50")
-plt.plot(t, behaviour_ind_50, 'orange', label="corresponding behaviour ind 50 (starts sustainable)")
-plt.legend()
-plt.show()
-
-# print(groups_opinions)
-# print(groups_opinions[groups[0]])
-# print(groups_opinions[groups[0]][0])
-# print(groups_opinions_fixed)
-# print(groups_opinions_fixed[groups[0]])
-# print(groups_opinions_fixed[groups[0]][0])
-# print(individuals_behaviours_dict)
-# print(individuals_behaviours_dict[individuals[0]])
-# print(individuals_behaviours_dict[individuals[0]][0])
-
-v_array1 = []
-v_array2 = []
-for i in individuals:
-    v_array1.append(individuals_behaviours_dict[i][0])
-for index, g in enumerate(groups):
-    v_array2.append(groups_opinions[g][0])
-v_array = [v_array1, v_array2]
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.set_proj_type('ortho')
-LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], v_array, ax=ax)
-plt.show()
-
-multilayer = LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network],
-                    v_array, ax=ax, layout=nx.spring_layout)
-node_positions = multilayer.save_node_positions() # to get node positions
-
-for t_index in range(len(t)):
-    fig = plt.figure()
-    v_array1 = []
-    v_array2 = []
-    for i in individuals:
-        v_array1.append(individuals_behaviours_dict[i][t_index])
-    for index, g in enumerate(groups):
-        v_array2.append(groups_opinions[g][t_index])
-    v_array = [v_array1, v_array2]
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.view_init(40+0.075*t_index, 40-0.075*t_index)
-    LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network],
-                        v_array, ax=ax, layout=nx.spring_layout, node_positions=node_positions)
-    my_file = f'layered_network_{t_index}.png'
-    fig.savefig(os.path.join(my_path, my_file))
-    plt.close(fig)
-"""
-for i in range(len(t)):
-    color_map = []
-    unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_opinions[n][i])
-                    or (d["type"] == "Individual" and individuals_behaviours_dict[n][i])}
-    for node in list(GM.nodes):
-        if node in unsust_nodes:
-            color_map.append("red")
-        else:
-            color_map.append("blue")
-    fig = plt.figure()
-    nx.draw(GM, node_color=color_map, with_labels=False,
-            pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-    my_file = f'network_{i}.png'
-    fig.savefig(os.path.join(my_path, my_file))
-    plt.close(fig)
-"""
-# color_map = []
-# for node in list(GM.nodes):
-#     color_map.append(GM.nodes[node]["color"])
-# top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
-# bottom_nodes = set(GM) - top_nodes
-# nx.draw(GM, node_color=color_map, with_labels=False,
-#         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-# plt.show()#
-
-plt.close('all')
-
-# TODO: grit entfernen
-
+# text file
+with open(my_path +"\\" +'readme.txt', 'w') as f:
+    f.write('long run with 200 timesteps but little individuals and groups')

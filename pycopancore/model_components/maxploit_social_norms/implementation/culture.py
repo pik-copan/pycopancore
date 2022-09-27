@@ -54,7 +54,11 @@ class Culture (I.Culture):
             descriptive_norm = -1
         x = self.weight_descriptive * descriptive_norm + self.weight_injunctive * injunctive_norm
         k = 2 # factoring
-        probability = expit(k*x)
+        probability_distribution = expit(k*x)
+        if agent_i.behaviour == 0:
+            probability = probability_distribution
+        else:
+            probability = 1 - probability_distribution
         print(injunctive_norm, descriptive_norm, probability)
         if np.random.random() < probability:
             agent_i.behaviour = int(not agent_i.behaviour)
