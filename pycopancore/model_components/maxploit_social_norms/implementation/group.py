@@ -60,10 +60,10 @@ class Group(I.Group):
         self.mean_group_behaviour = n/N
 
     processes = [
-        Explicit("mean opinion in group", [I.Group.mean_group_opinion], get_mean_group_opinion),
-        Explicit("mean behaviour in group", [I.Group.mean_group_behaviour], get_mean_group_behaviour),
-        Step("update group opinion",
-              [I.Group.group_opinion],
-              [next_group_meeting_time,
-               update_group_opinion])
+        # Explicit("mean opinion in group", [I.Group.mean_group_opinion], get_mean_group_opinion),
+        # Explicit("mean behaviour in group", [I.Group.mean_group_behaviour], get_mean_group_behaviour),
+        # Step("update group opinion",
+        #       [I.Group.group_opinion],
+        #       [next_group_meeting_time,
+        #        update_group_opinion])
     ]

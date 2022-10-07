@@ -13,9 +13,9 @@ import plotly.offline as py
 #---paths and dirs---
 
 # data from which date?
-date = "2022_09_26"
+date = "2022_09_29"
 # data from which run?
-run = "Run_2022_09_26_19_30_07"
+run = "Run_2022_09_29_11_40_39"
 
 traj_path = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\maxploit\\{date}\\{run}\\traj.pickle"
 network_path = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\maxploit\\{date}\\{run}\\networks"
@@ -107,12 +107,13 @@ ngroup_1 = np.sum(groups_opinions, axis=0, dtype=float)
 
 fig = plt.figure()
 plt.plot(t, nbehav1, 'navy', label="N Inds. Sustainable")
-plt.plot(t, ngroup_1, 'crimson', label="N Groups Sustainable")
+# plt.plot(t, ngroup_1, 'crimson', label="N Groups Sustainable")
 plt.legend()
 plt.xlabel("t")
 plt.ylabel("N")
 my_file = f'Sustainability_over_time.png'
-fig.savefig(save_path+"\\"+my_file)
+plt.show()
+# fig.savefig(save_path+"\\"+my_file)
 plt.close(fig)
 
 """
@@ -128,9 +129,9 @@ plt.plot(t, total_stock, 'g', label="stock")
 plt.legend()
 plt.show()
 
-fig = plt.figure()
-plot_trajectory(nbehav1, total_stock, t)
-plt.show()
+# fig = plt.figure()
+# plot_trajectory(nbehav1, total_stock, t)
+# plt.show()
 
 # stock_cell_0 = stock[cells[0]]
 # behaviour_ind_0 = individuals_behaviours[individuals[0]] #first unsus ind living in cell 0

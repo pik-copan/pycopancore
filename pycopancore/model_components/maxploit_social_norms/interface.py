@@ -48,7 +48,7 @@ class Individual(object):
     rewiring_prob = Variable('rewiring probability', 'rew. prob.')
     imitation_prob = Variable("imitation probability",
                               """Probability to copy some behaviour or opinion.""")
-    average_waiting_time = Variable('estimated waiting time tau', 'tau')
+    average_waiting_time = Variable('estimated waiting time tau', 'tau', default=0.1)
     update_time = Variable('next update time', 'next time for update')
 
 class Group(object):
@@ -100,7 +100,7 @@ class Culture(object):
 
     majority_threshold = Variable('Treshold for majority',
                                  """Trehshold for a majority of individual opinions in a group being considered group opinion""",
-                                 default=0.5)
+                                 default=0.75)
 
     group_membership_network = D.CUL.group_membership_network
     acquaintance_network = D.CUL.acquaintance_network

@@ -49,7 +49,13 @@ class Culture (I.Culture):
         injunctive_norm = group_j.group_opinion
         if injunctive_norm == 0: # for right probabilities in the logit
             injunctive_norm = -1
-        descriptive_norm = agent_i.descriptive_norm_binary
+
+        if agent_i.descriptive_norm > self.culture.majority_threshold:
+            descriptive_norm = 1
+        else:
+            descriptive_norm = 0
+
+        # descriptive_norm = agent_i.descriptive_norm_binary
         if descriptive_norm == 0:
             descriptive_norm = -1
         x = self.weight_descriptive * descriptive_norm + self.weight_injunctive * injunctive_norm
@@ -59,7 +65,7 @@ class Culture (I.Culture):
             probability = probability_distribution
         else:
             probability = 1 - probability_distribution
-        print(injunctive_norm, descriptive_norm, probability)
+        # print(injunctive_norm, descriptive_norm, probability)
         if np.random.random() < probability:
             agent_i.behaviour = int(not agent_i.behaviour)
 

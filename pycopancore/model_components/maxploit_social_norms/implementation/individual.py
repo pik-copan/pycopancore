@@ -56,6 +56,7 @@ class Individual(I.Individual):
         # TODO: add custom code here:
         pass
 
+    # @profile
     def get_descriptive_norms(self, unused_t):
         """Calculate the mean behaviour of neighbouring individuals, which is taken to represent a descriptive norm."""
 
@@ -70,4 +71,7 @@ class Individual(I.Individual):
         else:
             self.descriptive_norm_binary = 0
 
-    processes = [Explicit("descriptive norm", [I.Individual.descriptive_norm], get_descriptive_norms)]
+    processes = [Explicit("descriptive norm",
+                          [I.Individual.descriptive_norm],
+                          (B.Individual.sum.acquaintances.behaviour / B.Individual.sum.acquaintances)
+                          )]

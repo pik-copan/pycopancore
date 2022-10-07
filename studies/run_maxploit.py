@@ -19,7 +19,7 @@ from numpy import random
 import argparse
 import json
 import networkx as nx
-
+import cProfile
 
 
 import pycopancore.models.maxploit as M
@@ -31,7 +31,7 @@ from pycopancore.runners.runner import Runner
 seed = 1
 
 # runner
-timeinterval = 100
+timeinterval = 1
 timestep = 0.1
 
 # individuals
@@ -49,7 +49,7 @@ nc = nindividuals  # number of cells
 ng_total = 10 # number of total groups
 ng_sust = 5 # number of sustainable groups
 ng_nonsust = ng_total - ng_sust
-group_meeting_interval = 1
+group_meeting_interval = 0.1
 
 #networks
 acquaintance_network_type = "Erdos-Renyi"
@@ -193,6 +193,8 @@ print("done ({})".format(dt.timedelta(seconds=(time() - start))))
 
 print('\n runner starting')
 
+
+
 r = Runner(model=model)
 start = time()
 traj = r.run(t_1=timeinterval, dt=timestep)
@@ -282,4 +284,4 @@ for counter, n in enumerate(network_list):
 
 # text file
 with open(my_path +"\\" +'readme.txt', 'w') as f:
-    f.write('long run with 200 timesteps but little individuals and groups')
+    f.write('Groups do not change their opinion')
