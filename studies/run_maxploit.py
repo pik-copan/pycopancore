@@ -27,6 +27,29 @@ from pycopancore.runners.runner import Runner
 
 #---configuration---
 
+# facts
+group_meeting_type = "Step" # "Step" or "Event"
+"""Step means a regular meeting interval. 
+Event means a similar way to the individuals way of drawing a next agent. 
+Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
+group_opinion_formation = "Majority" # "Majority" or "Random" or "Leader"
+"""Majority means that the group opinion is calculated from the mean.
+Random means that the group opinion is picked from one of the member individuals opinions.
+Leader means that the group opinion follows the lead of a leader (somehow to be implemented).
+Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
+descriptive_norm_formation = "Majority" # "Majority" or "Random"
+"""Majority means that the descriptive norm is calculated from the mean of acquaintances.
+Random means that the descriptive norm is calculated from one random one of the acquaintances opinions.
+Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
+adaptivity = "No" # "Yes" or "No"
+"""If adaptive or not, selfexplainatory. Is not a Toggle."""
+
+# toggles
+initialisation = "Random" #"Random" or "Given"
+"""Random means that inds and groups are initialised randomly.
+Given means that a certain percentage of individuals starts a way.
+Note that this variable is a toggle."""
+
 # seed
 seed = 1
 
@@ -34,10 +57,17 @@ seed = 1
 timeinterval = 1
 timestep = 0.1
 
+# culture
+majority_threshold = 0.5
+
+# logit
+k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
+
 # individuals
-ni_sust = 50  # number of agents with sustainable behaviour 1
-ni_nonsust = 50 # number of agents with unsustainable behaviour 0
-nindividuals = ni_sust + ni_nonsust
+nindividuals = 1000
+ni_sust_frac = 0.5
+ni_sust = nindividuals * ni_sust_frac  # number of agents with sustainable behaviour 1
+ni_nonsust = nindividuals - ni_sust # number of agents with unsustainable behaviour 0
 
 # cells:
 cell_stock=1
@@ -46,8 +76,9 @@ cell_growth_rate=1
 nc = nindividuals  # number of cells
 
 #groups:
-ng_total = 10 # number of total groups
-ng_sust = 5 # number of sustainable groups
+ng_total = 100 # number of total groups
+ng_sust_frac = 0.5
+ng_sust = ng_total * ng_sust_frac # number of sustainable groups
 ng_nonsust = ng_total - ng_sust
 group_meeting_interval = 0.1
 
@@ -58,9 +89,15 @@ p = 0.5  # link density for random networks
 
 #---write into dic---
 configuration = {
+    "Group Meeting Type": group_meeting_type,
+    "Group Opinion Formation": group_opinion_formation,
+    "Descriptive Norm Formation": descriptive_norm_formation,
+    "Adaptivity": adaptivity,
     "seed": seed,
     "timeinterval": timeinterval,
-    "timestep" : timestep,
+    "timestep": timestep,
+    "k_value": k_value,
+    "majority_treshold":  majority_threshold,
     "ni_sust" : ni_sust,
     "ni_nonsust" : ni_nonsust,
     "nindividuals" : nindividuals,
@@ -74,7 +111,7 @@ configuration = {
     "group_meeting_interval" : group_meeting_interval,
     "acquaintance_network_type" : acquaintance_network_type,
     "group_membership_network_type" : group_membership_network_type,
-    "p" : p
+    "link density for random networks" : p
 }
 
 # first thing: set seed so that each execution must return same thing:
@@ -84,26 +121,36 @@ random.seed(seed)
 model = M.Model()
 
 # instantiate process taxa culture:
-culture = M.Culture()
+culture = M.Culture(majority_threshold=majority_threshold,
+                    k_value=k_value)
 
 # generate entitites:
 world = M.World(culture=culture)
 social_system = M.SocialSystem(world=world)
 cells = [M.Cell(stock=1, capacity=1, growth_rate=1, social_system=social_system)
          for c in range(nc)]
-individuals = [M.Individual(behaviour=0, opinion=0, imitation_tendency=0,
-                            rewiring_prob=0.5,
-                            cell=cells[i]) for i in range(ni_nonsust)] \
-              + [M.Individual(behaviour=1, opinion=1, imitation_tendency=0,
-                              rewiring_prob=0.5,
-                              cell=cells[i + ni_nonsust])
-                 for i in range(ni_sust)]
 
-# instantiate groups
-groups = [M.Group(culture=culture, world=world, group_opinion=1,
-                  group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
-         [M.Group(culture=culture, world=world, group_opinion=0,
-                  group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
+# random initialisation or not?
+if initialisation == "Random":
+    behaviour = [0, 1]
+    opinion = [0, 1]
+    group_opinion = [0, 1]
+    individuals = [M.Individual(behaviour=np.random.choice(behaviour),
+                                cell=cells[i]) for i in range(nindividuals)]
+    groups = [M.Group(culture=culture, world=world, group_opinion=np.random.choice(group_opinion),
+                      group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
+else:
+    individuals = [M.Individual(behaviour=0, opinion=0,
+                                cell=cells[i]) for i in range(ni_nonsust)] \
+                  + [M.Individual(behaviour=1, opinion=1,
+                                  cell=cells[i + ni_nonsust])
+                     for i in range(ni_sust)]
+
+    # instantiate groups
+    groups = [M.Group(culture=culture, world=world, group_opinion=1,
+                      group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
+             [M.Group(culture=culture, world=world, group_opinion=0,
+                      group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
 
 for (i, c) in enumerate(cells):
     c.individual = individuals[i]

@@ -44,10 +44,6 @@ class Individual(object):
                                 default=0)
     descriptive_norm_binary = Variable("descriptive norm binary",
                                 """mean behaviour in acquaintance network of individual coded as binary""")
-    imitation_tendency = Variable('imitation tendency', 'former rationality')
-    rewiring_prob = Variable('rewiring probability', 'rew. prob.')
-    imitation_prob = Variable("imitation probability",
-                              """Probability to copy some behaviour or opinion.""")
     average_waiting_time = Variable('estimated waiting time tau', 'tau', default=0.1)
     update_time = Variable('next update time', 'next time for update')
 
@@ -97,10 +93,17 @@ class Culture(object):
     weight_dissonance =  Variable('Weight for Cognitive Dissonance',
                                  """Weight for the Cognitive Dissonance influence""",
                                  default=0.5)
+    k_value = Variable('k value',
+                       """Value for trimming the possibilites form the logit distribution. 
+                       The default of k = 2.94445 produces probabilites of 0.05, 0.5 and 0.95 for
+                       2 x_values element [0,1] and their combinations.""",
+                       default=2.94445
+                       )
+
 
     majority_threshold = Variable('Treshold for majority',
                                  """Trehshold for a majority of individual opinions in a group being considered group opinion""",
-                                 default=0.75)
+                                 default=0.5)
 
     group_membership_network = D.CUL.group_membership_network
     acquaintance_network = D.CUL.acquaintance_network
