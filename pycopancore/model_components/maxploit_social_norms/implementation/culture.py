@@ -11,7 +11,7 @@
 
 from pycopancore.model_components.base import interface as B
 from .. import interface as I
-from .... import Step
+from .... import Step, Event
 
 import numpy as np
 from scipy.special import expit
@@ -25,32 +25,37 @@ class Culture (I.Culture):
 
     def individual_update(self, t):
 
-        self.last_execution_time = t
-        agent_i = self.get_update_agent()
+        w = list(self.worlds)[0]
+        agents_i = list(w.individuals)
 
-        # book keeping
-        # opinion = agent_i.opinion
-        behaviour = agent_i.behaviour
-        group_j = list(agent_i.group_memberships)[0] # should be only one
+        for agent_i in agents_i:
+            if np.random.uniform() < self.individual_updating_probability:
+                agent_i = np.random.choice(list(w.individuals))
 
-        # Step (1)
-        assert (self.acquaintance_network.neighbors(agent_i)
-                and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
-        # Step (2)
-        self.individual_behaviour_switch(agent_i, group_j)
-        # Step (3)
-        # self.individual_opinion_switch(agent_i)
-        # Step (4)
-        self.set_new_update_time(agent_i)
+                # book keeping
+                # opinion = agent_i.opinion
+                behaviour = agent_i.behaviour
+                group_j = list(agent_i.group_memberships)[0] # should be only one
+
+                # Step (1)
+                assert (self.acquaintance_network.neighbors(agent_i)
+                        and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
+                # Step (2)
+                self.individual_behaviour_switch(agent_i, group_j)
+                # Step (3)
+                # self.individual_opinion_switch(agent_i)
+                # Step (4)
 
     def individual_behaviour_switch(self, agent_i, group_j):
         """Apply a switch of individuals behaviour, informed by individuals own opinion (cognitive dissonance),
          neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
         injunctive_norm = group_j.group_opinion
-        if injunctive_norm == 0: # for right probabilities in the logit
+        if injunctive_norm == 0: # for symmetric probabilities in the logit
             injunctive_norm = -1
 
-        if agent_i.descriptive_norm > self.culture.majority_threshold:
+        descriptive_norm = self.get_descriptive_norm(agent_i)
+
+        if descriptive_norm > self.majority_threshold:
             descriptive_norm = 1
         else:
             descriptive_norm = 0
@@ -76,70 +81,24 @@ class Culture (I.Culture):
     #     """Apply a switch of groups opinion, informed by ?."""
     # for now situated in group.py
 
-    def get_update_agent(self):
-        """Return the agent with the closest waiting time.
+    def get_descriptive_norm(self, agent_i):
+        """Calculate the descriptive norm in a less time expensive fashion than
+        via an explicit method in individual. Also tries to use as little networkx stuff as possible"""
+        n = 0
+        N = 0
+        for i in list(agent_i.acquaintances):
+            N += 1
+            if i.behaviour:
+                n += 1
+        # N = len(list(self.acquaintances))
+        descriptive_norm = n/N
+        return descriptive_norm
 
-        Choose from all agents the one with the smallest update_time.
-        Returns
-        -------
+    def next_update_time(self, t):
+        return t + np.random.exponential(self.average_waiting_time)
 
-        """
-        next_agent = list(self.acquaintance_network.nodes())[0]
-        for agent in self.acquaintance_network:
-            if agent.update_time < next_agent.update_time:
-                next_agent = agent
-        return next_agent
 
-    def set_new_update_time(self, agent):
-        """Set next time step when agent is to be called again.
 
-        Set the attribute update_time of agent to
-        old_update_time + new_update_time, where new_update_time is again
-        drawn from an exponential distribution.
-
-        Parameters
-        ----------
-        agent : Agent (Individual or SocialSystem)
-            The agent whose new update_time should be drawn and set.
-
-        Returns
-        -------
-
-        """
-        # print('old_update_time: ',individual.update_time)
-        new_update_time = np.random.exponential(agent.average_waiting_time)
-        agent.update_time += new_update_time
-
-    def step_timing(self, t):
-        """Return the next time step is to be called.
-
-        This function is used to get to know when the step function is
-        to be called.
-        Parameters
-        ----------
-        t : float
-            time
-
-        Returns
-        -------
-
-        """
-        if isinstance(self.last_execution_time, type(None)):
-            self.last_execution_time = 0
-        if t < self.last_execution_time:
-            print('last execution time after t!')
-
-        next_time = list(self.acquaintance_network.nodes())[0].update_time
-        for agent in self.acquaintance_network:
-            if agent.update_time < next_time:
-                next_time = agent.update_time
-        if t > next_time:
-            print('next update time before t!')
-        return next_time
-
-    processes = [Step('Social Update is a step function',
-                      [I.Culture.acquaintance_network,
-                       B.Culture.worlds.individuals.behaviour,
-                       B.Culture.worlds.individuals.opinion,
-                       B.Culture.worlds.individuals.update_time],
-                      [step_timing, individual_update])]
+    processes = [Event("Social Update",
+                      [B.Culture.worlds.individuals.behaviour],
+                      ["time", next_update_time, individual_update])]

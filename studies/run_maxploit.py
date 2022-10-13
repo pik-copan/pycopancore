@@ -16,14 +16,22 @@ import numpy as np
 from time import time
 import datetime as dt
 from numpy import random
-import argparse
 import json
 import networkx as nx
-import cProfile
-
 
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
+
+# argparse for mc runs
+import argparse
+parser = argparse.ArgumentParser()
+parser.parse_args()
+parser.add_argument("--runset_no",
+                    help="Integer that gives the number of the runset for MC-runs. \
+                                       Should be the same in the batch script.",
+                    nargs="?",
+                    type=int)
+args = parser.parse_args()  # returns data from the options specified
 
 #---configuration---
 
@@ -51,11 +59,11 @@ Given means that a certain percentage of individuals starts a way.
 Note that this variable is a toggle."""
 
 # seed
-seed = 1
+# seed = 1
 
 # runner
-timeinterval = 1
-timestep = 0.1
+timeinterval = 2
+timestep = 1
 
 # culture
 majority_threshold = 0.5
@@ -64,10 +72,11 @@ majority_threshold = 0.5
 k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
 
 # individuals
-nindividuals = 1000
+nindividuals = 100
 ni_sust_frac = 0.5
 ni_sust = nindividuals * ni_sust_frac  # number of agents with sustainable behaviour 1
 ni_nonsust = nindividuals - ni_sust # number of agents with unsustainable behaviour 0
+average_waiting_time = 1
 
 # cells:
 cell_stock=1
@@ -76,16 +85,16 @@ cell_growth_rate=1
 nc = nindividuals  # number of cells
 
 #groups:
-ng_total = 100 # number of total groups
+ng_total = 1 # number of total groups
 ng_sust_frac = 0.5
 ng_sust = ng_total * ng_sust_frac # number of sustainable groups
 ng_nonsust = ng_total - ng_sust
-group_meeting_interval = 0.1
+group_meeting_interval = 1
 
 #networks
 acquaintance_network_type = "Erdos-Renyi"
 group_membership_network_type = "1-random-Edge"
-p = 0.5  # link density for random networks
+p = 0.05  # link density for random networks; wiedermann: 0.05
 
 #---write into dic---
 configuration = {
@@ -93,7 +102,6 @@ configuration = {
     "Group Opinion Formation": group_opinion_formation,
     "Descriptive Norm Formation": descriptive_norm_formation,
     "Adaptivity": adaptivity,
-    "seed": seed,
     "timeinterval": timeinterval,
     "timestep": timestep,
     "k_value": k_value,
@@ -101,6 +109,7 @@ configuration = {
     "ni_sust" : ni_sust,
     "ni_nonsust" : ni_nonsust,
     "nindividuals" : nindividuals,
+    "average_waiting_time": average_waiting_time,
     "cell_stock": cell_stock,
     "cell_capacity": cell_capacity,
     "cell_growth_rate": cell_growth_rate,
@@ -114,14 +123,27 @@ configuration = {
     "link density for random networks" : p
 }
 
-# first thing: set seed so that each execution must return same thing:
-random.seed(seed)
+
+########################################################################################################################
+
+# decide if results should be saved:
+save = "n" # "y" or "n"
+
+# decide if multiple results should be saved:
+mc_save = "y" # "y" or "n"
+
+# set seed so that each execution must return same thing:
+if "seed" in locals():
+    configuration["seed"]: seed
+    np.random.seed(seed)
 
 # instantiate model
 model = M.Model()
 
 # instantiate process taxa culture:
 culture = M.Culture(majority_threshold=majority_threshold,
+                    weight_descriptive=1,
+                    weight_injunctive=0,
                     k_value=k_value)
 
 # generate entitites:
@@ -135,7 +157,8 @@ if initialisation == "Random":
     behaviour = [0, 1]
     opinion = [0, 1]
     group_opinion = [0, 1]
-    individuals = [M.Individual(behaviour=np.random.choice(behaviour),
+    individuals = [M.Individual(average_waiting_time=average_waiting_time,
+                                behaviour=np.random.choice(behaviour),
                                 cell=cells[i]) for i in range(nindividuals)]
     groups = [M.Group(culture=culture, world=world, group_opinion=np.random.choice(group_opinion),
                       group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
@@ -276,59 +299,120 @@ directory = f"Run_{time_string}"
 # Path
 my_path = os.path.join(os_path, parent_directory_name)
 
-# Create the directory
-# 'GeeksForGeeks' in
-# '/home / User / Documents'
-if not os.path.exists(my_path):
-    os.mkdir(my_path)
-    print(f"Directory {parent_directory_name} created @ {my_path}")
-
-my_path = os.path.join(my_path, directory)
-os.mkdir(my_path)
-print(f"Directory {directory} created @ {my_path}")
-
 # import json
 # f = open(my_path + "_traj_dic.json", "wb")
 # json.dump(traj, f)
 
-# saving things after succesfull run
-# saving config
-#---save json file---
-f = open(my_path+"\\"+"configuration.json", "w+")
-json.dump(configuration, f, indent=4)
+if save == "y":
 
-# saving traj
-# load pickle module
-from pickle import dump
-# create a binary pickle file
-f = open(my_path +"\\" + "traj.pickle", "wb")
+    # Create the directory
+    if not os.path.exists(my_path):
+        os.mkdir(my_path)
+        print(f"Directory {parent_directory_name} created @ {my_path}")
 
-tosave = {
-          v.owning_class.__name__ + "."
-          + v.codename: {str(e): traj[v][e]
-                         for e in traj[v].keys()
-                         }
-          for v in traj.keys() if v is not "t"
-          }
+    my_path = os.path.join(my_path, directory)
+    os.mkdir(my_path)
+    print(f"Directory {directory} created @ {my_path}")
 
-del tosave["Culture.group_membership_network"]
-del tosave["Culture.acquaintance_network"]
+    # saving things after succesfull run
+    # saving config
+    #---save json file---
+    print("Saving configuration.json.")
+    f = open(my_path+"\\"+"configuration.json", "w+")
+    json.dump(configuration, f, indent=4)
+    print("Done saving configuration.json.")
 
-tosave["t"] = traj["t"]
-dump(tosave, f)
-# close file
-f.close()
+    # saving traj
+    # load pickle module
+    from pickle import dump
+    # create a binary pickle file
+    f = open(my_path +"\\" + "traj.pickle", "wb")
 
-# save networks
-os.mkdir(my_path + "\\networks")
-print(f"Directory networks created @ {my_path}")
-network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
-network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
-for counter, n in enumerate(network_list):
-    f = open(my_path +f"\\networks\\{network_names[counter]}.pickle", "wb")
-    save_nx = nx.relabel_nodes(n, lambda x: str(x))
-    dump(save_nx, f)
+    tosave = {
+              v.owning_class.__name__ + "."
+              + v.codename: {str(e): traj[v][e]
+                             for e in traj[v].keys()
+                             }
+              for v in traj.keys() if v is not "t"
+              }
 
-# text file
-with open(my_path +"\\" +'readme.txt', 'w') as f:
-    f.write('Groups do not change their opinion')
+    del tosave["Culture.group_membership_network"]
+    del tosave["Culture.acquaintance_network"]
+    tosave["t"] = traj["t"]
+
+    print("Saving traj.pickle.")
+    dump(tosave, f)
+    # close file
+    f.close()
+    print("Done saving traj.pickle.")
+
+    # save networks
+    os.mkdir(my_path + "\\networks")
+    print(f"Directory networks created @ {my_path}")
+    network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
+    network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
+    print("Saving networks.")
+    for counter, n in enumerate(network_list):
+        f = open(my_path +f"\\networks\\{network_names[counter]}.pickle", "wb")
+        save_nx = nx.relabel_nodes(n, lambda x: str(x))
+        dump(save_nx, f)
+    print("Done saving networks.")
+
+    # text file
+    print("Saving readme.txt.")
+    with open(my_path +"\\" +'readme.txt', 'w') as f:
+        f.write('Groups do not change their opinion')
+    print("Done saving readme.txt.")
+
+mc_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\mc"
+# Path
+my_mc_path = os.path.join(mc_path, parent_directory_name)
+
+if mc_save == "y":
+    # Create the directory
+    if not os.path.exists(my_mc_path):
+        os.mkdir(my_mc_path)
+        print(f"Directory {parent_directory_name} created @ {my_mc_path}")
+    run_no = []
+
+    for i in range(500):
+        run_no.append(str(i))
+    if args.runset_no:
+        run_set_no = args.runset_no
+    else:
+        run_set_no = directory
+    run_set_no_path = os.path.join(my_mc_path, run_set_no)
+    if not os.path.exists(run_set_no_path):
+        os.mkdir(run_set_no_path)
+        print(f"Directory {run_set_no} created @ {run_set_no_path}")
+
+    config_path = f"{run_set_no_path}\\configuration.json"
+    if not os.path.exists(config_path):
+        print("Saving configuration.json.")
+        f = open(config_path, "w+")
+        json.dump(configuration, f, indent=4)
+        print("Done saving configuration.json.")
+    # saving traj
+    # load pickle module
+    from pickle import dump
+    # create a binary pickle file
+    for n in run_no:
+        run_no_path = os.path.join(run_set_no_path, n)
+        if not os.path.exists(run_no_path):
+            output_name = ".pickle"
+            f = open(run_no_path+output_name, "wb")
+            tosave = {
+                v.owning_class.__name__ + "."
+                + v.codename: {str(e): traj[v][e]
+                               for e in traj[v].keys()
+                               }
+                for v in traj.keys() if v is not "t"
+            }
+            del tosave["Culture.group_membership_network"]
+            del tosave["Culture.acquaintance_network"]
+            tosave["t"] = traj["t"]
+            t = tosave["t"]
+            print("Saving output.")
+            dump(tosave, f)
+            print("Done saving output.")
+            break

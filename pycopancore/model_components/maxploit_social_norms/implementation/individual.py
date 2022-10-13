@@ -71,7 +71,8 @@ class Individual(I.Individual):
         else:
             self.descriptive_norm_binary = 0
 
-    processes = [Explicit("descriptive norm",
-                          [I.Individual.descriptive_norm],
-                          (B.Individual.sum.acquaintances.behaviour / B.Individual.sum.acquaintances)
-                          )]
+    processes = []
+        # [Explicit("descriptive norm",
+        #                   [I.Individual.descriptive_norm],
+        #                   B.Individual.sum.acquaintances.behaviour / B.Individual.sum(B.Individual.acquaintances.behaviour**0)
+        #                   )]

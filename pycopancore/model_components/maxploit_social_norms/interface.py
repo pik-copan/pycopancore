@@ -107,7 +107,11 @@ class Culture(object):
 
     group_membership_network = D.CUL.group_membership_network
     acquaintance_network = D.CUL.acquaintance_network
-    last_execution_time = Variable('last exec.time',
+    average_waiting_time = Individual.average_waiting_time.copy()
+    individual_updating_probability = Variable("prob",
+                                               "blalbla no time",
+                                               default=0.1)
+    ast_execution_time = Variable('last exec.time',
                                    'last time a step was executed',
                                    default=-1)
     consensus = Variable('consensus state', 'indicating if consensus is there',

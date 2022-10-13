@@ -13,9 +13,9 @@ import plotly.offline as py
 #---paths and dirs---
 
 # data from which date?
-date = "2022_09_29"
+date = "2022_10_10"
 # data from which run?
-run = "Run_2022_09_29_11_40_39"
+run = "Run_2022_10_10_17_54_57"
 
 traj_path = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\maxploit\\{date}\\{run}\\traj.pickle"
 network_path = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\maxploit\\{date}\\{run}\\networks"
@@ -126,6 +126,12 @@ stock = traj["Cell.stock"]
 total_stock = np.sum([stock[c] for c in cells], axis=0)
 fig = plt.figure()
 plt.plot(t, total_stock, 'g', label="stock")
+plt.legend()
+plt.show()
+
+fig = plt.figure()
+plt.plot(t, stock["Cell[UID=2]"], label="stock Cell 0")
+plt.plot(t, individuals_behaviours[0], label="behaviour Individual 0")
 plt.legend()
 plt.show()
 
