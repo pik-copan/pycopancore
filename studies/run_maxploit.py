@@ -61,7 +61,7 @@ group_initialisation = "Given" #"Random" or "Given"
 """Random means that groups are initialised randomly.
 Given means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_opinion = False # boolean
+fix_group_opinion = True # boolean
 """Does not allow the initial group opinion to change,
 i.e. group becomes a norm entitiy."""
 
@@ -146,7 +146,7 @@ save = "n" # "y" or "n"
 
 # decide if multiple results should be saved:
 mc_save = "y" # "y" or "n"
-run_set_no = "3" # give explicit number of runset
+run_set_no = "0" # give explicit number of runset
 
 # set seed so that each execution must return same thing:
 # if "seed" in locals():

@@ -44,7 +44,7 @@ class Individual(object):
                                 default=0)
     descriptive_norm_binary = Variable("descriptive norm binary",
                                 """mean behaviour in acquaintance network of individual coded as binary""")
-    average_waiting_time = Variable('estimated waiting time tau', 'tau', default=0.1)
+    average_waiting_time = Variable('estimated waiting time tau', 'tau', default=1)
     update_time = Variable('next update time', 'next time for update')
 
 class Group(object):

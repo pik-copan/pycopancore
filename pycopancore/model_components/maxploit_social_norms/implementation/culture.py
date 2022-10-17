@@ -28,23 +28,21 @@ class Culture (I.Culture):
         w = list(self.worlds)[0]
         agents_i = list(w.individuals)
 
-        for agent_i in agents_i:
-            if np.random.uniform() < self.individual_updating_probability:
-                agent_i = np.random.choice(list(w.individuals))
+        agent_i = np.random.choice(agents_i)
 
-                # book keeping
-                # opinion = agent_i.opinion
-                behaviour = agent_i.behaviour
-                group_j = list(agent_i.group_memberships)[0] # should be only one
+        # book keeping
+        # opinion = agent_i.opinion
+        behaviour = agent_i.behaviour
+        group_j = list(agent_i.group_memberships)[0] # should be only one
 
-                # Step (1)
-                assert (self.acquaintance_network.neighbors(agent_i)
-                        and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
-                # Step (2)
-                self.individual_behaviour_switch(agent_i, group_j)
-                # Step (3)
-                # self.individual_opinion_switch(agent_i)
-                # Step (4)
+        # Step (1)
+        assert (self.acquaintance_network.neighbors(agent_i)
+                and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
+        # Step (2)
+        self.individual_behaviour_switch(agent_i, group_j)
+        # Step (3)
+        # self.individual_opinion_switch(agent_i)
+        # Step (4)
 
     def individual_behaviour_switch(self, agent_i, group_j):
         """Apply a switch of individuals behaviour, informed by individuals own opinion (cognitive dissonance),
