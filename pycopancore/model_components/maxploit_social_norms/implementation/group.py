@@ -28,17 +28,18 @@ class Group(I.Group):
 
     def update_group_opinion(self, unused_t):
         """Update a groups opinion based on the mean_group_behaviour."""
-        if self.mean_group_behaviour <= self.culture.majority_threshold: # get the mean in terms of true/false for adjusting the global opinion later
-            mean_group_opinion_binary = 0
-        else:
-            mean_group_opinion_binary = 1
+        if not self.culture.fix_group_opinion:
+            if self.mean_group_behaviour <= self.culture.majority_threshold: # get the mean in terms of true/false for adjusting the global opinion later
+                mean_group_opinion_binary = 0
+            else:
+                mean_group_opinion_binary = 1
 
-        for g in self.world.groups:
-            if uniform() <= self.group_update_probability: #groups consider updating only with certain probability
-                if self.group_opinion != mean_group_opinion_binary:
-                    if self.mean_group_behaviour > self.culture.majority_threshold or\
-                            self.mean_group_behaviour < (1-self.culture.majority_threshold): # defines an interval to allow switching in both directions
-                        self.group_opinion = mean_group_opinion_binary # switch group_opinion
+            for g in self.world.groups:
+                if uniform() <= self.group_update_probability: #groups consider updating only with certain probability
+                    if self.group_opinion != mean_group_opinion_binary:
+                        if self.mean_group_behaviour > self.culture.majority_threshold or\
+                                self.mean_group_behaviour < (1-self.culture.majority_threshold): # defines an interval to allow switching in both directions
+                            self.group_opinion = mean_group_opinion_binary # switch group_opinion
 
     def get_mean_group_opinion(self, unused_t):
         """Calculate the mean opinion of individuals in a group."""
@@ -61,9 +62,9 @@ class Group(I.Group):
 
     processes = [
         # Explicit("mean opinion in group", [I.Group.mean_group_opinion], get_mean_group_opinion),
-        # Explicit("mean behaviour in group", [I.Group.mean_group_behaviour], get_mean_group_behaviour),
-        # Step("update group opinion",
-        #       [I.Group.group_opinion],
-        #       [next_group_meeting_time,
-        #        update_group_opinion])
+        Explicit("mean behaviour in group", [I.Group.mean_group_behaviour], get_mean_group_behaviour),
+        Step("update group opinion",
+              [I.Group.group_opinion],
+              [next_group_meeting_time,
+               update_group_opinion])
     ]

@@ -12,26 +12,26 @@ A study to test the runner with the maxploit model.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
+# argparse for mc runs
+# import argparse
+# parser = argparse.ArgumentParser()
+# parser.parse_args()
+# parser.add_argument("runset_no",
+#                     help="Integer that gives the number of the runset for MC-runs. \
+#                                        Should be the same in the batch script.")
+# args = parser.parse_args()  # returns data from the options specified
+# print(type(args.runset_no))
+
 import numpy as np
 from time import time
 import datetime as dt
 from numpy import random
 import json
 import networkx as nx
+from pickle import dump
 
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
-
-# argparse for mc runs
-import argparse
-parser = argparse.ArgumentParser()
-parser.parse_args()
-parser.add_argument("--runset_no",
-                    help="Integer that gives the number of the runset for MC-runs. \
-                                       Should be the same in the batch script.",
-                    nargs="?",
-                    type=int)
-args = parser.parse_args()  # returns data from the options specified
 
 #---configuration---
 
@@ -53,28 +53,38 @@ adaptivity = "No" # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
 
 # toggles
-initialisation = "Random" #"Random" or "Given"
-"""Random means that inds and groups are initialised randomly.
+ind_initialisation = "Random" #"Random" or "Given"
+"""Random means that inds are initialised randomly.
 Given means that a certain percentage of individuals starts a way.
 Note that this variable is a toggle."""
+group_initialisation = "Given" #"Random" or "Given"
+"""Random means that groups are initialised randomly.
+Given means that a certain percentage of groups starts a way.
+Note that this variable is a toggle."""
+fix_group_opinion = False # boolean
+"""Does not allow the initial group opinion to change,
+i.e. group becomes a norm entitiy."""
 
 # seed
 # seed = 1
 
 # runner
-timeinterval = 2
+timeinterval = 50
 timestep = 1
 
 # culture
 majority_threshold = 0.5
+weight_descriptive = 0
+weight_injunctive = 1
 
 # logit
-k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
+# k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
+k_value = 2 # reproduces probs of exploit for gamma = 1
 
 # individuals
-nindividuals = 100
+nindividuals = 400
 ni_sust_frac = 0.5
-ni_sust = nindividuals * ni_sust_frac  # number of agents with sustainable behaviour 1
+ni_sust = int(nindividuals * ni_sust_frac)  # number of agents with sustainable behaviour 1
 ni_nonsust = nindividuals - ni_sust # number of agents with unsustainable behaviour 0
 average_waiting_time = 1
 
@@ -85,9 +95,9 @@ cell_growth_rate=1
 nc = nindividuals  # number of cells
 
 #groups:
-ng_total = 1 # number of total groups
+ng_total = 2 # number of total groups
 ng_sust_frac = 0.5
-ng_sust = ng_total * ng_sust_frac # number of sustainable groups
+ng_sust = int(ng_total * ng_sust_frac) # number of sustainable groups
 ng_nonsust = ng_total - ng_sust
 group_meeting_interval = 1
 
@@ -102,10 +112,15 @@ configuration = {
     "Group Opinion Formation": group_opinion_formation,
     "Descriptive Norm Formation": descriptive_norm_formation,
     "Adaptivity": adaptivity,
+    "Initialisation of Individuals": ind_initialisation,
+    "Initialisation of Groups": group_initialisation,
+    "Fixed group opinions": fix_group_opinion,
     "timeinterval": timeinterval,
     "timestep": timestep,
     "k_value": k_value,
     "majority_treshold":  majority_threshold,
+    "weight_descriptive": weight_descriptive,
+    "weight_injunctive": weight_injunctive,
     "ni_sust" : ni_sust,
     "ni_nonsust" : ni_nonsust,
     "nindividuals" : nindividuals,
@@ -131,19 +146,21 @@ save = "n" # "y" or "n"
 
 # decide if multiple results should be saved:
 mc_save = "y" # "y" or "n"
+run_set_no = "3" # give explicit number of runset
 
 # set seed so that each execution must return same thing:
-if "seed" in locals():
-    configuration["seed"]: seed
-    np.random.seed(seed)
+# if "seed" in locals():
+#     configuration["seed"]: seed
+#     np.random.seed(seed)
 
 # instantiate model
 model = M.Model()
 
 # instantiate process taxa culture:
 culture = M.Culture(majority_threshold=majority_threshold,
-                    weight_descriptive=1,
-                    weight_injunctive=0,
+                    weight_descriptive=weight_descriptive,
+                    weight_injunctive=weight_injunctive,
+                    fix_group_opinion=fix_group_opinion,
                     k_value=k_value)
 
 # generate entitites:
@@ -153,15 +170,12 @@ cells = [M.Cell(stock=1, capacity=1, growth_rate=1, social_system=social_system)
          for c in range(nc)]
 
 # random initialisation or not?
-if initialisation == "Random":
+if ind_initialisation == "Random":
     behaviour = [0, 1]
     opinion = [0, 1]
-    group_opinion = [0, 1]
     individuals = [M.Individual(average_waiting_time=average_waiting_time,
                                 behaviour=np.random.choice(behaviour),
                                 cell=cells[i]) for i in range(nindividuals)]
-    groups = [M.Group(culture=culture, world=world, group_opinion=np.random.choice(group_opinion),
-                      group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
 else:
     individuals = [M.Individual(behaviour=0, opinion=0,
                                 cell=cells[i]) for i in range(ni_nonsust)] \
@@ -170,10 +184,17 @@ else:
                      for i in range(ni_sust)]
 
     # instantiate groups
+if group_initialisation == "Random":
+    group_opinion = [0, 1]
+    groups = [M.Group(culture=culture, world=world, group_opinion=np.random.choice(group_opinion),
+                      group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
+else:
     groups = [M.Group(culture=culture, world=world, group_opinion=1,
                       group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
              [M.Group(culture=culture, world=world, group_opinion=0,
                       group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
+
+
 
 for (i, c) in enumerate(cells):
     c.individual = individuals[i]
@@ -198,6 +219,10 @@ print("erdosrenyifying the graph ... ", end="", flush=True)
 start = time()
 erdosrenyify(culture.acquaintance_network, p=p)
 
+# assert that each ind has at least one edge
+# for i in individuals:
+#     if not list(i.acquaintances):
+#         culture.acquaintance_network.add_edge(i, np.random.choice(individuals))
 
 GM = culture.group_membership_network
 # initialize group_membership network
@@ -323,8 +348,6 @@ if save == "y":
     print("Done saving configuration.json.")
 
     # saving traj
-    # load pickle module
-    from pickle import dump
     # create a binary pickle file
     f = open(my_path +"\\" + "traj.pickle", "wb")
 
@@ -377,10 +400,10 @@ if mc_save == "y":
 
     for i in range(500):
         run_no.append(str(i))
-    if args.runset_no:
-        run_set_no = args.runset_no
-    else:
-        run_set_no = directory
+    # if args.runset_no:
+    #     run_set_no = args.runset_no
+    # else:
+    #     run_set_no = directory
     run_set_no_path = os.path.join(my_mc_path, run_set_no)
     if not os.path.exists(run_set_no_path):
         os.mkdir(run_set_no_path)
@@ -392,15 +415,27 @@ if mc_save == "y":
         f = open(config_path, "w+")
         json.dump(configuration, f, indent=4)
         print("Done saving configuration.json.")
+
+    # save networks
+    network_path = f"{run_set_no_path}\\networks"
+    network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
+    network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
+    if not os.path.exists(network_path):
+        os.mkdir(network_path)
+        print("Saving networks.")
+        for counter, n in enumerate(network_list):
+            f = open(network_path +"\\"+f"{network_names[counter]}.pickle", "wb")
+            save_nx = nx.relabel_nodes(n, lambda x: str(x))
+            dump(save_nx, f)
+        print("Done saving networks.")
+
     # saving traj
-    # load pickle module
-    from pickle import dump
     # create a binary pickle file
     for n in run_no:
         run_no_path = os.path.join(run_set_no_path, n)
-        if not os.path.exists(run_no_path):
-            output_name = ".pickle"
-            f = open(run_no_path+output_name, "wb")
+        output_name = run_no_path + ".pickle"
+        if not os.path.exists(output_name):
+            f = open(output_name, "wb")
             tosave = {
                 v.owning_class.__name__ + "."
                 + v.codename: {str(e): traj[v][e]

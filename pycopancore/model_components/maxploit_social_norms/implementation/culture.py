@@ -54,24 +54,26 @@ class Culture (I.Culture):
             injunctive_norm = -1
 
         descriptive_norm = self.get_descriptive_norm(agent_i)
+        if descriptive_norm is not None:
+            if descriptive_norm > self.majority_threshold:
+                descriptive_norm = 1
+            else:
+                descriptive_norm = 0
 
-        if descriptive_norm > self.majority_threshold:
-            descriptive_norm = 1
-        else:
-            descriptive_norm = 0
+            # descriptive_norm = agent_i.descriptive_norm_binary
+            if descriptive_norm == 0:
+                descriptive_norm = -1
+            x = self.weight_descriptive * descriptive_norm + self.weight_injunctive * injunctive_norm
+            probability_distribution = expit(self.k_value*x)
+            if agent_i.behaviour == 0:
+                probability = probability_distribution
+            else:
+                probability = 1 - probability_distribution
+            # print(injunctive_norm, descriptive_norm, probability)
+            if np.random.random() < probability:
+                agent_i.behaviour = int(not agent_i.behaviour)
 
-        # descriptive_norm = agent_i.descriptive_norm_binary
-        if descriptive_norm == 0:
-            descriptive_norm = -1
-        x = self.weight_descriptive * descriptive_norm + self.weight_injunctive * injunctive_norm
-        probability_distribution = expit(self.k_value*x)
-        if agent_i.behaviour == 0:
-            probability = probability_distribution
-        else:
-            probability = 1 - probability_distribution
-        # print(injunctive_norm, descriptive_norm, probability)
-        if np.random.random() < probability:
-            agent_i.behaviour = int(not agent_i.behaviour)
+
 
     # def individual_opinion_switch(self, agent_i):
     #     """Apply a switch of individuals opinion, informed by individuals own behaviour (cognitive dissonance),
@@ -84,14 +86,18 @@ class Culture (I.Culture):
     def get_descriptive_norm(self, agent_i):
         """Calculate the descriptive norm in a less time expensive fashion than
         via an explicit method in individual. Also tries to use as little networkx stuff as possible"""
-        n = 0
-        N = 0
-        for i in list(agent_i.acquaintances):
-            N += 1
-            if i.behaviour:
-                n += 1
-        # N = len(list(self.acquaintances))
-        descriptive_norm = n/N
+        if not list(agent_i.acquaintances):
+            descriptive_norm = None
+        else:
+            n = 0
+            N = 0
+            for i in list(agent_i.acquaintances):
+                N += 1
+                if i.behaviour:
+                    n += 1
+            # N = len(list(agent_i.acquaintances))
+            assert N > 0
+            descriptive_norm = n/N
         return descriptive_norm
 
     def next_update_time(self, t):

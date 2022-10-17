@@ -105,6 +105,11 @@ class Culture(object):
                                  """Trehshold for a majority of individual opinions in a group being considered group opinion""",
                                  default=0.5)
 
+    fix_group_opinion = Variable("Fixed group opinion",
+                                 """Fixes the group opinion so it does not change, i.e. group becomes a fixed norm.""",
+                                 default=False,
+                                 datatype=bool)
+
     group_membership_network = D.CUL.group_membership_network
     acquaintance_network = D.CUL.acquaintance_network
     average_waiting_time = Individual.average_waiting_time.copy()
