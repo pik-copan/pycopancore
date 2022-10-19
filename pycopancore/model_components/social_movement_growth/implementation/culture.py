@@ -1,12 +1,8 @@
-"""Culture process taxon mixing class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
-"""
+"""Culture process taxon mixing class for social movement growth"""
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2022 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
@@ -16,11 +12,11 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 
-# TODO: uncomment this if you need ref. variables such as B.Culture.individuals:
+# import reference variables from the base component:
 from ...base import interface as B
 
-# TODO: import those process types you need:
-from .... import Event
+# import process types:
+from .... import Step
 
 from numpy.random import exponential, choice, uniform
 
@@ -40,30 +36,48 @@ class Culture (I.Culture):
 
     # process-related methods:
     def next_meeting_time(self, t):
-        return t + exponential(1 / self.meeting_rate)
+        return t + 1/self.meeting_rate
+    
+    def next_interaction_time(self, t):
+        return t + 1/self.interaction_rate
 
     def do_meeting(self, unused_t):
-        """In the current setup, each core member decides individually wether
-        to organize or mobilize, another option could be to let all core
-        members focus on the same task
+        """In the current setup, each core member decides individually
+        wether to organize or mobilize, another option could be to let
+        all core members focus on the same task
         """
         for w in self.worlds:
             for i in w.individuals:
                 i.is_mobilizing = False
+            for i in w.individuals:
                 if i.engagement_level == 'core':
                     if uniform() < self.growth_strategy:
-                        print("organizing …")
+                        print(f"Individual {i._uid} is going to spend its time organizing.")
                         i.organize()
-                    elif uniform() > self.growth_strategy:
-                        print("mobilizing …")
-                        i.is_mobilizing = True
+                    else:
+                        print(f"Individual {i._uid} is going to spend its time mobilizing.")
+                        i.mobilize()
+    
+    def do_interaction(self, unused_t):
+        """Have each mobilizing individual spread the word to their 
+        neighbors or attempt to mobilize them
+        """
+        for w in self.worlds:
+            for i in w.individuals:
+                if i.is_mobilizing == True:
+                    i.mobilize()
 
     processes = [
-        Event("do meeting",
+        Step("do meeting",
               [B.Culture.worlds.individuals.engagement_level],
-              ["time",
-               next_meeting_time,
+              [next_meeting_time,
                do_meeting
                ]
+              ),
+        Step("do interaction",
+              [B.Culture.worlds.individuals.is_mobilizing, B.Culture.worlds.individuals.engagement_level],
+              [next_interaction_time,
+               do_interaction
+               ]
               )
-        ]  # TODO: instantiate and list process objects here
+        ]

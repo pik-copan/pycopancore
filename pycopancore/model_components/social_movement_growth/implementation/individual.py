@@ -1,12 +1,8 @@
-"""Individual entity type class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
-"""
+"""Individual entity type class for social movement growth"""
 
 # This file is part of pycopancore.
 #
-# Copyright (C) 2016-2017 by COPAN team at Potsdam Institute for Climate
+# Copyright (C) 2022 by COPAN team at Potsdam Institute for Climate
 # Impact Research
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
@@ -16,10 +12,7 @@ then remove these instructions
 from .. import interface as I
 # from .... import master_data_model as D
 
-# TODO: uncomment this if you need ref. variables such as B.Individual.cell:
-# from ...base import interface as B
-
-# TODO: import those process types you need:
+# Import process types:
 from .... import Event
 
 from numpy.random import choice, uniform, exponential
@@ -53,37 +46,43 @@ class Individual (I.Individual):
     # process-related methods:
 
     def organize(self):
+        print(f"Individual {self._uid} attempts to organize …")
         if uniform() < self.culture.organizing_success_probability:
-            inactive_inds = [ind for world in self.culture.worlds for ind in world.individuals if ind.engagement_level == 'inactive']
-            if inactive_inds:
-                print("winning a new core member")
-                max_degree = max(self.culture.acquaintance_network.degree(inactive_inds), key=lambda k:k[1])[1]
-                core_candidates = [ind for ind in inactive_inds if ind.culture.acquaintance_network.degree(ind) == max_degree]
+            indifferent_inds = [
+                ind for world in self.culture.worlds
+                for ind in world.individuals
+                if ind.engagement_level == 'indifferent']
+            if indifferent_inds:
+                max_degree = max(
+                    self.culture.acquaintance_network.degree(
+                        indifferent_inds
+                        ),
+                    key=lambda k:k[1]
+                    )[1]
+                core_candidates = [
+                    ind for ind in indifferent_inds
+                    if ind.culture.acquaintance_network.degree(ind)
+                    == max_degree]
                 other = choice(core_candidates)
                 other.engagement_level = 'core'
-                print(other.culture.acquaintance_network.degree(other))
-    
-    def next_interaction_time(self, t):
-        return t + exponential(1 / self.interaction_rate)
+                print(f"Individual {self._uid} wins new core member Individual {other._uid}")
         
-    def mobilize(self, unused_t):
-        if self.is_mobilizing:
-            for other in list(self.culture.acquaintance_network.neighbors(self)):
-                if uniform() < self.culture.mobilizing_success_probability:
-                    if other.engagement_level == 'base':
-                        print("spreading the word")
-                        other.is_mobilizing = True
-                    elif other.engagement_level == 'support':
-                        print("winning a new base member")
-                        other.engagement_level = 'base'
-            self.is_mobilizing = False
+    def mobilize(self):
+        neighbors = list(self.culture.acquaintance_network.neighbors(self))
+        print(f"Individual {self._uid} attempts to mobilize its neighbors Individuals", ", ".join(f'{other._uid}' for other in neighbors))
+        for other in neighbors:
+            if uniform() < self.culture.mobilizing_success_probability:
+                if other.engagement_level == 'base':
+                    print(f"Individual {self._uid} spreads the word to Individual {other._uid}")
+                    other.is_mobilizing = True
+                elif other.engagement_level == 'support':
+                    print(f"Individual {self._uid} wins new base member Individual {other._uid}")
+                    other.engagement_level = 'base'
+                # TODO: maybe the following is a core super power or at least
+                # it should happen with lower probabity
+                elif other.engagement_level == 'indifferent':
+                    print(f"Individual {self._uid} wins new support member Individual {other._uid}")
+                    other.engagement_level = 'support'
+        self.is_mobilizing = False
 
-    processes = [
-        Event("do interaction",
-              [I.Individual.is_mobilizing, I.Individual.engagement_level],
-              ["time",
-               next_interaction_time,
-               mobilize
-               ]
-              )
-        ]
+    processes = []
