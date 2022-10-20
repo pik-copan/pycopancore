@@ -8,10 +8,11 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 # Set the path for importing modules (assuming this file resides in a
-# subfolder of the "studies" folder):
+# subfolder of the "studies" folder, meaning going two folders up):
 import os
 import sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import pycopancore.models.social_movement_growth as M
 
@@ -49,20 +50,11 @@ p = {
     "network": "BA",
 
     # Simulation parameters:
-    "t_max": 5,  # interval for which the model will be simulated
+    "t_max": 5,  # interval for which the model will be simulated.
     "dt": 0.1,  # desired temporal resolution of the resulting output.
 }
-p["ninds_indifferent"] = p["ninds"] - p["ninds_core"] - p["ninds_base"] - p["ninds_support"]
-
-res_dir = "./simulation_results/social_movement_growth/"
-date_str = time.strftime("%Y-%m-%d/")
-time_str = time.strftime("%H%M%S")
-filename = res_dir+date_str+time_str
-if not os.path.exists(res_dir+date_str):
-    os.makedirs(res_dir+date_str)
-
-yaml.dump(p, open(filename+"_conf.yaml", "w"), sort_keys=False)
-open(res_dir+"last_run.txt", "w").write(date_str+time_str)
+p["ninds_indifferent"] = p["ninds"]
+- p["ninds_core"] - p["ninds_base"] - p["ninds_support"]
 
 # Instantiate the model and have it analyse its own structure:
 model = M.Model()
@@ -126,8 +118,8 @@ if p["network"] == "BA":
 
     # Run over all the remaining nodes:
     for i in range(m0, N):
-        # Flatten the edges array so each node appears proportional to the
-        # number of links it has:
+        # Flatten the edges array so each node appears proportional to
+        # the number of links it has:
         prob = [node for edge in edges for node in edge]
         # For each new node, create m new links:
         for j in range(m):
@@ -176,4 +168,22 @@ tosave["Culture.acquaintance_network"] = {
     }
 tosave["t"] = traj["t"]
 
-dump(tosave, open(filename+".pickle", "wb"))
+# Define directory and file name for config and results to be saved:
+res_dir = "./simulation_results/social_movement_growth/"
+date_str = time.strftime("%Y-%m-%d/")
+time_str = time.strftime("%H%M%S")
+filename = res_dir+date_str+time_str
+if not os.path.exists(res_dir+date_str):
+    os.makedirs(res_dir+date_str)
+
+# Save configuration parameters:
+with open(filename+"_conf.yaml", "w") as f:
+    yaml.dump(p, f, sort_keys=False)
+
+# Save trajectory results:
+with open(filename+".pickle", "wb") as f:
+    dump(tosave, f)
+
+# Update the text file indicating the name of the last run:
+with open(res_dir+"all_runs.txt", "a") as f:
+    f.write(date_str+time_str+"\n")

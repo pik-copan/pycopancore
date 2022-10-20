@@ -11,11 +11,15 @@ import matplotlib.animation as animation
 from bisect import bisect
 
 res_dir = "./simulation_results/social_movement_growth/"
-date_time_str = open(res_dir+"last_run.txt", "r").read()
+with open(res_dir+"all_runs.txt", "r") as f:
+    for line in f:
+        pass
+date_time_str = line.strip()
 filename = res_dir+date_time_str
 
 # Load data:
-traj = load(open(filename+".pickle", "rb"))
+with open(filename+".pickle", "rb") as f:
+    traj = load(f)
 
 # Extract network trajectory (at time 0, static anyways):
 network_as_list = list(traj["Culture.acquaintance_network"].values())[0]
