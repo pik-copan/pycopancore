@@ -46,6 +46,7 @@ class Individual(object):
                                 """mean behaviour in acquaintance network of individual coded as binary""")
     average_waiting_time = Variable('estimated waiting time tau', 'tau', default=1)
     update_time = Variable('next update time', 'next time for update')
+    update_probability = Variable("update probability", "probability to be in a batch", default=0)
 
 class Group(object):
     """Interface for Group."""

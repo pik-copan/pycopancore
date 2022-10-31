@@ -51,17 +51,18 @@ Random means that the descriptive norm is calculated from one random one of the 
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
 adaptivity = "No" # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
+switching_back = "No" # can individuals switch even if norm does not say so?
 
 # toggles
 ind_initialisation = "Random" #"Random" or "Given"
 """Random means that inds are initialised randomly.
 Given means that a certain percentage of individuals starts a way.
 Note that this variable is a toggle."""
-group_initialisation = "Given" #"Random" or "Given"
+group_initialisation = "Random" #"Random" or "Given"
 """Random means that groups are initialised randomly.
 Given means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_opinion = True # boolean
+fix_group_opinion = False # boolean
 """Does not allow the initial group opinion to change,
 i.e. group becomes a norm entitiy."""
 
@@ -69,13 +70,13 @@ i.e. group becomes a norm entitiy."""
 # seed = 1
 
 # runner
-timeinterval = 50
+timeinterval = 100
 timestep = 1
 
 # culture
 majority_threshold = 0.5
-weight_descriptive = 0
-weight_injunctive = 1
+weight_descriptive = 0.5
+weight_injunctive = 0.5
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -87,6 +88,8 @@ ni_sust_frac = 0.5
 ni_sust = int(nindividuals * ni_sust_frac)  # number of agents with sustainable behaviour 1
 ni_nonsust = nindividuals - ni_sust # number of agents with unsustainable behaviour 0
 average_waiting_time = 1
+update_probability = 0.75
+
 
 # cells:
 cell_stock=1
@@ -95,7 +98,7 @@ cell_growth_rate=1
 nc = nindividuals  # number of cells
 
 #groups:
-ng_total = 2 # number of total groups
+ng_total = 10 # number of total groups
 ng_sust_frac = 0.5
 ng_sust = int(ng_total * ng_sust_frac) # number of sustainable groups
 ng_nonsust = ng_total - ng_sust
@@ -106,12 +109,24 @@ acquaintance_network_type = "Erdos-Renyi"
 group_membership_network_type = "1-random-Edge"
 p = 0.05  # link density for random networks; wiedermann: 0.05
 
+# decide if results should be saved:
+save = "n" # "y" or "n"
+
+# decide if multiple results should be saved:
+mc_save = "y" # "y" or "n"
+run_set_no = "2" # give explicit number of runset
+
+# for saving numbers (range(start_end))
+name_start = 0  # default
+name_end = 500
+
 #---write into dic---
 configuration = {
     "Group Meeting Type": group_meeting_type,
     "Group Opinion Formation": group_opinion_formation,
     "Descriptive Norm Formation": descriptive_norm_formation,
     "Adaptivity": adaptivity,
+    "Switching in opposite direction": switching_back,
     "Initialisation of Individuals": ind_initialisation,
     "Initialisation of Groups": group_initialisation,
     "Fixed group opinions": fix_group_opinion,
@@ -140,14 +155,6 @@ configuration = {
 
 
 ########################################################################################################################
-
-# decide if results should be saved:
-save = "n" # "y" or "n"
-
-# decide if multiple results should be saved:
-mc_save = "y" # "y" or "n"
-run_set_no = "0" # give explicit number of runset
-
 # set seed so that each execution must return same thing:
 # if "seed" in locals():
 #     configuration["seed"]: seed
@@ -174,6 +181,7 @@ if ind_initialisation == "Random":
     behaviour = [0, 1]
     opinion = [0, 1]
     individuals = [M.Individual(average_waiting_time=average_waiting_time,
+                                update_probability=update_probability,
                                 behaviour=np.random.choice(behaviour),
                                 cell=cells[i]) for i in range(nindividuals)]
 else:
@@ -193,7 +201,6 @@ else:
                       group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
              [M.Group(culture=culture, world=world, group_opinion=0,
                       group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
-
 
 
 for (i, c) in enumerate(cells):
@@ -398,7 +405,7 @@ if mc_save == "y":
         print(f"Directory {parent_directory_name} created @ {my_mc_path}")
     run_no = []
 
-    for i in range(500):
+    for i in range(name_start, name_end):
         run_no.append(str(i))
     # if args.runset_no:
     #     run_set_no = args.runset_no

@@ -26,27 +26,45 @@ class Culture (I.Culture):
     def individual_update(self, t):
 
         w = list(self.worlds)[0]
-        agents_i = list(w.individuals)
+        agents = list(w.individuals)
+        # agent_i = np.random.choice(agents)
 
-        agent_i = np.random.choice(agents_i)
+        for agent_i in agents:
+            agent_i.update_time = np.random.exponential()
 
-        # book keeping
-        # opinion = agent_i.opinion
-        behaviour = agent_i.behaviour
-        group_j = list(agent_i.group_memberships)[0] # should be only one
+        ordered_list = agents
+        n = len(ordered_list)
+        for i in range(n):
+            already_sorted = True
+            for j in range(n-i-1):
+                if ordered_list[j].update_time > ordered_list[j+1].update_time:
+                    ordered_list[j], ordered_list[j+1] = ordered_list[j+1], ordered_list[j]
+                    already_sorted = False
+            if already_sorted:
+                break
 
-        # Step (1)
-        assert (self.acquaintance_network.neighbors(agent_i)
-                and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
-        # Step (2)
-        self.individual_behaviour_switch(agent_i, group_j)
-        # Step (3)
-        # self.individual_opinion_switch(agent_i)
-        # Step (4)
+
+        for agent_i in ordered_list:
+            if np.random.uniform() > agent_i.update_probability:
+                # opinion = agent_i.opinion
+                # behaviour = agent_i.behaviour
+                group_j = list(agent_i.group_memberships)[0] # should be only one
+
+                # Step (1)
+                assert (self.acquaintance_network.neighbors(agent_i)
+                        and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
+                # Step (2)
+                self.individual_behaviour_switch(agent_i, group_j)
+                # self.descriptive_only(agent_i)
+                # self.injunctive_only(agent_i, group_j)
+                # Step (3)
+                # self.individual_opinion_switch(agent_i)
+                # Step (4)
 
     def individual_behaviour_switch(self, agent_i, group_j):
         """Apply a switch of individuals behaviour, informed by individuals own opinion (cognitive dissonance),
          neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
+
         injunctive_norm = group_j.group_opinion
         if injunctive_norm == 0: # for symmetric probabilities in the logit
             injunctive_norm = -1
@@ -71,8 +89,45 @@ class Culture (I.Culture):
             if np.random.random() < probability:
                 agent_i.behaviour = int(not agent_i.behaviour)
 
+    def descriptive_only(self, agent_i):
+        descriptive_norm = self.get_descriptive_norm(agent_i)
+        if descriptive_norm is not None:
+            if descriptive_norm > self.majority_threshold:
+                descriptive_norm = 1
+            else:
+                descriptive_norm = 0
 
+            if agent_i.behaviour != descriptive_norm:
+                if descriptive_norm == 0:
+                    descriptive_norm = -1
+                x = self.weight_descriptive * descriptive_norm
+                probability_distribution = expit(self.k_value*x)
+                if agent_i.behaviour == 0:
+                    probability = probability_distribution
+                else:
+                    probability = 1 - probability_distribution
+                # print(injunctive_norm, descriptive_norm, probability)
+                if np.random.random() < probability:
+                    agent_i.behaviour = int(not agent_i.behaviour)
 
+    def injunctive_only(self, agent_i, group_j):
+        # print("New agent.")
+        injunctive_norm = group_j.group_opinion
+        # print(group_j, "Group opinion of this agent...", injunctive_norm)
+        if injunctive_norm == 0: # for symmetric probabilities in the logit
+            injunctive_norm = -1
+        x = self.weight_injunctive * injunctive_norm
+        probability_distribution = expit(self.k_value*x)
+        if agent_i.behaviour == 0:
+            probability = probability_distribution
+        else:
+            probability = 1 - probability_distribution
+        # print(injunctive_norm, descriptive_norm, probability)
+        # print(probability)
+        if np.random.random() < probability:
+            # print(agent_i.behaviour, "Behaviour before...")
+            agent_i.behaviour = int(not agent_i.behaviour)
+            # print(agent_i.behaviour, "Behaviour after...")
     # def individual_opinion_switch(self, agent_i):
     #     """Apply a switch of individuals opinion, informed by individuals own behaviour (cognitive dissonance),
     #      neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
