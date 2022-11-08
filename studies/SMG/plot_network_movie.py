@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from bisect import bisect
 
-res_dir = "./simulation_results/social_movement_growth/"
+res_dir = "./simulation_results/SMG/"
 with open(res_dir+"all_runs.txt", "r") as f:
     for line in f:
         pass
@@ -45,32 +45,34 @@ frames = [bisect(time, t) - 1 for t in ideal_times]
 
 def plot_frame(framenumber):
     # Plot frame:
-    fig = plt.figure()
+    fig, ax = plt.subplots()
     pos = nx.spring_layout(G)
     #pos = nx.circular_layout(G)
     nc = [color_dict[engagement_level[ind][frames[framenumber]]] 
         for ind in G.nodes()]
-    nodes = nx.draw_networkx_nodes(G, pos, node_color=nc)
-    edges = nx.draw_networkx_edges(G, pos)
+    nodes = nx.draw_networkx_nodes(G, pos, ax=ax, alpha=0.75, node_size=50, node_color=nc)
+    edges = nx.draw_networkx_edges(G, pos, ax=ax, alpha=0.05)
+    ax.axis('off')
 
     plt.show()
     
 
 def plot_animation():
     # Plot animation:
-    fig = plt.figure()
+    fig, ax = plt.subplots()
     pos = nx.spring_layout(G)
     #pos = nx.circular_layout(G)
-    nodes = nx.draw_networkx_nodes(G, pos)
-    edges = nx.draw_networkx_edges(G, pos)
-    title = plt.title("t = 0.00 a")
+    nodes = nx.draw_networkx_nodes(G, pos, ax=ax, alpha=0.75, node_size=50, node_color='k')
+    edges = nx.draw_networkx_edges(G, pos, ax=ax, alpha=0.05)
+    title = ax.set_title(r"$t = 0.00\/\mathrm{{a}}$")
+    ax.axis('off')
 
     # Update node color in each animation step:
     def update(i):
         nc = [color_dict[engagement_level[ind][frames[i]]] 
             for ind in G.nodes()]
         nodes.set_color(nc)
-        title = plt.title(f"t = {ideal_times[i]:.2f} a")
+        title = ax.set_title(rf"$t = {ideal_times[i]:.2f}\/\mathrm{{a}}$")
         return nodes, title,
 
     ani = animation.FuncAnimation(fig, update, frames=len(frames),
