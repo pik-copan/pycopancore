@@ -1,6 +1,6 @@
-"""Test Study for the maxploit model.
+"""Study for the maxploit model.
 
-A study to test the runner with the maxploit model.
+A study to run the maxploit model.
 """
 
 # This file is part of pycopancore.
@@ -33,32 +33,32 @@ from pickle import dump
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
 
-#---configuration---
+# ---configuration---
 
 # facts
-group_meeting_type = "Step" # "Step" or "Event"
+group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
-group_opinion_formation = "Majority" # "Majority" or "Random" or "Leader"
+group_opinion_formation = "Majority"  # "Majority" or "Random" or "Leader"
 """Majority means that the group opinion is calculated from the mean.
 Random means that the group opinion is picked from one of the member individuals opinions.
 Leader means that the group opinion follows the lead of a leader (somehow to be implemented).
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
-descriptive_norm_formation = "Majority" # "Majority" or "Random"
+descriptive_norm_formation = "Majority"  # "Majority" or "Random"
 """Majority means that the descriptive norm is calculated from the mean of acquaintances.
 Random means that the descriptive norm is calculated from one random one of the acquaintances opinions.
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
-adaptivity = "No" # "Yes" or "No"
+adaptivity = "No"  # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
-switching_back = "No" # can individuals switch even if norm does not say so?
+switching_back = "No"  # can individuals switch even if norm does not say so?
 
 # toggles
-ind_initialisation = "Random" #"Random" or "Given"
+ind_initialisation = "Random"  #"Random" or "Given"
 """Random means that inds are initialised randomly.
 Given means that a certain percentage of individuals starts a way.
 Note that this variable is a toggle."""
-group_initialisation = "Random" #"Random" or "Given"
+group_initialisation = "Random"  #"Random" or "Given"
 """Random means that groups are initialised randomly.
 Given means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
@@ -304,7 +304,7 @@ runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
 import os
-os_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\maxploit"
+os_path = "/p/projects/copan/maxbecht"
 
 import datetime
 current_time = datetime.datetime.now()
@@ -350,13 +350,13 @@ if save == "y":
     # saving config
     #---save json file---
     print("Saving configuration.json.")
-    f = open(my_path+"\\"+"configuration.json", "w+")
+    f = open(my_path+"/"+"configuration.json", "w+")
     json.dump(configuration, f, indent=4)
     print("Done saving configuration.json.")
 
     # saving traj
     # create a binary pickle file
-    f = open(my_path +"\\" + "traj.pickle", "wb")
+    f = open(my_path + "/" + "traj.pickle", "wb")
 
     tosave = {
               v.owning_class.__name__ + "."
@@ -375,26 +375,25 @@ if save == "y":
     # close file
     f.close()
     print("Done saving traj.pickle.")
-
     # save networks
-    os.mkdir(my_path + "\\networks")
+    os.mkdir(my_path + "/networks")
     print(f"Directory networks created @ {my_path}")
     network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
     network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
     print("Saving networks.")
     for counter, n in enumerate(network_list):
-        f = open(my_path +f"\\networks\\{network_names[counter]}.pickle", "wb")
+        f = open(my_path +f"/networks/{network_names[counter]}.pickle", "wb")
         save_nx = nx.relabel_nodes(n, lambda x: str(x))
         dump(save_nx, f)
     print("Done saving networks.")
 
     # text file
     print("Saving readme.txt.")
-    with open(my_path +"\\" +'readme.txt', 'w') as f:
+    with open(my_path +"/" +'readme.txt', 'w') as f:
         f.write('Groups do not change their opinion')
     print("Done saving readme.txt.")
 
-mc_path = "C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\mc"
+mc_path = "/p/projects/copan/maxbecht/results/mc"
 # Path
 my_mc_path = os.path.join(mc_path, parent_directory_name)
 
@@ -416,7 +415,7 @@ if mc_save == "y":
         os.mkdir(run_set_no_path)
         print(f"Directory {run_set_no} created @ {run_set_no_path}")
 
-    config_path = f"{run_set_no_path}\\configuration.json"
+    config_path = f"{run_set_no_path}/configuration.json"
     if not os.path.exists(config_path):
         print("Saving configuration.json.")
         f = open(config_path, "w+")
@@ -424,14 +423,14 @@ if mc_save == "y":
         print("Done saving configuration.json.")
 
     # save networks
-    network_path = f"{run_set_no_path}\\networks"
+    network_path = f"{run_set_no_path}/networks"
     network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
     network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
     if not os.path.exists(network_path):
         os.mkdir(network_path)
         print("Saving networks.")
         for counter, n in enumerate(network_list):
-            f = open(network_path +"\\"+f"{network_names[counter]}.pickle", "wb")
+            f = open(network_path +"/"+f"{network_names[counter]}.pickle", "wb")
             save_nx = nx.relabel_nodes(n, lambda x: str(x))
             dump(save_nx, f)
         print("Done saving networks.")
