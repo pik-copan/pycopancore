@@ -303,157 +303,157 @@ traj = r.run(t_1=timeinterval, dt=timestep)
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
-import os
-os_path = "/p/projects/copan/maxbecht"
-
-import datetime
-current_time = datetime.datetime.now()
-current = [current_time.month, current_time.day, current_time.hour, current_time.minute, current_time.second]
-time_string = f"{current_time.year}"
-parent_directory_name = f"{current_time.year}"
-for i in current:
-    if i < 10:
-        time_string += f"_0{i}"
-    else:
-        time_string += f"_{i}"
-
-for i in current[:2]:
-    if i < 10:
-        parent_directory_name += f"_0{i}"
-    else:
-        parent_directory_name += f"_{i}"
-# save_time = f"{current_time.year}_" + f"{current_time.month}_" + f"{current_time.day}_" \
-#             + f"{current_time.hour}_" + f"{current_time.minute}_" + f"{current_time.second}"
-
-# Directory
-directory = f"Run_{time_string}"
-
-# Path
-my_path = os.path.join(os_path, parent_directory_name)
-
-# import json
-# f = open(my_path + "_traj_dic.json", "wb")
-# json.dump(traj, f)
-
-if save == "y":
-
-    # Create the directory
-    if not os.path.exists(my_path):
-        os.mkdir(my_path)
-        print(f"Directory {parent_directory_name} created @ {my_path}")
-
-    my_path = os.path.join(my_path, directory)
-    os.mkdir(my_path)
-    print(f"Directory {directory} created @ {my_path}")
-
-    # saving things after succesfull run
-    # saving config
-    #---save json file---
-    print("Saving configuration.json.")
-    f = open(my_path+"/"+"configuration.json", "w+")
-    json.dump(configuration, f, indent=4)
-    print("Done saving configuration.json.")
-
-    # saving traj
-    # create a binary pickle file
-    f = open(my_path + "/" + "traj.pickle", "wb")
-
-    tosave = {
-              v.owning_class.__name__ + "."
-              + v.codename: {str(e): traj[v][e]
-                             for e in traj[v].keys()
-                             }
-              for v in traj.keys() if v is not "t"
-              }
-
-    del tosave["Culture.group_membership_network"]
-    del tosave["Culture.acquaintance_network"]
-    tosave["t"] = traj["t"]
-
-    print("Saving traj.pickle.")
-    dump(tosave, f)
-    # close file
-    f.close()
-    print("Done saving traj.pickle.")
-    # save networks
-    os.mkdir(my_path + "/networks")
-    print(f"Directory networks created @ {my_path}")
-    network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
-    network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
-    print("Saving networks.")
-    for counter, n in enumerate(network_list):
-        f = open(my_path +f"/networks/{network_names[counter]}.pickle", "wb")
-        save_nx = nx.relabel_nodes(n, lambda x: str(x))
-        dump(save_nx, f)
-    print("Done saving networks.")
-
-    # text file
-    print("Saving readme.txt.")
-    with open(my_path +"/" +'readme.txt', 'w') as f:
-        f.write('Groups do not change their opinion')
-    print("Done saving readme.txt.")
-
-mc_path = "/p/projects/copan/maxbecht/results/mc"
-# Path
-my_mc_path = os.path.join(mc_path, parent_directory_name)
-
-if mc_save == "y":
-    # Create the directory
-    if not os.path.exists(my_mc_path):
-        os.mkdir(my_mc_path)
-        print(f"Directory {parent_directory_name} created @ {my_mc_path}")
-    run_no = []
-
-    for i in range(name_start, name_end):
-        run_no.append(str(i))
-    # if args.runset_no:
-    #     run_set_no = args.runset_no
-    # else:
-    #     run_set_no = directory
-    run_set_no_path = os.path.join(my_mc_path, run_set_no)
-    if not os.path.exists(run_set_no_path):
-        os.mkdir(run_set_no_path)
-        print(f"Directory {run_set_no} created @ {run_set_no_path}")
-
-    config_path = f"{run_set_no_path}/configuration.json"
-    if not os.path.exists(config_path):
-        print("Saving configuration.json.")
-        f = open(config_path, "w+")
-        json.dump(configuration, f, indent=4)
-        print("Done saving configuration.json.")
-
-    # save networks
-    network_path = f"{run_set_no_path}/networks"
-    network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
-    network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
-    if not os.path.exists(network_path):
-        os.mkdir(network_path)
-        print("Saving networks.")
-        for counter, n in enumerate(network_list):
-            f = open(network_path +"/"+f"{network_names[counter]}.pickle", "wb")
-            save_nx = nx.relabel_nodes(n, lambda x: str(x))
-            dump(save_nx, f)
-        print("Done saving networks.")
-
-    # saving traj
-    # create a binary pickle file
-    for n in run_no:
-        run_no_path = os.path.join(run_set_no_path, n)
-        output_name = run_no_path + ".pickle"
-        if not os.path.exists(output_name):
-            f = open(output_name, "wb")
-            tosave = {
-                v.owning_class.__name__ + "."
-                + v.codename: {str(e): traj[v][e]
-                               for e in traj[v].keys()
-                               }
-                for v in traj.keys() if v is not "t"
-            }
-            del tosave["Culture.group_membership_network"]
-            del tosave["Culture.acquaintance_network"]
-            tosave["t"] = traj["t"]
-            t = tosave["t"]
-            print("Saving output.")
-            dump(tosave, f)
-            print("Done saving output.")
-            break
+# import os
+# os_path = "/p/projects/copan/maxbecht"
+#
+# import datetime
+# current_time = datetime.datetime.now()
+# current = [current_time.month, current_time.day, current_time.hour, current_time.minute, current_time.second]
+# time_string = f"{current_time.year}"
+# parent_directory_name = f"{current_time.year}"
+# for i in current:
+#     if i < 10:
+#         time_string += f"_0{i}"
+#     else:
+#         time_string += f"_{i}"
+#
+# for i in current[:2]:
+#     if i < 10:
+#         parent_directory_name += f"_0{i}"
+#     else:
+#         parent_directory_name += f"_{i}"
+# # save_time = f"{current_time.year}_" + f"{current_time.month}_" + f"{current_time.day}_" \
+# #             + f"{current_time.hour}_" + f"{current_time.minute}_" + f"{current_time.second}"
+#
+# # Directory
+# directory = f"Run_{time_string}"
+#
+# # Path
+# my_path = os.path.join(os_path, parent_directory_name)
+#
+# # import json
+# # f = open(my_path + "_traj_dic.json", "wb")
+# # json.dump(traj, f)
+#
+# if save == "y":
+#
+#     # Create the directory
+#     if not os.path.exists(my_path):
+#         os.mkdir(my_path)
+#         print(f"Directory {parent_directory_name} created @ {my_path}")
+#
+#     my_path = os.path.join(my_path, directory)
+#     os.mkdir(my_path)
+#     print(f"Directory {directory} created @ {my_path}")
+#
+#     # saving things after succesfull run
+#     # saving config
+#     #---save json file---
+#     print("Saving configuration.json.")
+#     f = open(my_path+"/"+"configuration.json", "w+")
+#     json.dump(configuration, f, indent=4)
+#     print("Done saving configuration.json.")
+#
+#     # saving traj
+#     # create a binary pickle file
+#     f = open(my_path + "/" + "traj.pickle", "wb")
+#
+#     tosave = {
+#               v.owning_class.__name__ + "."
+#               + v.codename: {str(e): traj[v][e]
+#                              for e in traj[v].keys()
+#                              }
+#               for v in traj.keys() if v is not "t"
+#               }
+#
+#     del tosave["Culture.group_membership_network"]
+#     del tosave["Culture.acquaintance_network"]
+#     tosave["t"] = traj["t"]
+#
+#     print("Saving traj.pickle.")
+#     dump(tosave, f)
+#     # close file
+#     f.close()
+#     print("Done saving traj.pickle.")
+#     # save networks
+#     os.mkdir(my_path + "/networks")
+#     print(f"Directory networks created @ {my_path}")
+#     network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
+#     network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
+#     print("Saving networks.")
+#     for counter, n in enumerate(network_list):
+#         f = open(my_path +f"/networks/{network_names[counter]}.pickle", "wb")
+#         save_nx = nx.relabel_nodes(n, lambda x: str(x))
+#         dump(save_nx, f)
+#     print("Done saving networks.")
+#
+#     # text file
+#     print("Saving readme.txt.")
+#     with open(my_path +"/" +'readme.txt', 'w') as f:
+#         f.write('Groups do not change their opinion')
+#     print("Done saving readme.txt.")
+#
+# mc_path = "/p/projects/copan/maxbecht/results/mc"
+# # Path
+# my_mc_path = os.path.join(mc_path, parent_directory_name)
+#
+# if mc_save == "y":
+#     # Create the directory
+#     if not os.path.exists(my_mc_path):
+#         os.mkdir(my_mc_path)
+#         print(f"Directory {parent_directory_name} created @ {my_mc_path}")
+#     run_no = []
+#
+#     for i in range(name_start, name_end):
+#         run_no.append(str(i))
+#     # if args.runset_no:
+#     #     run_set_no = args.runset_no
+#     # else:
+#     #     run_set_no = directory
+#     run_set_no_path = os.path.join(my_mc_path, run_set_no)
+#     if not os.path.exists(run_set_no_path):
+#         os.mkdir(run_set_no_path)
+#         print(f"Directory {run_set_no} created @ {run_set_no_path}")
+#
+#     config_path = f"{run_set_no_path}/configuration.json"
+#     if not os.path.exists(config_path):
+#         print("Saving configuration.json.")
+#         f = open(config_path, "w+")
+#         json.dump(configuration, f, indent=4)
+#         print("Done saving configuration.json.")
+#
+#     # save networks
+#     network_path = f"{run_set_no_path}/networks"
+#     network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
+#     network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
+#     if not os.path.exists(network_path):
+#         os.mkdir(network_path)
+#         print("Saving networks.")
+#         for counter, n in enumerate(network_list):
+#             f = open(network_path +"/"+f"{network_names[counter]}.pickle", "wb")
+#             save_nx = nx.relabel_nodes(n, lambda x: str(x))
+#             dump(save_nx, f)
+#         print("Done saving networks.")
+#
+#     # saving traj
+#     # create a binary pickle file
+#     for n in run_no:
+#         run_no_path = os.path.join(run_set_no_path, n)
+#         output_name = run_no_path + ".pickle"
+#         if not os.path.exists(output_name):
+#             f = open(output_name, "wb")
+#             tosave = {
+#                 v.owning_class.__name__ + "."
+#                 + v.codename: {str(e): traj[v][e]
+#                                for e in traj[v].keys()
+#                                }
+#                 for v in traj.keys() if v is not "t"
+#             }
+#             del tosave["Culture.group_membership_network"]
+#             del tosave["Culture.acquaintance_network"]
+#             tosave["t"] = traj["t"]
+#             t = tosave["t"]
+#             print("Saving output.")
+#             dump(tosave, f)
+#             print("Done saving output.")
+#             break
