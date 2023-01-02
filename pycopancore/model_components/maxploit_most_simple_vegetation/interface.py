@@ -32,10 +32,9 @@ class Model(object):
 
 
 # entity types:
-
 class Cell(object):
     """Interface for Cell."""
 
     stock = Variable('current stock', 'current stock of resource')
-    capacity = Variable('capacity', 'capacity of resource')
-    growth_rate = Variable('growth rate', 'growth rate of resource') # could add this to environment
+    capacity = Variable('capacity', 'capacity of resource', default=1)
+    growth_rate = Variable('growth rate', 'growth rate of resource', default=1) # could add this to environment

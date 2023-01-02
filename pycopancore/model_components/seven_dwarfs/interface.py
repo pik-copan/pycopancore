@@ -96,6 +96,10 @@ class SocialSystem(object):
 
 class Culture (object):
     """Interface for Culture mixin"""
+
+    some_array = Variable("array",
+                          """Read in some array""")
+
     pass
 
 class Group(object):

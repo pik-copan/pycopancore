@@ -45,6 +45,7 @@ class Culture (I.Culture):
 
 
         for agent_i in ordered_list:
+            # print("Update prob.:", agent_i.update_probability)
             if np.random.uniform() > agent_i.update_probability:
                 # opinion = agent_i.opinion
                 # behaviour = agent_i.behaviour
