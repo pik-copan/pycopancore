@@ -406,10 +406,10 @@ def sem(fnames):
         by the list of fnames
     """
     import scipy.stats as st
-    import numpy as np
-    import pandas as pd
+    # import numpy as np
+    # import pandas as pd
 
-    return pd.concat([np.load(f, allow_pickle=True) for f in fnames]).groupby(level=0).mean()
+    # return pd.concat([np.load(f, allow_pickle=True) for f in fnames]).groupby(level=0).mean()
 
 # EVA = {"sem": sem,
 #        "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True) for f in fnames]).groupby(level=0).mean()}
