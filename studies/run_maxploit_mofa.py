@@ -28,10 +28,9 @@ import os
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
 
-experiment_name = "pymofa_test26"
+experiment_name = "pymofa_test2"
 
-# test
-
+#local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\{experiment_name}"
 os.mkdir(SAVE_FOLDER)
 print(f"Directory created @ {SAVE_FOLDER}")
@@ -40,6 +39,7 @@ os.mkdir(SAVE_PATH_RAW)
 SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 os.mkdir(SAVE_PATH_RES)
 
+#cluster
 
 
 SAMPLE_SIZE = 2
@@ -88,8 +88,8 @@ i.e. group becomes a norm entitiy."""
 # seed = 1
 
 # runner
-timeinterval = [2]
-timestep = [1]
+timeinterval = [1]
+timestep = [0.01]
 
 # culture
 majority_threshold = [0.5]
@@ -338,10 +338,12 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
                 placeholder_list.append([traj[v][e]])
             prep[v.owning_class.__name__ + "." + v.codename] = np.sum(placeholder_list, axis=0).flatten()
 
-    print(prep, type(prep))
-    res = pd.DataFrame(prep, index=list(t))
+    del prep["World.terrestrial_carbon"]
+    del prep["World.fossil_carbon"]
+    res = pd.DataFrame(prep)
+    # need to drop timestamps
+    # res.reset_index(drop=True)
     res.to_pickle(filename)
-
 
     # save networks
     # network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
@@ -355,9 +357,6 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
     # with open(filename, 'w') as f:
     #     f.write('Groups do not change their opinion')
 
-
-
-
     # delete old taxa to avoid instantiation errors
     world.delete()
     culture.delete()
@@ -368,7 +367,6 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
         i.delete()
     for g in groups:
         g.delete()
-
 
     exit_status = 1
 
@@ -391,7 +389,26 @@ handle.compute(RUN_FUNC)
 ##### POSTPROCESSING #####
 
 # how to call these results
-filename = "stateval_results"
+filename = "stateval_results.pkl"
+
+# find out how to concat well
+def concat(fnames):
+    # import scipy.stats as st
+    import numpy as np
+    import pandas as pd
+
+    return pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f], axis=0)
+
+# def mean(fnames):
+#     import numpy as np
+#     import pandas as pd
+#
+#     df_concat = pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=0).mean()
+#     # df = df_concat.groupby(level=1).mean()
+#
+#
+#     # resave = pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=1).mean(axis=1)
+#     return df_concat
 
 
 def sem(fnames):
@@ -408,13 +425,16 @@ def sem(fnames):
         by the list of fnames
     """
     import scipy.stats as st
-    # import numpy as np
-    # import pandas as pd
+    import numpy as np
+    import pandas as pd
 
-    # return pd.concat([np.load(f, allow_pickle=True) for f in fnames]).groupby(level=0).mean()
+    return pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=0).mean()
 
-# EVA = {"sem": sem,
-#        "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True) for f in fnames]).groupby(level=0).mean()}
+EVA = {
+    # "concat": concat,
+    # "sem": sem,
+    "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=0).mean()
+}
 
-# handle.resave(EVA, filename)
+handle.resave(EVA, filename)
 
