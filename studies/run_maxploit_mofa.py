@@ -30,6 +30,8 @@ from pycopancore.runners.runner import Runner
 
 experiment_name = "pymofa_test26"
 
+# test
+
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\{experiment_name}"
 os.mkdir(SAVE_FOLDER)
 print(f"Directory created @ {SAVE_FOLDER}")
