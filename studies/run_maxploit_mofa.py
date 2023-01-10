@@ -28,10 +28,12 @@ import os
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
 
-experiment_name = "pymofa_test2"
+start = time()
+
+experiment_name = "test2"
 
 #local
-SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\{experiment_name}"
+SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 os.mkdir(SAVE_FOLDER)
 print(f"Directory created @ {SAVE_FOLDER}")
 SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
@@ -50,6 +52,7 @@ SAMPLE_SIZE = 2
 # ---configuration---
 
 # facts - just for memory
+which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -72,11 +75,11 @@ group_membership_network_type = "1-random-Edge"
 ###### actual parameters
 
 # toggles
-ind_initialisation = [0]  # 0 or 1
+ind_initialisation = [1]  # 0 or 1
 """1 means that inds are initialised randomly.
 0 means that a certain percentage of individuals starts a way.
 Note that this variable is a toggle."""
-group_initialisation = [0]  # 0 or 1
+group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
@@ -88,13 +91,13 @@ i.e. group becomes a norm entitiy."""
 # seed = 1
 
 # runner
-timeinterval = [1]
-timestep = [0.01]
+timeinterval = [10]
+timestep = [0.1]
 
 # culture
-majority_threshold = [0.5]
-weight_descriptive = [0.5]
-weight_injunctive = [0.5]
+majority_threshold = [0.25, 0.5, 0.75]
+weight_descriptive = [1]
+weight_injunctive = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -102,11 +105,11 @@ k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [0.75]
+update_probability = [0.25, 0.5, 0.75]
 
 # groups:
 group_meeting_interval = [1]
-ng_total = [10]  # number of total groups
+ng_total = [1]  # number of total groups
 ng_sust_frac = 0.5
 ng_sust = []
 for x in ng_total:
@@ -140,14 +143,15 @@ nc = nindividuals  # number of cells
 
 # ---write into dic---
 configuration = {
-    "Group Meeting Type": group_meeting_type,
-    "Group Opinion Formation": group_opinion_formation,
-    "Descriptive Norm Formation": descriptive_norm_formation,
-    "Adaptivity": adaptivity,
-    "Switching in opposite direction": switching_back,
-    "Initialisation of Individuals": ind_initialisation,
-    "Initialisation of Groups": group_initialisation,
-    "Fixed group opinions": fix_group_opinion,
+    "which_norm": which_norm,
+    "group_meeting_type": group_meeting_type,
+    "group_opinion_formation": group_opinion_formation,
+    "descriptive_norm_formation": descriptive_norm_formation,
+    "adaptivity": adaptivity,
+    "switching_back": switching_back,
+    "ind_initialisation": ind_initialisation,
+    "group_initialisation": group_initialisation,
+    "fix_group_opinion": fix_group_opinion,
     "timeinterval": timeinterval,
     "timestep": timestep,
     "k_value": k_value,
@@ -158,6 +162,7 @@ configuration = {
     "ni_nonsust": ni_nonsust,
     "nindividuals": nindividuals,
     "average_waiting_time": average_waiting_time,
+    "update_probability": update_probability,
     "cell_stock": cell_stock,
     "cell_capacity": cell_capacity,
     "cell_growth_rate": cell_growth_rate,
@@ -168,7 +173,7 @@ configuration = {
     "group_meeting_interval": group_meeting_interval,
     "acquaintance_network_type": acquaintance_network_type,
     "group_membership_network_type": group_membership_network_type,
-    "link density for random networks": p
+    "p": p
 }
 
 # saving config
@@ -190,7 +195,8 @@ print("Done saving readme.txt.")
 # Defining an experiment execution function according pymofa
 def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
              majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-             average_waiting_time, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval, p, filename):
+             average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+             p, filename):
 
     # instantiate model
     model = M.Model()
@@ -340,7 +346,8 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
 
     del prep["World.terrestrial_carbon"]
     del prep["World.fossil_carbon"]
-    res = pd.DataFrame(prep)
+    # res = pd.DataFrame(prep)
+    res = pd.DataFrame(prep, index=list(t))
     # need to drop timestamps
     # res.reset_index(drop=True)
     res.to_pickle(filename)
@@ -372,17 +379,21 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
 
     return exit_status
 
-parameter_list = [ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval, p]
-parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
-                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
-                       "ni_nonsust", "nindividuals", "average_waiting_time", "nc", "ng_total", "ng_sust", "ng_nonsust",
-                       "group_meeting_interval", "p"]
+# parameter_list_full = [ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+#                   majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
+#                   average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+#                   p]
+# parameter_name_list_full = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
+#                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
+#                        "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
+#                        "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
+parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
+                  update_probability, ng_total,group_meeting_interval]
+parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
+                       "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
-PARAM_COMBS = list(it.product(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval, p))
+PARAM_COMBS = list(it.product(k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
+                  update_probability, ng_total,group_meeting_interval))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
 handle.compute(RUN_FUNC)
 
@@ -398,18 +409,6 @@ def concat(fnames):
     import pandas as pd
 
     return pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f], axis=0)
-
-# def mean(fnames):
-#     import numpy as np
-#     import pandas as pd
-#
-#     df_concat = pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=0).mean()
-#     # df = df_concat.groupby(level=1).mean()
-#
-#
-#     # resave = pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=1).mean(axis=1)
-#     return df_concat
-
 
 def sem(fnames):
     """calculate the standard error of the mean for the data in the files
@@ -431,10 +430,13 @@ def sem(fnames):
     return pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=0).mean()
 
 EVA = {
-    # "concat": concat,
-    # "sem": sem,
-    "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=0).mean()
+    "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
+                                      for f in fnames if "traj" not in f]).groupby(level=0).mean(),
+    "sem": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
+                                     for f in fnames if "traj" not in f]).groupby(level=0).sem()
 }
 
 handle.resave(EVA, filename)
 
+runtime = dt.timedelta(seconds=(time() - start))
+print('runtime: {runtime}'.format(**locals()))
