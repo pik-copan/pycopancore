@@ -30,19 +30,25 @@ from pycopancore.runners.runner import Runner
 
 start = time()
 
-experiment_name = "test10"
+experiment_name = "test"
 
 #local
-SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
+# SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
+# os.mkdir(SAVE_FOLDER)
+# print(f"Directory created @ {SAVE_FOLDER}")
+# SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
+# os.mkdir(SAVE_PATH_RAW)
+# SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
+# os.mkdir(SAVE_PATH_RES)
+
+#cluster
+SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
 os.mkdir(SAVE_FOLDER)
 print(f"Directory created @ {SAVE_FOLDER}")
 SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
 os.mkdir(SAVE_PATH_RAW)
 SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 os.mkdir(SAVE_PATH_RES)
-
-#cluster
-
 
 SAMPLE_SIZE = 10
 
