@@ -30,7 +30,7 @@ from pycopancore.runners.runner import Runner
 
 start = time()
 
-experiment_name = "test2"
+experiment_name = "test10"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -44,7 +44,7 @@ os.mkdir(SAVE_PATH_RES)
 #cluster
 
 
-SAMPLE_SIZE = 2
+SAMPLE_SIZE = 10
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -95,7 +95,7 @@ timeinterval = [10]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.25, 0.5, 0.75]
+majority_threshold = [0.5]
 weight_descriptive = [1]
 weight_injunctive = [0]
 
@@ -105,7 +105,7 @@ k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [0.25, 0.5, 0.75]
+update_probability = [0.5]
 
 # groups:
 group_meeting_interval = [1]
@@ -155,7 +155,7 @@ configuration = {
     "timeinterval": timeinterval,
     "timestep": timestep,
     "k_value": k_value,
-    "majority_treshold": majority_threshold,
+    "majority_threshold": majority_threshold,
     "weight_descriptive": weight_descriptive,
     "weight_injunctive": weight_injunctive,
     "ni_sust": ni_sust,
@@ -347,7 +347,22 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
     del prep["World.terrestrial_carbon"]
     del prep["World.fossil_carbon"]
     # res = pd.DataFrame(prep)
-    res = pd.DataFrame(prep, index=list(t))
+
+    # correct the timelines
+    t_grid = np.arange(0, timeinterval, timestep)
+    for key in prep.keys():
+        correcting_list = prep[key]
+        new_list = []
+        list_index = 0
+        for index, t_index in enumerate(t_grid[1:]):
+            for count, k in enumerate(t):
+                if k >= t_grid[index - 1] and k < t_grid[index]:
+                    list_index = count
+            new_list.append(correcting_list[list_index])
+        new_list.append(correcting_list[len(correcting_list) - 1])
+        prep[key] = new_list
+
+    res = pd.DataFrame(prep, index=t_grid)
     # need to drop timestamps
     # res.reset_index(drop=True)
     res.to_pickle(filename)
@@ -379,21 +394,23 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
 
     return exit_status
 
-# parameter_list_full = [ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
-#                   majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-#                   average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
-#                   p]
-# parameter_name_list_full = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
-#                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
-#                        "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
-#                        "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
-parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
-                  update_probability, ng_total,group_meeting_interval]
-parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
-                       "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
+parameter_list = [ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
+                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+                  p]
+parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
+                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
+                       "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
+                       "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
+# parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
+#                   update_probability, ng_total,group_meeting_interval]
+# parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
+#                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
-PARAM_COMBS = list(it.product(k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
-                  update_probability, ng_total,group_meeting_interval))
+PARAM_COMBS = list(it.product(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
+                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+                  p))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
 handle.compute(RUN_FUNC)
 
@@ -401,14 +418,6 @@ handle.compute(RUN_FUNC)
 
 # how to call these results
 filename = "stateval_results.pkl"
-
-# find out how to concat well
-def concat(fnames):
-    # import scipy.stats as st
-    import numpy as np
-    import pandas as pd
-
-    return pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f], axis=0)
 
 def sem(fnames):
     """calculate the standard error of the mean for the data in the files
