@@ -45,6 +45,7 @@ class Culture (I.Culture):
 
 
         for agent_i in ordered_list:
+            # print("Update prob.:", agent_i.update_probability)
             if np.random.uniform() > agent_i.update_probability:
                 # opinion = agent_i.opinion
                 # behaviour = agent_i.behaviour
@@ -54,8 +55,8 @@ class Culture (I.Culture):
                 assert (self.acquaintance_network.neighbors(agent_i)
                         and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
                 # Step (2)
-                self.individual_behaviour_switch(agent_i, group_j)
-                # self.descriptive_only(agent_i)
+                # self.individual_behaviour_switch(agent_i, group_j)
+                self.descriptive_only(agent_i)
                 # self.injunctive_only(agent_i, group_j)
                 # Step (3)
                 # self.individual_opinion_switch(agent_i)
