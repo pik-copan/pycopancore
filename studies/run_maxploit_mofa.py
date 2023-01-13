@@ -30,19 +30,10 @@ from pycopancore.runners.runner import Runner
 
 start = time()
 
-experiment_name = "test"
+experiment_name = "plot_chessboard_test"
 
 #local
-# SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
-# os.mkdir(SAVE_FOLDER)
-# print(f"Directory created @ {SAVE_FOLDER}")
-# SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
-# os.mkdir(SAVE_PATH_RAW)
-# SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
-# os.mkdir(SAVE_PATH_RES)
-
-#cluster
-SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 os.mkdir(SAVE_FOLDER)
 print(f"Directory created @ {SAVE_FOLDER}")
 SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
@@ -50,7 +41,16 @@ os.mkdir(SAVE_PATH_RAW)
 SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 10
+#cluster
+# SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+# os.mkdir(SAVE_FOLDER)
+# print(f"Directory created @ {SAVE_FOLDER}")
+# SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
+# os.mkdir(SAVE_PATH_RAW)
+# SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
+# os.mkdir(SAVE_PATH_RES)
+
+SAMPLE_SIZE = 1
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -101,7 +101,7 @@ timeinterval = [10]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.5]
+majority_threshold = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 weight_descriptive = [1]
 weight_injunctive = [0]
 
@@ -111,7 +111,7 @@ k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [0.5]
+update_probability = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 
 # groups:
 group_meeting_interval = [1]
