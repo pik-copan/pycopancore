@@ -30,7 +30,7 @@ from pycopancore.runners.runner import Runner
 
 start = time()
 
-experiment_name = "plot_chessboard_test"
+experiment_name = "batch_updating_test"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -50,7 +50,7 @@ os.mkdir(SAVE_PATH_RES)
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 1
+SAMPLE_SIZE = 100
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -97,11 +97,11 @@ i.e. group becomes a norm entitiy."""
 # seed = 1
 
 # runner
-timeinterval = [10]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+majority_threshold = [0.5]
 weight_descriptive = [1]
 weight_injunctive = [0]
 
@@ -110,7 +110,7 @@ weight_injunctive = [0]
 k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [1]
+average_waiting_time = [0.01, 0.1, 1, 10]
 update_probability = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 
 # groups:
@@ -315,9 +315,11 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
     del tosave["Culture.acquaintance_network"]
     tosave["t"] = traj["t"]
     t = np.array(traj["t"]).flatten()
-    TRAJ_PATH = filename.replace(".pkl", "_traj.pkl")
-    with open(TRAJ_PATH, "wb") as f:
-        pickle.dump(tosave, f)
+
+    #save traj?
+    # TRAJ_PATH = filename.replace(".pkl", "_traj.pkl")
+    # with open(TRAJ_PATH, "wb") as f:
+    #     pickle.dump(tosave, f)
 
     ### SAVE AS PANDAS
     # # optionally the whole traj can be safed in a pd frame
