@@ -2,7 +2,7 @@
 #SBATCH --qos=medium
 #SBATCH --job-name=maxploit_mofa_run_parallel
 #SBATCH --account=copan
-#SBATCH --ntasks=8
+#SBATCH --ntasks=16
 #SBATCH --output=maxploit_run-%j.out
 #SBATCH --error=maxploit_run-%j.err
 #SBATCH --workdir=/p/projects/copan/users/maxbecht/pycopancore/studies

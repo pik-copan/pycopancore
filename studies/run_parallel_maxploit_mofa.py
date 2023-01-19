@@ -30,7 +30,7 @@ from pycopancore.runners.runner import Runner
 
 start = time()
 
-experiment_name = "batch_updating_test"
+experiment_name = "delMtest2"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -50,7 +50,7 @@ os.mkdir(SAVE_PATH_RES)
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 100
+SAMPLE_SIZE = 10
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -97,7 +97,7 @@ i.e. group becomes a norm entitiy."""
 # seed = 1
 
 # runner
-timeinterval = [100]
+timeinterval = [1]
 timestep = [0.1]
 
 # culture
@@ -110,8 +110,8 @@ weight_injunctive = [0]
 k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [0.01, 0.1, 1, 10]
-update_probability = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+average_waiting_time = [1]
+update_probability = [0.75]
 
 # groups:
 group_meeting_interval = [1]
@@ -203,6 +203,9 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
              majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
              average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
              p, filename):
+
+    # import the model (again)
+    # import pycopancore.models.maxploit as M
 
     # instantiate model
     model = M.Model()
@@ -397,6 +400,8 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
         i.delete()
     for g in groups:
         g.delete()
+
+    # del M
 
     exit_status = 1
 
