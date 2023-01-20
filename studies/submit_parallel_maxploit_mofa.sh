@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --qos=medium
-#SBATCH --job-name=maxploit_mofa_run_parallel
+#SBATCH --job-name=maxploit_mofa_run_parallel_group_test
 #SBATCH --account=copan
 #SBATCH --ntasks=16
 #SBATCH --output=maxploit_run-%j.out

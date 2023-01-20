@@ -28,21 +28,17 @@ import os
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
 
+# check parallelity
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+print(size, "If > 1: parallel!")
+
 start = time()
 
-experiment_name = "delMtest2"
+experiment_name = "parallel test"
 
 #local
-SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
-os.mkdir(SAVE_FOLDER)
-print(f"Directory created @ {SAVE_FOLDER}")
-SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
-os.mkdir(SAVE_PATH_RAW)
-SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
-os.mkdir(SAVE_PATH_RES)
-
-#cluster
-# SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+# SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 # os.mkdir(SAVE_FOLDER)
 # print(f"Directory created @ {SAVE_FOLDER}")
 # SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
@@ -50,7 +46,16 @@ os.mkdir(SAVE_PATH_RES)
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 10
+# cluster
+# as not to do any damage, folders have to be created manually
+SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+assert os.path.exists(SAVE_FOLDER), "Error. Folder does not exist."
+SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
+assert os.path.exists(SAVE_PATH_RAW), "Error. Folder does not exist."
+SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
+assert os.path.exists(SAVE_PATH_RES), "Error. Folder does not exist."
+
+SAMPLE_SIZE = 100
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -58,7 +63,7 @@ SAMPLE_SIZE = 10
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -74,7 +79,7 @@ Random means that the descriptive norm is calculated from one random one of the 
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
 adaptivity = "No"  # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
-switching_back = "No"  # can individuals switch even if norm does not say so?
+switching_back = "Yes"  # can individuals switch even if norm does not say so?
 acquaintance_network_type = "Erdos-Renyi"
 group_membership_network_type = "1-random-Edge"
 
@@ -89,7 +94,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_opinion = [1]  # into boolean, i.e. 1 = True
+fix_group_opinion = [0, 1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group opinion to change,
 i.e. group becomes a norm entitiy."""
 
@@ -97,7 +102,7 @@ i.e. group becomes a norm entitiy."""
 # seed = 1
 
 # runner
-timeinterval = [1]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
@@ -115,7 +120,7 @@ update_probability = [0.75]
 
 # groups:
 group_meeting_interval = [1]
-ng_total = [1]  # number of total groups
+ng_total = [1,2,5,10,50,100]  # number of total groups
 ng_sust_frac = 0.5
 ng_sust = []
 for x in ng_total:
