@@ -29,7 +29,12 @@ parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
 # path to data
-PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\plot_chessboard_test"
+experiment_name = "group_opinion_sizes_injunctive_only"
+# local
+# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\plot_chessboard_test"
+# remote
+PATH = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+
 
 # load config
 CONFIG_LOAD_PATH = PATH + "\\config.json"
@@ -80,8 +85,8 @@ for n in range(max_length):
     key_dict[f"{n}"] = key_list
 
 
-RAW_LOAD_PATH = PATH + "\\raw\\1-1-1-10-0o1-2-0o5-1-0-400-0-400-1-0o5-400-1-0-1-1-0o05_s0.pkl"
-raw = pickle.load(open(RAW_LOAD_PATH, "rb"))
+# RAW_LOAD_PATH = PATH + "\\raw\\1-1-1-10-0o1-2-0o5-1-0-400-0-400-1-0o5-400-1-0-1-1-0o05_s0.pkl"
+# raw = pickle.load(open(RAW_LOAD_PATH, "rb"))
 
 RES_LOAD_PATH = PATH + "\\res\\stateval_results.pkl"
 data = pd.read_pickle(RES_LOAD_PATH)
