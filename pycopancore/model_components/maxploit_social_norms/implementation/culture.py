@@ -56,8 +56,8 @@ class Culture (I.Culture):
                         and self.group_membership_network.successors(agent_i)), "agent not in mandatory networks"
                 # Step (2)
                 # self.individual_behaviour_switch(agent_i, group_j)
-                self.descriptive_only(agent_i)
-                # self.injunctive_only(agent_i, group_j)
+                # self.descriptive_only(agent_i)
+                self.injunctive_only(agent_i, group_j)
                 # Step (3)
                 # self.individual_opinion_switch(agent_i)
                 # Step (4)

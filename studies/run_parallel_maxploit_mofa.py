@@ -27,22 +27,19 @@ import importlib
 import os
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
+from mpi4py import MPI
+
+# check parallelity
+# comm = MPI.COMM_WORLD
+# size = comm.Get_size()
+# print(size, "If > 1: parallel!")
 
 start = time()
 
-experiment_name = "delMtest2"
+experiment_name = "majority_threshold_descriptive_only"
 
 #local
-SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
-os.mkdir(SAVE_FOLDER)
-print(f"Directory created @ {SAVE_FOLDER}")
-SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
-os.mkdir(SAVE_PATH_RAW)
-SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
-os.mkdir(SAVE_PATH_RES)
-
-#cluster
-# SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+# SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 # os.mkdir(SAVE_FOLDER)
 # print(f"Directory created @ {SAVE_FOLDER}")
 # SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
@@ -50,7 +47,15 @@ os.mkdir(SAVE_PATH_RES)
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 10
+# cluster
+# as not to do any damage, folders have to be created manually
+SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+assert os.path.exists(SAVE_FOLDER), "Error. Folder does not exist."
+SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
+SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
+
+
+SAMPLE_SIZE = 100
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -74,7 +79,7 @@ Random means that the descriptive norm is calculated from one random one of the 
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
 adaptivity = "No"  # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
-switching_back = "No"  # can individuals switch even if norm does not say so?
+switching_back = "Yes"  # can individuals switch even if norm does not say so?
 acquaintance_network_type = "Erdos-Renyi"
 group_membership_network_type = "1-random-Edge"
 
@@ -97,11 +102,11 @@ i.e. group becomes a norm entitiy."""
 # seed = 1
 
 # runner
-timeinterval = [1]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.5]
+majority_threshold = list(np.arange(0.4,0.6,0.01))
 weight_descriptive = [1]
 weight_injunctive = [0]
 
@@ -184,15 +189,29 @@ configuration = {
 
 # saving config
 # ---save json file---
+# local
+# print("Saving config.json")
+# f = open(SAVE_FOLDER + "\\" + "config.json", "w+")
+# json.dump(configuration, f, indent=4)
+# print("Done saving config.json.")
+# remote (linux)
 print("Saving config.json")
-f = open(SAVE_FOLDER + "\\" + "config.json", "w+")
+f = open(SAVE_FOLDER + "/" + "config.json", "w+")
 json.dump(configuration, f, indent=4)
 print("Done saving config.json.")
 
 # text file
+# print("Saving readme.txt.")
+# with open(SAVE_FOLDER + "\\" + 'readme.txt', 'w') as f:
+#     f.write('Groups do not change their opinion')
+# print("Done saving readme.txt.")
+#remote
 print("Saving readme.txt.")
-with open(SAVE_FOLDER + "\\" + 'readme.txt', 'w') as f:
-    f.write('Groups do not change their opinion')
+with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
+    f.write("""
+    Have descriptive norm only.
+    Test here: majority threshold.
+    """)
 print("Done saving readme.txt.")
 
 ########################################################################################################################

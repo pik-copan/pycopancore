@@ -1,10 +1,11 @@
 #!/bin/bash
 #SBATCH --qos=medium
-#SBATCH --job-name=maxploit_mofa_run_parallel
+#SBATCH --job-name=maxploit_threshold
 #SBATCH --account=copan
 #SBATCH --ntasks=16
-#SBATCH --output=maxploit_run-%j.out
-#SBATCH --error=maxploit_run-%j.err
+#SBATCH --exclusive
+#SBATCH --output=maxploit_run_threshold-%j.out
+#SBATCH --error=maxploit_run_threshold-%j.err
 #SBATCH --workdir=/p/projects/copan/users/maxbecht/pycopancore/studies
 
 echo "------------------------------------------------------------"
