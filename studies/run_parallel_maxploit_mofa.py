@@ -27,15 +27,16 @@ import importlib
 import os
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
+from mpi4py import MPI
 
 # check parallelity
-comm = MPI.COMM_WORLD
-size = comm.Get_size()
-print(size, "If > 1: parallel!")
+# comm = MPI.COMM_WORLD
+# size = comm.Get_size()
+# print(size, "If > 1: parallel!")
 
 start = time()
 
-experiment_name = "parallel test"
+experiment_name = "majority_threshold_descriptive_only"
 
 #local
 # SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -51,9 +52,8 @@ experiment_name = "parallel test"
 SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
 assert os.path.exists(SAVE_FOLDER), "Error. Folder does not exist."
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
-assert os.path.exists(SAVE_PATH_RAW), "Error. Folder does not exist."
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
-assert os.path.exists(SAVE_PATH_RES), "Error. Folder does not exist."
+
 
 SAMPLE_SIZE = 100
 
@@ -63,7 +63,7 @@ SAMPLE_SIZE = 100
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -94,7 +94,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_opinion = [0, 1]  # into boolean, i.e. 1 = True
+fix_group_opinion = [1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group opinion to change,
 i.e. group becomes a norm entitiy."""
 
@@ -106,7 +106,7 @@ timeinterval = [100]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.5]
+majority_threshold = list(np.arange(0.4,0.6,0.01))
 weight_descriptive = [1]
 weight_injunctive = [0]
 
@@ -120,7 +120,7 @@ update_probability = [0.75]
 
 # groups:
 group_meeting_interval = [1]
-ng_total = [1,2,5,10,50,100]  # number of total groups
+ng_total = [1]  # number of total groups
 ng_sust_frac = 0.5
 ng_sust = []
 for x in ng_total:
@@ -189,15 +189,29 @@ configuration = {
 
 # saving config
 # ---save json file---
+# local
+# print("Saving config.json")
+# f = open(SAVE_FOLDER + "\\" + "config.json", "w+")
+# json.dump(configuration, f, indent=4)
+# print("Done saving config.json.")
+# remote (linux)
 print("Saving config.json")
-f = open(SAVE_FOLDER + "\\" + "config.json", "w+")
+f = open(SAVE_FOLDER + "/" + "config.json", "w+")
 json.dump(configuration, f, indent=4)
 print("Done saving config.json.")
 
 # text file
+# print("Saving readme.txt.")
+# with open(SAVE_FOLDER + "\\" + 'readme.txt', 'w') as f:
+#     f.write('Groups do not change their opinion')
+# print("Done saving readme.txt.")
+#remote
 print("Saving readme.txt.")
-with open(SAVE_FOLDER + "\\" + 'readme.txt', 'w') as f:
-    f.write('Groups do not change their opinion')
+with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
+    f.write("""
+    Have descriptive norm only.
+    Test here: majority threshold.
+    """)
 print("Done saving readme.txt.")
 
 ########################################################################################################################
