@@ -25,12 +25,19 @@ class ICell (object):
     cftfrac = L.Cell.cftfrac
     
 class IMetabolism (object):
+    # TODO check which rate is more fitting: once a year or multiple?
+    # landuse_update_rate = Variable(
+        # "landuse update rate",
+        # """average number of time points per time where some cells
+        # update their landuse""",
+        # unit = D.years**(-1), 
+        # default = 5 / D.years, lower_bound = 0)
     landuse_update_rate = Variable(
         "landuse update rate",
         """average number of time points per time where some cells
         update their landuse""",
-        unit = D.years**(-1), 
-        default = 5 / D.years, lower_bound = 0)
+        unit = D.unity,
+        default = 1)
     landuse_update_prob = Variable(
         "fishing effort update probability",
         """probability that an individual updates their fishing effort at

@@ -1,4 +1,4 @@
-"""Dummy run script for LPJmL coupling"""
+"""Test run script for LPJmL coupling"""
 
 # This file is part of pycopancore.
 #
@@ -94,7 +94,7 @@ landuse_update_rate = 10
 landuse_update_prob = 1.
 
 
-dt = 0.1  # desired temporal resolution of the resulting output.
+dt = 1  # desired temporal resolution of the resulting output.
 
 
 # instantiate process taxa:
@@ -107,8 +107,8 @@ env = M.Environment(
     coupler=coupler
     )
 met = M.Metabolism(
-    landuse_update_rate = landuse_update_rate,
-    landuse_update_prob = landuse_update_prob
+    landuse_update_rate=landuse_update_rate,
+    landuse_update_prob=landuse_update_prob
     )
 cul = M.Culture(
     )
@@ -133,7 +133,7 @@ ind = M.Individual(cell = cell)
 #
 
 runner = Runner(model=model)
-traj = runner.run(t_0=start_year, t_1=t_max, dt=dt)
+traj = runner.run(t_0=start_year, t_1=end_year, dt=dt)
 
 # TODO: Add some further analysis such as plotting or saving
 # plt.plot(traj['t'], traj[M.SocialSystem.population][socs[0]])

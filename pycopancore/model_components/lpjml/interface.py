@@ -22,7 +22,8 @@ class Model (object):
 
     # metadata:
     name = "lpjml coupler"
-    description = "model component implementing the bidirectional coupling of copan:CORE to lpjml"
+    description = "model component implementing the bidirectional coupling of\
+                    copan:CORE to lpjml"
     requires = []
     """list of other model components required for this model component to
     make sense"""
