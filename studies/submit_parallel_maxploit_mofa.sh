@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --qos=medium
-#SBATCH --job-name=maxploit_threshold
+#SBATCH --job-name=group_timescale1
 #SBATCH --account=copan
-#SBATCH --ntasks=16
+#SBATCH --ntasks=32
 #SBATCH --exclusive
-#SBATCH --output=maxploit_run_threshold-%j.out
-#SBATCH --error=maxploit_run_threshold-%j.err
+#SBATCH --output=group_timescale1-%j.out
+#SBATCH --error=group_timescale1-%j.err
 #SBATCH --workdir=/p/projects/copan/users/maxbecht/pycopancore/studies
 
 echo "------------------------------------------------------------"

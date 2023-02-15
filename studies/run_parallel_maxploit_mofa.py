@@ -36,7 +36,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "majority_threshold_descriptive_only"
+experiment_name = "group_timescale1"
 
 #local
 # SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -63,7 +63,7 @@ SAMPLE_SIZE = 100
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -94,9 +94,9 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_opinion = [1]  # into boolean, i.e. 1 = True
+fix_group_opinion = [0]  # into boolean, i.e. 1 = True
 """Does not allow the initial group opinion to change,
-i.e. group becomes a norm entitiy."""
+i.e. group becomes a norm entitity."""
 
 # seed
 # seed = 1
@@ -106,9 +106,9 @@ timeinterval = [100]
 timestep = [0.1]
 
 # culture
-majority_threshold = list(np.arange(0.4,0.6,0.01))
-weight_descriptive = [1]
-weight_injunctive = [0]
+majority_threshold = [0.5]
+weight_descriptive = [0]
+weight_injunctive = [1]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -119,8 +119,9 @@ average_waiting_time = [1]
 update_probability = [0.75]
 
 # groups:
-group_meeting_interval = [1]
-ng_total = [1]  # number of total groups
+group_meeting_interval = [0.1, 1, 10]
+group_update_probability = [0.5, 0.75, 1]
+ng_total = [10]  # number of total groups
 ng_sust_frac = 0.5
 ng_sust = []
 for x in ng_total:
@@ -179,6 +180,7 @@ configuration = {
     "cell_growth_rate": cell_growth_rate,
     "nc": nc,
     "ng_total": ng_total,
+    "group_update_probability": group_update_probability,
     "ng_sust": ng_sust,
     "ng_nonsust": ng_nonsust,
     "group_meeting_interval": group_meeting_interval,
@@ -209,8 +211,8 @@ print("Done saving config.json.")
 print("Saving readme.txt.")
 with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
     f.write("""
-    Have descriptive norm only.
-    Test here: majority threshold.
+    Have injunctive norm only.
+    Test here:  - group timescale
     """)
 print("Done saving readme.txt.")
 
@@ -220,7 +222,7 @@ print("Done saving readme.txt.")
 # Defining an experiment execution function according pymofa
 def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
              majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+             average_waiting_time, update_probability, nc, ng_total, group_update_probability, ng_sust, ng_nonsust, group_meeting_interval,
              p, filename):
 
     # import the model (again)
@@ -261,12 +263,15 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
         # instantiate groups
     if group_initialisation:
         group_opinion = [0, 1]
-        groups = [M.Group(culture=culture, world=world, group_opinion=np.random.choice(group_opinion),
+        groups = [M.Group(culture=culture, world=world, group_update_probability=group_update_probability,
+                          group_opinion=np.random.choice(group_opinion),
                           group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
     else:
-        groups = [M.Group(culture=culture, world=world, group_opinion=1,
+        groups = [M.Group(culture=culture, world=world, group_update_probability=group_update_probability,
+                          group_opinion=1,
                           group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
-                 [M.Group(culture=culture, world=world, group_opinion=0,
+                 [M.Group(culture=culture, world=world, group_update_probability=group_update_probability,
+                          group_opinion=0,
                           group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
 
     for (i, c) in enumerate(cells):
@@ -287,7 +292,7 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
 
     # set the initial graph structure to be an erdos-renyi graph
     print("erdosrenyifying the graph ... ", end="", flush=True)
-    start = time()
+    # start = time()
     erdosrenyify(culture.acquaintance_network, p=p)
 
     # assert that each ind has at least one edge
@@ -310,7 +315,7 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
     # print("done ({})".format(dt.timedelta(seconds=(time() - start))))
     # print('\n runner starting')
     r = Runner(model=model)
-    start = time()
+    # start = time()
     traj = r.run(t_1=timeinterval, dt=timestep)
     # runtime = dt.timedelta(seconds=(time() - start))
     # print('runtime: {runtime}'.format(**locals()))
