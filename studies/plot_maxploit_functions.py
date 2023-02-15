@@ -46,3 +46,57 @@ def correct_timeline(lists, t_lists, shape, t_new):
     print(f"Done correcting timelines!")
     return new_list
 
+def phase_transition(data, parameter_name_list, parameter_dict, param_combinations, param_1, timestep, value):
+    """Create phase transition plots for 1 parameter.
+    data: the data
+    parameter_name_list: list of parameter names
+    parameter_dict: dictionary of parameters and their valuess
+    param_combinations: all possible combinations
+    param_1: name (str) of parameter of interest
+    timestep: evaluation timestep
+    value: what to plot, can be "cells" or "inds" """
+
+    parameter_values = parameter_dict[param_1]
+
+    A = []
+
+    for index, key in enumerate(parameter_name_list):
+        if key == param_1:
+            param_loc = index
+
+    for p in param_combinations:
+        value = list(p)
+        for index, i in enumerate(parameter_values):
+            new_key = []
+            for index_i, x in enumerate(value):
+                if index_i == param_loc:
+                    new_key.append(i)
+                else:
+                    new_key.append(x)
+            A.append(new_key)
+
+    mean = np.zeros(len(parameter_values))
+    sem = np.zeros(len(parameter_values))
+
+    if value == "cells":
+        for i in range(len(mean)):
+            mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
+                    level=parameter_name_list).loc[timestep, "Cell.stock"])
+            sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
+                    level=parameter_name_list).loc[timestep, "Cell.stock"])
+    elif value == "inds":
+        for i in range(len(mean)):
+            mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
+                    level=parameter_name_list).loc[timestep, "Individual.behaviour"])
+            sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
+                    level=parameter_name_list).loc[timestep, "Individual.behaviour"])
+    else:
+        return "Error"
+
+    figure = plt.figure()
+
+    plt.plot(parameter_values, mean)
+    plt.fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(sem))),
+                     list(np.add(np.array(mean), np.array(sem))), alpha = 0.1)
+
+    return figure
