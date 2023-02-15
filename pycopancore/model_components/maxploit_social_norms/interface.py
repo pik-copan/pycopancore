@@ -37,8 +37,8 @@ class Individual(object):
 
     behaviour = Variable("harvesting behaviour",
                         """harvesting behaviour of individual, if = 0 -> sustainable""")
-    opinion = Variable("harvesting opinion",
-                       """Opinion on how one should be harvesting.""")
+    attitude = Variable("harvesting attitude",
+                       """attitude on how one should be harvesting.""")
     descriptive_norm = Variable("descriptive norm",
                                 """mean behaviour in acquaintance network of individual""",
                                 default=0)
@@ -51,14 +51,14 @@ class Individual(object):
 class Group(object):
     """Interface for Group."""
 
-    group_opinion = Variable(
-        "fixed opinion",
-        "the group opinion on how to harvest"
+    group_attitude = Variable(
+        "fixed attitude",
+        "the group attitude on how to harvest"
     )
 
-    mean_group_opinion = Variable(
-        "mean opinion of group",
-        "the mean of opinion on how to harvest of all of a groups members",
+    mean_group_attitude = Variable(
+        "mean attitude of group",
+        "the mean of attitude on how to harvest of all of a groups members",
         default=0
     )
 
@@ -70,13 +70,13 @@ class Group(object):
 
     group_meeting_interval = Variable(
         "timestep for meeting",
-        """gives the time interval for group meetings in which opinions can change""",
+        """gives the time interval for group meetings in which attitudes can change""",
         default=1
     )
 
     group_update_probability = Variable(
         "probability for an update",
-        """the probability that a group will consider updating their opinion""",
+        """the probability that a group will consider updating their attitude""",
         default=1
     )
 
@@ -101,13 +101,17 @@ class Culture(object):
                        default=2.94445
                        )
 
+    attitude_on = Variable('Attitude toggle',
+                           """If True, then model consideres individuals attitude in calculations.""",
+                           default=False,
+                           type=bool)
 
     majority_threshold = Variable('Treshold for majority',
-                                 """Trehshold for a majority of individual opinions in a group being considered group opinion""",
+                                 """Trehshold for a majority of individual attitudes in a group being considered group attitude""",
                                  default=0.5)
 
-    fix_group_opinion = Variable("Fixed group opinion",
-                                 """Fixes the group opinion so it does not change, i.e. group becomes a fixed norm.""",
+    fix_group_attitude = Variable("Fixed group attitude toggle",
+                                 """Fixes the group attitude so it does not change, i.e. group becomes a fixed norm.""",
                                  default=False,
                                  datatype=bool)
 
@@ -117,7 +121,7 @@ class Culture(object):
     individual_updating_probability = Variable("prob",
                                                "blalbla no time",
                                                default=0.1)
-    ast_execution_time = Variable('last exec.time',
+    last_execution_time = Variable('last exec.time',
                                    'last time a step was executed',
                                    default=-1)
     consensus = Variable('consensus state', 'indicating if consensus is there',

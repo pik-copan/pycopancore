@@ -26,29 +26,33 @@ class Group(I.Group):
         """Get the next meeting time"""
         return t + self.group_meeting_interval
 
-    def update_group_opinion(self, unused_t):
-        """Update a groups opinion based on the mean_group_behaviour."""
-        if not self.culture.fix_group_opinion:
-            if self.mean_group_behaviour <= self.culture.majority_threshold: # get the mean in terms of true/false for adjusting the global opinion later
-                mean_group_opinion_binary = 0
+    def update_group_attitude(self, unused_t):
+        """Update a groups attitude based on the mean_group_behaviour."""
+        if not self.culture.fix_group_attitude:
+            if self.culture.attitude_on:
+                mean_group_value = self.mean_group_attitude
             else:
-                mean_group_opinion_binary = 1
+                mean_group_value = self.mean_group_behaviour
+            if mean_group_value <= self.culture.majority_threshold: # get the mean in terms of true/false for adjusting the global attitude later
+                mean_group_value_binary = 0
+            else:
+                mean_group_value_binary = 1
 
             for g in self.world.groups:
                 if uniform() <= self.group_update_probability: #groups consider updating only with certain probability
-                    if self.group_opinion != mean_group_opinion_binary:
-                        if self.mean_group_behaviour > self.culture.majority_threshold or\
-                                self.mean_group_behaviour < (1-self.culture.majority_threshold): # defines an interval to allow switching in both directions
-                            self.group_opinion = mean_group_opinion_binary # switch group_opinion
+                    if self.group_attitude != mean_group_value_binary:
+                        if mean_group_value > self.culture.majority_threshold or\
+                                mean_group_value < (1-self.culture.majority_threshold): # defines an interval to allow switching in both directions
+                            self.group_attitude = mean_group_value_binary # switch group_attitude
 
-    def get_mean_group_opinion(self, unused_t):
-        """Calculate the mean opinion of individuals in a group."""
+    def get_mean_group_attitude(self, unused_t):
+        """Calculate the mean attitude of individuals in a group."""
         n = 0
         for i in self.group_members:
-            if i.opinion:
+            if i.attitude:
                 n += 1
         N = len(list(self.group_members))
-        self.mean_group_opinion = n/N
+        self.mean_group_attitude = n/N
 
     def get_mean_group_behaviour(self, unused_t):
         """Calculate the mean behaviour of individuals in a group."""
@@ -61,10 +65,10 @@ class Group(I.Group):
         self.mean_group_behaviour = n/N
 
     processes = [
-        # Explicit("mean opinion in group", [I.Group.mean_group_opinion], get_mean_group_opinion),
+        # Explicit("mean attitude in group", [I.Group.mean_group_attitude], get_mean_group_attitude),
         Explicit("mean behaviour in group", [I.Group.mean_group_behaviour], get_mean_group_behaviour),
-        Step("update group opinion",
-              [I.Group.group_opinion],
+        Step("update group attitude",
+              [I.Group.group_attitude],
               [next_group_meeting_time,
-               update_group_opinion])
+               update_group_attitude])
     ]

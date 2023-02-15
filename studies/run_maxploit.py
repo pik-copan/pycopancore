@@ -40,14 +40,14 @@ group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
-group_opinion_formation = "Majority"  # "Majority" or "Random" or "Leader"
-"""Majority means that the group opinion is calculated from the mean.
-Random means that the group opinion is picked from one of the member individuals opinions.
-Leader means that the group opinion follows the lead of a leader (somehow to be implemented).
+group_attitude_formation = "Majority"  # "Majority" or "Random" or "Leader"
+"""Majority means that the group attitude is calculated from the mean.
+Random means that the group attitude is picked from one of the member individuals attitudes.
+Leader means that the group attitude follows the lead of a leader (somehow to be implemented).
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
 descriptive_norm_formation = "Majority"  # "Majority" or "Random"
 """Majority means that the descriptive norm is calculated from the mean of acquaintances.
-Random means that the descriptive norm is calculated from one random one of the acquaintances opinions.
+Random means that the descriptive norm is calculated from one random one of the acquaintances attitudes.
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
 adaptivity = "No"  # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
@@ -62,8 +62,8 @@ group_initialisation = "Random"  #"Random" or "Given"
 """Random means that groups are initialised randomly.
 Given means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_opinion = False # boolean
-"""Does not allow the initial group opinion to change,
+fix_group_attitude = False # boolean
+"""Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitiy."""
 
 # seed
@@ -123,13 +123,13 @@ name_end = 500
 #---write into dic---
 configuration = {
     "Group Meeting Type": group_meeting_type,
-    "Group Opinion Formation": group_opinion_formation,
+    "Group attitude Formation": group_attitude_formation,
     "Descriptive Norm Formation": descriptive_norm_formation,
     "Adaptivity": adaptivity,
     "Switching in opposite direction": switching_back,
     "Initialisation of Individuals": ind_initialisation,
     "Initialisation of Groups": group_initialisation,
-    "Fixed group opinions": fix_group_opinion,
+    "Fixed group attitudes": fix_group_attitude,
     "timeinterval": timeinterval,
     "timestep": timestep,
     "k_value": k_value,
@@ -167,7 +167,7 @@ model = M.Model()
 culture = M.Culture(majority_threshold=majority_threshold,
                     weight_descriptive=weight_descriptive,
                     weight_injunctive=weight_injunctive,
-                    fix_group_opinion=fix_group_opinion,
+                    fix_group_attitude=fix_group_attitude,
                     k_value=k_value)
 
 # generate entitites:
@@ -179,27 +179,27 @@ cells = [M.Cell(stock=1, capacity=1, growth_rate=1, social_system=social_system)
 # random initialisation or not?
 if ind_initialisation == "Random":
     behaviour = [0, 1]
-    opinion = [0, 1]
+    attitude = [0, 1]
     individuals = [M.Individual(average_waiting_time=average_waiting_time,
                                 update_probability=update_probability,
                                 behaviour=np.random.choice(behaviour),
                                 cell=cells[i]) for i in range(nindividuals)]
 else:
-    individuals = [M.Individual(behaviour=0, opinion=0,
+    individuals = [M.Individual(behaviour=0, attitude=0,
                                 cell=cells[i]) for i in range(ni_nonsust)] \
-                  + [M.Individual(behaviour=1, opinion=1,
+                  + [M.Individual(behaviour=1, attitude=1,
                                   cell=cells[i + ni_nonsust])
                      for i in range(ni_sust)]
 
     # instantiate groups
 if group_initialisation == "Random":
-    group_opinion = [0, 1]
-    groups = [M.Group(culture=culture, world=world, group_opinion=np.random.choice(group_opinion),
+    group_attitude = [0, 1]
+    groups = [M.Group(culture=culture, world=world, group_attitude=np.random.choice(group_attitude),
                       group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
 else:
-    groups = [M.Group(culture=culture, world=world, group_opinion=1,
+    groups = [M.Group(culture=culture, world=world, group_attitude=1,
                       group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
-             [M.Group(culture=culture, world=world, group_opinion=0,
+             [M.Group(culture=culture, world=world, group_attitude=0,
                       group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
 
 
@@ -278,10 +278,10 @@ for g in groups:
 # plt.show()
 
 # color_map = []
-# unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and n.group_opinion)
+# unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and n.group_attitude)
 #                 or (d["type"] == "Individual" and n.behaviour)}
-# sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_opinion)
-#               or (d["type"] == "Individual" and not n.opinion)}
+# sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_attitude)
+#               or (d["type"] == "Individual" and not n.attitude)}
 # for node in list(GM.nodes):
 #     if node in unsust_nodes:
 #         color_map.append("red")
@@ -390,7 +390,7 @@ print('runtime: {runtime}'.format(**locals()))
 #     # text file
 #     print("Saving readme.txt.")
 #     with open(my_path +"/" +'readme.txt', 'w') as f:
-#         f.write('Groups do not change their opinion')
+#         f.write('Groups do not change their attitude')
 #     print("Done saving readme.txt.")
 #
 # mc_path = "/p/projects/copan/maxbecht/results/mc"

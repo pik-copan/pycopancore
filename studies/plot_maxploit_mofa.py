@@ -20,7 +20,7 @@ import datetime
 import glob
 # from plot_maxploit_functions import correct_timeline
 
-parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
+parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
                        "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
                        "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
@@ -29,7 +29,7 @@ parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
 # path to data
-experiment_name = "group_opinion_sizes_injunctive_only"
+experiment_name = "group_attitude_sizes_injunctive_only"
 # local
 # PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\plot_chessboard_test"
 # remote
@@ -45,7 +45,7 @@ parameter_dict = {str(key): value for key, value in config.items() if key in par
 # create parameter list
 ind_initialisation = parameter_dict["ind_initialisation"]
 group_initialisation = parameter_dict["group_initialisation"]
-fix_group_opinion = parameter_dict["fix_group_opinion"]
+fix_group_attitude = parameter_dict["fix_group_attitude"]
 timeinterval = parameter_dict["timeinterval"]
 timestep = parameter_dict["timestep"]
 k_value = parameter_dict["k_value"]
@@ -64,7 +64,7 @@ ng_nonsust = parameter_dict["ng_nonsust"]
 group_meeting_interval = parameter_dict["group_meeting_interval"]
 p = parameter_dict["p"]
 
-parameter_list = [ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+parameter_list = [ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
                   majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
                   average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
                   p]
@@ -111,7 +111,7 @@ VARIABLE: which variable of interest you want to plot
 # change the ones that were sweeped and fix the other ones
 
 PARAM_COMBS_0\
-    = list(it.product(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+    = list(it.product(ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
           majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
           average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
           p))

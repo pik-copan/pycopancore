@@ -86,7 +86,7 @@ for i in Traj:
         t.append(np.array(k["t"]))
         cells.append(list(k["Cell.stock"].keys()))
         individuals.append(list(k["Individual.behaviour"].keys()))
-        groups.append(list(k["Group.group_opinion"].keys()))
+        groups.append(list(k["Group.group_attitude"].keys()))
     T.append(t)
     Cells.append(cells)
     Individuals.append(individuals)
@@ -103,18 +103,18 @@ timestep = 1
 
 print("Done loading things!")
 ########################################################################################################################
-Total_stock, Nbehav1, Groups_opinions = ([] for i in range(3))
+Total_stock, Nbehav1, Groups_attitudes = ([] for i in range(3))
 for count1, i in enumerate(Traj):
-    individuals_behaviours, total_stock, nbehav1, groups_opinions = ([] for i in range(4))
+    individuals_behaviours, total_stock, nbehav1, groups_attitudes = ([] for i in range(4))
     for count2, k in enumerate(i):
         individuals_behaviours.append(np.array([k["Individual.behaviour"][ind]
                                        for ind in Individuals[count1][count2]]))
-        groups_opinions.append(np.array(np.array([k["Group.group_opinion"][g]
+        groups_attitudes.append(np.array(np.array([k["Group.group_attitude"][g]
                                          for g in Groups[count1][count2]])))
         stock = k["Cell.stock"]
         total_stock.append(np.divide(np.sum([stock[c] for c in Cells[count1][count2]], axis=0), nindividuals))
         nbehav1.append(np.divide(np.sum(individuals_behaviours[count2], axis=0), nindividuals))
-    Groups_opinions.append(groups_opinions)
+    Groups_attitudes.append(groups_attitudes)
     Total_stock.append(total_stock)
     Nbehav1.append(nbehav1)
 

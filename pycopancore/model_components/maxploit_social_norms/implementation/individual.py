@@ -23,7 +23,7 @@ class Individual(I.Individual):
     def __init__(self,
                  *,
                  behaviour=0,
-                 opinion=0,
+                 attitude=0,
                  imitation_tendency=1,
                  rewiring_prob=0,
                  average_waiting_time=1,
@@ -32,7 +32,7 @@ class Individual(I.Individual):
         """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
         self.behaviour = behaviour
-        self.opinion = opinion
+        self.attitude = attitude
         self.imitation_tendency = imitation_tendency
         self.rewiring_prob = rewiring_prob
         self.average_waiting_time = average_waiting_time

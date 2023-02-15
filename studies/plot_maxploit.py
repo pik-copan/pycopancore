@@ -61,7 +61,7 @@ group_membership_network = pickle.load(open(network_path+"\\"+networks[1]+".pick
 #---assign entities---
 cells = list(traj["Cell.stock"].keys())
 individuals = list(traj["Individual.behaviour"].keys())
-groups = list(traj["Group.group_opinion"].keys())
+groups = list(traj["Group.group_attitude"].keys())
 
 #---get things from congfig---
 nindividuals = configuration["nindividuals"]
@@ -72,26 +72,26 @@ ng_total = configuration["ng_total"]
 individuals_behaviours = np.array([traj["Individual.behaviour"][ind]
                                    for ind in individuals])
 individuals_behaviours_dict=traj["Individual.behaviour"]
-groups_opinions = np.array([traj["Group.group_opinion"][g]
+groups_attitudes = np.array([traj["Group.group_attitude"][g]
                            for g in groups])
-groups_opinions_dict = traj["Group.group_opinion"]
+groups_attitudes_dict = traj["Group.group_attitude"]
 mean_groups_behaviours = traj["Group.mean_group_behaviour"]
-# groups_opinions_fixed = traj[M.Group.group_opinion]
+# groups_attitudes_fixed = traj[M.Group.group_attitude]
 
 # print(mean_groups_behaviours)
 # plt.plot(t, mean_groups_behaviours[groups[0]])
 # plt.show()
 
 # for ind in individuals:
-#     print([traj[M.Individual.opinion][ind]])
-# individuals_opinions = np.array([traj[M.Individual.opinion][ind]
+#     print([traj[M.Individual.attitude][ind]])
+# individuals_attitudes = np.array([traj[M.Individual.attitude][ind]
 #                                  for ind in individuals])
 
 nbehav1_list = np.sum(individuals_behaviours, axis=0) / nindividuals
 nbehav0_list = 1 - nbehav1_list
 
-# nopinion1_list = np.sum(individuals_opinions, axis=0) / nindividuals
-# nopinion0_list = 1 - nopinion1_list
+# nattitude1_list = np.sum(individuals_attitudes, axis=0) / nindividuals
+# nattitude0_list = 1 - nattitude1_list
 
 nbehav1 = np.sum(individuals_behaviours, axis=0)
 nbehav0 = nindividuals - nbehav1
@@ -103,7 +103,7 @@ nbehav0 = nindividuals - nbehav1
 # plt.show()
 
 # group plot
-ngroup_1 = np.sum(groups_opinions, axis=0, dtype=float)
+ngroup_1 = np.sum(groups_attitudes, axis=0, dtype=float)
 
 fig = plt.figure()
 plt.plot(t, nbehav1, 'navy', label="N Inds. Sustainable")
@@ -154,12 +154,12 @@ plt.show()
 # plt.legend()
 # plt.show()
 
-# print(groups_opinions)
-# print(groups_opinions[groups[0]])
-# print(groups_opinions[groups[0]][0])
-# print(groups_opinions_fixed)
-# print(groups_opinions_fixed[groups[0]])
-# print(groups_opinions_fixed[groups[0]][0])
+# print(groups_attitudes)
+# print(groups_attitudes[groups[0]])
+# print(groups_attitudes[groups[0]][0])
+# print(groups_attitudes_fixed)
+# print(groups_attitudes_fixed[groups[0]])
+# print(groups_attitudes_fixed[groups[0]][0])
 # print(individuals_behaviours_dict)
 # print(individuals_behaviours_dict[individuals[0]])
 # print(individuals_behaviours_dict[individuals[0]][0])
@@ -180,7 +180,7 @@ v_array2 = []
 for i in individuals:
     v_array1.append(individuals_behaviours_dict[i][0])
 for index, g in enumerate(groups):
-    v_array2.append(groups_opinions_dict[g][0])
+    v_array2.append(groups_attitudes_dict[g][0])
 v_array = [v_array1, v_array2]
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -199,7 +199,7 @@ for t_index in range(len(t)):
     for i in individuals:
         v_array1.append(individuals_behaviours_dict[i][t_index])
     for index, g in enumerate(groups):
-        v_array2.append(groups_opinions_dict[g][t_index])
+        v_array2.append(groups_attitudes_dict[g][t_index])
     v_array = [v_array1, v_array2]
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -213,7 +213,7 @@ for t_index in range(len(t)):
 """
 for i in range(len(t)):
     color_map = []
-    unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_opinions[n][i])
+    unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_attitudes[n][i])
                     or (d["type"] == "Individual" and individuals_behaviours_dict[n][i])}
     for node in list(GM.nodes):
         if node in unsust_nodes:

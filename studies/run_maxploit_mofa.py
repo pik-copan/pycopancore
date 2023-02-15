@@ -63,14 +63,14 @@ group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
-group_opinion_formation = "Majority"  # "Majority" or "Random" or "Leader"
-"""Majority means that the group opinion is calculated from the mean.
-Random means that the group opinion is picked from one of the member individuals opinions.
-Leader means that the group opinion follows the lead of a leader (somehow to be implemented).
+group_attitude_formation = "Majority"  # "Majority" or "Random" or "Leader"
+"""Majority means that the group attitude is calculated from the mean.
+Random means that the group attitude is picked from one of the member individuals attitudes.
+Leader means that the group attitude follows the lead of a leader (somehow to be implemented).
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
 descriptive_norm_formation = "Majority"  # "Majority" or "Random"
 """Majority means that the descriptive norm is calculated from the mean of acquaintances.
-Random means that the descriptive norm is calculated from one random one of the acquaintances opinions.
+Random means that the descriptive norm is calculated from one random one of the acquaintances attitudes.
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
 adaptivity = "No"  # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
@@ -89,8 +89,8 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_opinion = [1]  # into boolean, i.e. 1 = True
-"""Does not allow the initial group opinion to change,
+fix_group_attitude = [1]  # into boolean, i.e. 1 = True
+"""Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitiy."""
 
 # seed
@@ -151,13 +151,13 @@ nc = nindividuals  # number of cells
 configuration = {
     "which_norm": which_norm,
     "group_meeting_type": group_meeting_type,
-    "group_opinion_formation": group_opinion_formation,
+    "group_attitude_formation": group_attitude_formation,
     "descriptive_norm_formation": descriptive_norm_formation,
     "adaptivity": adaptivity,
     "switching_back": switching_back,
     "ind_initialisation": ind_initialisation,
     "group_initialisation": group_initialisation,
-    "fix_group_opinion": fix_group_opinion,
+    "fix_group_attitude": fix_group_attitude,
     "timeinterval": timeinterval,
     "timestep": timestep,
     "k_value": k_value,
@@ -192,14 +192,14 @@ print("Done saving config.json.")
 # text file
 print("Saving readme.txt.")
 with open(SAVE_FOLDER + "\\" + 'readme.txt', 'w') as f:
-    f.write('Groups do not change their opinion')
+    f.write('Groups do not change their attitude')
 print("Done saving readme.txt.")
 
 ########################################################################################################################
 
 
 # Defining an experiment execution function according pymofa
-def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
              majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
              average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
              p, filename):
@@ -211,7 +211,7 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
     culture = M.Culture(majority_threshold=majority_threshold,
                         weight_descriptive=weight_descriptive,
                         weight_injunctive=weight_injunctive,
-                        fix_group_opinion=fix_group_opinion,
+                        fix_group_attitude=fix_group_attitude,
                         k_value=k_value)
     print(f"Culture process taxon created: {culture}")
 
@@ -224,27 +224,27 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
     # random initialisation or not?
     if ind_initialisation:
         behaviour = [0, 1]
-        opinion = [0, 1]
+        attitude = [0, 1]
         individuals = [M.Individual(average_waiting_time=average_waiting_time,
                                     update_probability=update_probability,
                                     behaviour=np.random.choice(behaviour),
                                     cell=cells[i]) for i in range(nindividuals)]
     else:
-        individuals = [M.Individual(behaviour=0, opinion=0,
+        individuals = [M.Individual(behaviour=0, attitude=0,
                                     cell=cells[i]) for i in range(ni_nonsust)] \
-                      + [M.Individual(behaviour=1, opinion=1,
+                      + [M.Individual(behaviour=1, attitude=1,
                                       cell=cells[i + ni_nonsust])
                          for i in range(ni_sust)]
 
         # instantiate groups
     if group_initialisation:
-        group_opinion = [0, 1]
-        groups = [M.Group(culture=culture, world=world, group_opinion=np.random.choice(group_opinion),
+        group_attitude = [0, 1]
+        groups = [M.Group(culture=culture, world=world, group_attitude=np.random.choice(group_attitude),
                           group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
     else:
-        groups = [M.Group(culture=culture, world=world, group_opinion=1,
+        groups = [M.Group(culture=culture, world=world, group_attitude=1,
                           group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
-                 [M.Group(culture=culture, world=world, group_opinion=0,
+                 [M.Group(culture=culture, world=world, group_attitude=0,
                           group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
 
     for (i, c) in enumerate(cells):
@@ -383,7 +383,7 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
     # print("Done saving networks.")
 
     # with open(filename, 'w') as f:
-    #     f.write('Groups do not change their opinion')
+    #     f.write('Groups do not change their attitude')
 
     # delete old taxa to avoid instantiation errors
     world.delete()
@@ -400,11 +400,11 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_opinion, timein
 
     return exit_status
 
-parameter_list = [ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+parameter_list = [ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
                   majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
                   average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
                   p]
-parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
+parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
                        "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
                        "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
@@ -413,7 +413,7 @@ parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_
 # parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
-PARAM_COMBS = list(it.product(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+PARAM_COMBS = list(it.product(ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
                   majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
                   average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
                   p))

@@ -47,7 +47,7 @@ class Culture (I.Culture):
         for agent_i in ordered_list:
             # print("Update prob.:", agent_i.update_probability)
             if np.random.uniform() > agent_i.update_probability:
-                # opinion = agent_i.opinion
+                # attitude = agent_i.attitude
                 # behaviour = agent_i.behaviour
                 group_j = list(agent_i.group_memberships)[0] # should be only one
 
@@ -59,14 +59,14 @@ class Culture (I.Culture):
                 # self.descriptive_only(agent_i)
                 self.injunctive_only(agent_i, group_j)
                 # Step (3)
-                # self.individual_opinion_switch(agent_i)
+                # self.individual_attitude_switch(agent_i)
                 # Step (4)
 
     def individual_behaviour_switch(self, agent_i, group_j):
-        """Apply a switch of individuals behaviour, informed by individuals own opinion (cognitive dissonance),
-         neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
+        """Apply a switch of individuals behaviour, informed by individuals own attitude (cognitive dissonance),
+         neighbours behaviour (descriptive norm) and groups attitude (injunctive norm)."""
 
-        injunctive_norm = group_j.group_opinion
+        injunctive_norm = group_j.group_attitude
         if injunctive_norm == 0: # for symmetric probabilities in the logit
             injunctive_norm = -1
 
@@ -113,8 +113,8 @@ class Culture (I.Culture):
 
     def injunctive_only(self, agent_i, group_j):
         # print("New agent.")
-        injunctive_norm = group_j.group_opinion
-        # print(group_j, "Group opinion of this agent...", injunctive_norm)
+        injunctive_norm = group_j.group_attitude
+        # print(group_j, "Group attitude of this agent...", injunctive_norm)
         if injunctive_norm == 0: # for symmetric probabilities in the logit
             injunctive_norm = -1
         x = self.weight_injunctive * injunctive_norm
@@ -129,13 +129,11 @@ class Culture (I.Culture):
             # print(agent_i.behaviour, "Behaviour before...")
             agent_i.behaviour = int(not agent_i.behaviour)
             # print(agent_i.behaviour, "Behaviour after...")
-    # def individual_opinion_switch(self, agent_i):
-    #     """Apply a switch of individuals opinion, informed by individuals own behaviour (cognitive dissonance),
-    #      neighbours behaviour (descriptive norm) and groups opinion (injunctive norm)."""
 
-    # def group_opinion_switch(self, unused_t):
-    #     """Apply a switch of groups opinion, informed by ?."""
-    # for now situated in group.py
+    # def individual_attitude_switch(self, agent_i):
+    #     """Apply a switch of individuals attitude, informed by individuals own behaviour,
+    #      neighbours behaviour (descriptive norm) and groups attitude (injunctive norm)."""
+
 
     def get_descriptive_norm(self, agent_i):
         """Calculate the descriptive norm in a less time expensive fashion than

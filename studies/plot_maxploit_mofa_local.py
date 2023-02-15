@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # from plot_maxploit_functions import correct_timeline
 from studies.plotting_tools.plot_maxploit_functions import phase_transition
 
-parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
+parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
                        "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
                        "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
@@ -30,7 +30,7 @@ parameter_dict = {str(key): value for key, value in config.items() if key in par
 # create parameter list
 ind_initialisation = parameter_dict["ind_initialisation"]
 group_initialisation = parameter_dict["group_initialisation"]
-fix_group_opinion = parameter_dict["fix_group_opinion"]
+fix_group_attitude = parameter_dict["fix_group_attitude"]
 timeinterval = parameter_dict["timeinterval"]
 timestep = parameter_dict["timestep"]
 k_value = parameter_dict["k_value"]
@@ -49,7 +49,7 @@ ng_nonsust = parameter_dict["ng_nonsust"]
 group_meeting_interval = parameter_dict["group_meeting_interval"]
 p = parameter_dict["p"]
 
-parameter_list = [ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+parameter_list = [ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
                   majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
                   average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
                   p]
@@ -57,7 +57,7 @@ parameter_list = [ind_initialisation, group_initialisation, fix_group_opinion, t
 last_timestep = timeinterval[0] - timestep[0]
 
 PARAM_COMBS\
-    = list(it.product(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+    = list(it.product(ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
           majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
           average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
           p))
