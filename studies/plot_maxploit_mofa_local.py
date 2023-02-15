@@ -1,24 +1,10 @@
-import numpy as np
-from time import time
-import datetime as dt
-
 import pandas as pd
-from numpy import random
 import json
 import itertools as it
-import networkx as nx
-import os
-import pickle
-from matplotlib import pyplot as plt
 import numpy as np
-import plotly.graph_objs as go
 import matplotlib.pyplot as plt
-import plotly.offline as py
-import matplotlib.colors as colors
-import matplotlib.cm as cmx
-import datetime
-import glob
 # from plot_maxploit_functions import correct_timeline
+from studies.plotting_tools.plot_maxploit_functions import phase_transition
 
 parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
@@ -29,8 +15,7 @@ parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
 # path to data
-PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\" \
-       f"cluster_results\\majority_threshold_descriptive_only"
+PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\parallel_test2"
 
 # path to test data
 # PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\" \
@@ -101,49 +86,51 @@ VARIABLE: which variable of interest you want to plot
 """
 
 # ----- phase transition plot
-param_1 = "majority_threshold"
+figure = phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold", last_timestep, "cells")
 
-parameter_values = parameter_dict[param_1]
-
-A = []
-
-for index, key in enumerate(parameter_name_list):
-    if key == param_1:
-        param_loc = index
-
-for count in range(len(parameter_values)):
-    new_key = []
-    for index, i in enumerate(parameter_list):
-        if index == param_loc:
-            new_key.append(parameter_values[count])
-        else:
-            new_key.append(i[0])
-    A.append(new_key)
-
-
-mean = np.zeros(len(parameter_values))
-sem = np.zeros(len(parameter_values))
-
-for i in range(len(mean)):
-    mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
-                                                           level=parameter_name_list).loc[last_timestep, "Cell.stock"])
-    sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
-                                                         level=parameter_name_list).loc[last_timestep, "Cell.stock"])
-
+# param_1 = "majority_threshold"
+#
+# parameter_values = parameter_dict[param_1]
+#
+# A = []
+#
+# for index, key in enumerate(parameter_name_list):
+#     if key == param_1:
+#         param_loc = index
+#
+# for count in range(len(parameter_values)):
+#     new_key = []
+#     for index, i in enumerate(parameter_list):
+#         if index == param_loc:
+#             new_key.append(parameter_values[count])
+#         else:
+#             new_key.append(i[0])
+#     A.append(new_key)
+#
+#
+# mean = np.zeros(len(parameter_values))
+# sem = np.zeros(len(parameter_values))
+#
 # for i in range(len(mean)):
 #     mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
-#                                                            level=parameter_name_list).loc[
-#                         timestep, "Individual.behaviour"])
+#                                                            level=parameter_name_list).loc[last_timestep, "Cell.stock"])
 #     sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
-#                                                          level=parameter_name_list).loc[
-#                        timestep, "Individual.behaviour"])
-
-
-figure = plt.figure()
-
-plt.scatter(parameter_values, mean)
-plt.fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(sem))),
-                 list(np.add(np.array(mean), np.array(sem))), alpha=0.1)
+#                                                          level=parameter_name_list).loc[last_timestep, "Cell.stock"])
+#
+# # for i in range(len(mean)):
+# #     mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
+# #                                                            level=parameter_name_list).loc[
+# #                         timestep, "Individual.behaviour"])
+# #     sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
+# #                                                          level=parameter_name_list).loc[
+# #                        timestep, "Individual.behaviour"])
+#
+#
+# figure = plt.figure()
+#
+# plt.scatter(parameter_values, mean)
+# plt.fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(sem))),
+#                  list(np.add(np.array(mean), np.array(sem))), alpha=0.1)
 
 
 

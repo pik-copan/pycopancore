@@ -13,8 +13,9 @@ import importlib
 import os
 
 # path to data
-experiment_name = "group_opinion_timescale_injunctive_only"
-SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+experiment_name = "parallel_test2"
+# SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 
@@ -69,7 +70,7 @@ handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=I
 # ----- postprocess -----
 
 # how to call these results
-filename = "stateval_results.pkl"
+filename = "stateval_results_2.pkl"
 
 EVA = {
     "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True)

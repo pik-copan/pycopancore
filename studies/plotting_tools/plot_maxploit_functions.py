@@ -46,7 +46,7 @@ def correct_timeline(lists, t_lists, shape, t_new):
     print(f"Done correcting timelines!")
     return new_list
 
-def phase_transition(data, parameter_name_list, parameter_dict, param_combinations, param_1, timestep, value):
+def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, param_1, timestep, value):
     """Create phase transition plots for 1 parameter.
     data: the data
     parameter_name_list: list of parameter names
@@ -64,16 +64,14 @@ def phase_transition(data, parameter_name_list, parameter_dict, param_combinatio
         if key == param_1:
             param_loc = index
 
-    for p in param_combinations:
-        value = list(p)
-        for index, i in enumerate(parameter_values):
-            new_key = []
-            for index_i, x in enumerate(value):
-                if index_i == param_loc:
-                    new_key.append(i)
-                else:
-                    new_key.append(x)
-            A.append(new_key)
+    for count in range(len(parameter_values)):
+        new_key = []
+        for index, i in enumerate(parameter_list):
+            if index == param_loc:
+                new_key.append(parameter_values[count])
+            else:
+                new_key.append(i[0])
+        A.append(new_key)
 
     mean = np.zeros(len(parameter_values))
     sem = np.zeros(len(parameter_values))
@@ -81,22 +79,24 @@ def phase_transition(data, parameter_name_list, parameter_dict, param_combinatio
     if value == "cells":
         for i in range(len(mean)):
             mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
-                    level=parameter_name_list).loc[timestep, "Cell.stock"])
+                                                                   level=parameter_name_list).loc[
+                                timestep, "Cell.stock"])
             sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
-                    level=parameter_name_list).loc[timestep, "Cell.stock"])
+                                                                 level=parameter_name_list).loc[
+                               timestep, "Cell.stock"])
+
     elif value == "inds":
         for i in range(len(mean)):
             mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
-                    level=parameter_name_list).loc[timestep, "Individual.behaviour"])
+                                                                   level=parameter_name_list).loc[
+                                timestep, "Individual.behaviour"])
             sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
-                    level=parameter_name_list).loc[timestep, "Individual.behaviour"])
-    else:
-        return "Error"
+                                                                 level=parameter_name_list).loc[
+                               timestep, "Individual.behaviour"])
 
     figure = plt.figure()
 
-    plt.plot(parameter_values, mean)
+    plt.scatter(parameter_values, mean)
     plt.fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(sem))),
-                     list(np.add(np.array(mean), np.array(sem))), alpha = 0.1)
-
+                     list(np.add(np.array(mean), np.array(sem))), alpha=0.1)
     return figure

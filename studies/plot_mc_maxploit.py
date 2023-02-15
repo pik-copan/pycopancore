@@ -1,21 +1,12 @@
-import numpy as np
-from time import time
-import datetime as dt
-from numpy import random
-import json
-import networkx as nx
 import os
 import pickle
-from matplotlib import pyplot as plt
 import numpy as np
-import plotly.graph_objs as go
 import matplotlib.pyplot as plt
-import plotly.offline as py
 import matplotlib.colors as colors
 import matplotlib.cm as cmx
 import datetime
 import glob
-from plot_maxploit_functions import correct_timeline
+from studies.plotting_tools.plot_maxploit_functions import correct_timeline
 
 # to be saved?
 save = "n" #"y" or "n"
