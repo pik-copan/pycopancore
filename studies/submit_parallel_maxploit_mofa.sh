@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --qos=medium
-#SBATCH --job-name=group_timescale1
+#SBATCH --job-name=individual_timescale
 #SBATCH --account=copan
-#SBATCH --ntasks=32
+#SBATCH --ntasks=16
 #SBATCH --exclusive
-#SBATCH --output=group_timescale1-%j.out
-#SBATCH --error=group_timescale1-%j.err
+#SBATCH --output=group_individual_timescale-%j.out
+#SBATCH --error=group_individual_timescale-%j.err
 #SBATCH --workdir=/p/projects/copan/users/maxbecht/pycopancore/studies
 
 echo "------------------------------------------------------------"

@@ -36,7 +36,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "group_timescale1"
+experiment_name = "individual_timescale"
 
 #local
 # SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -63,7 +63,7 @@ SAMPLE_SIZE = 100
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -86,7 +86,7 @@ group_membership_network_type = "1-random-Edge"
 ###### actual parameters
 
 # toggles
-attitude_on = [0] # 0 or 1
+attitude_on = [1] # 0 or 1
 """1 means that individuals have a second variable attitude. Then the group attitude is formed through all attitudes
 of the members.
 0 means that they dont have an attitude. Then the group attitude is influenced by the behaviour.
@@ -99,7 +99,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0]  # into boolean, i.e. 1 = True
+fix_group_attitude = [1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -112,20 +112,20 @@ timestep = [0.1]
 
 # culture
 majority_threshold = [0.5]
-weight_descriptive = [0]
-weight_injunctive = [1]
+weight_descriptive = [1]
+weight_injunctive = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
 k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [1]
+average_waiting_time = [0.1, 0.5, 1, 1.5, 2]
 update_probability = [0.75]
 
 # groups:
-group_meeting_interval = [0.1, 1, 10]
-group_update_probability = [0.5, 0.75, 1]
+group_meeting_interval = [1]
+group_update_probability = [1]
 ng_total = [10]  # number of total groups
 ng_sust_frac = 0.5
 ng_sust = []
