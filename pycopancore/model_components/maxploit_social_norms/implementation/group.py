@@ -47,22 +47,27 @@ class Group(I.Group):
 
     def get_mean_group_attitude(self, unused_t):
         """Calculate the mean attitude of individuals in a group."""
-        n = 0
-        for i in self.group_members:
-            if i.attitude:
-                n += 1
-        N = len(list(self.group_members))
-        self.mean_group_attitude = n/N
+        if self.mean_group_attitude:
+            n = 0
+            for i in self.group_members:
+                if i.attitude:
+                    n += 1
+            N = len(list(self.group_members))
+            self.mean_group_attitude = n/N
 
     def get_mean_group_behaviour(self, unused_t):
         """Calculate the mean behaviour of individuals in a group."""
 
-        n = 0
-        for i in self.group_members:
-            if i.behaviour:
-                n += 1
-        N = len(list(self.group_members))
-        self.mean_group_behaviour = n/N
+        # check that group has members to prevent division by zero error
+        if self.mean_group_behaviour:
+            n = 0
+            for i in self.group_members:
+                if i.behaviour:
+                    n += 1
+            N = len(list(self.group_members))
+            self.mean_group_behaviour = n/N
+
+        # else: group keeps previous variable
 
     processes = [
         # Explicit("mean attitude in group", [I.Group.mean_group_attitude], get_mean_group_attitude),

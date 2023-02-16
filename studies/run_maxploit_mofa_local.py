@@ -423,25 +423,6 @@ handle.compute(RUN_FUNC)
 # how to call these results
 filename = "stateval_results.pkl"
 
-def sem(fnames):
-    """calculate the standard error of the mean for the data in the files
-    that are in the list of fnames
-
-    Parameter:
-    ----------
-    fnames: string
-        list of strings of filenames containing simulation results
-    Returns:
-    sem: float
-        Standard error of the mean of the data in the files specified
-        by the list of fnames
-    """
-    import scipy.stats as st
-    import numpy as np
-    import pandas as pd
-
-    return pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=0).mean()
-
 EVA = {
     "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
                                       for f in fnames if "traj" not in f]).groupby(level=0).mean(),
