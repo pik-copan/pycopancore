@@ -6,24 +6,25 @@ import matplotlib.pyplot as plt
 # from plot_maxploit_functions import correct_timeline
 from studies.plotting_tools.plot_maxploit_functions import phase_transition
 
-parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
-                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
-                       "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
-                       "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
+parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
+                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
+                       "ni_sust_frac", "average_waiting_time", "update_probability", "nc", "ng_total",
+                       "ng_sust_frac", "group_update_probability", "group_meeting_interval", "p"]
 # parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
 # path to data
-# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\majority_threshold_descriptive_only"
+PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\group_size_test1"
 
 # path to test data
-PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\" \
-       f"test"
+# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\test"
 
 # path to save figures
-SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\" \
-       f"test"
+SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\group_size_test1"
+
+# test
+# SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\test"
 
 # load config
 CONFIG_LOAD_PATH = PATH + "\\config.json"
@@ -33,42 +34,39 @@ config = json.load(open(CONFIG_LOAD_PATH))
 parameter_dict = config
 
 # create parameter list
+attitude_on = parameter_dict["attitude_on"]
 ind_initialisation = parameter_dict["ind_initialisation"]
 group_initialisation = parameter_dict["group_initialisation"]
-if "fix_group_attitude" in parameter_dict.keys():
-    fix_group_attitude = parameter_dict["fix_group_attitude"]
-else:
-    fix_group_attitude = parameter_dict["fix_group_opinion"]
+fix_group_attitude = parameter_dict["fix_group_attitude"]
 timeinterval = parameter_dict["timeinterval"]
 timestep = parameter_dict["timestep"]
 k_value = parameter_dict["k_value"]
 majority_threshold = parameter_dict["majority_threshold"]
 weight_descriptive = parameter_dict["weight_descriptive"]
 weight_injunctive = parameter_dict["weight_injunctive"]
-ni_sust = parameter_dict["ni_sust"]
-ni_nonsust = parameter_dict["ni_nonsust"]
 nindividuals = parameter_dict["nindividuals"]
+ni_sust_frac = parameter_dict["ni_sust_frac"]
 average_waiting_time = parameter_dict["average_waiting_time"]
 update_probability = parameter_dict["update_probability"]
 nc = parameter_dict["nc"]
 ng_total = parameter_dict["ng_total"]
-ng_sust = parameter_dict["ng_sust"]
-ng_nonsust = parameter_dict["ng_nonsust"]
+ng_sust_frac = parameter_dict["ng_sust_frac"]
 group_meeting_interval = parameter_dict["group_meeting_interval"]
+group_update_probability = parameter_dict["group_update_probability"]
 p = parameter_dict["p"]
 
-parameter_list = [ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
-                  p]
+parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
+             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
+             p]
 
 last_timestep = timeinterval[0] - timestep[0]
 
 PARAM_COMBS\
-    = list(it.product(ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-          majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-          average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
-          p))
+    = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
+             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
+             p))
 
 # RAW_LOAD_PATH = PATH + "\\raw\\1-1-1-10-0o1-2-0o5-1-0-400-0-400-1-0o5-400-1-0-1-1-0o05_s0.pkl"
 # raw = pickle.load(open(RAW_LOAD_PATH, "rb"))
@@ -175,8 +173,8 @@ for p in pairs:
         plt.title(f"{m_names[index]}")
         plt.imshow(m, origin="lower")
         plt.colorbar()
-        plt.xlabel(param1)
-        plt.ylabel(param2)
+        plt.xlabel(param2)
+        plt.ylabel(param1)
         # save a plot
         plt.savefig(SAVE_PATH + "\\" + param1 + "_" + param2 + f"_{m_names[index]}" + ".png")
         # show plot

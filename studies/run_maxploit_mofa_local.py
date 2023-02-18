@@ -16,11 +16,11 @@ import numpy as np
 from time import time
 import datetime as dt
 import pandas as pd
-import pymofa.experiment_handling
 from numpy import random
 import json
 import networkx as nx
 import pickle
+import pymofa.experiment_handling
 from pymofa.experiment_handling import experiment_handling as eh
 import itertools as it
 import importlib
@@ -30,7 +30,7 @@ from pycopancore.runners.runner import Runner
 
 start = time()
 
-experiment_name = "test"
+experiment_name = "test3"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -50,7 +50,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 10
+SAMPLE_SIZE = 2
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -58,7 +58,7 @@ SAMPLE_SIZE = 10
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -74,13 +74,18 @@ Random means that the descriptive norm is calculated from one random one of the 
 Note that this variable is meant only for documentation purposes, the code needs to be changed by hand."""
 adaptivity = "No"  # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
-switching_back = "No"  # can individuals switch even if norm does not say so?
+switching_back = "Yes"  # can individuals switch even if norm does not say so?
 acquaintance_network_type = "Erdos-Renyi"
 group_membership_network_type = "1-random-Edge"
 
 ###### actual parameters
 
 # toggles
+attitude_on = [0] # 0 or 1
+"""1 means that individuals have a second variable attitude. Then the group attitude is formed through all attitudes
+of the members.
+0 means that they dont have an attitude. Then the group attitude is influenced by the behaviour.
+"""
 ind_initialisation = [1]  # 0 or 1
 """1 means that inds are initialised randomly.
 0 means that a certain percentage of individuals starts a way.
@@ -89,9 +94,9 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
-i.e. group becomes a norm entitiy."""
+i.e. group becomes a norm entitity."""
 
 # seed
 # seed = 1
@@ -101,7 +106,7 @@ timeinterval = [10]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.1, 0.5, 1]
+majority_threshold = [0.5]
 weight_descriptive = [1]
 weight_injunctive = [0]
 
@@ -110,19 +115,14 @@ weight_injunctive = [0]
 k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [1, 2, 3]
-update_probability = [0.1, 0.5, 1]
+average_waiting_time = [1]
+update_probability = [1]
 
 # groups:
 group_meeting_interval = [1]
-ng_total = [1]  # number of total groups
-ng_sust_frac = 0.5
-ng_sust = []
-for x in ng_total:
-    ng_sust.append(int(x * ng_sust_frac))  # number of sustainable groups
-ng_nonsust = []
-for i in range(len(ng_sust)):
-    ng_nonsust.append(ng_total[i] - ng_sust[i])
+group_update_probability = [1]
+ng_total = [1,2, 4]  # number of total groups
+ng_sust_frac = [0.5]
 
 # networks
 p = [0.05] # link density for random networks; wiedermann: 0.05
@@ -132,13 +132,8 @@ p = [0.05] # link density for random networks; wiedermann: 0.05
 ### parameters that usually will not be changed ###
 # individuals
 nindividuals = [400] # this does not change
-ni_sust_frac = 1
-ni_sust = []
-for x in nindividuals:
-    ni_sust.append(int(x * ni_sust_frac))  # number of agents with sustainable behaviour 1
-ni_nonsust = []
-for i in range(len(ni_sust)):
-    ni_nonsust.append(nindividuals[i] - ni_sust[i])  # number of agents with unsustainable behaviour 0
+ni_sust_frac = [1]
+
 # cells:
 cell_stock = [1] # does not change
 cell_capacity = [1] # does not change
@@ -153,6 +148,7 @@ configuration = {
     "descriptive_norm_formation": descriptive_norm_formation,
     "adaptivity": adaptivity,
     "switching_back": switching_back,
+    "attitude_on": attitude_on,
     "ind_initialisation": ind_initialisation,
     "group_initialisation": group_initialisation,
     "fix_group_attitude": fix_group_attitude,
@@ -162,9 +158,8 @@ configuration = {
     "majority_threshold": majority_threshold,
     "weight_descriptive": weight_descriptive,
     "weight_injunctive": weight_injunctive,
-    "ni_sust": ni_sust,
-    "ni_nonsust": ni_nonsust,
     "nindividuals": nindividuals,
+    "ni_sust_frac": ni_sust_frac,
     "average_waiting_time": average_waiting_time,
     "update_probability": update_probability,
     "cell_stock": cell_stock,
@@ -172,8 +167,8 @@ configuration = {
     "cell_growth_rate": cell_growth_rate,
     "nc": nc,
     "ng_total": ng_total,
-    "ng_sust": ng_sust,
-    "ng_nonsust": ng_nonsust,
+    "ng_sust_frac": ng_sust_frac,
+    "group_update_probability": group_update_probability,
     "group_meeting_interval": group_meeting_interval,
     "acquaintance_network_type": acquaintance_network_type,
     "group_membership_network_type": group_membership_network_type,
@@ -197,9 +192,9 @@ print("Done saving readme.txt.")
 
 
 # Defining an experiment execution function according pymofa
-def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
+             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
              p, filename):
 
     # instantiate model
@@ -219,6 +214,9 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_attitude, timei
     cells = [M.Cell(stock=1, capacity=1, growth_rate=1, social_system=social_system)
              for c in range(nc)]
 
+    ni_sust = nindividuals * ni_sust_frac  # number of agents with sustainable behaviour 1
+    ni_nonsust = nindividuals - ni_sust  # number of agents with unsustainable behaviour 0
+
     # random initialisation or not?
     if ind_initialisation:
         behaviour = [0, 1]
@@ -233,6 +231,9 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_attitude, timei
                       + [M.Individual(behaviour=1, attitude=1,
                                       cell=cells[i + ni_nonsust])
                          for i in range(ni_sust)]
+
+    ng_sust = ng_total * ng_sust_frac  # number of sustainable groups
+    ng_nonsust = ng_total - ng_sust
 
         # instantiate groups
     if group_initialisation:
@@ -313,9 +314,9 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_attitude, timei
     del tosave["Culture.acquaintance_network"]
     tosave["t"] = traj["t"]
     t = np.array(traj["t"]).flatten()
-    TRAJ_PATH = filename.replace(".pkl", "_traj.pkl")
-    with open(TRAJ_PATH, "wb") as f:
-        pickle.dump(tosave, f)
+    # TRAJ_PATH = filename.replace(".pkl", "_traj.pkl")
+    # with open(TRAJ_PATH, "wb") as f:
+    #     pickle.dump(tosave, f)
 
     ### SAVE AS PANDAS
     # # optionally the whole traj can be safed in a pd frame
@@ -398,23 +399,23 @@ def RUN_FUNC(ind_initialisation, group_initialisation, fix_group_attitude, timei
 
     return exit_status
 
-parameter_list = [ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
-                  p]
-parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
-                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
-                       "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
-                       "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
+parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
+             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
+             p]
+parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
+                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
+                       "ni_sust_frac", "average_waiting_time", "update_probability", "nc", "ng_total",
+                       "ng_sust_frac", "group_update_probability", "group_meeting_interval", "p"]
 # parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
 #                   update_probability, ng_total,group_meeting_interval]
 # parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
-PARAM_COMBS = list(it.product(ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
-                  p))
+PARAM_COMBS = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
+             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
+             p))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
 handle.compute(RUN_FUNC)
 
