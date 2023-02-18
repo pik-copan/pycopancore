@@ -47,7 +47,7 @@ class Group(I.Group):
 
     def get_mean_group_attitude(self, unused_t):
         """Calculate the mean attitude of individuals in a group."""
-        if self.mean_group_attitude:
+        if list(self.mean_group_members):
             n = 0
             for i in self.group_members:
                 if i.attitude:
@@ -59,7 +59,7 @@ class Group(I.Group):
         """Calculate the mean behaviour of individuals in a group."""
 
         # check that group has members to prevent division by zero error
-        if self.mean_group_behaviour:
+        if list(self.group_members):
             n = 0
             for i in self.group_members:
                 if i.behaviour:

@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --qos=medium
-#SBATCH --job-name=postprocess_timescale
+#SBATCH --qos=short
+#SBATCH --job-name=postprocess_on_one_node
 #SBATCH --account=copan
-#SBATCH --ntasks=16
+#SBATCH --ntasks=1
 #SBATCH --exclusive
-#SBATCH --output=maxploit_postprocess_timescale-%j.out
-#SBATCH --error=maxploit_postprocess_timescale-%j.err
+#SBATCH --output=postprocess_on_one_node-%j.out
+#SBATCH --error=postprocess_on_one_node-%j.err
 #SBATCH --workdir=/p/projects/copan/users/maxbecht/pycopancore/studies
 
 echo "------------------------------------------------------------"
