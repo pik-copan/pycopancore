@@ -36,7 +36,8 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "individual_timescale"
+experiment_name = "injunctive_groupsize_1"
+
 
 #local
 # SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -50,7 +51,7 @@ experiment_name = "individual_timescale"
 # cluster
 # as not to do any damage, folders have to be created manually
 SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
-assert os.path.exists(SAVE_FOLDER), "Error. Folder does not exist."
+assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exist."
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 
@@ -86,7 +87,7 @@ group_membership_network_type = "1-random-Edge"
 ###### actual parameters
 
 # toggles
-attitude_on = [1] # 0 or 1
+attitude_on = [0] # 0 or 1
 """1 means that individuals have a second variable attitude. Then the group attitude is formed through all attitudes
 of the members.
 0 means that they dont have an attitude. Then the group attitude is influenced by the behaviour.
@@ -99,7 +100,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -112,44 +113,32 @@ timestep = [0.1]
 
 # culture
 majority_threshold = [0.5]
-weight_descriptive = [1]
-weight_injunctive = [0]
+weight_descriptive = [0]
+weight_injunctive = [1]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
 k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [0.1, 0.5, 1, 1.5, 2]
+average_waiting_time = [1]
 update_probability = [0.75]
 
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [1]
-ng_total = [10]  # number of total groups
-ng_sust_frac = 0.5
-ng_sust = []
-for x in ng_total:
-    ng_sust.append(int(x * ng_sust_frac))  # number of sustainable groups
-ng_nonsust = []
-for i in range(len(ng_sust)):
-    ng_nonsust.append(ng_total[i] - ng_sust[i])
+ng_total = [1, 2, 4, 8, 16, 32, 64, 128]  # number of total groups
+ng_sust_frac = [0.5]
 
 # networks
 p = [0.05] # link density for random networks; wiedermann: 0.05
 
 
-
 ### parameters that usually will not be changed ###
 # individuals
 nindividuals = [400] # this does not change
-ni_sust_frac = 1
-ni_sust = []
-for x in nindividuals:
-    ni_sust.append(int(x * ni_sust_frac))  # number of agents with sustainable behaviour 1
-ni_nonsust = []
-for i in range(len(ni_sust)):
-    ni_nonsust.append(nindividuals[i] - ni_sust[i])  # number of agents with unsustainable behaviour 0
+ni_sust_frac = [1]
+
 # cells:
 cell_stock = [1] # does not change
 cell_capacity = [1] # does not change
@@ -176,9 +165,8 @@ configuration = {
     "majority_threshold": majority_threshold,
     "weight_descriptive": weight_descriptive,
     "weight_injunctive": weight_injunctive,
-    "ni_sust": ni_sust,
-    "ni_nonsust": ni_nonsust,
     "nindividuals": nindividuals,
+    "ni_sust_frac": ni_sust_frac,
     "average_waiting_time": average_waiting_time,
     "update_probability": update_probability,
     "cell_stock": cell_stock,
@@ -186,9 +174,8 @@ configuration = {
     "cell_growth_rate": cell_growth_rate,
     "nc": nc,
     "ng_total": ng_total,
+    "ng_sust_frac": ng_sust_frac,
     "group_update_probability": group_update_probability,
-    "ng_sust": ng_sust,
-    "ng_nonsust": ng_nonsust,
     "group_meeting_interval": group_meeting_interval,
     "acquaintance_network_type": acquaintance_network_type,
     "group_membership_network_type": group_membership_network_type,
@@ -203,10 +190,11 @@ configuration = {
 # json.dump(configuration, f, indent=4)
 # print("Done saving config.json.")
 # remote (linux)
-print("Saving config.json")
-f = open(SAVE_FOLDER + "/" + "config.json", "w+")
-json.dump(configuration, f, indent=4)
-print("Done saving config.json.")
+if not os.path.exists(SAVE_FOLDER + "/" + "config.json"):
+    print("Saving config.json")
+    f = open(SAVE_FOLDER + "/" + "config.json", "w+")
+    json.dump(configuration, f, indent=4)
+    print("Done saving config.json.")
 
 # text file
 # print("Saving readme.txt.")
@@ -214,21 +202,23 @@ print("Done saving config.json.")
 #     f.write('Groups do not change their attitude')
 # print("Done saving readme.txt.")
 #remote
-print("Saving readme.txt.")
-with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
-    f.write("""
-    Have injunctive norm only.
-    Test here:  - group timescale
-    """)
-print("Done saving readme.txt.")
+if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
+    print("Saving readme.txt.")
+    with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
+        f.write("""
+        Have descriptive norm only.
+        Test here:  - average_waiting_time
+                    - update_probability
+        """)
+    print("Done saving readme.txt.")
 
 ########################################################################################################################
 
 
 # Defining an experiment execution function according pymofa
 def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-             average_waiting_time, update_probability, nc, ng_total, group_update_probability, ng_sust, ng_nonsust, group_meeting_interval,
+             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
              p, filename):
 
     # import the model (again)
@@ -252,6 +242,9 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     cells = [M.Cell(stock=1, capacity=1, growth_rate=1, social_system=social_system)
              for c in range(nc)]
 
+    ni_sust = nindividuals * ni_sust_frac  # number of agents with sustainable behaviour 1
+    ni_nonsust = nindividuals - ni_sust  # number of agents with unsustainable behaviour 0
+
     # random initialisation or not?
     if ind_initialisation:
         behaviour = [0, 1]
@@ -266,6 +259,9 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
                       + [M.Individual(behaviour=1, attitude=1,
                                       cell=cells[i + ni_nonsust])
                          for i in range(ni_sust)]
+
+    ng_sust = ng_total * ng_sust_frac  # number of sustainable groups
+    ng_nonsust = ng_total - ng_sust
 
         # instantiate groups
     if group_initialisation:
@@ -438,22 +434,22 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
     return exit_status
 
-parameter_list = [ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
+                  majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+                  average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
                   p]
-parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
-                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
-                       "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
-                       "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
+parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
+                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
+                       "ni_sust_frac", "average_waiting_time", "update_probability", "nc", "ng_total",
+                       "ng_sust_frac", "group_update_probability", "group_meeting_interval", "p"]
 # parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
 #                   update_probability, ng_total,group_meeting_interval]
 # parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
-PARAM_COMBS = list(it.product(ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+PARAM_COMBS = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
+                  majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+                  average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
                   p))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
 handle.compute(RUN_FUNC)
@@ -462,25 +458,6 @@ handle.compute(RUN_FUNC)
 
 # how to call these results
 filename = "stateval_results.pkl"
-
-def sem(fnames):
-    """calculate the standard error of the mean for the data in the files
-    that are in the list of fnames
-
-    Parameter:
-    ----------
-    fnames: string
-        list of strings of filenames containing simulation results
-    Returns:
-    sem: float
-        Standard error of the mean of the data in the files specified
-        by the list of fnames
-    """
-    import scipy.stats as st
-    import numpy as np
-    import pandas as pd
-
-    return pd.concat([np.load(f, allow_pickle=True) for f in fnames if "traj" not in f]).groupby(level=0).mean()
 
 EVA = {
     "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True)

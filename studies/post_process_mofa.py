@@ -13,9 +13,9 @@ import importlib
 import os
 
 # path to data
-experiment_name = "parallel_test2"
-# SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
-SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
+experiment_name = "group_size2"
+SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+# SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 
@@ -23,17 +23,18 @@ SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 CONFIG_LOAD_PATH = SAVE_FOLDER + "/config.json"
 config = json.load(open(CONFIG_LOAD_PATH))
 
-parameter_name_list = ["ind_initialisation", "group_initialisation", "fix_group_opinion", "timeinterval", "timestep",
+parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive", "ni_sust",
                        "ni_nonsust", "nindividuals", "average_waiting_time", "update_probability", "nc", "ng_total",
-                       "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
+                       "group_update_probability", "ng_sust", "ng_nonsust", "group_meeting_interval", "p"]
 
 parameter_dict = {str(key): value for key, value in config.items() if key in parameter_name_list}
 
 # create parameter list
+attitude_on = parameter_dict["ind_initialisation"]
 ind_initialisation = parameter_dict["ind_initialisation"]
 group_initialisation = parameter_dict["group_initialisation"]
-fix_group_opinion = parameter_dict["fix_group_opinion"]
+fix_group_attitude = parameter_dict["fix_group_attitude"]
 timeinterval = parameter_dict["timeinterval"]
 timestep = parameter_dict["timestep"]
 k_value = parameter_dict["k_value"]
@@ -47,22 +48,22 @@ average_waiting_time = parameter_dict["average_waiting_time"]
 update_probability = parameter_dict["update_probability"]
 nc = parameter_dict["nc"]
 ng_total = parameter_dict["ng_total"]
+group_update_probability = parameter_dict["group_update_probability"]
 ng_sust = parameter_dict["ng_sust"]
 ng_nonsust = parameter_dict["ng_nonsust"]
 group_meeting_interval = parameter_dict["group_meeting_interval"]
 p = parameter_dict["p"]
 
-parameter_list = [ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
                   majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+                  average_waiting_time, update_probability, nc, ng_total, group_update_probability, ng_sust, ng_nonsust, group_meeting_interval,
                   p]
 
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
-PARAM_COMBS = list(it.product(ind_initialisation, group_initialisation, fix_group_opinion, timeinterval, timestep, k_value,
+PARAM_COMBS = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
                   majority_threshold, weight_descriptive, weight_injunctive, ni_sust, ni_nonsust, nindividuals,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust, ng_nonsust, group_meeting_interval,
+                  average_waiting_time, update_probability, nc, ng_total, group_update_probability, ng_sust, ng_nonsust, group_meeting_interval,
                   p))
-
 SAMPLE_SIZE = 100
 
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
@@ -70,7 +71,7 @@ handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=I
 # ----- postprocess -----
 
 # how to call these results
-filename = "stateval_results_2.pkl"
+filename = "stateval_results.pkl"
 
 EVA = {
     "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
