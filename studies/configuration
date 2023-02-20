@@ -1,0 +1,21 @@
+{
+    "seed": 1,
+    "timeinterval": 10,
+    "timestep": 0.1,
+    "ni_sust": 50,
+    "ni_nonsust": 50,
+    "nindividuals": 100,
+    "cell_stock": 1,
+    "cell_capacity": 1,
+    "cell_growth_rate": [
+        1
+    ],
+    "nc": 100,
+    "ng_total": 10,
+    "ng_sust": 5,
+    "ng_nonsust": 5,
+    "group_meeting_interval": 1,
+    "acquaintance_network_type": "Erdos-Renyi",
+    "group_membership_network_type": "Erdos-Renyi",
+    "p": 0.5
+}

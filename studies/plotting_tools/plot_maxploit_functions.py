@@ -56,6 +56,8 @@ def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, 
     timestep: evaluation timestep
     value: what to plot, can be "cells" or "inds" """
 
+    print("Start creating phase transition plot....")
+
     parameter_values = parameter_dict[param_1]
 
     A = []
@@ -100,3 +102,105 @@ def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, 
     plt.fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(sem))),
                      list(np.add(np.array(mean), np.array(sem))), alpha=0.1)
     return figure
+
+def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, timestep, SAVE_PATH):
+    import itertools as it
+    # create key sets for single parameter sweeps for plotting
+    # change the ones that were sweeped and fix the other ones
+
+    # get names of all alternating params
+    alternating_params = []
+    for key, value in config.items():
+        if len(value) > 1 and isinstance(value, list):
+            alternating_params.append(key)
+
+    param_locs = {}
+    for index, key in enumerate(parameter_name_list):
+        if key in alternating_params:
+            param_locs[key] = index
+
+    pairs = list(it.combinations(alternating_params, 2))
+
+    for p in pairs:
+        param1 = p[0]
+        param2 = p[1]
+        param_loc1 = param_locs[param1]
+        param_loc2 = param_locs[param2]
+
+        A = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=list)
+
+        param_list1 = parameter_list[param_loc1]
+        param_list2 = parameter_list[param_loc2]
+
+        # sort lists in case
+        if param_list1.sort() is not None:
+            param_list1 = parameter_list[param_loc1].sort()
+        if param_list2.sort() is not None:
+            param_list2 = parameter_list[param_loc2].sort()
+
+        for c in PARAM_COMBS:
+            value = list(c)
+            for index_i, i in enumerate(param_list1):
+                for index_j, j in enumerate(param_list2):
+                    new_key = []
+                    for index, x in enumerate(value):
+                        if index == param_loc1:
+                            new_key.append(i)
+                        elif index == param_loc2:
+                            new_key.append(j)
+                        else:
+                            new_key.append(x)
+                    A[index_i][index_j] = new_key
+
+        # create a data matrix
+        cells_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
+        inds_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
+        sem_cells_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
+        sem_inds_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
+        for i in range(np.shape(cells_matrix)[0]):
+            for j in range(np.shape(cells_matrix)[1]):
+                cells_matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
+                                                                                  level=parameter_name_list).loc[
+                                               timestep, "Cell.stock"])
+                sem_cells_matrix[i][j] = float(data['sem'].unstack('observables').xs(key=tuple(A[i][j]),
+                                                                                     level=parameter_name_list).loc[
+                                                   timestep, "Cell.stock"])
+                inds_matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
+                                                                                 level=parameter_name_list).loc[
+                                              timestep, "Individual.behaviour"])
+                sem_inds_matrix[i][j] = float(data['sem'].unstack('observables').xs(key=tuple(A[i][j]),
+                                                                                    level=parameter_name_list).loc[
+                                                  timestep, "Individual.behaviour"])
+        matrices = [cells_matrix, sem_cells_matrix, inds_matrix, sem_inds_matrix]
+        m_names = ["Cells", "Sem_Cells", "Inds", "Sem_Inds"]
+        # ----- PIXEL PLOT -----
+        # create a 2d data set
+
+        print("Plotting figures...")
+        for index, m in enumerate(matrices):
+            pixel_plot, ax = plt.subplots()
+            plt.suptitle(param1 + " vs. " + param2)
+            plt.title(f"{m_names[index]}")
+            extent = [min(param_list2), max(param_list2), min(param_list1), max(param_list1)]
+            plt.imshow(m, origin="lower")
+            plt.colorbar()
+            # ax.set_xscale('log', base=2)
+            plt.xlabel(param2)
+            plt.ylabel(param1)
+            xticks = list(np.arange(0, np.shape(m)[1], 1))
+            yticks = list(np.arange(0, np.shape(m)[0], 1))
+            ax.set_xticks(xticks)
+            ax.set_yticks(yticks)
+            xtickslabels = param_list2
+            ytickslabels = param_list1
+            ax.set_xticklabels(xtickslabels)
+            ax.set_yticklabels(ytickslabels)
+            # plt.xticks(xticks)
+            # plt.yticks(yticks)
+            # save a plot
+            plt.savefig(SAVE_PATH + "\\" + param1 + "_" + param2 + f"_{m_names[index]}" + ".png")
+            # show plot
+            # plt.show()
+            # clear axes
+            plt.close()
+        print("Done plotting figures!")

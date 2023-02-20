@@ -27,6 +27,8 @@ import importlib
 import os
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
+# from studies.plotting_tools import plot_multilayer
+from matplotlib import pyplot as plt
 
 start = time()
 
@@ -50,7 +52,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 2
+SAMPLE_SIZE = 10
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -121,7 +123,7 @@ update_probability = [1]
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [1]
-ng_total = [1,2, 4]  # number of total groups
+ng_total = [1]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -267,6 +269,9 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     start = time()
     erdosrenyify(culture.acquaintance_network, p=p)
 
+    nx.draw(culture.acquaintance_network)
+    plt.show()
+
     # assert that each ind has at least one edge
     # for i in individuals:
     #     if not list(i.acquaintances):
@@ -281,7 +286,6 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     inter_group_network = nx.Graph()
     for g in groups:
         inter_group_network.add_node(g)  # groups have no interaction so far
-
 
     # Runner
     # print("done ({})".format(dt.timedelta(seconds=(time() - start))))

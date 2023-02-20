@@ -1,10 +1,13 @@
+import os
+
 import pandas as pd
 import json
 import itertools as it
 import numpy as np
 import matplotlib.pyplot as plt
 # from plot_maxploit_functions import correct_timeline
-from studies.plotting_tools.plot_maxploit_functions import phase_transition
+# from studies.plotting_tools.plot_maxploit_functions import phase_transition
+import studies.plotting_tools.plot_maxploit_functions as pmf
 
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
@@ -14,14 +17,21 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
+experiment_name = "descriptive_threshold_1"
+
 # path to data
-PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\group_size_test1"
+PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
 
 # path to test data
 # PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\test"
 
 # path to save figures
-SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\group_size_test1"
+SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}"
+if not os.path.exists(SAVE_PATH):
+    os.mkdir(SAVE_PATH)
+TRAJ_PATHS = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\trajs"
+if not os.path.exists(TRAJ_PATHS):
+    os.mkdir(TRAJ_PATHS)
 
 # test
 # SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\test"
@@ -61,6 +71,7 @@ parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_gro
              p]
 
 last_timestep = timeinterval[0] - timestep[0]
+timepoints = np.arange(0, timeinterval[0], timestep[0])
 
 PARAM_COMBS\
     = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
@@ -72,10 +83,12 @@ PARAM_COMBS\
 # raw = pickle.load(open(RAW_LOAD_PATH, "rb"))
 
 RES_LOAD_PATH = PATH + "\\res\\stateval_results.pkl"
+print("Loading data...")
 data = pd.read_pickle(RES_LOAD_PATH)
+print("Done loading data!")
 
 # how to deal with keys
-data.head()
+# data.head()
 # for x in PARAM_COMBS:
 #     data['mean'].unstack('observables').xs(key=tuple(x), level=parameter_name_list).plot()
 #     plt.show()
@@ -90,96 +103,28 @@ X: which specific parameter set you want to plot
 TIMESTAMP: which index (e.g. last timestep of run)
 VARIABLE: which variable of interest you want to plot
 """
+# ----- plot trajectories -----
+for c in PARAM_COMBS:
+    y_c = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)["Cell.stock"]
+    y_c_e = data['sem'].unstack('observables').xs(key=c, level=parameter_name_list)["Cell.stock"]
+    y_i = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)["Individual.behaviour"]
+    y_i_e = data['sem'].unstack('observables').xs(key=c, level=parameter_name_list)["Individual.behaviour"]
+    fig, (ax1, ax2) = plt.subplots(2)
+    ax1.plot(timepoints, y_c, label="cell stock")
+    ax2.plot(timepoints, y_i, label="ind behav")
+    ax1.fill_between(timepoints, list(np.subtract(np.array(y_c), np.array(y_c_e))),
+                         list(np.add(np.array(y_c), np.array(y_c_e))), alpha=0.1)
+    ax2.fill_between(timepoints, list(np.subtract(np.array(y_c), np.array(y_c_e))),
+                         list(np.add(np.array(y_c), np.array(y_c_e))), alpha=0.1)
+    plt.savefig(TRAJ_PATHS + "\\" + f"_{c}" + ".png")
+    plt.close()
 
 # ----- phase transition plot
-# figure = phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold", last_timestep, "cells")
+figure = pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold", last_timestep, "cells")
+plt.show()
 
+figure = pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold", last_timestep, "inds")
+plt.show()
 
-
-# create key sets for single parameter sweeps for plotting
-# change the ones that were sweeped and fix the other ones
-
-# get names of all alternating params
-alternating_params = []
-for key, value in config.items():
-    if len(value) > 1 and isinstance(value, list):
-        alternating_params.append(key)
-
-param_locs = {}
-for index, key in enumerate(parameter_name_list):
-    if key in alternating_params:
-        param_locs[key] = index
-
-pairs = list(it.combinations(alternating_params, 2))
-
-for p in pairs:
-    param1 = p[0]
-    param2 = p[1]
-    param_loc1 = param_locs[param1]
-    param_loc2 = param_locs[param2]
-
-    A = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=list)
-
-    param_list1 = parameter_list[param_loc1]
-    param_list2 = parameter_list[param_loc2]
-
-    # sort lists in case
-    if param_list1.sort() is not None:
-        param_list1 = parameter_list[param_loc1].sort()
-    if param_list2.sort() is not None:
-        param_list2 = parameter_list[param_loc2].sort()
-
-    for c in PARAM_COMBS:
-        value = list(c)
-        for index_i, i in enumerate(param_list1):
-            for index_j, j in enumerate(param_list2):
-                new_key = []
-                for index, x in enumerate(value):
-                    if index == param_loc1:
-                        new_key.append(i)
-                    elif index == param_loc2:
-                        new_key.append(j)
-                    else:
-                        new_key.append(x)
-                A[index_i][index_j] = new_key
-
-    # create a data matrix
-    cells_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
-    inds_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
-    sem_cells_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
-    sem_inds_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
-    for i in range(np.shape(cells_matrix)[0]):
-        for j in range(np.shape(cells_matrix)[1]):
-            cells_matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                                             level=parameter_name_list).loc[
-                                          last_timestep, "Cell.stock"])
-            sem_cells_matrix[i][j] = float(data['sem'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                                             level=parameter_name_list).loc[
-                                          last_timestep, "Cell.stock"])
-            inds_matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                                             level=parameter_name_list).loc[
-                                          last_timestep, "Individual.behaviour"])
-            sem_inds_matrix[i][j] = float(data['sem'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                                             level=parameter_name_list).loc[
-                                          last_timestep, "Individual.behaviour"])
-    matrices = [cells_matrix, sem_cells_matrix, inds_matrix, sem_inds_matrix]
-    m_names = ["Cells", "Sem_Cells", "Inds", "Sem_Inds"]
-    # ----- PIXEL PLOT -----
-    # create a 2d data set
-
-    for index, m in enumerate(matrices):
-        pixel_plot = plt.figure()
-        plt.suptitle(param1 + " vs. " + param2)
-        plt.title(f"{m_names[index]}")
-        plt.imshow(m, origin="lower")
-        plt.colorbar()
-        plt.xlabel(param2)
-        plt.ylabel(param1)
-        # save a plot
-        plt.savefig(SAVE_PATH + "\\" + param1 + "_" + param2 + f"_{m_names[index]}" + ".png")
-        # show plot
-        #plt.show()
-        # clear axes
-        plt.close()
-
-# ----- PLOT PHASE TRANSITION -----
+# ----- PIXEL PLOT -----
+# pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, SAVE_PATH)
