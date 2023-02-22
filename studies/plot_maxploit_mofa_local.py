@@ -17,7 +17,7 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "descriptive_threshold_1"
+experiment_name = "injunctive_groupsize_1"
 
 # path to data
 PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
@@ -120,11 +120,10 @@ for c in PARAM_COMBS:
     plt.close()
 
 # ----- phase transition plot
-figure = pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold", last_timestep, "cells")
-plt.show()
-
-figure = pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold", last_timestep, "inds")
-plt.show()
+# pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold",
+#                      last_timestep, "cells", SAVE_PATH)
+# pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold",
+#                      last_timestep, "inds", SAVE_PATH)
 
 # ----- PIXEL PLOT -----
-# pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, SAVE_PATH)
+pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, SAVE_PATH)

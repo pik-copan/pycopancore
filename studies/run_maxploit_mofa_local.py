@@ -32,7 +32,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "test3"
+experiment_name = "test4"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -270,6 +270,10 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     erdosrenyify(culture.acquaintance_network, p=p)
 
     nx.draw(culture.acquaintance_network)
+    plt.show()
+
+    degrees = [culture.acquaintance_network.degree(n) for n in culture.acquaintance_network.nodes()]
+    plt.hist(degrees)
     plt.show()
 
     # assert that each ind has at least one edge

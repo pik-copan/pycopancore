@@ -46,7 +46,7 @@ def correct_timeline(lists, t_lists, shape, t_new):
     print(f"Done correcting timelines!")
     return new_list
 
-def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, param_1, timestep, value):
+def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, param_1, timestep, value, SAVE_PATH):
     """Create phase transition plots for 1 parameter.
     data: the data
     parameter_name_list: list of parameter names
@@ -96,12 +96,12 @@ def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, 
                                                                  level=parameter_name_list).loc[
                                timestep, "Individual.behaviour"])
 
-    figure = plt.figure()
+    plt.figure()
 
     plt.scatter(parameter_values, mean)
     plt.fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(sem))),
                      list(np.add(np.array(mean), np.array(sem))), alpha=0.1)
-    return figure
+    plt.savefig(SAVE_PATH + "\\" + f"{param_1}_{value}_" + ".png")
 
 def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, timestep, SAVE_PATH):
     import itertools as it
