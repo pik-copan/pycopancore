@@ -72,7 +72,7 @@ class Culture (I.Culture):
 
         descriptive_norm = self.get_descriptive_norm(agent_i)
         if descriptive_norm is not None:
-            if descriptive_norm > self.majority_threshold:
+            if descriptive_norm > self.descriptive_majority_threshold:
                 descriptive_norm = 1
             else:
                 descriptive_norm = 0
