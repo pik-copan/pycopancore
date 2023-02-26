@@ -108,7 +108,8 @@ timeinterval = [10]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.1]
+descriptive_majority_threshold = [0.5]
+injunctive_majority_threshold = [0.5]
 weight_descriptive = [1]
 weight_injunctive = [0]
 
@@ -158,7 +159,8 @@ configuration = {
     "timeinterval": timeinterval,
     "timestep": timestep,
     "k_value": k_value,
-    "majority_threshold": majority_threshold,
+    "descriptive_majority_threshold": descriptive_majority_threshold,
+    "injunctive_majority_threshold": injunctive_majority_threshold,
     "weight_descriptive": weight_descriptive,
     "weight_injunctive": weight_injunctive,
     "nindividuals": nindividuals,
@@ -197,7 +199,7 @@ print("Done saving readme.txt.")
 
 # Defining an experiment execution function according pymofa
 def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
              average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
              p, filename):
 
@@ -205,8 +207,9 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     model = M.Model()
 
     # instantiate process taxa culture:
-    culture = M.Culture(majority_threshold=majority_threshold,
-                        weight_descriptive=weight_descriptive,
+    culture = M.Culture(attitude_on=attitude_on,
+                        descriptive_majority_threshold=descriptive_majority_threshold,
+                        injunctive_majority_threshold=injunctive_majority_threshold,
                         weight_injunctive=weight_injunctive,
                         fix_group_attitude=fix_group_attitude,
                         k_value=k_value)
@@ -435,11 +438,11 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     return exit_status
 
 parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
              average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
              p]
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
-                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
+                       "k_value", "descriptive_majority_threshold", "injunctive_majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
                        "ni_sust_frac", "average_waiting_time", "update_probability", "nc", "ng_total",
                        "ng_sust_frac", "n_group_memberships", "group_update_probability", "group_meeting_interval", "p"]
 # parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
@@ -448,7 +451,7 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 PARAM_COMBS = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
              average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
              p))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
