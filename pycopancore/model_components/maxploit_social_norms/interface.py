@@ -106,8 +106,12 @@ class Culture(object):
                            default=False,
                            type=bool)
 
-    majority_threshold = Variable('Treshold for majority',
-                                 """Trehshold for a majority of individual attitudes in a group being considered group attitude""",
+    descriptive_majority_threshold = Variable('Threshold for des. majority',
+                                 """Threshold for a descriptive norm to be considered""",
+                                 default=0.5)
+    
+    injunctive_majority_threshold = Variable('Threshold for inj. majority',
+                                 """Threshold for an injunctive norm to be considered""",
                                  default=0.5)
 
     fix_group_attitude = Variable("Fixed group attitude toggle",

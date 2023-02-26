@@ -26,24 +26,24 @@ class Group(I.Group):
         """Get the next meeting time"""
         return t + self.group_meeting_interval
 
-    def update_group_attitude(self, unused_t):
-        """Update a groups attitude based on the mean_group_behaviour."""
+    def group_update(self, unused_t):
         if not self.culture.fix_group_attitude:
-            if self.culture.attitude_on:
-                mean_group_value = self.mean_group_attitude
-            else:
-                mean_group_value = self.mean_group_behaviour
-            if mean_group_value <= self.culture.majority_threshold: # get the mean in terms of true/false for adjusting the global attitude later
-                mean_group_value_binary = 0
-            else:
-                mean_group_value_binary = 1
-
             for g in self.world.groups:
-                if uniform() <= self.group_update_probability: #groups consider updating only with certain probability
-                    if self.group_attitude != mean_group_value_binary:
-                        if mean_group_value > self.culture.majority_threshold or\
-                                mean_group_value < (1-self.culture.majority_threshold): # defines an interval to allow switching in both directions
-                            self.group_attitude = mean_group_value_binary # switch group_attitude
+                if uniform() < g.group_update_probability:
+                    update_group_attitude(g)
+
+
+    def update_group_attitude(self, group_j):
+        """Update a groups attitude based on the mean_group_behaviour."""
+        if self.culture.attitude_on:
+            mean_group_value = self.mean_group_attitude
+        else:
+            mean_group_value = self.mean_group_behaviour
+        if mean_group_value > self.culture.injunctive_majority_threshold: # get the mean in terms of true/false for adjusting the global attitude later
+            group_j.group_attitude = 1
+        else:
+            group_j.group_attitude = 0
+
 
     def get_mean_group_attitude(self, unused_t):
         """Calculate the mean attitude of individuals in a group."""
@@ -75,5 +75,5 @@ class Group(I.Group):
         Step("update group attitude",
               [I.Group.group_attitude],
               [next_group_meeting_time,
-               update_group_attitude])
+               update_group])
     ]
