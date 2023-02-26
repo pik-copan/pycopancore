@@ -30,7 +30,7 @@ class Group(I.Group):
         if not self.culture.fix_group_attitude:
             for g in self.world.groups:
                 if uniform() < g.group_update_probability:
-                    update_group_attitude(g)
+                    self.update_group_attitude(g)
 
 
     def update_group_attitude(self, group_j):
@@ -75,5 +75,5 @@ class Group(I.Group):
         Step("update group attitude",
               [I.Group.group_attitude],
               [next_group_meeting_time,
-               update_group])
+               group_update])
     ]

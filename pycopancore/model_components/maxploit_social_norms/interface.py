@@ -36,17 +36,18 @@ class Individual(object):
     """Interface for Individual."""
 
     behaviour = Variable("harvesting behaviour",
-                        """harvesting behaviour of individual, if = 0 -> sustainable""")
+                         """harvesting behaviour of individual, if = 0 -> sustainable""")
     attitude = Variable("harvesting attitude",
-                       """attitude on how one should be harvesting.""")
+                        """attitude on how one should be harvesting.""")
     descriptive_norm = Variable("descriptive norm",
                                 """mean behaviour in acquaintance network of individual""",
                                 default=0)
     descriptive_norm_binary = Variable("descriptive norm binary",
-                                """mean behaviour in acquaintance network of individual coded as binary""")
+                                       """mean behaviour in acquaintance network of individual coded as binary""")
     average_waiting_time = Variable('estimated waiting time tau', 'tau', default=1)
     update_time = Variable('next update time', 'next time for update')
     update_probability = Variable("update probability", "probability to be in a batch", default=0)
+
 
 class Group(object):
     """Interface for Group."""
@@ -84,14 +85,14 @@ class Group(object):
 class Culture(object):
     """Define Interface for Culture."""
 
-    #parameters for the logit
+    # parameters for the logit
     weight_injunctive = Variable('Weight for Injunction',
                                  """Weight for the injuctive Norm influence""",
                                  default=0.5)
     weight_descriptive = Variable('Weight for Descriptive Norm',
-                                 """Weight for the descriptive Norm influence""",
-                                 default=0.5)
-    weight_dissonance =  Variable('Weight for Cognitive Dissonance',
+                                  """Weight for the descriptive Norm influence""",
+                                  default=0.5)
+    weight_dissonance = Variable('Weight for Cognitive Dissonance',
                                  """Weight for the Cognitive Dissonance influence""",
                                  default=0.5)
     k_value = Variable('k value',
@@ -107,17 +108,17 @@ class Culture(object):
                            type=bool)
 
     descriptive_majority_threshold = Variable('Threshold for des. majority',
-                                 """Threshold for a descriptive norm to be considered""",
-                                 default=0.5)
-    
+                                              """Threshold for a descriptive norm to be considered""",
+                                              default=0.5)
+
     injunctive_majority_threshold = Variable('Threshold for inj. majority',
-                                 """Threshold for an injunctive norm to be considered""",
-                                 default=0.5)
+                                             """Threshold for an injunctive norm to be considered""",
+                                             default=0.5)
 
     fix_group_attitude = Variable("Fixed group attitude toggle",
-                                 """Fixes the group attitude so it does not change, i.e. group becomes a fixed norm.""",
-                                 default=False,
-                                 datatype=bool)
+                                  """Fixes the group attitude so it does not change, i.e. group becomes a fixed norm.""",
+                                  default=False,
+                                  datatype=bool)
 
     group_membership_network = D.CUL.group_membership_network
     acquaintance_network = D.CUL.acquaintance_network
