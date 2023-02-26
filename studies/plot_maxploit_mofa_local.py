@@ -17,10 +17,10 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "injunctive_groupsize_1"
+experiment_name = "sustainable_state_test3"
 
 # path to data
-PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
+PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 
 # path to test data
 # PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\test"
@@ -114,8 +114,8 @@ for c in PARAM_COMBS:
     ax2.plot(timepoints, y_i, label="ind behav")
     ax1.fill_between(timepoints, list(np.subtract(np.array(y_c), np.array(y_c_e))),
                          list(np.add(np.array(y_c), np.array(y_c_e))), alpha=0.1)
-    ax2.fill_between(timepoints, list(np.subtract(np.array(y_c), np.array(y_c_e))),
-                         list(np.add(np.array(y_c), np.array(y_c_e))), alpha=0.1)
+    ax2.fill_between(timepoints, list(np.subtract(np.array(y_i), np.array(y_i_e))),
+                         list(np.add(np.array(y_i), np.array(y_i_e))), alpha=0.1)
     plt.savefig(TRAJ_PATHS + "\\" + f"_{c}" + ".png")
     plt.close()
 

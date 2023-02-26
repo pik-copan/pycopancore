@@ -32,11 +32,11 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "test4"
+experiment_name = "sustainable_state_test3"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
-# os.mkdir(SAVE_FOLDER)
+os.mkdir(SAVE_FOLDER)
 # print(f"Directory created @ {SAVE_FOLDER}")
 SAVE_PATH_RAW = SAVE_FOLDER + "\\" + "raw"
 # os.mkdir(SAVE_PATH_RAW)
@@ -60,7 +60,7 @@ SAMPLE_SIZE = 10
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -96,7 +96,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -104,21 +104,21 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [10]
+timeinterval = [50]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.5]
+majority_threshold = [0.1]
 weight_descriptive = [1]
 weight_injunctive = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [2]  # reproduces probs of exploit for gamma = 1
+k_value = [2, 2.5, 3, 3.5]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [1]
+update_probability = [0.75]
 
 # groups:
 group_meeting_interval = [1]
@@ -187,7 +187,7 @@ print("Done saving config.json.")
 # text file
 print("Saving readme.txt.")
 with open(SAVE_FOLDER + "\\" + 'readme.txt', 'w') as f:
-    f.write('Groups do not change their attitude')
+    f.write('All inds should end up being sustainable.')
 print("Done saving readme.txt.")
 
 ########################################################################################################################
