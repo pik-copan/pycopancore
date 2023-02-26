@@ -49,7 +49,7 @@ class Culture (I.Culture):
             if np.random.uniform() > agent_i.update_probability:
                 # attitude = agent_i.attitude
                 # behaviour = agent_i.behaviour
-                group_j = list(agent_i.group_memberships)[0] # should be only one
+                group_j = np.random.choice(list(agent_i.group_memberships))
 
                 # Step (1)
                 assert (self.acquaintance_network.neighbors(agent_i)
