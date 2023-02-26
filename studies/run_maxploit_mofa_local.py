@@ -32,7 +32,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "sustainable_state_test3"
+experiment_name = "multiple_group_memberships_test3"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -52,7 +52,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 10
+SAMPLE_SIZE = 1
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -78,7 +78,7 @@ adaptivity = "No"  # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
 switching_back = "Yes"  # can individuals switch even if norm does not say so?
 acquaintance_network_type = "Erdos-Renyi"
-group_membership_network_type = "1-random-Edge"
+group_membership_network_type = "n-random-Edge, individuals choose a random group at point of their decision"
 
 ###### actual parameters
 
@@ -104,7 +104,7 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [50]
+timeinterval = [10]
 timestep = [0.1]
 
 # culture
@@ -114,7 +114,7 @@ weight_injunctive = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [2, 2.5, 3, 3.5]  # reproduces probs of exploit for gamma = 1
+k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
@@ -123,7 +123,8 @@ update_probability = [0.75]
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [1]
-ng_total = [1]  # number of total groups
+n_group_memberships = [1, 2, 4]
+ng_total = [1, 2, 4]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -170,6 +171,7 @@ configuration = {
     "nc": nc,
     "ng_total": ng_total,
     "ng_sust_frac": ng_sust_frac,
+    "n_group_memberships": n_group_memberships,
     "group_update_probability": group_update_probability,
     "group_meeting_interval": group_meeting_interval,
     "acquaintance_network_type": acquaintance_network_type,
@@ -196,7 +198,7 @@ print("Done saving readme.txt.")
 # Defining an experiment execution function according pymofa
 def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
              majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
              p, filename):
 
     # instantiate model
@@ -269,22 +271,47 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     start = time()
     erdosrenyify(culture.acquaintance_network, p=p)
 
-    nx.draw(culture.acquaintance_network)
-    plt.show()
+    # nx.draw(culture.acquaintance_network)
+    # plt.show()
 
-    degrees = [culture.acquaintance_network.degree(n) for n in culture.acquaintance_network.nodes()]
-    plt.hist(degrees)
-    plt.show()
+    # degrees = [culture.acquaintance_network.degree(n) for n in culture.acquaintance_network.nodes()]
+    # plt.hist(degrees)
+    # plt.show()
 
     # assert that each ind has at least one edge
     # for i in individuals:
     #     if not list(i.acquaintances):
     #         culture.acquaintance_network.add_edge(i, np.random.choice(individuals))
 
-    GM = culture.group_membership_network
-    # group_membership network with only one group membership for now
+    # for plausibility reasons
+    if n_group_memberships > ng_total:
+        n_group_memberships = ng_total
+
+    # group_membership network with more than one group membership
     for i in individuals:
-        GM.add_edge(i, np.random.choice(groups))
+        while len(list(i.group_memberships)) < n_group_memberships:
+            g = np.random.choice(groups)
+            culture.group_membership_network.add_edge(i, g)
+
+    degrees = [culture.group_membership_network.degree(n) for n in culture.group_membership_network.nodes()]
+    plt.hist(degrees)
+    plt.show()
+
+    GM = culture.group_membership_network
+
+    color_map = []
+    shape_map = []
+    for node in list(GM.nodes):
+        color_map.append(GM.nodes[node]["color"])
+        if GM.nodes[node]["type"] == "Group":
+            shape_map.append("o")
+        else:
+            shape_map.append("^")
+    top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
+    bottom_nodes = set(GM) - top_nodes
+    nx.draw(GM, node_color=color_map, with_labels=False,
+            pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+    plt.show()
 
     # get a preliminary intergroup network for plotting multilayer
     inter_group_network = nx.Graph()
@@ -409,12 +436,12 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
 parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
              majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
              p]
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
                        "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
                        "ni_sust_frac", "average_waiting_time", "update_probability", "nc", "ng_total",
-                       "ng_sust_frac", "group_update_probability", "group_meeting_interval", "p"]
+                       "ng_sust_frac", "n_group_memberships", "group_update_probability", "group_meeting_interval", "p"]
 # parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
 #                   update_probability, ng_total,group_meeting_interval]
 # parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
@@ -422,7 +449,7 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 PARAM_COMBS = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
              majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
              p))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
 handle.compute(RUN_FUNC)
