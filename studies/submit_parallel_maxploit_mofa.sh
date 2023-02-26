@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --qos=medium
-#SBATCH --job-name=injunctive_groupsize_1
+#SBATCH --job-name=fullnorm_test1
 #SBATCH --account=copan
 #SBATCH --ntasks=32
 #SBATCH --exclusive
-#SBATCH --output=injunctive_groupsize_1-%j.out
-#SBATCH --error=injunctive_groupsize_1-%j.err
+#SBATCH --output=fullnorm_test1-%j.out
+#SBATCH --error=fullnorm_test1-%j.err
 #SBATCH --workdir=/p/projects/copan/users/maxbecht/pycopancore/studies
 
 echo "------------------------------------------------------------"

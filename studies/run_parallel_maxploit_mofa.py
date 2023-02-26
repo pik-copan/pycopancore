@@ -1,5 +1,5 @@
-"""Test Study for the maxploit model.
-
+"""
+Test Study for the maxploit model.
 A study to test the runner with the maxploit model.
 """
 
@@ -36,10 +36,10 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "injunctive_groupsize_1"
+experiment_name = "fullnorm_groupnetwork_test1"
 
 
-#local
+# local
 # SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 # os.mkdir(SAVE_FOLDER)
 # print(f"Directory created @ {SAVE_FOLDER}")
@@ -55,7 +55,6 @@ assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exi
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 
-
 SAMPLE_SIZE = 100
 
 ########################################################################################################################
@@ -64,7 +63,7 @@ SAMPLE_SIZE = 100
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Both" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -82,7 +81,7 @@ adaptivity = "No"  # "Yes" or "No"
 """If adaptive or not, selfexplainatory. Is not a Toggle."""
 switching_back = "Yes"  # can individuals switch even if norm does not say so?
 acquaintance_network_type = "Erdos-Renyi"
-group_membership_network_type = "1-random-Edge"
+group_membership_network_type = "n-random-Edge, individuals choose a random group at point of their decision"
 
 ###### actual parameters
 
@@ -112,9 +111,10 @@ timeinterval = [100]
 timestep = [0.1]
 
 # culture
-majority_threshold = [0.5]
-weight_descriptive = [0]
-weight_injunctive = [1]
+descriptive_majority_threshold = [0.5]
+injunctive_majority_threshold = [0.5]
+weight_descriptive = [0.5]
+weight_injunctive = [0.5]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -122,12 +122,13 @@ k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [0.75]
+update_probability = [0.25]
 
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [1]
-ng_total = [1, 2, 4, 8, 16, 32, 64, 128]  # number of total groups
+n_group_memberships = [1, 2, 4, 8, 16, 32, 64]
+ng_total = [64]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -162,7 +163,8 @@ configuration = {
     "timeinterval": timeinterval,
     "timestep": timestep,
     "k_value": k_value,
-    "majority_threshold": majority_threshold,
+    "descriptive_majority_threshold": descriptive_majority_threshold,
+    "injunctive_majority_threshold": injunctive_majority_threshold,
     "weight_descriptive": weight_descriptive,
     "weight_injunctive": weight_injunctive,
     "nindividuals": nindividuals,
@@ -175,6 +177,7 @@ configuration = {
     "nc": nc,
     "ng_total": ng_total,
     "ng_sust_frac": ng_sust_frac,
+    "n_group_memberships": n_group_memberships,
     "group_update_probability": group_update_probability,
     "group_meeting_interval": group_meeting_interval,
     "acquaintance_network_type": acquaintance_network_type,
@@ -217,8 +220,8 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
 
 # Defining an experiment execution function according pymofa
 def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
              p, filename):
 
     # import the model (again)
@@ -229,7 +232,8 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
     # instantiate process taxa culture:
     culture = M.Culture(attitude_on=attitude_on,
-                        majority_threshold=majority_threshold,
+                        descriptive_majority_threshold=descriptive_majority_threshold,
+                        injunctive_majority_threshold=injunctive_majority_threshold,
                         weight_descriptive=weight_descriptive,
                         weight_injunctive=weight_injunctive,
                         fix_group_attitude=fix_group_attitude,
@@ -303,15 +307,20 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     #     if not list(i.acquaintances):
     #         culture.acquaintance_network.add_edge(i, np.random.choice(individuals))
 
-    GM = culture.group_membership_network
-    # group_membership network with only one group membership for now
+    # for plausibility reasons
+    if n_group_memberships > ng_total:
+        n_group_memberships = ng_total
+
+    # group_membership network with more than one group membership
     for i in individuals:
-        GM.add_edge(i, np.random.choice(groups))
+        while len(list(i.group_memberships)) < n_group_memberships:
+            g = np.random.choice(groups)
+            culture.group_membership_network.add_edge(i, g)
 
     # get a preliminary intergroup network for plotting multilayer
-    inter_group_network = nx.Graph()
-    for g in groups:
-        inter_group_network.add_node(g)  # groups have no interaction so far
+    # inter_group_network = nx.Graph()
+    # for g in groups:
+    #    inter_group_network.add_node(g)  # groups have no interaction so far
 
 
     # Runner
@@ -435,22 +444,22 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     return exit_status
 
 parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
-                  p]
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
+             p]
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
-                       "k_value", "majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
+                       "k_value", "descriptive_majority_threshold", "injunctive_majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
                        "ni_sust_frac", "average_waiting_time", "update_probability", "nc", "ng_total",
-                       "ng_sust_frac", "group_update_probability", "group_meeting_interval", "p"]
+                       "ng_sust_frac", "n_group_memberships", "group_update_probability", "group_meeting_interval", "p"]
 # parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
 #                   update_probability, ng_total,group_meeting_interval]
 # parameter_name_list = ["k_value", "majority_threshold", "weight_descriptive", "weight_injunctive",
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 PARAM_COMBS = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-                  majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-                  average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
-                  p))
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
+             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
+             p))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
 handle.compute(RUN_FUNC)
 
