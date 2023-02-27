@@ -462,8 +462,8 @@ filename = "stateval_results.pkl"
 EVA = {
     "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
                                       for f in fnames if "traj" not in f]).groupby(level=0).mean(),
-    "sem": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
-                                     for f in fnames if "traj" not in f]).groupby(level=0).sem()
+    "std": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
+                                     for f in fnames if "traj" not in f]).groupby(level=0).std()
 }
 
 handle.resave(EVA, filename)

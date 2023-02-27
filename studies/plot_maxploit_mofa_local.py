@@ -1,12 +1,13 @@
 import os
-
+import pickle
+import glob
 import pandas as pd
 import json
 import itertools as it
 import numpy as np
 import matplotlib.pyplot as plt
 # from plot_maxploit_functions import correct_timeline
-# from studies.plotting_tools.plot_maxploit_functions import phase_transition
+from studies.plotting_tools.plot_maxploit_functions import phase_transition
 import studies.plotting_tools.plot_maxploit_functions as pmf
 
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
@@ -29,6 +30,9 @@ PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\max
 SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}"
 if not os.path.exists(SAVE_PATH):
     os.mkdir(SAVE_PATH)
+MEAN_PATHS = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\mean_sem"
+if not os.path.exists(MEAN_PATHS):
+    os.mkdir(MEAN_PATHS)
 TRAJ_PATHS = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\trajs"
 if not os.path.exists(TRAJ_PATHS):
     os.mkdir(TRAJ_PATHS)
@@ -79,7 +83,7 @@ PARAM_COMBS\
              average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, group_update_probability, group_meeting_interval,
              p))
 
-# RAW_LOAD_PATH = PATH + "\\raw\\1-1-1-10-0o1-2-0o5-1-0-400-0-400-1-0o5-400-1-0-1-1-0o05_s0.pkl"
+RAW_PATH = PATH + "\\raw"
 # raw = pickle.load(open(RAW_LOAD_PATH, "rb"))
 
 RES_LOAD_PATH = PATH + "\\res\\stateval_results.pkl"
@@ -95,28 +99,64 @@ print("Done loading data!")
 # data['sem'].unstack('observables').xs(key=key_dict["0"], level=parameter_name_list).plot()
 # plt.show()
 
-# how to access single data
+# how to access single data from aggregates
 """
 data['EVA'].unstack('observables').xs(key=key_dict["X"], level=parameter_name_list).loc[TIMESTAMP, "VARIABLE"]
-EVA: the functions you used in eva, e.g. "mean" or "sem"
+EVA: the functions you used in eva, e.g. "mean" or "std"
 X: which specific parameter set you want to plot
 TIMESTAMP: which index (e.g. last timestep of run)
 VARIABLE: which variable of interest you want to plot
 """
-# ----- plot trajectories -----
+
+# get names of variables that were saved
+variables = [name for name, values in data['mean'].unstack('observables').iteritems()]
+# or set them yourself
+variables = ['Cell.stock', 'Individual.behaviour', 'Group.group_attitude', 'Group.mean_group_behaviour']
+
+# ----- plot traj trajectories
+import glob
+ids = pmf.get_mofa_id(PARAM_COMBS[0])
+for i in ids:
+    if not os.path.exists(TRAJ_PATHS + "\\" + i):
+        os.mkdir(TRAJ_PATHS + "\\" + i)
+fnames = np.sort(glob.glob(RAW_PATH + "\\*"))
+to_plot = []
+for i in ids:
+    for f in fnames:
+        n = 0
+        if i in f:
+            raw = pickle.load(open(f, "rb"))
+            fig, ax = plt.subplots()
+            for name in variables:
+                ax.plot(timepoints, raw[name], label=name)
+            ax.set_xlabel("t")
+            ax.set_ylabel("Value")
+            ax.set_title(i + "_" + str(n))
+            n += 1
+            ax.legend(loc="best")
+            save_path = TRAJ_PATHS + "\\" + i
+            plt.show()
+            # plt.savefig(save_path + "\\" + f"_{n}" + ".png")
+
+# little function that recreates the id's of pymofa runs
+
+# ----- plot mean and sem trajectories -----
 for c in PARAM_COMBS:
-    y_c = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)["Cell.stock"]
-    y_c_e = data['sem'].unstack('observables').xs(key=c, level=parameter_name_list)["Cell.stock"]
-    y_i = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)["Individual.behaviour"]
-    y_i_e = data['sem'].unstack('observables').xs(key=c, level=parameter_name_list)["Individual.behaviour"]
-    fig, (ax1, ax2) = plt.subplots(2)
-    ax1.plot(timepoints, y_c, label="cell stock")
-    ax2.plot(timepoints, y_i, label="ind behav")
-    ax1.fill_between(timepoints, list(np.subtract(np.array(y_c), np.array(y_c_e))),
-                         list(np.add(np.array(y_c), np.array(y_c_e))), alpha=0.1)
-    ax2.fill_between(timepoints, list(np.subtract(np.array(y_i), np.array(y_i_e))),
-                         list(np.add(np.array(y_i), np.array(y_i_e))), alpha=0.1)
-    plt.savefig(TRAJ_PATHS + "\\" + f"_{c}" + ".png")
+    fig, ax = plt.subplots(len(variables))
+    for index, name in enumerate(variables):
+        y = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)[name]
+        y_e = data['sem'].unstack('observables').xs(key=c, level=parameter_name_list)[name]
+        ax[index].set_title(name)
+        ax[index].set_xlabel("t")
+        ax[index].set_ylabel("Value")
+        ax[index].plot(timepoints, y, c="blue")
+        ax[index].plot(timepoints, y_e, c="red")
+        ax[index].fill_between(timepoints, list(np.subtract(np.array(y), np.array(y_e))),
+                         list(np.add(np.array(y), np.array(y_e))), alpha=0.2)
+    plt.suptitle(str(c))
+    plt.tight_layout()
+    plt.show()
+    # plt.savefig(MEAN_PATHS + "\\" + f"_{c}" + ".png")
     plt.close()
 
 # ----- phase transition plot

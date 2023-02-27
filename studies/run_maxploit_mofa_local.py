@@ -32,7 +32,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "multiple_group_memberships_test3"
+experiment_name = "general_test_1"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -96,7 +96,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -110,8 +110,8 @@ timestep = [0.1]
 # culture
 descriptive_majority_threshold = [0.5]
 injunctive_majority_threshold = [0.5]
-weight_descriptive = [1]
-weight_injunctive = [0]
+weight_descriptive = [0.5]
+weight_injunctive = [0.5]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -119,11 +119,11 @@ k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [0.75]
+update_probability = [0.25, 0.5, 0.75]
 
 # groups:
-group_meeting_interval = [1]
-group_update_probability = [1]
+group_meeting_interval = [1, 5]
+group_update_probability = [0.25, 1]
 n_group_memberships = [1, 2, 4]
 ng_total = [1, 2, 4]  # number of total groups
 ng_sust_frac = [0.5]
@@ -300,21 +300,20 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     plt.hist(degrees)
     plt.show()
 
-    GM = culture.group_membership_network
-
-    color_map = []
-    shape_map = []
-    for node in list(GM.nodes):
-        color_map.append(GM.nodes[node]["color"])
-        if GM.nodes[node]["type"] == "Group":
-            shape_map.append("o")
-        else:
-            shape_map.append("^")
-    top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
-    bottom_nodes = set(GM) - top_nodes
-    nx.draw(GM, node_color=color_map, with_labels=False,
-            pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-    plt.show()
+    # GM = culture.group_membership_network
+    # color_map = []
+    # shape_map = []
+    # for node in list(GM.nodes):
+    #     color_map.append(GM.nodes[node]["color"])
+    #     if GM.nodes[node]["type"] == "Group":
+    #         shape_map.append("o")
+    #     else:
+    #         shape_map.append("^")
+    # top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
+    # bottom_nodes = set(GM) - top_nodes
+    # nx.draw(GM, node_color=color_map, with_labels=False,
+    #         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+    # plt.show()
 
     # get a preliminary intergroup network for plotting multilayer
     inter_group_network = nx.Graph()
@@ -385,7 +384,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
             placeholder_list = []
             for e in traj[v].keys():
                 placeholder_list.append([traj[v][e]])
-            prep[v.owning_class.__name__ + "." + v.codename] = np.sum(placeholder_list, axis=0).flatten()
+            prep[v.owning_class.__name__ + "." + v.codename] = np.sum(placeholder_list, axis=0).flatten() # be careful here!!!!
 
     del prep["World.terrestrial_carbon"]
     del prep["World.fossil_carbon"]
@@ -465,8 +464,8 @@ filename = "stateval_results.pkl"
 EVA = {
     "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
                                       for f in fnames if "traj" not in f]).groupby(level=0).mean(),
-    "sem": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
-                                     for f in fnames if "traj" not in f]).groupby(level=0).sem()
+    "std": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
+                                     for f in fnames if "traj" not in f]).groupby(level=0).std()
 }
 
 handle.resave(EVA, filename)

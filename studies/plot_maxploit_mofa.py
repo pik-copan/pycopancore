@@ -101,7 +101,7 @@ plt.show()
 # how to access single data
 """
 data['EVA'].unstack('observables').xs(key=key_dict["X"], level=parameter_name_list).loc[TIMESTAMP, "VARIABLE"]
-EVA: the functions you used in eva, e.g. "mean" or "sem"
+EVA: the functions you used in eva, e.g. "mean" or "std"
 X: which specific parameter set you want to plot
 TIMESTAMP: which index (e.g. last timestep of run)
 VARIABLE: which variable of interest you want to plot

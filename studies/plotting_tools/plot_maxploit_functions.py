@@ -8,6 +8,52 @@ def plot_trajectory(list_1, list_2, t):
         plt.xlabel(str(list_2))
         plt.title(f"Trajectory {str(list_1)} vs. {str(list_2)}")
 
+def get_mofa_id(parameter_combinations):
+    """
+    Recreates the fnames used by pymofa without the _s1 indicating number of runs.
+    With this all trajectories from a single run can then be plotted.
+
+    parameter_combinations: single tuple or list of tuples as created by it.product(param1, param2)
+
+    returns: list of ids
+    """
+
+    ids = []
+
+    if isinstance(parameter_combinations, list):
+        for comb in parameter_combinations:
+            res = str(comb)  # convert to sting
+            res = res[1:-1]  # delete brackets
+            res = res.replace(", ", "-")  # remove ", " with "-"
+            res = res.replace(",", "-")  # remove "," with "-"
+            res = res.replace(".", "o")  # replace dots with an "o"
+            res = res.replace("'", "")  # remove 's from values of string variables
+            # Remove all the other left over mean
+            # charakters that might fuck with you
+            # bash scripting or wild card usage.
+            for mean_character in "[]()^ #%&!@:+={}'~":
+                res = res.replace(mean_character, "")
+            ids.append(res)
+
+    elif isinstance(parameter_combinations, tuple):
+        id = str(parameter_combinations)  # convert to sting
+        id = id[1:-1]  # delete brackets
+        id = id.replace(", ", "-")  # remove ", " with "-"
+        id = id.replace(",", "-")  # remove "," with "-"
+        id = id.replace(".", "o")  # replace dots with an "o"
+        id = id.replace("'", "")  # remove 's from values of string variables
+        # Remove all the other left over mean
+        # charakters that might fuck with you
+        # bash scripting or wild card usage.
+        for mean_character in "[]()^ #%&!@:+={}'~":
+            id = id.replace(mean_character, "")
+        ids.append(id)
+
+    else:
+        pass
+
+    return ids
+
 def correct_timeline(lists, t_lists, shape, t_new):
     """Correct the timeline of one list to have same time points.
     Careful, depending on the resolution of t_new some data might be lost!
