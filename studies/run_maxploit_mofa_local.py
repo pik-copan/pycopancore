@@ -32,7 +32,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "general_test_1"
+experiment_name = "general_test_3"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -52,7 +52,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 1
+SAMPLE_SIZE = 10
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -96,7 +96,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [0]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -122,10 +122,10 @@ average_waiting_time = [1]
 update_probability = [0.25, 0.5, 0.75]
 
 # groups:
-group_meeting_interval = [1, 5]
-group_update_probability = [0.25, 1]
-n_group_memberships = [1, 2, 4]
-ng_total = [1, 2, 4]  # number of total groups
+group_meeting_interval = [1]
+group_update_probability = [1]
+n_group_memberships = [2]
+ng_total = [2, 4]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -296,9 +296,9 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
             g = np.random.choice(groups)
             culture.group_membership_network.add_edge(i, g)
 
-    degrees = [culture.group_membership_network.degree(n) for n in culture.group_membership_network.nodes()]
-    plt.hist(degrees)
-    plt.show()
+    # degrees = [culture.group_membership_network.degree(n) for n in culture.group_membership_network.nodes()]
+    # plt.hist(degrees)
+    # plt.show()
 
     # GM = culture.group_membership_network
     # color_map = []

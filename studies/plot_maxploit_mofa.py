@@ -95,7 +95,7 @@ data = pd.read_pickle(RES_LOAD_PATH)
 data.head()
 data['mean'].unstack('observables').xs(key=tuple(key_dict["0"]), level=parameter_name_list).plot()
 plt.show()
-# data['sem'].unstack('observables').xs(key=key_dict["0"], level=parameter_name_list).plot()
+# data['std'].unstack('observables').xs(key=key_dict["0"], level=parameter_name_list).plot()
 # plt.show()
 
 # how to access single data

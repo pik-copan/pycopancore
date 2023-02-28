@@ -1,5 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import glob
+import matplotlib.colors as colors
+import matplotlib.cm as cmx
+import os
+import glob
+import pickle
 
 def plot_trajectory(list_1, list_2, t):
     for index in range(len(t)):
@@ -54,6 +60,7 @@ def get_mofa_id(parameter_combinations):
 
     return ids
 
+
 def correct_timeline(lists, t_lists, shape, t_new):
     """Correct the timeline of one list to have same time points.
     Careful, depending on the resolution of t_new some data might be lost!
@@ -92,6 +99,91 @@ def correct_timeline(lists, t_lists, shape, t_new):
     print(f"Done correcting timelines!")
     return new_list
 
+
+def plot_single_trajs(variables, parameter_combinations, timepoints, RAW_PATH, SAVE_PATH):
+    ids = get_mofa_id(parameter_combinations)
+    for i in ids:
+        if not os.path.exists(SAVE_PATH + "\\" + i):
+            os.mkdir(SAVE_PATH + "\\" + i)
+    fnames = np.sort(glob.glob(RAW_PATH + "\\*"))
+    for i in ids:
+        n = 0
+        for f in fnames:
+            if i in f:
+                raw = pickle.load(open(f, "rb"))
+                fig, ax = plt.subplots()
+                for name in variables:
+                    ax.plot(timepoints, raw[name], label=name)
+                ax.set_xlabel("t")
+                ax.set_ylabel("Value")
+                ax.set_title(i + "_" + str(n))
+                ax.legend(loc="best")
+                save_path = SAVE_PATH + "\\" + i
+                # plt.show()
+                plt.savefig(save_path + "\\" + str(i) + f"_{n}" + ".png")
+                plt.close()
+                n += 1
+
+
+def plot_all_trajs_in_one(variables, parameter_combinations, timepoints, RAW_PATH, SAVE_PATH):
+    ids = get_mofa_id(parameter_combinations)
+    for i in ids:
+        if not os.path.exists(SAVE_PATH + "\\" + i):
+            os.mkdir(SAVE_PATH + "\\" + i)
+    fnames = np.sort(glob.glob(RAW_PATH + "\\*"))
+    for i in ids:
+        # get number of trajectories to plot cmap well
+        n = 0
+        for f in fnames:
+            if i in f:
+                n += 1
+        cvalues = range(n)
+        jet = cm = plt.get_cmap('jet')
+        cNorm = colors.Normalize(vmin=0, vmax=cvalues[-1])
+        scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=jet)
+        fig, ax = plt.subplots(len(variables))
+        count = 0
+        for f in fnames:
+            if i in f:
+                raw = pickle.load(open(f, "rb"))
+                colorVal = scalarMap.to_rgba(cvalues[count])
+                for index, name in enumerate(variables):
+                    ax[index].plot(timepoints, raw[name], color=colorVal)
+                    ax[index].set_xlabel("t")
+                    ax[index].set_ylabel("Value")
+                    ax[index].set_title(name)
+                    # ax[index].legend(loc="best")
+                count += 1
+        fig.set_figheight(16)
+        plt.suptitle(i)
+        save_path = SAVE_PATH + "\\" + i
+        fig.tight_layout()
+        # plt.show()
+        plt.savefig(save_path + "\\" + f"00allruns" + ".png")
+        plt.close()
+
+
+def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, variables, timepoints, SAVE_FOLDER):
+    for c in parameter_combinations:
+        fig, ax = plt.subplots(len(variables))
+        for index, name in enumerate(variables):
+            y = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)[name]
+            y_e = data['std'].unstack('observables').xs(key=c, level=parameter_name_list)[name]
+            ax[index].set_title(name)
+            ax[index].set_xlabel("t")
+            ax[index].set_ylabel("Value")
+            ax[index].plot(timepoints, y, c="blue")
+            ax[index].plot(timepoints, y_e, c="red")
+            ax[index].fill_between(timepoints, list(np.subtract(np.array(y), np.array(y_e))),
+                                   list(np.add(np.array(y), np.array(y_e))), alpha=0.1)
+        plt.suptitle(str(c))
+        fig.tight_layout()
+        fig.set_figheight(16)
+        plt.tight_layout()
+        plt.savefig(SAVE_FOLDER + "\\" + f"_{c}" + ".png")
+        plt.close()
+
+
 def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, param_1, timestep, value, SAVE_PATH):
     """Create phase transition plots for 1 parameter.
     data: the data
@@ -129,7 +221,7 @@ def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, 
             mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
                                                                    level=parameter_name_list).loc[
                                 timestep, "Cell.stock"])
-            sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
+            sem[i] = float(data['std'].unstack('observables').xs(key=tuple(A[i]),
                                                                  level=parameter_name_list).loc[
                                timestep, "Cell.stock"])
 
@@ -138,7 +230,7 @@ def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, 
             mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
                                                                    level=parameter_name_list).loc[
                                 timestep, "Individual.behaviour"])
-            sem[i] = float(data['sem'].unstack('observables').xs(key=tuple(A[i]),
+            sem[i] = float(data['std'].unstack('observables').xs(key=tuple(A[i]),
                                                                  level=parameter_name_list).loc[
                                timestep, "Individual.behaviour"])
 
@@ -208,17 +300,17 @@ def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, t
                 cells_matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
                                                                                   level=parameter_name_list).loc[
                                                timestep, "Cell.stock"])
-                sem_cells_matrix[i][j] = float(data['sem'].unstack('observables').xs(key=tuple(A[i][j]),
+                sem_cells_matrix[i][j] = float(data['std'].unstack('observables').xs(key=tuple(A[i][j]),
                                                                                      level=parameter_name_list).loc[
                                                    timestep, "Cell.stock"])
                 inds_matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
                                                                                  level=parameter_name_list).loc[
                                               timestep, "Individual.behaviour"])
-                sem_inds_matrix[i][j] = float(data['sem'].unstack('observables').xs(key=tuple(A[i][j]),
+                sem_inds_matrix[i][j] = float(data['std'].unstack('observables').xs(key=tuple(A[i][j]),
                                                                                     level=parameter_name_list).loc[
                                                   timestep, "Individual.behaviour"])
         matrices = [cells_matrix, sem_cells_matrix, inds_matrix, sem_inds_matrix]
-        m_names = ["Cells", "Sem_Cells", "Inds", "Sem_Inds"]
+        m_names = ["Cells", "Std_Cells", "Inds", "Std_Inds"]
         # ----- PIXEL PLOT -----
         # create a 2d data set
 
@@ -250,3 +342,4 @@ def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, t
             # clear axes
             plt.close()
         print("Done plotting figures!")
+
