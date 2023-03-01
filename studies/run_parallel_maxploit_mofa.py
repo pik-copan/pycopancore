@@ -36,7 +36,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "fullnorm_groupnetwork_test1"
+experiment_name = "full_norm_coarse_sweep"
 
 
 # local
@@ -55,7 +55,7 @@ assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exi
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 
-SAMPLE_SIZE = 100
+SAMPLE_SIZE = 25
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -63,7 +63,8 @@ SAMPLE_SIZE = 100
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Both" # "Both", "Descriptive", "Injunctive"
+sample_size = str(SAMPLE_SIZE)
+which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -118,7 +119,7 @@ weight_injunctive = [0.5]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [2]  # reproduces probs of exploit for gamma = 1
+k_value = [1, 2, 3]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
@@ -126,9 +127,9 @@ update_probability = [0.25]
 
 # groups:
 group_meeting_interval = [1]
-group_update_probability = [1]
-n_group_memberships = [1, 2, 4, 8, 16, 32, 64]
-ng_total = [64]  # number of total groups
+group_update_probability = [0.25]
+n_group_memberships = [1, 2, 5, 10]
+ng_total = [1, 2, 10]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -209,9 +210,8 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        Have descriptive norm only.
-        Test here:  - average_waiting_time
-                    - update_probability
+        Have both norms.
+        Test here:  - wide range of parameters
         """)
     print("Done saving readme.txt.")
 

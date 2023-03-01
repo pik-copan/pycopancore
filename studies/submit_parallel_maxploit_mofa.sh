@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --qos=medium
-#SBATCH --job-name=fullnorm_test1
+#SBATCH --job-name=full_norm_coarse_sweep
 #SBATCH --account=copan
 #SBATCH --ntasks=32
 #SBATCH --exclusive
-#SBATCH --output=fullnorm_test1-%j.out
-#SBATCH --error=fullnorm_test1-%j.err
+#SBATCH --output=full_norm_coarse_sweep-%j.out
+#SBATCH --error=full_norm_coarse_sweep-%j.err
 #SBATCH --workdir=/p/projects/copan/users/maxbecht/pycopancore/studies
 
 echo "------------------------------------------------------------"
