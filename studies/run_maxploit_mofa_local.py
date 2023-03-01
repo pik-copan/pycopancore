@@ -12,6 +12,13 @@ A study to test the runner with the maxploit model.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
+# this supresses a FutureWarning still encountered with pymofa
+# in ..\pymofa\pymofa\experiment_handling.py:367:
+# FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version.
+# Use pandas.concat instead. df = df.append(other=eva_return, verify_integrity=True)
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 import numpy as np
 from time import time
 import datetime as dt
@@ -32,7 +39,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "general_test_3"
+experiment_name = "warning_test2"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -52,7 +59,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 10
+SAMPLE_SIZE = 2
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -115,17 +122,17 @@ weight_injunctive = [0.5]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [2]  # reproduces probs of exploit for gamma = 1
+k_value = [2, 2.1]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [0.25, 0.5, 0.75]
+update_probability = [0.25]
 
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [1]
 n_group_memberships = [2]
-ng_total = [2, 4]  # number of total groups
+ng_total = [2]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -146,6 +153,7 @@ nc = nindividuals  # number of cells
 
 # ---write into dic---
 configuration = {
+    "SAMPLE_SIZE": SAMPLE_SIZE,
     "which_norm": which_norm,
     "group_meeting_type": group_meeting_type,
     "group_attitude_formation": group_attitude_formation,

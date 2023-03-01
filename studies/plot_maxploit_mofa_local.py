@@ -148,4 +148,4 @@ pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables, ti
 #                      last_timestep, "inds", SAVE_PATH)
 
 # ----- PIXEL PLOT -----
-# pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, SAVE_PATH)
+pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, variables, SAVE_PATH)

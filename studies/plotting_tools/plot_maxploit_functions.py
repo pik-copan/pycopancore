@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import glob
+import itertools as it
 import matplotlib.colors as colors
 import matplotlib.cm as cmx
 import os
@@ -180,19 +180,19 @@ def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, va
         fig.tight_layout()
         fig.set_figheight(16)
         plt.tight_layout()
-        plt.savefig(SAVE_FOLDER + "\\" + f"_{c}" + ".png")
+        plt.savefig(SAVE_FOLDER + "\\" + f"{c}" + ".png")
         plt.close()
 
 
-def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, param_1, timestep, value, SAVE_PATH):
-    """Create phase transition plots for 1 parameter.
+def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, param_1, timestep, variables, SAVE_PATH):
+    """Create phase transition plots for 1 parameter. Only works for sweeps of single params!!!
     data: the data
     parameter_name_list: list of parameter names
     parameter_dict: dictionary of parameters and their valuess
     param_combinations: all possible combinations
     param_1: name (str) of parameter of interest
     timestep: evaluation timestep
-    value: what to plot, can be "cells" or "inds" """
+    variables: list of variables to plot"""
 
     print("Start creating phase transition plot....")
 
@@ -214,35 +214,25 @@ def phase_transition(data, parameter_name_list, parameter_dict, parameter_list, 
         A.append(new_key)
 
     mean = np.zeros(len(parameter_values))
-    sem = np.zeros(len(parameter_values))
+    std = np.zeros(len(parameter_values))
 
-    if value == "cells":
+    fig, ax = plt.subplots(len(variables))
+    for index, name in enumerate(variables):
         for i in range(len(mean)):
             mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
-                                                                   level=parameter_name_list).loc[
-                                timestep, "Cell.stock"])
-            sem[i] = float(data['std'].unstack('observables').xs(key=tuple(A[i]),
-                                                                 level=parameter_name_list).loc[
-                               timestep, "Cell.stock"])
+                            level=parameter_name_list).loc[timestep, name])
+            std[i] = float(data['std'].unstack('observables').xs(key=tuple(A[i]),
+                           level=parameter_name_list).loc[timestep, name])
+        ax[index].scatter(parameter_values, mean)
+        ax[index].fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(std))),
+                     list(np.add(np.array(mean), np.array(std))), alpha=0.1)
+        ax[index].set_title(name)
+        ax[index].set_xlabel("t")
+        ax[index].set_ylabel("Value")
+    fig.set_figheight(16)
+    plt.savefig(SAVE_PATH + "\\" + f"{param_1}" + ".png")
 
-    elif value == "inds":
-        for i in range(len(mean)):
-            mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
-                                                                   level=parameter_name_list).loc[
-                                timestep, "Individual.behaviour"])
-            sem[i] = float(data['std'].unstack('observables').xs(key=tuple(A[i]),
-                                                                 level=parameter_name_list).loc[
-                               timestep, "Individual.behaviour"])
-
-    plt.figure()
-
-    plt.scatter(parameter_values, mean)
-    plt.fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(sem))),
-                     list(np.add(np.array(mean), np.array(sem))), alpha=0.1)
-    plt.savefig(SAVE_PATH + "\\" + f"{param_1}_{value}_" + ".png")
-
-def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, timestep, SAVE_PATH):
-    import itertools as it
+def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, timestep, variables, SAVE_PATH):
     # create key sets for single parameter sweeps for plotting
     # change the ones that were sweeped and fix the other ones
 
@@ -290,56 +280,40 @@ def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, t
                             new_key.append(x)
                     A[index_i][index_j] = new_key
 
-        # create a data matrix
-        cells_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
-        inds_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
-        sem_cells_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
-        sem_inds_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
-        for i in range(np.shape(cells_matrix)[0]):
-            for j in range(np.shape(cells_matrix)[1]):
-                cells_matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                                                  level=parameter_name_list).loc[
-                                               timestep, "Cell.stock"])
-                sem_cells_matrix[i][j] = float(data['std'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                                                     level=parameter_name_list).loc[
-                                                   timestep, "Cell.stock"])
-                inds_matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                                                 level=parameter_name_list).loc[
-                                              timestep, "Individual.behaviour"])
-                sem_inds_matrix[i][j] = float(data['std'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                                                    level=parameter_name_list).loc[
-                                                  timestep, "Individual.behaviour"])
-        matrices = [cells_matrix, sem_cells_matrix, inds_matrix, sem_inds_matrix]
-        m_names = ["Cells", "Std_Cells", "Inds", "Std_Inds"]
-        # ----- PIXEL PLOT -----
-        # create a 2d data set
-
         print("Plotting figures...")
-        for index, m in enumerate(matrices):
-            pixel_plot, ax = plt.subplots()
-            plt.suptitle(param1 + " vs. " + param2)
-            plt.title(f"{m_names[index]}")
-            extent = [min(param_list2), max(param_list2), min(param_list1), max(param_list1)]
-            plt.imshow(m, origin="lower")
-            plt.colorbar()
-            # ax.set_xscale('log', base=2)
-            plt.xlabel(param2)
-            plt.ylabel(param1)
-            xticks = list(np.arange(0, np.shape(m)[1], 1))
-            yticks = list(np.arange(0, np.shape(m)[0], 1))
-            ax.set_xticks(xticks)
-            ax.set_yticks(yticks)
-            xtickslabels = param_list2
-            ytickslabels = param_list1
-            ax.set_xticklabels(xtickslabels)
-            ax.set_yticklabels(ytickslabels)
-            # plt.xticks(xticks)
-            # plt.yticks(yticks)
-            # save a plot
+        # create a data matrix
+        for index, name in enumerate(variables):
+            matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
+            std_matrix = np.zeros((len(parameter_list[param_loc1]), len(parameter_list[param_loc2])), dtype=float)
+            for i in range(np.shape(matrix)[0]):
+                for j in range(np.shape(matrix)[1]):
+                    matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
+                                         level=parameter_name_list).loc[timestep, "Cell.stock"])
+                    std_matrix[i][j] = float(data['std'].unstack('observables').xs(key=tuple(A[i][j]),
+                                             level=parameter_name_list).loc[timestep, "Cell.stock"])
+            matrices = [matrix, std_matrix]
+            m_names = ["Values", "Std."]
+            fig, ax = plt.subplots(1, len(matrices))
+            fig.set_figwidth(16)
+            plt.suptitle(param1 + " vs. " + param2 + " " + name)
+            for index, m in enumerate(matrices):
+                ax[index].set_title(f"{m_names[index]}")
+                # extent = [min(param_list2), max(param_list2), min(param_list1), max(param_list1)]
+                ax[index].imshow(m, origin="lower")
+                # plt.colorbar(ax=ax[index])
+                # ax.set_xscale('log', base=2)
+                ax[index].set_xlabel(param2)
+                ax[index].set_ylabel(param1)
+                xticks = list(np.arange(0, np.shape(m)[1], 1))
+                yticks = list(np.arange(0, np.shape(m)[0], 1))
+                ax[index].set_xticks(xticks)
+                ax[index].set_yticks(yticks)
+                xtickslabels = param_list2
+                ytickslabels = param_list1
+                ax[index].set_xticklabels(xtickslabels)
+                ax[index].set_yticklabels(ytickslabels)
+            plt.tight_layout()
             plt.savefig(SAVE_PATH + "\\" + param1 + "_" + param2 + f"_{m_names[index]}" + ".png")
-            # show plot
-            # plt.show()
-            # clear axes
             plt.close()
         print("Done plotting figures!")
 
