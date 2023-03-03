@@ -1,11 +1,13 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import itertools as it
-import matplotlib.colors as colors
-import matplotlib.cm as cmx
 import os
 import glob
 import pickle
+import numpy as np
+import itertools as it
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+import matplotlib.cm as cmx
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 
 def plot_trajectory(list_1, list_2, t):
     for index in range(len(t)):
@@ -156,10 +158,9 @@ def plot_all_trajs_in_one(variables, parameter_combinations, timepoints, RAW_PAT
                 count += 1
         fig.set_figheight(16)
         plt.suptitle(i)
-        save_path = SAVE_PATH + "\\" + i
         fig.tight_layout()
         # plt.show()
-        plt.savefig(save_path + "\\" + f"00allruns" + ".png")
+        plt.savefig(SAVE_PATH + "\\" + i + ".png")
         plt.close()
 
 
@@ -236,6 +237,9 @@ def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, t
     # create key sets for single parameter sweeps for plotting
     # change the ones that were sweeped and fix the other ones
 
+    if not os.path.exists(SAVE_PATH + "\\pixelplots"):
+        os.mkdir(SAVE_PATH + "\\pixelplots")
+
     # get names of all alternating params
     alternating_params = []
     for key, value in config.items():
@@ -288,9 +292,9 @@ def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, t
             for i in range(np.shape(matrix)[0]):
                 for j in range(np.shape(matrix)[1]):
                     matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
-                                         level=parameter_name_list).loc[timestep, "Cell.stock"])
+                                         level=parameter_name_list).loc[timestep, name])
                     std_matrix[i][j] = float(data['std'].unstack('observables').xs(key=tuple(A[i][j]),
-                                             level=parameter_name_list).loc[timestep, "Cell.stock"])
+                                             level=parameter_name_list).loc[timestep, name])
             matrices = [matrix, std_matrix]
             m_names = ["Values", "Std."]
             fig, ax = plt.subplots(1, len(matrices))
@@ -299,7 +303,7 @@ def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, t
             for index, m in enumerate(matrices):
                 ax[index].set_title(f"{m_names[index]}")
                 # extent = [min(param_list2), max(param_list2), min(param_list1), max(param_list1)]
-                ax[index].imshow(m, origin="lower")
+                im = ax[index].imshow(m, interpolation="None", origin="lower")
                 # plt.colorbar(ax=ax[index])
                 # ax.set_xscale('log', base=2)
                 ax[index].set_xlabel(param2)
@@ -312,8 +316,11 @@ def pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, t
                 ytickslabels = param_list1
                 ax[index].set_xticklabels(xtickslabels)
                 ax[index].set_yticklabels(ytickslabels)
+                divider = make_axes_locatable(ax[index])
+                cax = divider.append_axes('right', size='5%', pad=0.05)
+                fig.colorbar(im, cax=cax, orientation='vertical')
             plt.tight_layout()
-            plt.savefig(SAVE_PATH + "\\" + param1 + "_" + param2 + f"_{m_names[index]}" + ".png")
+            plt.savefig(SAVE_PATH + f"\\pixelplots\\{param1}_{param2}_{name}" + ".png")
             plt.close()
         print("Done plotting figures!")
 

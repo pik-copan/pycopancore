@@ -18,13 +18,13 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "general_test_3"
+experiment_name = "descriptive_coarse_sweep"
 
-# path to data
-# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
+# path to cluster data
+PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
 
 # path to test data
-PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\00_old\\general_test_3"
+# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\00_old\\general_test_3"
 
 # path to save figures
 SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}"
@@ -76,8 +76,11 @@ parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_gro
              average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
              p]
 
-last_timestep = timeinterval[0] - timestep[0]
+
 timepoints = np.arange(0, timeinterval[0], timestep[0])
+last_timestep = timepoints[-1]
+# in case of weird error:
+# np.delete(timepoints, [-1])
 
 PARAM_COMBS\
     = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
@@ -115,31 +118,15 @@ variables = [name for name, values in data['mean'].unstack('observables').iterit
 # or set them yourself
 variables = ['Cell.stock', 'Individual.behaviour', 'Group.group_attitude', 'Group.mean_group_behaviour']
 
-# ----- plot traj trajectories
-pmf.plot_single_trajs(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PATHS)
-pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PATHS)
-
-# little function that recreates the id's of pymofa runs
+if os.path.exists(RAW_PATH):
+    # ----- plot traj trajectories -----
+    # can only be done if raw data available
+    # pmf.plot_single_trajs(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PATHS)
+    pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PATHS)
 
 # ----- plot mean and std trajectories -----
+# can only be done if raw data available
 pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables, timepoints, MEAN_PATHS)
-# for c in PARAM_COMBS:
-#     fig, ax = plt.subplots(len(variables))
-#     for index, name in enumerate(variables):
-#         y = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)[name]
-#         y_e = data['std'].unstack('observables').xs(key=c, level=parameter_name_list)[name]
-#         ax[index].set_title(name)
-#         ax[index].set_xlabel("t")
-#         ax[index].set_ylabel("Value")
-#         ax[index].plot(timepoints, y, c="blue")
-#         ax[index].plot(timepoints, y_e, c="red")
-#         ax[index].fill_between(timepoints, list(np.subtract(np.array(y), np.array(y_e))),
-#                          list(np.add(np.array(y), np.array(y_e))), alpha=0.2)
-#     plt.suptitle(str(c))
-#     plt.tight_layout()
-#     plt.show()
-#     # plt.savefig(MEAN_PATHS + "\\" + f"_{c}" + ".png")
-#     plt.close()
 
 # ----- phase transition plot
 # pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold",
