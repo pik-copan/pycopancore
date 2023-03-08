@@ -318,9 +318,9 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
             culture.group_membership_network.add_edge(i, g)
 
     # get a preliminary intergroup network for plotting multilayer
-    # inter_group_network = nx.Graph()
-    # for g in groups:
-    #    inter_group_network.add_node(g)  # groups have no interaction so far
+    inter_group_network = nx.Graph()
+    for g in groups:
+        inter_group_network.add_node(g)  # groups have no interaction so far
 
 
     # Runner
@@ -354,6 +354,35 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     del tosave["Culture.acquaintance_network"]
     tosave["t"] = traj["t"]
     t = np.array(traj["t"]).flatten()
+
+    # save networks
+    print("Saving networks.")
+    network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
+    network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
+    RAW_FOLDER = os.path.dirname(filename)
+    SAVE_FOLDER = os.path.dirname(RAW_FOLDER)
+    file_ending = filename.split("raw/", 1)[1]
+    file_ending = file_ending.replace(".pkl", "")
+    NETWORK_PATH = SAVE_FOLDER + f"/networks"
+    if not os.path.exists(NETWORK_PATH):
+        os.mkdir(NETWORK_PATH)
+    NETWORK_PATH = NETWORK_PATH + f"/{file_ending}"
+    if not os.path.exists(NETWORK_PATH):
+        os.mkdir(NETWORK_PATH)
+    for counter, n in enumerate(network_list):
+        f = open(NETWORK_PATH + f"/{network_names[counter]}.pkl", "wb")
+        save_nx = nx.relabel_nodes(n, lambda x: str(x))
+        pickle.dump(save_nx, f)
+    print("Done saving networks.")
+    # save the states of the nodes at every 10 timesteps
+    print("Save node states.")
+    save_node_states = {
+        "Individual.behaviour": {str(e): tosave["Individual.behaviour"][e][0::100] for e in tosave["Individual.behaviour"].keys()},
+        "Group.group_attitude": {str(e): tosave["Group.group_attitude"][e][0::100] for e in tosave["Group.group_attitude"].keys()}
+    }
+    f = open(NETWORK_PATH + f"/node_states.pkl", "wb")
+    pickle.dump(save_node_states, f)
+    print("Done saving node states.")
 
     #save traj?
     # TRAJ_PATH = filename.replace(".pkl", "_traj.pkl")

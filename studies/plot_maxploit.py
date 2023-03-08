@@ -164,69 +164,69 @@ plt.show()
 # print(individuals_behaviours_dict[individuals[0]])
 # print(individuals_behaviours_dict[individuals[0]][0])
 
-"""
-from plot_multilayer import LayeredNetworkGraph
+#
+# from plot_multilayer import LayeredNetworkGraph
+#
+# #get a preliminary intergroup network for plotting multilayer
+# inter_group_network = nx.Graph()
+# for g in groups:
+#     inter_group_network.add_node(g)
+# for index, g in enumerate(groups):
+#     for j in groups[:index]:
+#         inter_group_network.add_edge(g, j)
+#
+# v_array1 = []
+# v_array2 = []
+# for i in individuals:
+#     v_array1.append(individuals_behaviours_dict[i][0])
+# for index, g in enumerate(groups):
+#     v_array2.append(groups_attitudes_dict[g][0])
+# v_array = [v_array1, v_array2]
+# fig = plt.figure()
+# ax = fig.add_subplot(111, projection='3d')
+# ax.set_proj_type('ortho')
+# LayeredNetworkGraph([acquaintance_network, inter_group_network], [group_membership_network], v_array, ax=ax)
+# plt.show()
+#
+# multilayer = LayeredNetworkGraph([acquaintance_network, inter_group_network], [group_membership_network],
+#                     v_array, ax=ax, layout=nx.spring_layout)
+# node_positions = multilayer.save_node_positions() # to get node positions
+#
+# for t_index in range(len(t)):
+#     fig = plt.figure()
+#     v_array1 = []
+#     v_array2 = []
+#     for i in individuals:
+#         v_array1.append(individuals_behaviours_dict[i][t_index])
+#     for index, g in enumerate(groups):
+#         v_array2.append(groups_attitudes_dict[g][t_index])
+#     v_array = [v_array1, v_array2]
+#     fig = plt.figure()
+#     ax = fig.add_subplot(111, projection='3d')
+#     ax.view_init(40+0.075*t_index, 40-0.075*t_index)
+#     LayeredNetworkGraph([acquaintance_network, inter_group_network], [group_membership_network],
+#                         v_array, ax=ax, layout=nx.spring_layout, node_positions=node_positions)
+#     my_file = f'layered_network_{t_index}.png'
+#     fig.savefig(os.path.join(save_path, my_file))
+#     plt.close(fig)
+#
+#
+# for i in range(len(t)):
+#     color_map = []
+#     unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_attitudes[n][i])
+#                     or (d["type"] == "Individual" and individuals_behaviours_dict[n][i])}
+#     for node in list(GM.nodes):
+#         if node in unsust_nodes:
+#             color_map.append("red")
+#         else:
+#             color_map.append("blue")
+#     fig = plt.figure()
+#     nx.draw(GM, node_color=color_map, with_labels=False,
+#             pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
+#     my_file = f'network_{i}.png'
+#     fig.savefig(os.path.join(my_path, my_file))
+#     plt.close(fig)
 
-#get a preliminary intergroup network for plotting multilayer
-inter_group_network = nx.Graph()
-for g in groups:
-    inter_group_network.add_node(g)
-for index, g in enumerate(groups):
-    for j in groups[:index]:
-        inter_group_network.add_edge(g, j)
-
-v_array1 = []
-v_array2 = []
-for i in individuals:
-    v_array1.append(individuals_behaviours_dict[i][0])
-for index, g in enumerate(groups):
-    v_array2.append(groups_attitudes_dict[g][0])
-v_array = [v_array1, v_array2]
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.set_proj_type('ortho')
-LayeredNetworkGraph([acquaintance_network, inter_group_network], [group_membership_network], v_array, ax=ax)
-plt.show()
-
-multilayer = LayeredNetworkGraph([acquaintance_network, inter_group_network], [group_membership_network],
-                    v_array, ax=ax, layout=nx.spring_layout)
-node_positions = multilayer.save_node_positions() # to get node positions
-
-for t_index in range(len(t)):
-    fig = plt.figure()
-    v_array1 = []
-    v_array2 = []
-    for i in individuals:
-        v_array1.append(individuals_behaviours_dict[i][t_index])
-    for index, g in enumerate(groups):
-        v_array2.append(groups_attitudes_dict[g][t_index])
-    v_array = [v_array1, v_array2]
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.view_init(40+0.075*t_index, 40-0.075*t_index)
-    LayeredNetworkGraph([acquaintance_network, inter_group_network], [group_membership_network],
-                        v_array, ax=ax, layout=nx.spring_layout, node_positions=node_positions)
-    my_file = f'layered_network_{t_index}.png'
-    fig.savefig(os.path.join(save_path, my_file))
-    plt.close(fig)
-"""
-"""
-for i in range(len(t)):
-    color_map = []
-    unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and groups_attitudes[n][i])
-                    or (d["type"] == "Individual" and individuals_behaviours_dict[n][i])}
-    for node in list(GM.nodes):
-        if node in unsust_nodes:
-            color_map.append("red")
-        else:
-            color_map.append("blue")
-    fig = plt.figure()
-    nx.draw(GM, node_color=color_map, with_labels=False,
-            pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-    my_file = f'network_{i}.png'
-    fig.savefig(os.path.join(my_path, my_file))
-    plt.close(fig)
-"""
 
 
 # color_map = []

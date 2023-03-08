@@ -18,13 +18,13 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "descriptive_coarse_sweep"
+experiment_name = "network_saving_test8"
 
 # path to cluster data
-PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
+# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
 
 # path to test data
-# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\00_old\\general_test_3"
+PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 
 # path to save figures
 SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}"
@@ -95,6 +95,14 @@ RES_LOAD_PATH = PATH + "\\res\\stateval_results.pkl"
 print("Loading data...")
 data = pd.read_pickle(RES_LOAD_PATH)
 print("Done loading data!")
+
+NETWORK_PATH = PATH + "\\networks"
+print("Loading networks...")
+acquaintance_network = pickle.load(open(NETWORK_PATH+"\\culture.acquaintance_network.pkl","rb"))
+group_membership_network = pickle.load(open(NETWORK_PATH+"\\culture.group_membership_network.pkl","rb"))
+inter_group_network = pickle.load(open(NETWORK_PATH+"\\inter_group_network.pkl","rb"))
+node_states = pickle.load(open(NETWORK_PATH+"\\node_states.pkl", "rb"))
+print("Done loading networks!")
 
 # how to deal with keys
 # data.head()

@@ -39,7 +39,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "warning_test2"
+experiment_name = "network_saving_test22"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -122,7 +122,7 @@ weight_injunctive = [0.5]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [2, 2.1]  # reproduces probs of exploit for gamma = 1
+k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
@@ -359,6 +359,37 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     del tosave["Culture.acquaintance_network"]
     tosave["t"] = traj["t"]
     t = np.array(traj["t"]).flatten()
+
+    # save networks
+    print("Saving networks.")
+    network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
+    network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
+    RAW_FOLDER = os.path.dirname(filename)
+    SAVE_FOLDER = os.path.dirname(RAW_FOLDER)
+    file_ending = filename.split("raw/", 1)[1]
+    file_ending = file_ending.replace(".pkl", "")
+    NETWORK_PATH = SAVE_FOLDER + f"\\networks"
+    if not os.path.exists(NETWORK_PATH):
+        os.mkdir(NETWORK_PATH)
+    NETWORK_PATH = NETWORK_PATH + f"\\{file_ending}"
+    if not os.path.exists(NETWORK_PATH):
+        os.mkdir(NETWORK_PATH)
+    for counter, n in enumerate(network_list):
+        f = open(NETWORK_PATH + f"\\{network_names[counter]}.pkl", "wb")
+        save_nx = nx.relabel_nodes(n, lambda x: str(x))
+        pickle.dump(save_nx, f)
+    print("Done saving networks.")
+    # save the states of the nodes at every 10 timesteps
+    print("Save node states.")
+    save_node_states = {
+        "Individual.behaviour": {str(e): tosave["Individual.behaviour"][e][0::100] for e in tosave["Individual.behaviour"].keys()},
+        "Group.group_attitude": {str(e): tosave["Group.group_attitude"][e][0::100] for e in tosave["Group.group_attitude"].keys()}
+    }
+    f = open(NETWORK_PATH + f"\\node_states.pkl", "wb")
+    pickle.dump(save_node_states, f)
+    print("Done saving node states.")
+
+
     # TRAJ_PATH = filename.replace(".pkl", "_traj.pkl")
     # with open(TRAJ_PATH, "wb") as f:
     #     pickle.dump(tosave, f)
@@ -416,18 +447,6 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     # need to drop timestamps
     # res.reset_index(drop=True)
     res.to_pickle(filename)
-
-    # save networks
-    # network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
-    # network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
-    # for counter, n in enumerate(network_list):
-    #     f = open(filename, "wb")
-    #     save_nx = nx.relabel_nodes(n, lambda x: str(x))
-    #     pickle.dump(save_nx, f)
-    # print("Done saving networks.")
-
-    # with open(filename, 'w') as f:
-    #     f.write('Groups do not change their attitude')
 
     # delete old taxa to avoid instantiation errors
     world.delete()

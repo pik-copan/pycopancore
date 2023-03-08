@@ -113,12 +113,12 @@ p = 0.05  # link density for random networks; wiedermann: 0.05
 save = "n" # "y" or "n"
 
 # decide if multiple results should be saved:
-mc_save = "y" # "y" or "n"
-run_set_no = "2" # give explicit number of runset
+# mc_save = "y" # "y" or "n"
+# run_set_no = "2" # give explicit number of runset
 
 # for saving numbers (range(start_end))
-name_start = 0  # default
-name_end = 500
+# name_start = 0  # default
+# name_end = 500
 
 #---write into dic---
 configuration = {
@@ -160,15 +160,21 @@ configuration = {
 #     configuration["seed"]: seed
 #     np.random.seed(seed)
 
+attitude_on = 0
+descriptive_majority_threshold = 0.5
+injunctive_majority_threshold = 0.5
+
 # instantiate model
 model = M.Model()
 
 # instantiate process taxa culture:
-culture = M.Culture(majority_threshold=majority_threshold,
-                    weight_descriptive=weight_descriptive,
+culture = M.Culture(attitude_on=attitude_on,
+                    descriptive_majority_threshold=descriptive_majority_threshold,
+                    injunctive_majority_threshold=injunctive_majority_threshold,
                     weight_injunctive=weight_injunctive,
                     fix_group_attitude=fix_group_attitude,
                     k_value=k_value)
+print(f"Culture process taxon created: {culture}")
 
 # generate entitites:
 world = M.World(culture=culture)
@@ -176,8 +182,11 @@ social_system = M.SocialSystem(world=world)
 cells = [M.Cell(stock=1, capacity=1, growth_rate=1, social_system=social_system)
          for c in range(nc)]
 
+ni_sust = nindividuals * ni_sust_frac  # number of agents with sustainable behaviour 1
+ni_nonsust = nindividuals - ni_sust  # number of agents with unsustainable behaviour 0
+
 # random initialisation or not?
-if ind_initialisation == "Random":
+if ind_initialisation:
     behaviour = [0, 1]
     attitude = [0, 1]
     individuals = [M.Individual(average_waiting_time=average_waiting_time,
@@ -191,8 +200,11 @@ else:
                                   cell=cells[i + ni_nonsust])
                      for i in range(ni_sust)]
 
+ng_sust = ng_total * ng_sust_frac  # number of sustainable groups
+ng_nonsust = ng_total - ng_sust
+
     # instantiate groups
-if group_initialisation == "Random":
+if group_initialisation:
     group_attitude = [0, 1]
     groups = [M.Group(culture=culture, world=world, group_attitude=np.random.choice(group_attitude),
                       group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
@@ -202,10 +214,8 @@ else:
              [M.Group(culture=culture, world=world, group_attitude=0,
                       group_meeting_interval=group_meeting_interval) for i in range(ng_nonsust)]
 
-
 for (i, c) in enumerate(cells):
     c.individual = individuals[i]
-
 
 def erdosrenyify(graph, p=0.5):
     """Create a ErdosRenzi graph from networkx graph.
@@ -220,88 +230,99 @@ def erdosrenyify(graph, p=0.5):
             if random.random() < p:
                 graph.add_edge(n1, n2)
 
-
 # set the initial graph structure to be an erdos-renyi graph
 print("erdosrenyifying the graph ... ", end="", flush=True)
 start = time()
 erdosrenyify(culture.acquaintance_network, p=p)
+
+# nx.draw(culture.acquaintance_network)
+# plt.show()
+
+# degrees = [culture.acquaintance_network.degree(n) for n in culture.acquaintance_network.nodes()]
+# plt.hist(degrees)
+# plt.show()
 
 # assert that each ind has at least one edge
 # for i in individuals:
 #     if not list(i.acquaintances):
 #         culture.acquaintance_network.add_edge(i, np.random.choice(individuals))
 
-GM = culture.group_membership_network
-# initialize group_membership network
-# interlink_density = 0.5
-# for i in individuals:
-#     for g in groups:
-#         if np.random.uniform() < interlink_density:
-#             GM.add_edge(i, g)
-# make sure each individual is member of at least one group
-#     if not list(i.group_memberships): #i.e. list is empty
-#         GM.add_edge(i, np.random.choice(groups))
+n_group_memberships = 1
 
-# group_membership network with only one group membership for now
+# for plausibility reasons
+if n_group_memberships > ng_total:
+    n_group_memberships = ng_total
+
+# group_membership network with more than one group membership
 for i in individuals:
-    GM.add_edge(i, np.random.choice(groups))
+    while len(list(i.group_memberships)) < n_group_memberships:
+        g = np.random.choice(groups)
+        culture.group_membership_network.add_edge(i, g)
 
+# degrees = [culture.group_membership_network.degree(n) for n in culture.group_membership_network.nodes()]
+# plt.hist(degrees)
+# plt.show()
+
+# GM = culture.group_membership_network
 # color_map = []
+# shape_map = []
 # for node in list(GM.nodes):
 #     color_map.append(GM.nodes[node]["color"])
+#     if GM.nodes[node]["type"] == "Group":
+#         shape_map.append("o")
+#     else:
+#         shape_map.append("^")
 # top_nodes = {n for n, d in GM.nodes(data=True) if d["type"] == "Group"}
 # bottom_nodes = set(GM) - top_nodes
 # nx.draw(GM, node_color=color_map, with_labels=False,
 #         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
 # plt.show()
 
-#get a preliminary intergroup network for plotting multilayer
+# get a preliminary intergroup network for plotting multilayer
 inter_group_network = nx.Graph()
 for g in groups:
-    inter_group_network.add_node(g) # groups have no interaction so far
-# for index, g in enumerate(groups):
-#     for j in groups[:index]:
-#         inter_group_network.add_edge(g, j)
+    inter_group_network.add_node(g)  # groups have no interaction so far
 
-
-# try to plot a nice multilayer network
-# fig = plt.figure()
-# ax = fig.add_subplot(111, projection='3d')
-# LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], ax=ax)
-# ax.view_init(90, 0)
-# plt.show()
-#
-# fig = plt.figure()
-# ax = fig.add_subplot(111, projection='3d')
-# LayeredNetworkGraph([culture.acquaintance_network, inter_group_network], [culture.group_membership_network], ax=ax)
-# ax.view_init(40, 40)
-# plt.show()
-
-# color_map = []
-# unsust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and n.group_attitude)
-#                 or (d["type"] == "Individual" and n.behaviour)}
-# sust_nodes = {n for n, d in GM.nodes(data=True) if (d["type"] == "Group" and not n.mean_group_attitude)
-#               or (d["type"] == "Individual" and not n.attitude)}
-# for node in list(GM.nodes):
-#     if node in unsust_nodes:
-#         color_map.append("red")
-#     else:
-#         color_map.append("blue")
-# nx.draw(GM, node_color=color_map, with_labels=False,
-#         pos=nx.bipartite_layout(GM, bottom_nodes, align="horizontal", aspect_ratio=4 / 1))
-# plt.show()
-
-print("done ({})".format(dt.timedelta(seconds=(time() - start))))
-
-print('\n runner starting')
-
-
-
+# Runner
+# print("done ({})".format(dt.timedelta(seconds=(time() - start))))
+# print('\n runner starting')
 r = Runner(model=model)
 start = time()
 traj = r.run(t_1=timeinterval, dt=timestep)
-runtime = dt.timedelta(seconds=(time() - start))
-print('runtime: {runtime}'.format(**locals()))
+# runtime = dt.timedelta(seconds=(time() - start))
+# print('runtime: {runtime}'.format(**locals()))
+
+# saving trajs in another folder
+# create a binary pickle file
+
+
+
+#SAVE_PATH_TRAJ = SAVE_PATH_RAW.replace("raw", "traj")
+#os.mkdir(SAVE_PATH_TRAJ)
+
+#f = open(SAVE_PATH_TRAJ + filename, "wb")
+
+tosave = {
+    v.owning_class.__name__ + "."
+    + v.codename: {str(e): traj[v][e]
+                   for e in traj[v].keys()
+                   }
+    for v in traj.keys() if v is not "t"
+}
+
+# import pickle
+# import os
+# SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\network_test2"
+# os.mkdir(SAVE_FOLDER)
+#
+# print("Saving networks.")
+# network_list = [tosave["Culture.acquaintance_network"], tosave["Culture.group_membership_network"]]
+# # network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
+# for counter, n in enumerate(network_list):
+#     f = open(SAVE_FOLDER + "networks.pkl", "wb")
+#     save_nx = nx.relabel_nodes(n, lambda x: str(x))
+#     pickle.dump(save_nx, f)
+# print("Done saving networks.")
 
 # import os
 # os_path = "/p/projects/copan/maxbecht"
