@@ -12,6 +12,9 @@ A study to test the runner with the maxploit model.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 import numpy as np
 from time import time
 import datetime as dt
@@ -36,7 +39,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "full_norm_coarse_sweep"
+experiment_name = "descriptive_coarse_sweep"
 
 
 # local
@@ -64,7 +67,7 @@ SAMPLE_SIZE = 25
 
 # facts - just for memory
 sample_size = str(SAMPLE_SIZE)
-which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -108,28 +111,28 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [100]
+timeinterval = [75]
 timestep = [0.1]
 
 # culture
-descriptive_majority_threshold = [0.5]
+descriptive_majority_threshold = [0.4, 0.5, 0.6]
 injunctive_majority_threshold = [0.5]
-weight_descriptive = [0.5]
-weight_injunctive = [0.5]
+weight_descriptive = [1]
+weight_injunctive = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
 k_value = [1, 2, 3]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [1]
-update_probability = [0.25]
+average_waiting_time = [1, 10]
+update_probability = [0.25, 0.75]
 
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [0.25]
-n_group_memberships = [1, 2, 5, 10]
-ng_total = [1, 2, 10]  # number of total groups
+n_group_memberships = [1]
+ng_total = [1]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -210,8 +213,8 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        Have both norms.
-        Test here:  - wide range of parameters
+        Have descriptive norms.
+        Test here:  - range of params
         """)
     print("Done saving readme.txt.")
 
