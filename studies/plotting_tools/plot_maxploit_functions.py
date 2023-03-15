@@ -129,9 +129,9 @@ def plot_single_trajs(variables, parameter_combinations, timepoints, RAW_PATH, S
 
 def plot_all_trajs_in_one(variables, parameter_combinations, timepoints, RAW_PATH, SAVE_PATH):
     ids = get_mofa_id(parameter_combinations)
-    for i in ids:
-        if not os.path.exists(SAVE_PATH + "\\" + i):
-            os.mkdir(SAVE_PATH + "\\" + i)
+    # for i in ids:
+    #     if not os.path.exists(SAVE_PATH + "\\" + i):
+    #         os.mkdir(SAVE_PATH + "\\" + i)
     fnames = np.sort(glob.glob(RAW_PATH + "\\*"))
     for i in ids:
         # get number of trajectories to plot cmap well
@@ -163,6 +163,42 @@ def plot_all_trajs_in_one(variables, parameter_combinations, timepoints, RAW_PAT
         plt.savefig(SAVE_PATH + "\\" + i + ".png")
         plt.close()
 
+
+def plot_distributions(parameter_combinations, variables, ranges, timestep, RAW_PATH, SAVE_PATH):
+    """ranges must be a list of tuples with ranges same length as variables"""
+
+    print("Plotting distributions...")
+    ids = get_mofa_id(parameter_combinations)
+    # for i in ids:
+    #     if not os.path.exists(SAVE_PATH + "\\" + i):
+    #         os.mkdir(SAVE_PATH + "\\" + i)
+    fnames = np.sort(glob.glob(RAW_PATH + "\\*"))
+    for i in ids:
+        dist_dict = {}
+        for name in variables:
+            dist_dict[name] = []
+        for f in fnames:
+            if i in f:
+                raw = pickle.load(open(f, "rb"))
+                for index, name in enumerate(variables):
+                    dist_dict[name].append(raw[name][timestep])
+        fig, ax = plt.subplots(len(variables))
+        for index, name in enumerate(variables):
+            n_bins = int(ranges[index][1] - ranges[index][0])
+            if n_bins > 50:
+                n_bins = int(n_bins / 10)
+            ax[index].hist(dist_dict[name], bins=n_bins, range=ranges[index])
+            # ax[index].set_xlabel("")
+            ax[index].set_ylabel(name)
+            # ax[index].set_title(name)
+        # ax[index].legend(loc="best")
+        fig.set_figheight(16)
+        plt.suptitle(i)
+        fig.tight_layout()
+        # plt.show()
+        plt.savefig(SAVE_PATH + "\\" + i + ".png")
+        plt.close()
+    print("Done plotting distributions!")
 
 def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, variables, timepoints, SAVE_FOLDER):
     for c in parameter_combinations:

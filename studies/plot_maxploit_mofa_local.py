@@ -18,13 +18,14 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "network_saving_test8"
+experiment_name = "descriptive_coarse_sweep"
 
 # path to cluster data
-# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
+PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
 
 # path to test data
-PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
+# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\00_old\\{experiment_name}"
+# PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
 
 # path to save figures
 SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}"
@@ -36,6 +37,9 @@ if not os.path.exists(MEAN_PATHS):
 TRAJ_PATHS = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\trajs"
 if not os.path.exists(TRAJ_PATHS):
     os.mkdir(TRAJ_PATHS)
+DIST_PATHS =f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\dist"
+if not os.path.exists(DIST_PATHS):
+    os.mkdir(DIST_PATHS)
 
 # test
 # SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\test"
@@ -97,12 +101,13 @@ data = pd.read_pickle(RES_LOAD_PATH)
 print("Done loading data!")
 
 NETWORK_PATH = PATH + "\\networks"
-print("Loading networks...")
-acquaintance_network = pickle.load(open(NETWORK_PATH+"\\culture.acquaintance_network.pkl","rb"))
-group_membership_network = pickle.load(open(NETWORK_PATH+"\\culture.group_membership_network.pkl","rb"))
-inter_group_network = pickle.load(open(NETWORK_PATH+"\\inter_group_network.pkl","rb"))
-node_states = pickle.load(open(NETWORK_PATH+"\\node_states.pkl", "rb"))
-print("Done loading networks!")
+if os.path.exists(NETWORK_PATH):
+    print("Loading networks...")
+    acquaintance_network = pickle.load(open(NETWORK_PATH+"\\culture.acquaintance_network.pkl","rb"))
+    group_membership_network = pickle.load(open(NETWORK_PATH+"\\culture.group_membership_network.pkl","rb"))
+    inter_group_network = pickle.load(open(NETWORK_PATH+"\\inter_group_network.pkl","rb"))
+    node_states = pickle.load(open(NETWORK_PATH+"\\node_states.pkl", "rb"))
+    print("Done loading networks!")
 
 # how to deal with keys
 # data.head()
@@ -125,22 +130,24 @@ VARIABLE: which variable of interest you want to plot
 variables = [name for name, values in data['mean'].unstack('observables').iteritems()]
 # or set them yourself
 variables = ['Cell.stock', 'Individual.behaviour', 'Group.group_attitude', 'Group.mean_group_behaviour']
+variables_2 = ['Cell.stock', 'Individual.behaviour']
+ranges = [(0, 400), (0, 400)]
 
 if os.path.exists(RAW_PATH):
+    print("Raw data is plotted...:")
     # ----- plot traj trajectories -----
     # can only be done if raw data available
     # pmf.plot_single_trajs(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PATHS)
-    pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PATHS)
+    # pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PATHS)
+    pmf.plot_distributions(PARAM_COMBS, variables_2, ranges, last_timestep, RAW_PATH, DIST_PATHS)
+    print("Plotting raw data done!")
 
 # ----- plot mean and std trajectories -----
 # can only be done if raw data available
-pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables, timepoints, MEAN_PATHS)
+# pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables, timepoints, MEAN_PATHS)
 
-# ----- phase transition plot
-# pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold",
-#                      last_timestep, "cells", SAVE_PATH)
-# pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold",
-#                      last_timestep, "inds", SAVE_PATH)
+# ----- phase transition plot -----
+# pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold", last_timestep, variables_2, SAVE_PATH)
 
-# ----- PIXEL PLOT -----
-pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, variables, SAVE_PATH)
+# ----- pixel plot -----
+# pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, variables, SAVE_PATH)
