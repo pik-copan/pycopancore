@@ -39,7 +39,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "descriptive_coarse_sweep"
+experiment_name = "descriptive_threshold_final"
 
 
 # local
@@ -58,7 +58,7 @@ assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exi
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 
-SAMPLE_SIZE = 25
+SAMPLE_SIZE = 100
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -103,7 +103,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -111,25 +111,26 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [75]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
-descriptive_majority_threshold = [0.4, 0.5, 0.6]
+# descriptive_majority_threshold = [0.5]
+descriptive_majority_threshold = list(np.arange(0.4, 0.6025, 0.0025))
 injunctive_majority_threshold = [0.5]
 weight_descriptive = [1]
 weight_injunctive = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [1, 2, 3]  # reproduces probs of exploit for gamma = 1
+k_value = [0, 1, 2, 3, 10]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [1, 10]
-update_probability = [0.25, 0.75]
+average_waiting_time = [1]
+update_probability = [0.25]
 
 # groups:
-group_meeting_interval = [1]
+group_meeting_interval = [10]
 group_update_probability = [0.25]
 n_group_memberships = [1]
 ng_total = [1]  # number of total groups
@@ -213,8 +214,7 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        Have descriptive norms.
-        Test here:  - range of params
+        Testing the descriptive threshold.
         """)
     print("Done saving readme.txt.")
 
