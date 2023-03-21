@@ -38,6 +38,11 @@ class Model(object):
 class Individual(object):
     """Interface for Individual."""
 
+    harvest = Variable("harvest",
+                       """The amount of harvest and individual receives.""",
+                       lower_bound=0,
+                       is_extensive=True)
+
     behaviour = SN.Individual.behaviour
 
 

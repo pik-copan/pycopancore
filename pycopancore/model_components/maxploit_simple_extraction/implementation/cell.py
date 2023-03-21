@@ -41,7 +41,7 @@ class Cell(I.Cell):
     #     TODO: add custom code here:
     # process-related methods:
 
-    def harvest(self, t):
+    def harvesting(self, t):
         """Compute the harvesting dynamics.
 
         Parameters
@@ -53,6 +53,6 @@ class Cell(I.Cell):
         -------
 
         """
-        self.d_stock -= self.individual.get_harvest_rate()
+        self.d_stock -= self.individual.harvest
 
-    processes = [ODE('harvesting function', [I.Cell.stock], harvest)]
+    processes = [ODE('harvesting function', [I.Cell.stock], harvesting)]

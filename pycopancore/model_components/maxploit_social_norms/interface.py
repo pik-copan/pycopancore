@@ -13,7 +13,7 @@
 from ... import master_data_model as D
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
-from ..maxploit_individual_layer import interface as I
+from ..maxploit_simple_extraction import interface as EXT
 # import ..BBB.interface as BBB
 # TODO: uncomment and adjust only if you really need other variables:
 from ... import Variable
@@ -47,7 +47,7 @@ class Individual(object):
     average_waiting_time = Variable('estimated waiting time tau', 'tau', default=1)
     update_time = Variable('next update time', 'next time for update')
     update_probability = Variable("update probability", "probability to be in a batch", default=0)
-
+    harvest = EXT.Individual.harvest.copy()
 
 class Group(object):
     """Interface for Group."""
@@ -88,12 +88,12 @@ class Culture(object):
     # parameters for the logit
     weight_injunctive = Variable('Weight for Injunction',
                                  """Weight for the injuctive Norm influence""",
-                                 default=0.5)
+                                 default=0.25)
     weight_descriptive = Variable('Weight for Descriptive Norm',
                                   """Weight for the descriptive Norm influence""",
-                                  default=0.5)
-    weight_dissonance = Variable('Weight for Cognitive Dissonance',
-                                 """Weight for the Cognitive Dissonance influence""",
+                                  default=0.25)
+    weight_harvest = Variable('Weight for Harvest',
+                                 """Weight for the Harvest results influence""",
                                  default=0.5)
     k_value = Variable('k value',
                        """Value for trimming the possibilites form the logit distribution. 

@@ -80,7 +80,9 @@ class Culture (I.Culture):
             # descriptive_norm = agent_i.descriptive_norm_binary
             if descriptive_norm == 0:
                 descriptive_norm = -1
-            x = self.weight_descriptive * descriptive_norm + self.weight_injunctive * injunctive_norm
+            x = self.weight_descriptive * descriptive_norm\
+                + self.weight_injunctive * injunctive_norm\
+                + self.weight_harvest * agent_i.harvest
             probability_distribution = expit(self.k_value*x)
             if agent_i.behaviour == 0:
                 probability = probability_distribution
