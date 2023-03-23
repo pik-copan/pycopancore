@@ -47,7 +47,6 @@ class Individual(object):
     average_waiting_time = Variable('estimated waiting time tau', 'tau', default=1)
     update_time = Variable('next update time', 'next time for update')
     update_probability = Variable("update probability", "probability to be in a batch", default=0)
-    harvest = EXT.Individual.harvest.copy()
 
 class Group(object):
     """Interface for Group."""

@@ -53,6 +53,6 @@ class Cell(I.Cell):
         -------
 
         """
-        self.d_stock -= self.individual.harvest
+        self.d_stock -= self.individual.get_harvest_rate()
 
     processes = [ODE('harvesting function', [I.Cell.stock], harvesting)]

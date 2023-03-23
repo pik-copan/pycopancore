@@ -71,6 +71,17 @@ class Individual(I.Individual):
             else:
                 self.descriptive_norm_binary = 0
 
+    def get_harvest(self):
+        """Compute the harvest rate of the individual on its cell.
+
+        Returns
+        -------
+        harvest : float
+        """
+        effort = 0.5 * 1 * (3 - 2 * self.behaviour)
+        harvest = effort * self.cell.stock
+        return harvest
+
     processes = []
         # [Explicit("descriptive norm",
         #                   [I.Individual.descriptive_norm],

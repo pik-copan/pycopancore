@@ -39,7 +39,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "network_saving_test22"
+experiment_name = "harvest_influence_test17"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -59,7 +59,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 2
+SAMPLE_SIZE = 1
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -67,7 +67,7 @@ SAMPLE_SIZE = 2
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Harvest" # "All", "Harvest", "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -103,7 +103,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0]  # into boolean, i.e. 1 = True
+fix_group_attitude = [1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -111,14 +111,15 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [10]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
 descriptive_majority_threshold = [0.5]
 injunctive_majority_threshold = [0.5]
-weight_descriptive = [0.5]
-weight_injunctive = [0.5]
+weight_descriptive = [0]
+weight_injunctive = [0]
+weight_harvest = [1]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -126,7 +127,7 @@ k_value = [2]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [0.25]
+update_probability = [1]
 
 # groups:
 group_meeting_interval = [1]
@@ -153,7 +154,6 @@ nc = nindividuals  # number of cells
 
 # ---write into dic---
 configuration = {
-    "SAMPLE_SIZE": SAMPLE_SIZE,
     "which_norm": which_norm,
     "group_meeting_type": group_meeting_type,
     "group_attitude_formation": group_attitude_formation,
@@ -171,6 +171,7 @@ configuration = {
     "injunctive_majority_threshold": injunctive_majority_threshold,
     "weight_descriptive": weight_descriptive,
     "weight_injunctive": weight_injunctive,
+    "weight_harvest": weight_harvest,
     "nindividuals": nindividuals,
     "ni_sust_frac": ni_sust_frac,
     "average_waiting_time": average_waiting_time,
@@ -207,9 +208,9 @@ print("Done saving readme.txt.")
 
 # Defining an experiment execution function according pymofa
 def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
-             p, filename):
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive,
+             weight_harvest, nindividuals, ni_sust_frac, average_waiting_time, update_probability, nc, ng_total,
+             ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval, p, filename):
 
     # instantiate model
     model = M.Model()
@@ -218,7 +219,9 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     culture = M.Culture(attitude_on=attitude_on,
                         descriptive_majority_threshold=descriptive_majority_threshold,
                         injunctive_majority_threshold=injunctive_majority_threshold,
+                        weight_descriptive=weight_descriptive,
                         weight_injunctive=weight_injunctive,
+                        weight_harvest=weight_harvest,
                         fix_group_attitude=fix_group_attitude,
                         k_value=k_value)
     print(f"Culture process taxon created: {culture}")
@@ -360,6 +363,20 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     tosave["t"] = traj["t"]
     t = np.array(traj["t"]).flatten()
 
+    # save traj files
+    print("Saving trajs.")
+    RAW_FOLDER = os.path.dirname(filename)
+    SAVE_FOLDER = os.path.dirname(RAW_FOLDER)
+    TRAJ_SAVE_PATH = SAVE_FOLDER + "\\traj"
+    if not os.path.exists(TRAJ_SAVE_PATH):
+        os.mkdir(TRAJ_SAVE_PATH)
+    file_ending = filename.split("raw/", 1)[1]
+    file_ending = file_ending.replace(".pkl", "_traj.pkl")
+    TRAJ_SAVE_PATH = TRAJ_SAVE_PATH + "\\" + file_ending
+    with open(TRAJ_SAVE_PATH, "wb") as f:
+        pickle.dump(tosave, f)
+    print("Done saving trajs.")
+
     # save networks
     print("Saving networks.")
     network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
@@ -389,10 +406,6 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     pickle.dump(save_node_states, f)
     print("Done saving node states.")
 
-
-    # TRAJ_PATH = filename.replace(".pkl", "_traj.pkl")
-    # with open(TRAJ_PATH, "wb") as f:
-    #     pickle.dump(tosave, f)
 
     ### SAVE AS PANDAS
     # # optionally the whole traj can be safed in a pd frame
@@ -464,11 +477,12 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     return exit_status
 
 parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
-             p]
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive,
+             weight_harvest, nindividuals, ni_sust_frac, average_waiting_time, update_probability, nc, ng_total,
+             ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval, p]
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
-                       "k_value", "descriptive_majority_threshold", "injunctive_majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
+                       "k_value", "descriptive_majority_threshold", "injunctive_majority_threshold",
+                       "weight_descriptive", "weight_injunctive", "weight_harvest", "nindividuals",
                        "ni_sust_frac", "average_waiting_time", "update_probability", "nc", "ng_total",
                        "ng_sust_frac", "n_group_memberships", "group_update_probability", "group_meeting_interval", "p"]
 # parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
@@ -477,9 +491,9 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 PARAM_COMBS = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
-             p))
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive,
+             weight_harvest, nindividuals, ni_sust_frac, average_waiting_time, update_probability, nc, ng_total,
+             ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval, p))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
 handle.compute(RUN_FUNC)
 

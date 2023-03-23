@@ -10,7 +10,7 @@
 # License: BSD 2-clause license
 
 from .. import interface as I
-from .... import Explicit
+
 
 class Individual(I.Individual):
     """Define properties of simple_extraction individual."""
@@ -43,14 +43,18 @@ class Individual(I.Individual):
 
     # process-related methods:
 
-    def get_harvest_rate(self, unused_t):
+    def get_harvest_rate(self):
         """Compute the harvest rate of the individual on its cell.
 
         Returns
         -------
         harvest : float
         """
+        # print(f"The behvaiour of {self}: {self.behaviour}.")
         effort = 0.5 * self.cell.growth_rate * (3 - 2 * self.behaviour)
-        self.harvest = effort * self.cell.stock
+        # print(f"The effort of {self}: {effort}.")
+        harvest = effort * self.cell.stock
+        # print(f"The harvest of {self}: {harvest}.")
+        return harvest
 
-    processes = [Explicit("individual harvest", [I.Individual.harvest], get_harvest_rate)]
+    processes = []

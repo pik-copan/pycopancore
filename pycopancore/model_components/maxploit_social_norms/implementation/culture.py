@@ -80,16 +80,27 @@ class Culture (I.Culture):
             # descriptive_norm = agent_i.descriptive_norm_binary
             if descriptive_norm == 0:
                 descriptive_norm = -1
+
+            # make probability a probability to switch
+            if agent_i.behaviour == 1:
+                injunctive_norm = -1 * injunctive_norm
+                descriptive_norm = -1 * descriptive_norm
+
+            print(f"{agent_i} Behaviour: {agent_i.behaviour}.")
+            print(f"{agent_i} Harvest: {agent_i.get_harvest()}.")
+            # adjust harvest so it fits with expit [-1,1] and
+            # high harvest should mean low prob to switch so negative sign always
+            harvest = agent_i.get_harvest()
+            harvest = -1 * (2 * harvest - 1)
+            print(f"Adjusted harvest: {harvest}.")
             x = self.weight_descriptive * descriptive_norm\
                 + self.weight_injunctive * injunctive_norm\
-                + self.weight_harvest * agent_i.harvest
-            probability_distribution = expit(self.k_value*x)
-            if agent_i.behaviour == 0:
-                probability = probability_distribution
-            else:
-                probability = 1 - probability_distribution
+                + self.weight_harvest * harvest
+            print(f"x: {x}")
+            probability_to_switch = expit(self.k_value*x)
+            print(f"Probability for {agent_i} to be sustainable: {probability_to_switch}.")
             # print(injunctive_norm, descriptive_norm, probability)
-            if np.random.random() < probability:
+            if np.random.random() < probability_to_switch:
                 agent_i.behaviour = int(not agent_i.behaviour)
 
     def descriptive_only(self, agent_i):
