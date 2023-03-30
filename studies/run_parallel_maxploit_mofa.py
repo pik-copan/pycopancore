@@ -120,6 +120,7 @@ descriptive_majority_threshold = list(np.arange(0.4, 0.6025, 0.0025))
 injunctive_majority_threshold = [0.5]
 weight_descriptive = [1]
 weight_injunctive = [0]
+weight_harvest = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -172,6 +173,7 @@ configuration = {
     "injunctive_majority_threshold": injunctive_majority_threshold,
     "weight_descriptive": weight_descriptive,
     "weight_injunctive": weight_injunctive,
+    "weight_harvest": weight_harvest,
     "nindividuals": nindividuals,
     "ni_sust_frac": ni_sust_frac,
     "average_waiting_time": average_waiting_time,
@@ -223,9 +225,9 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
 
 # Defining an experiment execution function according pymofa
 def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
-             p, filename):
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive,
+             weight_harvest, nindividuals, ni_sust_frac, average_waiting_time, update_probability, nc, ng_total,
+             ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval, p, filename):
 
     # import the model (again)
     # import pycopancore.models.maxploit as M
@@ -239,6 +241,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
                         injunctive_majority_threshold=injunctive_majority_threshold,
                         weight_descriptive=weight_descriptive,
                         weight_injunctive=weight_injunctive,
+                        weight_harvest=weight_harvest,
                         fix_group_attitude=fix_group_attitude,
                         k_value=k_value)
     print(f"Culture process taxon created: {culture}")
@@ -476,11 +479,12 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     return exit_status
 
 parameter_list = [attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
-             p]
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive,
+             weight_harvest, nindividuals, ni_sust_frac, average_waiting_time, update_probability, nc, ng_total,
+             ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval, p]
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
-                       "k_value", "descriptive_majority_threshold", "injunctive_majority_threshold", "weight_descriptive", "weight_injunctive","nindividuals",
+                       "k_value", "descriptive_majority_threshold", "injunctive_majority_threshold",
+                       "weight_descriptive", "weight_injunctive", "weight_harvest", "nindividuals",
                        "ni_sust_frac", "average_waiting_time", "update_probability", "nc", "ng_total",
                        "ng_sust_frac", "n_group_memberships", "group_update_probability", "group_meeting_interval", "p"]
 # parameter_list = [k_value, majority_threshold, weight_descriptive, weight_injunctive, average_waiting_time,
@@ -489,9 +493,9 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 PARAM_COMBS = list(it.product(attitude_on, ind_initialisation, group_initialisation, fix_group_attitude, timeinterval, timestep, k_value,
-             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive, nindividuals, ni_sust_frac,
-             average_waiting_time, update_probability, nc, ng_total, ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval,
-             p))
+             descriptive_majority_threshold, injunctive_majority_threshold, weight_descriptive, weight_injunctive,
+             weight_harvest, nindividuals, ni_sust_frac, average_waiting_time, update_probability, nc, ng_total,
+             ng_sust_frac, n_group_memberships, group_update_probability, group_meeting_interval, p))
 handle = eh(sample_size=SAMPLE_SIZE, parameter_combinations=PARAM_COMBS, index=INDEX, path_raw=SAVE_PATH_RAW, path_res=SAVE_PATH_RES)
 handle.compute(RUN_FUNC)
 

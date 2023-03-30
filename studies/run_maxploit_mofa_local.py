@@ -257,7 +257,8 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     if group_initialisation:
         group_attitude = [0, 1]
         groups = [M.Group(culture=culture, world=world, group_attitude=np.random.choice(group_attitude),
-                          group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
+                          group_meeting_interval=group_meeting_interval,
+                          group_update_probability=group_update_probability) for i in range(ng_total)]
     else:
         groups = [M.Group(culture=culture, world=world, group_attitude=1,
                           group_meeting_interval=group_meeting_interval) for i in range(ng_sust)] + \
