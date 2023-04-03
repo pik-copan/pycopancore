@@ -46,6 +46,21 @@ class Culture (I.Culture):
 
         for agent_i in ordered_list:
             # print("Update prob.:", agent_i.update_probability)
+            mean_group_state = 0
+            for g in list(agent_i.group_memberships):
+                mean_group_state += g.group_attitude
+            agent_i.group_network_state = mean_group_state / len(list(agent_i.group_memberships))
+
+            alignment = agent_i.behaviour - agent_i.group_network_state
+            if alignment < 0:
+                alignment = -1*alignment
+            agent_i.alignment = alignment
+
+            if self.get_descriptive_norm(agent_i) is not None:
+                agent_i.acquaintance_network_state = self.get_descriptive_norm(agent_i)
+
+            print(f"New measures: {agent_i.group_network_state}, {agent_i.alignment}, {agent_i.acquaintance_network_state}")
+
             if np.random.uniform() < agent_i.update_probability:
                 # attitude = agent_i.attitude
                 # behaviour = agent_i.behaviour
@@ -72,6 +87,7 @@ class Culture (I.Culture):
 
         descriptive_norm = self.get_descriptive_norm(agent_i)
         if descriptive_norm is not None:
+            agent_i.acquaintance_network_state = descriptive_norm
             if descriptive_norm > self.descriptive_majority_threshold:
                 descriptive_norm = 1
             else:
@@ -86,19 +102,19 @@ class Culture (I.Culture):
                 injunctive_norm = -1 * injunctive_norm
                 descriptive_norm = -1 * descriptive_norm
 
-            print(f"{agent_i} Behaviour: {agent_i.behaviour}.")
-            print(f"{agent_i} Harvest: {agent_i.get_harvest()}.")
+            # print(f"{agent_i} Behaviour: {agent_i.behaviour}.")
+            # print(f"{agent_i} Harvest: {agent_i.get_harvest()}.")
             # adjust harvest so it fits with expit [-1,1] and
             # high harvest should mean low prob to switch so negative sign always
             harvest = agent_i.get_harvest()
             harvest = -1 * (2 * harvest - 1)
-            print(f"Adjusted harvest: {harvest}.")
+            # print(f"Adjusted harvest: {harvest}.")
             x = self.weight_descriptive * descriptive_norm\
                 + self.weight_injunctive * injunctive_norm\
                 + self.weight_harvest * harvest
-            print(f"x: {x}")
+            # print(f"x: {x}")
             probability_to_switch = expit(self.k_value*x)
-            print(f"Probability for {agent_i} to be sustainable: {probability_to_switch}.")
+            # print(f"Probability for {agent_i} to be sustainable: {probability_to_switch}.")
             # print(injunctive_norm, descriptive_norm, probability)
             if np.random.random() < probability_to_switch:
                 agent_i.behaviour = int(not agent_i.behaviour)
@@ -171,5 +187,8 @@ class Culture (I.Culture):
 
 
     processes = [Event("Social Update",
-                      [B.Culture.worlds.individuals.behaviour],
+                      [B.Culture.worlds.individuals.behaviour,
+                       B.Culture.worlds.individuals.alignment,
+                       B.Culture.worlds.individuals.acquaintance_network_state,
+                       B.Culture.worlds.individuals.group_network_state],
                       ["time", next_update_time, individual_update])]

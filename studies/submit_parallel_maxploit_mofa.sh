@@ -1,17 +1,21 @@
 #!/bin/bash
 #SBATCH --qos=short
-#SBATCH --job-name=descriptive_threshold_final
+#SBATCH --job-name=new_measures_test
 #SBATCH --account=copan
-#SBATCH --ntasks=32
+#SBATCH --ntasks=1
 #SBATCH --exclusive
-#SBATCH --output=descriptive_threshold_final-%j.out
-#SBATCH --error=descriptive_threshold_final-%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit/descriptive_threshold_final
+#SBATCH --output=new_measures_test-%j.out
+#SBATCH --error=new_measures_test-%j.err
+#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit/new_measures_test
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"
 echo "$SLURM_NTASKS tasks"
 echo "------------------------------------------------------------"
 
+cd ..
+cd ..
+cd ..
+
 export I_MPI_PMI_LIBRARY=/p/system/slurm/lib/libpmi.so
-srun -n $SLURM_NTASKS --mpi=pmi2 python p/projects/copan/users/maxbechts/pycopancore/studies/run_parallel_maxploit_mofa.py
+srun -n $SLURM_NTASKS --mpi=pmi2 python pycopancore/studies/run_parallel_maxploit_mofa.py
