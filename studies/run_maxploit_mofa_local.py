@@ -39,7 +39,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "harvest_influence_test17"
+experiment_name = "new_measures_test4"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -59,7 +59,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 1
+SAMPLE_SIZE = 5
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -103,7 +103,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [0]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -111,29 +111,29 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [100]
+timeinterval = [10]
 timestep = [0.1]
 
 # culture
 descriptive_majority_threshold = [0.5]
 injunctive_majority_threshold = [0.5]
-weight_descriptive = [0]
-weight_injunctive = [0]
-weight_harvest = [1]
+weight_descriptive = [0.5]
+weight_injunctive = [0.5]
+weight_harvest = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [2]  # reproduces probs of exploit for gamma = 1
+k_value = [3]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
-update_probability = [1]
+update_probability = [0.25]
 
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [1]
-n_group_memberships = [2]
-ng_total = [2]  # number of total groups
+n_group_memberships = [1]
+ng_total = [10]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks

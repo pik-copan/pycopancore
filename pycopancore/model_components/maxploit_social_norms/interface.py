@@ -49,11 +49,14 @@ class Individual(object):
     update_probability = Variable("update probability", "probability to be in a batch", default=0)
 
     acquaintance_network_state= Variable("mean state of neighbours",
-                         """Saves the mean state of the neighbours.""")
+                         """Saves the mean state of the neighbours.""",
+                         default=0)
     group_network_state= Variable("mean state of groups",
-                         """Saves the mean state of the groups.""")
+                         """Saves the mean state of the groups.""",
+                         default=0)
     alignment = Variable("alignment with group",
-                         """Checks how aligned individual is with its groups.""")
+                         """Checks how aligned individual is with its groups.""",
+                         default=0)
 
 class Group(object):
     """Interface for Group."""
