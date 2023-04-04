@@ -59,7 +59,7 @@ class Culture (I.Culture):
             if self.get_descriptive_norm(agent_i) is not None:
                 agent_i.acquaintance_network_state = self.get_descriptive_norm(agent_i)
 
-            print(f"New measures: {agent_i.group_network_state}, {agent_i.alignment}, {agent_i.acquaintance_network_state}")
+            # print(f"New measures: {agent_i.group_network_state}, {agent_i.alignment}, {agent_i.acquaintance_network_state}")
 
             if np.random.uniform() < agent_i.update_probability:
                 # attitude = agent_i.attitude
