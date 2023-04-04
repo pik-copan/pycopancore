@@ -19,7 +19,7 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 #                        "average_waiting_time", "update_probability", "ng_total", "group_meeting_interval"]
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "harvest_influence_test16"
+experiment_name = "new_measures_test4"
 
 # path to cluster data
 # PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\cluster_results\\{experiment_name}"
@@ -136,7 +136,7 @@ VARIABLE: which variable of interest you want to plot
 # get names of variables that were saved
 variables = [name for name, values in data['mean'].unstack('observables').iteritems()]
 # or set them yourself
-variables = ['Cell.stock', 'Individual.behaviour', 'Group.group_attitude', 'Group.mean_group_behaviour']
+# variables = ['Cell.stock', 'Individual.behaviour', 'Group.group_attitude', 'Group.mean_group_behaviour']
 variables_2 = ['Cell.stock', 'Individual.behaviour']
 ranges = [(0, 400), (0, 400)]
 

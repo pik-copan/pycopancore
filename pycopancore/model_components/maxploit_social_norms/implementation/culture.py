@@ -51,10 +51,10 @@ class Culture (I.Culture):
                 mean_group_state += g.group_attitude
             agent_i.group_network_state = mean_group_state / len(list(agent_i.group_memberships))
 
-            alignment = agent_i.behaviour - agent_i.group_network_state
-            if alignment < 0:
-                alignment = -1*alignment
-            agent_i.alignment = alignment
+            difference = agent_i.behaviour - agent_i.group_network_state
+            if difference < 0:
+                difference = -1*difference
+            agent_i.alignment = 1 - difference
 
             if self.get_descriptive_norm(agent_i) is not None:
                 agent_i.acquaintance_network_state = self.get_descriptive_norm(agent_i)
