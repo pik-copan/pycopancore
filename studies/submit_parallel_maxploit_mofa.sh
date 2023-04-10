@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --qos=short
-#SBATCH --job-name=new_measures_test
+#SBATCH --job-name=test
 #SBATCH --account=copan
-#SBATCH --ntasks=1
+#SBATCH --ntasks=4
 #SBATCH --exclusive
-#SBATCH --output=new_measures_test-%j.out
-#SBATCH --error=new_measures_test-%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit/new_measures_test
+#SBATCH --output=test-%j.out
+#SBATCH --error=test-%j.err
+#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit2/test
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"

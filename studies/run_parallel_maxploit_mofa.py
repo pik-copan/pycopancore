@@ -39,8 +39,9 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "new_measures_test"
-
+experiment_name = "test"
+# how to call postprocessed results
+post_process_filename = "stateval_results.pkl"
 
 # local
 # SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -53,12 +54,12 @@ experiment_name = "new_measures_test"
 
 # cluster
 # as not to do any damage, folders have to be created manually
-SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
 assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exist."
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 
-SAMPLE_SIZE = 100
+SAMPLE_SIZE = 10
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -67,7 +68,7 @@ SAMPLE_SIZE = 100
 
 # facts - just for memory
 sample_size = str(SAMPLE_SIZE)
-which_norm = "Descriptive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -103,7 +104,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0]  # into boolean, i.e. 1 = True
+fix_group_attitude = [1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -111,20 +112,21 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [100]
+timeinterval = [50]
 timestep = [0.1]
 
 # culture
 # list(np.arange(0,1,0.1))
+# [0.5]
 descriptive_majority_threshold = [0.5]
-injunctive_majority_threshold = [0.5]
+injunctive_majority_threshold = [0.4, 0.5, 0.6]
 weight_descriptive = [0.5]
 weight_injunctive = [0.5]
 weight_harvest = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [3]  # reproduces probs of exploit for gamma = 1
+k_value = [2, 3, 4]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
@@ -133,8 +135,9 @@ update_probability = [0.25]
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [0.25]
-n_group_memberships = [1]
-ng_total = [10]  # number of total groups
+# [1, 2, 4, 8, 16, 32, 64, 128]
+n_group_memberships = [2]
+ng_total = [2,4,8,16]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -216,7 +219,7 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        Testing the harvesting model alone in detail.
+        -
         """)
     print("Done saving readme.txt.")
 
@@ -432,6 +435,8 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
     # correct the timelines
     minimum_timestep = min(timestep, average_waiting_time, group_meeting_interval)
+    # for checking timescales
+    minimum_timestep = 0.001
     t_grid = np.arange(0, timeinterval, minimum_timestep)
     for key in prep.keys():
         correcting_list = prep[key]
@@ -502,9 +507,6 @@ handle.compute(RUN_FUNC)
 
 ##### POSTPROCESSING #####
 
-# how to call these results
-filename = "stateval_results.pkl"
-
 EVA = {
     "mean": lambda fnames: pd.concat([np.load(f, allow_pickle=True)
                                       for f in fnames if "traj" not in f]).groupby(level=0).mean(),
@@ -512,7 +514,7 @@ EVA = {
                                      for f in fnames if "traj" not in f]).groupby(level=0).std()
 }
 
-handle.resave(EVA, filename)
+handle.resave(EVA, post_process_filename)
 
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
