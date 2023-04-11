@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --qos=short
-#SBATCH --job-name=test
+#SBATCH --qos=medium
+#SBATCH --job-name=injunctive_threshold5
 #SBATCH --account=copan
-#SBATCH --ntasks=4
+#SBATCH --ntasks=16
 #SBATCH --exclusive
-#SBATCH --output=test-%j.out
-#SBATCH --error=test-%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit2/test
+#SBATCH --output=injunctive_threshold5-%j.out
+#SBATCH --error=injunctive_threshold5-%j.err
+#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit2/injunctive_threshold
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"

@@ -39,9 +39,9 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "test"
+experiment_name = "injunctive_threshold"
 # how to call postprocessed results
-post_process_filename = "stateval_results.pkl"
+post_process_filename = "stateval_results5.pkl"
 
 # local
 # SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -59,7 +59,7 @@ assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exi
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
 
-SAMPLE_SIZE = 10
+SAMPLE_SIZE = 100
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -104,7 +104,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -112,21 +112,21 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [50]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
 # list(np.arange(0,1,0.1))
 # [0.5]
 descriptive_majority_threshold = [0.5]
-injunctive_majority_threshold = [0.4, 0.5, 0.6]
-weight_descriptive = [0.5]
-weight_injunctive = [0.5]
+injunctive_majority_threshold = list(np.arange(0.45,0.55,0.005))
+weight_descriptive = [0]
+weight_injunctive = [1]
 weight_harvest = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [2, 3, 4]  # reproduces probs of exploit for gamma = 1
+k_value = [3]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [1]
@@ -136,8 +136,8 @@ update_probability = [0.25]
 group_meeting_interval = [1]
 group_update_probability = [0.25]
 # [1, 2, 4, 8, 16, 32, 64, 128]
-n_group_memberships = [2]
-ng_total = [2,4,8,16]  # number of total groups
+n_group_memberships = [16]
+ng_total = [16]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -219,7 +219,7 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        -
+        Testing the descriptive timescales.
         """)
     print("Done saving readme.txt.")
 
@@ -434,9 +434,9 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     # res = pd.DataFrame(prep)
 
     # correct the timelines
-    minimum_timestep = min(timestep, average_waiting_time, group_meeting_interval)
+    # minimum_timestep = min(timestep, average_waiting_time, group_meeting_interval)
     # for checking timescales
-    minimum_timestep = 0.001
+    minimum_timestep = 0.1
     t_grid = np.arange(0, timeinterval, minimum_timestep)
     for key in prep.keys():
         correcting_list = prep[key]
