@@ -11,6 +11,7 @@ from typing import List, Dict
 
 from ... import master_data_model as D
 from ...data_model import Dimension, Unit
+from .. import reg_decision_making as DM
 
 from ... import Variable
 
@@ -69,11 +70,14 @@ class Cell (object):
         datatype = np.array,
         array_shape = (1, ))
 
+    landuse = DM.Culture.landuse_decisions.copy()
+
     pft_harvestc = Variable(
         "yields of different pfts",
         "array of pft_harvest bands",
         datatype = np.array,
         array_shape = (32, ))
+
 
 #
 # Process taxa

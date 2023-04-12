@@ -30,15 +30,15 @@ class Individual (I.Individual):
 
     # aufgeführt: alle allgemeinen parameter, und AFT-spezifische parameter
     # für den "traditionalist" type
-     def __init__(self,
-                   *,  # TODO: how to assign AFT to individual?
-                   aft = 1,
-                   behaviour = 0,
-                   past_behaviour = 0,
-                   attitude = 0,
-                   subjective_norm = 0,  #TODO maybe adapt this name or check in culture
-                   pbc = 0,
-                   average_waiting_time = 1,
+    def __init__(self,
+                 *,  # TODO: how to assign AFT to individual?
+                 aft = 1,
+                 behaviour = 0,
+                 past_behaviour = 0,
+                 attitude = 0,
+                 subjective_norm = 0,  #TODO maybe adapt this name or check in culture
+                 pbc = 0,
+                 average_waiting_time = 1,
 
                 # TODO implement weights in a way that makes sure they add up to 1
                    w_trad_attitude = 1/2,
@@ -46,8 +46,10 @@ class Individual (I.Individual):
                    w_trad_soil = 1/3,
                    w_trad_norm = 1/2,
                    trad_pbc = 1/2,
-                   w_social_learning = 1/2,
-                   w_own_land = 1/2,
+                   w_trad_social_learning = 1/2,
+                   w_sust_social_learning = 1/2,
+                   w_trad_own_land = 1/2,
+                   w_sust_own_land = 1/2,
                    w_sust_attitude = 2/3,
                    w_sust_yield = 1/3,
                    w_sust_soil = 2/3,
@@ -68,21 +70,16 @@ class Individual (I.Individual):
          self.subjective_norm = subjective_norm
          self.pbc = pbc
          self.average_waiting_time = average_waiting_time
-         self.w_social_learning = w_social_learning
-         self.w_own_land = w_own_land
-         # trad aft
-         self.w_trad_attitude = w_trad_attitude
-         self.w_trad_yield = w_trad_yield
-         self.w_trad_soil = w_trad_soil
-         self.w_trad_norm = w_trad_norm
-         self.trad_pbc = trad_pbc
-         # sust aft
-         self.w_sust_attitude = w_sust_attitude
-         self.w_sust_yield = w_sust_yield
-         self.w_sust_soil = w_sust_soil
-         self.w_sust_norm = w_sust_norm
-         self.sust_pbc = sust_pbc
-
+         
+         # trad and sust aft
+         self.w_social_learning = [w_trad_social_learning,
+                                   w_sust_social_learning]
+         self.w_own_land = [w_trad_own_land, w_sust_own_land]
+         self.w_attitude = [w_trad_attitude, w_sust_attitude]
+         self.w_yield = [w_trad_yield, w_sust_yield]
+         self.w_soil = [w_trad_soil, w_sust_soil]
+         self.w_norm = [w_trad_norm, w_sust_norm]
+         self.pbc = [trad_pbc, sust_pbc]
          self.update_time = np.random.exponential(self.average_waiting_time)
 
          pass

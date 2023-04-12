@@ -14,6 +14,7 @@ from .... import Explicit
 
 import numpy as np
 
+
 class Cell (I.Cell):
     """Cell entity type mixin implementation class."""
 
@@ -43,14 +44,16 @@ class Cell (I.Cell):
 
     # process-related methods:
     def read_cftfrac(self, t):
-        self.cftfrac = np.sum((np.ceil(t)-t)*self.social_system.world.\
-                              environment.old_out_dict["cftfrac"]\
-                              [self.lpjml_grid_cell_ids] + (t-np.floor(t))\
-                              * self.social_system.world.environment.out_dict\ 
+        self.cftfrac = np.sum((np.ceil(t)-t)*self.social_system.world.
+                              environment.old_out_dict["cftfrac"]
+                              [self.lpjml_grid_cell_ids] + (t-np.floor(t))
+                              * self.social_system.world.environment.out_dict 
                               ["cftfrac"][self.lpjml_grid_cell_ids]) 
                               # extrapolation over the year and summation 
                               # over grid cells
-        # TODO: define lpjml_cell_ids, or do all cells in environment, double-think about dimensions, units and the points in time our data is about
+        # TODO: define lpjml_cell_ids, or do all cells in environment, 
+        # double-think about dimensions, units and the points in time our data
+        # is about
 
     def read_pft_harvestc(self, t):
         self.pft_harvestc = self.social_system.world.environment.old_out_dict\
@@ -67,7 +70,14 @@ making component to collect the decisions made in all cells in that timestep"""
             # pseudocode: self.environment.in_dict["with_tillage"] =
             # social model output as array matching bands needed
             # (number of cells and if not only tillage dimensions of landuse)
-            self.environment.in_dict["with_tillage"][i] = self.with_tillage  # TODO: move to become an environment step process because we only need to write this once a year
+            self.environment.in_dict["with_tillage"][i] = self.with_tillage
+            # TODO: move to become an environment step process because we only need to write this once a year
+    # TODO adjust write_landuse to integration with decision-making component
+    # pseudocode below, have to check how array / indexing works / 
+    # how landuse array has to be built up to match lpjml input requirements
+    # def write_landuse(self, unused_t):
+        # self.environment.in_dict["with_tillage"] = self.landuse
+
 
 
     processes = [

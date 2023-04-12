@@ -15,10 +15,10 @@ TODO: uncomment neccessary code wherever marked by the "TODO" flag.
 # export all provided entity type implementation mixin classes:
 #from .world import World
 #from .social_system import SocialSystem
-#from .cell import Cell
-#from .individual import Individual
+from .cell import Cell
+from .individual import Individual
 
 # export all provided process taxon implementation mixin classes:
 #from .environment import Environment
 #from .metabolism import Metabolism
-#from .culture import Culture
+from .culture import Culture
