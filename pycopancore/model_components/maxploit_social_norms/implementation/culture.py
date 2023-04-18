@@ -21,7 +21,7 @@ import networkx as nx
 class Culture (I.Culture):
     """Culture process taxon mixin for exploit_social_learning."""
 
-    def map_harvest(h):
+    def map_harvest(self, h):
         """Maps harvest range [0, 1.5] on range of expit [-1, 1] and then flip it, such
         that a high harvest means low prob to switch"""
         h = -1 * (4 / 3 * h - 1)
@@ -112,8 +112,8 @@ class Culture (I.Culture):
             # print(f"{agent_i} Harvest: {agent_i.get_harvest()}.")
             # adjust harvest so it fits with expit [-1,1] and
             # high harvest should mean low prob to switch so negative sign always
-            harvest = agent_i.get_harvest()
-            harvest = self.map_harvest(harvest)
+            h = agent_i.get_harvest()
+            harvest = self.map_harvest(h)
             # print(f"Adjusted harvest: {harvest}.")
             x = self.weight_descriptive * descriptive_norm\
                 + self.weight_injunctive * injunctive_norm\

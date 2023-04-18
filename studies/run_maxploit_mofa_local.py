@@ -39,7 +39,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "harvest_analytical1"
+experiment_name = "harvest_analytical_otherE"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -59,7 +59,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 100
+SAMPLE_SIZE = 5
 
 ########################################################################################################################
 # MODEL CONFIGURATION
