@@ -39,9 +39,9 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "injunctive_threshold"
+experiment_name = "harvest_final"
 # how to call postprocessed results
-post_process_filename = "stateval_results5.pkl"
+post_process_filename = "stateval_results.pkl"
 
 # local
 # SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -68,7 +68,7 @@ SAMPLE_SIZE = 100
 
 # facts - just for memory
 sample_size = str(SAMPLE_SIZE)
-which_norm = "Injunctive" # "Both", "Descriptive", "Injunctive"
+which_norm = "Harvest" # "Both", "Descriptive", "Injunctive", "Harvest", "All"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -104,7 +104,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -112,32 +112,32 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [100]
+timeinterval = [75]
 timestep = [0.1]
 
 # culture
 # list(np.arange(0,1,0.1))
 # [0.5]
 descriptive_majority_threshold = [0.5]
-injunctive_majority_threshold = list(np.arange(0.45,0.55,0.005))
+injunctive_majority_threshold = [0.5]
 weight_descriptive = [0]
-weight_injunctive = [1]
-weight_harvest = [0]
+weight_injunctive = [0]
+weight_harvest = [1]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [3]  # reproduces probs of exploit for gamma = 1
+k_value = [0, 1, 2, 3, 100]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [1]
+average_waiting_time = [0.1, 1, 10]
 update_probability = [0.25]
 
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [0.25]
 # [1, 2, 4, 8, 16, 32, 64, 128]
-n_group_memberships = [16]
-ng_total = [16]  # number of total groups
+n_group_memberships = [1]
+ng_total = [1]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -219,7 +219,7 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        Testing the descriptive timescales.
+        Harvest sweep for meeting with Jobst.
         """)
     print("Done saving readme.txt.")
 

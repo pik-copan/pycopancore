@@ -107,7 +107,7 @@ class Culture (I.Culture):
             # adjust harvest so it fits with expit [-1,1] and
             # high harvest should mean low prob to switch so negative sign always
             harvest = agent_i.get_harvest()
-            harvest = -1 * (4 / 3 * harvest - 1)
+            harvest = map_harvest(h)
             # print(f"Adjusted harvest: {harvest}.")
             x = self.weight_descriptive * descriptive_norm\
                 + self.weight_injunctive * injunctive_norm\
@@ -118,6 +118,12 @@ class Culture (I.Culture):
             # print(injunctive_norm, descriptive_norm, probability)
             if np.random.random() < probability_to_switch:
                 agent_i.behaviour = int(not agent_i.behaviour)
+
+    def map_harvest(h):
+        """Maps harvest range [0, 1.5] on range of expit [-1, 1] and then flip it, such
+        that a high harvest means low prob to switch"""
+        h = -1 * (4 / 3 * h - 1)
+        return h
 
     def descriptive_only(self, agent_i):
         descriptive_norm = self.get_descriptive_norm(agent_i)
