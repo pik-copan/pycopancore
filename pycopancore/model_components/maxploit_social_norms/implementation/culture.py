@@ -21,6 +21,12 @@ import networkx as nx
 class Culture (I.Culture):
     """Culture process taxon mixin for exploit_social_learning."""
 
+    def map_harvest(h):
+        """Maps harvest range [0, 1.5] on range of expit [-1, 1] and then flip it, such
+        that a high harvest means low prob to switch"""
+        h = -1 * (4 / 3 * h - 1)
+        return h
+
     # process-related methods:
 
     def individual_update(self, t):
@@ -118,12 +124,6 @@ class Culture (I.Culture):
             # print(injunctive_norm, descriptive_norm, probability)
             if np.random.random() < probability_to_switch:
                 agent_i.behaviour = int(not agent_i.behaviour)
-
-    def map_harvest(h):
-        """Maps harvest range [0, 1.5] on range of expit [-1, 1] and then flip it, such
-        that a high harvest means low prob to switch"""
-        h = -1 * (4 / 3 * h - 1)
-        return h
 
     def descriptive_only(self, agent_i):
         descriptive_norm = self.get_descriptive_norm(agent_i)
