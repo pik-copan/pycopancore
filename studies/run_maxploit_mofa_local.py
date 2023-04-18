@@ -39,7 +39,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "new_measures_test4"
+experiment_name = "harvest_analytical1"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -59,7 +59,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 5
+SAMPLE_SIZE = 100
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -111,15 +111,15 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [10]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
 descriptive_majority_threshold = [0.5]
 injunctive_majority_threshold = [0.5]
-weight_descriptive = [0.5]
-weight_injunctive = [0.5]
-weight_harvest = [0]
+weight_descriptive = [0]
+weight_injunctive = [0]
+weight_harvest = [1]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -133,7 +133,7 @@ update_probability = [0.25]
 group_meeting_interval = [1]
 group_update_probability = [1]
 n_group_memberships = [1]
-ng_total = [10]  # number of total groups
+ng_total = [1]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks

@@ -107,7 +107,7 @@ class Culture (I.Culture):
             # adjust harvest so it fits with expit [-1,1] and
             # high harvest should mean low prob to switch so negative sign always
             harvest = agent_i.get_harvest()
-            harvest = -1 * (2 * harvest - 1)
+            harvest = -1 * (4 / 3 * harvest - 1)
             # print(f"Adjusted harvest: {harvest}.")
             x = self.weight_descriptive * descriptive_norm\
                 + self.weight_injunctive * injunctive_norm\
