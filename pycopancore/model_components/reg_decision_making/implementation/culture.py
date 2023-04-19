@@ -19,6 +19,7 @@ from .... import Event
 from ...base import interface as B
 from .... import master_data_model as D
 from . import individual as ID
+from . import cell as C
 import numpy as np
 import networkx as nx
 
@@ -82,7 +83,7 @@ class Culture (I.Culture):
             agent_i.past_soil_carbon = agent_i.get_soil_carbon()
             agent_i.past_behaviour = agent_i.behaviour
             agent_i.behaviour = int(not agent_i.behaviour)
-            landuse_decisions[agent_i] = agent_i.behaviour
+            C.landuse_decisions[agent_i] = agent_i.behaviour
 
         self.set_new_update_time(agent_i)
         # do I want to check for consensus?
@@ -93,9 +94,9 @@ class Culture (I.Culture):
     social learning and obersation of own land"""
 
     def calc_attitude(self, agent_i):
-        return agent_i.w_social_learning[aft] * \
+        return agent_i.w_social_learning[agent_i.aft] * \
                 self.calc_attitude_social_learning \
-                + agent_i.w_own_land[aft] * self.calc_attitude_own_land
+                + agent_i.w_own_land[agent_i.aft] * self.calc_attitude_own_land
 
     # calculating the input of farmer's own land evaluation to attitude
     # differentiated for 2 farmer types
@@ -179,7 +180,7 @@ class Culture (I.Culture):
             average_yields[agent_i.behavior]
         soils_diff, soils_same = average_soils[not agent_i.behavior],\
             average_soils[agent_i.behavior]
-            # TODO is agent_i.behavior really getting me to the right return?
+        # TODO is agent_i.behavior really getting me to the right return?
 
         # calc both yield and soil comparison, then weight
         # TODO think about sigmoid instead of heaviside?
@@ -188,8 +189,8 @@ class Culture (I.Culture):
         soil_comparison = soils_diff - agent_i.get_soil_carbon() *\
             np.heaviside(soils_diff - soils_same, 0)
 
-        return self.sigmoid(agent_i.w_yield[aft] * yield_comparison +
-                            agent_i.w_soil[aft] * soil_comparison)
+        return self.sigmoid(agent_i.w_yield[agent_i.aft] * yield_comparison +
+                            agent_i.w_soil[agent_i.aft] * soil_comparison)
         # if agent_i.aft == 1:
         #     return self.sigmoid(w_sust_yield*yield_comparison +
         #                         w_sust_soil*soil_comparison)
@@ -215,20 +216,22 @@ class Culture (I.Culture):
     def next_landuse_update_time(self, t):
         return t + exponential(1 / self.landuse_update_rate)
 
-    # TODO: adapt update landuse style to TPB, this is just EXPLOIT
-    def update_landuse_style(self, unused_t):
-        for w in self.worlds:
-            for i in w.individuals:
-                if uniform() < self_landuse_update_prob:
-                    # TODO adjust
-                    # i.behaviour = 1 or 0
-                    i.update_landuse()
+    # TODO: this is just EXPLOIT, check if it can be removed completely
+    # def update_landuse_style(self, unused_t):
+    #    for w in self.worlds:
+    #        for i in w.individuals:
+    #            if uniform() < self_landuse_update_prob:
+    #                # TODO adjust
+    #                # i.behaviour = 1 or 0
+    #                i.update_landuse()
 
 # TODO adjust process to update_behaviour (TPB)
     processes = [
         Event("update landuse style",
-                [B.Culture.worlds.individuals.landuse_style],
+                [I.Culture.acquaintance_network,
+                 B.Culture.worlds.individuals.behaviour,
+                 B.Culture.worlds.individuals.update_time],
                 ["time",
                  next_landuse_update_time,
-                 update_landuse_style])
+                 update_behaviour])
     ]  # TODO: instantiate and list process objects here

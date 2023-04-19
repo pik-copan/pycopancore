@@ -12,6 +12,7 @@ the "TODO" flag.
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 from .. import interface as I
+import numpy as np
 # from .... import master_data_model as D
 
 # TODO: uncomment this if you need ref. variables such as B.Cell.individuals:
@@ -54,10 +55,14 @@ class Cell (I.Cell):
     def get_yield():
         # import "outputs variable" from CORE-coupler side and split into
         # yields and soil by accessing keys ["pft_harvestc"] ect.
+        crop_yield = 2
         return crop_yield
 
     def get_soil_carbon():
+        soil_carbon = 1
         return soil_carbon
+    
+    landuse_decisions = np.array
 
     # lpjml_cell_id = Variable('lpjml cell id', 'given by lpjml')
     # in case we want to use different cells than the ones from lpjml
