@@ -8,6 +8,7 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
  
 import pycopancore.models.social_inseeds as M
+# from pycopancore.models import social_inseeds as M
 
 # standard runner for simulating any model:
 from pycopancore.runners.runner import Runner
@@ -75,8 +76,7 @@ end_year = 2005
 
 
 delta_t = 1  # desired temporal resolution of the resulting output.
- 
- 
+
 
 # test_dict_in = {"landuse": np.zeros((1, 64)),"fertilizer_nr": np.zeros((1, 32))}
 # test_dict_out = {"cftfrac": np.zeros((1, 32)),"pft_harvestc": np.zeros((1, 32)),"pft_harvestn": np.zeros((1, 32))}
