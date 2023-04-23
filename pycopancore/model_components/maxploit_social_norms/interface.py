@@ -44,7 +44,6 @@ class Individual(object):
                                 default=0)
     descriptive_norm_binary = Variable("descriptive norm binary",
                                        """mean behaviour in acquaintance network of individual coded as binary""")
-    average_waiting_time = Variable('estimated waiting time tau', 'tau', default=1)
     update_time = Variable('next update time', 'next time for update')
     update_probability = Variable("update probability", "probability to be in a batch", default=0)
 
@@ -131,7 +130,7 @@ class Culture(object):
 
     group_membership_network = D.CUL.group_membership_network
     acquaintance_network = D.CUL.acquaintance_network
-    average_waiting_time = Individual.average_waiting_time.copy()
+    average_waiting_time = Variable('estimated waiting time tau', 'tau', default=1)
     individual_updating_probability = Variable("prob",
                                                "blalbla no time",
                                                default=0.1)
