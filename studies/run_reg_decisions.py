@@ -8,6 +8,7 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
  
 import pycopancore.models.social_inseeds as M
+
 # from pycopancore.models import social_inseeds as M
 
 # standard runner for simulating any model:
