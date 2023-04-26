@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # from plot_maxploit_functions import correct_timeline
 from plot_functions import plot_maxploit_functions_cluster as pmf
 
-old_run = 1
+old_run = 0
 
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
                        "k_value", "descriptive_majority_threshold", "injunctive_majority_threshold", "weight_descriptive", "weight_injunctive", "weight_harvest",
@@ -25,11 +25,11 @@ if old_run:
 
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "descriptive_threshold_final"
+experiment_name = "injunctive_timescale"
 
 # path to cluster data
-PATH = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
-# PATH = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
+# PATH = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+PATH = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
 
 # path to test data
 # PATH = f"C:/Users/bigma/Documents/Uni/Master/MA_Masterarbeit/results/maxploit/00_old/{experiment_name}"
@@ -159,42 +159,42 @@ variables_2 = ['Cell.stock', 'Individual.behaviour']
 ranges = [(0, 400), (0, 400)]
 
 # ----- plot trajs -----
-if os.path.exists(TRAJ_PATH):
-    print("Trajectories are plotted.")
-    ids = pmf.get_mofa_id(PARAM_COMBS)
-    for i in ids:
-        if not os.path.exists(SINGLE_TRAJ_PLOT_PATHS + "/" + i):
-            os.mkdir(SINGLE_TRAJ_PLOT_PATHS + "/" + i)
-    fnames = np.sort(glob.glob(TRAJ_PATH + "/*"))
-    for i in ids:
-        for index, f in enumerate(fnames):
-            if i in f:
-                traj = pickle.load(open(f, "rb"))
-                t = np.array(traj["t"])
-                cells = list(traj["Cell.stock"].keys())
-                individuals = list(traj["Individual.behaviour"].keys())
-                groups = list(traj["Group.group_attitude"].keys())
-                fig, ax = plt.subplots()
-                for c in cells:
-                    ax.plot(t, traj["Cell.stock"][c])
-                ax.set_xlabel("t")
-                ax.set_ylabel("Cell.stock")
-                ax.set_title(f)
-                # ax.legend(loc="best")
-                # plt.show()
-                plt.savefig(SINGLE_TRAJ_PLOT_PATHS + "/" + i + f"/{i}_stock_{index}.png")
-                plt.close()
-                for index in range(100):
-                    fig, ax = plt.subplots()
-                    ax.plot(t, traj["Cell.stock"][cells[index]], label="cell")
-                    ax.plot(t, traj["Individual.behaviour"][individuals[index]], label="ind")
-                    ax.set_xlabel("t")
-                    ax.set_ylabel("Value")
-                    ax.set_title(f)
-                    ax.legend(loc="best")
-                    plt.savefig(SINGLE_TRAJ_PLOT_PATHS + "/" + i + f"/{i}_all_{index}.png")
-                    # plt.show()
-                    plt.close()
+# if os.path.exists(TRAJ_PATH):
+#     print("Trajectories are plotted.")
+#     ids = pmf.get_mofa_id(PARAM_COMBS)
+#     for i in ids:
+#         if not os.path.exists(SINGLE_TRAJ_PLOT_PATHS + "/" + i):
+#             os.mkdir(SINGLE_TRAJ_PLOT_PATHS + "/" + i)
+#     fnames = np.sort(glob.glob(TRAJ_PATH + "/*"))
+#     for i in ids:
+#         for index, f in enumerate(fnames):
+#             if i in f:
+#                 traj = pickle.load(open(f, "rb"))
+#                 t = np.array(traj["t"])
+#                 cells = list(traj["Cell.stock"].keys())
+#                 individuals = list(traj["Individual.behaviour"].keys())
+#                 groups = list(traj["Group.group_attitude"].keys())
+#                 fig, ax = plt.subplots()
+#                 for c in cells:
+#                     ax.plot(t, traj["Cell.stock"][c])
+#                 ax.set_xlabel("t")
+#                 ax.set_ylabel("Cell.stock")
+#                 ax.set_title(f)
+#                 # ax.legend(loc="best")
+#                 # plt.show()
+#                 plt.savefig(SINGLE_TRAJ_PLOT_PATHS + "/" + i + f"/{i}_stock_{index}.png")
+#                 plt.close()
+#                 for index in range(100):
+#                     fig, ax = plt.subplots()
+#                     ax.plot(t, traj["Cell.stock"][cells[index]], label="cell")
+#                     ax.plot(t, traj["Individual.behaviour"][individuals[index]], label="ind")
+#                     ax.set_xlabel("t")
+#                     ax.set_ylabel("Value")
+#                     ax.set_title(f)
+#                     ax.legend(loc="best")
+#                     plt.savefig(SINGLE_TRAJ_PLOT_PATHS + "/" + i + f"/{i}_all_{index}.png")
+#                     # plt.show()
+#                     plt.close()
 
 # ----- plot raw data -----
 if os.path.exists(RAW_PATH):
@@ -202,7 +202,7 @@ if os.path.exists(RAW_PATH):
     # ----- plot traj trajectories -----
     # can only be done if raw data available
     # pmf.plot_single_trajs(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PLOT_PATHS)
-    # pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PLOT_PATHS)
+    pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PLOT_PATHS)
     # pmf.plot_distributions(PARAM_COMBS, variables_2, ranges, last_timestep, RAW_PATH, DIST_PATHS)
     print("Plotting raw data done!")
 
@@ -211,10 +211,10 @@ if os.path.exists(RAW_PATH):
 
 # ----- plot mean and std trajectories -----
 # can only be done if raw data available
-# pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables, timepoints, MEAN_PATHS)
+pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables, timepoints, MEAN_PATHS)
 
 # ----- phase transition plot -----
-pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "descriptive_majority_threshold", last_timestep, variables_2, SAVE_PATH)
+# pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "descriptive_majority_threshold", last_timestep, variables_2, SAVE_PATH)
 
 # ----- pixel plot -----
 # pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, variables, SAVE_PATH)

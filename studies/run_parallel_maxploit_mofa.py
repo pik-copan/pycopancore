@@ -39,7 +39,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "harvest_final"
+experiment_name = "injunctive_timescale_fix"
 # how to call postprocessed results
 post_process_filename = "stateval_results.pkl"
 
@@ -68,7 +68,7 @@ SAMPLE_SIZE = 100
 
 # facts - just for memory
 sample_size = str(SAMPLE_SIZE)
-which_norm = "Harvest" # "Both", "Descriptive", "Injunctive", "Harvest", "All"
+which_norm = "All" # "Both", "Descriptive", "Injunctive", "Harvest", "All"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -104,7 +104,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -112,7 +112,7 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [75]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
@@ -121,23 +121,23 @@ timestep = [0.1]
 descriptive_majority_threshold = [0.5]
 injunctive_majority_threshold = [0.5]
 weight_descriptive = [0]
-weight_injunctive = [0]
-weight_harvest = [1]
+weight_injunctive = [1]
+weight_harvest = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
-k_value = [0, 1, 2, 3, 100]  # reproduces probs of exploit for gamma = 1
+k_value = [3]  # reproduces probs of exploit for gamma = 1
 
 # updating
 average_waiting_time = [0.1, 1, 10]
-update_probability = [0.25]
+update_probability = [0.25, 0.5, 0.75, 1]
 
 # groups:
-group_meeting_interval = [1]
-group_update_probability = [0.25]
+group_meeting_interval = [0.1, 1, 10]
+group_update_probability = [0.25, 0.5, 0.75, 1]
 # [1, 2, 4, 8, 16, 32, 64, 128]
-n_group_memberships = [1]
-ng_total = [1]  # number of total groups
+n_group_memberships = [4]
+ng_total = [16]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -219,7 +219,7 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        Harvest sweep for meeting with Jobst.
+        Injunctive timescales again with right updating times.
         """)
     print("Done saving readme.txt.")
 
@@ -240,6 +240,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
     # instantiate process taxa culture:
     culture = M.Culture(attitude_on=attitude_on,
+                        average_waiting_time=average_waiting_time,
                         descriptive_majority_threshold=descriptive_majority_threshold,
                         injunctive_majority_threshold=injunctive_majority_threshold,
                         weight_descriptive=weight_descriptive,
@@ -262,8 +263,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     if ind_initialisation:
         behaviour = [0, 1]
         attitude = [0, 1]
-        individuals = [M.Individual(average_waiting_time=average_waiting_time,
-                                    update_probability=update_probability,
+        individuals = [M.Individual(update_probability=update_probability,
                                     behaviour=np.random.choice(behaviour),
                                     cell=cells[i]) for i in range(nindividuals)]
     else:
