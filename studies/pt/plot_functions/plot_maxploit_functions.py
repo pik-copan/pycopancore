@@ -244,7 +244,7 @@ def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, va
                                        list(np.add(np.array(y), np.array(y_e))), alpha=0.1)
         plt.suptitle(str(c))
         fig.tight_layout()
-        fig.set_figheight(16)
+        fig.set_figheight(len(variables) * 4)
         plt.tight_layout()
         plt.savefig(SAVE_FOLDER + "\\" + f"{c}" + ".png")
         plt.close()
