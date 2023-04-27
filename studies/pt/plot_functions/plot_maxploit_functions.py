@@ -127,7 +127,7 @@ def plot_single_trajs(variables, parameter_combinations, timepoints, RAW_PATH, S
                 n += 1
 
 
-def plot_all_trajs_in_one(variables, parameter_combinations, timepoints, RAW_PATH, SAVE_PATH):
+def plot_all_trajs_in_one(variables, parameter_combinations, timepoints, nc, RAW_PATH, SAVE_PATH):
     ids = get_mofa_id(parameter_combinations)
     # for i in ids:
     #     if not os.path.exists(SAVE_PATH + "\\" + i):
@@ -150,13 +150,26 @@ def plot_all_trajs_in_one(variables, parameter_combinations, timepoints, RAW_PAT
                 raw = pickle.load(open(f, "rb"))
                 colorVal = scalarMap.to_rgba(cvalues[count])
                 for index, name in enumerate(variables):
-                    ax[index].plot(timepoints, raw[name], color=colorVal)
-                    ax[index].set_xlabel("t")
-                    ax[index].set_ylabel("Value")
+                    ax[index].set_xlabel("$t$")
+                    if name == "Cell.stock":
+                        ax[index].set_ylabel(r"$\langle s_i \rangle$")
+                        ax[index].plot(timepoints, raw[name] / nc, color=colorVal)
+                        ax[index].set_ylim(0, 1)
+                        ax[index].set_xlim(-0.1, timepoints[-1] + 0.1)
+                        ax[index].set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+                    elif name == "Individual.behaviour":
+                        ax[index].set_ylabel(r"$\langle n_s \rangle$")
+                        ax[index].plot(timepoints, raw[name] / nc, color=colorVal)
+                        ax[index].set_ylim(0, 1)
+                        ax[index].set_xlim(-0.1, timepoints[-1] + 0.1)
+                        ax[index].set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+                    else:
+                        ax[index].set_ylabel("Value")
+                        ax[index].plot(timepoints, raw[name], color=colorVal)
                     ax[index].set_title(name)
                     # ax[index].legend(loc="best")
                 count += 1
-        fig.set_figheight(16)
+        fig.set_figheight(len(variables) * 4)
         plt.suptitle(i)
         fig.tight_layout()
         # plt.show()
@@ -200,7 +213,7 @@ def plot_distributions(parameter_combinations, variables, ranges, timestep, RAW_
         plt.close()
     print("Done plotting distributions!")
 
-def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, variables, timepoints, SAVE_FOLDER):
+def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, variables, timepoints, nc, SAVE_FOLDER):
     for c in parameter_combinations:
         fig, ax = plt.subplots(len(variables))
         for index, name in enumerate(variables):
@@ -208,11 +221,27 @@ def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, va
             y_e = data['std'].unstack('observables').xs(key=c, level=parameter_name_list)[name]
             ax[index].set_title(name)
             ax[index].set_xlabel("t")
-            ax[index].set_ylabel("Value")
-            ax[index].plot(timepoints, y, c="blue")
-            ax[index].plot(timepoints, y_e, c="red")
-            ax[index].fill_between(timepoints, list(np.subtract(np.array(y), np.array(y_e))),
-                                   list(np.add(np.array(y), np.array(y_e))), alpha=0.1)
+            if name == "Cell.stock":
+                ax[index].set_ylabel(r"$\langle s_i \rangle$")
+                ax[index].plot(timepoints, y / nc, color="green")
+                ax[index].fill_between(timepoints, list(np.subtract(np.array(y), np.array(y_e)) / nc),
+                                       list(np.add(np.array(y), np.array(y_e)) / nc), alpha=0.1, color="green")
+                ax[index].set_ylim(0, 1)
+                ax[index].set_xlim(-0.1, timepoints[-1] + 0.1)
+                ax[index].set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+            elif name == "Individual.behaviour":
+                ax[index].set_ylabel(r"$\langle n_s \rangle$")
+                ax[index].plot(timepoints, y / nc, color="blue")
+                ax[index].fill_between(timepoints, list(np.subtract(np.array(y), np.array(y_e)) / nc),
+                                       list(np.add(np.array(y), np.array(y_e)) / nc), alpha=0.1, color="blue")
+                ax[index].set_ylim(0, 1)
+                ax[index].set_xlim(-0.1, timepoints[-1] + 0.1)
+                ax[index].set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+            else:
+                ax[index].set_ylabel("Value")
+                ax[index].plot(timepoints, y, color="blue")
+                ax[index].fill_between(timepoints, list(np.subtract(np.array(y), np.array(y_e))),
+                                       list(np.add(np.array(y), np.array(y_e))), alpha=0.1)
         plt.suptitle(str(c))
         fig.tight_layout()
         fig.set_figheight(16)

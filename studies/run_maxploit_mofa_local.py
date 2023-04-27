@@ -39,7 +39,7 @@ from matplotlib import pyplot as plt
 
 start = time()
 
-experiment_name = "harvest_analytical_otherE"
+experiment_name = "test_plotting_set"
 
 #local
 SAVE_FOLDER = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\results\\maxploit\\{experiment_name}"
@@ -59,7 +59,7 @@ SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # SAVE_PATH_RES = SAVE_FOLDER + "\\" + "res"
 # os.mkdir(SAVE_PATH_RES)
 
-SAMPLE_SIZE = 5
+SAMPLE_SIZE = 10
 
 ########################################################################################################################
 # MODEL CONFIGURATION
@@ -67,7 +67,7 @@ SAMPLE_SIZE = 5
 # ---configuration---
 
 # facts - just for memory
-which_norm = "Harvest" # "All", "Harvest", "Both", "Descriptive", "Injunctive"
+which_norm = "Descriptive" # "All", "Harvest", "Both", "Descriptive", "Injunctive"
 group_meeting_type = "Step"  # "Step" or "Event"
 """Step means a regular meeting interval. 
 Event means a similar way to the individuals way of drawing a next agent. 
@@ -103,7 +103,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0]  # into boolean, i.e. 1 = True
+fix_group_attitude = [1]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -111,15 +111,15 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [100]
+timeinterval = [50]
 timestep = [0.1]
 
 # culture
-descriptive_majority_threshold = [0.5]
-injunctive_majority_threshold = [0.5]
-weight_descriptive = [0]
-weight_injunctive = [0]
-weight_harvest = [1]
+descriptive_majority_threshold = [0.4, 0.5, 0.6]
+injunctive_majority_threshold = [0.4, 0.5, 0.6]
+weight_descriptive = [0.5]
+weight_injunctive = [0.5]
+weight_harvest = [0]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -131,9 +131,9 @@ update_probability = [0.25]
 
 # groups:
 group_meeting_interval = [1]
-group_update_probability = [1]
-n_group_memberships = [1]
-ng_total = [1]  # number of total groups
+group_update_probability = [0.25]
+n_group_memberships = [4]
+ng_total = [16]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -217,6 +217,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
     # instantiate process taxa culture:
     culture = M.Culture(attitude_on=attitude_on,
+                        average_waiting_time=average_waiting_time,
                         descriptive_majority_threshold=descriptive_majority_threshold,
                         injunctive_majority_threshold=injunctive_majority_threshold,
                         weight_descriptive=weight_descriptive,
@@ -239,8 +240,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     if ind_initialisation:
         behaviour = [0, 1]
         attitude = [0, 1]
-        individuals = [M.Individual(average_waiting_time=average_waiting_time,
-                                    update_probability=update_probability,
+        individuals = [M.Individual(update_probability=update_probability,
                                     behaviour=np.random.choice(behaviour),
                                     cell=cells[i]) for i in range(nindividuals)]
     else:
