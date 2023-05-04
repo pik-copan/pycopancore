@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --qos=short
-#SBATCH --job-name=injunctive_timescale_fix
+#SBATCH --qos=medium
+#SBATCH --job-name=injunctive_timescale_final
 #SBATCH --account=copan
 #SBATCH --ntasks=16
 #SBATCH --exclusive
-#SBATCH --output=injunctive_timescale_fix-%j.out
-#SBATCH --error=injunctive_timescale_fix-%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit2/injunctive_timescale_fix
+#SBATCH --output=injunctive_timescale_final-%j.out
+#SBATCH --error=injunctive_timescale_final-%j.err
+#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit2/injunctive_timescale_final
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"

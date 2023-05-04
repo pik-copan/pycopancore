@@ -39,7 +39,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "injunctive_timescale_fix"
+experiment_name = "injunctive_timescale_final"
 # how to call postprocessed results
 post_process_filename = "stateval_results.pkl"
 

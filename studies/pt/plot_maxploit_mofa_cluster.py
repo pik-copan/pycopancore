@@ -25,7 +25,7 @@ if old_run:
 
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "injunctive_timescale"
+experiment_name = "injunctive_timsecale"
 
 # path to cluster data
 # PATH = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
@@ -120,7 +120,7 @@ RAW_PATH = PATH + "/raw"
 
 TRAJ_PATH = PATH + "/traj"
 
-RES_LOAD_PATH = PATH + "/res/stateval_results.pkl"
+RES_LOAD_PATH = PATH + "/res/stateval_results2.pkl"
 print("Loading data...")
 data = pd.read_pickle(RES_LOAD_PATH)
 print("Done loading data!")
@@ -202,7 +202,7 @@ if os.path.exists(RAW_PATH):
     # ----- plot traj trajectories -----
     # can only be done if raw data available
     # pmf.plot_single_trajs(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PLOT_PATHS)
-    pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PLOT_PATHS)
+    pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, 400, RAW_PATH, TRAJ_PLOT_PATHS)
     # pmf.plot_distributions(PARAM_COMBS, variables_2, ranges, last_timestep, RAW_PATH, DIST_PATHS)
     print("Plotting raw data done!")
 
@@ -211,10 +211,10 @@ if os.path.exists(RAW_PATH):
 
 # ----- plot mean and std trajectories -----
 # can only be done if raw data available
-pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables, timepoints, MEAN_PATHS)
+pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables, timepoints, 400, MEAN_PATHS)
 
 # ----- phase transition plot -----
 # pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "descriptive_majority_threshold", last_timestep, variables_2, SAVE_PATH)
 
 # ----- pixel plot -----
-# pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, variables, SAVE_PATH)
+pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, variables, SAVE_PATH)
