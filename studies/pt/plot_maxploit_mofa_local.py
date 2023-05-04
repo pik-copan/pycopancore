@@ -5,10 +5,12 @@ import pandas as pd
 import json
 import itertools as it
 import numpy as np
+import networkx as nx
 import matplotlib.pyplot as plt
 # from plot_maxploit_functions import correct_timeline
 # from studies.pt.plot_maxploit_functions import phase_transition
 import studies.pt.plot_functions.plot_maxploit_functions as pmf
+from studies.pt.plot_functions.plot_multilayer import LayeredNetworkGraph
 
 parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisation", "fix_group_attitude", "timeinterval", "timestep",
                        "k_value", "descriptive_majority_threshold", "injunctive_majority_threshold", "weight_descriptive", "weight_injunctive", "weight_harvest",
@@ -41,9 +43,12 @@ if not os.path.exists(MEAN_PATHS):
 TRAJ_PLOT_PATHS = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\trajs"
 if not os.path.exists(TRAJ_PLOT_PATHS):
     os.mkdir(TRAJ_PLOT_PATHS)
-DIST_PATHS =f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\dist"
+DIST_PATHS = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\dist"
 if not os.path.exists(DIST_PATHS):
     os.mkdir(DIST_PATHS)
+NETWORK_PATHS = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\{experiment_name}\\networks"
+if not os.path.exists(NETWORK_PATHS):
+    os.mkdir(NETWORK_PATHS)
 
 # test
 # SAVE_PATH = f"C:\\Users\\bigma\\Documents\\Uni\\Master\\MA_Masterarbeit\\plots\\maxploit\\test"
@@ -107,14 +112,8 @@ print("Loading data...")
 data = pd.read_pickle(RES_LOAD_PATH)
 print("Done loading data!")
 
-# NETWORK_PATH = PATH + "\\networks"
-# if os.path.exists(NETWORK_PATH):
-#     print("Loading networks...")
-#     acquaintance_network = pickle.load(open(NETWORK_PATH+"\\culture.acquaintance_network.pkl","rb"))
-#     group_membership_network = pickle.load(open(NETWORK_PATH+"\\culture.group_membership_network.pkl","rb"))
-#     inter_group_network = pickle.load(open(NETWORK_PATH+"\\inter_group_network.pkl","rb"))
-#     node_states = pickle.load(open(NETWORK_PATH+"\\node_states.pkl", "rb"))
-#     print("Done loading networks!")
+NETWORK_LOAD_PATH = PATH + "\\networks"
+
 
 # how to deal with keys
 # data.head()
@@ -190,10 +189,70 @@ if os.path.exists(RAW_PATH):
 
 # ----- plot mean and std trajectories -----
 # can only be done if raw data available
-pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables_2, timepoints, 400, MEAN_PATHS)
+# pmf.plot_mean_and_std_traj(data, PARAM_COMBS, parameter_name_list, variables_2, timepoints, 400, MEAN_PATHS)
 
 # ----- phase transition plot -----
 # pmf.phase_transition(data, parameter_name_list, parameter_dict, parameter_list, "majority_threshold", last_timestep, variables_2, SAVE_PATH)
 
 # ----- pixel plot -----
-pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, variables, SAVE_PATH)
+# pmf.pixel_plot(data, config, parameter_name_list, parameter_list, PARAM_COMBS, last_timestep, variables, SAVE_PATH)
+
+# ----- plot networks -----
+if os.path.exists(NETWORK_LOAD_PATH):
+    print("Networks are plotted.")
+    ids = pmf.get_mofa_id(PARAM_COMBS)
+    for i in ids:
+        if not os.path.exists(NETWORK_PATHS + "\\" + i):
+            os.mkdir(NETWORK_PATHS + "\\" + i)
+    fnames = np.sort(glob.glob(NETWORK_LOAD_PATH + "\\*"))
+    for i in ids:
+        for index, f in enumerate(fnames):
+            if i in f:
+                acquaintance_network = pickle.load(open(f + "\\culture.acquaintance_network.pkl", "rb"))
+                group_membership_network = pickle.load(
+                    open(f + "\\culture.group_membership_network.pkl", "rb"))
+                inter_group_network = pickle.load(open(f + "\\inter_group_network.pkl", "rb"))
+                node_states = pickle.load(open(f + "\\node_states.pkl", "rb"))
+                # node states are saved at same length
+                n_t = len(node_states["Individual.behaviour"][list(node_states["Individual.behaviour"].keys())[0]])
+                t = np.arange(0, n_t, 1)
+                v_array1 = []
+                v_array2 = []
+                for key, value in node_states["Individual.behaviour"].items():
+                    v_array1.append(value)
+                for key, value in node_states["Group.group_attitude"].items():
+                    v_array2.append(value)
+                v_array1_0 = [item[0] for item in v_array1]
+                v_array2_0 = [item[0] for item in v_array2]
+                v_array = [v_array1_0, v_array2_0]
+                fig = plt.figure()
+                ax = fig.add_subplot(111, projection='3d')
+                # ax.set_proj_type('ortho')
+                multilayer = LayeredNetworkGraph([acquaintance_network, inter_group_network],
+                                                 [group_membership_network],
+                                                 v_array, ax=ax, layout=nx.random_layout, highlight_cluster="Unsus")
+                node_positions = multilayer.save_node_positions()  # to get node positions
+                plt.close()
+                for t_index in range(len(t)):
+                    fig = plt.figure()
+                    v_array1 = []
+                    v_array2 = []
+                    for key, value in node_states["Individual.behaviour"].items():
+                        v_array1.append(value)
+                    for key, value in node_states["Group.group_attitude"].items():
+                        v_array2.append(value)
+                    v_array1_t = [item[t_index] for item in v_array1]
+                    v_array2_t = [item[t_index] for item in v_array2]
+                    v_array = [v_array1_t, v_array2_t]
+                    fig = plt.figure(figsize=(10, 10), dpi=200)
+                    ax = fig.add_subplot(111, projection='3d')
+                    # ax.view_init(40 + 0.075 * t_index, 40 - 0.075 * t_index)
+                    LayeredNetworkGraph([acquaintance_network, inter_group_network], [group_membership_network],
+                                        v_array, ax=ax, layout=nx.spring_layout, node_positions=node_positions, highlight_cluster="Unsus")
+                    plt.axis('off')
+                    my_file = f'layered_network_{t_index}.png'
+                    save_path = NETWORK_PATHS + "\\" + i + "\\" + str(index)
+                    if not os.path.exists(save_path):
+                        os.mkdir(save_path)
+                    fig.savefig(os.path.join(save_path, my_file))
+                plt.close('all')

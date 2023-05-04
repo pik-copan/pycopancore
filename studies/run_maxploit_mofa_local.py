@@ -337,7 +337,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     # print('\n runner starting')
     r = Runner(model=model)
     start = time()
-    traj = r.run(t_1=timeinterval, dt=timestep)
+    traj = r.run(t_1=timeinterval + timestep, dt=timestep)
     # runtime = dt.timedelta(seconds=(time() - start))
     # print('runtime: {runtime}'.format(**locals()))
 
