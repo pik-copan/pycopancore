@@ -25,7 +25,7 @@ if old_run:
 
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "injunctive_timsecale"
+experiment_name = "harvest"
 
 # path to cluster data
 # PATH = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
@@ -120,7 +120,7 @@ RAW_PATH = PATH + "/raw"
 
 TRAJ_PATH = PATH + "/traj"
 
-RES_LOAD_PATH = PATH + "/res/stateval_results2.pkl"
+RES_LOAD_PATH = PATH + "/res/stateval_results3.pkl"
 print("Loading data...")
 data = pd.read_pickle(RES_LOAD_PATH)
 print("Done loading data!")

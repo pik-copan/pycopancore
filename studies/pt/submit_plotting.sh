@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --qos=short
-#SBATCH --job-name=plot_injunctive_timescale
+#SBATCH --job-name=plot_harvest
 #SBATCH --account=copan
 #SBATCH --ntasks=1
 #SBATCH --exclusive
-#SBATCH --output=plot_injunctive_timescale-%j.out
-#SBATCH --error=plot_injunctive_timescale-%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/plots/injunctive_timescale
+#SBATCH --output=plot_plot_harvest-%j.out
+#SBATCH --error=plot_plot_harvest-%j.err
+#SBATCH --workdir=/p/projects/copan/users/maxbecht/plots/plot_harvest
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"

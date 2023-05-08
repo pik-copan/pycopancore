@@ -39,7 +39,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "injunctive_timescale_final"
+experiment_name = "full_norm_2groups"
 # how to call postprocessed results
 post_process_filename = "stateval_results.pkl"
 
@@ -112,7 +112,7 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [100]
+timeinterval = [50]
 timestep = [0.1]
 
 # culture
@@ -120,8 +120,8 @@ timestep = [0.1]
 # [0.5]
 descriptive_majority_threshold = [0.5]
 injunctive_majority_threshold = [0.5]
-weight_descriptive = [0]
-weight_injunctive = [1]
+weight_descriptive = [0.5]
+weight_injunctive = [0.5]
 weight_harvest = [0]
 
 # logit
@@ -129,15 +129,15 @@ weight_harvest = [0]
 k_value = [3]  # reproduces probs of exploit for gamma = 1
 
 # updating
-average_waiting_time = [0.1, 1, 10]
-update_probability = [0.25, 0.5, 0.75, 1]
+average_waiting_time = [1]
+update_probability = [0.25]
 
 # groups:
-group_meeting_interval = [0.1, 1, 10]
-group_update_probability = [0.25, 0.5, 0.75, 1]
+group_meeting_interval = [1]
+group_update_probability = [0.25]
 # [1, 2, 4, 8, 16, 32, 64, 128]
-n_group_memberships = [4]
-ng_total = [16]  # number of total groups
+n_group_memberships = [1]
+ng_total = [2]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -219,7 +219,7 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        Injunctive timescales again with right updating times.
+        Full model, thresholds, 1 to 2.
         """)
     print("Done saving readme.txt.")
 
