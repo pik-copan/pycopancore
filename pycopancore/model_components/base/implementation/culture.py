@@ -9,13 +9,13 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
+from networkx import Graph
+
 # only used in this component, not in others:
-from ... import abstract
-from ....private import unknown
+from pycopancore.model_components import abstract
+from pycopancore.private._expressions import unknown
 
 from .. import interface as I
-
-from networkx import Graph
 
 
 class Culture (I.Culture, abstract.Culture):

@@ -15,11 +15,17 @@ variables in special list to be accessed by the runner.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import abstract
-from ... import Variable, ReferenceVariable, SetVariable, \
-                ODE, Explicit, Step, Event, OrderedSet
-from ...private import _AbstractProcess, unknown, _expressions, \
-    _AbstractEntityMixin, _AbstractProcessTaxonMixin
+from pycopancore.model_components import abstract
+from pycopancore.data_model import Variable, ReferenceVariable, SetVariable, \
+    OrderedSet
+from pycopancore.process_types import ODE, Explicit, Step, Event
+
+from pycopancore.private._abstract_process import _AbstractProcess
+from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
+from pycopancore.private._abstract_process_taxon_mixin \
+    import _AbstractProcessTaxonMixin
+
+from pycopancore.private._expressions import unknown, get_vars
 import gc
 import inspect
 import re
@@ -310,7 +316,7 @@ class ModelLogics (object):
                                            + str(target.owning_class) \
                                            + str(composed_class)
                                 if isinstance(p.specification, list):
-                                    deps = _expressions.get_vars(p.specification[i])
+                                    deps = get_vars(p.specification[i])
                                     print("      Derivative of",
                                           target.target_variable,
                                           "directly depends on", deps)
@@ -353,7 +359,7 @@ class ModelLogics (object):
                                            "reference starts at a wrong " \
                                            "entity-type/taxon:"
                                 if isinstance(p.specification, list):
-                                    deps = _expressions.get_vars(p.specification[i])
+                                    deps = get_vars(p.specification[i])
                                     print("      Target var.",
                                           target.target_variable,
                                           "directly depends on", deps)

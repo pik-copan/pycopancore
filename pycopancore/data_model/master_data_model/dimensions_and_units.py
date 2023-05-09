@@ -9,8 +9,8 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import Dimension
-from .. import Unit, unity
+from pycopancore.data_model.dimension import Dimension
+from pycopancore.data_model.unit import Unit, unity
 
 
 class DimensionsAndUnits:
@@ -107,7 +107,7 @@ class DimensionsAndUnits:
     percent = pct = (unity / 100).named("per cent", symbol="%")
     
     area = (length**2).named("area", "2D spatial dimension")
-    square_kilometers = (kilometers**2).named("square kilometers", symbol="km²")
+    km2 = square_kilometers = (kilometers**2).named("square kilometers", symbol="km²")
     hectares = (meters**2 * 1e4).named("hectares", symbol="ha")
     
     volume = (length**3).named("volume", "3D spatial dimension")

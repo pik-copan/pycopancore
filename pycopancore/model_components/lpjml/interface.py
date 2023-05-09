@@ -9,11 +9,12 @@
 
 from typing import List, Dict
 
-from ... import master_data_model as D
-from ...data_model import Dimension, Unit
+from pycopancore.data_model import master_data_model as D
+from pycopancore.data_model.dimension import Dimension
+from pycopancore.data_model.unit import Unit
 from .. import reg_decision_making as DM
 
-from ... import Variable
+from pycopancore.data_model.variable import Variable
 
 import numpy as np
 
@@ -41,9 +42,9 @@ class Model (object):
 #
 class Cell (object):
     """Interface for Cell entity type mixin."""
-    
+
     # TODO: add list of all forseeable possible variables that will be used in the project
-    
+
     # endogenous variables:
     lpjml_grid_cell_ids = Variable(
         "LPJmL grid cell ids",

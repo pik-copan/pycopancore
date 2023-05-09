@@ -10,9 +10,9 @@
 # License: BSD 2-clause license
 
 # only used in this component, not in others
-from ... import abstract
+from pycopancore.model_components import abstract
 # from .... import master_data_model as D
-from ....private import unknown
+from pycopancore.private._expressions import unknown
 
 from .. import interface as I
 

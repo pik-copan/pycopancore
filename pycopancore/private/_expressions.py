@@ -19,25 +19,29 @@ import sympy as sp
 from sympy.functions.elementary.piecewise import ExprCondPair
 import scipy.special
 
-from .. import data_model as D
-from .. import private
-
-from numba import njit
+from pycopancore import data_model as D
 
 
 class _Unknown(object):
+
     def __str__(self):
         return "unknown"
+
     def update(self, *args):
         return self
+
 
 unknown = _Unknown()
 
+
 class _Unset(object):
+
     def __str__(self):
         return "unset"
+
     def update(self, *args):
         return self
+
 
 unset = _Unset()
 
@@ -49,7 +53,6 @@ def aggregation(npfunc):
 
     # TODO: add docstring to function
 
-    @njit
     def func(values, lens):
         """Dummy docstring"""
 
@@ -83,7 +86,6 @@ name2aggregation = {name: aggregation(func)
 
 # hierarchical broadcasting:
 
-@njit
 def _broadcast(values, lens):
     """Dummy docstring"""
     # TODO: add docstring to function

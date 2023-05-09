@@ -9,8 +9,8 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from . import Variable
-from ..private import _DotConstruct, unknown
+from pycopancore.data_model.variable import Variable
+from pycopancore.private._expressions import _DotConstruct, unknown
 
 # TODO: complete logics, set other Variable attributes, validate etc.
 

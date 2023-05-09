@@ -12,11 +12,11 @@ remove these instructions.
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 # Use variables from the master data model wherever possible
-from ... import master_data_model as D
+from pycopancore.data_model import master_data_model as D
 
 # from ..MODEL_COMPONENT import interface as MODEL_COMPONENT
-from ... import Variable
-from ..lpjml import interface as L
+from pycopancore.data_model.variable import Variable
+from pycopancore.model_components.lpjml import interface as LPJmL
 import numpy as np
 
 
@@ -46,12 +46,12 @@ class Model (object):
 class Cell (object):
     """Interface for Cell entity type mixin."""
 
-    # pft_harvestc = L.Cell.pft_harvestc
-    crop_yield = L.Cell.pft_harvestc.copy()
+    # pft_harvestc = LPJmL.Cell.pft_harvestc
+    crop_yield = LPJmL.Cell.pft_harvestc.copy()
     # crop_yield = Variable('current yield', 'yield in given LPJmL cell')
     # soil_carbon = Variable('current soilC value', 'proxy for soil health')
-    soil_carbon = L.Cell.cftfrac.copy() # TODO this is not soil_carbon, adjust
-    lpjml_cell_id = L.Cell.lpjml_grid_cell_ids.copy()
+    soil_carbon = LPJmL.Cell.cftfrac.copy() # TODO this is not soil_carbon, adjust
+    lpjml_cell_id = LPJmL.Cell.lpjml_grid_cell_ids.copy()
     # lpjml_cell_id = Variable('lpjml cell id', 'given by lpjml') 
     # core_cell_id = Variable('core cell id', 'lpjml cell mapped to core')
 

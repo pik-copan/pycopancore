@@ -13,7 +13,8 @@ from functools import reduce
 import operator
 from numpy import log10
 
-from . import dimension, dimensional_quantity, nondim
+from pycopancore.data_model.dimension import nondim
+from pycopancore.data_model import dimensional_quantity
 
 
 class Unit (object):
@@ -49,7 +50,7 @@ class Unit (object):
             return reduce(operator.mul,
                           [unit.dimension**ex
                            for unit, ex in self.exponents.items()],
-                          dimension.nondim)
+                          nondim)
 
     def __init__(self,
                  name="",

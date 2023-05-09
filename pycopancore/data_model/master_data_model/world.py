@@ -9,27 +9,31 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from . import ENV, MET
-from . import gigatonnes_carbon as GtC
-from . import square_kilometers as km2
+from pycopancore.data_model.master_data_model.environment \
+    import Environment as ENV
+from pycopancore.data_model.master_data_model.metabolism \
+    import Metabolism as MET
+
+from pycopancore.data_model.master_data_model.dimensions_and_units \
+    import DimensionsAndUnits as DAU
 
 
 class World:
 
     # natural:
     
-    land_area = ENV.land_area.copy(default=1.5e8*km2)
-    atmospheric_carbon = ENV.atmospheric_carbon.copy(default=589*GtC)
+    land_area = ENV.land_area.copy(default=1.5e8*DAU.km2)
+    atmospheric_carbon = ENV.atmospheric_carbon.copy(default=589*DAU.GtC)
     surface_air_temperature = ENV.surface_air_temperature.copy()
-    ocean_carbon = ENV.ocean_carbon.copy(default=38000*GtC)
-    upper_ocean_carbon = ENV.upper_ocean_carbon.copy(default=900*GtC)
-    deep_ocean_carbon = ENV.deep_ocean_carbon.copy(default=37100*GtC)
-    terrestrial_carbon = ENV.terrestrial_carbon.copy(default=2550*GtC)
-    soil_carbon = ENV.soil_carbon.copy(default=2000*GtC)
-    biomass_carbon = ENV.biomass_carbon.copy(default=550*GtC)
+    ocean_carbon = ENV.ocean_carbon.copy(default=38000*DAU.GtC)
+    upper_ocean_carbon = ENV.upper_ocean_carbon.copy(default=900*DAU.GtC)
+    deep_ocean_carbon = ENV.deep_ocean_carbon.copy(default=37100*DAU.GtC)
+    terrestrial_carbon = ENV.terrestrial_carbon.copy(default=2550*DAU.GtC)
+    soil_carbon = ENV.soil_carbon.copy(default=2000*DAU.GtC)
+    biomass_carbon = ENV.biomass_carbon.copy(default=550*DAU.GtC)
     harvestable_biomass_carbon = ENV.harvestable_biomass_carbon.copy()
     other_biomass_carbon = ENV.other_biomass_carbon.copy()
-    fossil_carbon = ENV.fossil_carbon.copy(default=1500*GtC)
+    fossil_carbon = ENV.fossil_carbon.copy(default=1500*DAU.GtC)
     discovered_fossil_reserves = ENV.discovered_fossil_reserves.copy()
     undiscovered_fossil_reserves = ENV.undiscovered_fossil_reserves.copy()
     
