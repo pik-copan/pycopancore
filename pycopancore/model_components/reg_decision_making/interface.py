@@ -129,11 +129,11 @@ class Individual (object):
 # Process taxa
 
 
-class Culture (object):
+class Culture(object):
     """Interface for Culture process taxon mixin."""
 
     acquaintance_network = D.CUL.acquaintance_network
-    #TODO make an array of all individual agent decisions and respective cell ids
+    # TODO make an array of all individual agent decisions and respective cell ids
     landuse_decisions = Variable(
         "landuse decision bands",
         "array of landuse bands and cell ids",

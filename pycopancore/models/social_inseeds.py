@@ -51,7 +51,7 @@ class SocialSystem(base.SocialSystem):
 
 
 # TODO: list all mixin classes needed:
-class Cell(decision_making.Cell, # TODO why is cell not linked?
+class Cell(decision_making.Cell,  # TODO why is cell not linked?
            base.Cell):
     """Cell entity type."""
     pass
