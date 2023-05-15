@@ -15,7 +15,7 @@ from pycopancore.private._abstract_process_taxon_mixin import \
 from pycopancore.data_model.ordered_set import OrderedSet
 
 from pycopancore.model_components import abstract
-from pycopancore.private._expressions import unknown
+from pycopancore.private._simple_expressions import unknown
 
 from .. import interface as I
 

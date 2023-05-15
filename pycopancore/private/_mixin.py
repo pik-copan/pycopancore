@@ -18,7 +18,7 @@ It sets the basic structure of mixins (entity types, process taxa).
 # - in __init__, add logics that sets all variables to either their specified
 #   values or their default values as given in Variable.
 
-from pycopancore.data_model import variable
+from pycopancore.data_model.variable import Variable
 from pycopancore.private._expressions import _DotConstruct, aggregation_names
 
 import inspect
@@ -57,7 +57,7 @@ class _MixinType(type):
             for c in inspect.getmro(cls)[1:]:
                 try:
                     res = c.__getattribute__(c, name)
-                    if isinstance(res, variable.Variable):
+                    if isinstance(res, Variable):
                         return res
                 except BaseException:
                     pass
@@ -120,7 +120,7 @@ class _Mixin(object, metaclass=_MixinType):
         for key, val in kwargs.items():
             if hasattr(self.__class__, key):
                 clsattr = getattr(self.__class__, key)
-                if isinstance(clsattr, variable.Variable):
+                if isinstance(clsattr, Variable):
                     varvals[clsattr] = val
                     continue
             print("unexpected (misspelled?) keyword argument",key,"=",val," (was this variable properly defined in the model?)")
@@ -135,7 +135,7 @@ class _Mixin(object, metaclass=_MixinType):
         """assign default values to all unset Variables"""
         for var in self.variables:
             if (not hasattr(self, var.codename)  # this happens for unset properties
-                or isinstance(getattr(self, var.codename), variable.Variable)):
+                or isinstance(getattr(self, var.codename), Variable)):
                 # class attribute was returned by getattr,
                 # hence object attribute has not been assigned a value yet. 
                 try:
@@ -150,7 +150,7 @@ class _Mixin(object, metaclass=_MixinType):
     def set_value(self, var, value):
         """Dummy docstring"""
         # TODO: add docstring to method
-        assert isinstance(var, variable.Variable), \
+        assert isinstance(var, Variable), \
             "variable must be a Variable object"
         var.set_value(self, value)
 

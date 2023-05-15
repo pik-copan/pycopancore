@@ -1,4 +1,4 @@
-"""Cell entity type mixing class template.
+"""World entity type mixing class template.
 
 TODO: adjust or fill in code and documentation wherever marked by "TODO:",
 then remove these instructions
@@ -14,27 +14,27 @@ then remove these instructions
 # License: BSD 2-clause license
 
 from .. import interface as I
-from pycopancore.process_types import Event
-import numpy as np
-
 # from .... import master_data_model as D
 
 
-class Cell (I.Cell):
-    """Cell entity type mixin implementation class."""
+class World (I.World):
+    """World entity type mixin implementation class."""
 
     # standard methods:
 
     def __init__(self,
-                 *,
-                 eating_stock=100,
                  **kwargs):
-        """Initialize an instance of Cell."""
+        """Initialize an instance of World."""
         super().__init__(**kwargs)
-        self.eating_stock = eating_stock
 
-        # Following method is defined in abstract_entity_mixin which is
-        # inherited only by mixing in the model:
-        self.assert_valid()
+    def deactivate(self):
+        """Deactivate a world."""
+        super().deactivate()  # must be the last line
+
+    def reactivate(self):
+        """Reactivate a world."""
+        super().reactivate()  # must be the first line
+
+    # process-related methods:
 
     processes = []

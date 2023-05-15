@@ -97,8 +97,12 @@ class Individual (object):
     # taken from ronja, what is it?
     # TODO chat with Ronja abput how these two could be set up
     sust_identity_vals = Variable('parameter for general enclinedness towards\
-                                  sustainable farming')
-    sust_inertia_vals = Variable('parameter for change aversion')
+                                  sustainable farming',
+                                  # TODO: check if this is the right
+                                  'sust. identity of agent')
+    sust_inertia_vals = Variable('parameter for change aversion',
+                                 # TODO: check if this is the right
+                                 'sust. inertia of agent')
     sust_pbc = Variable('perceived behavioural control', 'pbc of sust. AFT')
 
     # Weights for traditionalist AFT
@@ -111,9 +115,14 @@ class Individual (object):
     w_trad_norm = Variable('norm weight of trad. AFT',
                            'relative importance of social norm for behaviour')
     trad_identity_vals = Variable('parameter for general enclinedness towards\
-                                  sustainable farming')
-    trad_inertia_vals = Variable('parameter for change aversion')
-    trad_pbc = Variable('perceived behavioural control', 'pbc of trad. AFT')
+                                  sustainable farming',
+                                  # TODO: check if this is the right
+                                  'trad. identity of agent')
+    trad_inertia_vals = Variable('parameter for change aversion',
+                                 # TODO: check if this is the right
+                                 'trad. inertia of agent')
+    trad_pbc = Variable('perceived behavioural control',
+                        'pbc of trad. AFT')
     # endogenous variables:
         
     # TODO: use variables from the master data model wherever possible
@@ -148,5 +157,7 @@ class Culture(object):
                                    """average number of time points per time\
                                    where some individuals update their landuse\
                                    style""",
+                                   # TODO: check if this is the right
+                                   "landuse update rate",
                                    unit=D.years**(-1), default=1 / D.years,
-                                   lower_bound=0)   
+                                   lower_bound=0)

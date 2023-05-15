@@ -25,7 +25,8 @@ from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
 from pycopancore.private._abstract_process_taxon_mixin \
     import _AbstractProcessTaxonMixin
 
-from pycopancore.private._expressions import unknown, get_vars
+from pycopancore.private._simple_expressions import unknown
+from pycopancore.private._expressions import get_vars
 import gc
 import inspect
 import re

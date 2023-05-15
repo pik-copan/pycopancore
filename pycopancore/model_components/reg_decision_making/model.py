@@ -19,7 +19,7 @@ from .implementation import SocialSystem, Cell, Individual  # TODO: think about
 # if social system is the more appropriate entity, or if I stick with culture 
 # (which is from the taxon category)
 # import all needed process taxon implementation classes:
-from .implementation import Culture 
+from .implementation import Culture
 
 
 class Model (I.Model):

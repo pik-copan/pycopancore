@@ -8,18 +8,12 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 from typing import List, Dict
-
-from pycopancore.data_model import master_data_model as D
-from pycopancore.data_model.dimension import Dimension
-from pycopancore.data_model.unit import Unit
-from .. import reg_decision_making as DM
+import numpy as np
 
 from pycopancore.data_model.variable import Variable
 
-import numpy as np
 
-
-class Model (object):
+class Model:
     """Interface for Model mixin."""
 
     # metadata:
@@ -36,11 +30,12 @@ class Model (object):
     # - implementation.Model lists these entity-types and process taxons
 
 
-# TODO: For the following variables set default, boundaries, types and other properties (see doc)
-#
-# Entity types
-#
-class Cell (object):
+# Entity type world
+class World:
+    pass
+
+
+class Cell:
     """Interface for Cell entity type mixin."""
 
     # TODO: add list of all forseeable possible variables that will be used in the project
@@ -49,75 +44,70 @@ class Cell (object):
     lpjml_grid_cell_ids = Variable(
         "LPJmL grid cell ids",
         "List of ids of LPJmL cells that belong to this macro cell",
-        datatype = List[int],
-        default = [])
-    
+        datatype=List[int],
+        default=[])
+
     cftfrac = Variable(
         "cftfrac bands",
         "array of cftfrac bands",
-        datatype = np.array,
-        array_shape = (32, ))
+        datatype=np.array,
+        array_shape=(32, ))
 
-    # exogenous variables / parameters:
-    # landuse = Variable(
-        # "landuse bands",
-        # "array of landuse bands",
-        # datatype = np.array,
-        # array_shape = (64, ))
-    
     with_tillage = Variable(
         "landuse bands",
         "array of landuse bands",
-        datatype = np.array,
-        array_shape = (1, ))
+        datatype=np.array,
+        array_shape=(1, ))
 
-    landuse = DM.Culture.landuse_decisions.copy()
+    landuse = Variable(
+        "landuse decision bands",
+        "array of landuse bands and cell ids",
+        datatype=np.array
+    )
+
+    # landuse = DM.Culture.landuse_decisions.copy()
 
     pft_harvestc = Variable(
         "yields of different pfts",
         "array of pft_harvest bands",
-        datatype = np.array,
-        array_shape = (32, ))
+        datatype=np.array,
+        array_shape=(32, ))
 
 
 #
 # Process taxa
 #
-class Environment (object):
+class Environment:
     """Interface for Environment process taxon mixin."""
 
-    # endogenous variables:    
+    # endogenous variables:
     out_dict = Variable(
-        "output from lpjml", 
+        "output from lpjml",
         """output dictionary from lpjml, like e.g. cftfrac""",
-        datatype = Dict[str, np.ndarray])
-    
+        datatype=Dict[str, np.ndarray])
+
     # TODO does this work?
     # coupler = Coupler(config_file=config_coupled_fn)
-    
+
     old_out_dict = Variable(
-        "old output from lpjml", 
+        "old output from lpjml",
         """output dictionary from lpjml, like e.g. cftfrac""",
-        datatype = Dict[str, np.ndarray])
-    
+        datatype=Dict[str, np.ndarray])
 
     # exogenous variables / parameters:
     delta_t = Variable(
         "time step",
         """time step has to be given in study script""")
-    
+
     start_year = Variable(
         "coupled start year",
-        """"start year of the coupled simulation, given by end year of lpjml spinup""")
+        """start year of the coupled simulation, given by end year of lpjml spinup""")
 
     end_year = Variable(
-        "coupled end year", 
+        "coupled end year",
         """end year of coupled simulation""")
-    
+
     in_dict = Variable(
-        "input to lpjml", 
+        "input to lpjml",
         """input dictionary to lpjml with values on e.g. land use""",
-        datatype = Dict[str, np.ndarray])
-
-
-
+        datatype=Dict[str, np.ndarray])

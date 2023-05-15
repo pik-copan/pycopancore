@@ -18,7 +18,8 @@ from sympy import Symbol
 
 from pycopancore.data_model.dimensional_quantity import DimensionalQuantity
 from pycopancore.data_model.unit import Unit
-from pycopancore.private._expressions import unset, unknown
+from pycopancore.private._simple_expressions import unset, unknown
+
 
 EPS = 1e-10
 """infinitesimal value for ensuring strict bounds"""
@@ -435,6 +436,10 @@ class Variable(Symbol):
                     self.set_value(i, v)  # does the conversion
 
     def _get_instances(self, instances):
+        from pycopancore.private._abstract_entity_mixin import \
+            _AbstractEntityMixin
+        from pycopancore.private._abstract_process_taxon_mixin import \
+            _AbstractProcessTaxonMixin
         """converts argument into a set of instances
         (entities or process taxa)"""
         if instances is None:  # use all that have this variable
@@ -445,8 +450,8 @@ class Variable(Symbol):
                 instances.update(self._get_instances(k))
                 instances.update(self._get_instances(i))
         elif isinstance(instances,
-                        (private._AbstractEntityMixin,
-                         private._AbstractProcessTaxonMixin)):
+                        (_AbstractEntityMixin,
+                         _AbstractProcessTaxonMixin)):
             instances = set([instances])
         else:
             instances = set(instances)

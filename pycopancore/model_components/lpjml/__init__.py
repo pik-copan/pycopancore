@@ -12,7 +12,6 @@ TODO: There is nothing to do here.
 # URL: <http://www.pik-potsdam.de/copan/software>
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
-
 from . import interface
 
 # export all implementation classes:

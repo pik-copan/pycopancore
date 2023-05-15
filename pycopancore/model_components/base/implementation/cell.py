@@ -11,7 +11,7 @@
 
 # only used in this component, not in others:
 from pycopancore.model_components import abstract
-from pycopancore.private._expressions import unknown
+from pycopancore.private._simple_expressions import unknown
 
 # typical imports for implementation classes:
 from .. import interface as I

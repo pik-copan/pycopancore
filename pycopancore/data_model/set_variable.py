@@ -10,7 +10,8 @@
 # License: BSD 2-clause license
 
 from pycopancore.data_model.variable import Variable
-from pycopancore.private._expressions import _DotConstruct, unknown
+from pycopancore.private._expressions import _DotConstruct
+from pycopancore.private._simple_expressions import unknown
 
 # TODO: complete logics, set other Variable attributes, validate etc.
 

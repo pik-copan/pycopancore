@@ -19,31 +19,8 @@ import sympy as sp
 from sympy.functions.elementary.piecewise import ExprCondPair
 import scipy.special
 
+from ._simple_expressions import unknown
 from pycopancore import data_model as D
-
-
-class _Unknown(object):
-
-    def __str__(self):
-        return "unknown"
-
-    def update(self, *args):
-        return self
-
-
-unknown = _Unknown()
-
-
-class _Unset(object):
-
-    def __str__(self):
-        return "unset"
-
-    def update(self, *args):
-        return self
-
-
-unset = _Unset()
 
 
 # hierarchical aggregation functions:
@@ -67,6 +44,7 @@ def aggregation(npfunc):
         return list(results)
 
     return func
+
 
 name2numpy = {
     "all": np.all,
