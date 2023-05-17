@@ -45,11 +45,12 @@ class Earth:
 
     def get_cells(self, model, **kwargs):
         """get cell instances for each corresponding cell via numpy views"""
+        # https://docs.xarray.dev/en/stable/user-guide/indexing.html#copies-vs-views
         return [model.Cell(**kwargs,
-                           input=self.input.sel(cell=cell),
-                           output=self.output.sel(cell=cell),
-                           neighbourhood=self.neighbourhood.sel(cell=cell))
-                for cell in (self.lpjml.get_cells(id=True))]
+                           input=self.input.isel(cell=cell),
+                           output=self.output.isel(cell=cell),
+                           neighbourhood=self.neighbourhood.isel(cell=cell))
+                for cell in (self.lpjml.get_cells(id=False))]
 
     processes = [
         Step("lpjml step",
