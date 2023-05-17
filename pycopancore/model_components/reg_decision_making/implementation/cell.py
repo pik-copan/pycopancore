@@ -62,7 +62,6 @@ class Cell (I.Cell):
         soil_carbon = 1
         return soil_carbon
     
-    landuse_decisions = np.array
 
     # lpjml_cell_id = Variable('lpjml cell id', 'given by lpjml')
     # in case we want to use different cells than the ones from lpjml
