@@ -96,8 +96,11 @@ class Culture (I.Culture):
             agent_i.acquaintance_network_state = descriptive_norm
             if descriptive_norm > self.descriptive_majority_threshold:
                 descriptive_norm = 1
+            elif descriptive_norm == self.descriptive_majority_threshold:
+                descriptive_norm = np.random.choice([0, 1])
             else:
                 descriptive_norm = 0
+
 
             # descriptive_norm = agent_i.descriptive_norm_binary
             if descriptive_norm == 0:
@@ -119,8 +122,9 @@ class Culture (I.Culture):
                 + self.weight_injunctive * injunctive_norm\
                 + self.weight_harvest * harvest
             # print(f"x: {x}")
+            # print(self.weight_descriptive, self.weight_injunctive, self.weight_harvest)
             probability_to_switch = expit(self.k_value*x)
-            # print(f"Probability for {agent_i} to be sustainable: {probability_to_switch}.")
+            # print(f"Probability for {agent_i} to switch: {probability_to_switch}.")
             # print(injunctive_norm, descriptive_norm, probability)
             if np.random.random() < probability_to_switch:
                 agent_i.behaviour = int(not agent_i.behaviour)

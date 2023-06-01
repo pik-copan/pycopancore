@@ -25,6 +25,7 @@ class Group(I.Group):
     def next_group_meeting_time(self, t):
         """Get the next meeting time"""
         return t + self.group_meeting_interval
+        print(t + self.group_meeting_interval)
 
     def group_update(self, unused_t):
         if not self.culture.fix_group_attitude:
@@ -35,15 +36,25 @@ class Group(I.Group):
 
     def update_group_attitude(self, group_j):
         """Update a groups attitude based on the mean_group_behaviour."""
-        if self.culture.attitude_on:
-            mean_group_value = self.mean_group_attitude
+        # print("\n\n")
+        # print(group_j)
+        # print(len(list(self.group_members)))
+        if list(self.group_members):
+            if self.culture.attitude_on:
+                mean_group_value = self.mean_group_attitude
+            else:
+                mean_group_value = group_j.mean_group_behaviour
+            # print("Before:", mean_group_value, group_j.group_attitude)
+            if mean_group_value > self.culture.injunctive_majority_threshold: # get the mean in terms of true/false for adjusting the global attitude later
+                group_j.group_attitude = 1
+            elif mean_group_value == self.culture.injunctive_majority_threshold:
+                group_j.group_attitude = np.random.choice([0, 1])
+            else:
+                group_j.group_attitude = 0
+            # print("After:", mean_group_value, group_j.group_attitude)
         else:
-            mean_group_value = self.mean_group_behaviour
-        if mean_group_value > self.culture.injunctive_majority_threshold: # get the mean in terms of true/false for adjusting the global attitude later
-            group_j.group_attitude = 1
-        else:
-            group_j.group_attitude = 0
-
+            group_j.group_attitude = group_j.group_attitude
+        # print("\n\n")
 
     def get_mean_group_attitude(self, unused_t):
         """Calculate the mean attitude of individuals in a group."""
@@ -66,6 +77,7 @@ class Group(I.Group):
                     n += 1
             N = len(list(self.group_members))
             self.mean_group_behaviour = n/N
+            # print(n/N)
 
         # else: group keeps previous variable
 

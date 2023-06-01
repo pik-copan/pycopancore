@@ -1,12 +1,13 @@
 #!/bin/bash
 #SBATCH --qos=short
-#SBATCH --job-name=full_norm_2groups
+#SBATCH --job-name=full_model_groups_0
 #SBATCH --account=copan
 #SBATCH --ntasks=16
 #SBATCH --exclusive
-#SBATCH --output=full_norm_2groups-%j.out
-#SBATCH --error=full_norm_2groups-%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit2/full_norm_2groups
+#SBATCH --output=full_model_groups_0%j.out
+#SBATCH --error=full_model_groups_0%j.err
+#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit3/full_model_groups_0
+
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"

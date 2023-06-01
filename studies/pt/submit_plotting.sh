@@ -1,12 +1,13 @@
 #!/bin/bash
-#SBATCH --qos=short
-#SBATCH --job-name=plot_harvest
+#SBATCH --qos=priority
+#SBATCH --job-name=plot-full_model_thresholds_0
 #SBATCH --account=copan
 #SBATCH --ntasks=1
 #SBATCH --exclusive
-#SBATCH --output=plot_plot_harvest-%j.out
-#SBATCH --error=plot_plot_harvest-%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/plots/plot_harvest
+#SBATCH --output=plot-full_model_thresholds_0-%j.out
+#SBATCH --error=plot-full_model_thresholds_0-%j.err
+#SBATCH --workdir=/p/projects/copan/users/maxbecht/plots/
+#SBATCH --time=02:00:00
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"

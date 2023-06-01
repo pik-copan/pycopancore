@@ -39,7 +39,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "full_norm_2groups"
+experiment_name = "full_model_groups_0"
 # how to call postprocessed results
 post_process_filename = "stateval_results.pkl"
 
@@ -54,7 +54,8 @@ post_process_filename = "stateval_results.pkl"
 
 # cluster
 # as not to do any damage, folders have to be created manually
-SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
+# SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
+SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit3/{experiment_name}"
 assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exist."
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
@@ -104,7 +105,7 @@ group_initialisation = [1]  # 0 or 1
 """1 means that groups are initialised randomly.
 0 means that a certain percentage of groups starts a way.
 Note that this variable is a toggle."""
-fix_group_attitude = [0, 1]  # into boolean, i.e. 1 = True
+fix_group_attitude = [0]  # into boolean, i.e. 1 = True
 """Does not allow the initial group attitude to change,
 i.e. group becomes a norm entitity."""
 
@@ -112,17 +113,17 @@ i.e. group becomes a norm entitity."""
 # seed = 1
 
 # runner
-timeinterval = [50]
+timeinterval = [100]
 timestep = [0.1]
 
 # culture
-# list(np.arange(0,1,0.1))
+# list(np.arange(0.45, 0.55, 0.01))
 # [0.5]
 descriptive_majority_threshold = [0.5]
 injunctive_majority_threshold = [0.5]
-weight_descriptive = [0.5]
-weight_injunctive = [0.5]
-weight_harvest = [0]
+weight_descriptive = [0.33]
+weight_injunctive = [0.33]
+weight_harvest = [0.33]
 
 # logit
 # k_value = 2.94445 #produces probabilities of roughly 0.05, 0.5, 0.95
@@ -135,14 +136,14 @@ update_probability = [0.25]
 # groups:
 group_meeting_interval = [1]
 group_update_probability = [0.25]
-# [1, 2, 4, 8, 16, 32, 64, 128]
-n_group_memberships = [1]
-ng_total = [2]  # number of total groups
+# [1, 2, 4, 8, 16, 32, 64, 128, 256]
+n_group_memberships = [1, 2, 4, 8, 16, 32, 64, 128, 256]
+ng_total = [1, 2, 4, 8, 16, 32, 64, 128, 256]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
-p = [0.05] # link density for random networks; wiedermann: 0.05
-
+# p = [0.05] # link density for random networks; wiedermann: 0.05
+p = [0.05]
 
 ### parameters that usually will not be changed ###
 # individuals
@@ -219,7 +220,7 @@ if not os.path.exists(SAVE_FOLDER + "/" + 'readme.txt'):
     print("Saving readme.txt.")
     with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
         f.write("""
-        Full model, thresholds, 1 to 2.
+
         """)
     print("Done saving readme.txt.")
 
@@ -318,7 +319,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
     # for plausibility reasons
     if n_group_memberships > ng_total:
-        n_group_memberships = ng_total
+        n_group_memberships = 1
 
     # group_membership network with more than one group membership
     for i in individuals:
@@ -365,33 +366,35 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
     t = np.array(traj["t"]).flatten()
 
     # save networks
-    print("Saving networks.")
-    network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
-    network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
-    RAW_FOLDER = os.path.dirname(filename)
-    SAVE_FOLDER = os.path.dirname(RAW_FOLDER)
-    file_ending = filename.split("raw/", 1)[1]
-    file_ending = file_ending.replace(".pkl", "")
-    NETWORK_PATH = SAVE_FOLDER + f"/networks"
-    if not os.path.exists(NETWORK_PATH):
-        os.mkdir(NETWORK_PATH)
-    NETWORK_PATH = NETWORK_PATH + f"/{file_ending}"
-    if not os.path.exists(NETWORK_PATH):
-        os.mkdir(NETWORK_PATH)
-    for counter, n in enumerate(network_list):
-        f = open(NETWORK_PATH + f"/{network_names[counter]}.pkl", "wb")
-        save_nx = nx.relabel_nodes(n, lambda x: str(x))
-        pickle.dump(save_nx, f)
-    print("Done saving networks.")
-    # save the states of the nodes at every 10 timesteps
-    print("Save node states.")
-    save_node_states = {
-        "Individual.behaviour": {str(e): tosave["Individual.behaviour"][e][0::100] for e in tosave["Individual.behaviour"].keys()},
-        "Group.group_attitude": {str(e): tosave["Group.group_attitude"][e][0::100] for e in tosave["Group.group_attitude"].keys()}
-    }
-    f = open(NETWORK_PATH + f"/node_states.pkl", "wb")
-    pickle.dump(save_node_states, f)
-    print("Done saving node states.")
+    save_networks = False
+    if save_networks:
+        print("Saving networks.")
+        network_list = [culture.acquaintance_network, culture.group_membership_network, inter_group_network]
+        network_names = ["culture.acquaintance_network", "culture.group_membership_network", "inter_group_network"]
+        RAW_FOLDER = os.path.dirname(filename)
+        SAVE_FOLDER = os.path.dirname(RAW_FOLDER)
+        file_ending = filename.split("raw/", 1)[1]
+        file_ending = file_ending.replace(".pkl", "")
+        NETWORK_PATH = SAVE_FOLDER + f"/networks"
+        if not os.path.exists(NETWORK_PATH):
+            os.mkdir(NETWORK_PATH)
+        NETWORK_PATH = NETWORK_PATH + f"/{file_ending}"
+        if not os.path.exists(NETWORK_PATH):
+            os.mkdir(NETWORK_PATH)
+        for counter, n in enumerate(network_list):
+            f = open(NETWORK_PATH + f"/{network_names[counter]}.pkl", "wb")
+            save_nx = nx.relabel_nodes(n, lambda x: str(x))
+            pickle.dump(save_nx, f)
+        print("Done saving networks.")
+        # save the states of the nodes at every 10 timesteps
+        print("Save node states.")
+        save_node_states = {
+            "Individual.behaviour": {str(e): tosave["Individual.behaviour"][e][0::100] for e in tosave["Individual.behaviour"].keys()},
+            "Group.group_attitude": {str(e): tosave["Group.group_attitude"][e][0::100] for e in tosave["Group.group_attitude"].keys()}
+        }
+        f = open(NETWORK_PATH + f"/node_states.pkl", "wb")
+        pickle.dump(save_node_states, f)
+        print("Done saving node states.")
 
     #save traj?
     # TRAJ_PATH = filename.replace(".pkl", "_traj.pkl")
@@ -518,3 +521,7 @@ handle.resave(EVA, post_process_filename)
 
 runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
+
+if not os.path.exists(SAVE_FOLDER + "/" + 'runtime.txt'):
+    with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
+        f.write(runtime)
