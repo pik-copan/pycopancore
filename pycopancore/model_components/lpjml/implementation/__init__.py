@@ -14,4 +14,4 @@ TODO: uncomment neccessary code wherever marked by the "TODO" flag.
 
 # export all provided entity type implementation mixin classes:
 from .cell import Cell
-from .earth import Earth
+from .world import World

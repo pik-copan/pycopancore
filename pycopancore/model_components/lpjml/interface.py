@@ -30,7 +30,7 @@ class Model:
 
 
 # Entity type world
-class Earth:
+class World:
     """Interface for World entity type mixin."""
     lpjml = None
 
@@ -73,4 +73,3 @@ class Cell:
         "neighbourhood of cells",
         datatype=LPJmLData
     )
-

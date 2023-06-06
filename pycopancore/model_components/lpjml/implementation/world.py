@@ -18,10 +18,15 @@ from .. import interface as I
 from pycopancore.process_types import Step
 
 
-class Earth:
-    """Earth entity type mixin implementation class."""
+class World(I.World):
+    """World entity type mixin implementation class."""
 
-    def __init__(self, lpjml):
+    def __init__(self,
+                 lpjml,
+                 **kwargs):
+        """Initialize an instance of World."""
+        super().__init__(**kwargs)
+
         self.lpjml = lpjml
         self.input = self.lpjml.read_input()
         self.output = self.lpjml.read_historic_output()
@@ -43,17 +48,17 @@ class Earth:
         if year == self.lpjml.config.lastyear:
             self.lpjml.close()
 
-    def get_cells(self, model, **kwargs):
-        """get cell instances for each corresponding cell via numpy views"""
+    def init_cells(self, model, **kwargs):
+        """Init cell instances for each corresponding cell via numpy views"""
         # https://docs.xarray.dev/en/stable/user-guide/indexing.html#copies-vs-views
-        return [model.Cell(**kwargs,
-                           input=self.input.isel(cell=cell),
+        return [model.Cell(input=self.input.isel(cell=cell),
                            output=self.output.isel(cell=cell),
-                           neighbourhood=self.neighbourhood.isel(cell=cell))
+                           neighbourhood=self.neighbourhood.isel(cell=cell),
+                           **kwargs)  # world = self
                 for cell in (self.lpjml.get_cells(id=False))]
 
     processes = [
         Step("lpjml step",
-             [I.Earth.output],
+             [I.World.output],
              [update, interact])
     ]

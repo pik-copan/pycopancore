@@ -42,12 +42,12 @@ config_coupled.set_coupled(sim_path,
                            coupled_year=1981,
                            coupled_input=["with_tillage",
                                           "landuse"],
-                           coupled_output=["cftfrac",
+                           coupled_output=["soilc",
                                            "pft_harvestc",
                                            "leaching"])
 
 # only for single cell runs
-# config_coupled.outputyear = 1982
+config_coupled.outputyear = 1980
 config_coupled.startgrid = startcell
 config_coupled.endgrid = endcell
 config_coupled.river_routing = False
@@ -69,11 +69,15 @@ run_lpjml(
 
 lpjml = LPJmLCoupler(config_file=config_coupled_fn)
 
+
+# TODO: L is only a temporary solution, should be replaced by the actual model
+world = L.World(lpjml=lpjml)
+# instantiate the cells, when replaced with actual model, one could also pass
+#    further entities to the cells, like the social system
+cells = world.init_cells(model=L)
+
 # instantiate the model and have it analyse its own structure:
 model = M.Model()
-
-earth = L.Earth(lpjml=lpjml)
-cells = earth.get_cells(model=L)
 
 delta_t = 1  # desired temporal resolution of the resulting output.
 
@@ -113,14 +117,14 @@ cul = M.Culture(
 
 # generate entities:
 
-world = M.World(
-    environment=env,
-    metabolism=met,
-    culture=cul,
-    )
+# world = M.World(
+#     environment=env,
+#     metabolism=met,
+#     culture=cul,
+# )
 soc = M.SocialSystem(world=world)
 
-cells = earth.get_cells(model=L)
+cells = world.init_cells(model=L)
 
 ind = M.Individual(cell=cell)
 

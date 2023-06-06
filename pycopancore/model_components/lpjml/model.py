@@ -11,8 +11,7 @@
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import Cell, Earth
-
+from .implementation import Cell, World
 
 
 class Model (I.Model):
@@ -20,7 +19,7 @@ class Model (I.Model):
 
     # mixins provided by this model component:
 
-    entity_types = [Earth, Cell]
+    entity_types = [World, Cell]
     """list of entity types augmented by this component"""
     process_taxa = []
     """list of process taxa augmented by this component"""
