@@ -71,8 +71,11 @@ class World(I.World):
             for neighbour in neighbour_matrix.isel(cell=icell).values:
                 if neighbour >= 0:  # Ignore negative values (-1 or NaN)
                     self.neighbourhood.add_edge(cells[icell], cells[neighbour])
-            cells[icell].neighbourhood = self.neighbourhood.subgraph(
-                [cells[icell]]
+
+        # Add neighbourhood subgraph for each cell
+        for icell in self.lpjml.get_cells(id=False):
+            cells[icell].neighbourhood = self.neighbourhood.neighbors(
+                cells[icell]
             )
 
         return cells
