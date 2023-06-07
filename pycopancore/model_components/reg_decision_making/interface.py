@@ -45,15 +45,21 @@ class Model (object):
 #
 class Cell (object):
     """Interface for Cell entity type mixin."""
+    # TODO adjust to communicate with from_lpj component when re-attaching L.
+    # pft_harvestc = L.Cell.pft_harvestc
+    # crop_yield = L.Cell.pft_harvestc.copy() 
+    crop_yield = Variable('current yield', 'yield in given LPJmL cell')
+    soil_carbon = Variable('current soilC value', 'proxy for soil health')
+    # soil_carbon = L.Cell.cftfrac.copy() # TODO this is not soilcarbon, adjust
+    # lpjml_cell_id = L.Cell.lpjml_grid_cell_ids.copy()
+    lpjml_cell_id = Variable('lpjml cell id', 'given by lpjml') 
+    core_cell_id = Variable('core cell id', 'lpjml cell mapped to core')
 
-    # pft_harvestc = LPJmL.Cell.pft_harvestc
-    crop_yield = LPJmL.Cell.pft_harvestc.copy()
-    # crop_yield = Variable('current yield', 'yield in given LPJmL cell')
-    # soil_carbon = Variable('current soilC value', 'proxy for soil health')
-    soil_carbon = LPJmL.Cell.cftfrac.copy() # TODO this is not soil_carbon, adjust
-    lpjml_cell_id = LPJmL.Cell.lpjml_grid_cell_ids.copy()
-    # lpjml_cell_id = Variable('lpjml cell id', 'given by lpjml') 
-    # core_cell_id = Variable('core cell id', 'lpjml cell mapped to core')
+
+class World(object):
+    """Define Interface for World."""
+
+    agent_list = Variable('list of all agents', 'all agents in network')
 
 
 class Individual (object):
@@ -96,13 +102,9 @@ class Individual (object):
 
     # taken from ronja, what is it?
     # TODO chat with Ronja abput how these two could be set up
-    sust_identity_vals = Variable('parameter for general enclinedness towards\
-                                  sustainable farming',
-                                  # TODO: check if this is the right
-                                  'sust. identity of agent')
-    sust_inertia_vals = Variable('parameter for change aversion',
-                                 # TODO: check if this is the right
-                                 'sust. inertia of agent')
+    # sust_identity_vals = Variable('parameter for general enclinedness towards\
+    #                               sustainable farming')
+    # sust_inertia_vals = Variable('parameter for change aversion')
     sust_pbc = Variable('perceived behavioural control', 'pbc of sust. AFT')
 
     # Weights for traditionalist AFT
@@ -114,15 +116,10 @@ class Individual (object):
                            'relative importance of soil health for attitude')
     w_trad_norm = Variable('norm weight of trad. AFT',
                            'relative importance of social norm for behaviour')
-    trad_identity_vals = Variable('parameter for general enclinedness towards\
-                                  sustainable farming',
-                                  # TODO: check if this is the right
-                                  'trad. identity of agent')
-    trad_inertia_vals = Variable('parameter for change aversion',
-                                 # TODO: check if this is the right
-                                 'trad. inertia of agent')
-    trad_pbc = Variable('perceived behavioural control',
-                        'pbc of trad. AFT')
+    # trad_identity_vals = Variable('parameter for general enclinedness towards\
+    #                               sustainable farming')
+    # trad_inertia_vals = Variable('parameter for change aversion')
+    trad_pbc = Variable('perceived behavioural control', 'pbc of trad. AFT')
     # endogenous variables:
         
     # TODO: use variables from the master data model wherever possible
@@ -142,18 +139,19 @@ class Culture(object):
     """Interface for Culture process taxon mixin."""
 
     acquaintance_network = D.CUL.acquaintance_network
-    # TODO make an array of all individual agent decisions and respective cell ids
+    # TODO make an array of individual agent decisions and respective cell ids
     landuse_decisions = Variable(
         "landuse decision bands",
-        "array of landuse bands and cell ids",
+        """array of landuse bands, 'created by storing each agent\'s\
+        decision-makingprocess outcome in array when updatingbehaviour""",
         datatype=np.array
     )
-    
+
     last_execution_time = Variable('last exec. time',
                                    'last time a step was executed',
                                    default=-1)
 
-    landuse_update_rate = Variable("landuse style update rate"
+    landuse_update_rate = Variable("landuse style update rate",
                                    """average number of time points per time\
                                    where some individuals update their landuse\
                                    style""",

@@ -19,7 +19,7 @@ from pycopancore.process_types.event import Event
 from pycopancore.model_components.base import interface as B
 from pycopancore.data_model import master_data_model as D
 from . import individual as ID
-from . import cell as C
+# from . import culture as C
 import numpy as np
 import networkx as nx
 
@@ -57,7 +57,8 @@ class Culture (I.Culture):
 
     def update_behaviour(self, t):
         self.last_execution_time = t
-        agent_i = self.get_update_agent()
+        # TODO ? where does agent_i come from in my model? nowhere...
+        agent_i = self.get_next_agent()
         # behaviour = agent_i.behaviour
         # TODO make sure that aft/behavior here and strategy in Ronjas model
         # align
@@ -82,8 +83,10 @@ class Culture (I.Culture):
             agent_i.past_yield = agent_i.get_yield()
             agent_i.past_soil_carbon = agent_i.get_soil_carbon()
             agent_i.past_behaviour = agent_i.behaviour
+            # TODO check if this implementation works or if it lacks transfer 
+            # from Exploit
             agent_i.behaviour = int(not agent_i.behaviour)
-            C.landuse_decisions[agent_i] = agent_i.behaviour
+            landuse_decisions[agent_i] = agent_i.behaviour
 
         self.set_new_update_time(agent_i)
         # do I want to check for consensus?
@@ -215,6 +218,35 @@ class Culture (I.Culture):
 
     def next_landuse_update_time(self, t):
         return t + exponential(1 / self.landuse_update_rate)
+    
+    def get_next_agent(self):
+        """Return the agent with the closest waiting time.
+        Choose from all agents the one with the smallest update_time.
+        Returns
+        -------
+        """
+        next_agent = list(self.acquaintance_network.nodes())[0]
+        for agent in self.acquaintance_network:
+            if agent.update_time < next_agent.update_time:
+                next_agent = agent
+        return next_agent
+
+    def set_new_update_time(self, agent):
+        """Set next time step when agent is to be called again.
+        Set the attribute update_time of agent to
+        old_update_time + new_update_time, where new_update_time is again
+        drawn from an exponential distribution.
+        Parameters
+        ----------
+        agent : Agent (Individual or SocialSystem)
+            The agent whose new update_time should be drawn and set.
+        Returns
+        -------
+        """
+        # print('old_update_time: ',individual.update_time)
+        new_update_time = np.random.exponential(agent.average_waiting_time)
+        agent.update_time += new_update_time
+
 
     # TODO: this is just EXPLOIT, check if it can be removed completely
     # def update_landuse_style(self, unused_t):
