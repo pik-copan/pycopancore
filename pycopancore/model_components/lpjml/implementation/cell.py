@@ -8,6 +8,7 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 from .. import interface as I
+import networkx as nx
 
 
 class Cell(I.Cell):
@@ -16,13 +17,21 @@ class Cell(I.Cell):
     def __init__(self,
                  input=None,
                  output=None,
-                 network=None,
                  **kwargs):
         """Initialize an instance of Cell."""
 
         self.input = input
         self.output = output
-        self.network = network
+        self.neighbourhood = nx.Graph()
+
+    def __lt__(self, other):
+        return self.input.cell.values < other.input.cell.values
+
+    def __eq__(self, other):
+        return self.input.cell.values == other.input.cell.values
+
+    def __hash__(self):
+        return hash(self.input.cell.values.tolist())
 
     def deactivate(self):
         """Deactivate a Cell."""

@@ -14,6 +14,7 @@ then remove these instructions
 # License: BSD 2-clause license
 
 from .. import interface as I
+import networkx as nx
 
 from pycopancore.process_types import Step
 
@@ -30,7 +31,7 @@ class World(I.World):
         self.lpjml = lpjml
         self.input = self.lpjml.read_input()
         self.output = self.lpjml.read_historic_output()
-        self.neighbourhood = self.lpjml.grid.get_neighbourhood()
+        self.neighbourhood = nx.Graph()
 
     # process-related methods:
     def update(self, time):
@@ -51,11 +52,23 @@ class World(I.World):
     def init_cells(self, model, **kwargs):
         """Init cell instances for each corresponding cell via numpy views"""
         # https://docs.xarray.dev/en/stable/user-guide/indexing.html#copies-vs-views
-        return [model.Cell(input=self.input.isel(cell=cell),
-                           output=self.output.isel(cell=cell),
-                           neighbourhood=self.neighbourhood.isel(cell=cell),
-                           **kwargs)  # world = self
-                for cell in (self.lpjml.get_cells(id=False))]
+        neighbour_matrix = self.lpjml.grid.get_neighbourhood(id=False)
+        self.neighbourhood.add_nodes_from(range(neighbour_matrix.shape[0]))
+
+        cells = [model.Cell(input=self.input.isel(cell=icell),
+                            output=self.output.isel(cell=icell),
+                            **kwargs)  # world = self
+                 for icell in self.lpjml.get_cells(id=False)]
+
+        for icell in self.lpjml.get_cells(id=False):
+            for neighbour in neighbour_matrix.isel(cell=icell).values:
+                if neighbour >= 0:  # Ignore negative values (-1 or NaN)
+                    self.neighbourhood.add_edge(cells[icell], cells[neighbour])
+            cells[icell].neighbourhood = self.neighbourhood.subgraph(
+                [cells[icell]]
+            )
+
+        return cells
 
     processes = [
         Step("lpjml step",
