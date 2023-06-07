@@ -16,8 +16,9 @@ taxa.
 import random
 from sympy import Symbol
 
-from . import DimensionalQuantity, Unit
-from .. import private
+from pycopancore.data_model.dimensional_quantity import DimensionalQuantity
+from pycopancore.data_model.unit import Unit
+from pycopancore.private._simple_expressions import unset, unknown
 
 
 EPS = 1e-10
@@ -44,7 +45,7 @@ class Variable(Symbol):
 
     readonly = None
     """whether variable is read-only, e.g. holding redundant information"""
-    default = private.unset  # can't use None since None is a possible default value
+    default = unset  # can't use None since None is a possible default value
     """default initial value"""
     uninformed_prior = None
     """random value generator (probability distribution)
@@ -141,7 +142,7 @@ class Variable(Symbol):
                  ref=None,
                  scale="ratio",
                  readonly=False,
-                 default=private.unset,
+                 default=unset,
                  uninformed_prior=None,
                  CF=None,
                  AMIP=None,
@@ -204,10 +205,10 @@ class Variable(Symbol):
         self.levels = levels
 
         if readonly:
-            assert default is private.unset
+            assert default is unset
             assert uninformed_prior is None
             self.allow_none = True
-            self.default = private.unknown
+            self.default = unknown
         else:
             self.allow_none = allow_none
             self.default = default
@@ -247,7 +248,7 @@ class Variable(Symbol):
         
     @default.setter
     def default(self, value):
-        if value is not private.unset:
+        if value is not unset:
             self.assert_valid(value)
         self._default = value
 
@@ -312,7 +313,7 @@ class Variable(Symbol):
             r += ", shape=" + str(self.array_shape)
 # FIXME: the following was commented out as a dirty fix of the AttributeError 
 # in run_example1.py:
-#        if self.default is not private.unset:
+#        if self.default is not unset:
 #            r += ", default=" + str(self.default)
         return r # + " (uid=" + str(self._uid) + ")"
 
@@ -321,7 +322,7 @@ class Variable(Symbol):
     def _check_valid(self, v):
         """check validity of candidate value"""
 
-        assert v is not private.unset, str(self) + " has no value set"
+        assert v is not unset, str(self) + " has no value set"
 
         if self.array_shape is not None:
             if not v.shape == self.array_shape:
@@ -435,6 +436,10 @@ class Variable(Symbol):
                     self.set_value(i, v)  # does the conversion
 
     def _get_instances(self, instances):
+        from pycopancore.private._abstract_entity_mixin import \
+            _AbstractEntityMixin
+        from pycopancore.private._abstract_process_taxon_mixin import \
+            _AbstractProcessTaxonMixin
         """converts argument into a set of instances
         (entities or process taxa)"""
         if instances is None:  # use all that have this variable
@@ -445,8 +450,8 @@ class Variable(Symbol):
                 instances.update(self._get_instances(k))
                 instances.update(self._get_instances(i))
         elif isinstance(instances,
-                        (private._AbstractEntityMixin,
-                         private._AbstractProcessTaxonMixin)):
+                        (_AbstractEntityMixin,
+                         _AbstractProcessTaxonMixin)):
             instances = set([instances])
         else:
             instances = set(instances)
@@ -456,7 +461,7 @@ class Variable(Symbol):
             self,
             instances=None):  # if None: all entities/taxa
         """Set values in selected entities to default if a default was given"""
-        if self.default is private.unset:
+        if self.default is unset:
             return
         instances = self._get_instances(instances)
         if instances:  # Maybe variables owning class has no instances!

@@ -14,10 +14,10 @@ then remove these instructions
 # License: BSD 2-clause license
 
 from .. import interface as I
-from numpy.random import exponential, uniform
-from .... import Event
-from ...base import interface as B
-from .... import master_data_model as D
+from numpy.random import exponential
+from pycopancore.process_types.event import Event
+from pycopancore.model_components.base import interface as B
+from pycopancore.data_model import master_data_model as D
 from . import individual as ID
 # from . import culture as C
 import numpy as np

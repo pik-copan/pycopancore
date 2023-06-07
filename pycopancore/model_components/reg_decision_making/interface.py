@@ -12,11 +12,11 @@ remove these instructions.
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 # Use variables from the master data model wherever possible
-from ... import master_data_model as D
+from pycopancore.data_model import master_data_model as D
 
 # from ..MODEL_COMPONENT import interface as MODEL_COMPONENT
-from ... import Variable
-# from ..lpjml import interface as L
+from pycopancore.data_model.variable import Variable
+from pycopancore.model_components.lpjml import interface as LPJmL
 import numpy as np
 
 
@@ -135,7 +135,7 @@ class Individual (object):
 # Process taxa
 
 
-class Culture (object):
+class Culture(object):
     """Interface for Culture process taxon mixin."""
 
     acquaintance_network = D.CUL.acquaintance_network
@@ -155,5 +155,7 @@ class Culture (object):
                                    """average number of time points per time\
                                    where some individuals update their landuse\
                                    style""",
+                                   # TODO: check if this is the right
+                                   "landuse update rate",
                                    unit=D.years**(-1), default=1 / D.years,
                                    lower_bound=0)

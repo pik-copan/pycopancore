@@ -1,8 +1,10 @@
 """Master data model for social_system."""
 
-from . import MET
-from .. import Variable
-from . import dollars, gigatonnes_carbon, gigajoules
+from pycopancore.data_model.master_data_model.metabolism \
+    import Metabolism as MET
+from pycopancore.data_model.variable import Variable
+from pycopancore.data_model.master_data_model.dimensions_and_units import \
+    DimensionsAndUnits as DAU
 
 
 class SocialSystem:
@@ -84,10 +86,10 @@ class SocialSystem:
     emissions_tax_level = \
         Variable("emissions tax level",
                  "level of emissions tax when introduced",
-                 unit = dollars / gigatonnes_carbon, 
+                 unit=DAU.dollars / DAU.gigatonnes_carbon,
                  lower_bound=0, default=100e9*3.5)
     renewable_subsidy_level = \
         Variable("renewable subsidy level",
                  "level of renewable subsidy when introduced",
-                 unit = dollars / gigajoules, 
-                 lower_bound=0, default=50) # FIXME: check plausibility!
+                 unit=DAU.dollars / DAU.gigajoules,
+                 lower_bound=0, default=50)  # FIXME: check plausibility!
