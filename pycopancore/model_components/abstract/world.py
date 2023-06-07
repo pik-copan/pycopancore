@@ -9,8 +9,8 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from ...private import _AbstractEntityMixin
-from ...data_model import OrderedSet
+from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
+from pycopancore.data_model.ordered_set import OrderedSet
 
 
 class World (_AbstractEntityMixin):

@@ -38,4 +38,3 @@ from .individual import Individual as I
 from .individual import Individual as individual
 from .individual import Individual
 
-from .. import unity

@@ -13,13 +13,27 @@ by entity type and process taxon
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from ...private import _MixinType, unknown
-from ... import Variable, ReferenceVariable, SetVariable
-from ... import master_data_model as D
-from ...data_model.master_data_model import ENV, CUL, W, S, C
+from pycopancore.private._mixin import _MixinType
 
+from pycopancore.data_model.variable import Variable
+from pycopancore.data_model.reference_variable import ReferenceVariable
+from pycopancore.data_model.set_variable import SetVariable
 
-# model component:
+from pycopancore.data_model.unit import unity
+
+from pycopancore.data_model.master_data_model.dimensions_and_units \
+    import DimensionsAndUnits as DAU
+
+from pycopancore.data_model.master_data_model.environment \
+    import Environment as ENV
+from pycopancore.data_model.master_data_model.culture \
+    import Culture as CUL
+from pycopancore.data_model.master_data_model.world \
+    import World as W
+from pycopancore.data_model.master_data_model.social_system \
+    import SocialSystem as S
+from pycopancore.data_model.master_data_model.cell \
+    import Cell as C
 
 
 class Model (object):
@@ -253,7 +267,7 @@ class Individual (object, metaclass=_MixinType):
                  "relative representation weight for social_system's population, "
                  "to be used in determining how many people this individual "
                  "represents",
-                 unit=D.unity, lower_bound=0, default=1)
+                 unit=unity, lower_bound=0, default=1)
 
     # attributes storing redundant information:
     world = ReferenceVariable("world", "", type=World,
@@ -285,7 +299,7 @@ class Individual (object, metaclass=_MixinType):
         "represented population", 
         "absolute population represented by this individual",
         readonly=True,
-        unit=D.people,
+        unit=DAU.people,
         is_extensive=True)
 
 

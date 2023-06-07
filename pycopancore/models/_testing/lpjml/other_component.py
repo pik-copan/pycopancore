@@ -19,16 +19,25 @@ from numpy.random import exponential, uniform
 # INTERFACE
 
 class ICell (object):
-    landuse = L.Cell.landuse
+    # landuse = L.Cell.landuse
+    # TODO is with_tillage really to be found in L.Cell?
+    with_tillage = L.Cell.with_tillage
     cftfrac = L.Cell.cftfrac
     
 class IMetabolism (object):
+    # TODO check which rate is more fitting: once a year or multiple?
+    # landuse_update_rate = Variable(
+        # "landuse update rate",
+        # """average number of time points per time where some cells
+        # update their landuse""",
+        # unit = D.years**(-1), 
+        # default = 5 / D.years, lower_bound = 0)
     landuse_update_rate = Variable(
         "landuse update rate",
         """average number of time points per time where some cells
         update their landuse""",
-        unit = D.years**(-1), 
-        default = 5 / D.years, lower_bound = 0)
+        unit = D.unity,
+        default = 1)
     landuse_update_prob = Variable(
         "fishing effort update probability",
         """probability that an individual updates their fishing effort at
@@ -52,12 +61,14 @@ class interface:
 class Cell (ICell):
     
     def update_landuse(self, unused_t):
-        self.landuse = np.ones((1, 64))
+        # self.landuse = np.ones((1, 64))
+        self.with_tillage = np.ones((1, 1))
     processes = []
 
 class Metabolism (IMetabolism):
     def next_landuse_update_time(self, t):
         return t + exponential(1 / self.landuse_update_rate)
+
 
     def update_landuse(self, unused_t):
         for w in self.worlds:
@@ -67,7 +78,8 @@ class Metabolism (IMetabolism):
 
     processes = [
         Event("update landuse",
-              [B.Metabolism.worlds.cells.landuse],
+              # [B.Metabolism.worlds.cells.landuse],
+              [B.Metabolism.worlds.cells.with_tillage],
               ["time",
               next_landuse_update_time,
               update_landuse])]
