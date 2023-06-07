@@ -123,11 +123,11 @@ class Individual (I.Individual):
         average_cropyields = self.split_neighbourhood_status("cropyield")
         average_soilcs = self.split_neighbourhood_status("soilc")
         # important: this is about behaviour (RA / CF, NOT AFT)
-        yields_diff, yields_same = average_cropyields[not self.behavior],\
-            average_cropyields[self.behavior]
-        soils_diff, soils_same = average_soilcs[not self.behavior],\
-            average_soilcs[self.behavior]
-        # TODO is agent_i.behavior really getting me to the right return?
+        yields_diff, yields_same = average_cropyields[not self.behaviour],\
+            average_cropyields[self.behaviour]
+        soils_diff, soils_same = average_soilcs[not self.behaviour],\
+            average_soilcs[self.behaviour]
+        # TODO is agent_i.behaviour really getting me to the right return?
 
         # calc both yield and soil comparison, then weight
         # TODO think about sigmoid instead of heaviside?
@@ -139,38 +139,7 @@ class Individual (I.Individual):
         return sigmoid(self.w_yield * yield_comparison +
                        self.w_soil * soil_comparison)
 
-    def split_neighbourhood(self, attribute):
-        first_nb = []  # regeneratively managed
-        second_nb = []  # conventionally managed
-        for neighbour in self.neighbourhood:
-            if getattr(neighbour, attribute) == 1:
-                first_nb.append(neighbour)
-            else:
-                second_nb.append(neighbour)
-        return first_nb, second_nb
-
-    def split_neighbourhood_status(self, variable):
-        # sorting agent_i neighbours by their current farming behavior 
-        # (regenerative or conventional)
-        # note: current behavoor is not necessarily = farmer type
-        # calculate average yield for neighbours, reg. and conv.
-        # TODO think about finding a nicer way to access list_neighbours outputs
-        first_nb, second_nb = self.split_neighbourhood("behaviour")
-        if first_nb:
-            first_var = sum(getattr(n, variable) for n in first_nb)\
-                / len(first_nb)
-        else:
-            first_var = 0
-        # for conventionals
-        if second_nb:
-            second_var = sum(getattr(n, variable) for n in second_nb)\
-                / len(second_nb)
-        else:
-            second_var = 0
-
-        return first_var, second_var
-
-    """The social learning part of TPB here looks at the average behavior,
+    """The social learning part of TPB here looks at the average behaviour,
     not performance, of neighbouring agents"""
     @property
     # calculating descriptive social norm based on all neighbouring farmers
@@ -193,11 +162,42 @@ class Individual (I.Individual):
         """compute a random farming behaviour of individual"""
         return np.random.rand()
 
+    def split_neighbourhood(self, attribute):
+        first_nb = []  # regeneratively managed
+        second_nb = []  # conventionally managed
+        for neighbour in self.neighbourhood:
+            if getattr(neighbour, attribute) == 1:
+                first_nb.append(neighbour)
+            else:
+                second_nb.append(neighbour)
+        return first_nb, second_nb
+
+    def split_neighbourhood_status(self, variable):
+        # sorting agent_i neighbours by their current farming behaviour 
+        # (regenerative or conventional)
+        # note: current behavoor is not necessarily = farmer type
+        # calculate average yield for neighbours, reg. and conv.
+        # TODO think about finding a nicer way to access list_neighbours outputs
+        first_nb, second_nb = self.split_neighbourhood("behaviour")
+        if first_nb:
+            first_var = sum(getattr(n, variable) for n in first_nb)\
+                / len(first_nb)
+        else:
+            first_var = 0
+        # for conventionals
+        if second_nb:
+            second_var = sum(getattr(n, variable) for n in second_nb)\
+                / len(second_nb)
+        else:
+            second_var = 0
+
+        return first_var, second_var
+
     def update_behaviour(self, t):
         self.last_execution_time = t
         # TODO ? where does self come from in my model? nowhere...
         # behaviour = self.behaviour
-        # TODO make sure that aft/behavior here and strategy in Ronjas model
+        # TODO make sure that aft/behaviour here and strategy in Ronjas model
         # align
 
         # now comes the update
