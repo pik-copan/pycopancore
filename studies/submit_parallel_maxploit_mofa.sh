@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --qos=short
-#SBATCH --job-name=full_model_groups_0
+#SBATCH --job-name=full_model_storyline_2_1
 #SBATCH --account=copan
 #SBATCH --ntasks=16
 #SBATCH --exclusive
-#SBATCH --output=full_model_groups_0%j.out
-#SBATCH --error=full_model_groups_0%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/results/maxploit3/full_model_groups_0
+#SBATCH --output=full_model_storyline_2_1%j.out
+#SBATCH --error=full_model_storyline_2_1%j.err
+#SBATCH --workdir=/p/tmp/maxbecht/results/full_model_storyline_2_1
 
 
 echo "------------------------------------------------------------"
@@ -17,6 +17,7 @@ echo "------------------------------------------------------------"
 cd ..
 cd ..
 cd ..
+cd ..
 
 export I_MPI_PMI_LIBRARY=/p/system/slurm/lib/libpmi.so
-srun -n $SLURM_NTASKS --mpi=pmi2 python pycopancore/studies/run_parallel_maxploit_mofa.py
+srun -n $SLURM_NTASKS --mpi=pmi2 python projects/copan/users/maxbecht/pycopancore/studies/run_parallel_maxploit_mofa.py

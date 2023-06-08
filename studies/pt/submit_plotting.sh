@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --qos=priority
-#SBATCH --job-name=plot-full_model_thresholds_0
+#SBATCH --job-name=plot-full_model_thresholds_64_4
 #SBATCH --account=copan
 #SBATCH --ntasks=1
 #SBATCH --exclusive
-#SBATCH --output=plot-full_model_thresholds_0-%j.out
-#SBATCH --error=plot-full_model_thresholds_0-%j.err
-#SBATCH --workdir=/p/projects/copan/users/maxbecht/plots/
-#SBATCH --time=02:00:00
+#SBATCH --output=%x-%j.out
+#SBATCH --error=%x-%j.err
+#SBATCH --workdir=/p/tmp/maxbecht/plots/full_model_thresholds_64_4
+#SBATCH --time=01:00:00
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"
@@ -16,6 +16,8 @@ echo "------------------------------------------------------------"
 
 cd ..
 cd ..
+cd ..
+cd ..
 
 export I_MPI_PMI_LIBRARY=/p/system/slurm/lib/libpmi.so
-srun -n $SLURM_NTASKS --mpi=pmi2 python pycopancore/studies/pt/plot_maxploit_mofa_cluster.py
+srun -n $SLURM_NTASKS --mpi=pmi2 python projects/copan/users/maxbecht/pycopancore/studies/pt/plot_maxploit_mofa_cluster.py

@@ -40,17 +40,19 @@ class Group(I.Group):
         # print(group_j)
         # print(len(list(self.group_members)))
         if list(self.group_members):
-            if self.culture.attitude_on:
-                mean_group_value = self.mean_group_attitude
-            else:
-                mean_group_value = group_j.mean_group_behaviour
-            # print("Before:", mean_group_value, group_j.group_attitude)
-            if mean_group_value > self.culture.injunctive_majority_threshold: # get the mean in terms of true/false for adjusting the global attitude later
-                group_j.group_attitude = 1
-            elif mean_group_value == self.culture.injunctive_majority_threshold:
-                group_j.group_attitude = np.random.choice([0, 1])
-            else:
-                group_j.group_attitude = 0
+            group_j.group_attitude = 1
+
+            # if self.culture.attitude_on:
+            #     mean_group_value = self.mean_group_attitude
+            # else:
+            #     mean_group_value = group_j.mean_group_behaviour
+            # # print("Before:", mean_group_value, group_j.group_attitude)
+            # if mean_group_value > self.culture.injunctive_majority_threshold: # get the mean in terms of true/false for adjusting the global attitude later
+            #     group_j.group_attitude = 1
+            # elif mean_group_value == self.culture.injunctive_majority_threshold:
+            #     group_j.group_attitude = np.random.choice([0, 1])
+            # else:
+            #     group_j.group_attitude = 0
             # print("After:", mean_group_value, group_j.group_attitude)
         else:
             group_j.group_attitude = group_j.group_attitude

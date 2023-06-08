@@ -24,11 +24,12 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "full_model_thresholds_0"
+experiment_name = "full_model_thresholds_64_4"
 
 # path to cluster data
 # PATH = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
 PATH = f"/p/projects/copan/users/maxbecht/results/maxploit3/{experiment_name}"
+# PATH = f"/p/tmp/maxbecht/results/{experiment_name}"
 
 # path to test data
 # PATH = f"C:/Users/bigma/Documents/Uni/Master/MA_Masterarbeit/results/maxploit/00_old/{experiment_name}"
@@ -40,19 +41,24 @@ if old_run:
     PATH = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
 
 # path to save figures
-SAVE_PATH = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}"
+# SAVE_PATH = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}"
+SAVE_PATH = f"/p/tmp/maxbecht/plots/{experiment_name}"
 if not os.path.exists(SAVE_PATH):
     os.mkdir(SAVE_PATH)
-SINGLE_TRAJ_PLOT_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/single_trajs"
+# SINGLE_TRAJ_PLOT_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/single_trajs"
+SINGLE_TRAJ_PLOT_PATHS = f"/p/tmp/maxbecht/plots/{experiment_name}/single_trajs"
 if not os.path.exists(SINGLE_TRAJ_PLOT_PATHS):
     os.mkdir(SINGLE_TRAJ_PLOT_PATHS)
-MEAN_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/mean_std"
+# MEAN_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/mean_std"
+MEAN_PATHS = f"/p/tmp/maxbecht/plots/{experiment_name}/mean_std"
 if not os.path.exists(MEAN_PATHS):
     os.mkdir(MEAN_PATHS)
-TRAJ_PLOT_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/trajs"
+# TRAJ_PLOT_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/trajs"
+TRAJ_PLOT_PATHS = f"/p/tmp/maxbecht/plots/{experiment_name}/trajs"
 if not os.path.exists(TRAJ_PLOT_PATHS):
     os.mkdir(TRAJ_PLOT_PATHS)
-DIST_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/dist"
+# DIST_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/dist"
+DIST_PATHS = f"/p/tmp/maxbecht/plots/{experiment_name}/dist"
 if not os.path.exists(DIST_PATHS):
     os.mkdir(DIST_PATHS)
 
@@ -129,10 +135,10 @@ print("Loading data...")
 data = pd.read_pickle(RES_LOAD_PATH)
 print("Done loading data!")
 
-NETWORK_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/networks"
-if not os.path.exists(NETWORK_PATHS):
-    os.mkdir(NETWORK_PATHS)
-NETWORK_LOAD_PATH = PATH + "/networks"
+# NETWORK_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/networks"
+# if not os.path.exists(NETWORK_PATHS):
+#     os.mkdir(NETWORK_PATHS)
+# NETWORK_LOAD_PATH = PATH + "/networks"
 
 # NETWORK_PATH = PATH + "/networks"
 # if os.path.exists(NETWORK_PATH):
@@ -211,7 +217,7 @@ if os.path.exists(RAW_PATH):
     # ----- plot traj trajectories -----
     # can only be done if raw data available
     # pmf.plot_single_trajs(variables, PARAM_COMBS, timepoints, RAW_PATH, TRAJ_PLOT_PATHS, 400, 2)
-    pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, 400, RAW_PATH, TRAJ_PLOT_PATHS)
+    # pmf.plot_all_trajs_in_one(variables, PARAM_COMBS, timepoints, 400, RAW_PATH, TRAJ_PLOT_PATHS)
     # pmf.plot_all_trajs_in_one(variables_2, PARAM_COMBS, timepoints, 400, RAW_PATH, TRAJ_PLOT_PATHS)
     # pmf.plot_distributions(PARAM_COMBS, variables_2, ranges, last_timestep, RAW_PATH, DIST_PATHS)
     print("Plotting raw data done!")
@@ -225,7 +231,7 @@ if os.path.exists(RAW_PATH):
 
 # ----- phase transition plot -----
 # pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "descriptive_majority_threshold", last_timestep, variables_2, 400, SAVE_PATH)
-pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "injunctive_majority_threshold", last_timestep, variables_2, 400, SAVE_PATH)
+# pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "injunctive_majority_threshold", last_timestep, variables_2, 400, SAVE_PATH)
 # pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "average_waiting_time", last_timestep, variables_2, 400, SAVE_PATH, scale="log")
 # pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "p", last_timestep, variables_2, 400, SAVE_PATH, scale="log")
 # pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "k_value", last_timestep, variables_2, 400, SAVE_PATH, scale="log")

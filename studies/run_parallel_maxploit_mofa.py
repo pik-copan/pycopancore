@@ -27,6 +27,7 @@ import pickle
 from pymofa.experiment_handling import experiment_handling as eh
 import itertools as it
 import importlib
+
 import os
 import pycopancore.models.maxploit as M
 from pycopancore.runners.runner import Runner
@@ -39,7 +40,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "full_model_groups_0"
+experiment_name = "full_model_storyline_2_1"
 # how to call postprocessed results
 post_process_filename = "stateval_results.pkl"
 
@@ -55,7 +56,8 @@ post_process_filename = "stateval_results.pkl"
 # cluster
 # as not to do any damage, folders have to be created manually
 # SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
-SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit3/{experiment_name}"
+# SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit3/{experiment_name}"
+SAVE_FOLDER = f"/p/tmp/maxbecht/results/{experiment_name}"
 assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exist."
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
@@ -134,11 +136,11 @@ average_waiting_time = [1]
 update_probability = [0.25]
 
 # groups:
-group_meeting_interval = [1]
-group_update_probability = [0.25]
+group_meeting_interval = [50]
+group_update_probability = [1]
 # [1, 2, 4, 8, 16, 32, 64, 128, 256]
-n_group_memberships = [1, 2, 4, 8, 16, 32, 64, 128, 256]
-ng_total = [1, 2, 4, 8, 16, 32, 64, 128, 256]  # number of total groups
+n_group_memberships = [1]
+ng_total = [2]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -279,7 +281,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
         # instantiate groups
     if group_initialisation:
-        group_attitude = [0, 1]
+        group_attitude = [0]
         groups = [M.Group(culture=culture, world=world, group_update_probability=group_update_probability,
                           group_attitude=np.random.choice(group_attitude),
                           group_meeting_interval=group_meeting_interval) for i in range(ng_total)]
@@ -523,5 +525,5 @@ runtime = dt.timedelta(seconds=(time() - start))
 print('runtime: {runtime}'.format(**locals()))
 
 if not os.path.exists(SAVE_FOLDER + "/" + 'runtime.txt'):
-    with open(SAVE_FOLDER + "/" + 'readme.txt', 'w') as f:
-        f.write(runtime)
+    with open(SAVE_FOLDER + "/" + 'runtime.txt', 'w') as f:
+        f.write(str(runtime))
