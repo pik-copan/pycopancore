@@ -7,7 +7,8 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 import os
-os.chdir("/p/projects/copan/users/lschwarz/core/pycopancore")
+# os.chdir("/p/projects/copan/users/lschwarz/core/pycopancore")
+os.chdir("/p/projects/open/Jannes/copan_core/pycopancore")
 
 import pycopancore.models.social_inseeds as M
 
@@ -16,7 +17,7 @@ import pycopancore.models.social_inseeds as M
 # standard runner for simulating any model:
 from pycopancore.runners.runner import Runner
 
-from pycopancore import master_data_model as D  # to be able to specify variables with physical units
+from pycopancore.data_model import master_data_model as D  # to be able to specify variables with physical units
 
 import numpy as np  # which is usually needed
 from numpy.random import choice, uniform  # to generate random initial conditions

@@ -155,5 +155,6 @@ class Culture(object):
                                    """average number of time points per time\
                                    where some individuals update their landuse\
                                    style""",
-                                   unit=D.years**(-1), default=1 / D.years,
+                                   unit=D.years**(-1), 
+                                   default=1 / D.years,
                                    lower_bound=0)
