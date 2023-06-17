@@ -15,10 +15,16 @@ then remove these instructions
 
 from .. import interface as I
 import numpy as np
-from itertools import chain
+from enum import Enum
 
 from pycopancore.process_types.event import Event
 from pycopancore.model_components.base import interface as B
+
+
+class AFT(Enum):
+    """Available Inputs"""
+    sustainably_oriented: int = 0
+    profit_oriented: int = 1
 
 
 class Individual (I.Individual):
@@ -29,35 +35,10 @@ class Individual (I.Individual):
     # aufgeführt: alle allgemeinen parameter, und AFT-spezifische parameter
     # für den "traditionalist" type
     def __init__(self,
-                 *,  # TODO: how to assign AFT to individual?
-                 aft=1,
-                 behaviour=0,
-                 past_behaviour=0,
-                 attitude=0,
-                 subjective_norm=0,  # TODO maybe adapt this name or check in culture
-                 pbc=0,
-                 input_name="with_tillage",
-
-
-                 # TODO implement weights in a way that makes sure they add up to 1
-                 w_trad_attitude=1/2,
-                 w_trad_yield=2/3,
-                 w_trad_soil=1/3,
-                 w_trad_norm=1/2,
-                 trad_pbc=1/2,
-                 w_trad_social_learning=1/2,
-                 w_sust_social_learning=1/2,
-                 w_trad_own_land=1/2,
-                 w_sust_own_land=1/2,
-                 w_sust_attitude=2/3,
-                 w_sust_yield=1/3,
-                 w_sust_soil=2/3,
-                 w_sust_norm=1/3,
-                 sust_pbc=1/2,
-                 # how to bring diff pbc vals to AFTs? 
-                 # in all other cases, weighting was necessary because one had
-                 # 2 values (i.e., soil and yield), hw to do this now as it
-                 # is just a parameter to multiply?
+                 *,
+                 aft=AFT.sustainably_oriented,
+                 copan_config={},
+                 avg_hdate=0,
                  **kwargs):
 
         """Initialize an instance of Individual."""
@@ -65,31 +46,27 @@ class Individual (I.Individual):
         self.neighbourhood = [cell_neighbour.individuals[0]
                               for cell_neighbour in self.cell.neighbourhood]
         self.aft = aft
-        self.behaviour = behaviour
-        self.past_behaviour = past_behaviour
-        self.attitude = attitude
-        self.subjective_norm = subjective_norm
-        self.pbc = pbc
+        self.couple_target = copan_config.couple_target[0]
+        self.__dict__.update(getattr(copan_config.aftpar, self.aft.name))
+        self.behaviour = self.cell.input[self.couple_target]
 
-        self.input_name = input_name
-        # trad and sust aft
-        self.w_social_learning = [w_trad_social_learning,
-                                  w_sust_social_learning]
-        self.w_own_land = [w_trad_own_land, w_sust_own_land]
-        self.w_attitude = [w_trad_attitude, w_sust_attitude]
-        self.w_yield = [w_trad_yield, w_sust_yield]
-        self.w_soil = [w_trad_soil, w_sust_soil]
-        self.w_norm = [w_trad_norm, w_sust_norm]
-        self.pbc = [trad_pbc, sust_pbc]
+        # average harvest date of the cell is used as a proxy for the order
+        # of the agents making decisions in time through the year
+        self.avg_hdate = avg_hdate
 
+        # soilc is the last "measured" soilc value of the farmer whereas the
+        #   cell_soilc value is the actual status of soilc of the cell
         self.soilc = self.cell_soilc
-        self.max_soilc = self.soilc
+
+        # Same applies for cropyield (as for soilc)
         self.cropyield = self.cell_cropyield
-        self.max_cropyield = self.cropyield
+        # Maximal soilc and cropyield might be used in the future to assess
+        #   soil potential
+        # self.max_soilc = self.soilc
+        # self.max_cropyield = self.cropyield
 
     @property
     def cell_cropyield(self):
-        # harvest to be implemented (currently only pft_harvest - too large!)
         return self.cell.output.harvest.item()
 
     @property
@@ -98,9 +75,9 @@ class Individual (I.Individual):
 
     @property
     def attitude(self):
-        return self.w_social_learning * \
+        return self.weight_social_learning * \
                 self.attitude_social_learning \
-                + self.w_own_land * self.attitude_own_land
+                + self.weight_own_land * self.attitude_own_land
 
     # calculating the input of farmer's own land evaluation to attitude
     # differentiated for 2 farmer types
@@ -109,10 +86,12 @@ class Individual (I.Individual):
         # TODO differentiate for 2 AFTs
         # TODO think about to which tate agent compares current state...
         # state before last update or last year?
-        attitude_own_soil = sigmoid(self.past_soil -
-                                    self.get_soil_carbon())
-        attitude_own_yield = sigmoid(self.past_soil -
-                                     self.get_yield())
+        # See definition for soilc and cell_soilc in init
+        attitude_own_soil = sigmoid(self.soilc -
+                                    self.cell_soilc)
+        # See definition for cropyield and cell_cropyield in init
+        attitude_own_yield = sigmoid(self.cropyield -
+                                     self.cell_cropyield)
         return attitude_own_soil, attitude_own_yield
 
     # calculating the input of farmer's comparison to neighbouring farmers
@@ -136,8 +115,8 @@ class Individual (I.Individual):
         soil_comparison = soils_diff - self.get_soil_carbon() *\
             np.heaviside(soils_diff - soils_same, 0)
 
-        return sigmoid(self.w_yield * yield_comparison +
-                       self.w_soil * soil_comparison)
+        return sigmoid(self.weight_yield * yield_comparison +
+                       self.weight_soil * soil_comparison)
 
     """The social learning part of TPB here looks at the average behaviour,
     not performance, of neighbouring agents"""
@@ -173,7 +152,7 @@ class Individual (I.Individual):
         return first_nb, second_nb
 
     def split_neighbourhood_status(self, variable):
-        # sorting agent_i neighbours by their current farming behaviour 
+        # sorting agent_i neighbours by their current farming behaviour
         # (regenerative or conventional)
         # note: current behavoor is not necessarily = farmer type
         # calculate average yield for neighbours, reg. and conv.
@@ -202,8 +181,8 @@ class Individual (I.Individual):
 
         # now comes the update
         # identity_value = 0
-        tpb = (self.w_attitude * self.attitude
-               + self.w_norm * self.calc_social_norm())\
+        tpb = (self.weight_attitude * self.attitude
+               + self.weight_norm * self.calc_social_norm())\
             * self.pbc
 
         if np.random.random() < tpb:
@@ -220,7 +199,7 @@ class Individual (I.Individual):
         #     print('Consensus! time ', t)
 
     def set_cell_input(self, value):
-        self.cell.input[self.input_name] = value
+        self.cell.input[self.couple_target] = value
 
     # TODO: define landuse_update_rate
     def next_landuse_update_time(self, t):
@@ -242,3 +221,4 @@ class Individual (I.Individual):
 def sigmoid(x):
     """The following part contains helping stuff"""
     return 0.5 * (np.tanh(x) + 1)
+

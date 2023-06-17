@@ -38,13 +38,14 @@ config_coupled = read_config(model_path=model_path, file_name="lpjml.js")
 
 # set coupled run configuration
 config_coupled.set_coupled(sim_path,
+                           sim_name="coupled_test",
                            start_year=1901, end_year=2005,
                            coupled_year=1981,
-                           coupled_input=["with_tillage",
-                                          "landuse"],
+                           coupled_input=["with_tillage"],
                            coupled_output=["soilc",
+                                           "cftfrac",
                                            "pft_harvestc",
-                                           "leaching"])
+                                           "hdate"])
 
 # only for single cell runs
 config_coupled.outputyear = 1980
@@ -52,6 +53,11 @@ config_coupled.startgrid = startcell
 config_coupled.endgrid = endcell
 config_coupled.river_routing = False
 config_coupled.tillage_type = "read"
+config_coupled.double_harvest = False
+
+config_coupled.add_config(
+    "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa
+)
 
 # write config (Config object) as json file
 config_coupled_fn = config_coupled.to_json()
@@ -64,7 +70,8 @@ check_lpjml(config_coupled_fn, model_path)
 run_lpjml(
     config_file=config_coupled_fn,
     model_path=model_path,
-    sim_path=sim_path
+    sim_path=sim_path,
+    std_to_file=False,  # write stdout and stderr to file
 )
 
 lpjml = LPJmLCoupler(config_file=config_coupled_fn)
