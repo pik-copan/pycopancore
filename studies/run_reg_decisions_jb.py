@@ -15,15 +15,8 @@ from pycoupler.run import run_lpjml
 from pycoupler.coupler import LPJmLCoupler
 from pycoupler.utils import check_lpjml
 
-from pycopancore.model_components import lpjml as L
-# import warnings
-# warnings.filterwarnings("error")
+from pycopancore.models import social_inseeds as M
 
-# import pycopancore.models.social_inseeds as M
-# # standard runner for simulating any model:
-# from pycopancore.runners.runner import Runner
-# # to be able to specify variables with physical units
-# from pycopancore.data_model import master_data_model as D
 
 # paths
 sim_path = "/p/projects/open/Jannes/copan_core/lpjml"
@@ -77,11 +70,10 @@ run_lpjml(
 lpjml = LPJmLCoupler(config_file=config_coupled_fn)
 
 
-# TODO: L is only a temporary solution, should be replaced by the actual model
-world = L.World(lpjml=lpjml)
+world = M.World(lpjml=lpjml)
 # instantiate the cells, when replaced with actual model, one could also pass
 #    further entities to the cells, like the social system
-cells = world.init_cells(model=L)
+cells = world.init_cells(model=M)
 
 # instantiate the model and have it analyse its own structure:
 model = M.Model()

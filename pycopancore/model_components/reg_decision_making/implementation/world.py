@@ -12,8 +12,10 @@
 # License: BSD 2-clause license
 import numpy as np
 
+from pycopancore.process_types import Step
+
 from .. import interface as I
-from random import sample
+
 
 
 class World (I.World):
@@ -31,8 +33,6 @@ class World (I.World):
         agent_list
         """
         super(World, self).__init__(**kwargs)
-
-    processes = []
 
     def init_farmers(self, model, **kwargs):
         cells = self.init_cells(model, **kwargs)
@@ -59,3 +59,5 @@ class World (I.World):
         farmers_sorted = sorted(farmers, key=lambda farmer: farmer.hdate)
 
         return farmers_sorted
+
+    processes = []

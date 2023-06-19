@@ -12,19 +12,25 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
+import numpy as np
+
+from enum import Enum
+from random import sample
+
+from pycopancore.process_types import Step
+from pycopancore.model_components.base import interface as B
 
 from .. import interface as I
-import numpy as np
-from enum import Enum
-
-from pycopancore.process_types.event import Event
-from pycopancore.model_components.base import interface as B
 
 
 class AFT(Enum):
     """Available Inputs"""
-    sustainably_oriented: int = 0
-    profit_oriented: int = 1
+    progressive_minded: int = 0
+    conservative_minded: int = 1
+
+    @staticmethod
+    def random():
+        return sample(list(AFT), 1)[0]
 
 
 class Individual (I.Individual):
@@ -36,19 +42,20 @@ class Individual (I.Individual):
     # für den "traditionalist" type
     def __init__(self,
                  *,
-                 aft=AFT.sustainably_oriented,
-                 copan_config={},
+                 aft=AFT.random(),
+                 config=None,
                  avg_hdate=0,
                  **kwargs):
 
         """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
+
         self.neighbourhood = [cell_neighbour.individuals[0]
                               for cell_neighbour in self.cell.neighbourhood]
+
         self.aft = aft
-        self.couple_target = copan_config.couple_target[0]
-        self.__dict__.update(getattr(copan_config.aftpar, self.aft.name))
-        self.behaviour = self.cell.input[self.couple_target]
+        self.__dict__.update(getattr(config.aftpar, self.aft.name))
+        self.behaviour = self.cell.input[self.couple_target[0]]
 
         # average harvest date of the cell is used as a proxy for the order
         # of the agents making decisions in time through the year
@@ -173,12 +180,6 @@ class Individual (I.Individual):
         return first_var, second_var
 
     def update_behaviour(self, t):
-        self.last_execution_time = t
-        # TODO ? where does self come from in my model? nowhere...
-        # behaviour = self.behaviour
-        # TODO make sure that aft/behaviour here and strategy in Ronjas model
-        # align
-
         # now comes the update
         # identity_value = 0
         tpb = (self.weight_attitude * self.attitude
@@ -193,32 +194,16 @@ class Individual (I.Individual):
             self.behaviour = int(not self.behaviour)
             self.set_cell_input(self.behaviour)
 
-        self.set_new_update_time(self)
-        # do I want to check for consensus?
-        # if self.check_for_consensus():
-        #     print('Consensus! time ', t)
-
     def set_cell_input(self, value):
         self.cell.input[self.couple_target] = value
 
-    # TODO: define landuse_update_rate
-    def next_landuse_update_time(self, t):
-        return t + np.random.exponential(1 / self.landuse_update_rate)
-
-
-# TODO adjust process to update_behaviour (TPB)
     processes = [
-        Event("update landuse style",
-                [I.Culture.acquaintance_network,
-                 B.Culture.worlds.individuals.behaviour,
-                 B.Culture.worlds.individuals.update_time],
-                ["time",
-                 next_landuse_update_time,
-                 update_behaviour])
-    ]  # TODO: instantiate and list process objects here
+        Step("update farmer",
+             [I.Individual.behaviour],
+             [update_behaviour])
+    ]
 
 
 def sigmoid(x):
     """The following part contains helping stuff"""
     return 0.5 * (np.tanh(x) + 1)
-

@@ -26,59 +26,29 @@ also the model development tutorial.
 #
 import pycopancore.model_components.base as base
 import pycopancore.model_components.reg_decision_making as decision_making
+import pycopancore.model_components.lpjml as lpjml
 
-
-# entity types:
-
-# TODO: compose all needed entity type implementation classes
-# by mixing the above model components' mixin classes of the same name.
-# Only compose those entity types and process taxons that the model needs,
-# delete the templates for the unneeded ones, and add those for missing ones:
 
 # TODO: list all mixin classes needed:
-class World(base.World):
+class World(base.World,
+            lpjml.World,
+            decision_making.World):
     """World entity type."""
     pass
 
 
-# TODO: list all mixin classes needed:
-class SocialSystem(base.SocialSystem):
-    """SocialSystem entity type."""
-    pass
-
-
-# TODO: list all mixin classes needed:
-class Cell(decision_making.Cell,  # TODO why is cell not linked?
-           base.Cell):
+class Cell(base.Cell,
+           lpjml.Cell):
     """Cell entity type."""
     pass
 
 
-# TODO: list all mixin classes needed:
-class Individual(decision_making.Individual,
-                 base.Individual):
+class Individual(base.Individual,
+                 decision_making.Individual):
     """Individual entity type."""
     pass
 
 
-# process taxa:
-
-# TODO: do the same for process taxa:
-
-# TODO: list all mixin classes needed:
-
-
-
-# TODO: list all mixin classes needed:
-class Culture(decision_making.Culture,
-              base.Culture):
-    """Culture process taxon."""
-    pass
-
-
-# Model class:
-
-# TODO: list all used model components:
 class Model(decision_making.Model,
             base.Model):
     """Class representing the whole model."""
@@ -88,9 +58,9 @@ class Model(decision_making.Model,
     dynamics and decision-making on the basis of the TPB"
 
     # TODO: list all entity types you composed above:
-    entity_types = [World, SocialSystem, Cell, Individual]
+    entity_types = [World, Cell, Individual]
     """List of entity types used in the model"""
 
     # TODO: list all entity types you composed above:
-    process_taxa = [Culture]
+    process_taxa = []
     """List of process taxa used in the model"""

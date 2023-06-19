@@ -35,7 +35,7 @@ class World(I.World):
 
     # process-related methods:
     def update(self, time):
-        return time + self.delta_t
+        return time + 1
 
     def interact(self, time):
 
