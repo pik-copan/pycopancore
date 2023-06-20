@@ -38,13 +38,13 @@ class World(base.World,
 
 
 class Cell(base.Cell,
+           decision_making.Cell,
            lpjml.Cell):
     """Cell entity type."""
     pass
 
 
-class Individual(base.Individual,
-                 decision_making.Individual):
+class Individual(decision_making.Individual):
     """Individual entity type."""
     pass
 

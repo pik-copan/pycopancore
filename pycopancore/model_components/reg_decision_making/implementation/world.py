@@ -34,7 +34,7 @@ class World (I.World):
         """
         super(World, self).__init__(**kwargs)
 
-    def init_farmers(self, model, **kwargs):
+    def init_individuals(self, model, **kwargs):
         cells = self.init_cells(model, **kwargs)
         crop_idx = [
             i for i, item in enumerate(self.output.hdate.band.values)
@@ -50,13 +50,14 @@ class World (I.World):
             )
             farmer = model.Individual(
                 cell=cell,
-                copan_config=self.lpjml.config.coupled_config,
-                hdate=avg_hdate,
-                **kwargs
+                config=self.lpjml.config.coupled_config,
+                avg_hdate=avg_hdate
             )
             farmers.append(farmer)
 
-        farmers_sorted = sorted(farmers, key=lambda farmer: farmer.hdate)
+        farmers_sorted = sorted(farmers, key=lambda farmer: farmer.avg_hdate)
+        for farmer in farmers_sorted:
+            farmer.init_neighbourhood()
 
         return farmers_sorted
 

@@ -123,14 +123,26 @@ class _Mixin(object, metaclass=_MixinType):
                 if isinstance(clsattr, Variable):
                     varvals[clsattr] = val
                     continue
-            print("unexpected (misspelled?) keyword argument",key,"=",val," (was this variable properly defined in the model?)")
+
+            if val.__class__.__name__ not in [
+                "LPJmLCoupler",
+                "LPJmLData",
+                "LPJmLDataSet",
+                "CoupledConfig",
+                "LPJmLConfig",
+                "SubConfig"
+            ]:
+                print("unexpected (misspelled?) keyword argument",
+                      key, "=", val,
+                      " (was this variable properly defined in the model?)")
             nonvarkwargs[key] = val
+
         # pass other kwargs to super:
         super().__init__(**nonvarkwargs)
         # assign Variable values:
         for var, val in varvals.items():
             var.set_value(self, val)
-            
+
     def complete_values(self):
         """assign default values to all unset Variables"""
         for var in self.variables:

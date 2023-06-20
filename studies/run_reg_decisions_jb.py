@@ -71,70 +71,10 @@ lpjml = LPJmLCoupler(config_file=config_coupled_fn)
 
 
 world = M.World(lpjml=lpjml)
+
 # instantiate the cells, when replaced with actual model, one could also pass
 #    further entities to the cells, like the social system
-cells = world.init_cells(model=M)
-
-# instantiate the model and have it analyse its own structure:
-model = M.Model()
-
-delta_t = 1  # desired temporal resolution of the resulting output.
+# cells = world.init_cells(model=M)
 
 
-# test_dict_in = {"landuse": np.zeros((1, 64)),"fertilizer_nr": np.zeros((1, 32))}
-# test_dict_out = {"cftfrac": np.zeros((1, 32)),"pft_harvestc": np.zeros((1, 32)),"pft_harvestn": np.zeros((1, 32))}
-
-
-# adjust reading and writing as in Jannes' test script
-# erst mal benötigt als pre-struktur, kommt dann quasi weg, wenn lpjml output da ist
-# fkt die output auf hohem level als argument entgegennimmt
-test_dict_in = {"with_tillage": np.zeros((1, 1), dtype=int)}
-test_dict_out = {"cftfrac": np.zeros((1, 32)), "pft_harvestc": np.zeros((1, 32))}
-
-landuse_update_rate = 10
-landuse_update_prob = 1.
-
-
-dt = 1  # desired temporal resolution of the resulting output.
-
-
-# instantiate process taxa:
-env = M.Environment(
-    delta_t=delta_t,  # dt should be given to environment probably
-    start_year=start_year,  # our starting point
-    in_dict=test_dict_in,
-    out_dict=test_dict_out,
-    old_out_dict=test_dict_out,
-    # coupler=coupler
-    )
-met = M.Metabolism(
-    landuse_update_rate=landuse_update_rate,
-    landuse_update_prob=landuse_update_prob
-    )
-cul = M.Culture(
-    )
-
-# generate entities:
-
-# world = M.World(
-#     environment=env,
-#     metabolism=met,
-#     culture=cul,
-# )
-soc = M.SocialSystem(world=world)
-
-cells = world.init_cells(model=L)
-
-ind = M.Individual(cell=cell)
-
-# Run the model
-#
-
-runner = Runner(model=model)
-traj = runner.run(t_0=start_year, t_1=end_year, dt=dt)
-
-# TODO: Add some further analysis such as plotting or saving
-# plt.plot(traj['t'], traj[M.SocialSystem.population][socs[0]])
-# plt.show()
-
-# coupler.close_channel()
+farmers = world.init_individuals(model=M)

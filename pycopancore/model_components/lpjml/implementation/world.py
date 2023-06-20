@@ -23,14 +23,19 @@ class World(I.World):
     """World entity type mixin implementation class."""
 
     def __init__(self,
-                 lpjml,
+                 lpjml=None,
                  **kwargs):
         """Initialize an instance of World."""
         super().__init__(**kwargs)
+        if lpjml:
+            self.lpjml = lpjml
+            self.input = self.lpjml.read_input()
+            self.output = self.lpjml.read_historic_output()
+        else:
+            self.lpjml = None
+            self.input = None
+            self.output = None
 
-        self.lpjml = lpjml
-        self.input = self.lpjml.read_input()
-        self.output = self.lpjml.read_historic_output()
         self.neighbourhood = nx.Graph()
 
     # process-related methods:
@@ -58,7 +63,8 @@ class World(I.World):
         neighbour_matrix = self.lpjml.grid.get_neighbourhood(id=False)
 
         # Create cell instances
-        cells = [model.Cell(input=self.input.isel(cell=icell),
+        cells = [model.Cell(world=self,
+                            input=self.input.isel(cell=icell),
                             output=self.output.isel(cell=icell),
                             **kwargs)  # world = self
                  for icell in self.lpjml.get_cells(id=False)]

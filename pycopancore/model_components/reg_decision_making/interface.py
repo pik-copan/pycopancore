@@ -41,6 +41,11 @@ class World(object):
     agent_list = Variable('list of all agents', 'all agents in network')
 
 
+class Cell(object):
+    """Define Interface for Cell."""
+    pass
+
+
 class Individual (object):
     """Interface for Individual entity type mixin."""
 
@@ -57,6 +62,8 @@ class Individual (object):
                          datatype=bool)
     average_waiting_time = Variable('estimated waiting time tau', 'tau')
     update_time = Variable('next update time', 'next time for update')
+    avg_hdate = Variable('average harvest date',
+                         'weighted average harvest date of grown crops (by crop area)')
 
     # Different weights for the two AFTs
     # Weights for the sustainability pioneer AFT

@@ -19,6 +19,7 @@ from random import sample
 
 from pycopancore.process_types import Step
 from pycopancore.model_components.base import interface as B
+import pycopancore.model_components.base as base
 
 from .. import interface as I
 
@@ -33,7 +34,7 @@ class AFT(Enum):
         return sample(list(AFT), 1)[0]
 
 
-class Individual (I.Individual):
+class Individual (I.Individual, base.Individual):
     """Individual entity type mixin implementation class."""
 
     # standard methods:
@@ -50,12 +51,9 @@ class Individual (I.Individual):
         """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
 
-        self.neighbourhood = [cell_neighbour.individuals[0]
-                              for cell_neighbour in self.cell.neighbourhood]
-
         self.aft = aft
-        self.__dict__.update(getattr(config.aftpar, self.aft.name))
-        self.behaviour = self.cell.input[self.couple_target[0]]
+        self.__dict__.update(getattr(config.aftpar, self.aft.name).to_dict())
+        self.behaviour = self.cell.input[config.couple_target[0]]
 
         # average harvest date of the cell is used as a proxy for the order
         # of the agents making decisions in time through the year
@@ -72,13 +70,21 @@ class Individual (I.Individual):
         # self.max_soilc = self.soilc
         # self.max_cropyield = self.cropyield
 
+    def init_neighbourhood(self):
+        """Initialize the neighbourhood of the agent."""
+        self.neighbourhood = [
+            neighbour for cell_neighbours in self.cell.neighbourhood
+            if len(cell_neighbours.individuals) > 0
+            for neighbour in cell_neighbours.individuals
+        ]
+
     @property
     def cell_cropyield(self):
-        return self.cell.output.harvest.item()
+        return self.cell.output.pft_harvestc.values.mean()
 
     @property
     def cell_soilc(self):
-        return self.cell.output.soilc.item()
+        return self.cell.output.soilc.values.mean()
 
     @property
     def attitude(self):
