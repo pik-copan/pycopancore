@@ -22,7 +22,7 @@ class Cell(I.Cell):
 
         self.input = input
         self.output = output
-        self.neighbourhood = nx.Graph()
+        self.neighbourhood = list()
 
     def __lt__(self, other):
         return self.input.cell.values < other.input.cell.values

@@ -13,7 +13,7 @@ TODO: There is nothing to do here.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from . import interface
+from .interface import *
 
 # export all implementation classes:
 from .implementation import *

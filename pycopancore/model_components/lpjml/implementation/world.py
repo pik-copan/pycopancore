@@ -23,30 +23,30 @@ class World(I.World):
     """World entity type mixin implementation class."""
 
     def __init__(self,
-                 lpjml,
+                 lpjml=None,
                  **kwargs):
-        """Initialize an instance of World."""
+        """Initialize an instance of World.
+        """
         super().__init__(**kwargs)
+        if lpjml:
+            self.lpjml = lpjml
+            self.input = self.lpjml.read_input()
+            self.output = self.lpjml.read_historic_output()
+        else:
+            self.lpjml = None
+            self.input = None
+            self.output = None
 
-        self.lpjml = lpjml
-        self.input = self.lpjml.read_input()
-        self.output = self.lpjml.read_historic_output()
         self.neighbourhood = nx.Graph()
 
-    # process-related methods:
-    def update(self, time):
-        return time + self.delta_t
-
-    def interact(self, time):
-
-        # TODO: workarounds for now, check if this is the right way to do it
-        year = time-1
-
-        self.lpjml.send_input(self.input, year)
+    def update_lpjml(self, t):
+        """ Exchange input and output data with LPJmL
+        """
+        self.lpjml.send_input(self.input, t)
         # read output data from lpjml
-        self.output = self.lpjml.read_output(year)
+        self.output = self.lpjml.read_output(t)
 
-        if year == self.lpjml.config.lastyear:
+        if t == self.lpjml.config.lastyear:
             self.lpjml.close()
 
     def init_cells(self, model, **kwargs):
@@ -58,7 +58,8 @@ class World(I.World):
         neighbour_matrix = self.lpjml.grid.get_neighbourhood(id=False)
 
         # Create cell instances
-        cells = [model.Cell(input=self.input.isel(cell=icell),
+        cells = [model.Cell(world=self,
+                            input=self.input.isel(cell=icell),
                             output=self.output.isel(cell=icell),
                             **kwargs)  # world = self
                  for icell in self.lpjml.get_cells(id=False)]
@@ -71,14 +72,13 @@ class World(I.World):
             for neighbour in neighbour_matrix.isel(cell=icell).values:
                 if neighbour >= 0:  # Ignore negative values (-1 or NaN)
                     self.neighbourhood.add_edge(cells[icell], cells[neighbour])
-            cells[icell].neighbourhood = self.neighbourhood.subgraph(
-                [cells[icell]]
+
+        # Add neighbourhood subgraph for each cell
+        for icell in self.lpjml.get_cells(id=False):
+            cells[icell].neighbourhood = self.neighbourhood.neighbors(
+                cells[icell]
             )
 
         return cells
 
-    processes = [
-        Step("lpjml step",
-             [I.World.output],
-             [update, interact])
-    ]
+    processes = []

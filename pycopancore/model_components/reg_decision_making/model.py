@@ -15,19 +15,14 @@ then remove these instructions
 
 from . import interface as I
 # import all needed entity type implementation classes:
-from .implementation import World, Cell, Individual
-# TODO: think about
-# if social system is the more appropriate entity, or if I stick with culture 
-# (which is from the taxon category)
-# import all needed process taxon implementation classes:
-from .implementation import Culture
+from .implementation import World, Individual
 
 
 class Model(I.Model):
     """Model mixin class."""
 
     # mixins provided by this model component:
-    entity_types = [World, Cell, Individual]
+    entity_types = [World, Individual]
     """list of entity types augmented by this component"""
-    process_taxa = [Culture]
+    process_taxa = []
     """list of process taxa augmented by this component"""

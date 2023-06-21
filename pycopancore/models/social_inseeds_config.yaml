@@ -1,0 +1,25 @@
+couple_target:
+    - "with_tillage"
+
+aftpar:
+    # AFT for progressive farmer who more likely tends to switch to
+    #   regenerative agriculture
+    progressive_minded:
+        pbc: 0.5
+        weight_attitude: 0.667
+        weight_yield: 0.333
+        weight_soil: 0.667
+        weight_norm: 0.333
+        weight_social_learning: 0.5
+        weight_own_land: 0.5
+
+    # AFT for conservative/traditional values following farmer tending to stay
+    #   with conventional agriculture
+    conservative_minded:
+        pbc: 0.5
+        weight_attitude: 0.5
+        weight_yield: 0.667
+        weight_soil: 0.333
+        weight_norm: 0.5
+        weight_social_learning: 0.5
+        weight_own_land: 0.5

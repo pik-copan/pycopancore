@@ -8,6 +8,9 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 
 from pycoupler.data import LPJmLData, LPJmLDataSet
+from pycoupler.coupler import LPJmLCoupler
+from networkx import Graph
+
 
 from pycopancore.data_model.variable import Variable
 
@@ -32,7 +35,13 @@ class Model:
 # Entity type world
 class World:
     """Interface for World entity type mixin."""
-    lpjml = None
+    # TODO: This currently does not work with mixin, since mixin messes up
+    #   Python inheritance logic
+    # lpjml = Variable(
+    #     "coupled lpjml simulation",
+    #     "pycoupler lpjmlcoupler object to operate coupled lpjml instance",
+    #     datatype=LPJmLCoupler
+    # )
 
     input = Variable(
         "input to lpjml",
@@ -48,28 +57,32 @@ class World:
 
     neighbourhood = Variable(
         "neighbourhood",
-        "neighbourhood of cells",
-        datatype=LPJmLData
+        "networkx graph of neighbourhood of cells",
+        datatype=Graph
     )
 
 
 class Cell:
     """Interface for Cell entity type mixin."""
+    pass
 
-    input = Variable(
-        "input to lpjml",
-        "input LPJmLDataSet to lpjml with values on e.g. land use",
-        datatype=LPJmLDataSet
-    )
+    # TODO: This currently does not work with mixin, since mixin messes up
+    #   Python inheritance logic
 
-    output = Variable(
-        "output from lpjml",
-        "output LPJmLDataSet from lpjml with values on e.g. cftfrac",
-        datatype=LPJmLDataSet
-    )
+    # input = Variable(
+    #     "input to lpjml",
+    #     "input LPJmLDataSet to lpjml with values on e.g. land use",
+    #     datatype=LPJmLDataSet
+    # )
 
-    neighbourhood = Variable(
-        "neighbourhood",
-        "neighbourhood of cells",
-        datatype=LPJmLData
-    )
+    # output = Variable(
+    #     "output from lpjml",
+    #     "output LPJmLDataSet from lpjml with values on e.g. cftfrac",
+    #     datatype=LPJmLDataSet
+    # )
+
+    # neighbourhood = Variable(
+    #     "neighbourhood",
+    #     "neighbourhood of cells",
+    #     datatype=LPJmLData
+    # )

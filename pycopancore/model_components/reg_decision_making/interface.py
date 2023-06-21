@@ -11,13 +11,8 @@ remove these instructions.
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 
-# Use variables from the master data model wherever possible
-from pycopancore.data_model import master_data_model as D
-
 # from ..MODEL_COMPONENT import interface as MODEL_COMPONENT
 from pycopancore.data_model.variable import Variable
-from pycopancore.model_components.lpjml import interface as LPJmL
-import numpy as np
 
 
 class Model (object):
@@ -40,26 +35,10 @@ class Model (object):
     # - implementation.Model lists these entity-types and process taxons
 
 
-#
-# Entity types
-#
-class Cell (object):
-    """Interface for Cell entity type mixin."""
-    # TODO adjust to communicate with from_lpj component when re-attaching L.
-    # pft_harvestc = L.Cell.pft_harvestc
-    # crop_yield = L.Cell.pft_harvestc.copy() 
-    crop_yield = Variable('current yield', 'yield in given LPJmL cell')
-    soil_carbon = Variable('current soilC value', 'proxy for soil health')
-    # soil_carbon = L.Cell.cftfrac.copy() # TODO this is not soilcarbon, adjust
-    # lpjml_cell_id = L.Cell.lpjml_grid_cell_ids.copy()
-    lpjml_cell_id = Variable('lpjml cell id', 'given by lpjml') 
-    core_cell_id = Variable('core cell id', 'lpjml cell mapped to core')
-
-
 class World(object):
     """Define Interface for World."""
 
-    agent_list = Variable('list of all agents', 'all agents in network')
+    pass
 
 
 class Individual (object):
@@ -68,23 +47,23 @@ class Individual (object):
     attitude = Variable('farmer attitude',
                         'attitude based on observation of yield and soilC of\
                          own land and neighboring land')
-    pbc = Variable('perceived behavioral control',
+    pbc = Variable('perceived behavioural control',
                    'own appraisal of how much efficacy agent posesses')
     subjective_norm = Variable('norm surrounding an individual agent',
                                'average displayed farming behaviour of all\
                                direct neighbours of agent')
     # also potentially different for the two AFTs
-    behavior = Variable('agent behavior', 'regenerative=1, conventional=0',
-                        datatype=bool)
-    past_behavior = Variable('past agent farming behavior',
-                             'individual behavior before last update')
+    behaviour = Variable('agent behaviour', 'regenerative=1, conventional=0',
+                         datatype=bool)
     average_waiting_time = Variable('estimated waiting time tau', 'tau')
     update_time = Variable('next update time', 'next time for update')
-    
+    avg_hdate = Variable('average harvest date',
+                         'weighted average harvest date of grown crops (by crop area)')
+
     # Different weights for the two AFTs
     # Weights for the sustainability pioneer AFT
     w_sust_attitude = Variable('attitude weight of sust. AFT',
-                               'relative importance of attitude for behavior')
+                               'relative importance of attitude for behaviour')
     w_sust_yield = Variable('yield weight of sust. AFT',
                             'relative importance of yield for attitude')
     w_sust_soil = Variable('soil carbon weight of sust. AFT',
@@ -109,7 +88,7 @@ class Individual (object):
 
     # Weights for traditionalist AFT
     w_trad_attitude = Variable('attitude weight of trad. AFT',
-                               'relative importance of attitude for behavior')
+                               'relative importance of attitude for behaviour')
     w_trad_yield = Variable('yield weight of trad. AFT',
                             'relative importance of yield for attitude')
     w_trad_soil = Variable('soil carbon weight of trad. AFT',
@@ -121,40 +100,3 @@ class Individual (object):
     # trad_inertia_vals = Variable('parameter for change aversion')
     trad_pbc = Variable('perceived behavioural control', 'pbc of trad. AFT')
     # endogenous variables:
-        
-    # TODO: use variables from the master data model wherever possible
-    # wherever possible!:
-    # ONEINDIVIDUALVARIABLE = master_data_model.Individual.\
-    # ONEINDIVIDUALVARIABLE
-
-    # TODO: uncomment and adjust if you need further variables from another
-    # model component:
-    # ANOTHERINDIVIDUALVARIABLE= MODEL_COMPONENT.Individual.\
-    # ANOTHERINDIVIDUALVARIABLE
-
-# Process taxa
-
-
-class Culture(object):
-    """Interface for Culture process taxon mixin."""
-
-    acquaintance_network = D.CUL.acquaintance_network
-    # TODO make an array of individual agent decisions and respective cell ids
-    landuse_decisions = Variable(
-        "landuse decision bands",
-        """array of landuse bands, 'created by storing each agent\'s\
-        decision-makingprocess outcome in array when updatingbehaviour""",
-        datatype=np.array
-    )
-
-    last_execution_time = Variable('last exec. time',
-                                   'last time a step was executed',
-                                   default=-1)
-
-    landuse_update_rate = Variable("landuse style update rate",
-                                   """average number of time points per time\
-                                   where some individuals update their landuse\
-                                   style""",
-                                   unit=D.years**(-1), 
-                                   default=1 / D.years,
-                                   lower_bound=0)

@@ -256,14 +256,3 @@ class Culture (I.Culture):
     #                # TODO adjust
     #                # i.behaviour = 1 or 0
     #                i.update_landuse()
-
-# TODO adjust process to update_behaviour (TPB)
-    processes = [
-        Event("update landuse style",
-                [I.Culture.acquaintance_network,
-                 B.Culture.worlds.individuals.behaviour,
-                 B.Culture.worlds.individuals.update_time],
-                ["time",
-                 next_landuse_update_time,
-                 update_behaviour])
-    ]  # TODO: instantiate and list process objects here
