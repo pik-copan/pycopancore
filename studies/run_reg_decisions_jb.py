@@ -15,7 +15,7 @@ from pycoupler.run import run_lpjml
 from pycoupler.coupler import LPJmLCoupler
 from pycoupler.utils import check_lpjml
 
-# from pycopancore.runners.runner import Runner as copan_core
+# from pycopancore.runners.runner import Runner
 from pycopancore.models import social_inseeds as M
 
 
@@ -78,7 +78,7 @@ farmers = world.init_individuals(model=M)
 
 
 # Runner sucks
-# copan_core(model=M).run(t_0=world.lpjml.config.start_coupling,
+# Runner(model=M).run(t_0=world.lpjml.config.start_coupling,
 #                         t_1=world.lpjml.config.lastyear,
 #                         dt=1)
 
