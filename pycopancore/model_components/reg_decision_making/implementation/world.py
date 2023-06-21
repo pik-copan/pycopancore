@@ -70,7 +70,7 @@ class World (I.World):
     def update(self, t):
         self.update_individuals(t)
         self.update_lpjml(t)
-        print(self.input.with_tillage.values.flatten().tolist())
+        print(f"with_tillage (behaviour): {self.input.with_tillage.values.flatten().tolist()}")
 
     processes = []
 
