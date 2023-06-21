@@ -14,6 +14,7 @@ then remove these instructions
 # License: BSD 2-clause license
 import numpy as np
 
+from math import prod
 from enum import Enum
 from random import sample
 
@@ -52,8 +53,9 @@ class Individual (I.Individual, base.Individual):
         super().__init__(**kwargs)  # must be the first line
 
         self.aft = aft
+        self.couple_target = config.couple_target[0]
         self.__dict__.update(getattr(config.aftpar, self.aft.name).to_dict())
-        self.behaviour = self.cell.input[config.couple_target[0]].item()
+        self.behaviour = self.cell.input[self.couple_target].item()
 
         # average harvest date of the cell is used as a proxy for the order
         # of the agents making decisions in time through the year
@@ -84,13 +86,13 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def cell_soilc(self):
-        return self.cell.output.soilc.values.mean()
+        return self.cell.output.soilc.values.item()
 
     @property
     def attitude(self):
-        return self.weight_social_learning * \
-                self.attitude_social_learning \
-                + self.weight_own_land * self.attitude_own_land
+        return self.weight_social_learning \
+            * self.attitude_social_learning \
+            + self.weight_own_land * prod(self.attitude_own_land)
 
     # calculating the input of farmer's own land evaluation to attitude
     # differentiated for 2 farmer types
@@ -123,9 +125,9 @@ class Individual (I.Individual, base.Individual):
 
         # calc both yield and soil comparison, then weight
         # TODO think about sigmoid instead of heaviside?
-        yield_comparison = yields_diff - self.get_yield() *\
+        yield_comparison = yields_diff - self.cell_cropyield *\
             np.heaviside(yields_diff - yields_same, 0)
-        soil_comparison = soils_diff - self.get_soil_carbon() *\
+        soil_comparison = soils_diff - self.cell_soilc *\
             np.heaviside(soils_diff - soils_same, 0)
 
         return sigmoid(self.weight_yield * yield_comparison +
@@ -189,7 +191,7 @@ class Individual (I.Individual, base.Individual):
         # now comes the update
         # identity_value = 0
         tpb = (self.weight_attitude * self.attitude
-               + self.weight_norm * self.calc_social_norm())\
+               + self.weight_norm * self.social_norm)\
             * self.pbc
 
         if np.random.random() < tpb:
@@ -203,11 +205,7 @@ class Individual (I.Individual, base.Individual):
     def set_cell_input(self, value):
         self.cell.input[self.couple_target] = value
 
-    processes = [
-        Step("update farmer",
-             [I.Individual.behaviour],
-             [update_behaviour])
-    ]
+    processes = []
 
 
 def sigmoid(x):

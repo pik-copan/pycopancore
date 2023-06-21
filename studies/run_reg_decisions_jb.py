@@ -15,6 +15,7 @@ from pycoupler.run import run_lpjml
 from pycoupler.coupler import LPJmLCoupler
 from pycoupler.utils import check_lpjml
 
+# from pycopancore.runners.runner import Runner as copan_core
 from pycopancore.models import social_inseeds as M
 
 
@@ -51,7 +52,6 @@ config_coupled.double_harvest = False
 config_coupled.add_config(
     "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa
 )
-config_coupled = config_coupled.coupled_config.aftpar.progressive_minded.weight_yield
 
 # write config (Config object) as json file
 config_coupled_fn = config_coupled.to_json()
@@ -73,9 +73,15 @@ lpjml = LPJmLCoupler(config_file=config_coupled_fn)
 
 world = M.World(lpjml=lpjml)
 
-# instantiate the cells, when replaced with actual model, one could also pass
-#    further entities to the cells, like the social system
-# cells = world.init_cells(model=M)
-
 
 farmers = world.init_individuals(model=M)
+
+
+# Runner sucks
+# copan_core(model=M).run(t_0=world.lpjml.config.start_coupling,
+#                         t_1=world.lpjml.config.lastyear,
+#                         dt=1)
+
+
+for year in world.lpjml.get_sim_years():
+    world.update(year)

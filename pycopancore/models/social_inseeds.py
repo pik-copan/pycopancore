@@ -38,7 +38,6 @@ class World(base.World,
 
 
 class Cell(base.Cell,
-           decision_making.Cell,
            lpjml.Cell):
     """Cell entity type."""
     pass
@@ -49,7 +48,8 @@ class Individual(decision_making.Individual):
     pass
 
 
-class Model(decision_making.Model,
+class Model(lpjml.Model,
+            decision_making.Model,
             base.Model):
     """Class representing the whole model."""
 

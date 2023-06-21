@@ -6,10 +6,10 @@ aftpar:
     #   regenerative agriculture
     progressive_minded:
         pbc: 0.5
-        weight_attitude: 2/3
-        weight_yield: 1/3
-        weight_soil: 2/3
-        weight_norm: 1/3
+        weight_attitude: 0.667
+        weight_yield: 0.333
+        weight_soil: 0.667
+        weight_norm: 0.333
         weight_social_learning: 0.5
         weight_own_land: 0.5
 
@@ -18,8 +18,8 @@ aftpar:
     conservative_minded:
         pbc: 0.5
         weight_attitude: 0.5
-        weight_yield: 2/3
-        weight_soil: 1/3
+        weight_yield: 0.667
+        weight_soil: 0.333
         weight_norm: 0.5
         weight_social_learning: 0.5
         weight_own_land: 0.5

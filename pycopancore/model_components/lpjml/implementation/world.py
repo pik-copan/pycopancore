@@ -25,7 +25,8 @@ class World(I.World):
     def __init__(self,
                  lpjml=None,
                  **kwargs):
-        """Initialize an instance of World."""
+        """Initialize an instance of World.
+        """
         super().__init__(**kwargs)
         if lpjml:
             self.lpjml = lpjml
@@ -38,20 +39,14 @@ class World(I.World):
 
         self.neighbourhood = nx.Graph()
 
-    # process-related methods:
-    def update(self, time):
-        return time + 1
-
-    def interact(self, time):
-
-        # TODO: workarounds for now, check if this is the right way to do it
-        year = time-1
-
-        self.lpjml.send_input(self.input, year)
+    def update_lpjml(self, t):
+        """ Exchange input and output data with LPJmL
+        """
+        self.lpjml.send_input(self.input, t)
         # read output data from lpjml
-        self.output = self.lpjml.read_output(year)
+        self.output = self.lpjml.read_output(t)
 
-        if year == self.lpjml.config.lastyear:
+        if t == self.lpjml.config.lastyear:
             self.lpjml.close()
 
     def init_cells(self, model, **kwargs):
@@ -86,8 +81,4 @@ class World(I.World):
 
         return cells
 
-    processes = [
-        Step("lpjml step",
-             [I.World.output],
-             [update, interact])
-    ]
+    processes = []

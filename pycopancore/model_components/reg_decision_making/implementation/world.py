@@ -57,4 +57,25 @@ class World (I.World):
 
         return farmers_sorted
 
+    def update_individuals(self, t):
+        farmers_sorted = sorted(self.individuals,
+                                key=lambda farmer: farmer.avg_hdate)
+        for farmer in farmers_sorted:
+            farmer.update_behaviour(t)
+
+    # Runner related method, but runner sucks
+    # def update_time(self, t):
+    #     return t + 1
+
+    def update(self, t):
+        self.update_individuals(t)
+        self.update_lpjml(t)
+        print(self.input.with_tillage.values.flatten().tolist())
+
     processes = []
+
+    # processes = [
+    #     Step("inseeds step",
+    #          [],
+    #          [update_time, update])
+    # ]

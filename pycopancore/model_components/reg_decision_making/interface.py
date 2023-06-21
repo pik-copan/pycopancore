@@ -38,11 +38,6 @@ class Model (object):
 class World(object):
     """Define Interface for World."""
 
-    agent_list = Variable('list of all agents', 'all agents in network')
-
-
-class Cell(object):
-    """Define Interface for Cell."""
     pass
 
 
