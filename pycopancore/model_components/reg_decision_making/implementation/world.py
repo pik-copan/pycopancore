@@ -17,7 +17,6 @@ from pycopancore.process_types import Step
 from .. import interface as I
 
 
-
 class World (I.World):
     """Define properties.
     Inherits from I.World as the interface with all necessary variables
@@ -28,9 +27,6 @@ class World (I.World):
                  **kwargs
                  ):
         """Initialize an instance of World.
-        Parameters
-        ----------
-        agent_list
         """
         super(World, self).__init__(**kwargs)
 

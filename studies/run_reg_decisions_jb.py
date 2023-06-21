@@ -51,6 +51,7 @@ config_coupled.double_harvest = False
 config_coupled.add_config(
     "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa
 )
+config_coupled = config_coupled.coupled_config.aftpar.progressive_minded.weight_yield
 
 # write config (Config object) as json file
 config_coupled_fn = config_coupled.to_json()

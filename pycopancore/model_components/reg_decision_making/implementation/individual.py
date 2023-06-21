@@ -53,7 +53,7 @@ class Individual (I.Individual, base.Individual):
 
         self.aft = aft
         self.__dict__.update(getattr(config.aftpar, self.aft.name).to_dict())
-        self.behaviour = self.cell.input[config.couple_target[0]]
+        self.behaviour = self.cell.input[config.couple_target[0]].item()
 
         # average harvest date of the cell is used as a proxy for the order
         # of the agents making decisions in time through the year
