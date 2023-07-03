@@ -19,6 +19,7 @@ def plot_trajectory(list_1, list_2, t):
         plt.ylabel(str(list_2))
         plt.title(f"Trajectory {str(list_1)} vs. {str(list_2)}")
 
+
 def translate_into_thesis_naming(param):
     string = str()
     if param == "k_value":
@@ -52,13 +53,12 @@ def translate_into_thesis_naming(param):
         print("Error translating.")
     return string
 
+
 def get_mofa_id(parameter_combinations):
     """
     Recreates the fnames used by pymofa without the _s1 indicating number of runs.
     With this all trajectories from a single run can then be plotted.
-
     parameter_combinations: single tuple or list of tuples as created by it.product(param1, param2)
-
     returns: list of ids
     """
 
@@ -102,7 +102,6 @@ def get_mofa_id(parameter_combinations):
 def correct_timeline(lists, t_lists, shape, t_new):
     """Correct the timeline of one list to have same time points.
     Careful, depending on the resolution of t_new some data might be lost!
-
     lists: list or list of list containing data
     t_lists: list or list of list containing time points and are of different length
     shape: "1d" if single list, "2d" if list of lists
@@ -121,18 +120,18 @@ def correct_timeline(lists, t_lists, shape, t_new):
                     if k >= t_new[index - 1] and k < t_new[index]:
                         list_index = count
                 new_sub_list.append(lists[i][list_index])
-            new_sub_list.append(lists[i][len(lists[i])-1])
+            new_sub_list.append(lists[i][len(lists[i]) - 1])
             new_list.append(new_sub_list)
 
-    else: # 1d
+    else:  # 1d
         new_list = []
         list_index = 0
         for index, t in enumerate(t_new[1:]):
             for count, k in enumerate(t_lists):
-                if k >= t_new[index-1] and k < t_new[index]:
+                if k >= t_new[index - 1] and k < t_new[index]:
                     list_index = count
             new_list.append(lists[list_index])
-        new_list.append(lists[len(lists)-1])
+        new_list.append(lists[len(lists) - 1])
 
     print(f"Done correcting timelines!")
     return new_list
@@ -278,6 +277,7 @@ def plot_distributions(parameter_combinations, variables, ranges, timestep, RAW_
         plt.close()
     print("Done plotting distributions!")
 
+
 def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, variables, timepoints, nc, SAVE_FOLDER):
     for c in parameter_combinations:
         fig, ax = plt.subplots(1, len(variables))
@@ -315,9 +315,8 @@ def plot_mean_and_std_traj(data, parameter_combinations, parameter_name_list, va
         plt.close("all")
 
 
-
-
-def phase_transition(data, parameter_combinations, parameter_dict, parameter_name_list, param_1, timestep, variables, nc, SAVE_PATH , scale=None):
+def phase_transition(data, parameter_combinations, parameter_dict, parameter_name_list, param_1, timestep, variables,
+                     nc, SAVE_PATH, scale=None):
     """Create phase transition plots for 1 parameter. Only works for sweeps of single params!!!
     data: the data
     parameter_name_list: list of parameter names
@@ -369,17 +368,19 @@ def phase_transition(data, parameter_combinations, parameter_dict, parameter_nam
         for index, name in enumerate(variables):
             for i in range(len(mean)):
                 mean[i] = float(data['mean'].unstack('observables').xs(key=tuple(A[i]),
-                                level=parameter_name_list).loc[timestep, name] / nc)
+                                                                       level=parameter_name_list).loc[
+                                    timestep, name] / nc)
                 std[i] = float(data['std'].unstack('observables').xs(key=tuple(A[i]),
-                               level=parameter_name_list).loc[timestep, name] / nc)
+                                                                     level=parameter_name_list).loc[
+                                   timestep, name] / nc)
             if name == "Cell.stock":
-                #ax[index].set_major_formatter(FormatStrFormatter('%.2f'))
-                #ax[index].set_major_formatter(FormatStrFormatter('%.2f'))
+                # ax[index].set_major_formatter(FormatStrFormatter('%.2f'))
+                # ax[index].set_major_formatter(FormatStrFormatter('%.2f'))
                 ax[index].set_ylabel(r"$\langle S \rangle$")
                 ax[index].set_ylim(0, 1)
                 ax[index].set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-                #ax[index].set_xticks(parameter_values)
-                #ax[index].set_xticks(parameter_values[::5])
+                # ax[index].set_xticks(parameter_values)
+                # ax[index].set_xticks(parameter_values[::5])
                 if scale == "log":
                     ax[index].set_xscale('log')
                 if scale == "log2":
@@ -387,19 +388,19 @@ def phase_transition(data, parameter_combinations, parameter_dict, parameter_nam
                 # ax[index].set_xticks([1, 2, 4, 8, 16, 32, 64, 128])
                 ax[index].scatter(parameter_values, mean, color="forestgreen")
                 ax[index].fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(std))),
-                             list(np.add(np.array(mean), np.array(std))), alpha=0.1, color="forestgreen")
-                #ax[index].set_title(name)
+                                       list(np.add(np.array(mean), np.array(std))), alpha=0.1, color="forestgreen")
+                # ax[index].set_title(name)
                 ax[index].set_xlabel(translate_into_thesis_naming(param_1))
-                #ax[index].set_ylabel("Value")
+                # ax[index].set_ylabel("Value")
 
             elif name == "Individual.behaviour":
-                #ax[index].set_major_formatter(FormatStrFormatter('%.2f'))
-                #ax[index].set_major_formatter(FormatStrFormatter('%.2f'))
+                # ax[index].set_major_formatter(FormatStrFormatter('%.2f'))
+                # ax[index].set_major_formatter(FormatStrFormatter('%.2f'))
                 ax[index].set_ylabel(r"$\langle n_s \rangle$")
                 ax[index].set_ylim(0, 1)
                 ax[index].set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-                #ax[index].set_xticks(parameter_values)
-                #ax[index].set_xticks(parameter_values[::5])
+                # ax[index].set_xticks(parameter_values)
+                # ax[index].set_xticks(parameter_values[::5])
                 if scale == "log":
                     ax[index].set_xscale('log')
                 if scale == "log2":
@@ -408,8 +409,8 @@ def phase_transition(data, parameter_combinations, parameter_dict, parameter_nam
                 ax[index].scatter(parameter_values, mean, color="firebrick")
                 # print(parameter_values, mean)
                 ax[index].fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(std))),
-                             list(np.add(np.array(mean), np.array(std))), alpha=0.1, color="firebrick")
-                #ax[index].set_title(name)
+                                       list(np.add(np.array(mean), np.array(std))), alpha=0.1, color="firebrick")
+                # ax[index].set_title(name)
                 ax[index].set_xlabel(translate_into_thesis_naming(param_1))
                 # plot cdf
                 # x = np.arange(0, 1, 0.01)
@@ -420,7 +421,7 @@ def phase_transition(data, parameter_combinations, parameter_dict, parameter_nam
                 ax[index].set_ylabel("Value")
                 ax[index].scatter(parameter_values, mean, color="red")
                 ax[index].fill_between(parameter_values, list(np.subtract(np.array(mean), np.array(std))),
-                             list(np.add(np.array(mean), np.array(std))), alpha=0.1, color="red")
+                                       list(np.add(np.array(mean), np.array(std))), alpha=0.1, color="red")
                 ax[index].set_title(name)
                 ax[index].set_xlabel(param_1)
         # plt.legend()
@@ -449,9 +450,8 @@ def phase_transition(data, parameter_combinations, parameter_dict, parameter_nam
         n += 1
 
 
-
-
-def pixel_plot(data, config, cmaps, parameter_name_list, parameter_list, PARAM_COMBS, timestep, variables, nc, SAVE_PATH, scale=None, groups=None):
+def pixel_plot(data, config, cmaps, parameter_name_list, parameter_list, PARAM_COMBS, timestep, variables, nc,
+               SAVE_PATH, scale=None, groups=None):
     # create key sets for single parameter sweeps for plotting
     # change the ones that were sweeped and fix the other ones
 
@@ -518,9 +518,11 @@ def pixel_plot(data, config, cmaps, parameter_name_list, parameter_list, PARAM_C
                 for i in range(np.shape(matrix)[0]):
                     for j in range(np.shape(matrix)[1]):
                         matrix[i][j] = float(data['mean'].unstack('observables').xs(key=tuple(A[i][j]),
-                                             level=parameter_name_list).loc[timestep, name] / nc)
+                                                                                    level=parameter_name_list).loc[
+                                                 timestep, name] / nc)
                         std_matrix[i][j] = float(data['std'].unstack('observables').xs(key=tuple(A[i][j]),
-                                                 level=parameter_name_list).loc[timestep, name] / nc)
+                                                                                       level=parameter_name_list).loc[
+                                                     timestep, name] / nc)
                         if groups:
                             if j > i:
                                 matrix[i][j] = None
@@ -547,9 +549,11 @@ def pixel_plot(data, config, cmaps, parameter_name_list, parameter_list, PARAM_C
                         im = ax[index].imshow(m, interpolation="None", origin="lower", vmin=0, vmax=0.5, cmap=cmaps[2])
                     else:
                         if name == "Cell.stock":
-                            im = ax[index].imshow(m, interpolation="None", origin="lower", vmin=0, vmax=0.5, cmap=cmaps[0])
+                            im = ax[index].imshow(m, interpolation="None", origin="lower", vmin=0, vmax=0.5,
+                                                  cmap=cmaps[0])
                         else:
-                            im = ax[index].imshow(m, interpolation="None", origin="lower", vmin=0, vmax=1, cmap=cmaps[1])
+                            im = ax[index].imshow(m, interpolation="None", origin="lower", vmin=0, vmax=1,
+                                                  cmap=cmaps[1])
                     # plt.colorbar(ax=ax[index])
                     # ax.set_xscale('log', base=2)
                     ax[index].set_xlabel(translate_into_thesis_naming(param2))
@@ -563,19 +567,19 @@ def pixel_plot(data, config, cmaps, parameter_name_list, parameter_list, PARAM_C
                     xtickslabels = []
                     for w in param_list2:
                         if w < 1:
-                            xtickslabels.append(format(w,'.3f'))
+                            xtickslabels.append(format(w, '.2f'))
                         else:
                             xtickslabels.append(w)
-                    ax[index].set_xticklabels(xtickslabels, rotation = -45)
+                    ax[index].set_xticklabels(xtickslabels, rotation=-45, fontsize=6)
                     ax[index].set_yticks(yticks)
                     if index == 0:
                         ytickslabels = []
                         for w in param_list1:
                             if w < 1:
-                                ytickslabels.append(format(w, '.3f'))
+                                ytickslabels.append(format(w, '.2f'))
                             else:
                                 ytickslabels.append(w)
-                        ax[index].set_yticklabels(ytickslabels)
+                        ax[index].set_yticklabels(ytickslabels, fontsize=6)
                     else:
                         ax[index].set_yticklabels([])
 
@@ -620,6 +624,7 @@ def pixel_plot(data, config, cmaps, parameter_name_list, parameter_list, PARAM_C
                 plt.savefig(SAVE_PATH + f"/pixelplots/{param1}_{param2}_{name}_{id}" + ".png")
                 plt.close("all")
         print("Done plotting figures!")
+
 
 def stationarity_analysis():
     ids = get_mofa_id(PARAM_COMBS)
@@ -671,8 +676,8 @@ def stationarity_analysis():
             data = [i, mean_p_cells[index], mean_p_inds[index]]
         writer.writerow(data)
 
-def plot_phase_plot(data, parameter_combinations, parameter_name_list, variables, timepoints, nc, SAVE_FOLDER):
 
+def plot_phase_plot(data, parameter_combinations, parameter_name_list, variables, timepoints, nc, SAVE_FOLDER):
     if not os.path.exists(SAVE_FOLDER + "/phasespace"):
         os.mkdir(SAVE_FOLDER + "/phasespace")
 
@@ -684,7 +689,7 @@ def plot_phase_plot(data, parameter_combinations, parameter_name_list, variables
 
         x = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)[name_1]
         y = data['mean'].unstack('observables').xs(key=c, level=parameter_name_list)[name_2]
-        plt.plot(x/nc, y/nc)
+        plt.plot(x / nc, y / nc)
         plt.xlabel(r"$\langle S \rangle$")
         plt.ylabel(r"$\langle n_s \rangle$")
         plt.xlim(0, 1.0)
@@ -698,7 +703,9 @@ def plot_phase_plot(data, parameter_combinations, parameter_name_list, variables
         plt.savefig(SAVE_FOLDER + "/phasespace/" + f"{c}" + ".png")
         plt.close("all")
 
-def plot_phase_plot_with_analytical_h(data, error, parameter_combinations, parameter_name_list, parameter_list, variables, timepoints, nc, SAVE_FOLDER):
+
+def plot_phase_plot_with_analytical_h(data, error, parameter_combinations, parameter_name_list, parameter_list,
+                                      variables, timepoints, nc, SAVE_FOLDER):
     from scipy.integrate import odeint
     from scipy.special import expit
 
@@ -764,7 +771,7 @@ def plot_phase_plot_with_analytical_h(data, error, parameter_combinations, param
         labelcount = 0
         t = np.arange(0, 50, 0.1)
         for count, y in enumerate(y_0):
-            #colorVal = scalarMap.to_rgba(values[c])
+            # colorVal = scalarMap.to_rgba(values[c])
             sol = odeint(dynamical_system, y, t, args=(k,))
             for index in range(len(t) - 1):
                 plt.arrow(sol[index, 0], sol[index, 1], sol[index + 1, 0] - sol[index, 0],
@@ -778,21 +785,20 @@ def plot_phase_plot_with_analytical_h(data, error, parameter_combinations, param
 
         x = data['mean'].unstack('observables').xs(key=comb, level=parameter_name_list)[name_1]
         y = data['mean'].unstack('observables').xs(key=comb, level=parameter_name_list)[name_2]
-        #plt.plot(x / nc, y / nc, color="navy", label="model traj.", linewidth=2)
+        # plt.plot(x / nc, y / nc, color="navy", label="model traj.", linewidth=2)
 
         labelcount = 0
         for index, t in enumerate(timepoints):
             colorVal = scalarMap.to_rgba(values[index])
-            if index < (len(timepoints)-1):
+            if index < (len(timepoints) - 1):
                 plt.arrow(x[t] / nc, y[t] / nc, x[timepoints[index + 1]] / nc - x[t] / nc,
                           y[timepoints[index + 1]] / nc - y[t] / nc,
                           color=colorVal, width=0.005, head_width=0, alpha=1)
                 if labelcount == 0:
-                    plt.arrow(x[t] / nc, y[t] / nc, x[timepoints[index+1]] / nc - x[t] / nc,
-                          y[timepoints[index+1]] / nc - y[t] / nc,
-                          color=colorVal, width=0.005, head_width=0, alpha=1, label="model traj.")
+                    plt.arrow(x[t] / nc, y[t] / nc, x[timepoints[index + 1]] / nc - x[t] / nc,
+                              y[timepoints[index + 1]] / nc - y[t] / nc,
+                              color=colorVal, width=0.005, head_width=0, alpha=1, label="model traj.")
                     labelcount += 1
-                
 
         if error:
             x_e = data['std'].unstack('observables').xs(key=comb, level=parameter_name_list)[name_1]
@@ -802,8 +808,8 @@ def plot_phase_plot_with_analytical_h(data, error, parameter_combinations, param
                 if index == 1:
                     plt.errorbar(x[e] / nc, y[e] / nc, xerr=x_e[e] / nc, yerr=y_e[e] / nc,
                                  color="dimgrey", label=r"$\sigma$", lolims=True, uplims=True)
-                plt.errorbar(x[e]/nc, y[e]/nc, xerr=x_e[e]/nc, yerr=y_e[e]/nc, color="dimgrey", lolims=True, uplims=True)
-
+                plt.errorbar(x[e] / nc, y[e] / nc, xerr=x_e[e] / nc, yerr=y_e[e] / nc, color="dimgrey", lolims=True,
+                             uplims=True)
 
         plt.xlabel(r"$\langle S \rangle$")
         plt.ylabel(r"$\langle n_s \rangle$")

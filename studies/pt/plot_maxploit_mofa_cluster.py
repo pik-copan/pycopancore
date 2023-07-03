@@ -24,12 +24,12 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "full_model_thresholds_64_4"
+experiment_name = "full_model_new_timescales_64_4"
 
 # path to cluster data
 # PATH = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
-PATH = f"/p/projects/copan/users/maxbecht/results/maxploit3/{experiment_name}"
-# PATH = f"/p/tmp/maxbecht/results/{experiment_name}"
+# PATH = f"/p/projects/copan/users/maxbecht/results/maxploit3/{experiment_name}"
+PATH = f"/p/tmp/maxbecht/results/{experiment_name}"
 
 # path to test data
 # PATH = f"C:/Users/bigma/Documents/Uni/Master/MA_Masterarbeit/results/maxploit/00_old/{experiment_name}"
@@ -236,6 +236,7 @@ if os.path.exists(RAW_PATH):
 # pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "p", last_timestep, variables_2, 400, SAVE_PATH, scale="log")
 # pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "k_value", last_timestep, variables_2, 400, SAVE_PATH, scale="log")
 # pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "ng_total", last_timestep, variables_2, 400, SAVE_PATH)
+# pmf.phase_transition(data, PARAM_COMBS, parameter_dict, parameter_name_list, "group_update_probability", last_timestep, variables_2, 400, SAVE_PATH)
 
 # ----- 2d phase space plot -----
 # pmf.plot_phase_plot(data, PARAM_COMBS, parameter_name_list, ["Cell.stock", "Individual.behaviour"], timepoints, 400, SAVE_PATH)

@@ -40,7 +40,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "full_model_storyline_2_1"
+experiment_name = "full_model_new_thresholds_64_4"
 # how to call postprocessed results
 post_process_filename = "stateval_results.pkl"
 
@@ -121,8 +121,8 @@ timestep = [0.1]
 # culture
 # list(np.arange(0.45, 0.55, 0.01))
 # [0.5]
-descriptive_majority_threshold = [0.5]
-injunctive_majority_threshold = [0.5]
+descriptive_majority_threshold = list(np.arange(0,1,0.025))
+injunctive_majority_threshold = list(np.arange(0,1,0.025))
 weight_descriptive = [0.33]
 weight_injunctive = [0.33]
 weight_harvest = [0.33]
@@ -136,11 +136,11 @@ average_waiting_time = [1]
 update_probability = [0.25]
 
 # groups:
-group_meeting_interval = [50]
-group_update_probability = [1]
+group_meeting_interval = [1]
+group_update_probability = [0.25]
 # [1, 2, 4, 8, 16, 32, 64, 128, 256]
-n_group_memberships = [1]
-ng_total = [2]  # number of total groups
+n_group_memberships = [4]
+ng_total = [64]  # number of total groups
 ng_sust_frac = [0.5]
 
 # networks
@@ -281,7 +281,7 @@ def RUN_FUNC(attitude_on, ind_initialisation, group_initialisation, fix_group_at
 
         # instantiate groups
     if group_initialisation:
-        group_attitude = [0]
+        group_attitude = [0, 1]
         groups = [M.Group(culture=culture, world=world, group_update_probability=group_update_probability,
                           group_attitude=np.random.choice(group_attitude),
                           group_meeting_interval=group_meeting_interval) for i in range(ng_total)]

@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --qos=short
-#SBATCH --job-name=full_model_storyline_2_1
+#SBATCH --qos=priority
+#SBATCH --job-name=full_model_new_thresholds_64_4
 #SBATCH --account=copan
 #SBATCH --ntasks=16
 #SBATCH --exclusive
-#SBATCH --output=full_model_storyline_2_1%j.out
-#SBATCH --error=full_model_storyline_2_1%j.err
-#SBATCH --workdir=/p/tmp/maxbecht/results/full_model_storyline_2_1
+#SBATCH --output=full_model_new_thresholds_64_4%j.out
+#SBATCH --error=full_model_new_thresholds_64_4%j.err
+#SBATCH --workdir=/p/tmp/maxbecht/results/full_model_new_thresholds_64_4
 
 
 echo "------------------------------------------------------------"
