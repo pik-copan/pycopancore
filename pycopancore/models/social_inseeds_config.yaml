@@ -1,6 +1,18 @@
 couple_target:
     - "with_tillage"
 
+lpjml_settings:
+    country_code_to_name: true # same for region code
+    iso_country_code: true
+
+output:
+    individual:
+        - "behaviour"
+        - "avg_hdate"
+        - "soilc"
+        - "cropyield"
+
+
 aftpar:
     # AFT for progressive farmer who more likely tends to switch to
     #   regenerative agriculture

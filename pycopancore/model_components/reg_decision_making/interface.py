@@ -13,6 +13,8 @@ remove these instructions.
 
 # from ..MODEL_COMPONENT import interface as MODEL_COMPONENT
 from pycopancore.data_model.variable import Variable
+from pycopancore.data_model.master_data_model.dimensions_and_units import \
+    DimensionsAndUnits as DAU
 
 
 class Model (object):
@@ -58,8 +60,14 @@ class Individual (object):
     average_waiting_time = Variable('estimated waiting time tau', 'tau')
     update_time = Variable('next update time', 'next time for update')
     avg_hdate = Variable('average harvest date',
-                         'weighted average harvest date of grown crops (by crop area)')
-
+                         'weighted average harvest date of grown crops (by crop area)',
+                         unit=DAU.doy)
+    soilc = Variable('soil organic carbon',
+                     'soil organic carbon content of agent land',
+                     unit=DAU.gC_per_m2)
+    cropyield = Variable('average crop yield',
+                         'average crop yield of agent land weighted by crop area',
+                         unit=DAU.gC_per_m2)
     # Different weights for the two AFTs
     # Weights for the sustainability pioneer AFT
     w_sust_attitude = Variable('attitude weight of sust. AFT',

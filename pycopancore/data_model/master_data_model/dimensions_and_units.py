@@ -29,9 +29,10 @@ class DimensionsAndUnits:
     minutes = (seconds * 60).named("minutes", symbol="min")
     h = hours = (minutes * 60).named("hours", symbol="h")
     days = (hours * 24).named("days", symbol="d")
+    doy = (hours * 24).named("day of the year", symbol="doy")
     weeks = (days * 7).named("weeks")
     months = (years / 12).named("months")
-    
+
     mass = Dimension("mass",
                      "mass (only use for matter changing its type, otherwise use specific mass dimension, e.g. 'carbon')")
     mass.default_unit = t = tonnes = \
@@ -40,7 +41,8 @@ class DimensionsAndUnits:
              symbol="t")
     Gt = gigatonnes = (tonnes * 1e9).named("gigatonnes", symbol="Gt")
     kg = kilograms = (tonnes * 1e-3).named("kilograms", symbol="kg")
-    
+    g = grams = (tonnes * 1e-6).named("grams", symbol="g")
+
     absolute_temperature = Dimension("absolute temperature",
                                      "absolute temperature")
     absolute_temperature.default_unit = K = kelvins = \
@@ -70,7 +72,10 @@ class DimensionsAndUnits:
              symbol="tC")
     GtC = gigatonnes_carbon = (tonnes_carbon * 1e9).named("gigatonnes carbon",
                                                           symbol="GtC")
-    
+    kgC = kilograms_carbon = (tonnes_carbon * 1e-3).named("kilograms carbon",
+                                                          symbol="kgC")
+    gC = grams_carbon = (tonnes_carbon * 1e-6).named("grams carbon",
+                                                     symbol="gC")
     humans = Dimension("humans", "cardinality of a set of human beings")
     humans.default_unit = H = people = persons = \
         Unit("people", "number of human beings", symbol="H")
@@ -101,23 +106,31 @@ class DimensionsAndUnits:
     power = energy_flow = heat_flow = (energy / time).named("energy flow")
     GW = gigawatts = (GWh / h).named("gigawatts", symbol="GW")
     W = watts = (GW / 1e9).named("watts", symbol="W")
-    
+
     # other derived dimensions and units:
-    
+
     percent = pct = (unity / 100).named("per cent", symbol="%")
-    
+
     area = (length**2).named("area", "2D spatial dimension")
-    km2 = square_kilometers = (kilometers**2).named("square kilometers", symbol="km²")
-    hectares = (meters**2 * 1e4).named("hectares", symbol="ha")
-    
+    km2 = square_kilometers = (kilometers**2).named("square kilometers",
+                                                    symbol="km²")
+    ha = hectares = (meters**2 * 1e4).named("hectares", symbol="ha")
+    m2 = square_meters = (meters**2).named("square meters", symbol="m²")
+
     volume = (length**3).named("volume", "3D spatial dimension")
-    litres = (decimeters**3).named("litres", symbol="l") 
-    
+    litres = (decimeters**3).named("litres", symbol="l")
+
     velocity = (length / time).named("velocity")
     acceleration = (velocity / time).named("acceleration")
+
+    tC_per_ha = (t/ha).named("tonnes carbon per hectare",
+                             symbol="tC/ha")
+    kgC_per_m2 = (kgC/m2).named("grams carbon per square meter",
+                                symbol="kgC/m²")
+    gC_per_m2 = (gC/m2).named("grams carbon per square meter",
+                              symbol="gC/m²")
 
     person_hours = (people * hours).named("person hours")
     person_months = (people * months).named("person months")
 
     heat_flux = (heat_flow / area).named("heat flux")
-    

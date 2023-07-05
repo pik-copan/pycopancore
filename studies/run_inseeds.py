@@ -70,7 +70,9 @@ config_coupled.set_coupled(sim_path,
                            coupled_output=["soilc",
                                            "cftfrac",
                                            "pft_harvestc",
-                                           "hdate"])
+                                           "hdate",
+                                           "country",
+                                           "region"])
 
 # only for single cells runs
 config_coupled.outputyear = 2022
@@ -134,17 +136,11 @@ run_lpjml(
 lpjml = LPJmLCoupler(config_file=config_coupled_fn)
 
 # initialize (LPJmL) world
-world = M.World(lpjml=lpjml)
+world = M.World(model=M, lpjml=lpjml)
 
 # initialize (cells and) individuals
-farmers = world.init_individuals(model=M)
+farmers = world.init_individuals()
 
 # run coupled model until end_year
 for year in world.lpjml.get_sim_years():
     world.update(year)
-
-
-# No Runner needed
-# Runner(model=M).run(t_0=world.lpjml.config.start_coupling,
-#                         t_1=world.lpjml.config.lastyear,
-#                         dt=1)

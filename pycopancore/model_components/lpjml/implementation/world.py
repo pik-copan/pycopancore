@@ -12,9 +12,10 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
+import numpy as np
+import networkx as nx
 
 from .. import interface as I
-import networkx as nx
 
 from pycopancore.process_types import Step
 
@@ -23,11 +24,17 @@ class World(I.World):
     """World entity type mixin implementation class."""
 
     def __init__(self,
+                 model=None,
                  lpjml=None,
                  **kwargs):
         """Initialize an instance of World.
         """
         super().__init__(**kwargs)
+        if model:
+            self.model = model
+        else:
+            self.model = None
+
         if lpjml:
             self.lpjml = lpjml
             self.input = self.lpjml.read_input()
@@ -39,9 +46,16 @@ class World(I.World):
 
         self.neighbourhood = nx.Graph()
 
+        if self.lpjml.config.coupled_config.lpjml_settings.country_code_to_name:  # noqa
+            self.lpjml.code_to_name(
+                self.lpjml.config.coupled_config.lpjml_settings.iso_country_code  # noqa
+            )
+
     def update_lpjml(self, t):
         """ Exchange input and output data with LPJmL
         """
+        self.input.time.values[0] = np.datetime64(f"{t}-12-31")
+        # send input data to lpjml
         self.lpjml.send_input(self.input, t)
         # read output data from lpjml
         self.output = self.lpjml.read_output(t)
@@ -49,7 +63,7 @@ class World(I.World):
         if t == self.lpjml.config.lastyear:
             self.lpjml.close()
 
-    def init_cells(self, model, **kwargs):
+    def init_cells(self, **kwargs):
         """Init cell instances for each corresponding cell via numpy views"""
         # https://docs.xarray.dev/en/stable/user-guide/indexing.html#copies-vs-views
 
@@ -58,11 +72,17 @@ class World(I.World):
         neighbour_matrix = self.lpjml.grid.get_neighbourhood(id=False)
 
         # Create cell instances
-        cells = [model.Cell(world=self,
-                            input=self.input.isel(cell=icell),
-                            output=self.output.isel(cell=icell),
-                            **kwargs)  # world = self
-                 for icell in self.lpjml.get_cells(id=False)]
+        cells = [
+            self.model.Cell(
+                world=self,
+                input=self.input.isel(cell=icell),
+                output=self.output.isel(cell=icell),
+                grid=self.lpjml.grid.isel(cell=icell),
+                country=self.lpjml.country.isel(cell=icell) if hasattr(self.lpjml, "country") else None,  # noqa
+                region=self.lpjml.region.isel(cell=icell) if hasattr(self.lpjml, "region") else None,  # noqa
+                **kwargs
+            ) for icell in self.lpjml.get_cells(id=False)
+        ]
 
         # Build neighbourhood graph nodes from cells
         self.neighbourhood.add_nodes_from(cells)
