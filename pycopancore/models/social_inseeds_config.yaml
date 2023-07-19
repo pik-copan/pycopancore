@@ -1,6 +1,28 @@
-couple_target:
-    - "with_tillage"
+# Settings for LPJmL specifically for coupling (pycoupler)
+#   (not covered by LPJmL's direct config)
+lpjml_settings:
+    country_code_to_name: true # same for region code
+    iso_country_code: true
 
+# Variables to be written to copan_core_data table file 
+output:
+    individual:
+        - "behaviour"
+        - "avg_hdate"
+        - "soilc"
+        - "cropyield"
+
+# Define how copan_core_data table file should be written
+output_settings:
+    write_lon_lat: true
+    format: "csv"  # "csv", "feather" (fast binary table format)
+
+# Define which individual variables map with coupled LPJmL input variables
+coupling_map:
+    behaviour: ["with_tillage"]  # "residue_on_field"
+
+# Analogous to LPJmL pftpar, define the AFT parameters for the two different
+#   farmer types
 aftpar:
     # AFT for progressive farmer who more likely tends to switch to
     #   regenerative agriculture

@@ -17,12 +17,20 @@ class Cell(I.Cell):
     def __init__(self,
                  input=None,
                  output=None,
+                 grid=None,
+                 country=None,
+                 region=None,
                  **kwargs):
         """Initialize an instance of Cell."""
 
         self.input = input
         self.output = output
         self.neighbourhood = list()
+        self.grid = grid
+        if country is not None:
+            self.country = country
+        if region is not None:
+            self.region = region
 
     def __lt__(self, other):
         return self.input.cell.values < other.input.cell.values
