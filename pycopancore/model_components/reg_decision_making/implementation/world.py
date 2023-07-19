@@ -33,23 +33,17 @@ class World (I.World):
         super(World, self).__init__(**kwargs)
 
     def init_individuals(self, **kwargs):
+        """Initialize individuals.
+        """
         cells = self.init_cells(**kwargs)
-        crop_idx = [
-            i for i, item in enumerate(self.output.hdate.band.values)
-            if any(x in item for x in self.lpjml.config.cftmap)
-        ]
         farmers = []
         for cell in cells:
             if cell.output.cftfrac.sum("band") == 0:
                 continue
-            avg_hdate = np.average(
-                cell.output.hdate,
-                weights=cell.output.cftfrac.isel(band=crop_idx)
-            )
+
             farmer = self.model.Individual(
                 cell=cell,
-                config=self.lpjml.config.coupled_config,
-                avg_hdate=avg_hdate
+                config=self.lpjml.config.coupled_config
             )
             farmers.append(farmer)
 
@@ -57,7 +51,7 @@ class World (I.World):
         for farmer in farmers_sorted:
             farmer.init_neighbourhood()
 
-        return farmers_sorted
+        return farmers_sorted, cells
 
     def update_individuals(self, t):
         farmers_sorted = sorted(self.individuals,
@@ -109,14 +103,20 @@ class World (I.World):
                     else:
                         call = ""
 
-                    df_data["longitude"] = [
-                        eval(f"attr{call}.grid.longitude.item()")
+                    df_data["cell"] = [
+                        eval(f"attr{call}.grid.cell.item()")
                         for attr in getattr(self, f"{core_class}s")
                     ]
-                    df_data["latitude"] = [
-                        eval(f"attr{call}.grid.latitude.item()")
-                        for attr in getattr(self, f"{core_class}s")
-                    ]
+
+                    if self.lpjml.config.coupled_config.output_settings.write_lon_lat:  # noqa
+                        df_data["longitude"] = [
+                            eval(f"attr{call}.grid.longitude.item()")
+                            for attr in getattr(self, f"{core_class}s")
+                        ]
+                        df_data["latitude"] = [
+                            eval(f"attr{call}.grid.latitude.item()")
+                            for attr in getattr(self, f"{core_class}s")
+                        ]
 
                     if hasattr(self.lpjml, "country"):
                         df_data["country"] = [
@@ -129,17 +129,24 @@ class World (I.World):
                             for attr in getattr(self, f"{core_class}s")
                         ]
 
-                df_data["variable"] = (
+                variable = (
                     [eval(f"self.model.{copan_interface}.{var}.name")] * len(
                         getattr(self, f"{core_class}s")
                     )
                 )
 
                 if core_class == "world":
+                    df_data["class"] = [core_class]
+                    df_data["variable"] = variable
                     df_data["value"] = [
                         eval(f"self.{var}")
                     ]
+
                 else:
+                    df_data["class"] = [core_class] * len(
+                        getattr(self, f"{core_class}s")
+                    )
+                    df_data["variable"] = variable
                     df_data["value"] = [
                         eval(f"attr.{var}")
                         for attr in getattr(self, f"{core_class}s")

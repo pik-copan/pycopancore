@@ -46,20 +46,20 @@ class Individual (I.Individual, base.Individual):
                  *,
                  aft=AFT.random(),
                  config=None,
-                 avg_hdate=0,
                  **kwargs):
 
         """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
 
         self.aft = aft
-        self.couple_target = config.couple_target[0]
+        self.coupling_map = config.coupling_map.to_dict()
         self.__dict__.update(getattr(config.aftpar, self.aft.name).to_dict())
-        self.behaviour = self.cell.input[self.couple_target].item()
+
+        self.init_coupled_vars()
 
         # average harvest date of the cell is used as a proxy for the order
         # of the agents making decisions in time through the year
-        self.avg_hdate = avg_hdate
+        self.avg_hdate = self.cell_avg_hdate
 
         # soilc is the last "measured" soilc value of the farmer whereas the
         #   cell_soilc value is the actual status of soilc of the cell
@@ -86,7 +86,18 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def cell_soilc(self):
-        return self.cell.output.soilc.values.item()
+        return self.cell.output.soilc_agr_layer.values.mean()  # [:2]
+
+    @property
+    def cell_avg_hdate(self):
+        crop_idx = [
+            i for i, item in enumerate(self.cell.world.output.hdate.band.values)  # noqa
+            if any(x in item for x in self.cell.world.lpjml.config.cftmap)
+        ]
+        return np.average(
+            self.cell.output.hdate,
+            weights=self.cell.output.cftfrac.isel(band=crop_idx)
+        )
 
     @property
     def attitude(self):
@@ -194,16 +205,43 @@ class Individual (I.Individual, base.Individual):
                + self.weight_norm * self.social_norm)\
             * self.pbc
 
+        self.avg_hdate = self.cell_avg_hdate
+        self.cropyield = self.cell_cropyield
+        self.soilc = self.cell_soilc
+
         if np.random.random() < tpb:
-            self.cropyield = self.cell_cropyield
-            # self.max_crop_yield = max(self.max_crop_yield, self.cropyield)
-            self.soilc = self.cell_soilc
+
             # self.max_soilc = max(self.max_soilc, self.soilc)
             self.behaviour = int(not self.behaviour)
-            self.set_cell_input(self.behaviour)
+            self.set_lpjml_var(map_attribute="behaviour")
 
-    def set_cell_input(self, value):
-        self.cell.input[self.couple_target] = value
+    def set_lpjml_var(self, map_attribute):
+
+        lpjml_var = self.coupling_map[map_attribute]
+
+        if not isinstance(lpjml_var, list):
+            lpjml_var = [lpjml_var]
+
+        for single_var in lpjml_var:
+            if len(self.cell.input[single_var].values.flatten()) > 1:
+                self.cell.input[single_var][:] = getattr(self, map_attribute)
+            else:
+                self.cell.input[single_var] = getattr(self, map_attribute)
+
+    def init_coupled_vars(self):
+        for attribute, lpjml_var in self.coupling_map.items():
+            if not isinstance(lpjml_var, list):
+                lpjml_var = [lpjml_var]
+
+            for single_var in lpjml_var:
+                if len(self.cell.input[single_var].values.flatten()) > 1:
+                    continue
+                    # setattr(
+                    #     self, attribute, self.cell.input[single_var].mean()
+                    # )
+                setattr(
+                    self, attribute, self.cell.input[single_var].item()
+                )
 
     processes = []
 

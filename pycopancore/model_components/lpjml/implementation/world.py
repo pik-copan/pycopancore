@@ -58,7 +58,10 @@ class World(I.World):
         # send input data to lpjml
         self.lpjml.send_input(self.input, t)
         # read output data from lpjml
-        self.output = self.lpjml.read_output(t)
+
+        self.output.time.values[0] = np.datetime64(f"{t}-12-31")
+        for name, output in self.lpjml.read_output(t).items():
+            self.output[name][:] = output[:]
 
         if t == self.lpjml.config.lastyear:
             self.lpjml.close()
