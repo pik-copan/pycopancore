@@ -91,7 +91,8 @@ class Individual (I.Individual, base.Individual):
     @property
     def cell_avg_hdate(self):
         crop_idx = [
-            i for i, item in enumerate(self.cell.world.output.hdate.band.values)  # noqa
+            i for i, item in enumerate(self.cell.world.output.hdate.band.
+                                       values)  # noqa
             if any(x in item for x in self.cell.world.lpjml.config.cftmap)
         ]
         return np.average(
@@ -182,7 +183,7 @@ class Individual (I.Individual, base.Individual):
         # (regenerative or conventional)
         # note: current behavoor is not necessarily = farmer type
         # calculate average yield for neighbours, reg. and conv.
-        # TODO think about finding a nicer way to access list_neighbours outputs
+        # TODO think about a nicer way to access list_neighbours outputs
         first_nb, second_nb = self.split_neighbourhood("behaviour")
         if first_nb:
             first_var = sum(getattr(n, variable) for n in first_nb)\
@@ -212,8 +213,17 @@ class Individual (I.Individual, base.Individual):
         if np.random.random() < tpb:
 
             # self.max_soilc = max(self.max_soilc, self.soilc)
-            self.behaviour = int(not self.behaviour)
-            self.set_lpjml_var(map_attribute="behaviour")
+            # need: include mechanism such that behaviour change does not
+            # happen yearly
+            # potentially then good: include some kind of memory of the past 
+            # years tpb values that were not "put into practice"
+
+            # if self.last_update_counter > self.min_update_interval:
+            if self.last_update_counter > 20:
+                self.behaviour = int(not self.behaviour)
+                self.set_lpjml_var(map_attribute="behaviour")
+                self.last_update_counter += 1
+            # else store this tpb value for later use
 
     def set_lpjml_var(self, map_attribute):
 

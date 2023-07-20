@@ -17,6 +17,8 @@ output_settings:
     write_lon_lat: true
     format: "csv"  # "csv", "feather" (fast binary table format)
 
+# added by luana for less frequent updates TODO does that make sense here?
+min_update_interval: 20  # in years
 # Define which individual variables map with coupled LPJmL input variables
 coupling_map:
     behaviour: ["with_tillage"]  # "residue_on_field"

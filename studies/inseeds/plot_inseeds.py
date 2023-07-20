@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-output_file = "/p/projects/open/Jannes/copan_core/lpjml/output/coupled_test/copan_core_data.csv"
+output_file = "/p/projects/copan/users/lschwarz/coupling_runs/output/coupled_test/copan_core_data.csv"
 
 all_output = pd.read_csv(output_file)
 ts = pd.pivot_table(all_output,
