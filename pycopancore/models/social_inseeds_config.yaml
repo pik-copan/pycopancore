@@ -34,6 +34,8 @@ aftpar:
         weight_norm: 0.333
         weight_social_learning: 0.5
         weight_own_land: 0.5
+        # duration of waiting time before switching to another strategy
+        strategy_switch_duration: 10 # years
 
     # AFT for conservative/traditional values following farmer tending to stay
     #   with conventional agriculture
@@ -45,3 +47,5 @@ aftpar:
         weight_norm: 0.5
         weight_social_learning: 0.5
         weight_own_land: 0.5
+        # duration of waiting time before switching to another strategy
+        strategy_switch_duration: 10 # years
