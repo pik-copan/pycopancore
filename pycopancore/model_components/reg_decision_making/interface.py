@@ -57,6 +57,12 @@ class Individual (object):
     # also potentially different for the two AFTs
     behaviour = Variable('agent behaviour', 'regenerative=1, conventional=0',
                          datatype=bool)
+    last_update_counter = Variable('last update count',
+                                   'counts how many years have passed since an\
+                                   update', default=0, datatype=int)
+    min_update_interval = Variable('minimum update interval', 'minimum time to\
+                                   have passed since last update of behaviour',
+                                   unit=DAU.yr)
     average_waiting_time = Variable('estimated waiting time tau', 'tau')
     update_time = Variable('next update time', 'next time for update')
     avg_hdate = Variable('average harvest date',
