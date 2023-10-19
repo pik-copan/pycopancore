@@ -84,6 +84,7 @@ class Runner(_AbstractRunner):
         t : float
             Model time
         """
+        self._current_iteration += 1  # marks current evaluation caches as outdated
         # TODO: apply them in an order that respects dependencies among
         # variables! for this, determine dependency structure in
         # modellogics.configure!
@@ -628,8 +629,8 @@ class Runner(_AbstractRunner):
 
                 # Complete the new state by applying all explicit processes
                 # (3.5 in runner scheme):
-                print("    Applying Explicit processes to changed state...")
-                if self.model.explicit_processes:
+                if self.model.explicit_processes and len(self.model.explicit_processes) > 0:
+                    print("    Applying Explicit processes to changed state...")
                     self.apply_explicits(t)
 
                 # Store all information that has been calculated at time t:

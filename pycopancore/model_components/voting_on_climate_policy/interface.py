@@ -15,7 +15,7 @@ remove these instructions.
 
 # TODO: use variables from the master data model wherever possible:
 from ... import master_data_model as D
-from ...data_model.master_data_model import S
+from ...data_model.master_data_model import S, I
 # TODO: uncomment and adjust of you need further variables from another
 # model component:
 # import ..BBB.interface as BBB
@@ -38,6 +38,14 @@ class Model (object):
 
 
 # entity types:
+
+class Individual (object):
+    """Interface for Individual entity type mixin."""
+
+    # endogenous variables:
+    is_environmentally_friendly = I.is_environmentally_friendly
+
+    # exogenous variables / parameters:
 
 
 class SocialSystem (object):
