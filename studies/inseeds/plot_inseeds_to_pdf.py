@@ -34,4 +34,6 @@ plt.suptitle('Netherlands: Spreading effects of (no-)till practices')
 # show the plot
 plt.show()
 
+fig.savefig("foo.pdf", bbox_inches='tight')
+
 # %%

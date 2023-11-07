@@ -7,7 +7,8 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 import os
-os.chdir("/p/projects/open/Jannes/copan_core/pycopancore")
+# os.chdir("/p/projects/open/Jannes/copan_core/pycopancore")
+os.chdir("/p/projects/copan/users/lschwarz/core/pycopancore")
 
 import pycopancore.models.social_inseeds as M
 
