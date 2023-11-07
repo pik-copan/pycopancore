@@ -52,3 +52,5 @@ class Cell(I.Cell):
         super().reactivate()  # must be the first line
         # TODO: add custom code here:
         pass
+
+    processes = []

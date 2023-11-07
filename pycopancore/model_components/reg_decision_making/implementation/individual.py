@@ -16,7 +16,7 @@ import numpy as np
 
 from math import prod
 from enum import Enum
-from random import sample
+from random import sample, randint
 
 from pycopancore.process_types import Step
 from pycopancore.model_components.base import interface as B
@@ -71,6 +71,10 @@ class Individual (I.Individual, base.Individual):
         #   soil potential
         # self.max_soilc = self.soilc
         # self.max_cropyield = self.cropyield
+
+        # Randomize switch time at beginning of simulation to avoid
+        #   synchronization of agents
+        self.strategy_switch_time = randint(0, self.strategy_switch_duration)
 
     def init_neighbourhood(self):
         """Initialize the neighbourhood of the agent."""
@@ -210,20 +214,18 @@ class Individual (I.Individual, base.Individual):
         self.cropyield = self.cell_cropyield
         self.soilc = self.cell_soilc
 
-        if np.random.random() < tpb:
+        if np.random.random() < tpb and self.strategy_switch_time >= self.strategy_switch_duration:  # noqa
 
-            # self.max_soilc = max(self.max_soilc, self.soilc)
             # need: include mechanism such that behaviour change does not
             # happen yearly
             # potentially then good: include some kind of memory of the past 
             # years tpb values that were not "put into practice"
 
-            # if self.last_update_counter > self.min_update_interval:
-            if self.last_update_counter > 20:
-                self.behaviour = int(not self.behaviour)
-                self.set_lpjml_var(map_attribute="behaviour")
-                self.last_update_counter += 1
-            # else store this tpb value for later use
+            self.behaviour = int(not self.behaviour)
+            self.set_lpjml_var(map_attribute="behaviour")
+            self.strategy_switch_time = 0
+        else:
+            self.strategy_switch_time += 1
 
     def set_lpjml_var(self, map_attribute):
 
@@ -233,10 +235,7 @@ class Individual (I.Individual, base.Individual):
             lpjml_var = [lpjml_var]
 
         for single_var in lpjml_var:
-            if len(self.cell.input[single_var].values.flatten()) > 1:
-                self.cell.input[single_var][:] = getattr(self, map_attribute)
-            else:
-                self.cell.input[single_var] = getattr(self, map_attribute)
+            self.cell.input[single_var][:] = getattr(self, map_attribute)
 
     def init_coupled_vars(self):
         for attribute, lpjml_var in self.coupling_map.items():

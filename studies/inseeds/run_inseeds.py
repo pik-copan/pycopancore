@@ -1,6 +1,5 @@
 """Run script for InSEEDS with LPJmL coupling"""
 import os
-import numpy as np  # which is usually needed
 
 from pycoupler.config import read_config
 from pycoupler.run import run_lpjml
