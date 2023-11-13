@@ -7,7 +7,7 @@ from pycoupler.run import run_lpjml
 from pycoupler.coupler import LPJmLCoupler
 from pycoupler.utils import check_lpjml, search_country
 
-os.chdir("/p/projects/open/Jannes/copan_core/pycopancore")
+os.chdir("/p/projects/copan/users/lschwarz/core/pycopancore")
 # from pycopancore.runners.runner import Runner
 from pycopancore.models import social_inseeds as M  # noqa
 
@@ -67,6 +67,13 @@ config_coupled.double_harvest = False
 config_coupled.regrid(sim_path, country_code=country_code)
 
 config_coupled.add_config(inseeds_config_file)
+
+for weight in weight_list:
+    # config_coupled.coupled_config.aftpar.conservative_minded.weight_norm = 0.5
+    fonfig_coupled
+    # config_coupled.coupled_config.
+
+for
 
 # write config (Config object) as json file
 config_coupled_fn = config_coupled.to_json()
