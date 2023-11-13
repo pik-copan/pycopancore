@@ -19,7 +19,7 @@ sim_path = "/p/projects/open/Jannes/copan_core/lpjml"
 model_path = f"{sim_path}/LPJmL_internal"
 inseeds_config_file = "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa"
 
-spinup = False
+spinup = True
 
 # search for country code by supplying country name
 # search_country("netherlands")
@@ -50,7 +50,7 @@ if spinup:
     config_spinup.river_routing = False
 
     # regrid by country - create new (extracted) input files and update config
-    config_spinup.regrid(sim_path, country_code=country_code)
+    config_spinup.regrid(sim_path, country_code=country_code, overwrite_input=True)
 
     # write config (Config object) as json file
     config_spinup_fn = config_spinup.to_json()
@@ -80,7 +80,7 @@ if spinup:
     config_historic.double_harvest = False
 
     # regrid by country - create new (extracted) input files and update config
-    config_historic.regrid(sim_path, country_code=country_code)
+    config_historic.regrid(sim_path, country_code=country_code, overwrite_input=True)
 
     # write config (Config object) as json file
     config_historic_fn = config_historic.to_json()
@@ -112,6 +112,8 @@ config_coupled.radiation = "cloudiness"
 config_coupled.input.temp.name = "CRU_TS4.03/cru_ts4.03.1901.2018.tmp.clm"
 config_coupled.input.prec.name = "CRU_TS4.03/cru_ts4.03.1901.2018.pre.clm"
 config_coupled.input.cloud.name = "CRU_TS4.03/cru_ts4.03.1901.2018.cld.clm"
+config_coupled.fix_co2 = True
+config_coupled.fix_co2_year = 2018
 config_coupled.input.co2.name = "input_VERSION2/co2_1841-2018.dat"
 config_coupled.input.wetdays.name = "CRU_TS4.03/cru_ts4.03.1901.2018.wet.clm"  # noqa
 config_coupled.input.landuse.name = "input_toolbox_30arcmin/cftfrac_1500-2017_64bands_f2o.clm"  # noqa
@@ -126,7 +128,7 @@ config_coupled.residue_treatment = "no_residue_remove"  # "read_residue_data"
 config_coupled.double_harvest = False
 
 # regrid by country - create new (extracted) input files and update config file
-config_coupled.regrid(sim_path, country_code=country_code)
+config_coupled.regrid(sim_path, country_code=country_code, overwrite_input=True)
 
 config_coupled.add_config(inseeds_config_file)
 

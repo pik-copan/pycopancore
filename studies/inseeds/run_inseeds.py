@@ -48,6 +48,8 @@ config_coupled.radiation = "cloudiness"
 config_coupled.input.temp.name = "CRU_TS4.03/cru_ts4.03.1901.2018.tmp.clm"
 config_coupled.input.prec.name = "CRU_TS4.03/cru_ts4.03.1901.2018.pre.clm"
 config_coupled.input.cloud.name = "CRU_TS4.03/cru_ts4.03.1901.2018.cld.clm"
+config_coupled.fix_co2 = True
+config_coupled.fix_co2_year = 2018
 config_coupled.input.co2.name = "input_VERSION2/co2_1841-2018.dat"
 config_coupled.input.wetdays.name = "CRU_TS4.03/cru_ts4.03.1901.2018.wet.clm"  # noqa
 config_coupled.input.landuse.name = "input_toolbox_30arcmin/cftfrac_1500-2017_64bands_f2o.clm"  # noqa
@@ -66,34 +68,41 @@ config_coupled.regrid(sim_path, country_code=country_code)
 
 config_coupled.add_config(inseeds_config_file)
 
-# write config (Config object) as json file
-config_coupled_fn = config_coupled.to_json()
+weight_list = [0.1,0.2,0.3]
+
+for weight in weight_list:
+
+    config_coupled.coupled_config.aftpar.progressive_minded.weight_norm = weight
+    config_coupled.sim_name = f"coupled_test_{weight}"
+
+    # write config (Config object) as json file
+    config_coupled_fn = config_coupled.to_json()
 
 
-# Simulations =============================================================== #
+    # Simulations =============================================================== #
 
-# check if everything is set correct
-check_lpjml(config_coupled_fn, model_path)
+    # check if everything is set correct
+    check_lpjml(config_coupled_fn, model_path)
 
-# run lpjml simulation for coupling in the background
-run_lpjml(
-    config_file=config_coupled_fn,
-    model_path=model_path,
-    sim_path=sim_path,
-    std_to_file=False,  # write stdout and stderr to file
-)
+    # run lpjml simulation for coupling in the background
+    run_lpjml(
+        config_file=config_coupled_fn,
+        model_path=model_path,
+        sim_path=sim_path,
+        std_to_file=False,  # write stdout and stderr to file
+    )
 
-# InSEEDS run --------------------------------------------------------------- #
+    # InSEEDS run --------------------------------------------------------------- #
 
-# establish coupler connection to LPJmL
-lpjml = LPJmLCoupler(config_file=config_coupled_fn)
+    # establish coupler connection to LPJmL
+    lpjml = LPJmLCoupler(config_file=config_coupled_fn)
 
-# initialize (LPJmL) world
-world = M.World(model=M, lpjml=lpjml)
+    # initialize (LPJmL) world
+    world = M.World(model=M, lpjml=lpjml)
 
-# initialize (cells and) individuals
-farmers, cells = world.init_individuals()
+    # initialize (cells and) individuals
+    farmers, cells = world.init_individuals()
 
-# run coupled model until end_year
-for year in world.lpjml.get_sim_years():
-    world.update(year)
+    # run coupled model until end_year
+    for year in world.lpjml.get_sim_years():
+        world.update(year)
