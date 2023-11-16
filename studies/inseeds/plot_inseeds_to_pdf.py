@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-output_file = "/p/projects/copan/users/lschwarz/coupling_runs/output/coupled_test/copan_core_data.csv"
+output_file = "/p/projects/copan/users/lschwarz/coupling_runs/output/coupled_test_0.1/copan_core_data.csv"
 
 all_output = pd.read_csv(output_file)
 ts = pd.pivot_table(all_output,
@@ -34,6 +34,6 @@ plt.suptitle('Netherlands: Spreading effects of (no-)till practices')
 # show the plot
 plt.show()
 
-fig.savefig("foo1.pdf", bbox_inches='tight')
+fig.savefig("foo7.pdf", bbox_inches='tight')
 
 # %%

@@ -174,11 +174,10 @@ class Individual (I.Individual, base.Individual):
                 sum(n.behaviour for n in self.neighbourhood) /
                 len(self.neighbourhood)
             )
-        # if self.behaviour == 1:
-        #     return sigmoid(0.5-social_norm)
-        # else:
-        #     return sigmoid(social_norm-0.5)
-        return social_norm
+        if self.behaviour == 1:
+            return sigmoid(0.5-social_norm)
+        else:
+            return sigmoid(social_norm-0.5)
 
     # TODO: how to do this for the two AFTs?
     @property
@@ -218,89 +217,29 @@ class Individual (I.Individual, base.Individual):
         return first_var, second_var
 
     def update_behaviour(self, t):
+        # now comes the update
+        # identity_value = 0
+        tpb = (self.weight_attitude * self.attitude
+               + self.weight_norm * self.social_norm)\
+            * self.pbc
+        
+        # breakpoint()
+
         self.avg_hdate = self.cell_avg_hdate
         self.cropyield = self.cell_cropyield
         self.soilc = self.cell_soilc
-        # make the execution of this here, or maybe even better somewhere
-        # else, (where?) conditional on the strategy_switch_time, to not
-        # do the whol decision making evaluation if the farmers are not
-        # switching anyways, but still save info about soil and yield somewhere
-        if self.strategy_switch_time < self.strategy_switch_duration:
-            self.strategy_switch_time += 1
-            # TODO: insert code to collect yield and soil data
-        else:
-            tpb = (self.weight_attitude * self.attitude
-                   + self.weight_norm * self.social_norm)
-            # breakpoint()
 
+        if np.random.random() < tpb and self.strategy_switch_time >= self.strategy_switch_duration:  # noqa
+            # need: include mechanism such that behaviour change does not
+            # happen yearly
+            # potentially then good: include some kind of memory of the past 
+            # years tpb values that were not "put into practice"
 
-            # if np.random.random() < tpb and self.strategy_switch_time >= self.strategy_switch_duration:  # noqa
-# 
-            #     # need: include mechanism such that behaviour change does not
-            #     # happen yearly
-            #     # potentially then good: include some kind of memory of the past 
-            #     # years tpb values that were not "put into practice"
-# 
-            #     self.behaviour = int(not self.behaviour)
-            #     self.set_lpjml_var(map_attribute="behaviour")
-            #     self.strategy_switch_time = 0
-            # else:
-            #     self.strategy_switch_time += 1
-
-            """below one idea of how to determine pbc dynamically according to 
-                current behavior"""
-            # if my decision-making evaluation results
-            # in a behavioral intention to do CF 
-            if tpb > 0.5:
-                # Assumption: this differs depending on if I already practice CF 
-                # or not, so if my pbc to switch is high?
-                # TODO can we do this dynamic differentiation of pbc according to
-                # current behavior in the yaml file?
-                # no "switching costs" (financial, cognitive), so pbc should be high
-                if self.behaviour == 1:
-                    # stay with already practiced CF at high likelihood
-                    # perceived behavioral control to keep doing what you did
-                    # is assumed to be high
-                    pbc = 1
-                else:
-                    # switching is probably hampered by switching costs
-                    # this could then be one of the big levers in the sensititvity 
-                    # analysis
-                    # here, a pbc range between 0 and 1 hampers,
-                    # the smaller the values, the more hampering
-                    pbc = 0.5
-            
-            # if my decision-making evaluation results
-            # in a behavioral intention to do CA / RA
-            if tpb < 0.5:
-                # Same as in the case above
-                # no "switching costs" (financial, cognitive), so pbc should be high
-                if self.behaviour == 0:
-                    # stay with already practiced CA/RA
-                    pbc = 1
-                else:
-                    # switching is probably hampered by switching costs
-                    # pbc must be larger than 1 in this example to hamper the 
-                    # switching likelihood to RA. The lower the tpb_complete number
-                    # the more likeli CF farmers are to switch to RA
-                    # to the tpb_complete number has to get larger by multiplying 
-                    # with pbc factor between 1 and 2, the larger the pbc factor
-                    # value, the more the hampering
-                    pbc = 1.5
-
-            tpb_complete = tpb*pbc
-
-
-            if tpb_complete > 0.5:
-                self.behaviour = 1
-            elif tpb_complete < 0.5:
-                self.behaviour = 0
-                
+            self.behaviour = int(not self.behaviour)
             self.set_lpjml_var(map_attribute="behaviour")
             self.strategy_switch_time = 0
-
-
-
+        else:
+            self.strategy_switch_time += 1
 
     def set_lpjml_var(self, map_attribute):
 

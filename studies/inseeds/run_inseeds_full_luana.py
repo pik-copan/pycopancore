@@ -51,7 +51,9 @@ if spinup:
     config_spinup.river_routing = False
 
     # regrid by country - create new (extracted) input files and update config
-    config_spinup.regrid(sim_path, country_code=country_code)
+    config_spinup.regrid(sim_path,
+                         country_code=country_code,
+                         overwrite_input=True)
 
     # write config (Config object) as json file
     config_spinup_fn = config_spinup.to_json()
@@ -81,7 +83,9 @@ if spinup:
     config_historic.double_harvest = False
 
     # regrid by country - create new (extracted) input files and update config
-    config_historic.regrid(sim_path, country_code=country_code)
+    config_historic.regrid(sim_path,
+                           country_code=country_code,
+                           overwrite_input=True)
 
     # write config (Config object) as json file
     config_historic_fn = config_historic.to_json()
@@ -129,7 +133,9 @@ config_coupled.residue_treatment = "no_residue_remove"  # "read_residue_data"
 config_coupled.double_harvest = False
 
 # regrid by country - create new (extracted) input files and update config file
-config_coupled.regrid(sim_path, country_code=country_code)
+config_coupled.regrid(sim_path,
+                      country_code=country_code,
+                      overwrite_input=True)
 
 config_coupled.add_config(inseeds_config_file)
 config_coupled.coupled_config
