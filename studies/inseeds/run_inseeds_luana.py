@@ -32,6 +32,7 @@ config_coupled = read_config(model_path=model_path, file_name="lpjml.js")
 # set coupled run configuration
 config_coupled.set_coupled(sim_path,
                            sim_name="coupled_test",
+                           dependency="historic_run",
                            start_year=2001, end_year=2050,
                            coupled_year=2023,
                            coupled_input=["with_tillage"],  # residue_on_field
@@ -50,9 +51,9 @@ config_coupled.radiation = "cloudiness"
 config_coupled.input.temp.name = "CRU_TS4.03/cru_ts4.03.1901.2018.tmp.clm"
 config_coupled.input.prec.name = "CRU_TS4.03/cru_ts4.03.1901.2018.pre.clm"
 config_coupled.input.cloud.name = "CRU_TS4.03/cru_ts4.03.1901.2018.cld.clm"
-config_coupled.input.co2.name = "input_VERSION2/co2_1841-2018.dat"
 config_coupled.fix_co2 = True
 config_coupled.fix_co2_year = 2018
+config_coupled.input.co2.name = "input_VERSION2/co2_1841-2018.dat"
 config_coupled.input.wetdays.name = "CRU_TS4.03/cru_ts4.03.1901.2018.wet.clm"  # noqa
 config_coupled.input.landuse.name = "input_toolbox_30arcmin/cftfrac_1500-2017_64bands_f2o.clm"  # noqa
 config_coupled.fix_climate = True
@@ -77,14 +78,12 @@ config_coupled_fn = config_coupled.to_json()
 # Simulations =============================================================== #
 
 # check if everything is set correct
-check_lpjml(config_coupled_fn, model_path)
+check_lpjml(config_coupled_fn)
 
 # run lpjml simulation for coupling in the background
 run_lpjml(
     config_file=config_coupled_fn,
-    model_path=model_path,
-    sim_path=sim_path,
-    std_to_file=False,  # write stdout and stderr to file
+    std_to_file=False  # write stdout and stderr to file
 )
 
 # InSEEDS run --------------------------------------------------------------- #

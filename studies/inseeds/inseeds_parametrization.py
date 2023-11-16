@@ -69,55 +69,40 @@ config_coupled.regrid(sim_path, country_code=country_code)
 
 config_coupled.add_config(inseeds_config_file)
 
-# write config (Config object) as json file
-config_coupled_fn = config_coupled.to_json()
+weight_list = [0.1,0.2,0.3]
+
+for weight in weight_list:
+
+    config_coupled.coupled_config.aftpar.progressive_minded.weight_norm = weight
+    config_coupled.sim_name = f"coupled_test_{weight}"
+    config_coupled.set_outputpath(f"{sim_path}/output/{config_coupled.sim_name}")  # noqa
+
+    # write config (Config object) as json file
+    config_coupled_fn = config_coupled.to_json()
 
 
-# Simulations =============================================================== #
+    # Simulations =============================================================== #
 
-# check if everything is set correct
-check_lpjml(config_coupled_fn)
+    # check if everything is set correct
+    check_lpjml(config_coupled_fn)
 
-# run lpjml simulation for coupling in the background
-run_lpjml(
-    config_file=config_coupled_fn,
-    std_to_file=False  # write stdout and stderr to file
-)
+    # run lpjml simulation for coupling in the background
+    run_lpjml(
+        config_file=config_coupled_fn,
+        std_to_file=False,  # write stdout and stderr to file
+    )
 
-# InSEEDS run --------------------------------------------------------------- #
+    # InSEEDS run --------------------------------------------------------------- #
 
-# establish coupler connection to LPJmL
-lpjml = LPJmLCoupler(config_file=config_coupled_fn)
+    # establish coupler connection to LPJmL
+    lpjml = LPJmLCoupler(config_file=config_coupled_fn)
 
-# initialize (LPJmL) world
-world = M.World(model=M, lpjml=lpjml)
+    # initialize (LPJmL) world
+    world = M.World(model=M, lpjml=lpjml)
 
-# initialize (cells and) individuals
-farmers, cells = world.init_individuals()
+    # initialize (cells and) individuals
+    farmers, cells = world.init_individuals()
 
-for year in world.lpjml.get_sim_years():
-    world.update(year)
-
-
-from cProfile import Profile
-from pstats import SortKey, Stats
-
-with Profile() as profile:
     # run coupled model until end_year
     for year in world.lpjml.get_sim_years():
         world.update(year)
-    (
-        Stats(profile)
-        .strip_dirs()
-        .sort_stats(SortKey.CALLS)
-        .print_stats()
-    )
-
-
-from pyinstrument import Profiler
-with Profiler(interval=0.05) as profiler:
-    for year in world.lpjml.get_sim_years():
-        world.update(year)
-
-
-profiler.print()

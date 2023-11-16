@@ -95,14 +95,16 @@ class Individual (I.Individual, base.Individual):
     @property
     def cell_avg_hdate(self):
         crop_idx = [
-            i for i, item in enumerate(self.cell.world.output.hdate.band.
-                                       values)  # noqa
+            i for i, item in enumerate(self.cell.output.hdate.band.values)  # noqa
             if any(x in item for x in self.cell.world.lpjml.config.cftmap)
         ]
-        return np.average(
-            self.cell.output.hdate,
-            weights=self.cell.output.cftfrac.isel(band=crop_idx)
-        )
+        if np.sum(self.cell.output.cftfrac.isel(band=crop_idx).values) == 0:
+            return 365
+        else:
+            return np.average(
+                self.cell.output.hdate,
+                weights=self.cell.output.cftfrac.isel(band=crop_idx)
+            )
 
     @property
     def attitude(self):
