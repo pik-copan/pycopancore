@@ -1,13 +1,12 @@
 """Run script for InSEEDS with LPJmL coupling"""
 import os
-import numpy as np  # which is usually needed
 
 from pycoupler.config import read_config
-from pycoupler.run import run_lpjml
+from pycoupler.run import run_lpjml, check_lpjml
 from pycoupler.coupler import LPJmLCoupler
-from pycoupler.utils import check_lpjml, search_country
+from pycoupler.utils import search_country
 
-os.chdir("/p/projects/copan/users/lschwarz/core/pycopancore")
+os.chdir("/p/projects/open/Jannes/copan_core/pycopancore")
 # from pycopancore.runners.runner import Runner
 from pycopancore.models import social_inseeds as M  # noqa
 
@@ -15,10 +14,9 @@ from pycopancore.models import social_inseeds as M  # noqa
 # Settings ================================================================== #
 
 # paths
-sim_path = "/p/projects/copan/users/lschwarz/coupling_runs"
-# model_path = f"{sim_path}/LPJmL_internal"
-model_path = "/p/projects/open/Jannes/copan_core/lpjml/LPJmL_internal"
-inseeds_config_file = "/p/projects/copan/users/lschwarz/core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa"
+sim_path = "/p/projects/open/Jannes/copan_core/lpjml"
+model_path = f"{sim_path}/LPJmL_internal"
+inseeds_config_file = "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa"
 
 # search for country code by supplying country name
 # search_country("netherlands")
@@ -67,21 +65,17 @@ config_coupled.residue_treatment = "no_residue_remove"  # "read_residue_data"
 config_coupled.double_harvest = False
 
 # regrid by country - create new (extracted) input files and update config file
-config_coupled.regrid(sim_path,
-                      country_code=country_code,
-                      overwrite_input=False)
+config_coupled.regrid(sim_path, country_code=country_code)
 
 config_coupled.add_config(inseeds_config_file)
 
-weight_list = [0.1,0.3]
+weight_list = [0.1,0.2,0.3]
 
 for weight in weight_list:
 
     config_coupled.coupled_config.aftpar.progressive_minded.weight_norm = weight
-    config_coupled.coupled_config.aftpar.progressive_minded.weight_attitude = 1-weight
-    # config_coupled.coupled_config.aftpar.progressive_minded.weight_soil = 1
-    # config_coupled.coupled_config.aftpar.progressive_minded.weight_yield = 0
     config_coupled.sim_name = f"coupled_test_{weight}"
+    config_coupled.set_outputpath(f"{sim_path}/output/{config_coupled.sim_name}")  # noqa
 
     # write config (Config object) as json file
     config_coupled_fn = config_coupled.to_json()
@@ -89,14 +83,14 @@ for weight in weight_list:
 
     # Simulations =============================================================== #
 
-# check if everything is set correct
-check_lpjml(config_coupled_fn)
+    # check if everything is set correct
+    check_lpjml(config_coupled_fn)
 
-# run lpjml simulation for coupling in the background
-run_lpjml(
-    config_file=config_coupled_fn,
-    std_to_file=False  # write stdout and stderr to file
-)
+    # run lpjml simulation for coupling in the background
+    run_lpjml(
+        config_file=config_coupled_fn,
+        std_to_file=False,  # write stdout and stderr to file
+    )
 
     # InSEEDS run --------------------------------------------------------------- #
 

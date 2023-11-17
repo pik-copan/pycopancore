@@ -3,9 +3,9 @@ import os
 import numpy as np  # which is usually needed
 
 from pycoupler.config import read_config
-from pycoupler.run import run_lpjml
+from pycoupler.run import run_lpjml, check_lpjml
 from pycoupler.coupler import LPJmLCoupler
-from pycoupler.utils import check_lpjml, search_country
+from pycoupler.utils import search_country
 
 os.chdir("/p/projects/copan/users/lschwarz/core/pycopancore")
 # from pycopancore.runners.runner import Runner
@@ -65,6 +65,7 @@ if spinup:
     # set historic run configuration
     config_historic.set_transient(sim_path,
                                   sim_name="historic_run",
+                                  dependency="spinup",
                                   start_year=1901,
                                   end_year=2000)
 
@@ -99,6 +100,7 @@ config_coupled = read_config(model_path=model_path, file_name="lpjml.js")
 # set coupled run configuration
 config_coupled.set_coupled(sim_path,
                            sim_name="coupled_test",
+                           dependency="historic_run",
                            start_year=2001, end_year=2050,
                            coupled_year=2023,
                            coupled_input=["with_tillage"],
@@ -117,9 +119,9 @@ config_coupled.radiation = "cloudiness"
 config_coupled.input.temp.name = "CRU_TS4.03/cru_ts4.03.1901.2018.tmp.clm"
 config_coupled.input.prec.name = "CRU_TS4.03/cru_ts4.03.1901.2018.pre.clm"
 config_coupled.input.cloud.name = "CRU_TS4.03/cru_ts4.03.1901.2018.cld.clm"
-config_coupled.input.co2.name = "input_VERSION2/co2_1841-2018.dat"
 config_coupled.fix_co2 = True
 config_coupled.fix_co2_year = 2018
+config_coupled.input.co2.name = "input_VERSION2/co2_1841-2018.dat"
 config_coupled.input.wetdays.name = "CRU_TS4.03/cru_ts4.03.1901.2018.wet.clm"  # noqa
 config_coupled.input.landuse.name = "input_toolbox_30arcmin/cftfrac_1500-2017_64bands_f2o.clm"  # noqa
 config_coupled.fix_climate = True
@@ -138,7 +140,6 @@ config_coupled.regrid(sim_path,
                       overwrite_input=True)
 
 config_coupled.add_config(inseeds_config_file)
-config_coupled.coupled_config
 
 # write config (Config object) as json file
 config_coupled_fn = config_coupled.to_json()
@@ -149,35 +150,29 @@ config_coupled_fn = config_coupled.to_json()
 # LPJmL spinup run ---------------------------------------------------------- #
 if spinup:
     # check if everything is set correct
-    check_lpjml(config_file=config_spinup_fn, model_path=model_path)
+    check_lpjml(config_file=config_spinup_fn)
 
     # run spinup job
     run_lpjml(
-        config_file=config_spinup_fn,
-        model_path=model_path,
-        sim_path=sim_path
+        config_file=config_spinup_fn
     )
 
     # check if everything is set correct
-    check_lpjml(config_file=config_historic_fn, model_path=model_path)
+    check_lpjml(config_historic_fn)
 
     # run spinup job
     run_lpjml(
-        config_file=config_historic_fn,
-        model_path=model_path,
-        sim_path=sim_path
+        config_file=config_historic_fn
     )
 
 # LPJmL coupled run --------------------------------------------------------- #
 
 # check if everything is set correct
-check_lpjml(config_coupled_fn, model_path)
+check_lpjml(config_coupled_fn)
 
 # run lpjml simulation for coupling in the background
 run_lpjml(
     config_file=config_coupled_fn,
-    model_path=model_path,
-    sim_path=sim_path,
     std_to_file=False,  # write stdout and stderr to file
 )
 

@@ -7,11 +7,7 @@ from pycoupler.data import read_data
 
 
 # output_file = "/p/projects/copan/users/lschwarz/coupling_runs/output/coupled_test"
-output_path = "/p/projects/open/Jannes/copan_core/lpjml/output/coupled_test/"
-
-
-grid = read_data(f"{output_path}/grid.nc4").astype("float32")
-grid["cellid"].plot()
+output_path = "/p/projects/open/Jannes/copan_core/lpjml/output/coupled_test_0.1/"
 
 all_output = pd.read_csv(f"{output_path}/copan_core_data.csv")
 ts = pd.pivot_table(all_output,
@@ -22,6 +18,7 @@ ts = pd.pivot_table(all_output,
 ts.query('cell == 0')
 ts_mean = ts.groupby('year').mean()
 
+ts_mean = ts_mean.drop('average harvest date', axis=1)
 
 # create a figure with multiple subplots
 fig, axes = plt.subplots(nrows=len(ts_mean.columns), ncols=1, sharex=True, figsize=(8, 10))
@@ -41,6 +38,6 @@ plt.suptitle('Netherlands: Spreading effects of (no-)till practices')
 # show the plot
 plt.show()
 
-fig.savefig("test.pdf")
+# fig.savefig("test.pdf")
 
 # %%

@@ -2,9 +2,9 @@
 import os
 
 from pycoupler.config import read_config
-from pycoupler.run import run_lpjml
+from pycoupler.run import run_lpjml, check_lpjml
 from pycoupler.coupler import LPJmLCoupler
-from pycoupler.utils import check_lpjml, search_country
+from pycoupler.utils import search_country
 
 os.chdir("/p/projects/open/Jannes/copan_core/pycopancore")
 # from pycopancore.runners.runner import Runner
@@ -30,6 +30,7 @@ config_coupled = read_config(model_path=model_path, file_name="lpjml.js")
 # set coupled run configuration
 config_coupled.set_coupled(sim_path,
                            sim_name="coupled_test",
+                           dependency="historic_run",
                            start_year=2001, end_year=2050,
                            coupled_year=2023,
                            coupled_input=["with_tillage"],  # residue_on_field
@@ -68,41 +69,55 @@ config_coupled.regrid(sim_path, country_code=country_code)
 
 config_coupled.add_config(inseeds_config_file)
 
-weight_list = [0.1,0.2,0.3]
-
-for weight in weight_list:
-
-    config_coupled.coupled_config.aftpar.progressive_minded.weight_norm = weight
-    config_coupled.sim_name = f"coupled_test_{weight}"
-
-    # write config (Config object) as json file
-    config_coupled_fn = config_coupled.to_json()
+# write config (Config object) as json file
+config_coupled_fn = config_coupled.to_json()
 
 
-    # Simulations =============================================================== #
+# Simulations =============================================================== #
 
-    # check if everything is set correct
-    check_lpjml(config_coupled_fn, model_path)
+# check if everything is set correct
+check_lpjml(config_coupled_fn)
 
-    # run lpjml simulation for coupling in the background
-    run_lpjml(
-        config_file=config_coupled_fn,
-        model_path=model_path,
-        sim_path=sim_path,
-        std_to_file=False,  # write stdout and stderr to file
-    )
+# run lpjml simulation for coupling in the background
+run_lpjml(
+    config_file=config_coupled_fn,
+    std_to_file=False  # write stdout and stderr to file
+)
 
-    # InSEEDS run --------------------------------------------------------------- #
+# InSEEDS run --------------------------------------------------------------- #
 
-    # establish coupler connection to LPJmL
-    lpjml = LPJmLCoupler(config_file=config_coupled_fn)
+# establish coupler connection to LPJmL
+lpjml = LPJmLCoupler(config_file=config_coupled_fn)
 
-    # initialize (LPJmL) world
-    world = M.World(model=M, lpjml=lpjml)
+# initialize (LPJmL) world
+world = M.World(model=M, lpjml=lpjml)
 
-    # initialize (cells and) individuals
-    farmers, cells = world.init_individuals()
+# initialize (cells and) individuals
+farmers, cells = world.init_individuals()
 
+for year in world.lpjml.get_sim_years():
+    world.update(year)
+
+
+from cProfile import Profile
+from pstats import SortKey, Stats
+
+with Profile() as profile:
     # run coupled model until end_year
     for year in world.lpjml.get_sim_years():
         world.update(year)
+    (
+        Stats(profile)
+        .strip_dirs()
+        .sort_stats(SortKey.CALLS)
+        .print_stats()
+    )
+
+
+from pyinstrument import Profiler
+with Profiler(interval=0.05) as profiler:
+    for year in world.lpjml.get_sim_years():
+        world.update(year)
+
+
+profiler.print()
