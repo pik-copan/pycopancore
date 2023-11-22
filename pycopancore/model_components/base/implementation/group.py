@@ -31,7 +31,6 @@ class Group (I.Group, abstract.Group):
                  *,
                  culture,
                  world,
-                 next_higher_group=None,
                  **kwargs
                  ):
         """Initialize an instance of Group.
@@ -42,8 +41,6 @@ class Group (I.Group, abstract.Group):
             Culture the Group belongs to
         world: obj
             World the Group belongs to (to bypass AttributeErrors for now)
-        next_higher_group: obj
-            Optional Group the Group belongs to (default is None)
         **kwargs
             keyword arguments passed to super()
 
@@ -55,15 +52,6 @@ class Group (I.Group, abstract.Group):
         self.culture = culture
         self._world = None
         self.world = world
-
-        # self._social_system = None
-        # self.social_system = social_system
-        # self._next_higher_group = None
-        # self.next_higher_group = next_higher_group
-
-        # init caches:
-        # self._next_lower_group = set()
-        # self._direct_cells = set()
 
         if self.culture:
             self.culture.group_membership_network.add_node(self, type="Group", color="green")
@@ -126,42 +114,6 @@ class Group (I.Group, abstract.Group):
         w._groups.add(self)
         self._world = w
 
-    # @property
-    # def social_system(self):
-    #     """Get the SocialSystem the Group is part of."""
-    #     return self._social_system
-
-    # @social_system.setter
-    # def social_system(self, s):
-    #     """Set the SocialSystem the Group is part of."""
-    #     if self._social_system is not None:
-    #         self._social_system._groups.remove(self)
-    #     assert isinstance(s, I.SocialSystem), "socialsystem must be of entity type SocialSystem"
-    #     s._groups.add(self)
-    #     self._social_system = s
-
-    # @property
-    # def next_higher_group(self):
-    #     """Get next higher group."""
-    #     return self._next_higher_group
-
-    # @next_higher_group.setter
-    # def next_higher_group(self, s):
-    #     """Set next higher group."""
-    #     if self._next_higher_group is not None:
-    #         self._next_higher_group._next_lower_groups.remove(self)
-    #         reset dependent cache:
-            # self._next_higher_group.cells = unknown
-        # if s is not None:
-        #     assert isinstance(s, I.Group), \
-        #         "next_higher_group must be of entity type group"
-        #     s._next_lower_groups.add(self)
-        #     reset dependent cache:
-        #     s.cells = unknown
-        # self._next_higher_group = s
-        # reset dependent caches:
-        # self.higher_groups = unknown
-
     # getters for backwards references and convenience variables:
 
     @property  # read-only
@@ -174,52 +126,11 @@ class Group (I.Group, abstract.Group):
         """Get the Metabolism of which the Group is a part."""
         return self._world.metabolism
 
-    # _higher_groups = unknown
-    """cache, depends on self.next_higher_group
-    and self.next_higher_group.higher_groups"""
-    # @property  # read-only
-    # def higher_groups(self):
-    #     """Get higher groups."""
-    #     if self._higher_groups is unknown:
-            # find recursively:
-            # self._higher_groups = [] if self.next_higher_group is None \
-            #     else ([self.next_higher_group]
-            #           + self.next_higher_group.groups)
-        # return self._higher_groups
-
-    # @higher_groups.setter
-    # def higher_groups(self, u):
-    #     """Set higher groups."""
-    #     assert u == unknown, "setter can only be used to reset cache"
-    #     self._higher_groups = unknown
-        # reset dependent caches:
-        # for s in self._next_lower_groups:
-        #     s.higher_groups = unknown
-        # for c in self._direct_cells:
-        #     c.groups = unknown
-
-    # @property  # read-only
-    # def next_lower_groups(self):
-    #     """Get next lower groups."""
-    #     return self._next_lower_groups
-
-    # @property  # read-only
-    # def lower_groups(self):
-    #     """Get lower groups."""
-        # aggregate recursively:
-        # l = self._next_lower_groups
-        # for s in self._next_lower_groups:
-        #     l.update(s.lower_groups)
-        # return l
-
     @property
     def group_members(self):
         """Get the set of Individuals associated with this Group."""
         # return self.culture.group_membership_network.neighbors(self)
         return self.culture.group_membership_network.predecessors(self) # .predecessors as network is directed from inds to groups
-
-
-
 
 
     # no process-related methods
