@@ -1,5 +1,5 @@
 """
-Model component implementation subpackage template.
+Model component implementation subpackage exploit_social_learning.
 """
 
 # This file is part of pycopancore.
@@ -11,10 +11,12 @@ Model component implementation subpackage template.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
+# TODO: adjust the following lists to your needs:
+
 # export all provided entity type implementation mixin classes:
-from .world import World
-from .cell import Cell
 from .individual import Individual
-from .culture import Culture
-from .social_system import SocialSystem
 from .group import Group
+
+# export all provided process taxon implementation mixin classes:
+
+from .culture import Culture
