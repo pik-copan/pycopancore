@@ -29,7 +29,7 @@ aftpar:
     # AFT for progressive farmer who more likely tends to switch to
     #   regenerative agriculture
     progressive_minded:
-        pbc: 0.5
+        pbc: &pbc_value 0.5
         weight_attitude: 0.667
         weight_yield: 0.333
         weight_soil: 0.667
@@ -42,7 +42,7 @@ aftpar:
     # AFT for conservative/traditional values following farmer tending to stay
     #   with conventional agriculture
     conservative_minded:
-        pbc: 0.5
+        pbc: *pbc_value
         weight_attitude: 0.5
         weight_yield: 0.667
         weight_soil: 0.333
