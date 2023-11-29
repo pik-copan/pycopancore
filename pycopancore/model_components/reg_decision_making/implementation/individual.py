@@ -64,9 +64,11 @@ class Individual (I.Individual, base.Individual):
         # soilc is the last "measured" soilc value of the farmer whereas the
         #   cell_soilc value is the actual status of soilc of the cell
         self.soilc = self.cell_soilc
+        self.soilc_previous = self.soilc
 
         # Same applies for cropyield (as for soilc)
         self.cropyield = self.cell_cropyield
+        self.cropyield_previous = self.cropyield
         # Maximal soilc and cropyield might be used in the future to assess
         #   soil potential
         # self.max_soilc = self.soilc
@@ -120,13 +122,11 @@ class Individual (I.Individual, base.Individual):
         # TODO think about to which tate agent compares current state...
         # state before last update or last year?
         # See definition for soilc and cell_soilc in init
-        attitude_own_soil = sigmoid(self.cell_soilc -
-                                    self.soilc)
+        attitude_own_soil = sigmoid(self.soilc / self.soilc_previous - 1)
         # See definition for cropyield and cell_cropyield in init
         # TODO check if using the same sigmoid really works for soil and yield
         # parameter ranges / units
-        attitude_own_yield = sigmoid(self.cell_cropyield -
-                                     self.cropyield)
+        attitude_own_yield = sigmoid(self.cropyield / self.cropyield_previous - 1) # noqa
         return attitude_own_soil, attitude_own_yield
 
     # calculating the input of farmer's comparison to neighbouring farmers
@@ -150,8 +150,16 @@ class Individual (I.Individual, base.Individual):
         # soil_comparison = soils_diff - self.cell_soilc *\
         #     np.heaviside(soils_diff - soils_same, 0)
         
-        yield_comparison = yields_diff - self.cell_cropyield
-        soil_comparison = soils_diff - self.cell_soilc
+        if yields_diff == 0:
+            yield_comparison = 0
+        else:
+            yield_comparison = self.cropyield / yields_diff - 1
+    
+        if soils_diff == 0:
+            soil_comparison = 0
+        else:
+            soil_comparison = self.soilc / soils_diff - 1
+
         # TODO make seperate yield and soil comparisons, if comparing yields
         # a number > 0 the inclination to switch grows. normalize these differences
         # found in comparison in some ways to make sure the difference in units
@@ -222,8 +230,12 @@ class Individual (I.Individual, base.Individual):
 
     def update_behaviour(self, t):
         self.avg_hdate = self.cell_avg_hdate
-        self.cropyield = self.cell_cropyield
-        self.soilc = self.cell_soilc
+        # running average over strategy_switch_duration years to avoid rapid 
+        #    switching by weather fluctuations
+        self.cropyield = (1-1/self.strategy_switch_duration) * self.cropyield\
+            + 1/self.strategy_switch_duration * self.cell_cropyield
+        self.soilc = (1-1/self.strategy_switch_duration) * self.soilc\
+            + 1/self.strategy_switch_duration * self.cell_soilc
         # make the execution of this here, or maybe even better somewhere
         # else, (where?) conditional on the strategy_switch_time, to not
         # do the whol decision making evaluation if the farmers are not
@@ -271,7 +283,7 @@ class Individual (I.Individual, base.Individual):
                     # analysis
                     # here, a pbc range between 0 and 1 hampers,
                     # the smaller the values, the more hampering
-                    pbc = 0.5
+                    pbc = 1 + self.pbc
             
             # if my decision-making evaluation results
             # in a behavioral intention to do CA / RA
@@ -289,10 +301,9 @@ class Individual (I.Individual, base.Individual):
                     # to the tpb_complete number has to get larger by multiplying 
                     # with pbc factor between 1 and 2, the larger the pbc factor
                     # value, the more the hampering
-                    pbc = 1.5
+                    pbc = self.pbc
 
             tpb_complete = tpb*pbc
-
 
             if tpb_complete > 0.5:
                 self.behaviour = 1
@@ -300,6 +311,13 @@ class Individual (I.Individual, base.Individual):
                 self.behaviour = 0
                 
             self.set_lpjml_var(map_attribute="behaviour")
+            # freeze the current soilc and cropyield values that were used for
+            #   the decision making in the next evaluation after
+            #   self.strategy_switch_duration
+            self.cropyield_previous = self.cropyield
+            self.soilc_previous = self.soilc
+
+            # set back counter for strategy switch
             self.strategy_switch_time = 0
 
 

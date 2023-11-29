@@ -7,7 +7,7 @@ from pycoupler.data import read_data
 
 
 # output_file = "/p/projects/copan/users/lschwarz/coupling_runs/output/coupled_test"
-output_path = "/p/projects/open/Jannes/copan_core/lpjml/output/coupled_test_0.1/"
+output_path = "/p/projects/open/Jannes/copan_core/lpjml/output/coupled_test/"
 
 all_output = pd.read_csv(f"{output_path}/copan_core_data.csv")
 ts = pd.pivot_table(all_output,
