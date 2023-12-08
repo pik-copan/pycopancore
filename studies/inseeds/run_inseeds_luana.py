@@ -3,9 +3,9 @@ import os
 import numpy as np  # which is usually needed
 
 from pycoupler.config import read_config
-from pycoupler.run import run_lpjml
+from pycoupler.run import run_lpjml, check_lpjml
 from pycoupler.coupler import LPJmLCoupler
-from pycoupler.utils import check_lpjml, search_country
+from pycoupler.utils import search_country
 
 os.chdir("/p/projects/copan/users/lschwarz/core/pycopancore")
 # from pycopancore.runners.runner import Runner
@@ -98,17 +98,13 @@ run_lpjml(
     std_to_file=False  # write stdout and stderr to file
 )
 
-    # InSEEDS run --------------------------------------------------------------- #
-
-    # establish coupler connection to LPJmL
-    lpjml = LPJmLCoupler(config_file=config_coupled_fn)
-
-    # initialize (LPJmL) world
-    world = M.World(model=M, lpjml=lpjml)
-
-    # initialize (cells and) individuals
-    farmers, cells = world.init_individuals()
-
-    # run coupled model until end_year
-    for year in world.lpjml.get_sim_years():
-        world.update(year)
+# InSEEDS run --------------------------------------------------------------- #
+# establish coupler connection to LPJmL
+lpjml = LPJmLCoupler(config_file=config_coupled_fn)
+# initialize (LPJmL) world
+world = M.World(model=M, lpjml=lpjml)
+# initialize (cells and) individuals
+farmers, cells = world.init_individuals()
+# run coupled model until end_year
+for year in world.lpjml.get_sim_years():
+    world.update(year)
