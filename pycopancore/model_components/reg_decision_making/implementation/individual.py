@@ -169,10 +169,9 @@ class Individual (I.Individual, base.Individual):
         # Last, derive an inclination to switch based both on soil and yield-
         # based switching inclinations
 
-        attitude = sigmoid(self.weight_yield * yield_comparison +
-                           self.weight_soil * soil_comparison)
-        
-        return attitude
+        # TODO was anderes machen ;) heaviside....
+        return sigmoid(self.weight_yield * yield_comparison +
+                       self.weight_soil * soil_comparison) 
 
     """The social learning part of TPB here looks at the average behaviour,
     not performance, of neighbouring agents"""
