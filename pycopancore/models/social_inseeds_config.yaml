@@ -31,8 +31,8 @@ aftpar:
     progressive_minded:
         pbc: 0.5
         weight_attitude: 0.667
-        weight_yield: 0.333
-        weight_soil: 0.667
+        weight_yield: 2
+        weight_soil: 3.5
         weight_norm: 0.333
         weight_social_learning: 0.5
         weight_own_land: 0.5
@@ -44,8 +44,8 @@ aftpar:
     conservative_minded:
         pbc: 0.5
         weight_attitude: 0.5
-        weight_yield: 0.667
-        weight_soil: 0.333
+        weight_yield: 3.5
+        weight_soil: 2
         weight_norm: 0.5
         weight_social_learning: 0.5
         weight_own_land: 0.5

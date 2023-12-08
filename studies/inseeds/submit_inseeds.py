@@ -25,7 +25,7 @@ config_coupled = read_config(model_path=model_path,
 config_coupled.set_coupled(sim_path,
                            sim_name="coupled_test",
                            dependency="historic_run",
-                           start_year=2001, end_year=2050,
+                           start_year=2001, end_year=2030,
                            coupled_year=2023,
                            coupled_input=["with_tillage"],  # residue_on_field
                            coupled_output=["soilc_agr_layer",
@@ -72,5 +72,5 @@ submit_lpjml(
     config_file=config_coupled_fn,
     couple_to="/p/projects/open/Jannes/copan_core/pycopancore/studies/inseeds/inseeds_main.py",
     group="copan",
-    wtime = "3:00:00"
+    wtime = "8:00:00"
 )

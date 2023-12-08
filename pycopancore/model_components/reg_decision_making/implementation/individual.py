@@ -92,7 +92,7 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def cell_soilc(self):
-        return self.cell.output.soilc_agr_layer.values.mean()  # [:2]
+        return self.cell.output.soilc_agr_layer.values[:2].sum()
 
     @property
     def cell_avg_hdate(self):
@@ -122,11 +122,11 @@ class Individual (I.Individual, base.Individual):
         # TODO think about to which tate agent compares current state...
         # state before last update or last year?
         # See definition for soilc and cell_soilc in init
-        attitude_own_soil = sigmoid(self.soilc / self.soilc_previous - 1)
+        attitude_own_soil = sigmoid(self.soilc_previous / self.soilc  - 1)
         # See definition for cropyield and cell_cropyield in init
         # TODO check if using the same sigmoid really works for soil and yield
         # parameter ranges / units
-        attitude_own_yield = sigmoid(self.cropyield / self.cropyield_previous - 1) # noqa
+        attitude_own_yield = sigmoid(self.cropyield_previous / self.cropyield  - 1) # noqa
         return attitude_own_soil, attitude_own_yield
 
     # calculating the input of farmer's comparison to neighbouring farmers
@@ -153,12 +153,12 @@ class Individual (I.Individual, base.Individual):
         if yields_diff == 0:
             yield_comparison = 0
         else:
-            yield_comparison = self.cropyield / yields_diff - 1
+            yield_comparison = yields_diff / self.cropyield - 1
     
         if soils_diff == 0:
             soil_comparison = 0
         else:
-            soil_comparison = self.soilc / soils_diff - 1
+            soil_comparison = soils_diff / self.soilc - 1
 
         # TODO make seperate yield and soil comparisons, if comparing yields
         # a number > 0 the inclination to switch grows. normalize these differences
@@ -169,8 +169,10 @@ class Individual (I.Individual, base.Individual):
         # Last, derive an inclination to switch based both on soil and yield-
         # based switching inclinations
 
-        return sigmoid(self.weight_yield * yield_comparison +
-                       self.weight_soil * soil_comparison) 
+        attitude = sigmoid(self.weight_yield * yield_comparison +
+                           self.weight_soil * soil_comparison)
+        
+        return attitude
 
     """The social learning part of TPB here looks at the average behaviour,
     not performance, of neighbouring agents"""
@@ -184,11 +186,10 @@ class Individual (I.Individual, base.Individual):
                 sum(n.behaviour for n in self.neighbourhood) /
                 len(self.neighbourhood)
             )
-        # if self.behaviour == 1:
-        #     return sigmoid(0.5-social_norm)
-        # else:
-        #     return sigmoid(social_norm-0.5)
-        return social_norm
+        if self.behaviour == 1:
+            return sigmoid(0.5-social_norm)
+        else:
+            return sigmoid(social_norm-0.5)
 
     # TODO: how to do this for the two AFTs?
     @property
@@ -239,86 +240,27 @@ class Individual (I.Individual, base.Individual):
         # else, (where?) conditional on the strategy_switch_time, to not
         # do the whol decision making evaluation if the farmers are not
         # switching anyways, but still save info about soil and yield somewhere
-        if self.strategy_switch_time < self.strategy_switch_duration:
-            self.strategy_switch_time += 1
-            # TODO: insert code to collect yield and soil data
-        else:
-            tpb = (self.weight_attitude * self.attitude
-                   + self.weight_norm * self.social_norm)
-            # breakpoint()
+
+        tpb = (self.weight_attitude * self.attitude
+               + self.weight_norm * self.social_norm) # * self.pbc
 
 
-            # if np.random.random() < tpb and self.strategy_switch_time >= self.strategy_switch_duration:  # noqa
-# 
-            #     # need: include mechanism such that behaviour change does not
-            #     # happen yearly
-            #     # potentially then good: include some kind of memory of the past 
-            #     # years tpb values that were not "put into practice"
-# 
-            #     self.behaviour = int(not self.behaviour)
-            #     self.set_lpjml_var(map_attribute="behaviour")
-            #     self.strategy_switch_time = 0
-            # else:
-            #     self.strategy_switch_time += 1
-
-            """below one idea of how to determine pbc dynamically according to 
-                current behavior"""
-            # if my decision-making evaluation results
-            # in a behavioral intention to do CF 
-            if tpb > 0.5:
-                # Assumption: this differs depending on if I already practice CF 
-                # or not, so if my pbc to switch is high?
-                # TODO can we do this dynamic differentiation of pbc according to
-                # current behavior in the yaml file?
-                # no "switching costs" (financial, cognitive), so pbc should be high
-                if self.behaviour == 1:
-                    # stay with already practiced CF at high likelihood
-                    # perceived behavioral control to keep doing what you did
-                    # is assumed to be high
-                    pbc = 1
-                else:
-                    # switching is probably hampered by switching costs
-                    # this could then be one of the big levers in the sensititvity 
-                    # analysis
-                    # here, a pbc range between 0 and 1 hampers,
-                    # the smaller the values, the more hampering
-                    pbc = 1 + self.pbc
-            
-            # if my decision-making evaluation results
-            # in a behavioral intention to do CA / RA
-            if tpb < 0.5:
-                # Same as in the case above
-                # no "switching costs" (financial, cognitive), so pbc should be high
-                if self.behaviour == 0:
-                    # stay with already practiced CA/RA
-                    pbc = 1
-                else:
-                    # switching is probably hampered by switching costs
-                    # pbc must be larger than 1 in this example to hamper the 
-                    # switching likelihood to RA. The lower the tpb_complete number
-                    # the more likeli CF farmers are to switch to RA
-                    # to the tpb_complete number has to get larger by multiplying 
-                    # with pbc factor between 1 and 2, the larger the pbc factor
-                    # value, the more the hampering
-                    pbc = self.pbc
-
-            tpb_complete = tpb*pbc
-
-            if tpb_complete > 0.5:
-                self.behaviour = 1
-            elif tpb_complete < 0.5:
-                self.behaviour = 0
-                
-            self.set_lpjml_var(map_attribute="behaviour")
+        if tpb > 0.5:
+            self.behaviour = int(not self.behaviour)
+            # self.set_lpjml_var(map_attribute="behaviour")
             # freeze the current soilc and cropyield values that were used for
             #   the decision making in the next evaluation after
             #   self.strategy_switch_duration
-            self.cropyield_previous = self.cropyield
-            self.soilc_previous = self.soilc
 
-            # set back counter for strategy switch
-            self.strategy_switch_time = 0
+        self.set_lpjml_var(map_attribute="behaviour")
+        # freeze the current soilc and cropyield values that were used for
+        #   the decision making in the next evaluation after
+        #   self.strategy_switch_duration
+        self.cropyield_previous = self.cropyield
+        self.soilc_previous = self.soilc
 
+        # set back counter for strategy switch
+        self.strategy_switch_time = 0
 
 
 

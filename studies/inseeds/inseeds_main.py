@@ -1,5 +1,6 @@
 import os
 import argparse
+from pyinstrument import Profiler
 
 from pycoupler.coupler import LPJmLCoupler
 from pycopancore.models import social_inseeds as M
@@ -19,9 +20,13 @@ def run_inseeds(config_file):
     # initialize (cells and) individuals
     farmers, cells = world.init_individuals()
 
-    # run coupled model until end_year
-    for year in world.lpjml.get_sim_years():
-        world.update(year)
+    with Profiler(interval=0.05) as profiler:
+        for year in world.lpjml.get_sim_years():
+            profiler.write_html(
+                f"/p/projects/open/Jannes/copan_core/global_runs/output_{str(year)}.html"
+            )
+            world.update(year)
+
 
 
 if __name__ == "__main__":

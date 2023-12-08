@@ -15,12 +15,14 @@ from pycopancore.models import social_inseeds as M  # noqa
 
 # paths
 sim_path = "/p/projects/open/Jannes/copan_core/lpjml"
-model_path = f"{sim_path}/LPJmL_internal"
+sim_path = "/p/projects/open/Jannes/copan_core/deu_runs"
+model_path = "/p/projects/open/Jannes/copan_core/lpjml/LPJmL_internal"
 inseeds_config_file = "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa"
 
 # search for country code by supplying country name
 # search_country("netherlands")
 country_code = "NLD"
+country_code = "DEU"
 
 # Configuration ============================================================= #
 
@@ -65,7 +67,7 @@ config_coupled.residue_treatment = "no_residue_remove"  # "read_residue_data"
 config_coupled.double_harvest = False
 
 # regrid by country - create new (extracted) input files and update config file
-config_coupled.regrid(sim_path, country_code=country_code)
+config_coupled.regrid(sim_path, country_code=country_code, overwrite_input=True)
 
 config_coupled.add_config(inseeds_config_file)
 

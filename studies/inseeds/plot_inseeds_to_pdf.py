@@ -1,10 +1,13 @@
-# %%
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 output_file = "/p/projects/copan/users/lschwarz/coupling_runs/output/coupled_test_0.1/copan_core_data.csv"
+output_file = "/p/projects/open/Jannes/copan_core/deu_runs/output/coupled_test/copan_core_data.csv"
+plot_path = "/p/projects/open/Jannes/copan_core/deu_runs/plots"
+
 
 all_output = pd.read_csv(output_file)
 ts = pd.pivot_table(all_output,
@@ -29,11 +32,9 @@ for i, col in enumerate(ts_mean.columns):
 plt.xlabel('Year')
 
 # set the plot title
-plt.suptitle('Netherlands: Spreading effects of (no-)till practices')
+plt.suptitle('Germany: Spreading effects of (no-)till practices')
 
 # show the plot
 plt.show()
 
-fig.savefig("foo7.pdf", bbox_inches='tight')
-
-# %%
+fig.savefig(f"{plot_path}/time_series_new2.pdf", bbox_inches='tight')
