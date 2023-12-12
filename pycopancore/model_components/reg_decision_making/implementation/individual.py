@@ -112,7 +112,7 @@ class Individual (I.Individual, base.Individual):
     def attitude(self):
         return self.weight_social_learning \
             * self.attitude_social_learning \
-            + self.weight_own_land * prod(self.attitude_own_land)
+            + self.weight_own_land * self.attitude_own_land
 
     # calculating the input of farmer's own land evaluation to attitude
     # differentiated for 2 farmer types
@@ -122,12 +122,24 @@ class Individual (I.Individual, base.Individual):
         # TODO think about to which tate agent compares current state...
         # state before last update or last year?
         # See definition for soilc and cell_soilc in init
-        attitude_own_soil = sigmoid(self.soilc_previous / self.soilc  - 1)
+        comparison_own_soil = self.soilc_previous / self.soilc  - 1
+        # attitude_own_soil = sigmoid(self.soilc_previous / self.soilc  - 1)
         # See definition for cropyield and cell_cropyield in init
         # TODO check if using the same sigmoid really works for soil and yield
         # parameter ranges / units
-        attitude_own_yield = sigmoid(self.cropyield_previous / self.cropyield  - 1) # noqa
-        return attitude_own_soil, attitude_own_yield
+        comparison_own_yield = self.cropyield_previous / self.cropyield  - 1 # noqa
+        # attitude_own_yield = sigmoid(self.cropyield_previous / self.cropyield  - 1) # noqa
+        # return attitude_own_soil, attitude_own_yield
+        comparison_own_land = self.weight_yield * comparison_own_yield + \
+                            self.weight_soil * comparison_own_soil
+        if self.behaviour == 1:
+            return np.heaviside(0.5-comparison_own_land, 0)
+        else:
+            return np.heaviside(comparison_own_land-0.5, 0)
+        # if self.behaviour == 1:
+        #     return np.heaviside(0.5-comparison_own_soil, 0), np.heaviside(0.5-comparison_own_yield, 0)
+        # else:
+        #     return np.heaviside(comparison_own_soil-0.5, 0), np.heaviside(comparison_own_yield-0.5, 0)
 
     # calculating the input of farmer's comparison to neighbouring farmers
     # to attitide, differentiated for 2 farmer types
@@ -170,8 +182,14 @@ class Individual (I.Individual, base.Individual):
         # based switching inclinations
 
         # TODO was anderes machen ;) heaviside....
-        return sigmoid(self.weight_yield * yield_comparison +
-                       self.weight_soil * soil_comparison) 
+        # return sigmoid(self.weight_yield * yield_comparison +
+        #                self.weight_soil * soil_comparison)
+        comparison_social = self.weight_yield * yield_comparison + \
+                            self.weight_soil * soil_comparison
+        if self.behaviour == 1:
+            return np.heaviside(0.5-comparison_social, 0)
+        else:
+            return np.heaviside(comparison_social-0.5, 0)
 
     """The social learning part of TPB here looks at the average behaviour,
     not performance, of neighbouring agents"""
@@ -185,10 +203,11 @@ class Individual (I.Individual, base.Individual):
                 sum(n.behaviour for n in self.neighbourhood) /
                 len(self.neighbourhood)
             )
+        #TODO heaviside function has default threshold of 0. sbouldn't it be 0.5 instead of 0? If there
         if self.behaviour == 1:
-            return sigmoid(0.5-social_norm)
+            return np.heaviside(0.5-social_norm, 0)
         else:
-            return sigmoid(social_norm-0.5)
+            return np.heaviside(social_norm-0.5, 0)
 
     # TODO: how to do this for the two AFTs?
     @property
@@ -294,3 +313,11 @@ class Individual (I.Individual, base.Individual):
 def sigmoid(x):
     """The following part contains helping stuff"""
     return 0.5 * (np.tanh(x) + 1)
+
+def heaviside_norm(x):
+    if x < 0.5:
+        return 0
+    if x == 0.5:
+        return 0.5
+    if x > 0.5:
+        return 1
