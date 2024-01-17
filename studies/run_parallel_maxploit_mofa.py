@@ -40,7 +40,7 @@ from mpi4py import MPI
 
 start = time()
 
-experiment_name = "full_model_new_thresholds_64_4"
+experiment_name = "full_model_thresholds_64_8"
 # how to call postprocessed results
 post_process_filename = "stateval_results.pkl"
 
@@ -57,7 +57,7 @@ post_process_filename = "stateval_results.pkl"
 # as not to do any damage, folders have to be created manually
 # SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
 # SAVE_FOLDER = f"/p/projects/copan/users/maxbecht/results/maxploit3/{experiment_name}"
-SAVE_FOLDER = f"/p/tmp/maxbecht/results/{experiment_name}"
+SAVE_FOLDER = f"/p/tmp/maxbecht/paper/{experiment_name}"
 assert os.path.exists(SAVE_FOLDER), f"Error. Folder @ {SAVE_FOLDER} does not exist."
 SAVE_PATH_RAW = SAVE_FOLDER + "/" + "raw"
 SAVE_PATH_RES = SAVE_FOLDER + "/" + "res"
@@ -139,7 +139,7 @@ update_probability = [0.25]
 group_meeting_interval = [1]
 group_update_probability = [0.25]
 # [1, 2, 4, 8, 16, 32, 64, 128, 256]
-n_group_memberships = [4]
+n_group_memberships = [8]
 ng_total = [64]  # number of total groups
 ng_sust_frac = [0.5]
 

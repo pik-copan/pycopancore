@@ -24,12 +24,12 @@ parameter_name_list = ["attitude_on", "ind_initialisation", "group_initialisatio
 
 INDEX = {i: parameter_name_list[i] for i in range(len(parameter_name_list))}
 
-experiment_name = "full_model_new_timescales_64_4"
+experiment_name = "full_model_thresholds_2_1"
 
 # path to cluster data
 # PATH = f"/p/projects/copan/users/maxbecht/results/maxploit2/{experiment_name}"
 # PATH = f"/p/projects/copan/users/maxbecht/results/maxploit3/{experiment_name}"
-PATH = f"/p/tmp/maxbecht/results/{experiment_name}"
+PATH = f"/p/tmp/maxbecht/paper/{experiment_name}"
 
 # path to test data
 # PATH = f"C:/Users/bigma/Documents/Uni/Master/MA_Masterarbeit/results/maxploit/00_old/{experiment_name}"
@@ -38,27 +38,27 @@ PATH = f"/p/tmp/maxbecht/results/{experiment_name}"
 if old_run:
     parameter_name_list.remove("weight_harvest")
     weight_harvest = 0
-    PATH = f"/p/projects/copan/users/maxbecht/results/maxploit/{experiment_name}"
+    PATH = f"/p/projects/copan/users/maxbecht/paper/{experiment_name}"
 
 # path to save figures
 # SAVE_PATH = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}"
-SAVE_PATH = f"/p/tmp/maxbecht/plots/{experiment_name}"
+SAVE_PATH = f"/p/tmp/maxbecht/paper_plots/{experiment_name}"
 if not os.path.exists(SAVE_PATH):
     os.mkdir(SAVE_PATH)
 # SINGLE_TRAJ_PLOT_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/single_trajs"
-SINGLE_TRAJ_PLOT_PATHS = f"/p/tmp/maxbecht/plots/{experiment_name}/single_trajs"
+SINGLE_TRAJ_PLOT_PATHS = f"/p/tmp/maxbecht/paper_plots/{experiment_name}/single_trajs"
 if not os.path.exists(SINGLE_TRAJ_PLOT_PATHS):
     os.mkdir(SINGLE_TRAJ_PLOT_PATHS)
 # MEAN_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/mean_std"
-MEAN_PATHS = f"/p/tmp/maxbecht/plots/{experiment_name}/mean_std"
+MEAN_PATHS = f"/p/tmp/maxbecht/paper_plots/{experiment_name}/mean_std"
 if not os.path.exists(MEAN_PATHS):
     os.mkdir(MEAN_PATHS)
 # TRAJ_PLOT_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/trajs"
-TRAJ_PLOT_PATHS = f"/p/tmp/maxbecht/plots/{experiment_name}/trajs"
+TRAJ_PLOT_PATHS = f"/p/tmp/maxbecht/paper_plots/{experiment_name}/trajs"
 if not os.path.exists(TRAJ_PLOT_PATHS):
     os.mkdir(TRAJ_PLOT_PATHS)
 # DIST_PATHS = f"/p/projects/copan/users/maxbecht/plots/{experiment_name}/dist"
-DIST_PATHS = f"/p/tmp/maxbecht/plots/{experiment_name}/dist"
+DIST_PATHS = f"/p/tmp/maxbecht/paper_plots/{experiment_name}/dist"
 if not os.path.exists(DIST_PATHS):
     os.mkdir(DIST_PATHS)
 

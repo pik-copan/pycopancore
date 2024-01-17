@@ -54,8 +54,7 @@ class Individual(object):
                          """Saves the mean state of the groups.""",
                          default=0)
     alignment = Variable("alignment with group",
-                         """Checks how aligned individual is with its groups.""",
-                         default=0)
+                         """Checks how aligned individual is with its groups.""")
 
 class Group(object):
     """Interface for Group."""

@@ -1,13 +1,12 @@
 #!/bin/bash
 #SBATCH --qos=priority
-#SBATCH --job-name=plot-full_model_new_timescales_64_4
+#SBATCH --job-name=plot-full_model_thresholds_64_4
 #SBATCH --account=copan
 #SBATCH --ntasks=1
 #SBATCH --exclusive
 #SBATCH --output=%x-%j.out
 #SBATCH --error=%x-%j.err
-#SBATCH --workdir=/p/tmp/maxbecht/plots/full_model_new_timescales_64_4
-#SBATCH --time=08:00:00
+#SBATCH --workdir=/p/tmp/maxbecht/paper_plots/full_model_thresholds_64_2
 
 echo "------------------------------------------------------------"
 echo "SLURM JOB ID: $SLURM_JOBID"
