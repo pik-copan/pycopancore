@@ -5,8 +5,14 @@ import matplotlib.pyplot as plt
 
 
 output_file = "/p/projects/copan/users/lschwarz/coupling_runs/output/coupled_test_0.1/copan_core_data.csv"
-output_file = "/p/projects/open/Jannes/copan_core/deu_runs/output/coupled_test/copan_core_data.csv"
-plot_path = "/p/projects/open/Jannes/copan_core/deu_runs/plots"
+output_file = "/p/projects/open/Jannes/copan_core/nl_runs/output/coupled_test/copan_core_data.csv"
+# output_file = "/p/projects/open/Jannes/copan_core/nl_runs/output/coupled_global_100/copan_core_data.csv"
+# output_file = "/p/projects/open/Jannes/copan_core/deu_runs/output/coupled_test/copan_core_data.csv"
+output_file = "/p/projects/open/Jannes/copan_core/global_runs/output/coupled_global_0/copan_core_data.csv"
+
+#plot_path = "/p/projects/open/Jannes/copan_core/nl_runs/plots"
+# plot_path = "/p/projects/open/Jannes/copan_core/deu_runs/plots"
+plot_path = "/p/projects/open/Jannes/copan_core/global_runs/plots"
 
 
 all_output = pd.read_csv(output_file)
@@ -15,7 +21,6 @@ ts = pd.pivot_table(all_output,
                     index=['year', 'cell'],
                     columns=['variable'])
 
-ts.query('cell == 0')
 ts_mean = ts.groupby('year').mean()
 
 
@@ -32,9 +37,9 @@ for i, col in enumerate(ts_mean.columns):
 plt.xlabel('Year')
 
 # set the plot title
-plt.suptitle('Germany: Spreading effects of (no-)till practices')
+plt.suptitle('Netherlands: Spreading effects of (no-)till practices')
 
 # show the plot
 plt.show()
 
-fig.savefig(f"{plot_path}/time_series_new2.pdf", bbox_inches='tight')
+fig.savefig(f"{plot_path}/time_series_check_0.pdf", bbox_inches='tight')

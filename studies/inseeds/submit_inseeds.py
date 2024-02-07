@@ -19,16 +19,16 @@ inseeds_config_file = "/p/projects/open/Jannes/copan_core/pycopancore/pycopancor
 
 # create config for coupled run
 config_coupled = read_config(model_path=model_path,
-                             file_name="lpjml.js")
+                             file_name="lpjml_config.cjson")
 
 # set coupled run configuration
 config_coupled.set_coupled(sim_path,
-                           sim_name="coupled_test",
+                           sim_name="coupled_global_100",
                            dependency="historic_run",
-                           start_year=2001, end_year=2030,
+                           start_year=2001, end_year=2050,
                            coupled_year=2023,
                            coupled_input=["with_tillage"],  # residue_on_field
-                           coupled_output=["soilc_agr_layer",
+                           coupled_output=["soilc_agr_layer_fast",
                                            "cftfrac",
                                            "pft_harvestc",
                                            "hdate",
@@ -52,11 +52,14 @@ config_coupled.fix_climate = True
 config_coupled.fix_climate_cycle = 11
 config_coupled.fix_climate_year = 2013
 
+config_coupled.intercrop = True
 config_coupled.tillage_type = "read"
-config_coupled.residue_treatment = "no_residue_remove"  # "read_residue_data"
+config_coupled.residue_treatment = "fixed_residue_remove"  # "read_residue_data"
 config_coupled.double_harvest = False
 
 config_coupled.add_config(inseeds_config_file)
+
+config_coupled.coupled_config.progressive_probability = 1.0
 
 # write config (Config object) as json file
 config_coupled_fn = config_coupled.to_json()
@@ -71,6 +74,6 @@ check_lpjml(config_coupled_fn)
 submit_lpjml(
     config_file=config_coupled_fn,
     couple_to="/p/projects/open/Jannes/copan_core/pycopancore/studies/inseeds/inseeds_main.py",
-    group="copan",
-    wtime = "8:00:00"
+    group="worldtrans",
+    wtime = "24:00:00"
 )

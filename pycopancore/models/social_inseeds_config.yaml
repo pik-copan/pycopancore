@@ -15,7 +15,7 @@ output:
 # Define how copan_core_data table file should be written
 output_settings:
     write_lon_lat: true
-    format: "csv"  # "csv", "feather" (fast binary table format)
+    format: "csv"
 
 # added by luana for less frequent updates TODO does that make sense here?
 min_update_interval: 20  # in years
@@ -23,17 +23,19 @@ min_update_interval: 20  # in years
 coupling_map:
     behaviour: ["with_tillage"]  # "residue_on_field"
 
+progressive_probability: 0.5
+
 # Analogous to LPJmL pftpar, define the AFT parameters for the two different
 #   farmer types
 aftpar:
     # AFT for progressive farmer who more likely tends to switch to
     #   regenerative agriculture
     progressive_minded:
-        pbc: &pbc_value 0.5
-        weight_attitude: 0.667
+        pbc: 0.95
+        weight_attitude: 0.8
         weight_yield: 2
-        weight_soil: 3.5
-        weight_norm: 0.333
+        weight_soil: 9
+        weight_norm: 0.2
         weight_social_learning: 0.5
         weight_own_land: 0.5
         # duration of waiting time before switching to another strategy
@@ -42,12 +44,12 @@ aftpar:
     # AFT for conservative/traditional values following farmer tending to stay
     #   with conventional agriculture
     conservative_minded:
-        pbc: *pbc_value
-        weight_attitude: 0.5
-        weight_yield: 3.5
-        weight_soil: 2
-        weight_norm: 0.5
-        weight_social_learning: 0.5
+        pbc: 0.75
+        weight_attitude: 0.6
+        weight_yield: 7
+        weight_soil: 4
+        weight_norm: 0.4
+        weight_social_learning: 0.4
         weight_own_land: 0.5
         # duration of waiting time before switching to another strategy
         strategy_switch_duration: 10 # years

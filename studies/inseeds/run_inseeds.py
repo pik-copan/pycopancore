@@ -15,28 +15,30 @@ from pycopancore.models import social_inseeds as M  # noqa
 
 # paths
 sim_path = "/p/projects/open/Jannes/copan_core/lpjml"
-sim_path = "/p/projects/open/Jannes/copan_core/deu_runs"
+sim_path = "/p/projects/open/Jannes/copan_core/nl_runs"
 model_path = "/p/projects/open/Jannes/copan_core/lpjml/LPJmL_internal"
 inseeds_config_file = "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa"
 
 # search for country code by supplying country name
-# search_country("netherlands")
+# search_country("germany")
 country_code = "NLD"
-country_code = "DEU"
+# country_code = "DEU"
 
 # Configuration ============================================================= #
 
 # create config for coupled run
-config_coupled = read_config(model_path=model_path, file_name="lpjml.js")
+config_coupled = read_config(
+    model_path=model_path, file_name="lpjml_config.cjson"
+)
 
 # set coupled run configuration
 config_coupled.set_coupled(sim_path,
                            sim_name="coupled_test",
                            dependency="historic_run",
-                           start_year=2001, end_year=2050,
+                           start_year=2001, end_year=2100,
                            coupled_year=2023,
                            coupled_input=["with_tillage"],  # residue_on_field
-                           coupled_output=["soilc_agr_layer",
+                           coupled_output=["soilc_agr_layer_fast",
                                            "cftfrac",
                                            "pft_harvestc",
                                            "hdate",
@@ -63,13 +65,18 @@ config_coupled.fix_climate_year = 2013
 # only for global runs = TRUE
 config_coupled.river_routing = False
 config_coupled.tillage_type = "read"
-config_coupled.residue_treatment = "no_residue_remove"  # "read_residue_data"
+config_coupled.residue_treatment = "fixed_residue_remove" # "read_residue_data" # "no_residue_remove" # "fixed_residue_remove"
 config_coupled.double_harvest = False
 
 # regrid by country - create new (extracted) input files and update config file
-config_coupled.regrid(sim_path, country_code=country_code, overwrite_input=True)
+config_coupled.regrid(sim_path, country_code=country_code, overwrite_input=False)
 
 config_coupled.add_config(inseeds_config_file)
+
+config_coupled.intercrop = True
+# config_coupled.coupled_config.aftpar.progressive_minded.strategy_switch_duration = 20
+# config_coupled.coupled_config.aftpar.conservative_minded.strategy_switch_duration = 20
+config_coupled.coupled_config.progressive_probability = 0.75
 
 # write config (Config object) as json file
 config_coupled_fn = config_coupled.to_json()
@@ -117,9 +124,15 @@ with Profile() as profile:
 
 
 from pyinstrument import Profiler
-with Profiler(interval=0.05) as profiler:
-    for year in world.lpjml.get_sim_years():
-        world.update(year)
+profiler = Profiler(interval=0.05)
+profiler.start()
+
+for year in world.lpjml.get_sim_years():
+    if year == lpjml.config.lastyear:
+        profiler.stop()
+        profiler.write_html("/p/projects/open/Jannes/copan_core/global_runs/output_test.html")
+    world.update(year)
 
 
 profiler.print()
+# profiler.write_html("/p/projects/open/Jannes/copan_core/global_runs/output.html")

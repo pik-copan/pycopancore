@@ -20,7 +20,15 @@ def run_inseeds(config_file):
     # initialize (cells and) individuals
     farmers, cells = world.init_individuals()
 
+    profiler = Profiler(interval=0.05)
+    profiler.start()
+
     for year in world.lpjml.get_sim_years():
+        if year == lpjml.config.lastyear:
+            profiler.stop()
+            profiler.write_html(
+                f"/p/projects/open/Jannes/copan_core/global_runs/profiler_{str(year)}.html"
+            )
         world.update(year)
 
 

@@ -51,6 +51,8 @@ class World (I.World):
         for farmer in farmers_sorted:
             farmer.init_neighbourhood()
 
+        self.update_output_table(self.lpjml.sim_year-1, init=True)
+
         return farmers_sorted, cells
 
     def update_individuals(self, t):
@@ -65,9 +67,9 @@ class World (I.World):
 
         self.update_lpjml(t)
 
-    def update_output_table(self, t):
+    def update_output_table(self, t, init=False):
         df = self.create_output_table(t)
-        self.write_output_table(df)
+        self.write_output_table(df, init)
 
     def create_output_table(self, t):
         """Initialize output data"""
@@ -164,12 +166,11 @@ class World (I.World):
 
         return df
 
-    def write_output_table(self, df):
+    def write_output_table(self, df, init=False):
         """Write output data"""
-
-        mode = "w" if self.lpjml.sim_year in [
-            self.lpjml.config.start_coupling, self.lpjml.config.firstyear
-        ] else "a"
+        mode = "w" if (
+            self.lpjml.sim_year == self.lpjml.config.start_coupling and init
+        ) else "a"
 
         # define the file name and header row
         file_name = f"{self.lpjml.config.sim_path}/output/{self.lpjml.config.sim_name}/copan_core_data.csv"  # noqa

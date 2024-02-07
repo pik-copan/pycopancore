@@ -31,9 +31,11 @@ class AFT(Enum):
     conservative_minded: int = 1
 
     @staticmethod
-    def random():
-        return sample(list(AFT), 1)[0]
-
+    def random(progressive_probability=0.5):
+        return np.random.choice(
+            [AFT.progressive_minded, AFT.conservative_minded],
+            p=[progressive_probability, 1-progressive_probability]
+        )
 
 class Individual (I.Individual, base.Individual):
     """Individual entity type mixin implementation class."""
@@ -44,14 +46,13 @@ class Individual (I.Individual, base.Individual):
     # für den "traditionalist" type
     def __init__(self,
                  *,
-                 aft=AFT.random(),
                  config=None,
                  **kwargs):
 
         """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
 
-        self.aft = aft
+        self.aft = AFT.random(config.progressive_probability)
         self.coupling_map = config.coupling_map.to_dict()
         self.__dict__.update(getattr(config.aftpar, self.aft.name).to_dict())
 
@@ -73,7 +74,10 @@ class Individual (I.Individual, base.Individual):
         #   soil potential
         # self.max_soilc = self.soilc
         # self.max_cropyield = self.cropyield
-
+        # self.strategy_switch_duration = randint(
+        #     self.strategy_switch_duration/2,
+        #     self.strategy_switch_duration/2 + self.strategy_switch_duration
+        # )
         # Randomize switch time at beginning of simulation to avoid
         #   synchronization of agents
         self.strategy_switch_time = randint(0, self.strategy_switch_duration)
@@ -88,11 +92,17 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def cell_cropyield(self):
-        return self.cell.output.pft_harvestc.values.mean()
+        if (self.cell.output.pft_harvestc.values.mean() == 0):
+            return 1e-3
+        else:
+            return self.cell.output.pft_harvestc.values.mean()
 
     @property
     def cell_soilc(self):
-        return self.cell.output.soilc_agr_layer.values[:2].sum()
+        if (self.cell.output.soilc_agr_layer_fast.values[0].item() == 0):
+            return 1e-3
+        else:
+            return self.cell.output.soilc_agr_layer_fast.values[0].item()
 
     @property
     def cell_avg_hdate(self):
@@ -149,16 +159,10 @@ class Individual (I.Individual, base.Individual):
         #     np.heaviside(yields_diff - yields_same, 0)
         # soil_comparison = soils_diff - self.cell_soilc *\
         #     np.heaviside(soils_diff - soils_same, 0)
-        
-        if yields_diff == 0:
-            yield_comparison = 0
-        else:
-            yield_comparison = yields_diff / self.cropyield - 1
-    
-        if soils_diff == 0:
-            soil_comparison = 0
-        else:
-            soil_comparison = soils_diff / self.soilc - 1
+
+        yield_comparison = yields_diff / self.cropyield - 1
+
+        soil_comparison = soils_diff / self.soilc - 1
 
         # TODO make seperate yield and soil comparisons, if comparing yields
         # a number > 0 the inclination to switch grows. normalize these differences
@@ -171,7 +175,7 @@ class Individual (I.Individual, base.Individual):
 
         # TODO was anderes machen ;) heaviside....
         return sigmoid(self.weight_yield * yield_comparison +
-                       self.weight_soil * soil_comparison) 
+                       self.weight_soil * soil_comparison)
 
     """The social learning part of TPB here looks at the average behaviour,
     not performance, of neighbouring agents"""
@@ -231,36 +235,46 @@ class Individual (I.Individual, base.Individual):
         self.avg_hdate = self.cell_avg_hdate
         # running average over strategy_switch_duration years to avoid rapid 
         #    switching by weather fluctuations
-        self.cropyield = (1-1/self.strategy_switch_duration) * self.cropyield\
-            + 1/self.strategy_switch_duration * self.cell_cropyield
-        self.soilc = (1-1/self.strategy_switch_duration) * self.soilc\
-            + 1/self.strategy_switch_duration * self.cell_soilc
+        self.cropyield = (1-1/(self.strategy_switch_duration/2)) * self.cropyield\
+            + 1/(self.strategy_switch_duration/2) * self.cell_cropyield
+        self.soilc = (1-1/(self.strategy_switch_duration/2)) * self.soilc\
+            + 1/(self.strategy_switch_duration/2) * self.cell_soilc
         # make the execution of this here, or maybe even better somewhere
         # else, (where?) conditional on the strategy_switch_time, to not
         # do the whol decision making evaluation if the farmers are not
         # switching anyways, but still save info about soil and yield somewhere
 
-        tpb = (self.weight_attitude * self.attitude
-               + self.weight_norm * self.social_norm) # * self.pbc
+        if self.strategy_switch_time <= 0:
+            tpb = (self.weight_attitude * self.attitude
+                + self.weight_norm * self.social_norm) * self.pbc
 
+            if tpb > 0.5:
+                self.behaviour = int(not self.behaviour)
+                # self.set_lpjml_var(map_attribute="behaviour")
+                # freeze the current soilc and cropyield values that were used for
+                #   the decision making in the next evaluation after
+                #   self.strategy_switch_duration
+                self.pbc = max(self.pbc - 0.25, 0.5)
 
-        if tpb > 0.5:
-            self.behaviour = int(not self.behaviour)
-            # self.set_lpjml_var(map_attribute="behaviour")
+                # set back counter for strategy switch
+                self.strategy_switch_time = randint(
+                    round(self.strategy_switch_duration/2),
+                    round(self.strategy_switch_duration/2 + self.strategy_switch_duration)
+                )
+
+            elif tpb <= 0.5 and tpb > 0.4:
+                self.pbc = min(self.pbc + 0.25/self.strategy_switch_duration, 1)
+
+            self.set_lpjml_var(map_attribute="behaviour")
             # freeze the current soilc and cropyield values that were used for
             #   the decision making in the next evaluation after
             #   self.strategy_switch_duration
 
-        self.set_lpjml_var(map_attribute="behaviour")
-        # freeze the current soilc and cropyield values that were used for
-        #   the decision making in the next evaluation after
-        #   self.strategy_switch_duration
+        else:
+            self.strategy_switch_time -= 1
+
         self.cropyield_previous = self.cropyield
         self.soilc_previous = self.soilc
-
-        # set back counter for strategy switch
-        self.strategy_switch_time = 0
-
 
 
     def set_lpjml_var(self, map_attribute):
