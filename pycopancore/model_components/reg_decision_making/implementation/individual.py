@@ -99,10 +99,10 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def cell_soilc(self):
-        if (self.cell.output.soilc_agr_layer_fast.values[0].item() == 0):
+        if (self.cell.output.soilc_agr_layer.values[0].item() == 0):
             return 1e-3
         else:
-            return self.cell.output.soilc_agr_layer_fast.values[0].item()
+            return self.cell.output.soilc_agr_layer.values[0].item()
 
     @property
     def cell_avg_hdate(self):
@@ -120,8 +120,7 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def attitude(self):
-        return self.weight_social_learning \
-            * self.attitude_social_learning \
+        return self.weight_social_learning * self.attitude_social_learning \
             + self.weight_own_land * prod(self.attitude_own_land)
 
     # calculating the input of farmer's own land evaluation to attitude
