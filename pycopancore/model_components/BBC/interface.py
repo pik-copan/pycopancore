@@ -1,8 +1,3 @@
-"""model component Interface template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", then
-remove these instructions.
-"""
 
 # This file is part of pycopancore.
 #
@@ -19,7 +14,7 @@ class Model (object):
     # metadata:
     name = "BBC"
     """Behaviour-Bisophere-Climate Model"""
-    description = "simple model for evaluating co-evolutionary danamics of human behaviour and climate change as well as bisohere Integrity "
+    description = "simple model for evaluating co-evolutionary danamics of human behaviour and Climate Change as well as Biosphere Integrity "
 
 
 class Environment (object):
@@ -247,7 +242,7 @@ class Metabolism (object):
                    "Emissions from land-use based on RCP scenario",
                    default=.003)
     emission_array = Variable("emissions",
-                                "array of emissions for each time step")
+                                "array of emissions for each time step based on RCP scenario")
     LUC_array = Variable("LUC",
                            "LUC per time step for chosen RCP scenario")
     i_min = Variable("maximal direct human impact on biodiversity",
