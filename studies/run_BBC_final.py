@@ -28,7 +28,7 @@ import os
 #Loop for runing several experiments
 
 #directors with the model imputs
-directory = 'C:/Users/hhpra/Desktop/Ausbildung/Hu_Berlin/INRM/Masterarbeit/Model_input/SN_PBC_CC'
+directory = 'C:/Users/hhpra/Desktop/Ausbildung/Hu_Berlin/INRM/Masterarbeit/Model_input/SN_PBC_CC' # adopt!
 sfile = 0
 print(sfile)
 for savefile in os.scandir(directory):
@@ -46,9 +46,9 @@ for savefile in os.scandir(directory):
         # simulation parameters
         t_max = 2100  # interval for which the model will be simulated
         dt = 1  # desired temporal resolution of the resulting output.
-        Emissions = pd.read_csv('C:/Users/hhpra/Desktop/Ausbildung/Hu_Berlin/INRM/Masterarbeit/Model_input/Emissions85.csv')
+        Emissions = pd.read_csv('C:/Users/hhpra/Desktop/Ausbildung/Hu_Berlin/INRM/Masterarbeit/Model_input/Emissions85.csv') # adopt to RCP szenario
         Emissions_array = Emissions.to_numpy()
-        LUC = pd.read_csv('C:/Users/hhpra/Desktop/Ausbildung/Hu_Berlin/INRM/Masterarbeit/Model_input/LUC85.csv')
+        LUC = pd.read_csv('C:/Users/hhpra/Desktop/Ausbildung/Hu_Berlin/INRM/Masterarbeit/Model_input/LUC85.csv') # adopt to RCP szenario
         LUC_array = LUC.to_numpy()
 
 
@@ -110,7 +110,7 @@ for savefile in os.scandir(directory):
         traj = runner.run(t_0=1765, t_1=t_max, dt=dt)
 
 
-        #get variabled for saving
+        #get variables for saving
         temp = list(traj[BBC.Environment.temperature].values())
         temp = (temp[0])
         biodiv = list(traj[BBC.Environment.J].values())
@@ -125,7 +125,7 @@ for savefile in os.scandir(directory):
         PBCBD = (PBCBD[0])
         filename = str(index+10)
 
-        #choose variabled for model output
+        #choose variables for model output
         output_sensitivity = pd.DataFrame(np.column_stack([traj['t'], temp, biodiv, SNCC, PBCCC]),
                             columns=['time', 'Temperature' + filename, 'Biosiv_loss' + filename, "SN_CC"+filename, "PBC_CC"+filename])
 
