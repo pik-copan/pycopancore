@@ -1,8 +1,3 @@
-"""World entity type mixing class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
-"""
 
 # This file is part of pycopancore.
 #
@@ -58,7 +53,7 @@ class World(I.World):
 
     # ODEs
     def temperature_eqn(self, t):
-        """ODE for calculating the global mean temperature"""
+        """ODE for calculating the global mean temperature T"""
         self.environment.d_temperature += (self.environment.lam * np.log(
             self.environment.carbon_atmosphere / self.environment.c_a0) / np.log(
             2) - self.environment.temperature) / self.environment.tau
