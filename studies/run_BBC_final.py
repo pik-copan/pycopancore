@@ -1,11 +1,4 @@
-"""
-Run script template.
 
-TODO: Go through the file and adjust all parts of the code marked with the TODO
-flag. Pay attention to those variables and objects written in capital letters.
-These are placeholders and must be adjusted as needed. For further details see
-also the model development tutorial.
-"""
 # This file is part of pycopancore.
 #
 # Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
