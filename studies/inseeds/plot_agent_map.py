@@ -10,15 +10,11 @@ import cartopy.feature as cfeature
 import imageio
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
-
-# plot_dir = "/p/projects/open/Jannes/copan_core/nl_runs/plot"
-plot_dir = "/p/projects/open/Jannes/copan_core/global_runs/plots"
-
 from pycoupler.data import read_data
 
-# output_file = "/p/projects/copan/users/lschwarz/coupling_runs/output/coupled_test"
-# output_path = "/p/projects/open/Jannes/copan_core/lpjml/output/coupled_test/"
-output_path = "/p/projects/open/Jannes/copan_core/global_runs/output/coupled_global_50"
+plot_dir = "./copan_core/global_runs/plots"
+
+output_path = "./copan_core/global_runs/output/coupled_global_50"
 
 
 all_output = pd.read_csv(f"{output_path}/copan_core_data.csv")
@@ -179,4 +175,4 @@ year_images = sorted(year_images, key=lambda x: int(x.split("_")[-1].split(".")[
 
 var = [imageio.imread(file) for file in year_images]
 
-imageio.mimsave(f'{plot_dir}/all_map_50.gif', var, duration=10)
+imageio.mimsave(f'{plot_dir}/all_map.gif', var, duration=10)

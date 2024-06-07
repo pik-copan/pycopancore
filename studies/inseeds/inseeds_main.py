@@ -1,6 +1,5 @@
 import os
 import argparse
-from pyinstrument import Profiler
 
 from pycoupler.coupler import LPJmLCoupler
 from pycopancore.models import social_inseeds as M
