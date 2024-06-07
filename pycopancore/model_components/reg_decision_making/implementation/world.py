@@ -37,6 +37,7 @@ class World (I.World):
         """
         cells = self.init_cells(**kwargs)
         farmers = []
+
         for cell in cells:
             if cell.output.cftfrac.sum("band") == 0:
                 continue
@@ -111,12 +112,12 @@ class World (I.World):
                     ]
 
                     if self.lpjml.config.coupled_config.output_settings.write_lon_lat:  # noqa
-                        df_data["longitude"] = [
-                            eval(f"attr{call}.grid.longitude.item()")
+                        df_data["lon"] = [
+                            eval(f"attr{call}.grid.lon.item()")
                             for attr in getattr(self, f"{core_class}s")
                         ]
-                        df_data["latitude"] = [
-                            eval(f"attr{call}.grid.latitude.item()")
+                        df_data["lat"] = [
+                            eval(f"attr{call}.grid.lat.item()")
                             for attr in getattr(self, f"{core_class}s")
                         ]
 
@@ -128,6 +129,11 @@ class World (I.World):
                     if hasattr(self.lpjml, "region"):
                         df_data["region"] = [
                             eval(f"attr{call}.region.item()")
+                            for attr in getattr(self, f"{core_class}s")
+                        ]
+                    if hasattr(self.lpjml, "terr_area"):
+                        df_data["area [km2]"] = [
+                            eval(f"attr{call}.area.item()") * 1e-6
                             for attr in getattr(self, f"{core_class}s")
                         ]
 

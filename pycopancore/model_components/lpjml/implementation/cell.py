@@ -20,6 +20,7 @@ class Cell(I.Cell):
                  grid=None,
                  country=None,
                  region=None,
+                 area=None,
                  **kwargs):
         """Initialize an instance of Cell."""
 
@@ -31,6 +32,8 @@ class Cell(I.Cell):
             self.country = country
         if region is not None:
             self.region = region
+        if area is not None:
+            self.area = area
 
     def __lt__(self, other):
         return self.input.cell.values < other.input.cell.values

@@ -83,6 +83,7 @@ class World(I.World):
                 grid=self.lpjml.grid.isel(cell=icell),
                 country=self.lpjml.country.isel(cell=icell) if hasattr(self.lpjml, "country") else None,  # noqa
                 region=self.lpjml.region.isel(cell=icell) if hasattr(self.lpjml, "region") else None,  # noqa
+                area=self.lpjml.terr_area.isel(cell=icell) if hasattr(self.lpjml, "terr_area") else None,  # noqa
                 **kwargs
             ) for icell in self.lpjml.get_cells(id=False)
         ]
