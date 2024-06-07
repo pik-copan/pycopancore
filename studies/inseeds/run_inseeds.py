@@ -5,7 +5,7 @@ from pycoupler.coupler import LPJmLCoupler
 from pycoupler.utils import search_country
 
 # from pycopancore.runners.runner import Runner
-from pycopancore.models import social_inseeds as M  # noqa
+from pycopancore.models import inseeds_social as M # noqa
 
 
 # Settings ================================================================== #
@@ -13,7 +13,7 @@ from pycopancore.models import social_inseeds as M  # noqa
 # paths
 sim_path = "./copan_core/nl_runs"
 model_path = "./copan_core/lpjml/LPJmL_internal"
-inseeds_config_file = "./copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa"
+inseeds_config_file = "./copan_core/pycopancore/pycopancore/models/inseeds_social_config.yaml"  # noqa"
 
 # search for country code by supplying country name
 # search_country("netherlands")

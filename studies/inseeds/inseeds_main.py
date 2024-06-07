@@ -2,7 +2,7 @@ import os
 import argparse
 
 from pycoupler.coupler import LPJmLCoupler
-from pycopancore.models import social_inseeds as M
+from pycopancore.models import inseeds_social as M
 
 
 def run_inseeds(config_file):

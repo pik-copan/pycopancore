@@ -9,7 +9,7 @@ from pycoupler.run import check_lpjml, submit_lpjml
 # paths
 sim_path = "./copan_core/global_runs"
 model_path = "./copan_core/lpjml/LPJmL_internal"
-inseeds_config_file = "./copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa"
+inseeds_config_file = "./copan_core/pycopancore/pycopancore/models/inseeds_social_config.yaml"  # noqa"
 
 
 # Configuration ============================================================= #

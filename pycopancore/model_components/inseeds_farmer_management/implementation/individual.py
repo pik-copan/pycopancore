@@ -70,6 +70,7 @@ class Individual (I.Individual, base.Individual):
         # Same applies for cropyield (as for soilc)
         self.cropyield = self.cell_cropyield
         self.cropyield_previous = self.cropyield
+
         # Maximal soilc and cropyield might be used in the future to assess
         #   soil potential
         # self.max_soilc = self.soilc
@@ -78,6 +79,7 @@ class Individual (I.Individual, base.Individual):
         #     self.strategy_switch_duration/2,
         #     self.strategy_switch_duration/2 + self.strategy_switch_duration
         # )
+
         # Randomize switch time at beginning of simulation to avoid
         #   synchronization of agents
         self.strategy_switch_time = randint(0, self.strategy_switch_duration)
@@ -92,6 +94,7 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def cell_cropyield(self):
+        """Return the average crop yield of the cell."""
         if (self.cell.output.pft_harvestc.values.mean() == 0):
             return 1e-3
         else:
@@ -99,6 +102,7 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def cell_soilc(self):
+        """Return the average soil carbon of the cell."""
         if (self.cell.output.soilc_agr_layer.values[0].item() == 0):
             return 1e-3
         else:
@@ -106,6 +110,7 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def cell_avg_hdate(self):
+        """Return the average harvest date of the cell."""
         crop_idx = [
             i for i, item in enumerate(self.cell.output.hdate.band.values)  # noqa
             if any(x in item for x in self.cell.world.lpjml.config.cftmap)
@@ -120,68 +125,53 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def attitude(self):
+        """Calculate the attitude of the farmer following the TPB"""
         return self.weight_social_learning * self.attitude_social_learning \
             + self.weight_own_land * prod(self.attitude_own_land)
 
-    # calculating the input of farmer's own land evaluation to attitude
-    # differentiated for 2 farmer types
     @property
     def attitude_own_land(self):
-        # TODO differentiate for 2 AFTs
-        # TODO think about to which tate agent compares current state...
-        # state before last update or last year?
-        # See definition for soilc and cell_soilc in init
-        attitude_own_soil = sigmoid(self.soilc_previous / self.soilc  - 1)
-        # See definition for cropyield and cell_cropyield in init
-        # TODO check if using the same sigmoid really works for soil and yield
-        # parameter ranges / units
-        attitude_own_yield = sigmoid(self.cropyield_previous / self.cropyield  - 1) # noqa
+        """Calculate the attitude of the farmer towards his own land"""
+        # compare own soil and yield to previous values
+        attitude_own_soil = sigmoid(
+            self.soilc_previous / self.soilc  - 1
+        )
+        attitude_own_yield = sigmoid(
+            self.cropyield_previous / self.cropyield  - 1
+        )
+
         return attitude_own_soil, attitude_own_yield
 
-    # calculating the input of farmer's comparison to neighbouring farmers
-    # to attitide, differentiated for 2 farmer types
     @property
     def attitude_social_learning(self):
-        # maybe split up method above? or explicitly refer to the valsneeded?
+        """Calculate the attitude of the farmer towards social learning based
+        on the comparison to neighbours using a different strategy"""
+
+        # split variables (crop yield, soilc) status of neighbours into groups
+        #   of different strategies applied and average them
         average_cropyields = self.split_neighbourhood_status("cropyield")
         average_soilcs = self.split_neighbourhood_status("soilc")
-        # important: this is about behaviour (RA / CF, NOT AFT)
+
+        # select the average of the neighbours that are using a different
+        #   strategy
         yields_diff, yields_same = average_cropyields[not self.behaviour],\
             average_cropyields[self.behaviour]
         soils_diff, soils_same = average_soilcs[not self.behaviour],\
             average_soilcs[self.behaviour]
-        # TODO is agent_i.behaviour really getting me to the right return?
 
-        # calc both yield and soil comparison, then weight
-        # TODO think about sigmoid instead of heaviside?
-        # yield_comparison = yields_diff - self.cell_cropyield *\
-        #     np.heaviside(yields_diff - yields_same, 0)
-        # soil_comparison = soils_diff - self.cell_soilc *\
-        #     np.heaviside(soils_diff - soils_same, 0)
-
+        # calculate the difference between the own status and the average
+        #   status of the neighbours
         yield_comparison = yields_diff / self.cropyield - 1
-
         soil_comparison = soils_diff / self.soilc - 1
 
-        # TODO make seperate yield and soil comparisons, if comparing yields
-        # a number > 0 the inclination to switch grows. normalize these differences
-        # found in comparison in some ways to make sure the difference in units
-        # from yield and soil is reflected (not done currently, exploit legacy)
-        # and then combine these 2 inclinations according to the weights
-        # (sust. aft will give more importance to soil-based inclination). 
-        # Last, derive an inclination to switch based both on soil and yield-
-        # based switching inclinations
-
-        # TODO was anderes machen ;) heaviside....
+        # calculate the attitude of social learning based on the comparison
         return sigmoid(self.weight_yield * yield_comparison +
                        self.weight_soil * soil_comparison)
 
-    """The social learning part of TPB here looks at the average behaviour,
-    not performance, of neighbouring agents"""
     @property
-    # calculating descriptive social norm based on all neighbouring farmers
     def social_norm(self):
-        # TODO check if base model is neede for .neighbours
+        """Calculate the social norm of the farmer based on the behaviour of
+        the neighbours"""
         social_norm = 0
         if self.neighbourhood:
             social_norm = (
@@ -193,15 +183,16 @@ class Individual (I.Individual, base.Individual):
         else:
             return sigmoid(social_norm-0.5)
 
-    # TODO: how to do this for the two AFTs?
-    @property
-    def random_behaviour(self):
-        """compute a random farming behaviour of individual"""
-        return np.random.rand()
-
     def split_neighbourhood(self, attribute):
-        first_nb = []  # regeneratively managed
-        second_nb = []  # conventionally managed
+        """split the neighbourhood of farmers after a defined boolean attribute
+        (e.g. behaviour)
+        """
+        # init split into two neighbourhood lists
+        first_nb = []
+        second_nb = []
+
+        # split the neighbourhood into two groups based on the attribute
+        #   of the neighbours 
         for neighbour in self.neighbourhood:
             if getattr(neighbour, attribute) == 1:
                 first_nb.append(neighbour)
@@ -210,49 +201,54 @@ class Individual (I.Individual, base.Individual):
         return first_nb, second_nb
 
     def split_neighbourhood_status(self, variable):
-        # sorting agent_i neighbours by their current farming behaviour
-        # (regenerative or conventional)
-        # note: current behavoor is not necessarily = farmer type
-        # calculate average yield for neighbours, reg. and conv.
-        # TODO think about a nicer way to access list_neighbours outputs
+        """split the neighbourhood of farmers after a defined attribute
+        (behaviour) and calculate the average of each group
+        """
+        # split the neighbourhood into two groups based on the behaviour
         first_nb, second_nb = self.split_neighbourhood("behaviour")
+
+        # calculate the average of the variable for first group
         if first_nb:
             first_var = sum(getattr(n, variable) for n in first_nb)\
                 / len(first_nb)
+        # if there are no neighbours of the same strategy, set the average
+        #   to 0
         else:
             first_var = 0
-        # for conventionals
+
+        # calculate the average of the variable for second group
         if second_nb:
             second_var = sum(getattr(n, variable) for n in second_nb)\
                 / len(second_nb)
+        # if there are no neighbours of the same strategy, set the average
+        #   to 0
         else:
             second_var = 0
 
         return first_var, second_var
 
     def update_behaviour(self, t):
+        """Update the behaviour of the farmer based on the TPB"""
+        # update the average harvest date of the cell
         self.avg_hdate = self.cell_avg_hdate
+
         # running average over strategy_switch_duration years to avoid rapid 
         #    switching by weather fluctuations
         self.cropyield = (1-1/(self.strategy_switch_duration/2)) * self.cropyield\
             + 1/(self.strategy_switch_duration/2) * self.cell_cropyield
         self.soilc = (1-1/(self.strategy_switch_duration/2)) * self.soilc\
             + 1/(self.strategy_switch_duration/2) * self.cell_soilc
-        # make the execution of this here, or maybe even better somewhere
-        # else, (where?) conditional on the strategy_switch_time, to not
-        # do the whol decision making evaluation if the farmers are not
-        # switching anyways, but still save info about soil and yield somewhere
 
+        # If strategy switch time is down to 0 calculate TPB
         if self.strategy_switch_time <= 0:
             tpb = (self.weight_attitude * self.attitude
                 + self.weight_norm * self.social_norm) * self.pbc
 
             if tpb > 0.5:
+                # switch strategy
                 self.behaviour = int(not self.behaviour)
-                # self.set_lpjml_var(map_attribute="behaviour")
-                # freeze the current soilc and cropyield values that were used for
-                #   the decision making in the next evaluation after
-                #   self.strategy_switch_duration
+
+                # decrease pbc after strategy switch
                 self.pbc = max(self.pbc - 0.25, 0.5)
 
                 # set back counter for strategy switch
@@ -261,23 +257,26 @@ class Individual (I.Individual, base.Individual):
                     round(self.strategy_switch_duration/2 + self.strategy_switch_duration)
                 )
 
+            # increase pbc if tpb is near 0.5 to learn from own experience
             elif tpb <= 0.5 and tpb > 0.4:
                 self.pbc = min(self.pbc + 0.25/self.strategy_switch_duration, 1)
 
+            # set the values of the farmers attributes to the LPJmL variables
             self.set_lpjml_var(map_attribute="behaviour")
-            # freeze the current soilc and cropyield values that were used for
-            #   the decision making in the next evaluation after
-            #   self.strategy_switch_duration
+
 
         else:
+            # decrease the counter for strategy switch time each year
             self.strategy_switch_time -= 1
 
+        # freeze the current soilc and cropyield values that were used for
+        #   the decision making in the next evaluation after
+        #   self.strategy_switch_duration
         self.cropyield_previous = self.cropyield
         self.soilc_previous = self.soilc
 
-
     def set_lpjml_var(self, map_attribute):
-
+        """Set the mapped variables from the farmers to the LPJmL input"""
         lpjml_var = self.coupling_map[map_attribute]
 
         if not isinstance(lpjml_var, list):
@@ -287,6 +286,8 @@ class Individual (I.Individual, base.Individual):
             self.cell.input[single_var][:] = getattr(self, map_attribute)
 
     def init_coupled_vars(self):
+        """Initialize the mapped variables from the LPJmL output to the farmers
+        """
         for attribute, lpjml_var in self.coupling_map.items():
             if not isinstance(lpjml_var, list):
                 lpjml_var = [lpjml_var]
@@ -294,9 +295,6 @@ class Individual (I.Individual, base.Individual):
             for single_var in lpjml_var:
                 if len(self.cell.input[single_var].values.flatten()) > 1:
                     continue
-                    # setattr(
-                    #     self, attribute, self.cell.input[single_var].mean()
-                    # )
                 setattr(
                     self, attribute, self.cell.input[single_var].item()
                 )

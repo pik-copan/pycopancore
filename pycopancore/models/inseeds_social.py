@@ -25,14 +25,14 @@ also the model development tutorial.
 # TODO: import all other needed model components (adjust as needed):
 #
 import pycopancore.model_components.base as base
-import pycopancore.model_components.reg_decision_making as decision_making
+import pycopancore.model_components.inseeds_farmer_management as farmer_management
 import pycopancore.model_components.lpjml as lpjml
 
 
 # TODO: list all mixin classes needed:
 class World(base.World,
             lpjml.World,
-            decision_making.World):
+            farmer_management.World):
     """World entity type."""
     pass
 
@@ -43,13 +43,13 @@ class Cell(base.Cell,
     pass
 
 
-class Individual(decision_making.Individual):
+class Individual(farmer_management.Individual):
     """Individual entity type."""
     pass
 
 
 class Model(lpjml.Model,
-            decision_making.Model,
+            farmer_management.Model,
             base.Model):
     """Class representing the whole model."""
 

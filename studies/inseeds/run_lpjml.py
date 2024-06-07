@@ -9,7 +9,7 @@ from pycoupler.utils import search_country
 
 os.chdir("/p/projects/open/Jannes/copan_core/pycopancore")
 # from pycopancore.runners.runner import Runner
-from pycopancore.models import social_inseeds as M  # noqa
+from pycopancore.models import inseeds_social as M  # noqa
 
 
 # Settings ================================================================== #
@@ -17,7 +17,7 @@ from pycopancore.models import social_inseeds as M  # noqa
 # paths
 sim_path = "/p/projects/open/Jannes/copan_core/lpjml"
 model_path = f"{sim_path}/LPJmL_internal"
-inseeds_config_file = "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/social_inseeds_config.yaml"  # noqa"
+inseeds_config_file = "/p/projects/open/Jannes/copan_core/pycopancore/pycopancore/models/inseeds_social_config.yaml"  # noqa"
 
 spinup = True
 

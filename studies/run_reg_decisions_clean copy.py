@@ -9,9 +9,9 @@
 import os
 os.chdir("/p/projects/copan/users/lschwarz/core/pycopancore")
 
-import pycopancore.models.social_inseeds as M
+import pycopancore.models.inseeds_social as M
 
-# from pycopancore.models import social_inseeds as M
+# from pycopancore.models import inseeds_social as M
 
 # standard runner for simulating any model:
 from pycopancore.runners.runner import Runner
