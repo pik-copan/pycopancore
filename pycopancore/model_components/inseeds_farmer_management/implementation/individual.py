@@ -41,9 +41,6 @@ class Individual (I.Individual, base.Individual):
     """Individual entity type mixin implementation class."""
 
     # standard methods:
-
-    # aufgeführt: alle allgemeinen parameter, und AFT-spezifische parameter
-    # für den "traditionalist" type
     def __init__(self,
                  *,
                  config=None,
@@ -131,7 +128,7 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def attitude_own_land(self):
-        """Calculate the attitude of the farmer towards his own land"""
+        """Calculate the attitude of the farmer based on their own land"""
         # compare own soil and yield to previous values
         attitude_own_soil = sigmoid(
             self.soilc_previous / self.soilc  - 1
@@ -144,7 +141,7 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def attitude_social_learning(self):
-        """Calculate the attitude of the farmer towards social learning based
+        """Calculate the attitude of the farmer through social learning based
         on the comparison to neighbours using a different strategy"""
 
         # split variables (crop yield, soilc) status of neighbours into groups
@@ -170,8 +167,8 @@ class Individual (I.Individual, base.Individual):
 
     @property
     def social_norm(self):
-        """Calculate the social norm of the farmer based on the behaviour of
-        the neighbours"""
+        """Calculate the social norm of the farmer based on the majority
+        behaviour of the neighbours"""
         social_norm = 0
         if self.neighbourhood:
             social_norm = (
@@ -239,7 +236,8 @@ class Individual (I.Individual, base.Individual):
         self.soilc = (1-1/(self.strategy_switch_duration/2)) * self.soilc\
             + 1/(self.strategy_switch_duration/2) * self.cell_soilc
 
-        # If strategy switch time is down to 0 calculate TPB
+        # If strategy switch time is down to 0 calculate TPB-based strategy
+        # switch probability value
         if self.strategy_switch_time <= 0:
             tpb = (self.weight_attitude * self.attitude
                 + self.weight_norm * self.social_norm) * self.pbc
