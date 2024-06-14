@@ -52,7 +52,6 @@ class Individual (object):
     pbc = Variable('perceived behavioural control',
                    'own appraisal of how much efficacy agent posesses')
 
-    # also potentially different for the two AFTs
     behaviour = Variable('agent behaviour', 'regenerative=1, conventional=0',
                          datatype=bool)
 
@@ -68,7 +67,6 @@ class Individual (object):
                          'average crop yield of agent land weighted by crop area',
                          unit=DAU.gC_per_m2)
 
-    # attitude composition weights, for now not differentiated between AFTs
     w_social_learning = Variable('weight of social learning in attitude',
                                  'respective importance of social learning\
                                  compared to own land for attitude')
