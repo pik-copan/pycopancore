@@ -66,10 +66,3 @@ class Individual (object):
     cropyield = Variable('average crop yield',
                          'average crop yield of agent land weighted by crop area',
                          unit=DAU.gC_per_m2)
-
-    w_social_learning = Variable('weight of social learning in attitude',
-                                 'respective importance of social learning\
-                                 compared to own land for attitude')
-    w_own_land = Variable('weight of own land evaluation in attitude',
-                          'respective importance of own land evaluation\
-                          compared to social learning for attitude')
