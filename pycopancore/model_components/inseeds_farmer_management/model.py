@@ -1,7 +1,4 @@
-"""Model mixing class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
+"""Model mixing class for inseeds_farmer_management
 """
 
 # This file is part of pycopancore.
