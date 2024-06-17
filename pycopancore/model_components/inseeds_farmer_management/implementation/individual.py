@@ -1,7 +1,4 @@
-"""Individual entity type class template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:",
-then remove these instructions
+"""Individual entity type class of inseeds_farmer_management
 """
 
 # This file is part of pycopancore.
