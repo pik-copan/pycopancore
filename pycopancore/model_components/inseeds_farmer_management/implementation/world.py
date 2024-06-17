@@ -1,4 +1,4 @@
-"""The reg decision making.world class.
+"""The inseeds_farmer_mnagement.world class.
 
 """
 
