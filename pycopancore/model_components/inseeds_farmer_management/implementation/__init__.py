@@ -1,7 +1,5 @@
 """
-Model component implementation subpackage template.
-
-TODO: uncomment neccessary code wherever marked by the "TODO" flag.
+Model component implementation subpackage.
 """
 # This file is part of pycopancore.
 #
