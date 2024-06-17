@@ -1,7 +1,4 @@
-"""model component Interface template.
-
-TODO: adjust or fill in code and documentation wherever marked by "TODO:", then
-remove these instructions.
+"""model component Interface of inseeds_farmer_management
 """
 
 # This file is part of pycopancore.
