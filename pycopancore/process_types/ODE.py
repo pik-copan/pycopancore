@@ -23,7 +23,7 @@ dependent of the time.
 # Definition of class ODE
 #
 
-from ..private import _AbstractProcess
+from pycopancore.private._abstract_process import _AbstractProcess
 
 
 class ODE(_AbstractProcess):

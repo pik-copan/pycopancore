@@ -10,13 +10,16 @@
 # License: BSD 2-clause license
 
 # only used in this component, not in others:
-from ... import abstract
-from .... import master_data_model as D
-from ....private import unknown
+from pycopancore.private._abstract_process_taxon_mixin import \
+    _AbstractProcessTaxonMixin
+from pycopancore.data_model.ordered_set import OrderedSet
+
+from pycopancore.model_components import abstract
+from pycopancore.private._simple_expressions import unknown
 
 from .. import interface as I
 
-from .... import Explicit
+from pycopancore.process_types import Explicit
 
 
 class World (I.World, abstract.World):
@@ -112,20 +115,6 @@ class World (I.World, abstract.World):
             assert isinstance(c, I.Culture), \
                 "Culture must be taxon type Culture"
             c._worlds.add(self)
-        self._culture = c
-
-    @property
-    def culture(self):
-        """Get the Culture acting in this World."""
-        return self._culture
-
-    @culture.setter
-    def culture(self, c):
-        """Set the World the SocialSystem is part of."""
-        if self._culture is not None:
-            self._culture._worlds.remove(self)
-        assert isinstance(c, I.Culture), "culture must be of taxon type Culture"
-        c._worlds.add(self)
         self._culture = c
 
     @property  # read-only
