@@ -16,7 +16,7 @@ from setuptools import setup, find_packages
 # This creates a link insteaed of copying the files, so modifications in this directory are modifications in the installed package.
 
 setup(name="pycopancore",
-      version="0.0.0",
+      version="0.6.1",
       description="to be added",
       url="to be added",
       author="Copan-group @ PIK",
