@@ -219,6 +219,18 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
         # reset dependent caches:
         pass
 
+    @property  # read-only
+    def groups(self):
+        """Get the set of all Groups in this SocialSystem."""
+        return self._groups
+    @groups.setter
+    def groups(self, g):
+        """Set the World the SocialSystem is part of."""
+        if self._groups is not None:
+            self._groups._social_system.remove(self)
+        assert isinstance(g, I.Culture), "groups must be of taxon type Group"
+        g._worlds.add(self)
+        self._culture = g
     # TODO: helper methods for mergers, splits, etc.
 
     # no process-related methods
