@@ -12,11 +12,14 @@
 # python recipe at https://code.activestate.com/recipes/576694/
 # plus __add__, __iadd__
 
-import collections
+try:
+    from collections import MutableSet
+except:
+    from collections.abc import MutableSet
 
 # TODO: docstrings
 
-class OrderedSet(collections.MutableSet):
+class OrderedSet(MutableSet):
     """Ordered Set."""
 
     def __init__(self, iterable=None):
