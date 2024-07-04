@@ -1,7 +1,5 @@
 """Master data model for group."""
 
-"""https://github.com/pik-copan/pycopancore/blob/master/docs/framework_documentation/abstract_level/entity_types/group.rst"""
-
 from .. import Variable
 
 from networkx import Graph

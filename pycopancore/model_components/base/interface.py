@@ -321,19 +321,6 @@ class Group (object, metaclass=_MixinType):
                                    readonly=True)
     culture = ReferenceVariable("culture", "", type=Culture,
                                 readonly=True)
-    # higher_groups = SetVariable(
-    #     "higher groups",
-    #     "upward list of (in)direct super-Groups",
-    #     readonly=True)
-    # next_lower_groups = SetVariable(
-    #     "next lower groups",
-    #     "set of sub-Groups of next lower level",
-    #     readonly=True)
-    # lower_groups = SetVariable(
-    #     "lower groups",
-    #     "set of all direct and indirect sub-Groups",
-    #     readonly=True)
-
     group_members = SetVariable(
         "group members",
         "set of all individuals associated with the group",
@@ -341,13 +328,3 @@ class Group (object, metaclass=_MixinType):
     )
 
 Culture.groups.type = Group
-
-# specified only now to avoid recursion errors:
-# Group.next_higher_group.type = Group
-# Group.higher_groups.type = Group
-# Group.next_lower_groups.type = Group
-# Group.lower_groups.type = Group
-# Individual.group_memberships.type = Group # TODO: assert this is at the right place
-# Group.group_members.type = Individual
-#Group.groups.type = Group
-#SocialSystem.top_level_groups.type = Group

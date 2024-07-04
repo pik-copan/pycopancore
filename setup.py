@@ -16,12 +16,12 @@ from setuptools import setup, find_packages
 # This creates a link insteaed of copying the files, so modifications in this directory are modifications in the installed package.
 
 setup(name="pycopancore",
-      version="0.0.0",
-      description="to be added",
-      url="to be added",
-      author="Copan-group @ PIK",
-      author_email="to be added",
-      license="to be added",
+      version="0.7.0",
+      description="Reference implementation of the copan:CORE World-Earth modelling framework",
+      url="https://github.com/pik-copan/pycopancore",
+      author="COPAN team @ PIK",
+      author_email="",
+      license="BSD-2-Clause",
       packages=find_packages(), #["pycopancore"],
       install_requires=[
           "numpy>=1.11.0",
@@ -39,3 +39,4 @@ setup(name="pycopancore",
       ],
       zip_safe=False # see http://stackoverflow.com/questions/15869473/what-is-the-advantage-of-setting-zip-safe-to-true-when-packaging-a-python-projec
       )
+

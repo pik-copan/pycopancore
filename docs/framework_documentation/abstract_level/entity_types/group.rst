@@ -39,18 +39,16 @@ A group will usually...
 In addition, a group may...
 
 -  have an "intra" group network between members :doc:`individuals<individual>`
-   (this feature is not completely implemented yet)
 
 -  have one or several "leader" :doc:`individuals<individual>`,
-   of which one may be the dominant leader (this feature is not implemented yet)
+   of which one may be the dominant leader
 
--  have a "headquarters" :doc:`cell<cell>` (this feature is not implemented yet)
+-  have a "headquarters" :doc:`cell<cell>`
 
 -  be related to other groups via an "inter" network owned by the culture taxon
    (which will typically interact with the network of personal acquaintance between member individuals)
-   - (this feature is not completely implemented yet)
 
--  act as the current "elite" in some :doc:`social system<social system>` (this feature is not implemented yet)
+-  act as the current "elite" in some :doc:`social system<social system>`
 
 All these relationships may be dynamic.
 
@@ -58,5 +56,5 @@ Finally, a group may...
 
 -  be a permanent subgroup of a larger group or :doc:`social system<social system>` *by definition* 
    (rather than by coincidence, e.g., "scientists" are by definition a subgroup of the group "academics",
-   and "German workers" may be by definition a subgroup of the social system "Germany") - (this feature is not implemented yet)
+   and "German workers" may be by definition a subgroup of the social system "Germany")
 
