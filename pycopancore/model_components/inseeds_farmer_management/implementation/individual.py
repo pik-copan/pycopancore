@@ -10,10 +10,7 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 import numpy as np
-
-from math import prod
 from enum import Enum
-from random import sample, randint
 
 from pycopancore.process_types import Step
 from pycopancore.model_components.base import interface as B
@@ -24,8 +21,8 @@ from .. import interface as I
 
 class AFT(Enum):
     """Available Inputs"""
-    progressive_minded: int = 0
-    conservative_minded: int = 1
+    conservative_minded: int = 0
+    progressive_minded: int = 1
 
     @staticmethod
     def random(progressive_probability=0.5):
@@ -47,8 +44,10 @@ class Individual (I.Individual, base.Individual):
         super().__init__(**kwargs)  # must be the first line
 
         self.aft = AFT.random(config.progressive_probability)
+        self.aft_id = self.aft.value
         self.coupling_map = config.coupling_map.to_dict()
         self.__dict__.update(getattr(config.aftpar, self.aft.name).to_dict())
+        self.control_run = config.control_run
 
         self.init_coupled_vars()
 
@@ -65,18 +64,13 @@ class Individual (I.Individual, base.Individual):
         self.cropyield = self.cell_cropyield
         self.cropyield_previous = self.cropyield
 
-        # Maximal soilc and cropyield might be used in the future to assess
-        #   soil potential
-        # self.max_soilc = self.soilc
-        # self.max_cropyield = self.cropyield
-        # self.strategy_switch_duration = randint(
-        #     self.strategy_switch_duration/2,
-        #     self.strategy_switch_duration/2 + self.strategy_switch_duration
-        # )
-
         # Randomize switch time at beginning of simulation to avoid
         #   synchronization of agents
-        self.strategy_switch_time = randint(0, self.strategy_switch_duration)
+        self.strategy_switch_time = np.random.randint(
+            0, self.strategy_switch_duration
+        )
+        # initialize tbp for meaningful output
+        self.tpb = 0
 
     def init_neighbourhood(self):
         """Initialize the neighbourhood of the agent."""
@@ -89,10 +83,10 @@ class Individual (I.Individual, base.Individual):
     @property
     def cell_cropyield(self):
         """Return the average crop yield of the cell."""
-        if (self.cell.output.pft_harvestc.values.mean() == 0):
+        if (self.cell.output.harvestc.values.mean() == 0):
             return 1e-3
         else:
-            return self.cell.output.pft_harvestc.values.mean()
+            return self.cell.output.harvestc.values.mean()
 
     @property
     def cell_soilc(self):
@@ -105,8 +99,9 @@ class Individual (I.Individual, base.Individual):
     @property
     def cell_avg_hdate(self):
         """Return the average harvest date of the cell."""
+        check = self.cell.output.hdate.band.values
         crop_idx = [
-            i for i, item in enumerate(self.cell.output.hdate.band.values)  # noqa
+            i for i, item in enumerate(self.cell.output.hdate.band.values)
             if any(x in item for x in self.cell.world.lpjml.config.cftmap)
         ]
         if np.sum(self.cell.output.cftfrac.isel(band=crop_idx).values) == 0:
@@ -121,20 +116,17 @@ class Individual (I.Individual, base.Individual):
     def attitude(self):
         """Calculate the attitude of the farmer following the TPB"""
         return self.weight_social_learning * self.attitude_social_learning \
-            + self.weight_own_land * prod(self.attitude_own_land)
+            + self.weight_own_land * self.attitude_own_land
 
     @property
     def attitude_own_land(self):
         """Calculate the attitude of the farmer based on their own land"""
         # compare own soil and yield to previous values
-        attitude_own_soil = sigmoid(
-            self.soilc_previous / self.soilc  - 1
-        )
-        attitude_own_yield = sigmoid(
-            self.cropyield_previous / self.cropyield  - 1
-        )
+        attitude_own_soil = self.soilc_previous / self.soilc  - 1
+        attitude_own_yield =  self.cropyield_previous / self.cropyield  - 1
 
-        return attitude_own_soil, attitude_own_yield
+        return sigmoid(self.weight_yield * attitude_own_yield +
+                       self.weight_soil * attitude_own_soil)
 
     @property
     def attitude_social_learning(self):
@@ -148,10 +140,8 @@ class Individual (I.Individual, base.Individual):
 
         # select the average of the neighbours that are using a different
         #   strategy
-        yields_diff, yields_same = average_cropyields[not self.behaviour],\
-            average_cropyields[self.behaviour]
-        soils_diff, soils_same = average_soilcs[not self.behaviour],\
-            average_soilcs[self.behaviour]
+        yields_diff = average_cropyields[not self.behaviour]
+        soils_diff = average_soilcs[not self.behaviour]
 
         # calculate the difference between the own status and the average
         #   status of the neighbours
@@ -184,11 +174,11 @@ class Individual (I.Individual, base.Individual):
         # init split into two neighbourhood lists
         first_nb = []
         second_nb = []
-
+        
         # split the neighbourhood into two groups based on the attribute
         #   of the neighbours 
         for neighbour in self.neighbourhood:
-            if getattr(neighbour, attribute) == 1:
+            if getattr(neighbour, attribute) == 0:
                 first_nb.append(neighbour)
             else:
                 second_nb.append(neighbour)
@@ -228,18 +218,23 @@ class Individual (I.Individual, base.Individual):
 
         # running average over strategy_switch_duration years to avoid rapid 
         #    switching by weather fluctuations
-        self.cropyield = (1-1/(self.strategy_switch_duration/2)) * self.cropyield\
-            + 1/(self.strategy_switch_duration/2) * self.cell_cropyield
-        self.soilc = (1-1/(self.strategy_switch_duration/2)) * self.soilc\
-            + 1/(self.strategy_switch_duration/2) * self.cell_soilc
+        self.cropyield = (1-1/self.strategy_switch_duration) * self.cropyield\
+            + 1/self.strategy_switch_duration * self.cell_cropyield
+        self.soilc = (1-1/self.strategy_switch_duration) * self.soilc\
+            + 1/self.strategy_switch_duration * self.cell_soilc
+        # self.cropyield = self.cell_cropyield
+        # self.soilc = self.cell_soilc
+
+        if self.control_run:
+            return
 
         # If strategy switch time is down to 0 calculate TPB-based strategy
         # switch probability value
-        if self.strategy_switch_time <= 0:
-            tpb = (self.weight_attitude * self.attitude
+        if self.strategy_switch_time <= 0 :
+            self.tpb = (self.weight_attitude * self.attitude
                 + self.weight_norm * self.social_norm) * self.pbc
 
-            if tpb > 0.5:
+            if self.tpb > 0.5:
                 # switch strategy
                 self.behaviour = int(not self.behaviour)
 
@@ -247,28 +242,27 @@ class Individual (I.Individual, base.Individual):
                 self.pbc = max(self.pbc - 0.25, 0.5)
 
                 # set back counter for strategy switch
-                self.strategy_switch_time = randint(
-                    round(self.strategy_switch_duration/2),
-                    round(self.strategy_switch_duration/2 + self.strategy_switch_duration)
+                self.strategy_switch_time = np.random.normal(
+                    self.strategy_switch_duration,
+                    round(self.strategy_switch_duration/2)
                 )
 
+                # freeze the current soilc and cropyield values that were used for
+                #   the decision making in the next evaluation after
+                #   self.strategy_switch_duration
+                self.cropyield_previous = self.cropyield
+                self.soilc_previous = self.soilc
+
+                # set the values of the farmers attributes to the LPJmL variables
+                self.set_lpjml_var(map_attribute="behaviour")
+
             # increase pbc if tpb is near 0.5 to learn from own experience
-            elif tpb <= 0.5 and tpb > 0.4:
+            elif self.tpb <= 0.5 and self.tpb > 0.4:
                 self.pbc = min(self.pbc + 0.25/self.strategy_switch_duration, 1)
-
-            # set the values of the farmers attributes to the LPJmL variables
-            self.set_lpjml_var(map_attribute="behaviour")
-
 
         else:
             # decrease the counter for strategy switch time each year
             self.strategy_switch_time -= 1
-
-        # freeze the current soilc and cropyield values that were used for
-        #   the decision making in the next evaluation after
-        #   self.strategy_switch_duration
-        self.cropyield_previous = self.cropyield
-        self.soilc_previous = self.soilc
 
     def set_lpjml_var(self, map_attribute):
         """Set the mapped variables from the farmers to the LPJmL input"""

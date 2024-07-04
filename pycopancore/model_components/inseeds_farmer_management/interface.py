@@ -43,17 +43,25 @@ class World(object):
 class Individual (object):
     """Interface for Individual entity type mixin."""
 
-    attitude = Variable('farmer attitude',
-                        'attitude based on observation of yield and soilC of\
-                         own land and neighboring land')
-    pbc = Variable('perceived behavioural control',
-                   'own appraisal of how much efficacy agent posesses')
-
+    aft_id = Variable('AFT ID', 'unique identifier for agent')
     behaviour = Variable('agent behaviour', 'regenerative=1, conventional=0',
                          datatype=bool)
-
-    average_waiting_time = Variable('estimated waiting time tau', 'tau')
-    update_time = Variable('next update time', 'next time for update')
+    pbc = Variable('perceived behavioural control',
+                   'own appraisal of how much efficacy agent posesses')
+    tpb = Variable('theory of planned behaviour',
+                   'attitude, subjective norm, perceived behavioural control')
+    social_norm = Variable('social norm',
+                            'social norm based on observation of own and\
+                             neighboring land')
+    attitude = Variable('attitude',
+                        'farmer attitude based on observation of yield and soilC of\
+                         own land and neighboring land')
+    attitude_own_land = Variable('attitude towards own land',
+                                 'attitude based on observation of yield and soilC\
+                                  of own land')
+    attitude_social_learning = Variable('attitude based on social learning',
+                                        'attitude based on observation of yield and\
+                                         soilC of neighboring land')
     avg_hdate = Variable('average harvest date',
                          'weighted average harvest date of grown crops (by crop area)',
                          unit=DAU.doy)

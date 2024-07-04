@@ -65,7 +65,7 @@ class World (I.World):
     def update(self, t):
         self.update_individuals(t)
         self.update_output_table(t)
-
+        
         self.update_lpjml(t)
 
     def update_output_table(self, t, init=False):
@@ -124,11 +124,6 @@ class World (I.World):
                     if hasattr(self.lpjml, "country"):
                         df_data["country"] = [
                             eval(f"attr{call}.country.item()")
-                            for attr in getattr(self, f"{core_class}s")
-                        ]
-                    if hasattr(self.lpjml, "region"):
-                        df_data["region"] = [
-                            eval(f"attr{call}.region.item()")
                             for attr in getattr(self, f"{core_class}s")
                         ]
                     if hasattr(self.lpjml, "terr_area"):

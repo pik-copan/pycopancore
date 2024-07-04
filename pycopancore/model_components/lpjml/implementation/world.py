@@ -38,7 +38,7 @@ class World(I.World):
         if lpjml:
             self.lpjml = lpjml
             self.input = self.lpjml.read_input()
-            self.output = self.lpjml.read_historic_output()
+            self.output = self.lpjml.read_historic_output().isel(time=[-1])
         else:
             self.lpjml = None
             self.input = None
@@ -58,7 +58,6 @@ class World(I.World):
         # send input data to lpjml
         self.lpjml.send_input(self.input, t)
         # read output data from lpjml
-
         self.output.time.values[0] = np.datetime64(f"{t}-12-31")
         for name, output in self.lpjml.read_output(t).items():
             self.output[name][:] = output[:]
@@ -82,12 +81,10 @@ class World(I.World):
                 output=self.output.isel(cell=icell),
                 grid=self.lpjml.grid.isel(cell=icell),
                 country=self.lpjml.country.isel(cell=icell) if hasattr(self.lpjml, "country") else None,  # noqa
-                region=self.lpjml.region.isel(cell=icell) if hasattr(self.lpjml, "region") else None,  # noqa
                 area=self.lpjml.terr_area.isel(cell=icell) if hasattr(self.lpjml, "terr_area") else None,  # noqa
                 **kwargs
             ) for icell in self.lpjml.get_cells(id=False)
         ]
-
         # Build neighbourhood graph nodes from cells
         self.neighbourhood.add_nodes_from(cells)
 
