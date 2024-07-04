@@ -16,7 +16,7 @@ from setuptools import setup, find_packages
 # This creates a link insteaed of copying the files, so modifications in this directory are modifications in the installed package.
 
 setup(name="pycopancore",
-      version="0.7.0",
+      version="0.7.1",
       description="Reference implementation of the copan:CORE World-Earth modelling framework",
       url="https://github.com/pik-copan/pycopancore",
       author="COPAN team @ PIK",
