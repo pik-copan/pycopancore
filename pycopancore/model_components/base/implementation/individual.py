@@ -55,6 +55,7 @@ class Individual (I.Individual, abstract.Individual):
         # register with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
+            self.culture.group_membership_network.add_node(self, type="Individual", color="yellow")
 
     def deactivate(self):
         """Deactivate an individual.
@@ -65,6 +66,7 @@ class Individual (I.Individual, abstract.Individual):
         # deregister from all networks:
         if self.culture:
             self.culture.acquaintance_network.remove_node(self)
+            self.culture.group_membership_network.remove_node(self)
         super().deactivate()  # must be the last line
 
     def reactivate(self):
@@ -77,6 +79,7 @@ class Individual (I.Individual, abstract.Individual):
         # reregister with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
+            self.culture.group_membership_network.add_node(self, type="Individual", color="yellow")
 
     # getters and setters for references:
 
@@ -155,6 +158,11 @@ class Individual (I.Individual, abstract.Individual):
     def acquaintances(self):
         """Get the set of Individuals the Individual is acquainted with."""
         return self.culture.acquaintance_network.neighbors(self)
+
+    @property
+    def group_memberships(self):
+        """Get the set of Groups the Individual is associated with."""
+        return self.culture.group_membership_network.neighbors(self) # .successors as network is directed from inds to groups
 
     # no process-related methods
 

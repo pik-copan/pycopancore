@@ -16,6 +16,7 @@ from .world import World
 from .social_system import SocialSystem
 from .cell import Cell
 from .individual import Individual
+from .group import Group
 
 from .environment import Environment
 from .metabolism import Metabolism
