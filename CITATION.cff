@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+type: software
+title: 'pycopancore: Reference implementation of the copan:CORE World-Earth modelling framework'
+version: 0.7.0
+date-released: '2024-07-04'
+abstract: The pycopancore package is a python implementation of the copan:CORE
+  modeling framework as described in this paper. The framework is designed to
+  allow an easy implementation of World-Earth (i.e., global social-ecological)
+  models by using different model components of environmental, social-metabolic
+  or cultural submodels and combining them with newly developed components.
+  The implementation and simulation of World-Earth models within the framework
+  can use different types of modeling techniques such as differential equations,
+  stochastic and deterministic events and therefore allows to compare different
+  model and component types and implementations.
+authors:
+- family-names: Bechthold
+  given-names: Max
+  email: maxbecht@pik-potsdam.de
+  orcid: 0009-0007-7113-4814
+- family-names: Heitzig
+  given-names: Jobst
+  email: jobst.heitzig@pik-potsdam.de
+  orcid: 0000-0002-0442-8077
+- family-names: Donges
+  given-names: Jonathan
+  email: donges@pik-potsdam.de
+  orcid: 0000-0001-5233-7703
+- family-names: Barfuss
+  given-names: Wolfram
+  email: wbarfuss@uni-bonn.de
+  orcid: 0000-0002-9077-5242
+- family-names: Marc
+  given-names: Wiedermann
+  orcid: 0000-0001-9869-3789
+- family-names: Zimmerer
+  given-names: Kilian B.
+- family-names: Kolb
+  given-names: Jakob
+- family-names: Kolster
+  given-names: Till
+  orcid: 0000-0002-6409-8882
+- family-names: Müller-Hansen
+  given-names: Finn
+  orcid: 0000-0002-0425-1996
+- family-names: Breitbach
+  given-names: Paula
+
+license: BSD-2-Clause
+repository-code: https://github.com/pik-copan/pycopancore
+doi: 10.5281/zenodo.12654089
+

@@ -83,6 +83,8 @@ class Culture (object):
 
     acquaintance_network = CUL.acquaintance_network
 
+    group_membership_network = CUL.group_membership_network
+
     # read-only attributes storing redundant information:
     worlds = SetVariable("worlds",
                          "Set of Worlds governed by this Culture",
@@ -96,6 +98,9 @@ class Culture (object):
 
 # entity types:
 
+    groups = SetVariable("groups",
+                         "Set of Groups existing on this world",
+                         readonly=True)
 
 # TODO: clarify whether it is necessary to specify the metaclass here!
 class World (object, metaclass=_MixinType):
@@ -140,6 +145,7 @@ class World (object, metaclass=_MixinType):
     individuals = SetVariable("individuals",
                               "Set of Individuals residing on this world",
                               readonly=True)
+
 
 
 # specified only now to avoid recursion errors:
@@ -292,6 +298,10 @@ class Individual (object, metaclass=_MixinType):
                     "set of Individuals this one is acquainted with",
                     readonly=True)
 
+    group_memberships = SetVariable("group memberships",
+                                    "set of Groups this one is associated with",
+                                    readonly=True)
+
     # TODO: specify Variable objects for the following:
     population_share = None
     """share of social_system's direct population represented by this individual"""
@@ -310,3 +320,33 @@ SocialSystem.direct_individuals.type = Individual
 SocialSystem.individuals.type = Individual
 Cell.individuals.type = Individual
 Individual.acquaintances.type = Individual
+
+
+
+
+class Group (object, metaclass=_MixinType):
+    """Basic Group interface.
+
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # references:
+    #social_system = ReferenceVariable("socialsystem", "", type=SocialSystem)
+    # next_higher_group = ReferenceVariable("next higher group", "optional",
+    #                                         allow_none=True)  # type is Group, hence it can only be specified after class Group is defined, see below
+
+
+    # read-only attributes storing redundant information:
+    environment = ReferenceVariable("environment", "", type=Environment,
+                               readonly=True)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
+                                   readonly=True)
+    culture = ReferenceVariable("culture", "", type=Culture,
+                                readonly=True)
+    group_members = SetVariable(
+        "group members",
+        "set of all individuals associated with the group",
+        readonly=True
+    )
+
+Culture.groups.type = Group
