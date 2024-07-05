@@ -14,7 +14,7 @@ then remove these instructions
 # License: BSD 2-clause license
 
 from .. import interface as I
-from pycopancore import Event
+from pycopancore.process_types import Event
 import numpy as np
 
 # from .... import master_data_model as D

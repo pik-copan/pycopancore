@@ -13,7 +13,7 @@ It sets the basic structure of dynamic mixins (culture, metabolism, environment)
 # License: BSD 2-clause license
 
 
-from . import _Mixin
+from pycopancore.private._mixin import _Mixin
 
 
 class _AbstractProcessTaxonMixin(_Mixin):

@@ -12,8 +12,9 @@ Inherited by base model component.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from ...private import _AbstractProcessTaxonMixin
-from ...data_model import OrderedSet
+from pycopancore.private._abstract_process_taxon_mixin import \
+    _AbstractProcessTaxonMixin
+from pycopancore.data_model.ordered_set import OrderedSet
 
 
 class Metabolism (_AbstractProcessTaxonMixin):

@@ -22,7 +22,7 @@ for example calculate temperature from co2 level.
 # Definition of class Event
 #
 
-from ..private import _AbstractProcess
+from pycopancore.private._abstract_process import _AbstractProcess
 
 
 class Explicit(_AbstractProcess):

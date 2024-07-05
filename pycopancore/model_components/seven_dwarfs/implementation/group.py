@@ -13,14 +13,11 @@ then remove these instructions
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import interface as I
-# from .... import master_data_model as D
-
-# TODO: uncomment this if you need ref. variables such as B.Individual.cell:
-from ...base import interface as B
-
 # TODO: import those process types you need:
-from .... import Explicit
+from pycopancore.process_types import Explicit
+
+from .. import interface as I
+
 
 class Group (I.Group):
     """Group entity type mixin implementation class."""

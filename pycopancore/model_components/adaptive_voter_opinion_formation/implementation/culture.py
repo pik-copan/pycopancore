@@ -19,7 +19,8 @@ from .... import Step
 
 from ....runners import Hooks
 
-from blist import sortedlist  # more performant for large list modifications
+# from blist import sortedlist  # more performant for large list modifications
+
 import datetime as dt
 from enum import Enum, unique
 import random
@@ -129,9 +130,13 @@ class Culture (I.Culture):
         print("    analyzing the graph ... ", end="", flush=True)
         start = time()
 
-        self.__nodes = sortedlist(self.acquaintance_network.nodes())  # FIXME: why do you assume entities allow sorting?
-        self.__nodes_by_opinion = {opinion: sortedlist()
-                                   for opinion in self.possible_opinions}
+        # TODO: blist conflicts
+        # self.__nodes = sortedlist(self.acquaintance_network.nodes())  # FIXME: why do you assume entities allow sorting?
+        # self.__nodes_by_opinion = {opinion: sortedlist()
+        #                            for opinion in self.possible_opinions}
+
+        self.__nodes = set(self.acquaintance_network.nodes())
+        self.__nodes_by_opinion = {opinion: set() for opinion in self.possible_opinions}
         for node in self.acquaintance_network:
             self.__nodes_by_opinion[node.opinion].add(node)
 

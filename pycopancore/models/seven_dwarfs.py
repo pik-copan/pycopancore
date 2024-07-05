@@ -13,10 +13,11 @@
 #  Imports
 #
 
-from .. import base  # all models must use the base component
+# all models must use the base component
+from pycopancore.model_components import base
 
-from ..model_components import seven_dwarfs as sd
-from ..model_components import snowwhite as sw
+from pycopancore.model_components import seven_dwarfs as sd
+from pycopancore.model_components import snowwhite as sw
 
 # entity types:
 

@@ -8,8 +8,9 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from ...private import _AbstractProcessTaxonMixin
-from ...data_model import OrderedSet
+from pycopancore.private._abstract_process_taxon_mixin import \
+    _AbstractProcessTaxonMixin
+from pycopancore.data_model.ordered_set import OrderedSet
 
 
 class Environment (_AbstractProcessTaxonMixin):

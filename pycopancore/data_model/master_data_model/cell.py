@@ -9,8 +9,12 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from . import ENV, MET
-from . import square_kilometers
+from pycopancore.data_model.master_data_model.environment \
+    import Environment as ENV
+from pycopancore.data_model.master_data_model.metabolism \
+    import Metabolism as MET
+from pycopancore.data_model.master_data_model.dimensions_and_units \
+    import DimensionsAndUnits as DAU
 
 
 class Cell:
@@ -18,7 +22,7 @@ class Cell:
     # natural:
     
     land_area = ENV.land_area.copy()
-    land_area.default = 1 * square_kilometers
+    land_area.default = 1 * DAU.km2
     atmospheric_carbon = ENV.atmospheric_carbon.copy()
     surface_air_temperature = ENV.surface_air_temperature.copy()
     ocean_carbon = ENV.ocean_carbon.copy()

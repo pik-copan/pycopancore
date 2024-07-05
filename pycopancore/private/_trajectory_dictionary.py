@@ -16,7 +16,8 @@ are easily done by the user."""
 
 import pickle, json
 import networkx as nx
-from . import _AbstractEntityMixin, _AbstractProcessTaxonMixin
+from ._abstract_entity_mixin import _AbstractEntityMixin
+from ._abstract_process_taxon_mixin import _AbstractProcessTaxonMixin
 
 
 class _TrajectoryDictionary(dict):

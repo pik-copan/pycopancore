@@ -18,8 +18,8 @@ remove these instructions.
 # model component:
 # import ..BBB.interface as BBB
 # TODO: uncomment and adjust only if you really need other variables:
-from ... import Variable
-from ... import master_data_model as D
+from pycopancore.data_model import Variable
+from pycopancore.data_model import master_data_model as D
 from ..seven_dwarfs.interface import Cell as C
 
 
