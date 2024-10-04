@@ -62,6 +62,7 @@ class World (I.World, abstract.World):
         self.culture = culture
         self._social_systems = set()
         self._cells = set()
+        self._groups = set()
 
         # make sure all variable values are valid:
         self.assert_valid()
@@ -134,6 +135,11 @@ class World (I.World, abstract.World):
         """Get the set of Cells on this World."""
         return self._cells
 
+    @property  # read-only
+    def groups(self):
+        """Get the set of Groups on this World."""
+        return self._groups
+
     _individuals = unknown
     """cache, depends on self.cells, cell.individuals"""
     @property  # read-only
@@ -152,7 +158,6 @@ class World (I.World, abstract.World):
         self._individuals = unknown
         # reset dependent caches:
         pass
-
 
     processes = [
         # TODO: convert this into an Implicit equation once supported:
