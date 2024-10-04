@@ -21,14 +21,14 @@ from .. import interface as I
 
 class AFT(Enum):
     """Available Inputs"""
-    conservative_minded: int = 0
-    progressive_minded: int = 1
+    traditionalist: int = 0
+    pioneer: int = 1
 
     @staticmethod
-    def random(progressive_probability=0.5):
+    def random(pioneer_share=0.5):
         return np.random.choice(
-            [AFT.progressive_minded, AFT.conservative_minded],
-            p=[progressive_probability, 1-progressive_probability]
+            [AFT.pioneer, AFT.traditionalist],
+            p=[pioneer_share, 1-pioneer_share]
         )
 
 class Individual (I.Individual, base.Individual):
@@ -43,7 +43,7 @@ class Individual (I.Individual, base.Individual):
         """Initialize an instance of Individual."""
         super().__init__(**kwargs)  # must be the first line
 
-        self.aft = AFT.random(config.progressive_probability)
+        self.aft = AFT.random(config.pioneer_share)
         self.aft_id = self.aft.value
         self.coupling_map = config.coupling_map.to_dict()
         self.__dict__.update(getattr(config.aftpar, self.aft.name).to_dict())
@@ -145,8 +145,15 @@ class Individual (I.Individual, base.Individual):
 
         # calculate the difference between the own status and the average
         #   status of the neighbours
-        yield_comparison = yields_diff / self.cropyield - 1
-        soil_comparison = soils_diff / self.soilc - 1
+        if np.isnan(yields_diff):
+            yield_comparison = 0
+        else:
+            yield_comparison = yields_diff / self.cropyield - 1
+
+        if np.isnan(soils_diff):
+            soil_comparison = 0
+        else:
+            soil_comparison = soils_diff / self.soilc - 1
 
         # calculate the attitude of social learning based on the comparison
         return sigmoid(self.weight_yield * yield_comparison +
@@ -198,7 +205,7 @@ class Individual (I.Individual, base.Individual):
         # if there are no neighbours of the same strategy, set the average
         #   to 0
         else:
-            first_var = 0
+            first_var = np.nan
 
         # calculate the average of the variable for second group
         if second_nb:
@@ -207,7 +214,7 @@ class Individual (I.Individual, base.Individual):
         # if there are no neighbours of the same strategy, set the average
         #   to 0
         else:
-            second_var = 0
+            second_var = np.nan
 
         return first_var, second_var
 

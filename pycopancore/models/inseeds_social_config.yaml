@@ -28,33 +28,33 @@ coupling_map:
     behaviour: ["with_tillage"]  # "residue_on_field"
 
 control_run: False
-progressive_probability: 0.25
+pioneer_share: 0.25
 
 # Analogous to LPJmL pftpar, define the AFT parameters for the two different
 #   farmer types
 aftpar:
     # AFT for conservative/traditional values following farmer tending to stay
     #   with conventional agriculture
-    conservative_minded:
-        pbc: 0.75
+    traditionalist:
+        pbc: 0.95
         weight_attitude: 0.6
         weight_yield: 0.8
-        weight_soil: 0.2
+        weight_soil: 0.4
         weight_norm: 0.4
-        weight_social_learning: 0.05
-        weight_own_land: 0.95
+        weight_social_learning: 0.4
+        weight_own_land: 0.6
         # duration of waiting time before switching to another strategy
         strategy_switch_duration: 10 # years
 
-    # AFT for progressive farmer who more likely tends to switch to
-    #   regenerative agriculture
-    progressive_minded:
-        pbc: 0.95
+    # AFT for pioneer farmer who more likely tends to switch to new (promising)
+    #   regenerative agriculture practices
+    pioneer:
+        pbc: 0.75
         weight_attitude: 0.8
-        weight_yield: 0.3
-        weight_soil: 0.7
+        weight_yield: 0.4
+        weight_soil: 0.8
         weight_norm: 0.2
-        weight_social_learning: 0.1
-        weight_own_land: 0.9
+        weight_social_learning: 0.6
+        weight_own_land: 0.4
         # duration of waiting time before switching to another strategy
         strategy_switch_duration: 10 # years

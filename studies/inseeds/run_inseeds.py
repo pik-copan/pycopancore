@@ -66,8 +66,8 @@ config_coupled.regrid(
 
 config_coupled.add_config(inseeds_config_file)
 
-# set InSEEDS configuration: here we set the progressive probability to 0.25
-config_coupled.coupled_config.progressive_probability = 0.25
+# set InSEEDS configuration: here we set the pioneer share to 0.25
+config_coupled.coupled_config.pioneer_share = 0.25
 
 # write config (Config object) as json file
 config_coupled_fn = config_coupled.to_json()
