@@ -12,6 +12,7 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
+import sys
 import numpy as np
 import networkx as nx
 
@@ -26,23 +27,32 @@ class World(I.World):
     def __init__(self,
                  model=None,
                  lpjml=None,
+                 input=None,
+                 output=None,
                  **kwargs):
         """Initialize an instance of World.
         """
         super().__init__(**kwargs)
-        if model:
+
+        if model is not None:
             self.model = model
         else:
             self.model = None
 
-        if lpjml:
+        if lpjml is not None:
             self.lpjml = lpjml
-            self.input = self.lpjml.read_input()
-            self.output = self.lpjml.read_historic_output().isel(time=[-1])
         else:
             self.lpjml = None
-            self.input = None
-            self.output = None
+
+        if input is not None:
+            self.input = input
+        else:
+            self.input = self.lpjml.read_input()
+
+        if output is not None:
+            self.output = output
+        else:
+            self.output = self.lpjml.read_historic_output().isel(time=[-1])
 
         self.neighbourhood = nx.Graph()
 
@@ -56,14 +66,17 @@ class World(I.World):
         """
         self.input.time.values[0] = np.datetime64(f"{t}-12-31")
         # send input data to lpjml
-        self.lpjml.send_input(self.input, t)
+        if not hasattr(sys, '_called_from_test'):
+            self.lpjml.send_input(self.input, t)
         # read output data from lpjml
         self.output.time.values[0] = np.datetime64(f"{t}-12-31")
-        for name, output in self.lpjml.read_output(t).items():
-            self.output[name][:] = output[:]
+    
+        if not hasattr(sys, '_called_from_test'):
+            for name, output in self.lpjml.read_output(t).items():
+                self.output[name][:] = output[:]
 
-        if t == self.lpjml.config.lastyear:
-            self.lpjml.close()
+            if t == self.lpjml.config.lastyear:
+                self.lpjml.close()
 
     def init_cells(self, **kwargs):
         """Init cell instances for each corresponding cell via numpy views"""

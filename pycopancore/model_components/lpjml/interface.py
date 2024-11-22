@@ -43,17 +43,17 @@ class World:
     #     datatype=LPJmLCoupler
     # )
 
-    input = Variable(
-        "input to lpjml",
-        "input LPJmLDataSet to lpjml with values on e.g. land use",
-        datatype=LPJmLDataSet
-    )
+    # input = Variable(
+    #     "input to lpjml",
+    #     "input LPJmLDataSet to lpjml with values on e.g. land use",
+    #     datatype=LPJmLDataSet
+    # )
 
-    output = Variable(
-        "output from lpjml",
-        "output LPJmLDataSet from lpjml with values on e.g. cftfrac",
-        datatype=LPJmLDataSet
-    )
+    # output = Variable(
+    #     "output from lpjml",
+    #     "output LPJmLDataSet from lpjml with values on e.g. cftfrac",
+    #     datatype=LPJmLDataSet
+    # )
 
     neighbourhood = Variable(
         "neighbourhood",
