@@ -170,6 +170,13 @@ class ModelLogics (object):
                  ])
         # iterate through all model components:
         for component in cls.components:
+
+            if "entity_types" not in component.__dict__:
+                component.entity_types = []
+
+            if "process_taxa" not in component.__dict__:
+                component.process_taxa = []
+
             component_interface = component.__bases__[0]  # the first base class of an impl. cl. is its interface
             print("Model component ", component_interface.name, "(", component,
                   ")...")
@@ -201,6 +208,9 @@ class ModelLogics (object):
                                 "different codename."
                 # find and register all processes defined directly in this
                 # mixin's "process" attribute:
+                if "processes" not in mixin_interface.__dict__:
+                    mixin.processes = []
+
                 for p in mixin.processes:
                     assert isinstance(p, _AbstractProcess), \
                         "The 'processes' attribute of an implementation " \
