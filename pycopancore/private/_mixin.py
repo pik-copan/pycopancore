@@ -124,17 +124,6 @@ class _Mixin(object, metaclass=_MixinType):
                     varvals[clsattr] = val
                     continue
 
-            if val.__class__.__name__ not in [
-                "LPJmLCoupler",
-                "LPJmLData",
-                "LPJmLDataSet",
-                "CoupledConfig",
-                "LPJmLConfig",
-                "SubConfig"
-            ]:
-                print("unexpected (misspelled?) keyword argument",
-                      key, "=", val,
-                      " (was this variable properly defined in the model?)")
             nonvarkwargs[key] = val
 
         # pass other kwargs to super:
