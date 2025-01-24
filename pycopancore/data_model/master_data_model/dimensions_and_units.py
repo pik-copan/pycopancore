@@ -89,6 +89,7 @@ class DimensionsAndUnits:
                       symbol="J", dimension=energy)
     energy.default_unit = GJ = gigajoules = \
         (joules * 1e9).named("gigajoules", symbol="GJ")
+    # TODO: provide other common units: Btu, kcal., MWh, etc.
     Btu = british_thermal_units = (GJ * 0.10550559e-5
                                    ).named("British thermal units", symbol="Btu")
     GWh = gigawatt_hours = (GJ * 3600
@@ -125,7 +126,7 @@ class DimensionsAndUnits:
 
     tC_per_ha = (t/ha).named("tonnes carbon per hectare",
                              symbol="tC/ha")
-    kgC_per_m2 = (kgC/m2).named("grams carbon per square meter",
+    kgC_per_m2 = (kgC/m2).named("kilograms carbon per square meter",
                                 symbol="kgC/m²")
     gC_per_m2 = (gC/m2).named("grams carbon per square meter",
                               symbol="gC/m²")
