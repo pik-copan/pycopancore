@@ -336,11 +336,6 @@ class Variable(Symbol):
         if v is None:
             if self.allow_none is False:
                 return False, str(self) + " may not be None"
-        elif isinstance(v, type({})):
-            for item in v.values():
-                res = self._check_valid(item)
-                if res is not True:
-                    return res            
         else:
 # FIXME: the following was commented out since it does not accept 0 as float:
 #            if self.datatype is not None:

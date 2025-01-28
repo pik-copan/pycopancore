@@ -100,13 +100,11 @@ class DimensionsAndUnits:
     
     # derived flow dimensions and units:
     
-    monetary_flow = (monetary_value / time).named("monetary flow")
+    value_flow = (monetary_value / time).named("monetary_value flow")
     carbon_flow = (carbon / time).named("carbon flow")
     human_flow = (humans / time).named("human flow")
 
-    power = energy_flow = heat_flow = (energy / time).named("energy flow")
     GW = gigawatts = (GWh / h).named("gigawatts", symbol="GW")
-    W = watts = (GW / 1e9).named("watts", symbol="W")
 
     # other derived dimensions and units:
 
@@ -134,4 +132,3 @@ class DimensionsAndUnits:
     person_hours = (people * hours).named("person hours")
     person_months = (people * months).named("person months")
 
-    heat_flux = (heat_flow / area).named("heat flux")
