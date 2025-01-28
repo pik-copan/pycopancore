@@ -3,7 +3,7 @@ message: If you use this software, please cite it using the metadata from this f
 type: software
 title: 'pycopancore: Reference implementation of the copan:CORE World-Earth modelling framework'
 version: 0.8.0
-date-released: '2024-07-XX'
+date-released: '2025-01-28'
 abstract: The pycopancore package is a python implementation of the copan:CORE
   modeling framework as described in this paper. The framework is designed to
   allow an easy implementation of World-Earth (i.e., global social-ecological)
