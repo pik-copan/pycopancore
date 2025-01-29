@@ -35,7 +35,6 @@ class World (I.World, abstract.World):
                  *,
                  environment=None,
                  metabolism=None,
-                 culture=None,
                  **kwargs
                  ):
         """Instantiate (typically the only) instance of World.
@@ -46,8 +45,6 @@ class World (I.World, abstract.World):
             Environment acting on this World.
         metabolism : obj
             Metabolism acting on this World.
-        culture : obj
-            Culture acting on this World.
         **kwargs
             keyword arguments passed to super()
 
@@ -58,8 +55,6 @@ class World (I.World, abstract.World):
         self.environment = environment
         self._metabolism = None
         self.metabolism = metabolism
-        self._culture = None
-        self.culture = culture
         self._social_systems = set()
         self._cells = set()
         self._groups = set()
@@ -100,23 +95,6 @@ class World (I.World, abstract.World):
                 "Metabolism must be of process taxon type Metabolism"
             m._worlds.add(self)
         self._metabolism = m
-
-    @property
-    def culture(self):
-        """Get world's culture."""
-        return self._culture
-
-    @culture.setter
-    def culture(self, c):
-        """Set world's culture."""
-        if self._culture is not None:
-            # first deregister from previous culture's list of worlds:
-            self._culture.worlds.remove(self)
-        if c is not None:
-            assert isinstance(c, I.Culture), \
-                "Culture must be taxon type Culture"
-            c._worlds.add(self)
-        self._culture = c
 
     @property  # read-only
     def social_systems(self):
