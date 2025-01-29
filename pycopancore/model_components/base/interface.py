@@ -85,10 +85,6 @@ class Culture (object):
 
     group_membership_network = CUL.group_membership_network
 
-    # read-only attributes storing redundant information:
-    worlds = SetVariable("worlds",
-                         "Set of Worlds governed by this Culture",
-                         readonly=True)
     social_systems = SetVariable("social systems",
                                  "Set of all SocialSystems governed by this Culture",
                                  readonly=True)
