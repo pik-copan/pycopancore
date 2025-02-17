@@ -9,11 +9,10 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import Variable
-
 from networkx import DiGraph, Graph
 
-from .. import unity
+from pycopancore.data_model.variable import Variable
+from pycopancore.data_model.unit import unity
 
 
 class Culture:

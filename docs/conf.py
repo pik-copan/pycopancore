@@ -44,7 +44,7 @@ autosummary_generate = True
 
 # Napoleon settings
 napoleon_numpy_docstring = True
-napoleon_google_docstring = False
+napoleon_google_docstring = True
 napoleon_include_special_with_doc = True
 # more info at http://www.sphinx-doc.org/en/stable/ext/
 #                   napoleon.html#module-sphinx.ext.napoleon
@@ -54,14 +54,15 @@ templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
+#source_suffix = '.rst'
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
 master_doc = 'index'
+root_doc = 'index'
 
 # General information about the project.
 project = u'pycopancore'
@@ -100,15 +101,15 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '_templates']
 #default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
-#add_function_parentheses = True
+add_function_parentheses = True
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-#add_module_names = True
+add_module_names = False
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
-#show_authors = False
+show_authors = True
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -185,19 +186,19 @@ html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 
 html_domain_indices = True
 
 # If false, no index is generated.
-#html_use_index = True
+html_use_index = True
 
 # If true, the index is split into individual pages for each letter.
-#html_split_index = False
+html_split_index = True
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+html_show_sourcelink = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-#html_show_sphinx = True
+html_show_sphinx = True
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-#html_show_copyright = True
+html_show_copyright = True
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the

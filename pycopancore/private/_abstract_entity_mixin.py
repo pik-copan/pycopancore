@@ -18,7 +18,7 @@ It sets the basic structure of entity mixins (individuals, cells , social_system
 # - in __init__, add logics that sets all variables to either their specified
 #   values or their default values as given in Variable.
 
-from . import _Mixin
+from pycopancore.private._mixin import _Mixin
 
 
 class _AbstractEntityMixin(_Mixin):
