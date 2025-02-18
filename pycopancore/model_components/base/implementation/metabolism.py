@@ -35,12 +35,17 @@ class Metabolism (I.Metabolism, abstract.Metabolism):
         super().__init__(**kwargs)  # must be the first line
 
         self._worlds = set()
+        self._regions = set()
 
     @property  # read-only
     def worlds(self):
         """Get the set of Worlds on this Metabolism."""
         return self._worlds
 
+    @property  # read-only
+    def regions(self):
+        """Get the set of Regions on this Metabolism."""
+        return self._regions
     # process-related methods:
 
     # TODO: add some if needed...

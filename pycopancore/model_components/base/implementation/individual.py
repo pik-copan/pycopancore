@@ -115,6 +115,11 @@ class Individual (I.Individual, abstract.Individual):
         return self._cell.world
 
     @property  # read-only
+    def region(self):
+        """Get the Region the Individual is part of."""
+        return self._cell.region
+
+    @property  # read-only
     def environment(self):
         """Get the Environment the Individual is part of."""
         return self._cell.environment

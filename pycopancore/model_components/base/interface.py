@@ -141,7 +141,11 @@ class World (object, metaclass=_MixinType):
     individuals = SetVariable("individuals",
                               "Set of Individuals residing on this world",
                               readonly=True)
-
+    regions = SetVariable(
+        "regions",
+        "set of Regions on this world",
+        readonly=True
+    )
 
 
 # specified only now to avoid recursion errors:
@@ -199,7 +203,11 @@ class SocialSystem (object, metaclass=_MixinType):
     individuals = SetVariable("individuals",
                               "set of direct or indirect resident Individuals",
                               readonly=True)
-
+    regions = SetVariable(
+        "regions",
+        "set of Regions governed by this SocialSystem",
+        readonly=True
+    )
 
 # specified only now to avoid recursion errors:
 SocialSystem.next_higher_social_system.type = SocialSystem
@@ -246,7 +254,12 @@ class Cell (object, metaclass=_MixinType):
     individuals = SetVariable("individuals",
                               "set of resident Individuals",
                               readonly=True)
-
+    region = ReferenceVariable(
+        "region",
+        "Region this Cell belongs to",
+        type=Region,
+        readonly=True
+    )
 
 # specified only now to avoid recursion:
 World.cells.type = Cell
@@ -297,6 +310,12 @@ class Individual (object, metaclass=_MixinType):
     group_memberships = SetVariable("group memberships",
                                     "set of Groups this one is associated with",
                                     readonly=True)
+    region = SetVariable(
+        "region",
+        "Region this Individual belongs to",
+        type=Region,
+        readonly=True
+    )
 
     # TODO: specify Variable objects for the following:
     population_share = None
@@ -331,7 +350,6 @@ class Group (object, metaclass=_MixinType):
     # next_higher_group = ReferenceVariable("next higher group", "optional",
     #                                         allow_none=True)  # type is Group, hence it can only be specified after class Group is defined, see below
 
-
     # read-only attributes storing redundant information:
     environment = ReferenceVariable("environment", "", type=Environment,
                                readonly=True)
@@ -344,5 +362,51 @@ class Group (object, metaclass=_MixinType):
         "set of all individuals associated with the group",
         readonly=True
     )
+    regions = SetVariable(
+        "regions",
+        "set of all regions the group is associated with",
+        readonly=True
+    )
 
 Culture.groups.type = Group
+
+
+class Region(object, metaclass=_MixinType):
+    """Basic Region interface.
+
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # references:
+    world = ReferenceVariable("world", "", type=World)
+
+    social_systems = SetVariable(
+        "social systems",
+        "Set of all SocialSystems governed by this Region",
+        readonly=True
+    )
+
+    individuals = SetVariable(
+        "individuals",
+        "Set of Individuals governed by this Culture",
+        readonly=True
+    )
+
+    cells = SetVariable(
+        "cells",
+        "set of Cells on this Region",
+        readonly=True
+    )
+
+    groups = SetVariable(
+        "groups",
+        "set of Groups on this Region",
+        readonly=True
+    )
+
+# specified only now to avoid recursion:
+World.regions.type = Region
+SocialSystem.regions.type = Region
+Cell.region.type = Region
+Individual.region.type = Region
+Group.regions.type = Region

@@ -40,4 +40,4 @@ from .individual import Individual
 from .group import Group as G
 from .group import Group as group
 from .group import Group
-
+from .region import Region

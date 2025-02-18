@@ -48,6 +48,7 @@ class Cell (I.Cell, abstract.Cell):
 
         # init and set variables implemented via properties
         self._world = None
+        self._region = None
         self._social_system = None
         if world:
             self.world = world
@@ -80,6 +81,21 @@ class Cell (I.Cell, abstract.Cell):
         assert isinstance(w, I.World), "world must be of entity type World"
         w._cells.add(self)
         self._world = w
+
+    @property
+    def region(self):
+        """Get the Region the Cell is part of."""
+        return self._region
+
+    @region.setter
+    def region(self, r):
+        """Set the Region the Cell is part of."""
+        if self._region is not None:
+            # first deregister from previous region's list of cells:
+            self._region.cells.remove(self)
+        assert isinstance(r, I.Region), "region must be of entity type Region"
+        r._cells.add(self)
+        self._region = r
 
     @property
     def social_system(self):

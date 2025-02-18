@@ -24,8 +24,3 @@ class Group:
         Variable("has a headquarter",
                  "whether the group has a headquarter located in a cell",
                  scale="ordinal", levels=[False, True], default=False)
-        
-        
-        
-        
-

@@ -19,14 +19,12 @@ from pycopancore.private._simple_expressions import unknown
 
 from .. import interface as I
 
-from pycopancore.process_types import Explicit
 
+class Region(I.Region, abstract.Region):
+    """Region entity type mixin implementation class.
 
-class World (I.World, abstract.World):
-    """World entity type mixin implementation class.
-
-    Base component's World mixin that every model must use in composing their
-    World class. Inherits from I.World as the interface with all necessary
+    Base component's Region mixin that every model must use in composing their
+    Region class. Inherits from I.Region as the interface with all necessary
     variables and parameters.
 
     """
@@ -51,34 +49,31 @@ class World (I.World, abstract.World):
         """
         super().__init__(**kwargs)  # must be the first line
 
-        self._environment = None
-        self.environment = environment
-        self._metabolism = None
-        self.metabolism = metabolism
+        self._world = None
+        self._metabolism = metabolism
         self._social_systems = set()
         self._cells = set()
         self._groups = set()
-        self._regions = set()
 
         # make sure all variable values are valid:
         self.assert_valid()
 
-    # getters and setters:
-    @property
-    def environment(self):
-        """Get world's environment."""
-        return self._environment
+    # getters and setters for references:
 
-    @environment.setter
-    def environment(self, n):
-        """Set world's environment."""
-        if self._environment is not None:
-            # first deregister from previous environment's list of worlds:
-            self._environment.worlds.remove(self)
-        if n is not None:
-            assert isinstance(n, I.Environment), "Environment must be taxon type Environment"
-            n._worlds.add(self)
-        self._environment = n
+    @property
+    def world(self):
+        """Get the World the Region is part of."""
+        return self._world
+
+    @world.setter
+    def world(self, w):
+        """Set the World the Region is part of."""
+        if self._world is not None:
+            # first deregister from previous world's list of cells:
+            self._world.regions.remove(self)
+        assert isinstance(w, I.World), "world must be of entity type World"
+        w._regions.add(self)
+        self._world = w
 
     @property
     def metabolism(self):
@@ -89,12 +84,12 @@ class World (I.World, abstract.World):
     def metabolism(self, m):
         """Set the Metabolism the World is part of."""
         if self._metabolism is not None:
-            # first deregister from previous metabolism's list of worlds:
-            self._metabolism.worlds.remove(self)
+            # first deregister from previous metabolism's list of regions:
+            self._metabolism.regions.remove(self)
         if m is not None:
             assert isinstance(m, I.Metabolism), \
                 "Metabolism must be of process taxon type Metabolism"
-            m._worlds.add(self)
+            m._regions.add(self)
         self._metabolism = m
 
     @property  # read-only
@@ -103,21 +98,9 @@ class World (I.World, abstract.World):
         return self._social_systems
 
     @property  # read-only
-    def top_level_social_systems(self):
-        """Get the set of top-level SocialSystems on this World."""
-        # find by filtering:
-        return set([s for s in self._social_systems
-                    if s.next_higher_social_system is None])
-
-    @property  # read-only
     def cells(self):
         """Get the set of Cells on this World."""
         return self._cells
-
-    @property
-    def regions(self):
-        """Get the set of Regions on this World."""
-        return self._regions
 
     @property  # read-only
     def groups(self):
@@ -143,11 +126,5 @@ class World (I.World, abstract.World):
         # reset dependent caches:
         pass
 
-    processes = [
-        # TODO: convert this into an Implicit equation once supported:
-        Explicit("aggregate cell carbon stocks",
-                 [I.World.terrestrial_carbon,
-                  I.World.fossil_carbon],
-                 [I.World.sum.cells.terrestrial_carbon,
-                  I.World.sum.cells.fossil_carbon])
-    ]
+
+    processes = []
