@@ -147,9 +147,7 @@ class World (object, metaclass=_MixinType):
         readonly=True
     )
 
-
 # specified only now to avoid recursion errors:
-Culture.worlds.type = World
 Metabolism.worlds.type = World
 Environment.worlds.type = World
 
@@ -257,7 +255,6 @@ class Cell (object, metaclass=_MixinType):
     region = ReferenceVariable(
         "region",
         "Region this Cell belongs to",
-        type=Region,
         readonly=True
     )
 
@@ -313,7 +310,6 @@ class Individual (object, metaclass=_MixinType):
     region = SetVariable(
         "region",
         "Region this Individual belongs to",
-        type=Region,
         readonly=True
     )
 
@@ -335,8 +331,6 @@ SocialSystem.direct_individuals.type = Individual
 SocialSystem.individuals.type = Individual
 Cell.individuals.type = Individual
 Individual.acquaintances.type = Individual
-
-
 
 
 class Group (object, metaclass=_MixinType):
@@ -410,3 +404,5 @@ SocialSystem.regions.type = Region
 Cell.region.type = Region
 Individual.region.type = Region
 Group.regions.type = Region
+Individual.region.type = Region
+Cell.region.type = Region
