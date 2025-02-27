@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: If you use this software, please cite it using the metadata from this file.
 type: software
 title: 'pycopancore: Reference implementation of the copan:CORE World-Earth modelling framework'
-version: 0.8.1
+version: 0.8.2
 date-released: '2025-02-27'
 abstract: The pycopancore package is a python implementation of the copan:CORE
   modeling framework as described in this paper. The framework is designed to
@@ -60,5 +60,5 @@ authors:
 
 license: BSD-2-Clause
 repository-code: https://github.com/pik-copan/pycopancore
-doi: 10.5281/zenodo.12654089
+doi: 10.5281/zenodo.14938316
 

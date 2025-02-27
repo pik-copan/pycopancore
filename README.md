@@ -1,7 +1,7 @@
 # pycopancore
 
 
-[![DOI](https://www.zenodo.org/badge/DOI/10.5281/zenodo.3772751.svg)](https://doi.org/10.5281/zenodo.3772751)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14938316.svg)](https://doi.org/10.5281/zenodo.14938316)
 
 
 Reference implementation of the copan:CORE World-Earth modelling framework
