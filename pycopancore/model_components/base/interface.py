@@ -147,6 +147,7 @@ class World (object, metaclass=_MixinType):
         readonly=True
     )
 
+
 # specified only now to avoid recursion errors:
 Metabolism.worlds.type = World
 Environment.worlds.type = World
