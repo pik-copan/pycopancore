@@ -9,11 +9,10 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import Variable
-
 from networkx import DiGraph, Graph
 
-from .. import unity
+from pycopancore.data_model.variable import Variable
+from pycopancore.data_model.unit import unity
 
 
 class Culture:
@@ -94,7 +93,24 @@ class Culture:
                  scale='nominal',
                  datatype=set)
         
-        
+
+    # group entity related networks
+
+    inter_group_network = \
+        Variable("inter group network",
+                 """Basic undirected social network between
+                 Groups.""",
+                 ref="https://en.wikipedia.org/wiki/Social_network#Meso_level",
+                 scale='nominal',
+                 datatype=Graph)
+
+    group_membership_network = \
+        Variable("group membership network",
+                 """Directed network from individual to group that
+                 signifies membership (to avoid problems due to n to n relation)""",
+                 scale='nominal',
+                 datatype=DiGraph)
+
     # socio-cultural traits that may occur on different levels:
     
     is_environmentally_friendly = \

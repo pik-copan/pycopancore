@@ -37,5 +37,7 @@ from .cell import Cell
 from .individual import Individual as I
 from .individual import Individual as individual
 from .individual import Individual
+from .group import Group as G
+from .group import Group as group
+from .group import Group
 
-from .. import unity

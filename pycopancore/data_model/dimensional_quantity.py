@@ -9,8 +9,8 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from . import dimension
-from . import unit as U
+from pycopancore.data_model import dimension
+from pycopancore.data_model import unit as U
 
 
 class DimensionalQuantity(object):

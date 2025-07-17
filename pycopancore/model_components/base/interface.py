@@ -13,13 +13,27 @@ by entity type and process taxon
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from ...private import _MixinType, unknown
-from ... import Variable, ReferenceVariable, SetVariable
-from ... import master_data_model as D
-from ...data_model.master_data_model import ENV, CUL, W, S, C
+from pycopancore.private._mixin import _MixinType
 
+from pycopancore.data_model.variable import Variable
+from pycopancore.data_model.reference_variable import ReferenceVariable
+from pycopancore.data_model.set_variable import SetVariable
 
-# model component:
+from pycopancore.data_model.unit import unity
+
+from pycopancore.data_model.master_data_model.dimensions_and_units \
+    import DimensionsAndUnits as DAU
+
+from pycopancore.data_model.master_data_model.environment \
+    import Environment as ENV
+from pycopancore.data_model.master_data_model.culture \
+    import Culture as CUL
+from pycopancore.data_model.master_data_model.world \
+    import World as W
+from pycopancore.data_model.master_data_model.social_system \
+    import SocialSystem as S
+from pycopancore.data_model.master_data_model.cell \
+    import Cell as C
 
 
 class Model (object):
@@ -69,13 +83,20 @@ class Culture (object):
 
     acquaintance_network = CUL.acquaintance_network
 
-    # read-only attributes storing redundant information:
-    worlds = SetVariable("worlds",
-                         "Set of Worlds governed by this Culture",
-                         readonly=True)
+    group_membership_network = CUL.group_membership_network
+
+    social_systems = SetVariable("social systems",
+                                 "Set of all SocialSystems governed by this Culture",
+                                 readonly=True)
+    individuals = SetVariable("individuals",
+                              "Set of Individuals governed by this Culture",
+                              readonly=True)
 
 # entity types:
 
+    groups = SetVariable("groups",
+                         "Set of Groups existing on this world",
+                         readonly=True)
 
 # TODO: clarify whether it is necessary to specify the metaclass here!
 class World (object, metaclass=_MixinType):
@@ -123,7 +144,6 @@ class World (object, metaclass=_MixinType):
 
 
 # specified only now to avoid recursion errors:
-Culture.worlds.type = World
 Metabolism.worlds.type = World
 Environment.worlds.type = World
 
@@ -184,6 +204,7 @@ SocialSystem.next_higher_social_system.type = SocialSystem
 SocialSystem.higher_social_systems.type = SocialSystem
 SocialSystem.next_lower_social_systems.type = SocialSystem
 SocialSystem.lower_social_systems.type = SocialSystem
+Culture.social_systems.type = SocialSystem
 World.social_systems.type = SocialSystem
 World.top_level_social_systems.type = SocialSystem
 
@@ -246,7 +267,7 @@ class Individual (object, metaclass=_MixinType):
                  "relative representation weight for social_system's population, "
                  "to be used in determining how many people this individual "
                  "represents",
-                 unit=D.unity, lower_bound=0, default=1)
+                 unit=unity, lower_bound=0, default=1)
 
     # attributes storing redundant information:
     world = ReferenceVariable("world", "", type=World,
@@ -271,6 +292,10 @@ class Individual (object, metaclass=_MixinType):
                     "set of Individuals this one is acquainted with",
                     readonly=True)
 
+    group_memberships = SetVariable("group memberships",
+                                    "set of Groups this one is associated with",
+                                    readonly=True)
+
     # TODO: specify Variable objects for the following:
     population_share = None
     """share of social_system's direct population represented by this individual"""
@@ -278,13 +303,44 @@ class Individual (object, metaclass=_MixinType):
         "represented population", 
         "absolute population represented by this individual",
         readonly=True,
-        unit=D.people,
+        unit=DAU.people,
         is_extensive=True)
 
 
 # specified only now to avoid recursion:
 World.individuals.type = Individual
+Culture.individuals.type = Individual
 SocialSystem.direct_individuals.type = Individual
 SocialSystem.individuals.type = Individual
 Cell.individuals.type = Individual
 Individual.acquaintances.type = Individual
+
+
+
+
+class Group (object, metaclass=_MixinType):
+    """Basic Group interface.
+
+    It contains all variables specified as mandatory ("base variables").
+    """
+
+    # references:
+    #social_system = ReferenceVariable("socialsystem", "", type=SocialSystem)
+    # next_higher_group = ReferenceVariable("next higher group", "optional",
+    #                                         allow_none=True)  # type is Group, hence it can only be specified after class Group is defined, see below
+
+
+    # read-only attributes storing redundant information:
+    environment = ReferenceVariable("environment", "", type=Environment,
+                               readonly=True)
+    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
+                                   readonly=True)
+    culture = ReferenceVariable("culture", "", type=Culture,
+                                readonly=True)
+    group_members = SetVariable(
+        "group members",
+        "set of all individuals associated with the group",
+        readonly=True
+    )
+
+Culture.groups.type = Group

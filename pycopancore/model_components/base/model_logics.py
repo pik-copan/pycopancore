@@ -15,11 +15,18 @@ variables in special list to be accessed by the runner.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import abstract
-from ... import Variable, ReferenceVariable, SetVariable, \
-                ODE, Explicit, Step, Event, OrderedSet
-from ...private import _AbstractProcess, unknown, _expressions, \
-    _AbstractEntityMixin, _AbstractProcessTaxonMixin
+from pycopancore.model_components import abstract
+from pycopancore.data_model import Variable, ReferenceVariable, SetVariable, \
+    OrderedSet
+from pycopancore.process_types import ODE, Explicit, Step, Event
+
+from pycopancore.private._abstract_process import _AbstractProcess
+from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
+from pycopancore.private._abstract_process_taxon_mixin \
+    import _AbstractProcessTaxonMixin
+
+from pycopancore.private._simple_expressions import unknown
+from pycopancore.private._expressions import get_vars
 import gc
 import inspect
 import re
@@ -163,6 +170,13 @@ class ModelLogics (object):
                  ])
         # iterate through all model components:
         for component in cls.components:
+
+            if "entity_types" not in component.__dict__:
+                component.entity_types = []
+
+            if "process_taxa" not in component.__dict__:
+                component.process_taxa = []
+
             component_interface = component.__bases__[0]  # the first base class of an impl. cl. is its interface
             print("Model component ", component_interface.name, "(", component,
                   ")...")
@@ -194,6 +208,9 @@ class ModelLogics (object):
                                 "different codename."
                 # find and register all processes defined directly in this
                 # mixin's "process" attribute:
+                if "processes" not in mixin_interface.__dict__:
+                    mixin.processes = []
+
                 for p in mixin.processes:
                     assert isinstance(p, _AbstractProcess), \
                         "The 'processes' attribute of an implementation " \
@@ -310,7 +327,7 @@ class ModelLogics (object):
                                            + str(target.owning_class) \
                                            + str(composed_class)
                                 if isinstance(p.specification, list):
-                                    deps = _expressions.get_vars(p.specification[i])
+                                    deps = get_vars(p.specification[i])
                                     print("      Derivative of",
                                           target.target_variable,
                                           "directly depends on", deps)
@@ -353,7 +370,7 @@ class ModelLogics (object):
                                            "reference starts at a wrong " \
                                            "entity-type/taxon:"
                                 if isinstance(p.specification, list):
-                                    deps = _expressions.get_vars(p.specification[i])
+                                    deps = get_vars(p.specification[i])
                                     print("      Target var.",
                                           target.target_variable,
                                           "directly depends on", deps)

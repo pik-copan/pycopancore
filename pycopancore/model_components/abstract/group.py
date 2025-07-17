@@ -1,4 +1,4 @@
-"""Abstract World entity type class, inherited by base model component."""
+"""Abstract Group entity type class, inherited by base model component."""
 
 # This file is part of pycopancore.
 #
@@ -13,8 +13,13 @@ from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
 from pycopancore.data_model.ordered_set import OrderedSet
 
 
-class World (_AbstractEntityMixin):
-    """Abstract World entity type class, inherited by base model component."""
+class Group (_AbstractEntityMixin):
+    """Abstract Group entity type class.
+
+    Inherited by base model component.
+    """
 
     variables = OrderedSet()
     """All variables occurring in this entity type"""
+
+
