@@ -56,6 +56,12 @@ class Individual (I.Individual, abstract.Individual):
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
             self.culture.group_membership_network.add_node(self, type="Individual", color="yellow")
+        elif self.world:
+            # Register with world's networks if no culture
+            if hasattr(self.world, 'acquaintance_network'):
+                self.world.acquaintance_network.add_node(self)
+            if hasattr(self.world, 'group_membership_network'):
+                self.world.group_membership_network.add_node(self, type="Individual", color="yellow")
 
     def deactivate(self):
         """Deactivate an individual.
@@ -67,6 +73,12 @@ class Individual (I.Individual, abstract.Individual):
         if self.culture:
             self.culture.acquaintance_network.remove_node(self)
             self.culture.group_membership_network.remove_node(self)
+        elif self.world:
+            # Deregister from world's networks if no culture
+            if hasattr(self.world, 'acquaintance_network'):
+                self.world.acquaintance_network.remove_node(self)
+            if hasattr(self.world, 'group_membership_network'):
+                self.world.group_membership_network.remove_node(self)
         super().deactivate()  # must be the last line
 
     def reactivate(self):
@@ -80,6 +92,12 @@ class Individual (I.Individual, abstract.Individual):
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
             self.culture.group_membership_network.add_node(self, type="Individual", color="yellow")
+        elif self.world:
+            # Reregister with world's networks if no culture
+            if hasattr(self.world, 'acquaintance_network'):
+                self.world.acquaintance_network.add_node(self)
+            if hasattr(self.world, 'group_membership_network'):
+                self.world.group_membership_network.add_node(self, type="Individual", color="yellow")
 
     # getters and setters for references:
 
@@ -157,12 +175,22 @@ class Individual (I.Individual, abstract.Individual):
     @property
     def acquaintances(self):
         """Get the set of Individuals the Individual is acquainted with."""
-        return self.culture.acquaintance_network.neighbors(self)
+        if self.culture and hasattr(self.culture, 'acquaintance_network'):
+            return self.culture.acquaintance_network.neighbors(self)
+        elif self.world and hasattr(self.world, 'acquaintance_network'):
+            return self.world.acquaintance_network.neighbors(self)
+        else:
+            return set()
 
     @property
     def group_memberships(self):
         """Get the set of Groups the Individual is associated with."""
-        return self.culture.group_membership_network.neighbors(self) # .successors as network is directed from inds to groups
+        if self.culture and hasattr(self.culture, 'group_membership_network'):
+            return self.culture.group_membership_network.neighbors(self)
+        elif self.world and hasattr(self.world, 'group_membership_network'):
+            return self.world.group_membership_network.neighbors(self)
+        else:
+            return set()
 
     # no process-related methods
 
