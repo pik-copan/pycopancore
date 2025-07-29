@@ -180,7 +180,7 @@ class Individual (I.Individual, abstract.Individual):
         elif self.world and hasattr(self.world, 'acquaintance_network'):
             return self.world.acquaintance_network.neighbors(self)
         else:
-            return set()
+            return networkx.Graph()
 
     @property
     def group_memberships(self):
@@ -190,7 +190,7 @@ class Individual (I.Individual, abstract.Individual):
         elif self.world and hasattr(self.world, 'group_membership_network'):
             return self.world.group_membership_network.neighbors(self)
         else:
-            return set()
+            return networkx.Graph()
 
     # no process-related methods
 
