@@ -20,6 +20,7 @@ from pycopancore.private._simple_expressions import unknown
 from .. import interface as I
 
 from pycopancore.process_types import Explicit
+from networkx import DiGraph, Graph
 
 
 class World (I.World, abstract.World):
@@ -35,6 +36,8 @@ class World (I.World, abstract.World):
                  *,
                  environment=None,
                  metabolism=None,
+                 acquaintance_network=None,
+                 group_membership_network=None,
                  **kwargs
                  ):
         """Instantiate (typically the only) instance of World.
@@ -50,6 +53,16 @@ class World (I.World, abstract.World):
 
         """
         super().__init__(**kwargs)  # must be the first line
+
+        if acquaintance_network is None:
+            acquaintance_network = Graph()
+        assert isinstance(acquaintance_network, Graph)
+        self.acquaintance_network = acquaintance_network
+
+        if group_membership_network is None:
+            group_membership_network = DiGraph()
+        assert isinstance(group_membership_network, DiGraph)
+        self.group_membership_network = group_membership_network
 
         self._environment = None
         self.environment = environment

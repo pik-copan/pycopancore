@@ -26,18 +26,18 @@ class Group (I.Group, abstract.Group):
 
     def __init__(self,
                  *,
-                 culture,
                  world,
+                 culture=None,
                  **kwargs
                  ):
         """Initialize an instance of Group.
 
         Parameters
         ----------
-        culture: obj
-            Culture the Group belongs to
         world: obj
-            World the Group belongs to (to bypass AttributeErrors for now)
+            World the Group belongs to
+        culture: obj, optional
+            Culture the Group belongs to (optional)
         **kwargs
             keyword arguments passed to super()
 
@@ -46,12 +46,18 @@ class Group (I.Group, abstract.Group):
 
         # init and set variables implemented via properties:
         self._culture = None
-        self.culture = culture
         self._world = None
         self.world = world
+        if culture is not None:
+            self.culture = culture
 
+        # Register with appropriate network
         if self.culture:
             self.culture.group_membership_network.add_node(self, type="Group", color="green")
+        elif self.world:
+            # Use world's group membership network if no culture
+            if hasattr(self.world, 'group_membership_network'):
+                self.world.group_membership_network.add_node(self, type="Group", color="green")
 
     def deactivate(self):
         """Deactivate a group.
@@ -62,6 +68,9 @@ class Group (I.Group, abstract.Group):
         # deregister from all networks:
         if self.culture:
             self.culture.group_membership_network.remove_node(self)
+        elif self.world:
+            if hasattr(self.world, 'group_membership_network'):
+                self.world.group_membership_network.remove_node(self)
         super().deactivate()  # must be the last line
 
     def reactivate(self):
@@ -74,11 +83,12 @@ class Group (I.Group, abstract.Group):
         # reregister with all mandatory networks:
         if self.culture:
             self.culture.group_membership_network.add_node(self, type="Group", color="green")
-
+        elif self.world:
+            if hasattr(self.world, 'group_membership_network'):
+                self.world.group_membership_network.add_node(self, type="Group", color="green")
 
     # getters and setters for references:
 
-    #culture needs to be before world, as group gets its world etc. over its culture
     @property
     def culture(self):
         """Get culture group is part of."""
@@ -88,7 +98,7 @@ class Group (I.Group, abstract.Group):
     def culture(self, c):
         """Set culture group is part of."""
         if self._culture is not None:
-            # first deregister from previous culture's list of worlds:
+            # first deregister from previous culture's list of groups:
             self._culture.groups.remove(self)
         if c is not None:
             assert isinstance(c, I.Culture), \
@@ -105,11 +115,21 @@ class Group (I.Group, abstract.Group):
     def world(self, w):
         """Set the World the Group is part of."""
         if self._world is not None:
-            # first deregister from previous world's list of cells:
-            self._world.groups.remove(self)
-        assert isinstance(w, I.World), "world must be of entity type World"
-        w._groups.add(self)
-        self._world = w
+            # first deregister from previous world's list of groups:
+            if hasattr(self._world, 'groups'):
+                self._world.groups.remove(self)
+        # Accept any world object that has a groups attribute
+        if hasattr(w, 'groups'):
+            # Try to add to _groups first (pycopancore style)
+            if hasattr(w, '_groups'):
+                w._groups.add(self)
+            else:
+                # For worlds with groups but no _groups, add to groups list
+                w.groups.append(self)
+            self._world = w
+        else:
+            # For worlds without groups attribute, just store the reference
+            self._world = w
 
     # getters for backwards references and convenience variables:
 
@@ -126,9 +146,13 @@ class Group (I.Group, abstract.Group):
     @property
     def group_members(self):
         """Get the set of Individuals associated with this Group."""
-        # return self.culture.group_membership_network.neighbors(self)
-        return self.culture.group_membership_network.predecessors(self) # .predecessors as network is directed from inds to groups
-
+        if self.culture:
+            return self.culture.group_membership_network.predecessors(self)
+        elif self.world and hasattr(self.world, 'group_membership_network'):
+            return self.world.group_membership_network.predecessors(self)
+        else:
+            # Return empty set if no network available
+            return set()
 
     # no process-related methods
 

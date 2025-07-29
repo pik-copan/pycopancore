@@ -141,6 +141,12 @@ class World (object, metaclass=_MixinType):
     individuals = SetVariable("individuals",
                               "Set of Individuals residing on this world",
                               readonly=True)
+    groups = SetVariable("groups", "set of Groups on this world",
+                        readonly=True)
+    group_membership_network = None
+    """Group membership network for this World"""
+    acquaintance_network = None
+    """Acquaintance network for this World"""
 
 
 # specified only now to avoid recursion errors:
