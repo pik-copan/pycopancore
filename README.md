@@ -58,7 +58,7 @@ from the root directory of the package. The script should automatically install 
 For developers, the recommended way of installing is to run in the package main directory
 
 ```
-$ pip install -e
+$ pip install -e .
 ```
 
 This creates a link instead of copying the files, so modifications in this directory are modifications in the installed package.
