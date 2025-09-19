@@ -72,7 +72,8 @@ jobs:
           git config --local user.name "GitHub Action"
           git add CITATION.cff
           git commit -m "Update CITATION.cff to current version [skip ci]"
-          git push
+          # Handle detached HEAD state by pushing to the tag
+          git push origin HEAD:refs/tags/$(git describe --tags --exact-match HEAD)
         else
           echo "No changes to CITATION.cff needed"
         fi
