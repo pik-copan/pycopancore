@@ -73,7 +73,10 @@ jobs:
           git add CITATION.cff
           git commit -m "Update CITATION.cff to current version [skip ci]"
           # Handle detached HEAD state by pushing to the tag
-          git push origin HEAD:refs/tags/$(git describe --tags --exact-match HEAD)
+          TAG_NAME=$(git describe --tags --exact-match HEAD 2>/dev/null || echo "v0.8.4")
+          # Create the tag locally if it doesn't exist
+          git tag $TAG_NAME 2>/dev/null || true
+          git push origin $TAG_NAME
         else
           echo "No changes to CITATION.cff needed"
         fi
