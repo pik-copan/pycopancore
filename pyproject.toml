@@ -52,7 +52,7 @@ Homepage = "https://github.com/pik-copan/pycopancore"
 Issues = "https://github.com/pik-copan/pycopancore/issues"
 Repository = "https://github.com/pik-copan/pycopancore"
 
-[tool.aliases]
+[tool.hatch.envs.default.scripts]
 test = "pytest"
 
 [tool.pytest.ini_options]

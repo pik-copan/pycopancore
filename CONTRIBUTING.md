@@ -49,7 +49,7 @@ Your contributions will be greatly appreciated and will help make *pycopancore*
 even better.
 
 ## Code Quality
-We use the the
+We use the
 [**PEP8 - Style Guide for Python Code**](https://peps.python.org/pep-0008/).
 
 Please make sure that your code passes all tests and static code analysis before

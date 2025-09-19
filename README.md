@@ -16,7 +16,7 @@ pycopancore is a Python implementation of the copan:CORE modeling framework for 
 pip install pycopancore
 ```
 
-### Prerequisites
+### Documentation
 Comprehensive documentation is available at: https://pik-copan.github.io/pycopancore
 
 See [examples](./examples/) for examples on how to use the framework.

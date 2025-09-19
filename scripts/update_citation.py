@@ -3,7 +3,6 @@
 Update CITATION.cff with current package version and release date.
 """
 
-import os
 import sys
 import subprocess
 from datetime import datetime
@@ -69,7 +68,7 @@ def update_citation_file(version, date=None):
         sys.exit(1)
     
     # Read current content
-    with open(citation_file, 'r') as f:
+    with open(citation_file, 'r', encoding='utf-8') as f:
         content = f.read()
     
     # Update version
@@ -92,7 +91,7 @@ def update_citation_file(version, date=None):
     
     if updated:
         # Write back to file
-        with open(citation_file, 'w') as f:
+        with open(citation_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(lines))
         print(f"Successfully updated CITATION.cff")
         return True
