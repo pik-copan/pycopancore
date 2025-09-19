@@ -1,0 +1,74 @@
+[build-system]
+requires = [
+    "hatchling>=1.8.0",
+    "hatch-vcs"
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "pycopancore"
+dynamic = ["version"]
+description = "Reference implementation of the copan:CORE World-Earth modelling framework"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    { name = "COPAN team @ PIK", email = "core@pik-potsdam.de" },
+]
+requires-python = ">=3.9"
+keywords = ["DGVM", "ABM", "World-Earth", "modelling", "framework"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+    "Programming Language :: Python",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+dependencies = [
+    "numpy>=1.11.0",
+    "scipy>=0.17.0",
+    "sympy>=1.0",
+    "python-louvain>=0.9",
+    "profilehooks",
+    "numba",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=4.6",
+    "pylama",
+    "pylint",
+    "pytest-cov>=2.5.1",
+    "pylama_pylint",
+]
+
+[project.urls]
+Homepage = "https://github.com/pik-copan/pycopancore"
+Issues = "https://github.com/pik-copan/pycopancore/issues"
+Repository = "https://github.com/pik-copan/pycopancore"
+
+[tool.hatch.envs.default.scripts]
+test = "pytest"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--strict-markers"
+
+[tool.hatch.version]
+source = "vcs"
+fallback_version = "0.8.6"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.hooks.vcs]
+version-file = "pycopancore/_version.py"
+template = "__version__ = '{version}'"

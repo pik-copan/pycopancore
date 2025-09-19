@@ -1,0 +1,89 @@
+name: check
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history and tags
+        fetch-tags: true  # Ensure all tags are fetched for version resolution
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+        pip install .
+        pip install -e .[dev]
+
+    # - name: Run tests
+    #   run: |
+    #     pytest --cov=pycopancore --cov-report=xml
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+    # - name: Check code formatting with Black
+    #   run: |
+    #     black --check .
+
+    # - name: Lint code with Flake8
+    #   run: |
+    #     flake8 .
+
+    - name: Build package
+      run: |
+        python -m build
+
+    - name: Check package
+      run: |
+        twine check dist/*
+
+    - name: Test package installation
+      run: |
+        pip install dist/*.whl
+        python -c "import pycopancore; print(f'pycopancore version: {pycopancore.__version__}')"
+
+    - name: Update CITATION.cff with current version
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        # Update CITATION.cff with current version using our script
+        python3 scripts/update_citation.py
+        
+        # Commit and push changes if there are any
+        if ! git diff --quiet CITATION.cff; then
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add CITATION.cff
+          git commit -m "Update CITATION.cff to current version [skip ci]"
+          # Handle detached HEAD state by pushing to the tag
+          TAG_NAME=$(git describe --tags --exact-match HEAD 2>/dev/null || echo "v0.8.4")
+          # Create the tag locally if it doesn't exist
+          git tag $TAG_NAME 2>/dev/null || true
+          git push origin $TAG_NAME
+        else
+          echo "No changes to CITATION.cff needed"
+        fi
+
+    - name: Publish to PyPI
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: twine upload dist/*
