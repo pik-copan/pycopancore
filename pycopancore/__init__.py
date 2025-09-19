@@ -15,6 +15,6 @@ try:
     from ._version import __version__
 except ModuleNotFoundError:  # pragma: no cover
     # package is not installed
-    __version__ = "0.8.3"
+    __version__ = "0.8.6"
 
 __all__ = ["__version__"]
