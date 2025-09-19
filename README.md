@@ -26,4 +26,6 @@ See [examples](./examples/) for examples on how to use the framework.
 In case of questions please contact core@pik-potsdam.de or [open an issue](https://github.com/pik-copan/pycopancore/issues/new).
 
 ## Contributing
-Merge requests are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md). For major changes, please open an issue first to discuss what you would like to change.
+Merge requests are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md).
+For major changes, please open an issue first to discuss what you would like to
+change.
