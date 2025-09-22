@@ -35,7 +35,7 @@ To create a new release with automatic CITATION.cff updates, use the release scr
 pip install -e .[dev]
 
 # Create a local release (updates CITATION.cff, commits, tags)
-./scripts/release.sh 0.8.7
+python3 -m pycoupler.release 0.8.7
 
 # Push to repository (triggers CI pipeline)
 # The script will show the correct branch name to push
@@ -64,6 +64,8 @@ The CI pipeline will then automatically:
 - Create GitHub release (if tag push)
 
 This ensures that CITATION.cff always reflects the exact version of the release.
+
+**Note:** This package uses the unified release functionality from `pycoupler`. The release script automatically detects the current package and handles all release operations consistently across all packages.
 
 ## Contributing
 

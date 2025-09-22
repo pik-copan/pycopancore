@@ -36,6 +36,7 @@ dependencies = [
     "python-louvain>=0.9",
     "profilehooks",
     "numba",
+    "pycoupler>=1.5.16",  # For release functionality
 ]
 
 [project.optional-dependencies]
