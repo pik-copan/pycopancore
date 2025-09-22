@@ -115,7 +115,11 @@ def main():
         date = None
     
     updated = update_citation_file(version, date)
-    sys.exit(0 if updated else 1)
+    if updated:
+        print("CITATION.cff has been updated!")
+    else:
+        print("No updates needed for CITATION.cff")
+    sys.exit(0)  # Always success - no updates needed is fine
 
 
 if __name__ == "__main__":

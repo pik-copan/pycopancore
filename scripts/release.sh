@@ -55,10 +55,6 @@ echo "Current branch: $CURRENT_BRANCH"
 # 5. Update CITATION.cff and commit changes (only after all checks pass)
 echo "Updating CITATION.cff..."
 python3 scripts/update_citation.py "$VERSION"
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to update CITATION.cff!"
-    exit 1
-fi
 
 if ! git diff --quiet CITATION.cff; then
     echo "CITATION.cff updated, committing changes..."
