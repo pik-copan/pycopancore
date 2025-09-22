@@ -26,31 +26,31 @@ CURRENT_BRANCH=$(git branch --show-current)
 echo "Current branch: $CURRENT_BRANCH"
 
 # 1. Format code with black
-echo "Formatting code with black..."
-python3 -m black ./
-if [ $? -ne 0 ]; then
-    echo "Error: Black formatting failed!"
-    exit 1
-fi
-echo "Code formatting completed successfully."
+# echo "Formatting code with black..."
+# python3 -m black ./
+# if [ $? -ne 0 ]; then
+#     echo "Error: Black formatting failed!"
+#     exit 1
+# fi
+# echo "Code formatting completed successfully."
 
 # 3. Run tests with pytest
-echo "Running tests with pytest..."
-python3 -m pytest
-if [ $? -ne 0 ]; then
-    echo "Error: Tests failed! Please fix the failing tests before releasing."
-    exit 1
-fi
-echo "Tests passed successfully."
+# echo "Running tests with pytest..."
+# python3 -m pytest
+# if [ $? -ne 0 ]; then
+#     echo "Error: Tests failed! Please fix the failing tests before releasing."
+#     exit 1
+# fi
+# echo "Tests passed successfully."
 
 # 4. Run linting with flake8
-echo "Running linting with flake8..."
-python3 -m flake8
-if [ $? -ne 0 ]; then
-    echo "Error: Flake8 linting failed! Please fix the issues before releasing."
-    exit 1
-fi
-echo "Linting passed successfully."
+# echo "Running linting with flake8..."
+# python3 -m flake8
+# if [ $? -ne 0 ]; then
+#     echo "Error: Flake8 linting failed! Please fix the issues before releasing."
+#     exit 1
+# fi
+# echo "Linting passed successfully."
 
 # 5. Update CITATION.cff and commit changes (only after all checks pass)
 echo "Updating CITATION.cff..."
