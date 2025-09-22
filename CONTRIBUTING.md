@@ -26,6 +26,45 @@ to your own GitHub account.
 
 Now you're ready to start making contributions!
 
+## Creating Releases
+
+To create a new release with automatic CITATION.cff updates, use the release script:
+
+```bash
+# Install development dependencies (required for release script)
+pip install -e .[dev]
+
+# Create a local release (updates CITATION.cff, commits, tags)
+./scripts/release.sh 0.8.7
+
+# Push to repository (triggers CI pipeline)
+# The script will show the correct branch name to push
+git push origin <current-branch> --tags
+```
+
+The release script will:
+- Update CITATION.cff to the specified version
+- Commit the changes
+- Format code with black
+- Run tests with pytest (fails if tests fail)
+- Run linting with flake8 (fails if issues found)
+- Create the git tag (only if all checks pass)
+
+**Prerequisites:** Install development dependencies first:
+```bash
+pip install -e .[dev]
+```
+
+The CI pipeline will then automatically:
+- Build the package
+- Validate package with twine check
+- Test package installation
+- Update CITATION.cff (if tag push)
+- Upload to PyPI (if tag push)
+- Create GitHub release (if tag push)
+
+This ensures that CITATION.cff always reflects the exact version of the release.
+
 ## Contributing
 
 To contribute to *pycopancore*, please follow these steps:

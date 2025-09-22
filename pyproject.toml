@@ -44,7 +44,7 @@ dev = [
     "pylama",
     "pylint",
     "pytest-cov>=2.5.1",
-    "pylama_pylint",
+    "pylama_pylint"
 ]
 
 [project.urls]

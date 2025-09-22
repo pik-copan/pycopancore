@@ -11,50 +11,52 @@ from pathlib import Path
 
 def get_package_version():
     """Get the current package version."""
+    # First try: get version from Git tag (most reliable for releases)
     try:
-        # Try to import the package and get version
+        result = subprocess.run(['git', 'describe', '--tags', '--abbrev=0'], 
+                              capture_output=True, text=True, check=True)
+        git_tag = result.stdout.strip()
+        # Remove 'v' prefix if present
+        if git_tag.startswith('v'):
+            return git_tag[1:]
+        return git_tag
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pass
+
+    # Second try: import the package and get version
+    try:
         import pycopancore
         return pycopancore.__version__
     except ImportError:
-        # Fallback: try to get version from Git tag
-        try:
-            result = subprocess.run(['git', 'describe', '--tags', '--abbrev=0'], 
-                                  capture_output=True, text=True, check=True)
-            git_tag = result.stdout.strip()
-            # Remove 'v' prefix if present
-            if git_tag.startswith('v'):
-                return git_tag[1:]
-            return git_tag
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            pass
-        
-        # Fallback: try to get version from _version.py file
-        try:
-            version_file = Path("pycopancore/_version.py")
-            if version_file.exists():
-                content = version_file.read_text()
-                # Extract version from __version__ = "x.y.z"
-                import re
-                match = re.search(r'__version__ = ["\']([^"\']+)["\']', content)
-                if match:
-                    return match.group(1)
-        except Exception:
-            pass
-        
-        # Final fallback: try to get version from pyproject.toml
-        try:
-            with open("pyproject.toml", "r") as f:
-                content = f.read()
-            # Extract fallback_version from pyproject.toml
+        pass
+    
+    # Third try: get version from _version.py file
+    try:
+        version_file = Path("pycopancore/_version.py")
+        if version_file.exists():
+            content = version_file.read_text()
+            # Extract version from __version__ = "x.y.z"
             import re
-            match = re.search(r'fallback_version = "([^"]+)"', content)
+            match = re.search(r'__version__ = ["\']([^"\']+)["\']', content)
             if match:
                 return match.group(1)
-        except (FileNotFoundError, Exception):
-            pass
-        
-        print("Error: Could not determine package version")
-        sys.exit(1)
+    except Exception:
+        pass
+    
+    # Final fallback: try to get version from pyproject.toml
+    try:
+        with open("pyproject.toml", "r") as f:
+            content = f.read()
+        # Extract fallback_version from pyproject.toml
+        import re
+        match = re.search(r'fallback_version = "([^"]+)"', content)
+        if match:
+            return match.group(1)
+    except (FileNotFoundError, Exception):
+        pass
+    
+    print("Error: Could not determine package version")
+    sys.exit(1)
 
 
 def update_citation_file(version, date=None):
@@ -112,15 +114,12 @@ def main():
     else:
         date = None
     
-    print(f"Updating CITATION.cff to version {version}")
     updated = update_citation_file(version, date)
-    
     if updated:
         print("CITATION.cff has been updated!")
-        sys.exit(0)
     else:
-        print("No changes were made.")
-        sys.exit(0)
+        print("No updates needed for CITATION.cff")
+    sys.exit(0)  # Always success - no updates needed is fine
 
 
 if __name__ == "__main__":
