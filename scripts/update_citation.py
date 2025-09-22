@@ -114,15 +114,8 @@ def main():
     else:
         date = None
     
-    print(f"Updating CITATION.cff to version {version}")
     updated = update_citation_file(version, date)
-    
-    if updated:
-        print("CITATION.cff has been updated!")
-        sys.exit(0)
-    else:
-        print("No changes were made.")
-        sys.exit(0)
+    sys.exit(0 if updated else 1)
 
 
 if __name__ == "__main__":
