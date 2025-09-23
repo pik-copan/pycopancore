@@ -68,8 +68,8 @@ jobs:
         # Reset any uncommitted changes to avoid including workflow files
         git reset --hard HEAD
         
-        # Update CITATION.cff with current version using our script
-        python3 scripts/update_citation.py
+        # Update CITATION.cff with current version using pycoupler.release
+        python3 -c "from pycoupler.release import update_citation_file; import pycopancore; update_citation_file(pycopancore.__version__)"
         
         # Check if there are changes to commit
         if ! git diff --quiet CITATION.cff; then
