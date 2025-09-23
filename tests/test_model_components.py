@@ -91,7 +91,7 @@ class TestBaseComponents:
         world = World()
         assert world is not None
 
-    # TODO: Fix Cell class - requires world/environment setup, missing _world attribute
+    # TODO: Fix Cell class - requires world/environment setup, missing _world
     # def test_base_cell_creation(self):
     #     """Test base Cell class creation."""
     #     cell = Cell()
@@ -103,7 +103,7 @@ class TestBaseComponents:
     #     env = Environment()
     #     assert env is not None
 
-    # TODO: Fix Individual class - requires cell parameter, missing _cell attribute
+    # TODO: Fix Individual class - requires cell parameter, missing _cell
     # def test_base_individual_creation(self):
     #     """Test base Individual class creation."""
     #     ind = Individual()
@@ -138,43 +138,43 @@ class TestBaseComponents:
         model = Model()
         assert model is not None
 
-    # TODO: Fix Cell class - missing _world attribute, requires proper initialization
+    # TODO: Fix Cell class - missing _world attribute, requires proper initialization  # noqa: E501
     # def test_world_cell_relationship(self):
     #     """Test World-Cell relationship."""
     #     world = World()
     #     cell = Cell()
-    #     
+    #
     #     # Set cell's world
     #     cell.world = world
     #     assert cell.world == world
     #     assert cell in world.cells
 
-    # TODO: Fix Individual class - missing _cell attribute, requires proper initialization
+    # TODO: Fix Individual class - missing _cell attribute, requires proper initialization  # noqa: E501
     # def test_cell_individual_relationship(self):
     #     """Test Cell-Individual relationship."""
     #     cell = Cell()
     #     individual = Individual(cell=cell)
-    #     
+    #
     #     assert individual.cell == cell
     #     assert individual in cell.individuals
 
-    # TODO: Fix SocialSystem class - missing _world attribute, requires proper initialization
+    # TODO: Fix SocialSystem class - missing _world attribute, requires proper initialization  # noqa: E501
     # def test_social_system_hierarchy(self):
     #     """Test SocialSystem hierarchy."""
     #     world = World()
     #     social_system = SocialSystem()
-    #     
+    #
     #     # Set social system's world
     #     social_system.world = world
     #     assert social_system.world == world
     #     assert social_system in world.social_systems
 
-    # TODO: Fix Individual class - social_system is read-only property, requires proper setup
+    # TODO: Fix Individual class - social_system is read-only property, requires proper setup  # noqa: E501
     # def test_individual_social_system_relationship(self):
     #     """Test Individual-SocialSystem relationship."""
     #     social_system = SocialSystem()
     #     individual = Individual()
-    #     
+    #
     #     # Set individual's social system
     #     individual.social_system = social_system
     #     assert individual.social_system == social_system
@@ -189,13 +189,13 @@ class TestSevenDwarfsComponents:
         world = SevenDwarfsWorld()
         assert world is not None
 
-    # TODO: Fix SevenDwarfs Cell - missing assert_valid method, requires model setup
+    # TODO: Fix SevenDwarfs Cell - missing assert_valid method, requires model setup  # noqa: E501
     # def test_seven_dwarfs_cell_creation(self):
     #     """Test SevenDwarfs Cell class creation."""
     #     cell = SevenDwarfsCell()
     #     assert cell is not None
 
-    # TODO: Fix SevenDwarfs Individual - missing social_system attribute, requires model setup
+    # TODO: Fix SevenDwarfs Individual - missing social_system attribute, requires model setup  # noqa: E501
     # def test_seven_dwarfs_individual_creation(self):
     #     """Test SevenDwarfs Individual class creation."""
     #     ind = SevenDwarfsIndividual()
@@ -219,11 +219,11 @@ class TestSevenDwarfsComponents:
     def test_seven_dwarfs_model_entity_types(self):
         """Test SevenDwarfs Model entity types."""
         model = SevenDwarfsModel()
-        
+
         # Check that entity types are defined
-        assert hasattr(model, 'entity_types')
+        assert hasattr(model, "entity_types")
         assert len(model.entity_types) > 0
-        
+
         # Check that all entity types are classes
         for entity_type in model.entity_types:
             assert isinstance(entity_type, type)
@@ -281,60 +281,60 @@ class TestInterfaceComponents:
 class TestComponentIntegration:
     """Test integration between different components."""
 
-    # TODO: Fix integration tests - requires proper model setup and attribute initialization
+    # TODO: Fix integration tests - requires proper model setup and attribute initialization  # noqa: E501
     # def test_world_cell_individual_integration(self):
     #     """Test integration between World, Cell, and Individual."""
     #     world = World()
     #     cell = Cell()
     #     individual = Individual(cell=cell)
-    #     
+    #
     #     # Set relationships
     #     cell.world = world
     #     individual.cell = cell
-    #     
+    #
     #     # Verify relationships
     #     assert individual.world == world
     #     assert individual in world.individuals
     #     assert individual in cell.individuals
     #     assert cell in world.cells
 
-    # TODO: Fix integration tests - requires proper model setup and attribute initialization
+    # TODO: Fix integration tests - requires proper model setup and attribute initialization  # noqa: E501
     # def test_social_system_hierarchy_integration(self):
     #     """Test SocialSystem hierarchy integration."""
     #     world = World()
     #     social_system = SocialSystem()
     #     individual = Individual()
-    #     
+    #
     #     # Set up hierarchy
     #     social_system.world = world
     #     individual.social_system = social_system
-    #     
+    #
     #     # Verify hierarchy
     #     assert individual.world == world
     #     assert individual in world.individuals
     #     assert individual in social_system.individuals
 
-    # TODO: Fix singleton pattern - Culture and Environment can only be instantiated once
+    # TODO: Fix singleton pattern - Culture and Environment can only be instantiated once  # noqa: E501
     # def test_culture_environment_integration(self):
     #     """Test Culture-Environment integration."""
     #     culture = Culture()
     #     environment = Environment()
-    #     
+    #
     #     # Set relationship
     #     culture.environment = environment
-    #     
+    #
     #     # Verify relationship
     #     assert culture.environment == environment
 
-    # TODO: Fix singleton pattern - Metabolism and Environment can only be instantiated once
+    # TODO: Fix singleton pattern - Metabolism and Environment can only be instantiated once  # noqa: E501
     # def test_metabolism_integration(self):
     #     """Test Metabolism integration."""
     #     metabolism = Metabolism()
     #     environment = Environment()
-    #     
+    #
     #     # Set relationship
     #     metabolism.environment = environment
-    #     
+    #
     #     # Verify relationship
     #     assert metabolism.environment == environment
 

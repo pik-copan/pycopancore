@@ -69,12 +69,12 @@ class TestVariable:
             lower_bound=0,
             upper_bound=10,
         )
-        
+
         # Valid values
         assert var._check_valid(5) is True
         assert var._check_valid(0) is True
         assert var._check_valid(10) is True
-        
+
         # Invalid values
         assert var._check_valid(-1)[0] is False
         assert var._check_valid(11)[0] is False
@@ -83,7 +83,7 @@ class TestVariable:
         """Test variable copying."""
         var = Variable("original", "Original variable", default=42)
         copy_var = var.copy()
-        
+
         assert copy_var.name == "original"  # name stays the same
         assert copy_var.desc == "Original variable"  # desc stays the same
         assert copy_var._default_value == 42
@@ -105,11 +105,11 @@ class TestUnit:
         dim = Dimension("length")
         meter = Unit("m", "meter", dimension=dim)
         km = Unit("km", "kilometer", dimension=dim, factor=1000)
-        
+
         # Convert 1000 meters to kilometers
         result = meter.convert(1000, km)
         assert result == 1.0
-        
+
         # Convert 2 kilometers to meters
         result = km.convert(2, meter)
         assert result == 2000.0
@@ -118,7 +118,7 @@ class TestUnit:
 class TestDimension:
     """Test Dimension class functionality."""
 
-    # TODO: Fix Dimension class - name property returns None, likely initialization issue
+    # TODO: Fix Dimension class - name property returns None, likely init issue
     # def test_dimension_creation(self):
     #     """Test basic dimension creation."""
     #     dim = Dimension("mass")
@@ -130,7 +130,7 @@ class TestDimension:
     #     dim1 = Dimension("length")
     #     dim2 = Dimension("length")
     #     dim3 = Dimension("mass")
-    #     
+    #
     #     assert dim1 == dim2
     #     assert dim1 != dim3
 
@@ -143,7 +143,7 @@ class TestDimensionalQuantity:
         dim = Dimension("length")
         unit = Unit("m", "meter", dimension=dim)
         qty = DimensionalQuantity(5.0, unit)
-        
+
         assert qty.number() == 5.0
         assert qty.unit == unit
 
@@ -152,7 +152,7 @@ class TestDimensionalQuantity:
         dim = Dimension("length")
         meter = Unit("m", "meter", dimension=dim)
         km = Unit("km", "kilometer", dimension=dim, factor=1000)
-        
+
         qty = DimensionalQuantity(1000, meter)
         converted = qty.number(km)
         assert converted == 1.0
@@ -171,7 +171,7 @@ class TestOrderedSet:
         s = OrderedSet([1, 2])
         s.add(3)
         assert list(s) == [1, 2, 3]
-        
+
         # Adding duplicate should not change order
         s.add(1)
         assert list(s) == [1, 2, 3]
