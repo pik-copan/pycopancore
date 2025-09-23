@@ -14,4 +14,7 @@ from . import culture as CUL
 
 
 class Individual:
-    is_environmentally_friendly = CUL.is_environmentally_friendly.copy()
+    @property
+    def is_environmentally_friendly(self):
+        """Get the environmentally friendly variable from culture."""
+        return CUL.is_environmentally_friendly.copy()

@@ -79,4 +79,12 @@ dimension clear in the following fashion:
 # License: BSD 2-clause license
 
 # Core data model components
+from .variable import Variable
+from .unit import Unit
+from .dimension import Dimension
+from .dimensional_quantity import DimensionalQuantity
+from .ordered_set import OrderedSet
+from .reference_variable import ReferenceVariable
+from .set_variable import SetVariable
+
 # Note: master_data_model is imported by other modules as needed
