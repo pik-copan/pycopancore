@@ -15,15 +15,15 @@
 # defines logics to deal with symbolic expressions and their evaluation
 
 import numpy as np
-import sympy as sp
-from sympy.functions.elementary.piecewise import ExprCondPair
 import scipy.special
+import sympy as sp
 
-from ._simple_expressions import unknown
 from pycopancore import data_model as D
 
+from ._simple_expressions import unknown
 
 # hierarchical aggregation functions:
+
 
 def aggregation(npfunc):
     """Dummy docstring"""
@@ -58,11 +58,12 @@ name2numpy = {
     "var": np.var,
 }
 aggregation_names = set(name2numpy.keys())
-name2aggregation = {name: aggregation(func)
-                    for name, func in name2numpy.items()}
-
+name2aggregation = {
+    name: aggregation(func) for name, func in name2numpy.items()
+}
 
 # hierarchical broadcasting:
+
 
 def _broadcast(values, lens):
     """Dummy docstring"""
@@ -106,8 +107,7 @@ def get_cardinalities_and_branchings(expr):
         return expr.cardinalities, expr.branchings
     except BaseException:
         # use longest cardinalities of args:
-        cbs = [get_cardinalities_and_branchings(arg)
-               for arg in expr.args]
+        cbs = [get_cardinalities_and_branchings(arg) for arg in expr.args]
         if len(cbs) == 0:
             return [1], []
         return cbs[np.argmax([len(c[0]) for c in cbs])]
@@ -126,17 +126,19 @@ class _DotConstruct(sp.AtomicExpr):
     """
 
     _start = None
-    """the entity-type, process taxon, ReferenceVariable or SetVariable 
-    at the start of the dot construct, e.g. SocialSystem or Environment.cells"""
+    """the entity-type, process taxon, ReferenceVariable or SetVariable
+    at the start of the dot construct, e.g. SocialSystem or Environment.cells
+    """
     _attribute_sequence = None
     """the sequence of further names, which must be codenames of variables,
     e.g. ["cells","population"]"""
     _aggregation = None
-    """the optional name of an aggregation function 
+    """the optional name of an aggregation function
     at the end of the construct, e.g., "sum"."""
     _argument = None
     """the optional argument expression of the aggregation function, e.g.
-    SocialSystem.world.sum.cells.population * SocialSystem.world.sum.cells.capital"""
+    SocialSystem.world.sum.cells.population *
+    SocialSystem.world.sum.cells.capital"""
     _can_be_target = None
     """whether this can be a target (i.e., does not involve aggregation)"""
 
@@ -148,14 +150,13 @@ class _DotConstruct(sp.AtomicExpr):
     args = ()
     is_Add = False
     is_float = False
-#    is_symbol = True
-#    is_Symbol = True
+    #    is_symbol = True
+    #    is_Symbol = True
     precedence = sp.printing.precedence.PRECEDENCE["Atom"]
     _iterable = False
 
     # needed to make sphinx happy:
     __qualname__ = "pycopancore.private._expressions._DotConstruct"
-
 
     # inheritance from Symbol is a little tricky since Symbol has a custom
     # __new__ method that returns the same object everytime the name is the
@@ -163,14 +164,15 @@ class _DotConstruct(sp.AtomicExpr):
     # can multiple copies of a Variable having the same name, to be attached
     # to different entity types:
     @staticmethod
-    def __new__(cls,
-                start,
-                attribute_sequence,
-                *args,
-                aggregation=None,
-                argument=None,
-                **assumptions):
-
+    def __new__(
+        cls,
+        start,
+        attribute_sequence,
+        *args,
+        aggregation=None,
+        argument=None,
+        **assumptions,
+    ):
         uid = str(start)  # repr
 
         if len(attribute_sequence) > 0:
@@ -179,15 +181,12 @@ class _DotConstruct(sp.AtomicExpr):
             uid += "." + aggregation
             if argument:
                 uid += "(" + str(argument) + ")"  # repr
-#        print("_DotConstruct.__new__ with uid", uid)
+        #        print("_DotConstruct.__new__ with uid", uid)
         return super().__new__(cls, uid, **assumptions)
 
-    def __init__(self,
-                 start,
-                 attribute_sequence,
-                 aggregation=None,
-                 argument=None
-                ):
+    def __init__(
+        self, start, attribute_sequence, aggregation=None, argument=None
+    ):
         super().__init__()
 
         if self._initialized is None:
@@ -198,7 +197,7 @@ class _DotConstruct(sp.AtomicExpr):
             self._aggregation = aggregation
             self._argument = argument
 
-            self._can_be_target = (aggregation is None)
+            self._can_be_target = aggregation is None
 
             self._target_class = unknown
             self._target_variable = unknown
@@ -206,9 +205,10 @@ class _DotConstruct(sp.AtomicExpr):
             self._branchings = unknown
             self._cardinalities = unknown
 
-#            print("_DotConstruct.__init__ of",self,"performed")
+        # print("_DotConstruct.__init__ of",self,"performed")
         else:
-#            print("repeated _DotConstruct.__init__ of",self,"skipped")
+            # print("repeated _DotConstruct.__init__ of",self,
+            # "skipped")
             pass
 
     def __getattr__(self, name):
@@ -217,50 +217,61 @@ class _DotConstruct(sp.AtomicExpr):
         attribute, giving special treatment to aggregations"""
         if name == "__qualname__":  # needed to make sphinx happy
             return "DUMMY"  # FIXME!
-#        print("_DotConstruct.__getattr__(", self, ",", name, ")")
+        #        print("_DotConstruct.__getattr__(", self, ",", name, ")")
         if self._argument is not None:  # we are an aggregation with argument
             # append name to argument:
-#            print("extending argument",self._argument,"by",name)
+            #            print("extending argument",self._argument,"by",name)
             newarg = getattr(self._argument, name)
-            newdc = _DotConstruct(self._start,
-                                  self._attribute_sequence,
-                                  aggregation=self._aggregation,
-                                  argument=newarg)
+            newdc = _DotConstruct(
+                self._start,
+                self._attribute_sequence,
+                aggregation=self._aggregation,
+                argument=newarg,
+            )
         elif self._aggregation:  # we are an aggregation without argument yet
             # add an argument:
-            argument = _DotConstruct(self._start,
-                                self._attribute_sequence + [name])
-#            print("adding argument",argument,"to aggregation of type",self._aggregation)
-            newdc = _DotConstruct(self._start,
-                                  self._attribute_sequence,
-                                  aggregation=self._aggregation,
-                                  argument=argument)
+            argument = _DotConstruct(
+                self._start, self._attribute_sequence + [name]
+            )
+            # print("adding argument",argument,"to aggregation of type",
+            #       self._aggregation)
+            newdc = _DotConstruct(
+                self._start,
+                self._attribute_sequence,
+                aggregation=self._aggregation,
+                argument=argument,
+            )
         elif name in aggregation_names:  # we become an aggregation
-#            print("adding aggregation of type",name)
-            newdc = _DotConstruct(self._start,
-                                  self._attribute_sequence,
-                                  aggregation=name)
+            #            print("adding aggregation of type",name)
+            newdc = _DotConstruct(
+                self._start, self._attribute_sequence, aggregation=name
+            )
         else:  # append name to attribute_sequence:
-#            print("adding variable reference named",name)
-            newdc = _DotConstruct(self._start,
-                                  self._attribute_sequence + [name])
+            #            print("adding variable reference named",name)
+            newdc = _DotConstruct(
+                self._start, self._attribute_sequence + [name]
+            )
         return newdc
         # Note that this causes hasattr(...) to always return True!
         # Hoping this causes no problem...
 
     def __call__(self, *args, **kwargs):
-        """calling is only allowed if we are an aggregation without argument yet,
-        and results in adding an argument"""
+        """calling is only allowed if we are an aggregation without argument
+        yet, and results in adding an argument"""
         # TODO: reactivate the following line after fixing sphinx bug:
-#        assert self._aggregation and not self._argument, "can't have brackets here"
+        #        assert self._aggregation and not self._argument,
+        #        "can't have brackets here"
         assert len(args) == 1, "must have exactly one argument"
-        return _DotConstruct(self._start,
-                             self._attribute_sequence,
-                             aggregation=self._aggregation,
-                             argument=args[0])
-# TODO: understand why an earlier version had this:
-#        else:
-#            return sp.AtomicExpr()
+        return _DotConstruct(
+            self._start,
+            self._attribute_sequence,
+            aggregation=self._aggregation,
+            argument=args[0],
+        )
+
+    # TODO: understand why an earlier version had this:
+    #        else:
+    #            return sp.AtomicExpr()
 
     def __repr__(self):
         r = repr(self._start)
@@ -273,7 +284,7 @@ class _DotConstruct(sp.AtomicExpr):
         return r
 
     def __str__(self):
-#        return self.__repr__()
+        #        return self.__repr__()
         r = str(self._start)
         if len(self._attribute_sequence) > 0:
             r += "." + ".".join(self._attribute_sequence)
@@ -300,16 +311,16 @@ class _DotConstruct(sp.AtomicExpr):
     def _eval_Eq(*args, **kwargs):
         return None
 
-# this does not work unfortunately:
-#    def __eq__(self, other):
-#        print("eq?")
-#        if self._target_instances is unknown:
-#            print("std.")
-#            return sp.AtomicExpr.__eq__(self, other)
-#        else:
-#            print("Eq")
-#            return sp.Eq(self, other)
-# so A == B cannot be used in formulas, instead sp.Eq(A,B) must be used.
+    # this does not work unfortunately:
+    #    def __eq__(self, other):
+    #        print("eq?")
+    #        if self._target_instances is unknown:
+    #            print("std.")
+    #            return sp.AtomicExpr.__eq__(self, other)
+    #        else:
+    #            print("Eq")
+    #            return sp.Eq(self, other)
+    # so A == B cannot be used in formulas, instead sp.Eq(A,B) must be used.
 
     # TODO: put a leading underscore before as many method names as possible
     # (only not those needed by sympy), to avoid name clashes with variables
@@ -338,7 +349,7 @@ class _DotConstruct(sp.AtomicExpr):
                 assert isinstance(var, (D.ReferenceVariable, D.SetVariable))
                 cls = var.type
             self._target_class = cls
-#            print("finding target class of",self,"as",cls)
+        #            print("finding target class of",self,"as",cls)
         return self._target_class
 
     @property  # read-only
@@ -346,9 +357,10 @@ class _DotConstruct(sp.AtomicExpr):
         """return the Variable object representing the target attribute"""
         assert self._can_be_target, "cannot serve as target"
         if self._target_variable is unknown:
-            self._target_variable = getattr(self.target_class,
-                                            self._attribute_sequence[-1])
-#            print("getting target variable of",self,"as",self._target_variable)
+            self._target_variable = getattr(
+                self.target_class, self._attribute_sequence[-1]
+            )
+        # print("getting target variable of",self,"as", self._target_variable)
         return self._target_variable
 
     @property  # read-only
@@ -387,11 +399,14 @@ class _DotConstruct(sp.AtomicExpr):
         for name in self._attribute_sequence[:-1]:
             # each item is a set of instances:
             if len(items) > 0 and hasattr(items[0], "__iter__"):
-                branchings.append([len(instance_set)
-                                   for instance_set in items])
-                items = [getattr(i, name)
-                         for instance_set in items
-                         for i in instance_set]
+                branchings.append(
+                    [len(instance_set) for instance_set in items]
+                )
+                items = [
+                    getattr(i, name)
+                    for instance_set in items
+                    for i in instance_set
+                ]
                 # store cardinality after the branching:
                 cardinalities.append(len(items))
             else:
@@ -399,11 +414,8 @@ class _DotConstruct(sp.AtomicExpr):
                 # items may now be a list of instances or a list of sets of
                 # instances...
         if len(items) > 0 and hasattr(items[0], "__iter__"):
-            branchings.append([len(instance_set)
-                               for instance_set in items])
-            items = [i
-                     for instance_set in items
-                     for i in instance_set]
+            branchings.append([len(instance_set) for instance_set in items])
+            items = [i for instance_set in items for i in instance_set]
             # store cardinality after the branching:
             cardinalities.append(len(items))
         self._target_instances = items
@@ -416,43 +428,51 @@ class _DotConstruct(sp.AtomicExpr):
         """gets referenced attribute values and performs aggregations
         where necessary.
         """
-#        print("eval",self)
+        #        print("eval",self)
         try:
-            items = self.owning_class.instances if instances is None else instances
-        except:
+            items = (
+                self.owning_class.instances if instances is None else instances
+            )
+        except Exception:
             print(self)
             raise Exception
         if isinstance(self._start, D.Variable):
             items = [getattr(i, self._start.codename) for i in items]
         for pos, name in enumerate(self._attribute_sequence):
             if len(items) > 0 and hasattr(items[0], "__iter__"):
-                items = [getattr(i, name)
-                         for instance_set in items
-                         for i in instance_set]
+                items = [
+                    getattr(i, name)
+                    for instance_set in items
+                    for i in instance_set
+                ]
             else:
                 items = [getattr(i, name) for i in items]
         if self._aggregation:
             assert self._argument is not None, "aggregation without argument"
             # make sure items is list of instances not list of sets:
             if len(items) > 0 and hasattr(items[0], "__iter__"):
-                items = [i
-                         for instance_set in items
-                         for i in instance_set]
+                items = [i for instance_set in items for i in instance_set]
             # sic! (not items!):
             arg_values = eval(self._argument, instances)
-            cardinalities, branchings = \
-                get_cardinalities_and_branchings(self._argument)
+            cardinalities, branchings = get_cardinalities_and_branchings(
+                self._argument
+            )
             try:
                 aggregation_level = cardinalities.index(len(items))
-            except:
+            except ValueError:
                 aggregation_level = len(cardinalities) - 1
-            layout = branchings[aggregation_level:] \
-                if aggregation_level < len(cardinalities) - 1 \
+            layout = (
+                branchings[aggregation_level:]
+                if aggregation_level < len(cardinalities) - 1
                 else [[1 for i in items]]
+            )
             lens = layout2lens(layout)
-            items = name2aggregation[self._aggregation](arg_values, lens) \
-                        if len(arg_values) > 0 else [0 for l in lens]
-#            print("aggregation",self,items)
+            items = (
+                name2aggregation[self._aggregation](arg_values, lens)
+                if len(arg_values) > 0
+                else [0 for length in lens]
+            )
+        #            print("aggregation",self,items)
         return items
 
     def _broadcast(self, values):
@@ -490,9 +510,9 @@ class _DotConstruct(sp.AtomicExpr):
         for pos, i in enumerate(self.target_instances):
             setattr(i, name, values[pos])
 
-#    def __iter__(self):
-#        print("AHA!")
-#        yield self
+    #    def __iter__(self):
+    #        print("AHA!")
+    #        yield self
 
     def _eval_expand_power_base(self, **kwargs):
         return self
@@ -549,6 +569,7 @@ _cached_iteration = None
 
 have_warned = False
 
+
 # TODO: use a separate cache for expressions that do not change during ode
 # integration and devaluate it only between integration intervals.
 # TODO: also use sympy to simplify and maybe even solve systems of equations
@@ -559,7 +580,7 @@ def _eval(expr, iteration=None):
             # still up to date, so try returning vals from cache:
             try:
                 res = _cached_values[expr]
-#                print("read from cache:",expr)
+                #                print("read from cache:",expr)
                 return res
             except KeyError:
                 pass
@@ -569,15 +590,19 @@ def _eval(expr, iteration=None):
             _cached_iteration = iteration
     t = type(expr)
     tt = type(t)
-    if (isinstance(expr, sp.Basic) or tt == sp.FunctionClass) \
-            and len(expr.args) > 0 and t != sp.Piecewise:
+    if (
+        (isinstance(expr, sp.Basic) or tt == sp.FunctionClass)
+        and len(expr.args) > 0
+        and t != sp.Piecewise
+    ):
         args = expr.args
         argvals = [None for a in args]
         argcards = [None for a in args]
         argbrs = [None for a in args]
         for i, arg in enumerate(args):
-            argvals[i], argcards[i], argbrs[i] = \
-                _eval(arg, iteration=iteration)
+            argvals[i], argcards[i], argbrs[i] = _eval(
+                arg, iteration=iteration
+            )
         # TODO: broadcast shorter args to level of longest arg!
         longest = np.argmax([len(c) for c in argcards])
         cardinalities = argcards[longest]
@@ -598,7 +623,10 @@ def _eval(expr, iteration=None):
     # binary operators:
     elif t in binary2numpy:
         vals = binary2numpy[t](argvals[0], argvals[1])
-    elif t == sp.Piecewise: # only works for Piecewise constructs of the form (iftrue, cond), (iffalse, True) yet!
+    elif (
+        t == sp.Piecewise
+    ):  # only works for Piecewise constructs of the form (iftrue, cond),
+        # (iffalse, True) yet!
         args = expr.args
         piecevals = [None for a in args]
         piececards = [None for a in args]
@@ -607,10 +635,12 @@ def _eval(expr, iteration=None):
         condcards = [None for a in args]
         condbrs = [None for a in args]
         for i, arg in enumerate(args):
-            piecevals[i], piececards[i], piecebrs[i] = \
-                _eval(arg[0], iteration=iteration)
-            condvals[i], condcards[i], condbrs[i] = \
-                _eval(arg[1], iteration=iteration)
+            piecevals[i], piececards[i], piecebrs[i] = _eval(
+                arg[0], iteration=iteration
+            )
+            condvals[i], condcards[i], condbrs[i] = _eval(
+                arg[1], iteration=iteration
+            )
         # TODO: broadcast shorter args to level of longest arg!
         longest = np.argmax([len(c) for c in piececards])
         cardinalities = piececards[longest]
@@ -628,15 +658,21 @@ def _eval(expr, iteration=None):
                 length = condvals[i].size
                 pos = 0 if length == 1 else cardinalities.index(length)
                 condvals[i] = broadcast(condvals[i], branchings[pos:])
-        assert np.all(condvals[1]), "Piecewise only works with args of the form (iftrue, cond), (iffalse, True) yet!"
+        assert np.all(
+            condvals[1]
+        ), "Piecewise only works with args of the form (iftrue, cond), (iffalse, True) yet!"  # noqa: E501
         truthvals = condvals[0]
-        trues = list(np.where(truthvals == True)[0])  # "==" is correct here, since it may be a sympy.True!! Do not replace "==" by "is"!!
+        # "==" is correct here, since it may be a sympy.True!!
+        # Do not replace "==" by "is"!!
+        trues = list(np.where(truthvals)[0])
         vals = piecevals[1]
         vals[trues] = piecevals[0][trues]
     # ternary operators:
     elif t == sp.ITE:
         truthvals = argvals[0]
-        trues = list(np.where(truthvals == True)[0])  # "==" is correct here, since it may be a sympy.True!! Do not replace "==" by "is"!!
+        # "==" is correct here, since it may be a sympy.True!!
+        # Do not replace "==" by "is"!!
+        trues = list(np.where(truthvals)[0])
         vals = argvals[2]
         vals[trues] = argvals[1][trues]
     # n-ary operators:
@@ -653,31 +689,39 @@ def _eval(expr, iteration=None):
         base = argvals[0]
         exponent = argvals[1]
         # FIXME: do the following much better!
-#        EPS = 1e-10
-#        LARGE = 1e50
-#        base[np.where(np.isnan(base))] = 0
-#        # try to avoid overflows due to (small abs)**(negative):
-#        base[np.where(np.logical_and(np.abs(base) < EPS, exponent < 0))] = EPS
-#        # try to avoid overflows due to (large abs)**(positive):
-#        base[np.where(np.logical_and(
-#             np.abs(base) > LARGE, exponent > 0))] = LARGE
-#        # try to avoid invalid values due to (negative)**(non-integer):
-#        base[np.where(np.logical_and(base < 0, exponent % 1 != 0))] = EPS
-#        print(base[:10],exponent[:10])
+        # EPS = 1e-10
+        # LARGE = 1e50
+        # base[np.where(np.isnan(base))] = 0
+        # # try to avoid overflows due to (small abs)**(negative):
+        # base[np.where(np.logical_and(np.abs(base) < EPS, exponent < 0))] =EPS
+        # # try to avoid overflows due to (large abs)**(positive):
+        # base[np.where(np.logical_and(
+        #      np.abs(base) > LARGE, exponent > 0))] = LARGE
+        # # try to avoid invalid values due to (negative)**(non-integer):
+        # base[np.where(np.logical_and(base < 0, exponent % 1 != 0))] = EPS
+        # print(base[:10],exponent[:10])
         try:
             pass
-#            base[np.where((base == 0)*(exponent < 0))] = 1e-10
-        except:
+        #            base[np.where((base == 0)*(exponent < 0))] = 1e-10
+        except Exception:
             print("oops! couldn't set values")
-        vals = base ** exponent
+        vals = base**exponent
         isn = np.isnan(vals.astype("float"))
         if np.any(isn):
             wh = np.where(isn)[0]
             global have_warned
             if not have_warned:
                 have_warned = True
-                print("Warning: invalid value encountered in power\nbase:",
-                      args[0], "=", base[wh], "\nexponent:", args[1], "=", exponent[wh])
+                print(
+                    "Warning: invalid value encountered in power\nbase:",
+                    args[0],
+                    "=",
+                    base[wh],
+                    "\nexponent:",
+                    args[1],
+                    "=",
+                    exponent[wh],
+                )
             vals[wh] = 0  # TODO: is this a good idea?
     # TODO: other types of expressions, including function evaluations!
     # other functions/unary operators:
@@ -699,7 +743,7 @@ def _eval(expr, iteration=None):
     if iteration is not None:
         # store vals in cache:
         _cached_values[expr] = (vals, cardinalities, branchings)
-#        print("stored in cache:",expr)
+    #        print("stored in cache:",expr)
     return vals, cardinalities, branchings
 
 

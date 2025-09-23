@@ -14,5 +14,4 @@ from . import culture as CUL
 
 
 class Individual:
-
     is_environmentally_friendly = CUL.is_environmentally_friendly.copy()

@@ -9,25 +9,30 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-
-# TODOs: 
+# TODOs:
 # - rename to ScipyODERunner
 # - enable verbosity level, use proper logger
 
-from pycopancore.process_types import Event, Step
+from time import time
+
+import numpy as np
+from scipy import integrate
+
 from pycopancore.data_model import Variable
+from pycopancore.private._abstract_entity_mixin import (
+    _AbstractEntityMixin,
+)
 from pycopancore.private._abstract_runner import _AbstractRunner
 from pycopancore.private._expressions import eval
 from pycopancore.private._simple_expressions import unknown
-from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
-from pycopancore.private._trajectory_dictionary import _TrajectoryDictionary
+from pycopancore.private._trajectory_dictionary import (
+    _TrajectoryDictionary,
+)
+from pycopancore.process_types import Event, Step
+
 # TODO: discuss whether this makes sense or leads to problems:
 from pycopancore.runners.hooks import Hooks
 
-from scipy import integrate
-import numpy as np
-
-from time import time
 # import sys
 
 # from profilehooks import coverage, profile
@@ -43,11 +48,7 @@ class Runner(_AbstractRunner):
     _current_iteration = None
     """counter for expression evaluation cache"""
 
-    def __init__(self,
-                 model,
-                 *,
-                 termination_calls=None
-                 ):
+    def __init__(self, model, *, termination_calls=None):
         """Instantiate a Runner.
 
         Parameters
@@ -79,7 +80,7 @@ class Runner(_AbstractRunner):
         # initialize counter:
         self._current_iteration = 0
 
-#    @profile  # generates time profiling information
+    #    @profile  # generates time profiling information
     def apply_explicits(self, t):
         """Apply all Explicit processes.
 
@@ -96,18 +97,19 @@ class Runner(_AbstractRunner):
         # entities' attributes all the time (profiling has shown that this
         # takes a significant portion of the time).
         for p in self.explicit_processes:
-#            print(t,"Process",p)
-            spec = p.specification  # either a list of symbolic expressions or a method
+            #            print(t,"Process",p)
+            spec = (
+                p.specification
+            )  # either a list of symbolic expressions or a method
             if isinstance(spec, list):
                 # it's a list of symbolic expressions, one for each target in
                 # the same order as in "targets". hence we loop over those:
                 for i, target in enumerate(p.targets):
-#                    print("Process",p,"target",target)
+                    #                    print("Process",p,"target",target)
                     # evaluate corresponding expression,
                     # giving a list of values, one for each instance,
                     # in an order determined by the target:
-                    values = eval(spec[i],
-                                  self._current_iteration)
+                    values = eval(spec[i], self._current_iteration)
                     # note that values may have different length than
                     # p.owning_class.instances due to broadcasting effects
                     # if the target is a dotconstruct.
@@ -120,11 +122,14 @@ class Runner(_AbstractRunner):
                 for inst in p.owning_class.instances:
                     spec(inst, t)
 
-#    @profile  # generates time profiling information
-    def get_rhs_array(self,
-                      t, value_array  # this order is correct for use with scipy.ode class!
-                      # value_array, t  # this order would be correct for use with scipy.odeint function
-                      ):
+    #    @profile  # generates time profiling information
+    def get_rhs_array(
+        self,
+        t,
+        value_array,  # this order is correct for use with scipy.ode class!
+        # value_array, t  # this order would be correct for use with
+        # scipy.odeint function
+    ):
         """Return RHS of composite ODE system as an array.
 
         Will be passed to scipy.ode class.
@@ -141,7 +146,9 @@ class Runner(_AbstractRunner):
         array
             array of derivatives in same order as value_array
         """
-        self._current_iteration += 1  # marks current evaluation caches as outdated
+        self._current_iteration += (
+            1  # marks current evaluation caches as outdated
+        )
 
         # copy values from value_array into instance attributes,
         # and clear target instances' derivative attributes:
@@ -149,7 +156,7 @@ class Runner(_AbstractRunner):
             var = target.target_variable
             # use the values stored in the slice of value_array specified
             # by the target's _from and _to attributes:
-            var.fast_set_values(values=value_array[target._from:target._to])
+            var.fast_set_values(values=value_array[target._from : target._to])
             var.clear_derivatives()
 
         # Execute all explicit processes (3.1.2 in runner scheme):
@@ -170,8 +177,10 @@ class Runner(_AbstractRunner):
                     if isinstance(target, Variable):
                         # add result directly to output array
                         # (rather than in instances' derivative attributes):
-#                        print("storing into summands_array for",target,"in",p)
-                        summands_array[target._from:target._to] += summands
+                        # print(
+                        # "storing into summands_array for",target,"in",p
+                        # )
+                        summands_array[target._from : target._to] += summands
                     else:
                         # summands may have different length than
                         # p.owning_class.instances due to broadcasting effects
@@ -181,7 +190,7 @@ class Runner(_AbstractRunner):
                         # instead, we add terms directly to target instances'
                         # derivative attributes where they will be read from
                         # later:
-#                        print("calling add_derivatives on",target,"in",p)
+                        # print("calling add_derivatives on",target,"in",p)
                         target.add_derivatives(summands)
                         # TODO: use an njitted function add2array(array,
                         # positions, values) and expr._target_positions based
@@ -193,41 +202,46 @@ class Runner(_AbstractRunner):
                 # call process' implementation method for each of it's
                 # owning class' (!) instances. This will add terms to
                 # the target (!) instances' derivative attributes:
-#                print("calling spec for",p,"with targets",p.targets)
+                # print("calling spec for",p,"with targets",p.targets)
                 for inst in p.owning_class.instances:
                     spec(inst, t)
 
         # compose complete derivative array:
         derivative_array = np.zeros(value_array.size)
         for target in self.model.ODE_targets:
-#            print("target:",target)
+            #            print("target:",target)
             if isinstance(target, Variable):
                 # add terms from summands_array to derivative attributes:
-#                print("adding from summands_array for",target)
-#                print(" old:",target.target_variable.get_derivatives(
-#                            instances=target.target_class.instances))
-#                print(" plus:",summands_array[target._from:target._to])
-                target.add_derivatives(summands_array[target._from:target._to])
-#                print(" new:",target.target_variable.get_derivatives(
-#                            instances=target.target_class.instances))
+                # print("adding from summands_array for",target)
+                # print(" old:",target.target_variable.get_derivatives(
+                #             instances=target.target_class.instances))
+                # print(" plus:",summands_array[target._from:target._to])
+                target.add_derivatives(
+                    summands_array[target._from : target._to]
+                )
+            # print(" new:",target.target_variable.get_derivatives(
+            #             instances=target.target_class.instances))
             # extract complete derivative terms from derivative attributes:
-            derivative_array[target._from:target._to] = \
+            derivative_array[target._from : target._to] = (
                 target.target_variable.get_derivatives(
-                            instances=target.target_class.instances)
-#        print("derivs:",derivative_array)
+                    instances=target.target_class.instances
+                )
+            )
+        #        print("derivs:",derivative_array)
         return derivative_array
 
     # @profile
-    def run(self,
-            *,
-            t_0=0,
-            t_1,
-            dt,  # TODO: rename to "resolution" since it is only an upper bound?
-            exclusions=None,
-            # TODO: add some kwargs for choosing solver and setting its params
-            max_resolution=False,
-            add_to_output=None  # optional list of variables to include in output
-            ):
+    def run(
+        self,
+        *,
+        t_0=0,
+        t_1,
+        dt,  # TODO: rename to "resolution" since it is only an upper bound?
+        exclusions=None,
+        # TODO: add some kwargs for choosing solver and setting its params
+        max_resolution=False,
+        add_to_output=None,  # optional list of variables to include in output
+    ):
         """Run the model for a specified time interval.
 
         Run the model by simulating all processes in the right order in a way
@@ -255,8 +269,15 @@ class Runner(_AbstractRunner):
                 key: entity or taxon,
                 value: list of variable values in same order as time points.
         """
-        print("\nRunning from", t_0, "to", t_1, "with output at least every",
-              dt, "...")
+        print(
+            "\nRunning from",
+            t_0,
+            "to",
+            t_1,
+            "with output at least every",
+            dt,
+            "...",
+        )
 
         # Initialize running time variable to starting time:
         t = t_0
@@ -278,12 +299,9 @@ class Runner(_AbstractRunner):
                 targets_to_save.remove(var)
 
         # Save initial state to output dict:
-        self.trajectory_dict['t'] = [t]
+        self.trajectory_dict["t"] = [t]
 
-        self.save_to_traj(targets_to_save,
-                          add_to_output,
-                          max_resolution,
-                          dt)
+        self.save_to_traj(targets_to_save, add_to_output, max_resolution, dt)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # Create dictionary containing discontinuities:
@@ -294,11 +312,8 @@ class Runner(_AbstractRunner):
         self.apply_explicits(t_0)
 
         # Only now save initial state to output dict:
-        self.trajectory_dict['t'] = [t]
-        self.save_to_traj(targets_to_save,
-                          add_to_output,
-                          max_resolution,
-                          dt)
+        self.trajectory_dict["t"] = [t]
+        self.save_to_traj(targets_to_save, add_to_output, max_resolution, dt)
         # TODO: have save_to_traj() save t as well to have this cleaner.
 
         # TODO: discuss whether hooks make sense, then maybe:
@@ -317,18 +332,24 @@ class Runner(_AbstractRunner):
             # TODO: Check if the following loop is correct:
             for inst in event.owning_class.instances:
                 # inst is a process taxon or entity
-                assert eventtype in ("rate", "time"), \
-                    "unsupported type of Event"
+                assert eventtype in (
+                    "rate",
+                    "time",
+                ), "unsupported type of Event"
                 if eventtype == "rate":
-                    assert rate_or_timefunc > 0, \
-                        "zero, negative, or varying rates not supported yet."
-                    next_time = t_0 + np.random.exponential(1. / rate_or_timefunc)
-                    # TODO: if rate_or_timefunc is a function or symbolic expression in this case,
-                    # it returns a potentially time-varying rate that depends on state,
-                    # hence it must be used in ode integration to integrate
-                    # its cumulative distribution function, and when the
-                    # latter crosses a threshold that we randomly draw
-                    # here, solout must terminate (see below).
+                    assert (
+                        rate_or_timefunc > 0
+                    ), "zero, negative, or varying rates not supported yet."
+                    next_time = t_0 + np.random.exponential(
+                        1.0 / rate_or_timefunc
+                    )
+                    # TODO: if rate_or_timefunc is a function or symbolic
+                    # expression in this case, it returns a potentially
+                    # time-varying rate that depends on state, hence it must be
+                    # used in ode integration to integrate its cumulative
+                    # distribution function, and when the latter crosses a
+                    # threshold that we randomly draw here, solout must
+                    # terminate (see below).
                 elif eventtype == "time":
                     # in this case, rate_or_timefunc directly returns a time:
                     next_time = rate_or_timefunc(inst, t)
@@ -381,11 +402,12 @@ class Runner(_AbstractRunner):
         # apparently dopri5 is faster than vode, so we use dopri5.
         # in vode, choosing bdf or adams doesn't seem to make any difference
         # solver.set_integrator("vode", max_step=dt, method="bdf")
-        solver.set_integrator("dopri5",  # TODO: make this a parameter?
-                              max_step=dt,
-                              verbosity=1,
-                              nsteps=10000  # TODO: make this a parameter?
-                              )
+        solver.set_integrator(
+            "dopri5",  # TODO: make this a parameter?
+            max_step=dt,
+            verbosity=1,
+            nsteps=10000,  # TODO: make this a parameter?
+        )
 
         # running lists of times and solutions:
         times = []
@@ -412,47 +434,56 @@ class Runner(_AbstractRunner):
             # due to events without a priori known occurrence
             # time! if solout returns 0 (or -1?), solver will
             # terminate. Similarly for solver "vode" above
-            print("      t =", sol_t, "            ", end='\r')
+            print("      t =", sol_t, "            ", end="\r")
             # TODO: return value??
+
         solver.set_solout(solout)
 
         # Now loop until end time or early termination is reached:
         while t < t_1:
             # check whether to terminate early:
             if self.terminate():
-                print('Terminating run early at time ', t)
+                print("Terminating run early at time ", t)
                 break
             # Get next discontinuity to find the next timestep where something
             # happens.
             # If there are no discontinuities, the next_discontinuities
             # dict is empty, therefore try is necessary:
             try:
-                next_time = min(t_1, min(next_discontinuities.keys()))  # TODO: speed-up by using different data type for next_discontinuities, something like OrderedDict?
+                # TODO: speed-up by using different data type for
+                # next_discontinuities, something like OrderedDict?
+                next_time = min(t_1, min(next_discontinuities.keys()))
             except ValueError:
                 next_time = t_1
 
             # Call ode solver if there are any ODE processes:
             if self.model.ODE_processes:
-
                 print("  Running smoothly from", t, "to", next_time, "...")
 
                 # clear all targets _DotConstructs' caches of target instances
                 # since events and steps may have changed instance references:
-                for target in self.model.ODE_targets \
-                        + self.model.explicit_targets:
+                for target in (
+                    self.model.ODE_targets + self.model.explicit_targets
+                ):
                     target._target_instances = unknown
 
                 # determine array layouts (froms and tos of slices)
                 # and compose initial value-array:
                 print("    Composing initial value array...")
                 # list of target variables:
-                target_variables = list(set(
-                        [target.target_variable
-                         for target in self.model.ODE_targets]))
+                target_variables = list(
+                    set(
+                        [
+                            target.target_variable
+                            for target in self.model.ODE_targets
+                        ]
+                    )
+                )
                 # list of array slice lengths, one for each target variable,
                 # length equalling number of target instances:
-                lens = [len(var.owning_class.instances)
-                        for var in target_variables]
+                lens = [
+                    len(var.owning_class.instances) for var in target_variables
+                ]
                 # upper slice index is given by cumulative sum of lens:
                 tos = np.cumsum(lens)
                 # lower slice index is previous slice's upper index:
@@ -466,8 +497,9 @@ class Runner(_AbstractRunner):
                     var._from = froms[i]
                     var._to = tos[i]
                     # get initial values from instances and store in array:
-                    initial_array_ode[froms[i]:tos[i]] = \
-                        var.eval(instances=var.owning_class.instances)
+                    initial_array_ode[froms[i] : tos[i]] = var.eval(
+                        instances=var.owning_class.instances
+                    )
                 # store slice indices also in targets:
                 for target in self.model.ODE_targets:
                     var = target.target_variable
@@ -495,15 +527,22 @@ class Runner(_AbstractRunner):
 
                 # TODO: capture solver failures and report any errors!
 
-                print("      ...took", time()-_starttime, "seconds and",
-                      len(times), "time steps")
+                print(
+                    "      ...took",
+                    time() - _starttime,
+                    "seconds and",
+                    len(times),
+                    "time steps",
+                )
 
                 # Save t values to output dict:
-                self.trajectory_dict['t'] += list(ts)
+                self.trajectory_dict["t"] += list(ts)
 
                 print("    Saving results to output dict...")
                 # save trajectory of ODE variables to output dict:
-                tlen = len(self.trajectory_dict['t'])  # no. of simulated time points
+                tlen = len(
+                    self.trajectory_dict["t"]
+                )  # no. of simulated time points
                 for i, target in enumerate(self.model.ODE_targets):
                     # from this target's slice starting at column target._from,
                     # read results column by column and store in corresponding
@@ -511,18 +550,25 @@ class Runner(_AbstractRunner):
                     for pos, inst in enumerate(target.target_class.instances):
                         # get this instance's value column as a list,
                         # containing the values for all time points:
-                        values = list(
-                                ode_trajectory[:, target._from + pos])
+                        values = list(ode_trajectory[:, target._from + pos])
                         try:
-                            if len(self.trajectory_dict[
-                                       target.target_variable][inst]) < tlen:
+                            if (
+                                len(
+                                    self.trajectory_dict[
+                                        target.target_variable
+                                    ][inst]
+                                )
+                                < tlen
+                            ):
                                 # append to existing list:
-                                self.trajectory_dict[
-                                    target.target_variable][inst] += values
+                                self.trajectory_dict[target.target_variable][
+                                    inst
+                                ] += values
                         except KeyError:
                             # store as new list:
-                            self.trajectory_dict[
-                                target.target_variable][inst] = values
+                            self.trajectory_dict[target.target_variable][
+                                inst
+                            ] = values
 
                 # Take the time steps output by the ODE solver and apply
                 # Explicit processes a posteriori (step 3.3 in runner scheme).
@@ -538,23 +584,31 @@ class Runner(_AbstractRunner):
                 # its result... (is this really true?)
 
                 if len(self.explicit_processes) > 0:
-                    print("    Applying Explicit processes to simulated "
-                          "time points...")
+                    print(
+                        "    Applying Explicit processes to simulated "
+                        "time points..."
+                    )
                     for pos, t in enumerate(ts):
-                        self._current_iteration += 1  # marks current evaluation caches as outdated
+                        self._current_iteration += (
+                            1  # marks current evaluation caches as outdated
+                        )
                         # copy values from returned matrix to instances'
                         # attributes:
                         ode_values = ode_trajectory[pos, :]
                         # read values from result vector in same order as
                         # written into it:
                         for i, var in enumerate(target_variables):
-                            var.fast_set_values(ode_values[var._from:var._to])
+                            var.fast_set_values(
+                                ode_values[var._from : var._to]
+                            )
                         self.apply_explicits(t)
                         # complete the output dictionary:
-                        self.save_to_traj(targets_to_save,
-                                          add_to_output,
-                                          max_resolution,
-                                          dt)
+                        self.save_to_traj(
+                            targets_to_save,
+                            add_to_output,
+                            max_resolution,
+                            dt,
+                        )
 
             # set current model time to end of previous ODE integration:
             t = next_time
@@ -564,10 +618,9 @@ class Runner(_AbstractRunner):
             # Delete the discontinuity from the dictionary and determine when
             # the next one happens:
             if t < t_1 and len(next_discontinuities) > 0:
-
                 # set current model time to end of previous ODE integration:
                 t = next_time
-                self.trajectory_dict['t'].append(t)
+                self.trajectory_dict["t"].append(t)
 
                 print("  Executing Steps and/or Events at", t, "...")
 
@@ -592,42 +645,44 @@ class Runner(_AbstractRunner):
                         eventtype = process.specification[0]
                         rate_or_timefunc = process.specification[1]
                         method = process.specification[2]
-                        # Perform the event by calling its implementation method:
+                        # Perform the event by calling its implementation
+                        # method:
                         method(inst, t)
                         # determine this event's next occurrence:
                         if eventtype == "rate":
                             # draw time from exponential distribution:
-                            next_time = t + \
-                                        np.random.exponential(1. /
-                                                              rate_or_timefunc)
+                            next_time = t + np.random.exponential(
+                                1.0 / rate_or_timefunc
+                            )
                         elif eventtype == "time":
                             # ask event when it next happens:
                             next_time = rate_or_timefunc(inst, t)
                             assert next_time > t, "next time must be > t"
                         # register it:
                         try:
-                            next_discontinuities[next_time].append((process,
-                                                                    inst))
+                            next_discontinuities[next_time].append(
+                                (process, inst)
+                            )
                         except KeyError:
-                            next_discontinuities[next_time] = [(process,
-                                                                inst)]
+                            next_discontinuities[next_time] = [(process, inst)]
                         print("      next time", next_time)
                     elif isinstance(process, Step):
                         print("    Step", process, "@", inst, "...")
                         timefunc = process.specification[0]
                         method = process.specification[1]
-                        # Perform the step by calling its implementation method:
+                        # Perform the step by calling its implementation
+                        # method:
                         method(inst, t)
                         # determine this event's next occurrence:
                         next_time = timefunc(inst, t)
                         assert next_time > t, "next time must be > t"
                         # register it:
                         try:
-                            next_discontinuities[next_time].append((process,
-                                                                    inst))
+                            next_discontinuities[next_time].append(
+                                (process, inst)
+                            )
                         except KeyError:
-                            next_discontinuities[next_time] = [(process,
-                                                                inst)]
+                            next_discontinuities[next_time] = [(process, inst)]
                         print("      next time", next_time)
 
                 # Complete the new state by applying all explicit processes
@@ -639,8 +694,9 @@ class Runner(_AbstractRunner):
                 # Store all information that has been calculated at time t:
                 print("    Completing output dict...")
 
-                self.save_to_traj(targets_to_save, add_to_output,
-                                  max_resolution, dt)
+                self.save_to_traj(
+                    targets_to_save, add_to_output, max_resolution, dt
+                )
 
             # TODO: discuss whether hooks make sense, then maybe:
             # TODO: add hooks to runner scheme
@@ -657,26 +713,23 @@ class Runner(_AbstractRunner):
             Hooks.execute_hooks(Hooks.Types.post, self.model, t_0)
 
         # Assert every list still has the same lenght:
-        print('asserting same lenghts of all entries')
-        tlen = len(self.trajectory_dict['t'])
+        print("asserting same lenghts of all entries")
+        tlen = len(self.trajectory_dict["t"])
         for target in targets_to_save:
             var = target.target_variable
             instances = target.target_class.instances
             for inst in instances:
                 assert len(self.trajectory_dict[var][inst]) == tlen, (
-                    len(self.trajectory_dict[var][inst]), tlen,
+                    len(self.trajectory_dict[var][inst]),
+                    tlen,
                     self.trajectory_dict[var][inst],
-                    self.trajectory_dict['t'],
-                    var
+                    self.trajectory_dict["t"],
+                    var,
                 )
 
         return self.trajectory_dict
 
-    def save_to_traj(self,
-                     targets,
-                     add_to_output,
-                     max_resolution,
-                     dt):
+    def save_to_traj(self, targets, add_to_output, max_resolution, dt):
         """Save simulation results to output dictionary.
 
         Update self.trajectory_dict for some targets.
@@ -699,8 +752,7 @@ class Runner(_AbstractRunner):
             idle_instances = None
             # Check for deactivated instances. The following check is
             # necessary, since Process Taxa cannot be inactive:
-            if issubclass(target.target_class,
-                          _AbstractEntityMixin):
+            if issubclass(target.target_class, _AbstractEntityMixin):
                 idle_instances = target.target_class.idle_entities
             # get values to store from instance attributes:
             values = var.eval(instances)
@@ -713,7 +765,9 @@ class Runner(_AbstractRunner):
                     if len(self.trajectory_dict[var][inst]) < tlen:
                         if isinstance(values[i], list):
                             # when handling lists, python only add references!
-                            self.trajectory_dict[var][inst].append(values[i][:])
+                            self.trajectory_dict[var][inst].append(
+                                values[i][:]
+                            )
                         else:
                             self.trajectory_dict[var][inst].append(values[i])
                     # else do nothing since value was already stored.
@@ -734,9 +788,10 @@ class Runner(_AbstractRunner):
                     try:  # already in trajectory_dict
                         # Check for length of list:
                         if len(self.trajectory_dict[var][inst]) < tlen:
-                            len_of_none = (
-                                tlen - len(self.trajectory_dict[var][inst]))
-                            none_list = [None]*len_of_none
+                            len_of_none = tlen - len(
+                                self.trajectory_dict[var][inst]
+                            )
+                            none_list = [None] * len_of_none
                             # Make list as long as 't' in trajectory_dict:
                             for j in none_list:
                                 self.trajectory_dict[var][inst].append(j)
@@ -744,18 +799,20 @@ class Runner(_AbstractRunner):
                             assert len(self.trajectory_dict[var][inst]) == tlen
                     except KeyError:  # Not yet in trajectory_dict
                         # create new list:
-                        none_list = [None]*tlen
+                        none_list = [None] * tlen
                         self.trajectory_dict[var][inst] = [none_list]
                         assert len(self.trajectory_dict[var][inst]) == tlen
         if max_resolution:
-            print('    Reducing resolution')
-            for i, val in enumerate(self.trajectory_dict['t']):
+            print("    Reducing resolution")
+            for i, val in enumerate(self.trajectory_dict["t"]):
                 # See if 3 timesteps are closer than dt:
-                if (i > 1) and i < (len(self.trajectory_dict['t']) - 10):
-                    diff = (self.trajectory_dict['t'][i + 1]
-                            - self.trajectory_dict['t'][i - 1])
+                if (i > 1) and i < (len(self.trajectory_dict["t"]) - 10):
+                    diff = (
+                        self.trajectory_dict["t"][i + 1]
+                        - self.trajectory_dict["t"][i - 1]
+                    )
                     if diff < dt:
-                        del self.trajectory_dict['t'][i]
+                        del self.trajectory_dict["t"][i]
                         # print(f'deleting, diff={diff}')
                         # delete this value from all trajectories
                         for target in targets:
@@ -763,26 +820,32 @@ class Runner(_AbstractRunner):
                             instances = target.target_class.instances
                             for inst in instances:
                                 # all active entities/taxa
-                                if (len(self.trajectory_dict[var][inst])
-                                        > len(self.trajectory_dict['t'])):
+                                if len(self.trajectory_dict[var][inst]) > len(
+                                    self.trajectory_dict["t"]
+                                ):
                                     del self.trajectory_dict[var][inst][i]
-                                assert len(self.trajectory_dict[var][
-                                               inst]) == len(
-                                    self.trajectory_dict['t'])
-                            if issubclass(target.target_class,
-                                          _AbstractEntityMixin):
+                                assert len(
+                                    self.trajectory_dict[var][inst]
+                                ) == len(self.trajectory_dict["t"])
+                            if issubclass(
+                                target.target_class,
+                                _AbstractEntityMixin,
+                            ):
                                 # check for inactivie entities
-                                idle_instances = target.target_class.idle_entities
+                                idle_instances = (
+                                    target.target_class.idle_entities
+                                )
                                 if idle_instances:
                                     for inst in idle_instances:
-                                        if (len(self.trajectory_dict[var][inst])
-                                                > len(
-                                                self.trajectory_dict['t'])):
-                                            del self.trajectory_dict[var][inst][
-                                                i]
-                                        assert len(self.trajectory_dict[var][
-                                                       inst]) == len(
-                                            self.trajectory_dict['t'])
+                                        if len(
+                                            self.trajectory_dict[var][inst]
+                                        ) > len(self.trajectory_dict["t"]):
+                                            del self.trajectory_dict[var][
+                                                inst
+                                            ][i]
+                                        assert len(
+                                            self.trajectory_dict[var][inst]
+                                        ) == len(self.trajectory_dict["t"])
 
     def terminate(self):
         """Determine if the runner should stop.

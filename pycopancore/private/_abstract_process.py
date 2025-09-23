@@ -16,10 +16,10 @@ It sets the basic structure of processes (ODE,explicit, step, event).
 # Imports
 #
 
-
 #
 # Definition of class _AbstractProcess
 #
+
 
 class _AbstractProcess(object):
     """Define Abstract class for representing types of model processes.

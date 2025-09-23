@@ -9,18 +9,20 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from pycopancore.data_model.master_data_model.environment \
-    import Environment as ENV
-from pycopancore.data_model.master_data_model.metabolism \
-    import Metabolism as MET
-from pycopancore.data_model.master_data_model.dimensions_and_units \
-    import DimensionsAndUnits as DAU
+from pycopancore.data_model.master_data_model.dimensions_and_units import (
+    DimensionsAndUnits as DAU,
+)
+from pycopancore.data_model.master_data_model.environment import (
+    Environment as ENV,
+)
+from pycopancore.data_model.master_data_model.metabolism import (
+    Metabolism as MET,
+)
 
 
 class Cell:
-
     # natural:
-    
+
     land_area = ENV.land_area.copy()
     land_area.default = 1 * DAU.km2
     atmospheric_carbon = ENV.atmospheric_carbon.copy()
@@ -36,32 +38,34 @@ class Cell:
     fossil_carbon = ENV.fossil_carbon.copy()
     discovered_fossil_reserves = ENV.discovered_fossil_reserves.copy()
     undiscovered_fossil_reserves = ENV.undiscovered_fossil_reserves.copy()
-    
-    ocean_atmosphere_diffusion_coefficient = \
+
+    ocean_atmosphere_diffusion_coefficient = (
         ENV.ocean_atmosphere_diffusion_coefficient.copy()
+    )
     carbon_solubility_in_sea_water = ENV.carbon_solubility_in_sea_water.copy()
-    
+
     photosynthesis_carbon_flow = ENV.photosynthesis_carbon_flow.copy()
-    terrestrial_respiration_carbon_flow = \
+    terrestrial_respiration_carbon_flow = (
         ENV.terrestrial_respiration_carbon_flow.copy()
+    )
     plant_respiration_carbon_flow = ENV.plant_respiration_carbon_flow.copy()
     soil_respiration_carbon_flow = ENV.soil_respiration_carbon_flow.copy()
-    
+
     # metabolic:
-    
+
     population = MET.population.copy()
-    
+
     biomass_harvest_flow = MET.biomass_harvest_flow.copy()
     fossil_extraction_flow = MET.fossil_extraction_flow.copy()
     carbon_emission_flow = MET.carbon_emission_flow.copy()
-    
+
     biomass_input_flow = MET.biomass_input_flow.copy()
     fossil_fuel_input_flow = MET.fossil_fuel_input_flow.copy()
     renewable_energy_input_flow = MET.renewable_energy_input_flow.copy()
-    
+
     biomass_energy_density = MET.biomass_energy_density.copy()
     fossil_energy_density = MET.fossil_energy_density.copy()
-    
+
     secondary_energy_flow = MET.secondary_energy_flow.copy()
     total_energy_intensity = MET.total_energy_intensity.copy()
     total_output_flow = MET.economic_output_flow.copy()

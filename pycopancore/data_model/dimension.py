@@ -40,10 +40,17 @@ class Dimension(object):
         self._default_unit = unit
         if unit._dimension is None:
             unit._dimension = self
-#        assert unit.dimension == self  # FIXME: fails
 
-    def __init__(self, is_base=True, name=None, desc=None,
-                 exponents=None, default_unit=None):
+    #        assert unit.dimension == self  # FIXME: fails
+
+    def __init__(
+        self,
+        is_base=True,
+        name=None,
+        desc=None,
+        exponents=None,
+        default_unit=None,
+    ):
         self.is_base = is_base
         if is_base:
             self.name = name
@@ -55,16 +62,43 @@ class Dimension(object):
             self.exponents = exponents
             # TODO: use words "per", "square", "cubic" and sort be descending
             # exponents
-            self.name = " ".join([dim.name + ("" if ex == 1 else "^" + str(ex) if ex >= 0 else "^(" + str(ex) + ")")
-                                  for dim, ex in exponents.items()]) if name is None else name
-            self.desc = "\n\n".join(
-                [dim.name + ": " + dim.desc for dim in exponents.keys()]) if desc is None else desc
+            self.name = (
+                " ".join(
+                    [
+                        dim.name
+                        + (
+                            ""
+                            if ex == 1
+                            else (
+                                "^" + str(ex)
+                                if ex >= 0
+                                else "^(" + str(ex) + ")"
+                            )
+                        )
+                        for dim, ex in exponents.items()
+                    ]
+                )
+                if name is None
+                else name
+            )
+            self.desc = (
+                "\n\n".join(
+                    [dim.name + ": " + dim.desc for dim in exponents.keys()]
+                )
+                if desc is None
+                else desc
+            )
         self._default_unit = default_unit
 
     def named(self, name, desc=None):
         """Named."""
-        return Dimension(is_base=self.is_base, name=name, desc=self.desc if desc is None else desc,
-                         exponents=self.exponents, default_unit=self.default_unit)
+        return Dimension(
+            is_base=self.is_base,
+            name=name,
+            desc=self.desc if desc is None else desc,
+            exponents=self.exponents,
+            default_unit=self.default_unit,
+        )
 
     def __str__(self):
         return self.__repr__()
@@ -80,11 +114,15 @@ class Dimension(object):
 
     def __pow__(self, power):
         """exponentiation **"""
-        return Dimension(is_base=False,
-                         exponents={dim: ex * power for dim,
-                                    ex in self.exponents.items()},
-                         default_unit=self.default_unit**power
-                         if self.default_unit is not None else None)
+        return Dimension(
+            is_base=False,
+            exponents={dim: ex * power for dim, ex in self.exponents.items()},
+            default_unit=(
+                self.default_unit**power
+                if self.default_unit is not None
+                else None
+            ),
+        )
 
     def __mul__(self, other):
         """multiplication *"""
@@ -97,12 +135,16 @@ class Dimension(object):
                     pex.pop(dim)
             else:
                 pex[dim] = ex
-        return Dimension(is_base=False,
-                         exponents=pex,
-                         default_unit=self.default_unit * other.default_unit
-                         if self.default_unit is not None
-                         and other.default_unit is not None
-                         else None)
+        return Dimension(
+            is_base=False,
+            exponents=pex,
+            default_unit=(
+                self.default_unit * other.default_unit
+                if self.default_unit is not None
+                and other.default_unit is not None
+                else None
+            ),
+        )
 
     def __truediv__(self, other):
         """division /"""
@@ -115,10 +157,16 @@ class Dimension(object):
                     qex.pop(dim)
             else:
                 qex[dim] = -ex
-        return Dimension(is_base=False,
-                         exponents=qex,
-                         default_unit=self.default_unit / other.default_unit)
+        return Dimension(
+            is_base=False,
+            exponents=qex,
+            default_unit=self.default_unit / other.default_unit,
+        )
 
 
-nondim = Dimension(name="non-dimensional", desc="non-dimensional",
-                   exponents={}, is_base=False)
+nondim = Dimension(
+    name="non-dimensional",
+    desc="non-dimensional",
+    exponents={},
+    is_base=False,
+)

@@ -13,18 +13,21 @@ then remove these instructions
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import interface as I
+from .. import interface as Interface
+
 # from .... import master_data_model as D
 
 
-class Culture (I.Culture):
+class Culture(Interface.Culture):
     """Culture process taxon mixin implementation class."""
 
     # standard methods:
 
-    def __init__(self,
-                 # *,
-                 **kwargs):
+    def __init__(
+        self,
+        # *,
+        **kwargs,
+    ):
         """Initialize the unique instance of Culture."""
         super().__init__(**kwargs)  # must be the first line
         self.extinction = False

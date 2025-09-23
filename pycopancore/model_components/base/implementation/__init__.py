@@ -13,12 +13,22 @@ This is the base model-component implementation subpackage
 
 # export all used entity types and process taxa from their respective modules:
 
-from .world import World
-from .social_system import SocialSystem
 from .cell import Cell
-from .individual import Individual
-from .group import Group
-
-from .environment import Environment
-from .metabolism import Metabolism
 from .culture import Culture
+from .environment import Environment
+from .group import Group
+from .individual import Individual
+from .metabolism import Metabolism
+from .social_system import SocialSystem
+from .world import World
+
+__all__ = [
+    "World",
+    "SocialSystem",
+    "Cell",
+    "Individual",
+    "Group",
+    "Environment",
+    "Metabolism",
+    "Culture",
+]

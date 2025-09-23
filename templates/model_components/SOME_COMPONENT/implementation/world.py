@@ -14,39 +14,41 @@ then remove these instructions
 # License: BSD 2-clause license
 
 from .. import interface as I
+
 # from .... import master_data_model as D
 
 # TODO: uncomment this if you need ref. variables such as B.World.cells:
-#from ...base import interface as B
+# from ...base import interface as B
 
 # TODO: import those process types you need:
 # from .... import Explicit, ODE, Event, Step
 
-class World (I.World):
+
+class World(I.World):
     """World entity type mixin implementation class."""
 
     # standard methods:
     # TODO: only uncomment when adding custom code!
 
-#     def __init__(self,
-#                  # *,  # TODO: uncomment when adding named args behind here
-#                  **kwargs):
-#         """Initialize an instance of World."""
-#         super().__init__(**kwargs)  # must be the first line
-#         # TODO: add custom code here:
-#         pass
-# 
-#     def deactivate(self):
-#         """Deactivate a World."""
-#         # TODO: add custom code here:
-#         pass
-#         super().deactivate()  # must be the last line
-# 
-#     def reactivate(self):
-#         """Reactivate a World."""
-#         super().reactivate()  # must be the first line
-#         # TODO: add custom code here:
-#         pass
+    #     def __init__(self,
+    #         # *,  # TODO: uncomment when adding named args behind here
+    #         **kwargs):
+    #         """Initialize an instance of World."""
+    #         super().__init__(**kwargs)  # must be the first line
+    #         # TODO: add custom code here:
+    #         pass
+    #
+    #     def deactivate(self):
+    #         """Deactivate a World."""
+    #         # TODO: add custom code here:
+    #         pass
+    #         super().deactivate()  # must be the last line
+    #
+    #     def reactivate(self):
+    #         """Reactivate a World."""
+    #         super().reactivate()  # must be the first line
+    #         # TODO: add custom code here:
+    #         pass
 
     # process-related methods:
 

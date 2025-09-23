@@ -1,4 +1,5 @@
-"""Abstract Environment process taxon class, inherited by base model component."""
+"""Abstract Environment process taxon class, inherited by base model
+component."""
 
 # This file is part of pycopancore.
 #
@@ -8,12 +9,13 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.private._abstract_process_taxon_mixin import \
-    _AbstractProcessTaxonMixin
 from pycopancore.data_model.ordered_set import OrderedSet
+from pycopancore.private._abstract_process_taxon_mixin import (
+    _AbstractProcessTaxonMixin,
+)
 
 
-class Environment (_AbstractProcessTaxonMixin):
+class Environment(_AbstractProcessTaxonMixin):
     """Abstract Environment process taxon class.
 
     Inherited by base model component.

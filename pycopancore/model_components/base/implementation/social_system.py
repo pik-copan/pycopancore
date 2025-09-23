@@ -13,25 +13,20 @@
 from pycopancore.model_components import abstract
 from pycopancore.private._simple_expressions import unknown
 
-from .. import interface as I
+from .. import interface as Interface
 
 
-class SocialSystem (I.SocialSystem, abstract.SocialSystem):
+class SocialSystem(Interface.SocialSystem, abstract.SocialSystem):
     """SocialSystem entity type mixin implementation class.
 
     Base component's SocialSystem mixin that every model must use in composing
-    their SocialSystem class. Inherits from I.SocialSystem as the interface with all
-    necessary variables and parameters.
+    their SocialSystem class. Inherits from Interface.SocialSystem as the
+    interface with all necessary variables and parameters.
     """
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 world,
-                 next_higher_social_system=None,
-                 **kwargs
-                 ):
+    def __init__(self, *, world, next_higher_social_system=None, **kwargs):
         """Initialize an instance of SocialSystem.
 
         Parameters
@@ -70,7 +65,9 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
         """Set the World the SocialSystem is part of."""
         if self._world is not None:
             self._world._social_systems.remove(self)
-        assert isinstance(w, I.World), "world must be of entity type World"
+        assert isinstance(
+            w, Interface.World
+        ), "world must be of entity type World"
         w._social_systems.add(self)
         self._world = w
 
@@ -83,12 +80,15 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
     def next_higher_social_system(self, s):
         """Set next higher social_system."""
         if self._next_higher_social_system is not None:
-            self._next_higher_social_system._next_lower_social_systems.remove(self)
+            self._next_higher_social_system._next_lower_social_systems.remove(
+                self
+            )
             # reset dependent cache:
             self._next_higher_social_system.cells = unknown
         if s is not None:
-            assert isinstance(s, I.SocialSystem), \
-                "next_higher_social_system must be of entity type SocialSystem"
+            assert isinstance(
+                s, Interface.SocialSystem
+            ), "next_higher_social_system must be of entity type SocialSystem"
             s._next_lower_social_systems.add(self)
             # reset dependent cache:
             s.cells = unknown
@@ -116,14 +116,20 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
     _higher_social_systems = unknown
     """cache, depends on self.next_higher_social_system
     and self.next_higher_social_system.higher_social_systems"""
+
     @property  # read-only
     def higher_social_systems(self):
         """Get higher social_systems."""
         if self._higher_social_systems is unknown:
             # find recursively:
-            self._higher_social_systems = [] if self.next_higher_social_system is None \
-                else ([self.next_higher_social_system]
-                      + self.next_higher_social_system.higher_social_systems)
+            self._higher_social_systems = (
+                []
+                if self.next_higher_social_system is None
+                else (
+                    [self.next_higher_social_system]
+                    + self.next_higher_social_system.higher_social_systems
+                )
+            )
         return self._higher_social_systems
 
     @higher_social_systems.setter
@@ -146,10 +152,10 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
     def lower_social_systems(self):
         """Get lower social_systems."""
         # aggregate recursively:
-        l = self._next_lower_social_systems
+        lower_systems = self._next_lower_social_systems
         for s in self._next_lower_social_systems:
-            l.update(s.lower_social_systems)
-        return l
+            lower_systems.update(s.lower_social_systems)
+        return lower_systems
 
     @property  # read-only
     def direct_cells(self):
@@ -159,9 +165,11 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
     _cells = unknown
     """cache, depends on self.direct_cells, self._next_lower_social_systems,
     and lowersocial_system.cells"""
+
     @property  # read-only
     def cells(self):
-        """Get cells that directly abd indirectly belong to the SocialSystem."""
+        """Get cells that directly abd indirectly belong to the
+        SocialSystem."""
         if self._cells is unknown:
             # aggregate recursively:
             self._cells = self.direct_cells
@@ -171,7 +179,8 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
 
     @cells.setter
     def cells(self, u):
-        """Set cells that directly and indirectly belong to the SocialSystem."""
+        """Set cells that directly and indirectly belong to the
+        SocialSystem."""
         assert u == unknown, "setter can only be used to reset cache"
         self._cells = unknown
         # reset dependent caches:
@@ -180,6 +189,7 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
 
     _direct_individuals = unknown
     """cache, depends on _direct_cells, directcell.individuals"""
+
     @property  # read-only
     def direct_individuals(self):
         """Get resident Individuals not in subsocial_systems."""
@@ -200,6 +210,7 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
 
     _individuals = unknown
     """cache, depends on self.cells, cell.individuals"""
+
     @property  # read-only
     def individuals(self):
         """Get direct and indirect resident Individuals."""
@@ -222,14 +233,18 @@ class SocialSystem (I.SocialSystem, abstract.SocialSystem):
     def groups(self):
         """Get the set of all Groups in this SocialSystem."""
         return self._groups
+
     @groups.setter
     def groups(self, g):
         """Set the World the SocialSystem is part of."""
         if self._groups is not None:
             self._groups._social_system.remove(self)
-        assert isinstance(g, I.Culture), "groups must be of taxon type Group"
+        assert isinstance(
+            g, Interface.Culture
+        ), "groups must be of taxon type Group"
         g._worlds.add(self)
         self._culture = g
+
     # TODO: helper methods for mergers, splits, etc.
 
     # no process-related methods

@@ -5,6 +5,7 @@ flag. Pay attention to those variables and object written in capital letters.
 These are placeholders and must be adjusted as needed. For further details see
 also the model development tutorial.
 """
+
 # This file is part of pycopancore.
 #
 # Copyright (C) 2017 by COPAN team at Potsdam Institute for Climate
@@ -29,35 +30,32 @@ from ..model_components import ANOTHERCOMPONENT as BAR
 # Only compose those entity types and process taxons that the model needs,
 # delete the templates for the unneeded ones, and add those for missing ones:
 
+
 # TODO: list all mixin classes needed:
-class World(FOO.World,
-            BAR.World,
-            base.World):
+class World(FOO.World, BAR.World, base.World):
     """World entity type."""
+
     pass
 
 
 # TODO: list all mixin classes needed:
-class SocialSystem(FOO.SocialSystem,
-                   BAR.SocialSystem,
-                   base.SocialSystem):
+class SocialSystem(FOO.SocialSystem, BAR.SocialSystem, base.SocialSystem):
     """SocialSystem entity type."""
+
     pass
 
 
 # TODO: list all mixin classes needed:
-class Cell(FOO.Cell,
-           BAR.Cell,
-           base.Cell):
+class Cell(FOO.Cell, BAR.Cell, base.Cell):
     """Cell entity type."""
+
     pass
 
 
 # TODO: list all mixin classes needed:
-class Individual(FOO.Individual,
-                 BAR.Individual,
-                 base.Individual):
+class Individual(FOO.Individual, BAR.Individual, base.Individual):
     """Individual entity type."""
+
     pass
 
 
@@ -65,36 +63,33 @@ class Individual(FOO.Individual,
 
 # TODO: do the same for process taxa:
 
+
 # TODO: list all mixin classes needed:
-class Environment(FOO.Environment,
-                  BAR.Environment,
-                  base.Environment):
+class Environment(FOO.Environment, BAR.Environment, base.Environment):
     """Environment process taxon."""
+
     pass
 
 
 # TODO: list all mixin classes needed:
-class Metabolism(FOO.Metabolism,
-                 BAR.Metabolism,
-                 base.Metabolism):
+class Metabolism(FOO.Metabolism, BAR.Metabolism, base.Metabolism):
     """Metabolism process taxon."""
+
     pass
 
 
 # TODO: list all mixin classes needed:
-class Culture(FOO.Culture,
-              BAR.Culture,
-              base.Culture):
+class Culture(FOO.Culture, BAR.Culture, base.Culture):
     """Culture process taxon."""
+
     pass
 
 
 # Model class:
 
+
 # TODO: list all used model components:
-class Model(FOO.Model,
-            BAR.Model,
-            base.Model):
+class Model(FOO.Model, BAR.Model, base.Model):
     """Class representing the whole model."""
 
     name = "..."

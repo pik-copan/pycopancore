@@ -11,8 +11,10 @@ This is the process-types package. Here, process-types are defined.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .ODE import ODE
 from .event import Event
 from .explicit import Explicit
 from .implicit import Implicit
+from .ODE import ODE
 from .step import Step
+
+__all__ = ["ODE", "Event", "Explicit", "Implicit", "Step"]

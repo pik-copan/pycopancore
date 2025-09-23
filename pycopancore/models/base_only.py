@@ -46,6 +46,7 @@ class SocialSystem(base.SocialSystem):
 
     pass
 
+
 #
 # Dynamics
 #
@@ -67,6 +68,7 @@ class Environment(base.Environment):
     """Class to mix all Environment_mixins to create Environment class."""
 
     pass
+
 
 #
 # Models

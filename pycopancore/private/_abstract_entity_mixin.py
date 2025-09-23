@@ -1,6 +1,7 @@
 """_abstract_entity_mixin class.
 
-It sets the basic structure of entity mixins (individuals, cells , social_systems).
+It sets the basic structure of entity mixins (individuals, cells ,
+social_systems).
 """
 
 # This file is part of pycopancore.
@@ -75,28 +76,30 @@ class _AbstractEntityMixin(_Mixin):
         Remove Entity from its classes idle_entities list and add it to its
         classes entities list.
         """
-        assert self in self.__class__.idle_entities, 'Not deactivated'
+        assert self in self.__class__.idle_entities, "Not deactivated"
         self.__class__.idle_entities.remove(self)
         self.__class__.instances.append(self)
 
     def delete(self):
         """Delete entity from all lists."""
         # check if idle_entities list exists and if self in that list:
-        if (self.__class__.idle_entities
-                and self in self.__class__.idle_entities):
+        if (
+            self.__class__.idle_entities
+            and self in self.__class__.idle_entities
+        ):
             self.__class__.idle_entities.remove(self)
         # check if instances list exists and if self in that list:
-        if (self.__class__.instances
-                and self in self.__class__.instances):
+        if self.__class__.instances and self in self.__class__.instances:
             self.__class__.instances.remove(self)
         # Now delete for good:
-        del(self)
+        del self
 
     @property
     def is_active(self):
         """Check if entity is active.
-        
-        In other words, check if entity is in self.__class__.instances"""
+
+        In other words, check if entity is in self.__class__.instances
+        """
         if self in self.__class__.instances:
             return True
         if self in self.__class__.idle_entities:
@@ -113,7 +116,8 @@ class _AbstractEntityMixin(_Mixin):
 
 class StatusError(Exception):
     """Define Error.
-    
-    This Error is states, that an entity is neither active nor deactivated"""
+
+    This Error is states, that an entity is neither active nor deactivated
+    """
 
     pass

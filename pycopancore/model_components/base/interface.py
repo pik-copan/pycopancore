@@ -13,69 +13,75 @@ by entity type and process taxon
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from pycopancore.private._mixin import _MixinType
-
-from pycopancore.data_model.variable import Variable
+from pycopancore.data_model.master_data_model.cell import Cell as C
+from pycopancore.data_model.master_data_model.culture import (
+    Culture as CUL,
+)
+from pycopancore.data_model.master_data_model.dimensions_and_units import (
+    DimensionsAndUnits as DAU,
+)
+from pycopancore.data_model.master_data_model.environment import (
+    Environment as ENV,
+)
+from pycopancore.data_model.master_data_model.social_system import (
+    SocialSystem as S,
+)
+from pycopancore.data_model.master_data_model.world import World as W
 from pycopancore.data_model.reference_variable import ReferenceVariable
 from pycopancore.data_model.set_variable import SetVariable
-
 from pycopancore.data_model.unit import unity
-
-from pycopancore.data_model.master_data_model.dimensions_and_units \
-    import DimensionsAndUnits as DAU
-
-from pycopancore.data_model.master_data_model.environment \
-    import Environment as ENV
-from pycopancore.data_model.master_data_model.culture \
-    import Culture as CUL
-from pycopancore.data_model.master_data_model.world \
-    import World as W
-from pycopancore.data_model.master_data_model.social_system \
-    import SocialSystem as S
-from pycopancore.data_model.master_data_model.cell \
-    import Cell as C
+from pycopancore.data_model.variable import Variable
+from pycopancore.private._mixin import _MixinType
 
 
-class Model (object):
+class Model(object):
     """Basic Model component interface."""
 
     # necessary metadata:
     name = "copan:CORE Base"
-    description = "Basic model component only providing basic relationships " \
-                  "between entity types."
+    description = (
+        "Basic model component only providing basic relationships "
+        "between entity types."
+    )
     requires = []
 
 
 # process taxa:
 
 
-class Environment (object):
+class Environment(object):
     """Basic Environment interface.
 
     It contains all variables specified as mandatory ("base variables").
     """
 
-    geographic_network = ENV.geographic_network  # copies the specification from the master data model
+    geographic_network = (
+        ENV.geographic_network
+    )  # copies the specification from the master data model
 
     # read-only attributes storing redundant information:
-    worlds = SetVariable("worlds", 
-                         "Set of Worlds governed by this Environment", 
-                         readonly=True)
+    worlds = SetVariable(
+        "worlds",
+        "Set of Worlds governed by this Environment",
+        readonly=True,
+    )
 
 
-class Metabolism (object):
+class Metabolism(object):
     """Basic Metabolism interface.
 
     It contains all variables specified as mandatory ("base variables").
     """
 
     # read-only attributes storing redundant information:
-    worlds = SetVariable("worlds", 
-                         "Set of Worlds governed by this Metabolism", 
-                         readonly=True)
+    worlds = SetVariable(
+        "worlds",
+        "Set of Worlds governed by this Metabolism",
+        readonly=True,
+    )
 
 
-class Culture (object):
+class Culture(object):
     """Basic Culture interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -85,43 +91,59 @@ class Culture (object):
 
     group_membership_network = CUL.group_membership_network
 
-    social_systems = SetVariable("social systems",
-                                 "Set of all SocialSystems governed by this Culture",
-                                 readonly=True)
-    individuals = SetVariable("individuals",
-                              "Set of Individuals governed by this Culture",
-                              readonly=True)
+    social_systems = SetVariable(
+        "social systems",
+        "Set of all SocialSystems governed by this Culture",
+        readonly=True,
+    )
+    individuals = SetVariable(
+        "individuals",
+        "Set of Individuals governed by this Culture",
+        readonly=True,
+    )
 
-# entity types:
+    # entity types:
 
-    groups = SetVariable("groups",
-                         "Set of Groups existing on this world",
-                         readonly=True)
+    groups = SetVariable(
+        "groups", "Set of Groups existing on this world", readonly=True
+    )
+
 
 # TODO: clarify whether it is necessary to specify the metaclass here!
-class World (object, metaclass=_MixinType):
+class World(object, metaclass=_MixinType):
     """Basic World interface.
 
     It contains all variables specified as mandatory ("base variables").
     """
+
     # the metaclass is needed to allow for intercepting class attribute calls
-    # when constructing DotConstructs like World.environment.geographic_network.
+    # when constructing DotConstructs like World.environment.geographic_network
     # similarly for the other entity types.
 
-
     # references to other entities and taxa:
-    environment = ReferenceVariable("environment",
-                               "Environment taxon working on this world",
-                               type=Environment, allow_none=True)
-    metabolism = ReferenceVariable("metabolism",
-                                   "Metabolism taxon working on this world",
-                                   type=Metabolism, allow_none=True)
-    culture = ReferenceVariable("culture",
-                                "Culture taxon working on this world",
-                                type=Culture, allow_none=True)
+    environment = ReferenceVariable(
+        "environment",
+        "Environment taxon working on this world",
+        type=Environment,
+        allow_none=True,
+    )
+    metabolism = ReferenceVariable(
+        "metabolism",
+        "Metabolism taxon working on this world",
+        type=Metabolism,
+        allow_none=True,
+    )
+    culture = ReferenceVariable(
+        "culture",
+        "Culture taxon working on this world",
+        type=Culture,
+        allow_none=True,
+    )
 
     # variables taken from the master data model:
-    population = W.population  # TODO: make sure it is no smaller than aggregate top-level social_systems'?
+    # TODO: make sure it is no smaller than aggregate top-level
+    # social_systems'?
+    population = W.population
     atmospheric_carbon = W.atmospheric_carbon
     surface_air_temperature = W.surface_air_temperature
     ocean_carbon = W.ocean_carbon
@@ -129,20 +151,27 @@ class World (object, metaclass=_MixinType):
     fossil_carbon = W.fossil_carbon
 
     # attributes storing redundant information (backward references):
-    social_systems = SetVariable("social systems",
-                            "Set of all SocialSystems on this world",
-                            readonly=True)  # type is SocialSystem, hence it can only be specified after class SocialSystem is defined, see below
+    # type is SocialSystem, hence it can only be specified after class
+    # SocialSystem is defined, see below
+    social_systems = SetVariable(
+        "social systems",
+        "Set of all SocialSystems on this world",
+        readonly=True,
+    )
     top_level_social_systems = SetVariable(
         "top level social systems",
         "Set of top-level SocialSystems on this world",
-        readonly=True)
-    cells = SetVariable("cells", "set of Cells on this world",
-                        readonly=True)
-    individuals = SetVariable("individuals",
-                              "Set of Individuals residing on this world",
-                              readonly=True)
-    groups = SetVariable("groups", "set of Groups on this world",
-                        readonly=True)
+        readonly=True,
+    )
+    cells = SetVariable("cells", "set of Cells on this world", readonly=True)
+    individuals = SetVariable(
+        "individuals",
+        "Set of Individuals residing on this world",
+        readonly=True,
+    )
+    groups = SetVariable(
+        "groups", "set of Groups on this world", readonly=True
+    )
     group_membership_network = None
     """Group membership network for this World"""
     acquaintance_network = None
@@ -154,16 +183,19 @@ Metabolism.worlds.type = World
 Environment.worlds.type = World
 
 
-class SocialSystem (object, metaclass=_MixinType):
+class SocialSystem(object, metaclass=_MixinType):
     """Basic SocialSystem interface.
 
     It contains all variables specified as mandatory ("base variables").
     """
 
     # references:
+    # type is SocialSystem, hence it can only be specified after class
+    # SocialSystem is defined, see below
     world = ReferenceVariable("world", "", type=World)
-    next_higher_social_system = ReferenceVariable("next higher social_system", "optional",
-                                            allow_none=True)  # type is SocialSystem, hence it can only be specified after class SocialSystem is defined, see below
+    next_higher_social_system = ReferenceVariable(
+        "next higher social_system", "optional", allow_none=True
+    )
 
     # other variables:
     # population is explicitly allowed to be non-integer so that we can use
@@ -174,35 +206,46 @@ class SocialSystem (object, metaclass=_MixinType):
     # aggregate next_lower_level social_systems'
 
     # read-only attributes storing redundant information:
-    environment = ReferenceVariable("environment", "", type=Environment,
-                               readonly=True)
-    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
-                                   readonly=True)
-    culture = ReferenceVariable("culture", "", type=Culture,
-                                readonly=True)
+    environment = ReferenceVariable(
+        "environment", "", type=Environment, readonly=True
+    )
+    metabolism = ReferenceVariable(
+        "metabolism", "", type=Metabolism, readonly=True
+    )
+    culture = ReferenceVariable("culture", "", type=Culture, readonly=True)
     higher_social_systems = SetVariable(
         "higher social systems",
         "upward list of (in)direct super-SocialSystems",
-        readonly=True)
+        readonly=True,
+    )
     next_lower_social_systems = SetVariable(
         "next lower social systems",
         "set of sub-SocialSystems of next lower level",
-        readonly=True)
+        readonly=True,
+    )
     lower_social_systems = SetVariable(
         "lower social systems",
         "set of all direct and indirect sub-SocialSystems",
-        readonly=True)
-    direct_cells = SetVariable("direct cells", "set of direct territory Cells",
-                               readonly=True)
-    cells = SetVariable("cells", "set of direct and indirect territory Cells",
-                        readonly=True)
+        readonly=True,
+    )
+    direct_cells = SetVariable(
+        "direct cells", "set of direct territory Cells", readonly=True
+    )
+    cells = SetVariable(
+        "cells",
+        "set of direct and indirect territory Cells",
+        readonly=True,
+    )
     direct_individuals = SetVariable(
         "direct individuals",
         "set of resident Individuals not in subsocial_systems",
-        readonly=True)
-    individuals = SetVariable("individuals",
-                              "set of direct or indirect resident Individuals",
-                              readonly=True)
+        readonly=True,
+    )
+    individuals = SetVariable(
+        "individuals",
+        "set of direct or indirect resident Individuals",
+        readonly=True,
+    )
 
 
 # specified only now to avoid recursion errors:
@@ -215,7 +258,7 @@ World.social_systems.type = SocialSystem
 World.top_level_social_systems.type = SocialSystem
 
 
-class Cell (object, metaclass=_MixinType):
+class Cell(object, metaclass=_MixinType):
     """Basic Cell interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -223,33 +266,42 @@ class Cell (object, metaclass=_MixinType):
 
     # references:
     world = ReferenceVariable("world", "", type=World)
-    social_system = ReferenceVariable("social_system",
-                                "optional lowest-level soc. cell belongs to",
-                                type=SocialSystem, allow_none=True)
+    social_system = ReferenceVariable(
+        "social_system",
+        "optional lowest-level soc. cell belongs to",
+        type=SocialSystem,
+        allow_none=True,
+    )
 
     # other variables:
-    location = Variable("location", "pair of coordinates?",
-                        allow_none=True, default=None)  # TODO: specify data type
+    location = Variable(
+        "location",
+        "pair of coordinates?",
+        allow_none=True,
+        default=None,
+    )  # TODO: specify data type
     land_area = C.land_area
 
     terrestrial_carbon = C.terrestrial_carbon
     fossil_carbon = C.fossil_carbon
 
     # attributes storing redundant information:
-    environment = ReferenceVariable("environment", "", type=Environment,
-                               readonly=True)
-    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
-                                   readonly=True)
-    culture = ReferenceVariable("culture", "", type=Culture,
-                                readonly=True)
+    environment = ReferenceVariable(
+        "environment", "", type=Environment, readonly=True
+    )
+    metabolism = ReferenceVariable(
+        "metabolism", "", type=Metabolism, readonly=True
+    )
+    culture = ReferenceVariable("culture", "", type=Culture, readonly=True)
     social_systems = SetVariable(
         "social_systems",
         "upward list of SocialSystems it belongs to (in)directly",
         type=SocialSystem,
-        readonly=True)
-    individuals = SetVariable("individuals",
-                              "set of resident Individuals",
-                              readonly=True)
+        readonly=True,
+    )
+    individuals = SetVariable(
+        "individuals", "set of resident Individuals", readonly=True
+    )
 
 
 # specified only now to avoid recursion:
@@ -258,7 +310,7 @@ SocialSystem.direct_cells.type = Cell
 SocialSystem.cells.type = Cell
 
 
-class Individual (object, metaclass=_MixinType):
+class Individual(object, metaclass=_MixinType):
     """Basic Individual interface.
 
     It contains all variables specified as mandatory ("base variables").
@@ -268,49 +320,60 @@ class Individual (object, metaclass=_MixinType):
     cell = ReferenceVariable("cell", "cell of residence", type=Cell)
 
     # other variables:
-    relative_weight = \
-        Variable("relative representation weight",
-                 "relative representation weight for social_system's population, "
-                 "to be used in determining how many people this individual "
-                 "represents",
-                 unit=unity, lower_bound=0, default=1)
+    relative_weight = Variable(
+        "relative representation weight",
+        "relative representation weight for social_system's population, "
+        "to be used in determining how many people this individual "
+        "represents",
+        unit=unity,
+        lower_bound=0,
+        default=1,
+    )
 
     # attributes storing redundant information:
-    world = ReferenceVariable("world", "", type=World,
-                              readonly=True)
-    environment = ReferenceVariable("environment", "", type=Environment,
-                               readonly=True)
-    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
-                                   readonly=True)
-    culture = ReferenceVariable("culture", "", type=Culture,
-                                readonly=True)
+    world = ReferenceVariable("world", "", type=World, readonly=True)
+    environment = ReferenceVariable(
+        "environment", "", type=Environment, readonly=True
+    )
+    metabolism = ReferenceVariable(
+        "metabolism", "", type=Metabolism, readonly=True
+    )
+    culture = ReferenceVariable("culture", "", type=Culture, readonly=True)
     social_system = ReferenceVariable(
         "social_system",
         "lowest level SocialSystem this individual is resident of",
         type=SocialSystem,
-        readonly=True)
+        readonly=True,
+    )
     social_systems = SetVariable(
         "social_systems",
         "upward list of all SocialSystems it is resident of",
         type=SocialSystem,
-        readonly=True)
-    acquaintances = SetVariable("acquaintances",
-                    "set of Individuals this one is acquainted with",
-                    readonly=True)
+        readonly=True,
+    )
+    acquaintances = SetVariable(
+        "acquaintances",
+        "set of Individuals this one is acquainted with",
+        readonly=True,
+    )
 
-    group_memberships = SetVariable("group memberships",
-                                    "set of Groups this one is associated with",
-                                    readonly=True)
+    group_memberships = SetVariable(
+        "group memberships",
+        "set of Groups this one is associated with",
+        readonly=True,
+    )
 
     # TODO: specify Variable objects for the following:
     population_share = None
-    """share of social_system's direct population represented by this individual"""
+    """share of social_system's direct population represented by this
+    individual"""
     represented_population = Variable(
-        "represented population", 
+        "represented population",
         "absolute population represented by this individual",
         readonly=True,
         unit=DAU.people,
-        is_extensive=True)
+        is_extensive=True,
+    )
 
 
 # specified only now to avoid recursion:
@@ -322,31 +385,31 @@ Cell.individuals.type = Individual
 Individual.acquaintances.type = Individual
 
 
-
-
-class Group (object, metaclass=_MixinType):
+class Group(object, metaclass=_MixinType):
     """Basic Group interface.
 
     It contains all variables specified as mandatory ("base variables").
     """
 
     # references:
-    #social_system = ReferenceVariable("socialsystem", "", type=SocialSystem)
+    # social_system = ReferenceVariable("socialsystem", "", type=SocialSystem)
     # next_higher_group = ReferenceVariable("next higher group", "optional",
-    #                                         allow_none=True)  # type is Group, hence it can only be specified after class Group is defined, see below
-
+    # allow_none=True)  # type is Group, hence it can only be specified after
+    # class Group is defined, see below
 
     # read-only attributes storing redundant information:
-    environment = ReferenceVariable("environment", "", type=Environment,
-                               readonly=True)
-    metabolism = ReferenceVariable("metabolism", "", type=Metabolism,
-                                   readonly=True)
-    culture = ReferenceVariable("culture", "", type=Culture,
-                                readonly=True)
+    environment = ReferenceVariable(
+        "environment", "", type=Environment, readonly=True
+    )
+    metabolism = ReferenceVariable(
+        "metabolism", "", type=Metabolism, readonly=True
+    )
+    culture = ReferenceVariable("culture", "", type=Culture, readonly=True)
     group_members = SetVariable(
         "group members",
         "set of all individuals associated with the group",
-        readonly=True
+        readonly=True,
     )
+
 
 Culture.groups.type = Group

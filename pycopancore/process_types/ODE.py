@@ -18,7 +18,6 @@ dependent of the time.
 # Imports
 #
 
-
 #
 # Definition of class ODE
 #
@@ -32,13 +31,7 @@ class ODE(_AbstractProcess):
     type = "ODE"
     timetype = "continuous"
 
-    def __init__(self,
-                 name,
-                 targets,
-                 specification,
-                 *,
-                 smoothness=1
-                ):
+    def __init__(self, name, targets, specification, *, smoothness=1):
         """Instantiate an instance of an ODE process.
 
         Parameters

@@ -20,6 +20,7 @@
 from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
+
 # from mpl_toolkits.mplot3d import Axes3D
 # from matplotlib import cm
 
@@ -29,7 +30,7 @@ import numpy as np
 
 # Building figure
 fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+ax = fig.add_subplot(111, projection="3d")
 ax.grid(False)
 ax.view_init(8, 213)  # 13-210setting initial view. first arg:lat, second:long
 ax.set_xlim3d(-1.2, 1.2)
@@ -42,18 +43,18 @@ ax.set_zlim3d(-1.0, 1.0)
 
 
 # Create instance of Image with PIL Package
-im = Image.open('./bluemarble4-bright-blackgrid.jpg')
+im = Image.open("./bluemarble4-bright-blackgrid.jpg")
 
 # Resizing the image with scaling factor sc
 # max(sc) = 1 (computational expensive)
 sc = 2
-im = im.resize([int(d/sc) for d in im.size])
+im = im.resize([int(d / sc) for d in im.size])
 # Getting np.array as Colorgrid and normalizing to python RGB-standard
-im = np.array(im)/256.
+im = np.array(im) / 256.0
 
 # Getting arrays of coordinates for the bluemarple surface_plot.
-lons = np.linspace(0, 360, im.shape[1]) * np.pi/180
-lats = np.linspace(0, 180, im.shape[0]) * np.pi/180
+lons = np.linspace(0, 360, im.shape[1]) * np.pi / 180
+lats = np.linspace(0, 180, im.shape[0]) * np.pi / 180
 
 # making grid for the bluemarple surface plot
 R = 1  # radius of sphere
@@ -63,9 +64,18 @@ z = R * np.outer(np.ones(np.size(lons)), np.cos(lats)).T
 
 # drawing the bluemarble image
 
-bluemarble = ax.plot_surface(x, y, z, facecolors=im, alpha=1, linewidth=0,
-                             rstride=1, cstride=2, shade=False, zorder=1
-                             )
+bluemarble = ax.plot_surface(
+    x,
+    y,
+    z,
+    facecolors=im,
+    alpha=1,
+    linewidth=0,
+    rstride=1,
+    cstride=2,
+    shade=False,
+    zorder=1,
+)
 
 """
 #
@@ -117,7 +127,7 @@ for i in range(500):
     x_c = r_soc * np.cos(lons) * np.sin(lats)
     y_c = r_soc * np.sin(lons) * np.sin(lats)
     z_c = -r_soc * np.cos(lats)
-    ax.plot(x_c, y_c, z_c, linewidth=1, alpha=0.1, color='yellow', zorder=6)
+    ax.plot(x_c, y_c, z_c, linewidth=1, alpha=0.1, color="yellow", zorder=6)
 
 #
 # step 2: second part of social_system
@@ -137,7 +147,7 @@ for i in range(500):
     x_c = r_soc * np.cos(lons) * np.sin(lats)
     y_c = r_soc * np.sin(lons) * np.sin(lats)
     z_c = -r_soc * np.cos(lats)
-    ax.plot(x_c, y_c, z_c, linewidth=1, alpha=0.1, color='yellow', zorder=6)
+    ax.plot(x_c, y_c, z_c, linewidth=1, alpha=0.1, color="yellow", zorder=6)
 
 #
 # Individuals group 1
@@ -171,13 +181,15 @@ lats_array2 = np.linspace(lats_min2, lats_max2)
 lons_array = np.zeros((lons_array1.size + lons_array2.size))
 lats_array = np.zeros((lats_array1.size + lats_array2.size))
 
-lons_array[0:lons_array1.size:1] = lons_array1
-lons_array[lons_array1.size:(lons_array1.size + lons_array2.size):1] = \
-    lons_array2
+lons_array[0 : lons_array1.size : 1] = lons_array1
+lons_array[lons_array1.size : (lons_array1.size + lons_array2.size) : 1] = (
+    lons_array2  # noqa: E501
+)
 
-lats_array[0:lats_array1.size:1] = lats_array1
-lats_array[lats_array1.size:(lats_array1.size + lats_array2.size):1] = \
-    lats_array2
+lats_array[0 : lats_array1.size : 1] = lats_array1
+lats_array[lats_array1.size : (lats_array1.size + lats_array2.size) : 1] = (
+    lats_array2  # noqa: E501
+)
 
 # create n-dim arrays for the individuals lons-lats positions
 lons1_i = np.zeros(N_i)
@@ -208,31 +220,55 @@ dd1 = z_pin * 500  # resolution of line
 for j in range(N_i):
     p_val = np.random.rand(1)
     if p_val < 0.5:
-        x_n = np.linspace(R * x_i[j], (R+0.5) * x_i[j], dd1)
-        y_n = np.linspace(R * y_i[j], (R+0.5) * y_i[j], dd1)
-        z_n = np.linspace(R * z_i[j], (R+0.5) * z_i[j], dd1)
-        ax.plot(x_n, y_n, z_n, 'black', linewidth=0.4, linestyle="-", zorder=1)
-        x_n = np.linspace((R+0.5) * x_i[j], (z_pin-0.019) * x_i[j], dd1)
-        y_n = np.linspace((R+0.5) * y_i[j], (z_pin-0.019) * y_i[j], dd1)
-        z_n = np.linspace((R+0.5) * z_i[j], (z_pin-0.019) * z_i[j], dd1)
-        ax.scatter(z_pin * x_i[j], z_pin * y_i[j], z_pin * z_i[j], color='red',
-                   s=10, zorder=10)
-        ax.plot(x_n, y_n, z_n, 'black', linewidth=0.4, linestyle="-", zorder=7)
-        ax.scatter(z_pin * x_i[j], z_pin * y_i[j], z_pin * z_i[j], color='red',
-                   s=10, zorder=10)
+        x_n = np.linspace(R * x_i[j], (R + 0.5) * x_i[j], dd1)
+        y_n = np.linspace(R * y_i[j], (R + 0.5) * y_i[j], dd1)
+        z_n = np.linspace(R * z_i[j], (R + 0.5) * z_i[j], dd1)
+        ax.plot(x_n, y_n, z_n, "black", linewidth=0.4, linestyle="-", zorder=1)
+        x_n = np.linspace((R + 0.5) * x_i[j], (z_pin - 0.019) * x_i[j], dd1)
+        y_n = np.linspace((R + 0.5) * y_i[j], (z_pin - 0.019) * y_i[j], dd1)
+        z_n = np.linspace((R + 0.5) * z_i[j], (z_pin - 0.019) * z_i[j], dd1)
+        ax.scatter(
+            z_pin * x_i[j],
+            z_pin * y_i[j],
+            z_pin * z_i[j],
+            color="red",
+            s=10,
+            zorder=10,  # noqa: E501
+        )
+        ax.plot(x_n, y_n, z_n, "black", linewidth=0.4, linestyle="-", zorder=7)
+        ax.scatter(
+            z_pin * x_i[j],
+            z_pin * y_i[j],
+            z_pin * z_i[j],
+            color="red",
+            s=10,
+            zorder=10,  # noqa: E501
+        )
     if p_val >= 0.5:
-        x_n = np.linspace(R * x_i[j], (R+0.5) * x_i[j], dd1)
-        y_n = np.linspace(R * y_i[j], (R+0.5) * y_i[j], dd1)
-        z_n = np.linspace(R * z_i[j], (R+0.5) * z_i[j], dd1)
-        ax.plot(x_n, y_n, z_n, 'black', linewidth=0.4, linestyle="-", zorder=1)
-        x_n = np.linspace((R + 0.5) * x_i[j], (z_pin-0.019) * x_i[j], dd1)
-        y_n = np.linspace((R + 0.5) * y_i[j], (z_pin-0.019) * y_i[j], dd1)
-        z_n = np.linspace((R + 0.5) * z_i[j], (z_pin-0.019		) * z_i[j], dd1)
-        ax.scatter(z_pin * x_i[j], z_pin * y_i[j], z_pin * z_i[j],
-                   color='green', s=10, zorder=10)
-        ax.plot(x_n, y_n, z_n, 'black', linewidth=0.4, linestyle="-", zorder=7)
-        ax.scatter(z_pin * x_i[j], z_pin * y_i[j], z_pin * z_i[j],
-                   color='green', s=10, zorder=10)
+        x_n = np.linspace(R * x_i[j], (R + 0.5) * x_i[j], dd1)
+        y_n = np.linspace(R * y_i[j], (R + 0.5) * y_i[j], dd1)
+        z_n = np.linspace(R * z_i[j], (R + 0.5) * z_i[j], dd1)
+        ax.plot(x_n, y_n, z_n, "black", linewidth=0.4, linestyle="-", zorder=1)
+        x_n = np.linspace((R + 0.5) * x_i[j], (z_pin - 0.019) * x_i[j], dd1)
+        y_n = np.linspace((R + 0.5) * y_i[j], (z_pin - 0.019) * y_i[j], dd1)
+        z_n = np.linspace((R + 0.5) * z_i[j], (z_pin - 0.019) * z_i[j], dd1)
+        ax.scatter(
+            z_pin * x_i[j],
+            z_pin * y_i[j],
+            z_pin * z_i[j],
+            color="green",
+            s=10,
+            zorder=10,
+        )
+        ax.plot(x_n, y_n, z_n, "black", linewidth=0.4, linestyle="-", zorder=7)
+        ax.scatter(
+            z_pin * x_i[j],
+            z_pin * y_i[j],
+            z_pin * z_i[j],
+            color="green",
+            s=10,
+            zorder=10,
+        )
     else:
         continue
 
@@ -265,9 +301,14 @@ for j in range(nc):
             xl = np.cos(l1) * np.sin(l2)
             yl = np.sin(l1) * np.sin(l2)
             zl = -np.cos(l2)
-        ax.plot(z_pin * xl, z_pin * yl, z_pin * zl, linestyle='-',
-                color='blue', linewidth=0.3
-                )
+        ax.plot(
+            z_pin * xl,
+            z_pin * yl,
+            z_pin * zl,
+            linestyle="-",
+            color="blue",
+            linewidth=0.3,
+        )
     else:
         continue
 
@@ -296,7 +337,7 @@ for i in range(500):
     x_c = r_soc * np.cos(lons) * np.sin(lats)
     y_c = r_soc * np.sin(lons) * np.sin(lats)
     z_c = -r_soc * np.cos(lats)
-    ax.plot(x_c, y_c, z_c, linewidth=1, alpha=0.1, color='yellow', zorder=6)
+    ax.plot(x_c, y_c, z_c, linewidth=1, alpha=0.1, color="yellow", zorder=6)
 
 #
 # Individuals group 2
@@ -342,31 +383,55 @@ dd1 = z_pin * 500  # resolution of line
 for j in range(N_j):
     p_val = np.random.rand(1)
     if p_val < 0.5:
-        x_n = np.linspace(R * x_i[j], (R+0.5) * x_i[j], dd1)
-        y_n = np.linspace(R * y_i[j], (R+0.5) * y_i[j], dd1)
-        z_n = np.linspace(R * z_i[j], (R+0.5) * z_i[j], dd1)
-        ax.plot(x_n, y_n, z_n, 'black', linewidth=0.4, linestyle="-", zorder=1)
-        x_n = np.linspace((R+0.5) * x_i[j], (z_pin-0.019) * x_i[j], dd1)
-        y_n = np.linspace((R+0.5) * y_i[j], (z_pin-0.019) * y_i[j], dd1)
-        z_n = np.linspace((R+0.5) * z_i[j], (z_pin-0.019) * z_i[j], dd1)
-        ax.scatter(z_pin * x_i[j], z_pin * y_i[j], z_pin * z_i[j], color='red',
-                   s=10, zorder=10)
-        ax.plot(x_n, y_n, z_n, 'black', linewidth=0.4, linestyle="-", zorder=7)
-        ax.scatter(z_pin * x_i[j], z_pin * y_i[j], z_pin * z_i[j], color='red',
-                   s=10, zorder=10)
+        x_n = np.linspace(R * x_i[j], (R + 0.5) * x_i[j], dd1)
+        y_n = np.linspace(R * y_i[j], (R + 0.5) * y_i[j], dd1)
+        z_n = np.linspace(R * z_i[j], (R + 0.5) * z_i[j], dd1)
+        ax.plot(x_n, y_n, z_n, "black", linewidth=0.4, linestyle="-", zorder=1)
+        x_n = np.linspace((R + 0.5) * x_i[j], (z_pin - 0.019) * x_i[j], dd1)
+        y_n = np.linspace((R + 0.5) * y_i[j], (z_pin - 0.019) * y_i[j], dd1)
+        z_n = np.linspace((R + 0.5) * z_i[j], (z_pin - 0.019) * z_i[j], dd1)
+        ax.scatter(
+            z_pin * x_i[j],
+            z_pin * y_i[j],
+            z_pin * z_i[j],
+            color="red",
+            s=10,
+            zorder=10,  # noqa: E501
+        )
+        ax.plot(x_n, y_n, z_n, "black", linewidth=0.4, linestyle="-", zorder=7)
+        ax.scatter(
+            z_pin * x_i[j],
+            z_pin * y_i[j],
+            z_pin * z_i[j],
+            color="red",
+            s=10,
+            zorder=10,  # noqa: E501
+        )
     if p_val >= 0.5:
-        x_n = np.linspace(R * x_i[j], (R+0.5) * x_i[j], dd1)
-        y_n = np.linspace(R * y_i[j], (R+0.5) * y_i[j], dd1)
-        z_n = np.linspace(R * z_i[j], (R+0.5) * z_i[j], dd1)
-        ax.plot(x_n, y_n, z_n, 'black', linewidth=0.4, linestyle="-", zorder=1)
-        x_n = np.linspace((R + 0.5) * x_i[j], (z_pin-0.019) * x_i[j], dd1)
-        y_n = np.linspace((R + 0.5) * y_i[j], (z_pin-0.019) * y_i[j], dd1)
-        z_n = np.linspace((R + 0.5) * z_i[j], (z_pin-0.019) * z_i[j], dd1)
-        ax.scatter(z_pin * x_i[j], z_pin * y_i[j], z_pin * z_i[j],
-                   color='green', s=10, zorder=10)
-        ax.plot(x_n, y_n, z_n, 'black', linewidth=0.4, linestyle="-", zorder=7)
-        ax.scatter(z_pin * x_i[j], z_pin * y_i[j], z_pin * z_i[j],
-                   color='green', s=10, zorder=10)
+        x_n = np.linspace(R * x_i[j], (R + 0.5) * x_i[j], dd1)
+        y_n = np.linspace(R * y_i[j], (R + 0.5) * y_i[j], dd1)
+        z_n = np.linspace(R * z_i[j], (R + 0.5) * z_i[j], dd1)
+        ax.plot(x_n, y_n, z_n, "black", linewidth=0.4, linestyle="-", zorder=1)
+        x_n = np.linspace((R + 0.5) * x_i[j], (z_pin - 0.019) * x_i[j], dd1)
+        y_n = np.linspace((R + 0.5) * y_i[j], (z_pin - 0.019) * y_i[j], dd1)
+        z_n = np.linspace((R + 0.5) * z_i[j], (z_pin - 0.019) * z_i[j], dd1)
+        ax.scatter(
+            z_pin * x_i[j],
+            z_pin * y_i[j],
+            z_pin * z_i[j],
+            color="green",
+            s=10,
+            zorder=10,
+        )
+        ax.plot(x_n, y_n, z_n, "black", linewidth=0.4, linestyle="-", zorder=7)
+        ax.scatter(
+            z_pin * x_i[j],
+            z_pin * y_i[j],
+            z_pin * z_i[j],
+            color="green",
+            s=10,
+            zorder=10,
+        )
     else:
         continue
 
@@ -377,7 +442,7 @@ for j in range(N_j):
 
 
 # Get connections in between individuals
-nc = 2*N_j  # number of connections
+nc = 2 * N_j  # number of connections
 
 # arrays for connections to avoid double connections (not necessary in current
 # code)
@@ -400,9 +465,14 @@ for j in range(nc):
             xl = np.cos(l1) * np.sin(l2)
             yl = np.sin(l1) * np.sin(l2)
             zl = -np.cos(l2)
-        ax.plot(z_pin * xl, z_pin * yl, z_pin * zl, linestyle='-',
-                color='blue', linewidth=0.3
-                )
+        ax.plot(
+            z_pin * xl,
+            z_pin * yl,
+            z_pin * zl,
+            linestyle="-",
+            color="blue",
+            linewidth=0.3,
+        )
     else:
         continue
 
@@ -426,12 +496,18 @@ for i in range(ns):
     xl1 = np.cos(l1) * np.sin(l2)
     yl1 = np.sin(l1) * np.sin(l2)
     zl1 = -np.cos(l2)
-    ax.plot(z_pin * xl1, z_pin * yl1, z_pin * zl1, linestyle='-',
-            color='blue', linewidth=0.3, zorder=10
-            )
+    ax.plot(
+        z_pin * xl1,
+        z_pin * yl1,
+        z_pin * zl1,
+        linestyle="-",
+        color="blue",
+        linewidth=0.3,
+        zorder=10,
+    )
 
 
-plt.axis('off')
-fig.savefig('example.jpg', bbox_inches='tight', dpi=400)
+plt.axis("off")
+fig.savefig("example.jpg", bbox_inches="tight", dpi=400)
 # plt.show()
 plt.close()

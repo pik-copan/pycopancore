@@ -14,8 +14,11 @@ are easily done by the user."""
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-import pickle, json
+import json
+import pickle
+
 import networkx as nx
+
 from ._abstract_entity_mixin import _AbstractEntityMixin
 from ._abstract_process_taxon_mixin import _AbstractProcessTaxonMixin
 
@@ -25,11 +28,7 @@ class _TrajectoryDictionary(dict):
 
     Inherits from dict"""
 
-    def save(self,
-             *,
-             filename,
-             path='./',
-             data_type='pickle'):
+    def save(self, *, filename, path="./", data_type="pickle"):
         """Save function.
 
         Use this to save a trajectory in some format.
@@ -60,8 +59,8 @@ class _TrajectoryDictionary(dict):
                     # print('new_key',  new_key, type(new_key))
                     dict_to_save[new_key] = {}
                     for key_2, value in item.items():
-                        # Here, key_2 are entities or taxa. Value are lists with
-                        # the values the variable took during the run.
+                        # Here, key_2 are entities or taxa. Value are lists
+                        # with the values the variable took during the run.
 
                         # First find out if key_2 is Taxon or Entity:
                         if isinstance(key_2, _AbstractEntityMixin):
@@ -70,29 +69,45 @@ class _TrajectoryDictionary(dict):
                             # print('new_key_2', new_key_2, type(new_key_2))
                             # If values are not numbers, they have to be
                             # transformed into strings, too:
-                            if all(isinstance(val, (float, int)) for val in value):
+                            if all(
+                                isinstance(val, (float, int)) for val in value
+                            ):
                                 dict_to_save[new_key][new_key_2] = value
                             # Maybe value is a list of list with floats/ints?
-                            elif (all(isinstance(val, (float, int)) for val in
-                                     list(self.traverse(value)))
-                                  ):
+                            elif all(
+                                isinstance(val, (float, int))
+                                for val in list(self.traverse(value))
+                            ):
                                 dict_to_save[new_key][new_key_2] = value
                             # Networks:
-                            elif all(isinstance(val, nx.Graph) for val in value):
+                            elif all(
+                                isinstance(val, nx.Graph) for val in value
+                            ):
                                 # save as dict of dicts
-                                new_value = [nx.to_dict_of_dicts(val) for val in value]
+                                new_value = [
+                                    nx.to_dict_of_dicts(val) for val in value
+                                ]
                                 # print(new_value)
-                                # iterate through timesteps in list, where for every
-                                # timestep there is a dictionary di in the list
+                                # iterate through timesteps in list, where for
+                                # every timestep there is a dictionary di in
+                                # the list
                                 for di in new_value:
                                     # Rewrite keys (the nodes), as they are
                                     # objects, to strings of objects:
-                                    for node_key, connections in di.copy().items():
+                                    for (
+                                        node_key,
+                                        connections,
+                                    ) in di.copy().items():
                                         di[str(node_key)] = di.pop(node_key)
-                                        # Also, connections for all nodes need to
-                                        # be replaced by strings:
-                                        for node_key_2, connections_2 in connections.copy().items():
-                                            connections[str(node_key_2)] = connections.pop(node_key_2)
+                                        # Also, connections for all nodes need
+                                        # to be replaced by strings:
+                                        for (
+                                            node_key_2,
+                                            connections_2,
+                                        ) in connections.copy().items():
+                                            connections[str(node_key_2)] = (
+                                                connections.pop(node_key_2)
+                                            )
                                 dict_to_save[new_key][new_key_2] = new_value
                             else:
                                 new_val = [str(val) for val in value]
@@ -103,40 +118,56 @@ class _TrajectoryDictionary(dict):
                             new_key_2 = str(key_2)
                             # If values are not numbers, they have to be
                             # transformed into strings, too:
-                            if all(isinstance(val, (float, int)) for val in value):
+                            if all(
+                                isinstance(val, (float, int)) for val in value
+                            ):
                                 dict_to_save[new_key][new_key_2] = value
                             # Maybe value is a list of list with floats/ints?
-                            elif (all(isinstance(val, (float, int)) for val in
-                                     list(self.traverse(value)))
-                                  ):
+                            elif all(
+                                isinstance(val, (float, int))
+                                for val in list(self.traverse(value))
+                            ):
                                 dict_to_save[new_key][new_key_2] = value
                             # Networks:
-                            elif all(isinstance(val, nx.Graph) for val in value):
+                            elif all(
+                                isinstance(val, nx.Graph) for val in value
+                            ):
                                 # save as dict of dicts
-                                new_value = [nx.to_dict_of_dicts(val) for val in value]
+                                new_value = [
+                                    nx.to_dict_of_dicts(val) for val in value
+                                ]
                                 # print(new_value)
-                                # iterate through timesteps in list, where for every
-                                # timestep there is a dictionary di in the list
+                                # iterate through timesteps in list, where for
+                                # every timestep there is a dictionary di in
+                                # the list
                                 for di in new_value:
                                     # Rewrite keys (the nodes), as they are
                                     # objects, to strings of objects:
-                                    for node_key, connections in di.copy().items():
+                                    for (
+                                        node_key,
+                                        connections,
+                                    ) in di.copy().items():
                                         di[str(node_key)] = di.pop(node_key)
-                                        # Also, connections for all nodes need to
-                                        # be replaced by strings:
-                                        for node_key_2, connections_2 in connections.copy().items():
-                                            connections[str(node_key_2)] = connections.pop(node_key_2)
+                                        # Also, connections for all nodes need
+                                        # to be replaced by strings:
+                                        for (
+                                            node_key_2,
+                                            connections_2,
+                                        ) in connections.copy().items():
+                                            connections[str(node_key_2)] = (
+                                                connections.pop(node_key_2)
+                                            )
                                 dict_to_save[new_key][new_key_2] = new_value
                             else:
                                 new_val = [str(val) for val in value]
                                 dict_to_save[new_key][new_key_2] = new_val
                         else:
-                            raise Exception('neither taxon nor entity')
-                elif key == 't':
+                            raise Exception("neither taxon nor entity")
+                elif key == "t":
                     # here we don't need to do anyhing
-                    dict_to_save['t'] = item
+                    dict_to_save["t"] = item
                 else:
-                    raise Exception('neither variable nor time!')
+                    raise Exception("neither variable nor time!")
 
             # checking if all entries have the same length as time:
             # tlen = len(dict_to_save['t'])
@@ -149,18 +180,20 @@ class _TrajectoryDictionary(dict):
             #             )
 
             # Add a file versio:
-            dict_to_save['file-version'] = 0.1
+            dict_to_save["file-version"] = 0.1
             # Fuse Filename and path:
             # add "/" to paths if missing
             save_path = path + "/" if not path.endswith("/") else path
             # Now save as datatype:
-            if data_type == 'pickle':
-                save_name = save_path + filename + '.pickle'
-                with open(save_name, 'wb') as dumpfile:
-                    pickle.dump(dict_to_save, dumpfile, pickle.HIGHEST_PROTOCOL)
-            if data_type == 'json':
-                save_name = save_path + filename + '.json'
-                with open(save_name, 'w') as dumpfile:
+            if data_type == "pickle":
+                save_name = save_path + filename + ".pickle"
+                with open(save_name, "wb") as dumpfile:
+                    pickle.dump(
+                        dict_to_save, dumpfile, pickle.HIGHEST_PROTOCOL
+                    )
+            if data_type == "json":
+                save_name = save_path + filename + ".json"
+                with open(save_name, "w") as dumpfile:
                     json.dump(dict_to_save, dumpfile)
 
         else:
@@ -171,7 +204,7 @@ class _TrajectoryDictionary(dict):
             # its values when being idel are None (dtype:None)! Earlier values
             # might include floats, booleans, or integers. This is not possible
             # with HDF5 at all.
-            raise Exception('Not implemented yet')
+            raise Exception("Not implemented yet")
 
     # Helping function to save lists and tuples
     def traverse(self, item, tree_types=(list, tuple)):
