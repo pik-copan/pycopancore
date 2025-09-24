@@ -180,7 +180,7 @@ class Runner(_AbstractRunner):
                         # print(
                         # "storing into summands_array for",target,"in",p
                         # )
-                        summands_array[target._from : target._to] += summands #  noqa: E203
+                        summands_array[target._from : target._to] += summands
                     else:
                         # summands may have different length than
                         # p.owning_class.instances due to broadcasting effects
