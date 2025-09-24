@@ -8,12 +8,13 @@
 # URL: <http://www.pik-potsdam.de/copan/software>
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
-from pycopancore.private._abstract_process_taxon_mixin import \
-    _AbstractProcessTaxonMixin
 from pycopancore.data_model.ordered_set import OrderedSet
+from pycopancore.private._abstract_process_taxon_mixin import (
+    _AbstractProcessTaxonMixin,
+)
 
 
-class Culture (_AbstractProcessTaxonMixin):
+class Culture(_AbstractProcessTaxonMixin):
     """Abstract Culture process taxon class.
 
     Inherited by base model component.

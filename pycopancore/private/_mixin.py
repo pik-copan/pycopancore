@@ -18,10 +18,13 @@ It sets the basic structure of mixins (entity types, process taxa).
 # - in __init__, add logics that sets all variables to either their specified
 #   values or their default values as given in Variable.
 
-from pycopancore.data_model.variable import Variable
-from pycopancore.private._expressions import _DotConstruct, aggregation_names
-
 import inspect
+
+from pycopancore.data_model.variable import Variable
+from pycopancore.private._expressions import (
+    _DotConstruct,
+    aggregation_names,
+)
 
 
 class _MixinType(type):
@@ -31,15 +34,15 @@ class _MixinType(type):
     class attribute calls and having nice reprs.
     """
 
-#     def __getattr__(cls, name):
-#         """return an object representing an aggregation"""
-#         print("seeking",cls,name,cls.__base__)
-#         try:
-#             return object.__getattribute__(name)
-#         if name in aggregation_names:
-#             return _DotConstruct(cls, [name])
-#         res = getattr(cls.__base__, name)
-#         return res
+    #     def __getattr__(cls, name):
+    #         """return an object representing an aggregation"""
+    #         print("seeking",cls,name,cls.__base__)
+    #         try:
+    #             return object.__getattribute__(name)
+    #         if name in aggregation_names:
+    #             return _DotConstruct(cls, [name])
+    #         res = getattr(cls.__base__, name)
+    #         return res
 
     def __getattribute__(cls, name):
         """Dummy docstring"""
@@ -48,7 +51,8 @@ class _MixinType(type):
             return "DUMMY"  # FIXME!
         if name in aggregation_names:
             dc = _DotConstruct(cls, [], aggregation=name)
-#            print("new aggregation dot construct",dc,"at",cls,"with aggregation",name)
+            # print("new aggregation dot construct",dc,"at",cls,"with
+            # aggregation",name)
             return dc
         res = type.__getattribute__(cls, name)
         if isinstance(res, property):
@@ -61,9 +65,11 @@ class _MixinType(type):
                         return res
                 except BaseException:
                     pass
-            raise AttributeError("property " + name
-                                 + " does not correspond to any Variable!")
+            raise AttributeError(
+                "property " + name + " does not correspond to any Variable!"
+            )
         return res
+
 
 #    def __str__(cls):
 #        return cls.__name__
@@ -102,12 +108,12 @@ class _Mixin(object, metaclass=_MixinType):
         try:
             # if a composite class been registered with the invoking mixin
             # class, we generate an instance of that:
-#            print("instantiating a", cls._composed_class, args, kwargs)
+            # print("instantiating a", cls._composed_class, args, kwargs)
             obj = super().__new__(cls._composed_class, *args, **kwargs)
-        except:
+        except Exception:
             # otherwise, we do what __new__ normally does, namely generate an
             # instance of the class invoking it, i.e., of cls:
-#            print("instantiating a", cls, args, kwargs)
+            #            print("instantiating a", cls, args, kwargs)
             obj = super().__new__(cls)
         return obj
 
@@ -135,27 +141,33 @@ class _Mixin(object, metaclass=_MixinType):
     def complete_values(self):
         """assign default values to all unset Variables"""
         for var in self.variables:
-            if (not hasattr(self, var.codename)  # this happens for unset properties
-                or isinstance(getattr(self, var.codename), Variable)):
+            if not hasattr(
+                self, var.codename
+            ) or isinstance(  # this happens for unset properties
+                getattr(self, var.codename), Variable
+            ):
                 # class attribute was returned by getattr,
-                # hence object attribute has not been assigned a value yet. 
+                # hence object attribute has not been assigned a value yet.
                 try:
                     var.set_to_default(self)
                 except AttributeError:
                     pass
 
     # Jobst: object provides a sufficient __str__ I guess
-#    def __str__(self):
-#        return repr(self)
+    #    def __str__(self):
+    #        return repr(self)
 
     def set_value(self, var, value):
         """Dummy docstring"""
         # TODO: add docstring to method
-        assert isinstance(var, Variable), \
-            "variable must be a Variable object"
+        assert isinstance(var, Variable), "variable must be a Variable object"
         var.set_value(self, value)
 
-    def assert_valid(self):  # TODO: rename to "validate" when adding code that sets unset vars to default?
+    # TODO: rename to "validate" when adding code that sets unset vars to
+    # default?
+    def assert_valid(
+        self,
+    ):
         """Make sure all variable values are valid.
 
         By calling assert_valid for all Variables
@@ -164,7 +176,7 @@ class _Mixin(object, metaclass=_MixinType):
         for v in self.variables:
             try:
                 val = v.get_value(self)
-            except:
+            except Exception:
                 # TODO: set to default if unset and default exists??
                 return
             v.assert_valid(val)

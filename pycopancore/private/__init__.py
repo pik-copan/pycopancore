@@ -5,9 +5,7 @@
 #
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
-
-"""
-"""
+""" """
 
 # from ._mixin import _Mixin, _MixinType
 # from ._abstract_process import _AbstractProcess

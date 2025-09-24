@@ -7,37 +7,53 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-# Dimension and Unit objects are defined at attributes in 
-# dimensions_and_units.DimensionsAndUnits so that sphinx will document them.
-# The following makes them accessible as package attributes:
-from .dimensions_and_units import *
-for k, o in DimensionsAndUnits.__dict__.items():
-    if isinstance(o, (Dimension, Unit)):
-        globals()[k] = o
-
-from .environment import Environment as ENV
-from .environment import Environment as environment
-from .environment import Environment
-from .metabolism import Metabolism as MET
-from .metabolism import Metabolism as metabolism
-from .metabolism import Metabolism
-from .culture import Culture as CUL
-from .culture import Culture as culture
+from .cell import Cell
 from .culture import Culture
 
-from .world import World as W
-from .world import World as world
-from .world import World
-from .social_system import SocialSystem as S
-from .social_system import SocialSystem as social_system
-from .social_system import SocialSystem
-from .cell import Cell as C
-from .cell import Cell as cell
-from .cell import Cell
-from .individual import Individual as I
-from .individual import Individual as individual
-from .individual import Individual
-from .group import Group as G
-from .group import Group as group
-from .group import Group
+# Import dimensions and units
+from .dimensions_and_units import DimensionsAndUnits
 
+# Import core classes
+from .environment import Environment
+from .group import Group
+from .individual import Individual
+from .metabolism import Metabolism
+from .social_system import SocialSystem
+from .world import World
+
+# Create aliases for backward compatibility
+ENV = Environment
+MET = Metabolism
+CUL = Culture
+W = World
+S = SocialSystem
+C = Cell
+# Individual class is available as Individual
+G = Group
+
+# Make dimensions and units available as module attributes
+for k, o in DimensionsAndUnits.__dict__.items():
+    if hasattr(o, "__class__") and "Dimension" in str(type(o)):
+        globals()[k] = o
+    elif hasattr(o, "__class__") and "Unit" in str(type(o)):
+        globals()[k] = o
+
+# Define what this module exports
+__all__ = [
+    "Environment",
+    "Metabolism",
+    "Culture",
+    "World",
+    "SocialSystem",
+    "Cell",
+    "Individual",
+    "Group",
+    "DimensionsAndUnits",
+    "ENV",
+    "MET",
+    "CUL",
+    "W",
+    "S",
+    "C",
+    "G",
+]

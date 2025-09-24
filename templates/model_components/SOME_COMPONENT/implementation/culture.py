@@ -14,27 +14,30 @@ then remove these instructions
 # License: BSD 2-clause license
 
 from .. import interface as I
+
 # from .... import master_data_model as D
 
-# TODO: uncomment this if you need ref. variables such as B.Culture.individuals:
-#from ...base import interface as B
+# TODO: uncomment this if you need ref. variables such as
+# B.Culture.individuals:
+# from ...base import interface as B
 
 # TODO: import those process types you need:
 # from .... import Explicit, ODE, Event, Step
 
-class Culture (I.Culture):
+
+class Culture(I.Culture):
     """Culture process taxon mixin implementation class."""
 
     # standard methods:
     # TODO: only uncomment when adding custom code!
 
-#     def __init__(self,
-#                  # *,  # TODO: uncomment when adding named args behind here
-#                  **kwargs):
-#         """Initialize the unique instance of Culture."""
-#         super().__init__(**kwargs)  # must be the first line
-#         # TODO: add custom code here:
-#         pass
+    #     def __init__(self,
+    #         # *,  # TODO: uncomment when adding named args behind here
+    #         **kwargs):
+    #         """Initialize the unique instance of Culture."""
+    #         super().__init__(**kwargs)  # must be the first line
+    #         # TODO: add custom code here:
+    #         pass
 
     # process-related methods:
 

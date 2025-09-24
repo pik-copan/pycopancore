@@ -17,7 +17,6 @@ An event might be something like a birth or death, catastrophes of all sorts.
 # Imports
 #
 
-
 #
 # Definition of class Event
 #
@@ -31,12 +30,7 @@ class Event(_AbstractProcess):
     type = "Event"
     timetype = "discrete"
 
-    def __init__(self,
-                 name,
-                 variables,
-                 specification,
-                 smoothness=0
-                 ):
+    def __init__(self, name, variables, specification, smoothness=0):
         """Instantiate an instance of an Event process.
 
         Parameters

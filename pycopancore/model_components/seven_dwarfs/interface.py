@@ -21,10 +21,9 @@ remove these instructions.
 # TODO: uncomment and adjust only if you really need other variables:
 from pycopancore.data_model import Variable
 from pycopancore.data_model import master_data_model as D
-from pycopancore.data_model.master_data_model import CUL
 
 
-class Model (object):
+class Model(object):
     """Interface for Model mixin."""
 
     # metadata:
@@ -45,7 +44,7 @@ class Model (object):
 # entity types:
 
 
-class World (object):
+class World(object):
     """Interface for World mixin."""
 
     # endogenous variables:
@@ -58,50 +57,53 @@ class World (object):
     # exogenous variables / parameters:
 
 
-class Cell (object):
+class Cell(object):
     """Interface for Cell entity type mixin."""
 
     # endogenous variables:
-    eating_stock = Variable("eating stock",
-                            "the eating stock",
-                            unit=D.kilograms,
-                            lower_bound=0,
-                            default=100)
+    eating_stock = Variable(
+        "eating stock",
+        "the eating stock",
+        unit=D.kilograms,
+        lower_bound=0,
+        default=100,
+    )
     # exogenous variables / parameters:
 
 
-class Individual (object):
+class Individual(object):
     """Interface for Individual entity type mixin."""
 
     # endogenous variables:
-    age = Variable("age",
-                   "dwarf's age",
-                   unit=D.years,
-                   default=0)
-    beard_length = Variable("beard length",
-                            "length of beard",
-                            unit=D.meters,
-                            default=0)
-    beard_growth_parameter = Variable("beard growth parameter",
-                                      "growth speed of dwarf beard",
-                                      default=0.1)
-    eating_parameter = Variable("eating parameter",
-                                "eating speed of dwarf",
-                                default=1)
+    age = Variable("age", "dwarf's age", unit=D.years, default=0)
+    beard_length = Variable(
+        "beard length", "length of beard", unit=D.meters, default=0
+    )
+    beard_growth_parameter = Variable(
+        "beard growth parameter",
+        "growth speed of dwarf beard",
+        default=0.1,
+    )
+    eating_parameter = Variable(
+        "eating parameter", "eating speed of dwarf", default=1
+    )
+
 
 class SocialSystem(object):
     """Interface for SocialSystem mixin"""
+
     pass
 
-class Culture (object):
+
+class Culture(object):
     """Interface for Culture mixin"""
+
     pass
+
 
 class Group(object):
     """Interface for Group mixin"""
 
-    having_members = Variable("test",
-                      "test",
-                      default=True)
+    having_members = Variable("test", "test", default=True)
 
     pass

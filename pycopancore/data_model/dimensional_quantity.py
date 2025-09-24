@@ -31,7 +31,7 @@ class DimensionalQuantity(object):
     """The corresponding dimension"""
 
     def number(self, unit=None):
-        """Get quantity as a dimensionless number of some (or the default) unit"""
+        """Get quantity as a dimensionless number of some (or the default) unit"""  # noqa: E501
         if unit is None:
             return self._number
         else:
@@ -61,8 +61,9 @@ class DimensionalQuantity(object):
             The unit in which this quantity is given
 
         """
-        assert not isinstance(number, DimensionalQuantity), \
-            "number must be a non-dimensional number or array"
+        assert not isinstance(
+            number, DimensionalQuantity
+        ), "number must be a non-dimensional number or array"
         self._number = number
         assert isinstance(unit, U.Unit), "unit must be a Unit object"
         self._unit = unit
@@ -72,7 +73,9 @@ class DimensionalQuantity(object):
         if unit is None:
             unit = self._unit
         format = str(width - len(unit.symbol) - 1) + "." + str(decimals) + "f"
-        return ("{:"+format+"}").format(self.number(unit)) + " " + unit.symbol
+        return (
+            ("{:" + format + "}").format(self.number(unit)) + " " + unit.symbol
+        )
 
     def __repr__(self):
         return str(self._number) + " " + self._unit.symbol
@@ -81,65 +84,83 @@ class DimensionalQuantity(object):
         return hash((self._number, self._unit))
 
     def reduce(self):
-        """return unit as dimensionless if it is nondimensional, else return self"""
-        return self._number * self._unit.factor \
-            if self._dimension == dimension.nondim else self
+        """return unit as dimensionless if it is nondimensional, else return self"""  # noqa: E501
+        return (
+            self._number * self._unit.factor
+            if self._dimension == dimension.nondim
+            else self
+        )
 
     def __pow__(self, power):
-        return DimensionalQuantity(self._number**power, self._unit**power) \
-            .reduce()
+        return DimensionalQuantity(
+            self._number**power, self._unit**power
+        ).reduce()
 
     def __add__(self, other):
         if other == 0:
             other = DimensionalQuantity(number=0, unit=self._unit)
         if len(self._unit.exponents) > 0:
-            assert isinstance(other, DimensionalQuantity), \
-                "can only add DimensionalQuantity to DimensionalQuantity"
+            assert isinstance(
+                other, DimensionalQuantity
+            ), "can only add DimensionalQuantity to DimensionalQuantity"
         elif not isinstance(other, DimensionalQuantity):
             other = DimensionalQuantity(other, U.unity)
-        assert other._dimension == self._dimension, \
-            "different dimensions cannot be added"
-        return DimensionalQuantity(self._number
-                                   + other._number * other._unit.factor / self._unit.factor,
-                                   self._unit).reduce()
+        assert (
+            other._dimension == self._dimension
+        ), "different dimensions cannot be added"
+        return DimensionalQuantity(
+            self._number
+            + other._number * other._unit.factor / self._unit.factor,
+            self._unit,
+        ).reduce()
 
     def __sub__(self, other):
         if other == 0:
             other = DimensionalQuantity(number=0, unit=self._unit)
         if len(self._unit.exponents) > 0:
-            assert isinstance(other, DimensionalQuantity), \
-                "can only subtract DimensionalQuantity from DimensionalQuantity"
+            assert isinstance(
+                other, DimensionalQuantity
+            ), "can only subtract DimensionalQuantity from DimensionalQuantity"  # noqa: E501
         elif not isinstance(other, DimensionalQuantity):
             other = DimensionalQuantity(other, U.unity)
-        assert other._dimension == self._dimension, \
-            "different dimensions cannot be subtracted"
-        return DimensionalQuantity(self._number
-                                   - other._number * other._unit.factor / self._unit.factor,
-                                   self._unit).reduce()
+        assert (
+            other._dimension == self._dimension
+        ), "different dimensions cannot be subtracted"
+        return DimensionalQuantity(
+            self._number
+            - other._number * other._unit.factor / self._unit.factor,
+            self._unit,
+        ).reduce()
 
     def __mul__(self, other):
         # TODO: improve the following dirty fix:
-        if hasattr(other, 'exponents'):  # then it is probably a Unit
-            return DimensionalQuantity(self._number,
-                                       self._unit * other).reduce()
+        if hasattr(other, "exponents"):  # then it is probably a Unit
+            return DimensionalQuantity(
+                self._number, self._unit * other
+            ).reduce()
         elif isinstance(other, DimensionalQuantity):
-            return DimensionalQuantity(self._number * other._number,
-                                       self._unit * other._unit).reduce()
+            return DimensionalQuantity(
+                self._number * other._number, self._unit * other._unit
+            ).reduce()
         else:
-            return DimensionalQuantity(self._number * other, self._unit)\
-                .reduce()
+            return DimensionalQuantity(
+                self._number * other, self._unit
+            ).reduce()
 
     def __truediv__(self, other):
         # TODO: improve the following dirty fix:
-        if hasattr(other, 'exponents'):  # then it is probably a Unit
-            return DimensionalQuantity(self._number,
-                                       self._unit / other).reduce()
+        if hasattr(other, "exponents"):  # then it is probably a Unit
+            return DimensionalQuantity(
+                self._number, self._unit / other
+            ).reduce()
         elif isinstance(other, DimensionalQuantity):
-            return DimensionalQuantity(self._number / other._number,
-                                       self._unit / other._unit).reduce()
+            return DimensionalQuantity(
+                self._number / other._number, self._unit / other._unit
+            ).reduce()
         else:
-            return DimensionalQuantity(self._number / other, self._unit)\
-                .reduce()
+            return DimensionalQuantity(
+                self._number / other, self._unit
+            ).reduce()
 
     def __radd__(self, other):
         return self + other
@@ -151,7 +172,7 @@ class DimensionalQuantity(object):
         return self * other
 
     def __rtruediv__(self, other):
-        return self**(-1) * other
+        return self ** (-1) * other
 
     def __getitem__(self, items):
         return DimensionalQuantity(self._number[items], self._unit)

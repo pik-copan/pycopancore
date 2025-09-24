@@ -9,26 +9,27 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from networkx import Graph
+from networkx import DiGraph, Graph
 
 # only used in this component, not in others:
 from pycopancore.model_components import abstract
 from pycopancore.private._simple_expressions import unknown
 
-from .. import interface as I
+from .. import interface as Interface
 
-from networkx import Graph, DiGraph
 
-class Culture (I.Culture, abstract.Culture):
+class Culture(Interface.Culture, abstract.Culture):
     """Culture process taxon mixin implementation class."""
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 acquaintance_network=None,
-                 group_membership_network=None,
-                 **kwargs):
+    def __init__(
+        self,
+        *,
+        acquaintance_network=None,
+        group_membership_network=None,
+        **kwargs,
+    ):
         """Initialize the unique instance of Culture.
 
         Parameters
@@ -69,6 +70,7 @@ class Culture (I.Culture, abstract.Culture):
 
     _individuals = unknown
     """cache, depends on self.worlds, world.individuals"""
+
     @property  # read-only
     def individuals(self):
         """Get and set the set of Individuals governed by this Culture."""
@@ -88,6 +90,7 @@ class Culture (I.Culture, abstract.Culture):
 
     _social_systems = unknown
     """cache, depends on self.worlds, world.social_systems"""
+
     @property  # read-only
     def social_systems(self):
         """Get and set the set of SocialSystems governed by this Culture."""

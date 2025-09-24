@@ -9,11 +9,13 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
 from pycopancore.data_model.ordered_set import OrderedSet
+from pycopancore.private._abstract_entity_mixin import (
+    _AbstractEntityMixin,
+)
 
 
-class Cell (_AbstractEntityMixin):
+class Cell(_AbstractEntityMixin):
     """Abstract Cell entity type class, inherited by base model component."""
 
     variables = OrderedSet()

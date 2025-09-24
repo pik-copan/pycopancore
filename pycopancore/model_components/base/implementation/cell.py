@@ -14,24 +14,19 @@ from pycopancore.model_components import abstract
 from pycopancore.private._simple_expressions import unknown
 
 # typical imports for implementation classes:
-from .. import interface as I
+from .. import interface as Interface
 
 
-class Cell (I.Cell, abstract.Cell):
+class Cell(Interface.Cell, abstract.Cell):
     """Cell entity type mixin implementation class.
 
     Base component's Cell mixin that every model must use in composing their
-    Cell class. Inherits from I.Cell as the interface with all necessary
-    variables and parameters.
+    Cell class. Inherits from Interface.Cell as the interface with all
+    necessary variables and parameters.
 
     """
 
-    def __init__(self,
-                 *,
-                 world=None,
-                 social_system=None,
-                 **kwargs
-                 ):
+    def __init__(self, *, world=None, social_system=None, **kwargs):
         """Initialize an instance of Cell.
 
         Parameters
@@ -51,7 +46,9 @@ class Cell (I.Cell, abstract.Cell):
         self._social_system = None
         if world:
             self.world = world
-        self.social_system = social_system  # this line must occur after setting world!
+        self.social_system = (
+            social_system  # this line must occur after setting world!
+        )
 
         # make sure all variable values are valid:
         self.assert_valid()
@@ -62,7 +59,6 @@ class Cell (I.Cell, abstract.Cell):
         # register with all mandatory networks:
         if self.environment:
             self.environment.geographic_network.add_node(self)
-
 
     # getters and setters for references:
 
@@ -77,18 +73,22 @@ class Cell (I.Cell, abstract.Cell):
         if self._world is not None:
             # first deregister from previous world's list of cells:
             self._world.cells.remove(self)
-        assert isinstance(w, I.World), "world must be of entity type World"
+        assert isinstance(
+            w, Interface.World
+        ), "world must be of entity type World"
         w._cells.add(self)
         self._world = w
 
     @property
     def social_system(self):
-        """Get the lowest-level SocialSystem whose territory the Cell is part of."""
+        """Get the lowest-level SocialSystem whose territory the Cell is part
+        of."""
         return self._social_system
 
     @social_system.setter
     def social_system(self, s):
-        """Set the lowest-level SocialSystem whose territory the Cell is part of."""
+        """Set the lowest-level SocialSystem whose territory the Cell is part
+        of."""
         if self._social_system is not None:
             # first deregister from previous social_system's list of cells:
             self._social_system._direct_cells.remove(self)
@@ -96,8 +96,9 @@ class Cell (I.Cell, abstract.Cell):
             self._social_system.cells = unknown
             self._social_system.direct_individuals = unknown
         if s is not None:
-            assert isinstance(s, I.SocialSystem), \
-                "social_system must be of entity type SocialSystem"
+            assert isinstance(
+                s, Interface.SocialSystem
+            ), "social_system must be of entity type SocialSystem"
             s._direct_cells.add(self)
             # reset dependent caches:
             s.cells = unknown
@@ -125,18 +126,26 @@ class Cell (I.Cell, abstract.Cell):
         return self._world.culture
 
     _social_systems = unknown
-    """cache, depends on self.social_system, self.social_system.higher_social_systems"""
+    """cache, depends on self.social_system,
+    self.social_system.higher_social_systems"""
+
     @property  # read-only
     def social_systems(self):
-        """Get upward list of SocialSystems the Cell belongs to (in)directly."""
+        """Get upward list of SocialSystems the Cell belongs to
+        (in)directly."""
         if self._social_systems is unknown:
-            self._social_systems = [] if self.social_system is None \
-                else [self.social_system] + self.social_system.higher_social_systems
+            self._social_systems = (
+                []
+                if self.social_system is None
+                else [self.social_system]
+                + self.social_system.higher_social_systems
+            )
         return self._social_systems
 
     @social_systems.setter
     def social_systems(self, u):
-        """Set upward list of SocialSystems the Cell belongs to (in)directly."""
+        """Set upward list of SocialSystems the Cell belongs to
+        (in)directly."""
         assert u == unknown, "setter can only be used to reset cache"
         self._social_systems = unknown
         # reset dependent caches:

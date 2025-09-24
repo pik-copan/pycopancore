@@ -22,7 +22,7 @@ from ... import master_data_model as D
 # from ... import Variable
 
 
-class Model (object):
+class Model(object):
     """Interface for Model mixin."""
 
     # metadata:
@@ -43,7 +43,7 @@ class Model (object):
 #
 # Entity types
 #
-class World (object):
+class World(object):
     """Interface for World mixin."""
 
     # endogenous variables:
@@ -63,18 +63,20 @@ class World (object):
     # TODO: similarly
 
 
-class SocialSystem (object):
+class SocialSystem(object):
     """Interface for SocialSystem entity type mixin."""
 
     # endogenous variables:
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    # ONESOCIALSYSTEMVARIABLE = master_data_model.SocialSystem.ONESOCIALSYSTEMVARIABLE
+    # ONESOCIALSYSTEMVARIABLE = master_data_model.SocialSystem.ASOCIALSYSTEMVAR
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    # ANOTHERSOCIALSYSTEMVARIABLE = MODEL_COMPONENT.SocialSystem.ANOTHERSOCIALSYSTEMVARIABLE
+    # ANOTHERSOCIALSYSTEMVARIABLE = (
+    # MODEL_COMPONENT.SocialSystem.MORESOCIALSYSTEMVARIABLE
+    # )
 
     # TODO: uncomment and adjust only if you really need other variables:
     # PERSONALSOCIALSYSTEMVARIABLE = Variable("name", "desc", unit=..., ...)
@@ -82,7 +84,7 @@ class SocialSystem (object):
     # exogenous variables / parameters:
 
 
-class Cell (object):
+class Cell(object):
     """Interface for Cell entity type mixin."""
 
     # endogenous variables:
@@ -101,39 +103,40 @@ class Cell (object):
     # exogenous variables / parameters:
 
 
-class Individual (object):
+class Individual(object):
     """Interface for Individual entity type mixin."""
 
     # endogenous variables:
-        
+
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    # ONEINDIVIDUALVARIABLE = master_data_model.Individual.ONEINDIVIDUALVARIABLE
+    # ONEINDIVIDUALVARIABLE = master_data_model.Individual.ONEINDIVIDUALVAR
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    # ANOTHERINDIVIDUALVARIABLE= MODEL_COMPONENT.Individual.ANOTHERINDIVIDUALVARIABLE
+    # ANOTHERINDIVIDUALVARIABLE= MODEL_COMPONENT.Individual.MOREINDIVIDUALVAR
 
     # TODO: uncomment and adjust only if you really need other variables:
     # PERSONALINDIVIDUALVARIABLE = Variable("name", "desc", unit=..., ...)
 
     # exogenous variables / parameters:
 
+
 #
 # Process taxa
 #
-class Environment (object):
+class Environment(object):
     """Interface for Environment process taxon mixin."""
 
     # endogenous variables:
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    # ONEENVIRONMENTVARIABLE = master_data_model.Environment.ONEENVIRONMENTVARIABLE
+    # ONEENVIRONMENTVARIABLE = master_data_model.Environment.ONEENVIRONMENTVAR
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    # ANOTHERENVIROMENTVARIABLE= MODEL_COMPONENT.Environment.ANOTHERENVIROMENTVARIABLE
+    # ANOTHERENVIROMENTVARIABLE= MODEL_COMPONENT.Environment.MORENVIROMENTVAR
 
     # TODO: uncomment and adjust only if you really need other variables:
     # PERSONALENVIROMENTVARIABLE = Variable("name", "desc", unit=..., ...)
@@ -141,18 +144,18 @@ class Environment (object):
     # exogenous variables / parameters:
 
 
-class Metabolism (object):
+class Metabolism(object):
     """Interface for Metabolism process taxon mixin."""
 
     # endogenous variables:
 
     # TODO: use variables from the master data model wherever possible
     # wherever possible!:
-    # ONEMETABOLISMVARIABLE = master_data_model.Metabolism.ONEMETABOLISMVARIABLE
+    # ONEMETABOLISMVARIABLE = master_data_model.Metabolism.ONEMETABOLISMVAR
 
     # TODO: uncomment and adjust if you need further variables from another
     # model component:
-    # ANOTHERMETABOLISMVARIABLE= MODEL_COMPONENT.Metabolism.ANOTHERMETABOLISMVARIABLE
+    # ANOTHERMETABOLISMVARIABLE= MODEL_COMPONENT.Metabolism.MOREMETABOLISMVAR
 
     # TODO: uncomment and adjust only if you really need other variables:
     # PERSONALMETABOLISMVARIABLE = Variable("name", "desc", unit=..., ...)
@@ -160,7 +163,7 @@ class Metabolism (object):
     # exogenous variables / parameters:
 
 
-class Culture (object):
+class Culture(object):
     """Interface for Culture process taxon mixin."""
 
     # endogenous variables:

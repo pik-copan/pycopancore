@@ -14,13 +14,15 @@ then remove these instructions
 # License: BSD 2-clause license
 
 from . import interface as I
+
 # import all needed entity type implementation classes:
-from .implementation import World, SocialSystem, Cell, Individual  # TODO: adjust!
+from .implementation import World, SocialSystem, Cell, Individual
+
 # import all needed process taxon implementation classes:
-from .implementation import Environment, Metabolism, Culture  # TODO: adjust!
+from .implementation import Environment, Metabolism, Culture
 
 
-class Model (I.Model):
+class Model(I.Model):
     """Model mixin class."""
 
     # mixins provided by this model component:

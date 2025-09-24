@@ -25,17 +25,13 @@ class ReferenceVariable(Variable):
     (will be adjusted by model.configure to point to composite class
     instead of mixin class)"""
 
-    def __init__(self,
-                 name,
-                 desc,
-                 *,
-                 type=object,
-                 **kwargs):
+    def __init__(self, name, desc, *, type=object, **kwargs):
         super().__init__(name, desc, **kwargs)
         self.type = type
 
     def __getattr__(self, name):
-        """return a _DotConstruct representing a variable of the referenced class"""
+        """return a _DotConstruct representing a variable of the referenced
+        class"""
         if name == "__qualname__":  # needed to make sphinx happy
             return "DUMMY"  # FIXME!
         return _DotConstruct(self, []).__getattr__(name)
@@ -51,15 +47,18 @@ class ReferenceVariable(Variable):
         else:
             if self.type is not None:
                 if not isinstance(v, self.type):
-                    return False, \
-                        str(self) + " must be instance of " + str(self.type)
+                    return False, str(self) + " must be instance of " + str(
+                        self.type
+                    )
 
         return super()._check_valid(v)
 
     def __str__(self):
-        return (self.owning_class.__name__ + "." + self.codename) \
-                if self.owning_class \
-                else self.name + "(uid=" + self._uid + ")"
+        return (
+            (self.owning_class.__name__ + "." + self.codename)
+            if self.owning_class
+            else self.name + "(uid=" + self._uid + ")"
+        )
 
     def __repr__(self):
         if self.owning_class:
@@ -88,4 +87,4 @@ class ReferenceVariable(Variable):
             r += ", scale=" + self.scale
         if self.type is not None:
             r += ", type=" + str(self.datatype)
-        return r # + " (uid=" + str(self._uid) + ")"
+        return r  # + " (uid=" + str(self._uid) + ")"
