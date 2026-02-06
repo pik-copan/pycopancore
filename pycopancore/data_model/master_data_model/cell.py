@@ -21,7 +21,6 @@ from pycopancore.data_model.master_data_model.dimensions_and_units import (
 
 
 class Cell:
-
     # natural:
 
     land_area = ENV.land_area.copy()

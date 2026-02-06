@@ -14,15 +14,15 @@ from pycopancore.model_components import abstract
 from pycopancore.private._simple_expressions import unknown
 
 # typical imports for implementation classes:
-from .. import interface as I
+from .. import interface as Interface
 
 
 class Cell(I.Cell, abstract.Cell):
     """Cell entity type mixin implementation class.
 
     Base component's Cell mixin that every model must use in composing their
-    Cell class. Inherits from I.Cell as the interface with all necessary
-    variables and parameters.
+    Cell class. Inherits from Interface.Cell as the interface with all
+    necessary variables and parameters.
 
     """
 
@@ -73,7 +73,9 @@ class Cell(I.Cell, abstract.Cell):
         if self._world is not None:
             # first deregister from previous world's list of cells:
             self._world.cells.remove(self)
-        assert isinstance(w, I.World), "world must be of entity type World"
+        assert isinstance(
+            w, Interface.World
+        ), "world must be of entity type World"
         w._cells.add(self)
         self._world = w
 

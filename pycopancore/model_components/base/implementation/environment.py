@@ -9,13 +9,11 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-# only used in this component, not in others:
-from ... import abstract
-
-from .. import interface as I
-
 from networkx import Graph
 
+# only used in this component, not in others:
+from ... import abstract
+from .. import interface as Interface
 
 class Environment(I.Environment, abstract.Environment):
     """Environment process taxon mixin implementation class."""

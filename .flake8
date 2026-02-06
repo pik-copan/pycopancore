@@ -2,3 +2,9 @@
 max-line-length = 79
 extend-ignore = F541, F841, F403, F401, E741, E203
 exclude = */_version.py
+exclude = 
+    */_version.py
+    graphics/
+    templates/
+    studies/
+    docs/

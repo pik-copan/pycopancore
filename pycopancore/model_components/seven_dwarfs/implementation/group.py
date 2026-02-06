@@ -16,7 +16,7 @@ then remove these instructions
 # TODO: import those process types you need:
 from pycopancore.process_types import Explicit
 
-from .. import interface as I
+from .. import interface as Interface
 
 
 class Group(I.Group):

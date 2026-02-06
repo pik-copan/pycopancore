@@ -1,11 +1,10 @@
 """Master data model for group."""
 
-from pycopancore.data_model.variable import Variable
-
 from networkx import Graph
 
 
 class Group:
+    # TODO: specify edges
 
     # TODO: specify edges
 

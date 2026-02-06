@@ -9,8 +9,10 @@ component."""
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
 from pycopancore.data_model.ordered_set import OrderedSet
+from pycopancore.private._abstract_entity_mixin import (
+    _AbstractEntityMixin,
+)
 
 
 class SocialSystem(_AbstractEntityMixin):

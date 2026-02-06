@@ -16,11 +16,9 @@ from .. import interface as I
 from pycopancore.model_components.base import interface as B
 
 # from .... import master_data_model as D
-from pycopancore.process_types import ODE, Step, Explicit, Event
-import numpy as np
 
 
-class SocialSystem(I.SocialSystem):
+class SocialSystem(Interface.SocialSystem):
     """SocialSystem entity type mixin implementation class."""
 
     # process-related methods:

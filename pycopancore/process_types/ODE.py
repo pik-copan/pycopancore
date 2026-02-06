@@ -18,7 +18,6 @@ dependent of the time.
 # Imports
 #
 
-
 #
 # Definition of class ODE
 #

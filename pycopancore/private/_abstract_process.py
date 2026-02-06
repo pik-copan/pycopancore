@@ -16,7 +16,6 @@ It sets the basic structure of processes (ODE,explicit, step, event).
 # Imports
 #
 
-
 #
 # Definition of class _AbstractProcess
 #

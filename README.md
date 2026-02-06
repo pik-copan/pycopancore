@@ -1,15 +1,16 @@
 # pycopancore
 
-
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14938316.svg)](https://doi.org/10.5281/zenodo.14938316)
 [![CI](https://github.com/pik-copan/pycopancore/actions/workflows/check.yml/badge.svg)](https://github.com/pik-copan/pycopancore/actions) [![codecov](https://codecov.io/gh/pik-copan/pycopancore/graph/badge.svg)](https://codecov.io/gh/pik-copan/pycopancore)
 [![PyPI version](https://badge.fury.io/py/pycopancore.svg)](https://badge.fury.io/py/pycopancore)
 
+## Overview
 
-Reference implementation of the copan:CORE World-Earth modelling framework
+pycopancore is a Python implementation of the copan:CORE modeling framework for building World-Earth (global social-ecological) models. The framework allows easy implementation of complex models by combining different environmental, social-metabolic, and cultural submodels using various modeling techniques including differential equations, stochastic and deterministic events.
 
-copan:CORE is developed at the Potsdam Institute for Climate Impact Research.
+## Installation
 
+<<<<<<< HEAD
 An extensive documentation is found at https://pik-copan.github.io/pycopancore
 
 Table of Contents:
@@ -75,89 +76,22 @@ This creates a link instead of copying the files, so modifications in this direc
 ### Running a model
 
 To run one of the preconfigured models, execute a python script in the `studies` folder, for example
+=======
+>>>>>>> origin/pypi_support
 ```bash
-python run_seven_dwarfs.py
+pip install pycopancore
 ```
 
 ### Documentation
+Comprehensive documentation is available at: https://pik-copan.github.io/pycopancore
 
-The documentation can be accessed under https://pik-copan.github.io/pycopancore and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.
+See [examples](./examples/) for examples on how to use the framework.
 
-To create a local html version of the documentation, access the `docs` directory and type
+## Questions / Problems
 
-```
-> make html
-```
-The documentation can then be accessed under `docs/_build/html/index.html`.
+In case of questions please contact core@pik-potsdam.de or [open an issue](https://github.com/pik-copan/pycopancore/issues/new).
 
-To be able to create the automatic UML-Diagrams, [pylint](https://www.pylint.org/) and [graphviz](http://www.graphviz.org/) needs to be installed. To finally create the diagrams, use
-```
-> make uml
-```
-
-### Code of Good Practice
-
-When contributing to the project, please follow the guidelines below:
-* For every class/function write a proper docstring before committing.
-* Use static values as little as possible. Preferably define a variable in the header of the file instead.
-* For functions describing processes in the `model_components`, papers from the scientific literature that use these functional forms should be referenced in the code documentation.
-* Use as many `assert` statements as possible, even if they are computationally expensive. For actual runs, these checks can be switched off using the `-O` flag of the Python Interpreter.
-* Use proper (and long) variable names. Auto-completion will help typing them.
-* If a similar set of command is used twice, write a function for it right away.
-* Design the metadata used in the Variable class according to established catalogs like the [CF conventions](http://cfconventions.org/).
-* When writing class and method docstrings, already specify types and bounds for arguments and return values in the [sphinx-compatible PyContracts way](https://andreacensi.github.io/contracts/).
-* Follow the ["Guidelines for Ensuring Good Scientific Modelling Practice at PIK"](https://www.pik-potsdam.de/intranet/scientific-life-pik/modelling-strategy).
-
-### Tests
-We are using the python testing framework [pytest](http://pytest.org/latest/) with [pylama](https://github.com/klen/pylama) for style and error checking. Please write corresponding unittests while developing and make sure that all test pass by executing
-```
-py.test
-```
-in the root of the project tree.
-
-Requires
-* pytest
-* pylama
-* pylint
-* pylama_pylint
-* pytest-cov, to check of test coverage
-
-## Structure of the repository
-
-The code in the repository is organized into different subfolders:
-
-**docs** contains a detailed description of the framework and scripts to compile API documentation of the code (see [Quick start guide/Documentation](#documentation)). Furthermore, it contains the material for the framework tutorials.
-
-**examples** ??
-
-**graphics** contains code to visualize model output.
- 
-**pycopancore** contains the main code of the framework, specifically:
-
-**pycopancore/data_model** implements and specifies the underlying master data model for the different process taxa and provides a base for defining units and keeping them consistent.
-
-**pycopancore/model_components** contains various subfolders, in which model components and their interfaces with other components are defined.
-
-**pycopancore/models** contains code files that combine different model components to self-contained models. 
-
-**pycopancore/private** implements classes that are needed for the correct plugging together of model components and other functionality for preparing the model for running. 
-
-**pycopancore/process_types** contains the definitions for the different process types (events, steps, explicit and implicit equations, and ordinary differential equations).
-
-**pycopancore/runners** contains implementation of model runner, that executes the model by integrating its processes.
-
-**pycopancore/util** contains auxiliary functions.
-
-**studies** accommodates the files for executing the models. These "run" files define parameter settings, initialize model entities and start the model runner.
-
-**tests** comprises code to implement and run testing procedures of the implementation.
-
-## Licence and Development
-
-pycopancore is licenced under the BSD 2-Clause License.
-See the `LICENCE` file for further information.
-
-The versioning of pycopancore has been chosen to be administrated on the [github.com system](http://github.com/) as the future prospect of this model strongly encourages outside contributions. Any release version will be pushed on the inhouse versioning systems, [gitlab](http://gitlab.pik-potsdam.de/) and / or [svn](https://www.pik-potsdam.de/services/it/core/software-repositories/subversion/subversion).
-
-Candidates for speeding up Python code: cython, numba, ...
-
+## Contributing
+Merge requests are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md).
+For major changes, please open an issue first to discuss what you would like to
+change.

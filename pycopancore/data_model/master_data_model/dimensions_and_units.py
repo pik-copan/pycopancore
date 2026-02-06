@@ -14,7 +14,6 @@ from pycopancore.data_model.unit import Unit, unity
 
 
 class DimensionsAndUnits:
-
     # fundamental physical dimensions and units:
 
     length = Dimension("length", "1D spatial dimension")

@@ -13,7 +13,7 @@
 from pycopancore.model_components import abstract
 from pycopancore.private._simple_expressions import unknown
 
-from .. import interface as I
+from .. import interface as Interface
 
 
 class SocialSystem(I.SocialSystem, abstract.SocialSystem):
@@ -65,7 +65,9 @@ class SocialSystem(I.SocialSystem, abstract.SocialSystem):
         """Set the World the SocialSystem is part of."""
         if self._world is not None:
             self._world._social_systems.remove(self)
-        assert isinstance(w, I.World), "world must be of entity type World"
+        assert isinstance(
+            w, Interface.World
+        ), "world must be of entity type World"
         w._social_systems.add(self)
         self._world = w
 
@@ -150,10 +152,10 @@ class SocialSystem(I.SocialSystem, abstract.SocialSystem):
     def lower_social_systems(self):
         """Get lower social_systems."""
         # aggregate recursively:
-        l = self._next_lower_social_systems
+        lower_systems = self._next_lower_social_systems
         for s in self._next_lower_social_systems:
-            l.update(s.lower_social_systems)
-        return l
+            lower_systems.update(s.lower_social_systems)
+        return lower_systems
 
     @property  # read-only
     def direct_cells(self):
@@ -237,7 +239,9 @@ class SocialSystem(I.SocialSystem, abstract.SocialSystem):
         """Set the World the SocialSystem is part of."""
         if self._groups is not None:
             self._groups._social_system.remove(self)
-        assert isinstance(g, I.Culture), "groups must be of taxon type Group"
+        assert isinstance(
+            g, Interface.Culture
+        ), "groups must be of taxon type Group"
         g._worlds.add(self)
         self._culture = g
 

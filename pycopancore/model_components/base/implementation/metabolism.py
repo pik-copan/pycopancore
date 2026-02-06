@@ -11,8 +11,7 @@
 
 # only used in this component, not in others:
 from ... import abstract
-
-from .. import interface as I
+from .. import interface as Interface
 
 
 class Metabolism(I.Metabolism, abstract.Metabolism):

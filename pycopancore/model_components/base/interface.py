@@ -13,12 +13,22 @@ by entity type and process taxon
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from pycopancore.private._mixin import _MixinType
-
-from pycopancore.data_model.variable import Variable
+from pycopancore.data_model.master_data_model.cell import Cell as C
+from pycopancore.data_model.master_data_model.culture import (
+    Culture as CUL,
+)
+from pycopancore.data_model.master_data_model.dimensions_and_units import (
+    DimensionsAndUnits as DAU,
+)
+from pycopancore.data_model.master_data_model.environment import (
+    Environment as ENV,
+)
+from pycopancore.data_model.master_data_model.social_system import (
+    SocialSystem as S,
+)
+from pycopancore.data_model.master_data_model.world import World as W
 from pycopancore.data_model.reference_variable import ReferenceVariable
 from pycopancore.data_model.set_variable import SetVariable
-
 from pycopancore.data_model.unit import unity
 
 from pycopancore.data_model.master_data_model.dimensions_and_units import (
@@ -178,6 +188,8 @@ class SocialSystem(object, metaclass=_MixinType):
     """
 
     # references:
+    # type is SocialSystem, hence it can only be specified after class
+    # SocialSystem is defined, see below
     world = ReferenceVariable("world", "", type=World)
     next_higher_social_system = ReferenceVariable(
         "next higher social_system", "optional", allow_none=True

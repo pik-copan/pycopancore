@@ -14,9 +14,12 @@ taxa.
 # License: BSD 2-clause license
 
 import random
+
 from sympy import Symbol
 
-from pycopancore.data_model.dimensional_quantity import DimensionalQuantity
+from pycopancore.data_model.dimensional_quantity import (
+    DimensionalQuantity,
+)
 from pycopancore.data_model.unit import Unit
 from pycopancore.private._simple_expressions import unset, unknown
 
@@ -44,7 +47,8 @@ class Variable(Symbol):
 
     readonly = None
     """whether variable is read-only, e.g. holding redundant information"""
-    default = unset  # can't use None since None is a possible default value
+    # can't use None since None is a possible default value
+    _default_value = unset
     """default initial value"""
     uninformed_prior = None
     """random value generator (probability distribution)
@@ -215,10 +219,10 @@ class Variable(Symbol):
             assert default is unset
             assert uninformed_prior is None
             self.allow_none = True
-            self.default = unknown
+            self._default_value = unknown
         else:
             self.allow_none = allow_none
-            self.default = default
+            self._default_value = default
         self.uninformed_prior = uninformed_prior
 
     def copy(self, **kwargs):
@@ -470,12 +474,12 @@ class Variable(Symbol):
 
     def set_to_default(self, instances=None):  # if None: all entities/taxa
         """Set values in selected entities to default if a default was given"""
-        if self.default is unset:
+        if self._default_value is unset:
             return
         instances = self._get_instances(instances)
         if instances:  # Maybe variables owning class has no instances!
             for e in instances:
-                self.set_value(e, self.default)
+                self.set_value(e, self._default_value)
 
     def set_to_random(
         self,
@@ -568,7 +572,6 @@ class Variable(Symbol):
         """
         if dictionary is not None:
             for e, v in dictionary.items():
-
                 #
                 # Following assert statements need _AbstractEntityMixin. We
                 # maybe should move them into the test environment:

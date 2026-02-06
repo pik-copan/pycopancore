@@ -12,11 +12,9 @@
 from networkx import DiGraph, Graph
 
 from pycopancore.data_model.variable import Variable
-from pycopancore.data_model.unit import unity
 
 
 class Culture:
-
     # Social networks between individuals:
 
     acquaintance_network = Variable(

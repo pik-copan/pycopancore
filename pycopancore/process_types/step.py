@@ -18,7 +18,6 @@ steps.
 # Imports
 #
 
-
 #
 # Definition of class Event
 #

@@ -1,9 +1,6 @@
-import math as ma
 import numpy as np
 import sympy as sp
-
 from sympy import Eq, Piecewise
-from sympy.logic.boolalg import Boolean
 
 
 def ITE(cond, iftrue, iffalse):

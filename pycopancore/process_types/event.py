@@ -17,7 +17,6 @@ An event might be something like a birth or death, catastrophes of all sorts.
 # Imports
 #
 
-
 #
 # Definition of class Event
 #

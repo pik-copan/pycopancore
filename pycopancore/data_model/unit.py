@@ -9,16 +9,16 @@
 
 # TODO: doc strings
 
-from functools import reduce
 import operator
+from functools import reduce
+
 from numpy import log10
 
-from pycopancore.data_model.dimension import nondim
 from pycopancore.data_model import dimensional_quantity
+from pycopancore.data_model.dimension import nondim
 
 
 class Unit(object):
-
     is_base = None
     """whether this is a base unit"""
 

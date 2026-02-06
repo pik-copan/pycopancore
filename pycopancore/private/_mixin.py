@@ -18,10 +18,13 @@ It sets the basic structure of mixins (entity types, process taxa).
 # - in __init__, add logics that sets all variables to either their specified
 #   values or their default values as given in Variable.
 
-from pycopancore.data_model.variable import Variable
-from pycopancore.private._expressions import _DotConstruct, aggregation_names
-
 import inspect
+
+from pycopancore.data_model.variable import Variable
+from pycopancore.private._expressions import (
+    _DotConstruct,
+    aggregation_names,
+)
 
 
 class _MixinType(type):

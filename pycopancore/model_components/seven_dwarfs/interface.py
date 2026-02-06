@@ -21,7 +21,6 @@ remove these instructions.
 # TODO: uncomment and adjust only if you really need other variables:
 from pycopancore.data_model import Variable
 from pycopancore.data_model import master_data_model as D
-from pycopancore.data_model.master_data_model import CUL
 
 
 class Model(object):

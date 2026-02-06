@@ -20,8 +20,15 @@ from pycopancore.model_components.base import interface as B
 from pycopancore.process_types import ODE, Step, Explicit, Event
 import numpy as np
 
+from pycopancore.model_components.base import interface as B
 
-class Individual(I.Individual):
+# from .... import master_data_model as D
+from pycopancore.process_types import ODE, Explicit, Step
+
+from .. import interface as Interface
+
+
+class Individual(Interface.Individual):
     """Individual entity type mixin implementation class."""
 
     # standard methods:
@@ -64,7 +71,7 @@ class Individual(I.Individual):
     def eating(self, t):
         """Let dwarf eat from stock."""
 
-        # else:  I.Cell.d_stock -= self.eating_parameter
+        # else:  Interface.Cell.d_stock -= self.eating_parameter
         if self.cell.eating_stock >= self.eating_parameter:
             self.cell.d_eating_stock -= self.eating_parameter
         else:

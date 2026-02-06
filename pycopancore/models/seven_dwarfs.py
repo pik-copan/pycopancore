@@ -15,7 +15,6 @@
 
 # all models must use the base component
 from pycopancore.model_components import base
-
 from pycopancore.model_components import seven_dwarfs as sd
 from pycopancore.model_components import snowwhite as sw
 

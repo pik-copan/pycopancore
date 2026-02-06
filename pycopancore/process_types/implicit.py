@@ -16,7 +16,6 @@ Implicit functions are not yet implemented.
 # Imports
 #
 
-
 #
 # Definition of class Event
 #

@@ -13,5 +13,7 @@ Created on Mar 10, 2017
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .runner import Runner
 from .hooks import Hooks
+from .runner import Runner
+
+__all__ = ["Runner", "Hooks"]

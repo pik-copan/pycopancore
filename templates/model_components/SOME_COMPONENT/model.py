@@ -24,7 +24,7 @@ from .implementation import (
 )  # TODO: adjust!
 
 # import all needed process taxon implementation classes:
-from .implementation import Environment, Metabolism, Culture  # TODO: adjust!
+from .implementation import Environment, Metabolism, Culture
 
 
 class Model(I.Model):

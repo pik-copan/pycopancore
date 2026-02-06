@@ -35,8 +35,27 @@ from pycopancore.private._expressions import get_vars
 import gc
 import inspect
 import re
+
 import numpy as np
-from networkx import DiGraph, write_graphml
+from networkx import DiGraph
+
+from pycopancore.data_model import (
+    OrderedSet,
+    ReferenceVariable,
+    SetVariable,
+    Variable,
+)
+from pycopancore.model_components import abstract
+from pycopancore.private._abstract_entity_mixin import (
+    _AbstractEntityMixin,
+)
+from pycopancore.private._abstract_process import _AbstractProcess
+from pycopancore.private._abstract_process_taxon_mixin import (
+    _AbstractProcessTaxonMixin,
+)
+from pycopancore.private._expressions import get_vars
+from pycopancore.private._simple_expressions import unknown
+from pycopancore.process_types import ODE, Event, Explicit, Step
 
 
 # helper function:
@@ -189,7 +208,6 @@ class ModelLogics(object):
         )
         # iterate through all model components:
         for component in cls.components:
-
             if "entity_types" not in component.__dict__:
                 component.entity_types = []
 
@@ -433,7 +451,6 @@ class ModelLogics(object):
                                         cls.ODE_dependencies[
                                             target.target_variable
                                         ] = deps
-
                             cls.ODE_targets += p.targets
                             cls.process_targets += p.targets
                         elif isinstance(p, Explicit):

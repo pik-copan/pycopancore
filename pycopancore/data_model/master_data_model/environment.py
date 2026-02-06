@@ -1,5 +1,4 @@
 # WARNING: DON'T, I REPEAT, DON'T REMOVE SPACES AROUND = !!!
-
 """Master data model for environment."""
 
 from pycopancore.data_model.variable import Variable
@@ -9,6 +8,12 @@ from pycopancore.data_model.master_data_model.dimensions_and_units import (
 from pycopancore.data_model.unit import unity
 
 from networkx import Graph
+
+from pycopancore.data_model.master_data_model.dimensions_and_units import (
+    DimensionsAndUnits as DAU,
+)
+from pycopancore.data_model.unit import unity
+from pycopancore.data_model.variable import Variable
 
 
 class Environment:

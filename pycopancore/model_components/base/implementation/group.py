@@ -11,14 +11,15 @@
 
 # only used in this component, not in others:
 from pycopancore.model_components import abstract
-from .. import interface as I
+
+from .. import interface as Interface
 
 
 class Group(I.Group, abstract.Group):
     """Gropp entity type mixin implementation class.
 
     Base component's Group mixin that every model must use in composing
-    their Group class. Inherits from I.Group as the interface with all
+    their Group class. Inherits from Interface.Group as the interface with all
     necessary variables and parameters.
     """
 

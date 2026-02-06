@@ -17,7 +17,6 @@ for example calculate temperature from co2 level.
 # Imports
 #
 
-
 #
 # Definition of class Event
 #

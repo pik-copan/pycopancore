@@ -13,7 +13,6 @@ environment).
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-
 from pycopancore.private._mixin import _Mixin
 
 

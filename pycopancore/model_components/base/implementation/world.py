@@ -17,21 +17,14 @@ from pycopancore.data_model.ordered_set import OrderedSet
 
 from pycopancore.model_components import abstract
 from pycopancore.private._simple_expressions import unknown
-
-from .. import interface as I
-
 from pycopancore.process_types import Explicit
-from networkx import DiGraph, Graph
+
+from .. import interface as Interface
 
 
 class World(I.World, abstract.World):
-    """World entity type mixin implementation class.
 
-    Base component's World mixin that every model must use in composing their
-    World class. Inherits from I.World as the interface with all necessary
-    variables and parameters.
-
-    """
+    """World process taxon mixin implementation class."""
 
     def __init__(
         self,

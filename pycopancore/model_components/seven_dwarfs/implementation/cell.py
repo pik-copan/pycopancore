@@ -13,9 +13,7 @@ then remove these instructions
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import interface as I
-from pycopancore.process_types import Event
-import numpy as np
+from .. import interface as Interface
 
 # from .... import master_data_model as D
 

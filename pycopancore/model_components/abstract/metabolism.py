@@ -16,6 +16,9 @@ from pycopancore.private._abstract_process_taxon_mixin import (
     _AbstractProcessTaxonMixin,
 )
 from pycopancore.data_model.ordered_set import OrderedSet
+from pycopancore.private._abstract_process_taxon_mixin import (
+    _AbstractProcessTaxonMixin,
+)
 
 
 class Metabolism(_AbstractProcessTaxonMixin):

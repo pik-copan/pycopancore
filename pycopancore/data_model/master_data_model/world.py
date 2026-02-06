@@ -22,7 +22,6 @@ from pycopancore.data_model.master_data_model.dimensions_and_units import (
 
 
 class World:
-
     # natural:
 
     land_area = ENV.land_area.copy(default=1.5e8 * DAU.km2)

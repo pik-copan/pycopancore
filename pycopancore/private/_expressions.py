@@ -15,11 +15,9 @@
 # defines logics to deal with symbolic expressions and their evaluation
 
 import numpy as np
-import sympy as sp
-from sympy.functions.elementary.piecewise import ExprCondPair
 import scipy.special
+import sympy as sp
 
-from ._simple_expressions import unknown
 from pycopancore import data_model as D
 
 # hierarchical aggregation functions:
@@ -61,7 +59,6 @@ aggregation_names = set(name2numpy.keys())
 name2aggregation = {
     name: aggregation(func) for name, func in name2numpy.items()
 }
-
 
 # hierarchical broadcasting:
 
@@ -174,7 +171,6 @@ class _DotConstruct(sp.AtomicExpr):
         argument=None,
         **assumptions,
     ):
-
         uid = str(start)  # repr
 
         if len(attribute_sequence) > 0:

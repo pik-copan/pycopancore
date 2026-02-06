@@ -16,7 +16,7 @@ from pycopancore.model_components import abstract
 # from .... import master_data_model as D
 from pycopancore.private._simple_expressions import unknown
 
-from .. import interface as I
+from .. import interface as Interface
 
 
 class Individual(I.Individual, abstract.Individual):
@@ -124,7 +124,9 @@ class Individual(I.Individual, abstract.Individual):
                 self._cell.social_system.direct_individuals = unknown
                 self._cell.social_system.individuals = unknown
             self.world.individuals = unknown
-        assert isinstance(c, I.Cell), "cell must be of entity type Cell"
+        assert isinstance(
+            c, Interface.Cell
+        ), "cell must be of entity type Cell"
         c._individuals.add(self)
         self._cell = c
         # reset dependent caches:

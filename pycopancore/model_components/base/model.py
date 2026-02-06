@@ -13,6 +13,19 @@ derives from ModelLogics.
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
+from .. import abstract
+from . import interface
+from . import (
+    Cell,
+    Culture,
+    Environment,
+    Group,
+    Individual,
+    Metabolism,
+    SocialSystem,
+    World,
+)
+
 # import essential framework logics
 # (this import occurs ONLY in the base component):
 from .model_logics import ModelLogics

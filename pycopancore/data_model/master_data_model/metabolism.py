@@ -14,10 +14,10 @@ from pycopancore.data_model.master_data_model.dimensions_and_units import (
     DimensionsAndUnits as DAU,
 )
 from pycopancore.data_model.unit import unity
+from pycopancore.data_model.variable import Variable
 
 
 class Metabolism:
-
     # Population, demographics:
 
     population = Variable(

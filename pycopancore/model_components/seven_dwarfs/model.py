@@ -28,7 +28,7 @@ from .implementation import (
 # import all needed process taxon implementation classes:
 
 
-class Model(I.Model):
+class Model(Interface.Model):
     """Model mixin class."""
 
     # mixins provided by this model component:

@@ -1,5 +1,4 @@
 # example script for plotting with plotly:
-
 from pickle import load
 import numpy as np
 from plotly.subplots import make_subplots
@@ -8,7 +7,6 @@ import plotly.graph_objects as go
 # ADJUST FILENAME HERE:
 filename = "/tmp/without_social.pickle"
 # note: that file should have been produced like in the end of run_example1.py!
-
 
 # load data:
 traj = load(open(filename, "rb"))

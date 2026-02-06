@@ -17,6 +17,7 @@ are easily done by the user."""
 import pickle
 import json
 import networkx as nx
+
 from ._abstract_entity_mixin import _AbstractEntityMixin
 from ._abstract_process_taxon_mixin import _AbstractProcessTaxonMixin
 

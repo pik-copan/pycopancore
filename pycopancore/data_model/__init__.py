@@ -10,8 +10,8 @@ Variable naming convention
 We suggest to use rather descriptive variable names that make the relevant
 dimension clear in the following fashion:
 
-* Variables that represent integer cardinalities should be called **numbers**
-  (possibly abbreviated as `n`, `no`, or `num`) or **counts**.
+* Variables that represent integer cardinalities should be called
+  **numbers** (possibly abbreviated as `n`, `no`, or `num`) or **counts**.
 
 * Extensive variables of simple physical dimension should be called **stocks**,
   e.g. `atmospheric_carbon_stock` of dimension `carbon` and default unit
@@ -78,14 +78,13 @@ dimension clear in the following fashion:
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .ordered_set import OrderedSet
-
-from .dimension import Dimension, nondim
-from .unit import Unit, unity
-from .dimensional_quantity import DimensionalQuantity
-
+# Core data model components
 from .variable import Variable
+from .unit import Unit
+from .dimension import Dimension
+from .dimensional_quantity import DimensionalQuantity
+from .ordered_set import OrderedSet
 from .reference_variable import ReferenceVariable
 from .set_variable import SetVariable
 
-from . import master_data_model
+# Note: master_data_model is imported by other modules as needed

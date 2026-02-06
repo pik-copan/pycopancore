@@ -13,7 +13,7 @@
 from pycopancore.model_components import abstract
 from pycopancore.private._simple_expressions import unknown
 
-from .. import interface as I
+from .. import interface as Interface
 
 from networkx import Graph
 from networkx import DiGraph

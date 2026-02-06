@@ -35,10 +35,6 @@ class Metabolism(I.Metabolism):
     #                  # *,  # TODO: uncomment when adding named args behind
     #                  **kwargs):
     #         """Initialize the unique instance of Metabolism."""
-    #         super().__init__(**kwargs)  # must be the first line
-    #         # TODO: add custom code here:
-    #         pass
-
     # process-related methods:
 
     # TODO: add some if needed...

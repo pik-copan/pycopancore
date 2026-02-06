@@ -9,13 +9,19 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-
 # TODOs:
 # - rename to ScipyODERunner
 # - enable verbosity level, use proper logger
 
-from pycopancore.process_types import Event, Step
+from time import time
+
+import numpy as np
+from scipy import integrate
+
 from pycopancore.data_model import Variable
+from pycopancore.private._abstract_entity_mixin import (
+    _AbstractEntityMixin,
+)
 from pycopancore.private._abstract_runner import _AbstractRunner
 from pycopancore.private._expressions import eval
 from pycopancore.private._simple_expressions import unknown
@@ -463,7 +469,6 @@ class Runner(_AbstractRunner):
 
             # Call ode solver if there are any ODE processes:
             if self.model.ODE_processes:
-
                 print("  Running smoothly from", t, "to", next_time, "...")
 
                 # clear all targets _DotConstructs' caches of target instances
@@ -621,7 +626,6 @@ class Runner(_AbstractRunner):
             # Delete the discontinuity from the dictionary and determine when
             # the next one happens:
             if t < t_1 and len(next_discontinuities) > 0:
-
                 # set current model time to end of previous ODE integration:
                 t = next_time
                 self.trajectory_dict["t"].append(t)

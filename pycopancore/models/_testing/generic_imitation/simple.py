@@ -1,7 +1,8 @@
 import numpy as np
 
 from .... import base  # all models must use the base component
-
+from ....model_components import config
+from ....model_components import generic_imitation as imi
 from . import other_component as other
 
 from ....model_components import config
@@ -17,7 +18,6 @@ config.generic_imitation = {
     ]
 }
 
-
 class World(base.World):
     pass
 
@@ -32,12 +32,12 @@ class Cell(other.Cell, base.Cell):
 
 
 class Individual(other.Individual, base.Individual):
+
     def imi_evaluate_pair(self, other=None):
         return other.a_criterion
 
 
 class Culture(imi.Culture, base.Culture):
-
     imi.Culture.imi_traits.default = {
         "bool": (other.SocialSystem.is_active,),
         "ord": (other.Cell.an_ordinal_var,),
