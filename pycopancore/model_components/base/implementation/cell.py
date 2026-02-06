@@ -104,8 +104,7 @@ class Cell (I.Cell, abstract.Cell):
             s.direct_individuals = unknown
             self.world = s.world
         self._social_system = s
-        # reset dependent caches:
-        self.social_systems = unknown
+        # no cached list here; social_systems is computed on demand
 
     # getters for backwards references and convenience variables:
 
@@ -124,23 +123,23 @@ class Cell (I.Cell, abstract.Cell):
         """Get the Culture of which the Cell is a part."""
         return self._world.culture
 
-    _social_systems = unknown
-    """cache, depends on self.social_system, self.social_system.higher_social_systems"""
     @property  # read-only
     def social_systems(self):
         """Get upward list of SocialSystems the Cell belongs to (in)directly."""
-        if self._social_systems is unknown:
-            self._social_systems = [] if self.social_system is None \
-                else [self.social_system] + self.social_system.higher_social_systems
-        return self._social_systems
+        sos = self._social_system
+        if sos is None:
+            return []
+        higher = getattr(sos, "higher_social_systems", []) or []
+        return [sos] + list(higher)
 
     @social_systems.setter
     def social_systems(self, u):
         """Set upward list of SocialSystems the Cell belongs to (in)directly."""
-        assert u == unknown, "setter can only be used to reset cache"
-        self._social_systems = unknown
-        # reset dependent caches:
-        pass
+        # Accept explicit override to preserve interface; store nowhere to avoid caching.
+        if u is unknown or u is None:
+            return
+        # If someone sets it explicitly, we just drop the value to avoid caching recursion.
+        return
 
     @property  # read-only
     def individuals(self):

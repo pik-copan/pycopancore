@@ -62,17 +62,23 @@ For running pycopancore, an installation with python > 3.6 with some additional 
 
 An easy way to install python is to use the `Anaconda environment <https://www.anaconda.com/download/>`_.
 
-The package can be installed by downloading the repository and and running the setup.py script with
+The package can be installed by downloading the repository and running:
 
 ```
-$ pip install
+$ pip install .
 ```
-from the root directory of the package. The script should automatically install all the required and missing packages.
+from the root directory of the package. This will automatically install all the required dependencies.
 
-For developers, the recommended way of installing is to run in the package main directory
+For developers, the recommended way of installing is to run in the package main directory:
 
 ```
-$ pip install -e
+$ pip install -e .
+```
+
+Or with development dependencies:
+
+```
+$ pip install -e .[dev]
 ```
 
 This creates a link instead of copying the files, so modifications in this directory are modifications in the installed package.

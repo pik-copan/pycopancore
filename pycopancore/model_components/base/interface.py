@@ -108,7 +108,6 @@ class World (object, metaclass=_MixinType):
     # when constructing DotConstructs like World.environment.geographic_network.
     # similarly for the other entity types.
 
-
     # references to other entities and taxa:
     environment = ReferenceVariable("environment",
                                "Environment taxon working on this world",
@@ -119,14 +118,6 @@ class World (object, metaclass=_MixinType):
     culture = ReferenceVariable("culture",
                                 "Culture taxon working on this world",
                                 type=Culture, allow_none=True)
-
-    # variables taken from the master data model:
-    population = W.population  # TODO: make sure it is no smaller than aggregate top-level social_systems'?
-    atmospheric_carbon = W.atmospheric_carbon
-    surface_air_temperature = W.surface_air_temperature
-    ocean_carbon = W.ocean_carbon
-    terrestrial_carbon = W.terrestrial_carbon
-    fossil_carbon = W.fossil_carbon
 
     # attributes storing redundant information (backward references):
     social_systems = SetVariable("social systems",

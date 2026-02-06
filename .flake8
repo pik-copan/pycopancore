@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 79
+extend-exclude = pycopancore/_version.py
+ignore = F841,F541,W503,E226

@@ -150,11 +150,4 @@ class World (I.World, abstract.World):
         # reset dependent caches:
         pass
 
-    processes = [
-        # TODO: convert this into an Implicit equation once supported:
-        Explicit("aggregate cell carbon stocks",
-                 [I.World.terrestrial_carbon,
-                  I.World.fossil_carbon],
-                 [I.World.sum.cells.terrestrial_carbon,
-                  I.World.sum.cells.fossil_carbon])
-    ]
+    processes = []

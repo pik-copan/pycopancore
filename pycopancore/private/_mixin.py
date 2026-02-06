@@ -41,11 +41,22 @@ class _MixinType(type):
 #         res = getattr(cls.__base__, name)
 #         return res
 
+    # Attributes that should bypass custom logic (serialization, introspection)
+    _BYPASS_ATTRS = frozenset({
+        "__qualname__", "__name__", "__module__", "__class__", "__dict__",
+        "__reduce__", "__reduce_ex__", "__getstate__", "__setstate__",
+        "__getnewargs__", "__getnewargs_ex__", "__slots__", "__mro__",
+        "__bases__", "__subclasses__", "__init__", "__new__", "__del__",
+        "__repr__", "__str__", "__hash__", "__eq__", "__ne__",
+        "__instancecheck__", "__subclasscheck__", "_abc_registry",
+        "_abc_caches_clear", "_abc_negative_cache", "_abc_negative_cache_version",
+    })
+
     def __getattribute__(cls, name):
         """Dummy docstring"""
-        # TODO: add docstring to function
-        if name == "__qualname__":  # needed to make sphinx happy
-            return "DUMMY"  # FIXME!
+        # Bypass custom logic for serialization/introspection attributes
+        if name in _MixinType._BYPASS_ATTRS or name.startswith("_"):
+            return type.__getattribute__(cls, name)
         if name in aggregation_names:
             dc = _DotConstruct(cls, [], aggregation=name)
 #            print("new aggregation dot construct",dc,"at",cls,"with aggregation",name)

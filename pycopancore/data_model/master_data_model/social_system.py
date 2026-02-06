@@ -21,7 +21,7 @@ class SocialSystem:
     mortality_temperature_sensitivity = \
         MET.mortality_temperature_sensitivity.copy()
     mortality_reference_temperature = \
-        MET.mortality_reference_temperature.copy()    
+        MET.mortality_reference_temperature.copy()
     
     births = MET.births.copy()
     deaths = MET.deaths.copy()
