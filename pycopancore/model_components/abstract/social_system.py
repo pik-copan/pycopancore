@@ -1,4 +1,5 @@
-"""Abstract SocialSystem entity type class, inherited by base model component."""
+"""Abstract SocialSystem entity type class, inherited by base model
+component."""
 
 # This file is part of pycopancore.
 #
@@ -12,7 +13,7 @@ from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
 from pycopancore.data_model.ordered_set import OrderedSet
 
 
-class SocialSystem (_AbstractEntityMixin):
+class SocialSystem(_AbstractEntityMixin):
     """Abstract SocialSystem entity type class.
 
     Inherited by base model component.

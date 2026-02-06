@@ -15,14 +15,16 @@ from ... import abstract
 from .. import interface as I
 
 
-class Metabolism (I.Metabolism, abstract.Metabolism):
+class Metabolism(I.Metabolism, abstract.Metabolism):
     """Metabolism process taxon mixin implementation class."""
 
     # standard methods:
 
-    def __init__(self,
-                 # *,
-                 **kwargs):
+    def __init__(
+        self,
+        # *,
+        **kwargs,
+    ):
         """
         Initialize the unique instance of Metabolism.
 

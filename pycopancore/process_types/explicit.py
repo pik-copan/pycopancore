@@ -31,12 +31,7 @@ class Explicit(_AbstractProcess):
     type = "Explicit"
     timetype = "continuous"
 
-    def __init__(self,
-                 name,
-                 targets,
-                 specification,
-                 smoothness=0
-                 ):
+    def __init__(self, name, targets, specification, smoothness=0):
         """Instantiate an instance of an explicit process.
 
         Parameters

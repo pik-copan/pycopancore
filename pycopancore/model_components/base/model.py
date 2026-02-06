@@ -19,11 +19,19 @@ from .model_logics import ModelLogics
 
 from .. import abstract
 from . import interface as I
-from . import World, Cell, Environment, Individual, Culture, SocialSystem, \
-    Metabolism, Group
+from . import (
+    World,
+    Cell,
+    Environment,
+    Individual,
+    Culture,
+    SocialSystem,
+    Metabolism,
+    Group,
+)
 
 
-class Model (I.Model, abstract.Model, ModelLogics):
+class Model(I.Model, abstract.Model, ModelLogics):
     """base model component mixin class.
 
     This is the base.Model class. It serves two purposes:
@@ -32,7 +40,7 @@ class Model (I.Model, abstract.Model, ModelLogics):
     2. Provide the configure method via the parent class ModelLogics.
     """
 
-    # specify entity types and process taxon classes 
+    # specify entity types and process taxon classes
     # defined in the base component:
     entity_types = [World, Cell, Individual, SocialSystem, Group]
     process_taxa = [Environment, Culture, Metabolism]

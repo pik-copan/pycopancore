@@ -10,8 +10,9 @@
 # License: BSD 2-clause license
 
 # only used in this component, not in others:
-from pycopancore.private._abstract_process_taxon_mixin import \
-    _AbstractProcessTaxonMixin
+from pycopancore.private._abstract_process_taxon_mixin import (
+    _AbstractProcessTaxonMixin,
+)
 from pycopancore.data_model.ordered_set import OrderedSet
 
 from pycopancore.model_components import abstract
@@ -23,7 +24,7 @@ from pycopancore.process_types import Explicit
 from networkx import DiGraph, Graph
 
 
-class World (I.World, abstract.World):
+class World(I.World, abstract.World):
     """World entity type mixin implementation class.
 
     Base component's World mixin that every model must use in composing their
@@ -32,14 +33,15 @@ class World (I.World, abstract.World):
 
     """
 
-    def __init__(self,
-                 *,
-                 environment=None,
-                 metabolism=None,
-                 acquaintance_network=None,
-                 group_membership_network=None,
-                 **kwargs
-                 ):
+    def __init__(
+        self,
+        *,
+        environment=None,
+        metabolism=None,
+        acquaintance_network=None,
+        group_membership_network=None,
+        **kwargs,
+    ):
         """Instantiate (typically the only) instance of World.
 
         Parameters
@@ -88,7 +90,9 @@ class World (I.World, abstract.World):
             # first deregister from previous environment's list of worlds:
             self._environment.worlds.remove(self)
         if n is not None:
-            assert isinstance(n, I.Environment), "Environment must be taxon type Environment"
+            assert isinstance(
+                n, I.Environment
+            ), "Environment must be taxon type Environment"
             n._worlds.add(self)
         self._environment = n
 
@@ -104,8 +108,9 @@ class World (I.World, abstract.World):
             # first deregister from previous metabolism's list of worlds:
             self._metabolism.worlds.remove(self)
         if m is not None:
-            assert isinstance(m, I.Metabolism), \
-                "Metabolism must be of process taxon type Metabolism"
+            assert isinstance(
+                m, I.Metabolism
+            ), "Metabolism must be of process taxon type Metabolism"
             m._worlds.add(self)
         self._metabolism = m
 
@@ -118,8 +123,13 @@ class World (I.World, abstract.World):
     def top_level_social_systems(self):
         """Get the set of top-level SocialSystems on this World."""
         # find by filtering:
-        return set([s for s in self._social_systems
-                    if s.next_higher_social_system is None])
+        return set(
+            [
+                s
+                for s in self._social_systems
+                if s.next_higher_social_system is None
+            ]
+        )
 
     @property  # read-only
     def cells(self):
@@ -133,6 +143,7 @@ class World (I.World, abstract.World):
 
     _individuals = unknown
     """cache, depends on self.cells, cell.individuals"""
+
     @property  # read-only
     def individuals(self):
         """Get and set the set of Individuals residing on this World."""

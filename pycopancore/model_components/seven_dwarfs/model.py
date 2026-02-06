@@ -14,8 +14,17 @@ then remove these instructions
 # License: BSD 2-clause license
 
 from . import interface as I
+
 # import all needed entity type implementation classes:
-from .implementation import World, Cell, Individual, Culture, SocialSystem, Group
+from .implementation import (
+    World,
+    Cell,
+    Individual,
+    Culture,
+    SocialSystem,
+    Group,
+)
+
 # import all needed process taxon implementation classes:
 
 

@@ -20,15 +20,12 @@ import numpy as np
 # from .... import master_data_model as D
 
 
-class Cell (I.Cell):
+class Cell(I.Cell):
     """Cell entity type mixin implementation class."""
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 eating_stock=100,
-                 **kwargs):
+    def __init__(self, *, eating_stock=100, **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)
         self.eating_stock = eating_stock

@@ -9,7 +9,8 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-class Model (object):
+
+class Model(object):
     """Abstract Model component class, inherited by base component."""
 
     # class attributes later holding the specific model component's metadata:

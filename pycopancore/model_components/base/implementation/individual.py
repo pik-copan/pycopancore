@@ -10,27 +10,27 @@
 # License: BSD 2-clause license
 
 # only used in this component, not in others
+import networkx
 from pycopancore.model_components import abstract
+
 # from .... import master_data_model as D
 from pycopancore.private._simple_expressions import unknown
 
 from .. import interface as I
 
 
-class Individual (I.Individual, abstract.Individual):
+class Individual(I.Individual, abstract.Individual):
     """Individual entity type mixin implementation class.
 
     Base component's Individual mixin that every model must use in composing
-    their Individual class. Inherits from I.Individual as the interface with all
-    necessary variables and parameters.
+    their Individual class. Inherits from I.Individual as the interface with
+    all necessary variables and parameters.
 
     """
 
-    def __init__(self,
-                 *,
-                 cell,  # this is a mandatory keyword-only argument!
-                 **kwargs
-                 ):
+    def __init__(
+        self, *, cell, **kwargs  # this is a mandatory keyword-only argument!
+    ):
         """Instantiate an instance of Individual.
 
         Parameters
@@ -55,13 +55,17 @@ class Individual (I.Individual, abstract.Individual):
         # register with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
-            self.culture.group_membership_network.add_node(self, type="Individual", color="yellow")
+            self.culture.group_membership_network.add_node(
+                self, type="Individual", color="yellow"
+            )
         elif self.world:
             # Register with world's networks if no culture
-            if hasattr(self.world, 'acquaintance_network'):
+            if hasattr(self.world, "acquaintance_network"):
                 self.world.acquaintance_network.add_node(self)
-            if hasattr(self.world, 'group_membership_network'):
-                self.world.group_membership_network.add_node(self, type="Individual", color="yellow")
+            if hasattr(self.world, "group_membership_network"):
+                self.world.group_membership_network.add_node(
+                    self, type="Individual", color="yellow"
+                )
 
     def deactivate(self):
         """Deactivate an individual.
@@ -75,9 +79,9 @@ class Individual (I.Individual, abstract.Individual):
             self.culture.group_membership_network.remove_node(self)
         elif self.world:
             # Deregister from world's networks if no culture
-            if hasattr(self.world, 'acquaintance_network'):
+            if hasattr(self.world, "acquaintance_network"):
                 self.world.acquaintance_network.remove_node(self)
-            if hasattr(self.world, 'group_membership_network'):
+            if hasattr(self.world, "group_membership_network"):
                 self.world.group_membership_network.remove_node(self)
         super().deactivate()  # must be the last line
 
@@ -91,13 +95,17 @@ class Individual (I.Individual, abstract.Individual):
         # reregister with all mandatory networks:
         if self.culture:
             self.culture.acquaintance_network.add_node(self)
-            self.culture.group_membership_network.add_node(self, type="Individual", color="yellow")
+            self.culture.group_membership_network.add_node(
+                self, type="Individual", color="yellow"
+            )
         elif self.world:
             # Reregister with world's networks if no culture
-            if hasattr(self.world, 'acquaintance_network'):
+            if hasattr(self.world, "acquaintance_network"):
                 self.world.acquaintance_network.add_node(self)
-            if hasattr(self.world, 'group_membership_network'):
-                self.world.group_membership_network.add_node(self, type="Individual", color="yellow")
+            if hasattr(self.world, "group_membership_network"):
+                self.world.group_membership_network.add_node(
+                    self, type="Individual", color="yellow"
+                )
 
     # getters and setters for references:
 
@@ -160,10 +168,11 @@ class Individual (I.Individual, abstract.Individual):
 
     @property
     def population_share(self):
-        """Get the share of SocialSystem's direct population represented by this
-        individual."""
-        total_relative_weight = sum([i.relative_weight
-                                     for i in self.social_system.individuals])
+        """Get the share of SocialSystem's direct population represented
+        by this individual."""
+        total_relative_weight = sum(
+            [i.relative_weight for i in self.social_system.individuals]
+        )
         return self.relative_weight / total_relative_weight
 
     @property
@@ -175,9 +184,9 @@ class Individual (I.Individual, abstract.Individual):
     @property
     def acquaintances(self):
         """Get the set of Individuals the Individual is acquainted with."""
-        if self.culture and hasattr(self.culture, 'acquaintance_network'):
+        if self.culture and hasattr(self.culture, "acquaintance_network"):
             return self.culture.acquaintance_network.neighbors(self)
-        elif self.world and hasattr(self.world, 'acquaintance_network'):
+        elif self.world and hasattr(self.world, "acquaintance_network"):
             return self.world.acquaintance_network.neighbors(self)
         else:
             return networkx.Graph()
@@ -185,9 +194,9 @@ class Individual (I.Individual, abstract.Individual):
     @property
     def group_memberships(self):
         """Get the set of Groups the Individual is associated with."""
-        if self.culture and hasattr(self.culture, 'group_membership_network'):
+        if self.culture and hasattr(self.culture, "group_membership_network"):
             return self.culture.group_membership_network.neighbors(self)
-        elif self.world and hasattr(self.world, 'group_membership_network'):
+        elif self.world and hasattr(self.world, "group_membership_network"):
             return self.world.group_membership_network.neighbors(self)
         else:
             return networkx.Graph()

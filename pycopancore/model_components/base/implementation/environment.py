@@ -17,13 +17,10 @@ from .. import interface as I
 from networkx import Graph
 
 
-class Environment (I.Environment, abstract.Environment):
+class Environment(I.Environment, abstract.Environment):
     """Environment process taxon mixin implementation class."""
 
-    def __init__(self,
-                 *,
-                 geographic_network=None,
-                 **kwargs):
+    def __init__(self, *, geographic_network=None, **kwargs):
         """Instantiate the unique instance of Environment.
 
         Parameters

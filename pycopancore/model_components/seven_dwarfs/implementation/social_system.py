@@ -14,6 +14,7 @@ then remove these instructions
 
 from .. import interface as I
 from pycopancore.model_components.base import interface as B
+
 # from .... import master_data_model as D
 from pycopancore.process_types import ODE, Step, Explicit, Event
 import numpy as np
@@ -29,9 +30,9 @@ class SocialSystem(I.SocialSystem):
         When a dwarf is instantiated, this function is called and
         connects the dwarf with all other ones in its social_system."""
         for ind in self.individuals:
-            if (ind not in dwarf.acquaintances
-                    and dwarf != ind):
+            if ind not in dwarf.acquaintances and dwarf != ind:
                 # Add edge:
                 self.culture.acquaintance_network.add_edge(dwarf, ind)
                 print(self.culture.acquaintance_network.edges())
+
     processes = []

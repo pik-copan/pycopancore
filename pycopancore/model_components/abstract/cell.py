@@ -13,7 +13,7 @@ from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
 from pycopancore.data_model.ordered_set import OrderedSet
 
 
-class Cell (_AbstractEntityMixin):
+class Cell(_AbstractEntityMixin):
     """Abstract Cell entity type class, inherited by base model component."""
 
     variables = OrderedSet()

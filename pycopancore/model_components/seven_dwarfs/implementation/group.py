@@ -19,31 +19,32 @@ from pycopancore.process_types import Explicit
 from .. import interface as I
 
 
-class Group (I.Group):
+class Group(I.Group):
     """Group entity type mixin implementation class."""
 
     # standard methods:
     # TODO: only uncomment when adding custom code!
 
-#     def __init__(self,
-#                  # *,  # TODO: uncomment when adding named args behind here
-#                  **kwargs):
-#         """Initialize an instance of Individual."""
-#         super().__init__(**kwargs)  # must be the first line
-#         # TODO: add custom code here:
-#         pass
-#
-#     def deactivate(self):
-#         """Deactivate a Group."""
-#         # TODO: add custom code here:
-#         pass
-#         super().deactivate()  # must be the last line
-#
-#     def reactivate(self):
-#         """Reactivate a Group."""
-#         super().reactivate()  # must be the first line
-#         # TODO: add custom code here:
-#         pass
+    #     def __init__(self,
+    #                  # *,  # TODO: uncomment when adding named args
+    #                  # behind here
+    #                  **kwargs):
+    #         """Initialize an instance of Individual."""
+    #         super().__init__(**kwargs)  # must be the first line
+    #         # TODO: add custom code here:
+    #         pass
+    #
+    #     def deactivate(self):
+    #         """Deactivate a Group."""
+    #         # TODO: add custom code here:
+    #         pass
+    #         super().deactivate()  # must be the last line
+    #
+    #     def reactivate(self):
+    #         """Reactivate a Group."""
+    #         super().reactivate()  # must be the first line
+    #         # TODO: add custom code here:
+    #         pass
 
     # process-related methods:
 
@@ -55,10 +56,6 @@ class Group (I.Group):
             self.having_members = True
         else:
             self.having_members = False
-
-
-
-
 
     # TODO: add some if needed...
 

@@ -1,5 +1,5 @@
 """
-This is the base model-component package, 
+This is the base model-component package,
 also including internal framework logics (module model_logics)
 """
 

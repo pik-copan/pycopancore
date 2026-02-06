@@ -13,7 +13,7 @@ from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
 from pycopancore.data_model.ordered_set import OrderedSet
 
 
-class Individual (_AbstractEntityMixin):
+class Individual(_AbstractEntityMixin):
     """Abstract Individual entity type class.
 
     Inherited by base model component.

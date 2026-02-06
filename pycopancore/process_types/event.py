@@ -31,12 +31,7 @@ class Event(_AbstractProcess):
     type = "Event"
     timetype = "discrete"
 
-    def __init__(self,
-                 name,
-                 variables,
-                 specification,
-                 smoothness=0
-                 ):
+    def __init__(self, name, variables, specification, smoothness=0):
         """Instantiate an instance of an Event process.
 
         Parameters

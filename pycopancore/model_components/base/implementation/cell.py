@@ -17,7 +17,7 @@ from pycopancore.private._simple_expressions import unknown
 from .. import interface as I
 
 
-class Cell (I.Cell, abstract.Cell):
+class Cell(I.Cell, abstract.Cell):
     """Cell entity type mixin implementation class.
 
     Base component's Cell mixin that every model must use in composing their
@@ -26,12 +26,7 @@ class Cell (I.Cell, abstract.Cell):
 
     """
 
-    def __init__(self,
-                 *,
-                 world=None,
-                 social_system=None,
-                 **kwargs
-                 ):
+    def __init__(self, *, world=None, social_system=None, **kwargs):
         """Initialize an instance of Cell.
 
         Parameters
@@ -51,7 +46,9 @@ class Cell (I.Cell, abstract.Cell):
         self._social_system = None
         if world:
             self.world = world
-        self.social_system = social_system  # this line must occur after setting world!
+        self.social_system = (
+            social_system  # this line must occur after setting world!
+        )
 
         # make sure all variable values are valid:
         self.assert_valid()
@@ -62,7 +59,6 @@ class Cell (I.Cell, abstract.Cell):
         # register with all mandatory networks:
         if self.environment:
             self.environment.geographic_network.add_node(self)
-
 
     # getters and setters for references:
 
@@ -83,12 +79,14 @@ class Cell (I.Cell, abstract.Cell):
 
     @property
     def social_system(self):
-        """Get the lowest-level SocialSystem whose territory the Cell is part of."""
+        """Get the lowest-level SocialSystem whose territory the Cell is
+        part of."""
         return self._social_system
 
     @social_system.setter
     def social_system(self, s):
-        """Set the lowest-level SocialSystem whose territory the Cell is part of."""
+        """Set the lowest-level SocialSystem whose territory the Cell is
+        part of."""
         if self._social_system is not None:
             # first deregister from previous social_system's list of cells:
             self._social_system._direct_cells.remove(self)
@@ -96,8 +94,9 @@ class Cell (I.Cell, abstract.Cell):
             self._social_system.cells = unknown
             self._social_system.direct_individuals = unknown
         if s is not None:
-            assert isinstance(s, I.SocialSystem), \
-                "social_system must be of entity type SocialSystem"
+            assert isinstance(
+                s, I.SocialSystem
+            ), "social_system must be of entity type SocialSystem"
             s._direct_cells.add(self)
             # reset dependent caches:
             s.cells = unknown
@@ -125,7 +124,8 @@ class Cell (I.Cell, abstract.Cell):
 
     @property  # read-only
     def social_systems(self):
-        """Get upward list of SocialSystems the Cell belongs to (in)directly."""
+        """Get upward list of SocialSystems the Cell belongs to
+        (in)directly."""
         sos = self._social_system
         if sos is None:
             return []
@@ -134,11 +134,14 @@ class Cell (I.Cell, abstract.Cell):
 
     @social_systems.setter
     def social_systems(self, u):
-        """Set upward list of SocialSystems the Cell belongs to (in)directly."""
-        # Accept explicit override to preserve interface; store nowhere to avoid caching.
+        """Set upward list of SocialSystems the Cell belongs to
+        (in)directly."""
+        # Accept explicit override to preserve interface; store nowhere to
+        # avoid caching.
         if u is unknown or u is None:
             return
-        # If someone sets it explicitly, we just drop the value to avoid caching recursion.
+        # If someone sets it explicitly, we just drop the value to avoid
+        # caching recursion.
         return
 
     @property  # read-only

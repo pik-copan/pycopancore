@@ -1,8 +1,8 @@
-'''
+"""
 Created on Mar 10, 2017
 
 @author: heitzig
-'''
+"""
 
 # This file is part of pycopancore.
 #

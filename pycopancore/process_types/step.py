@@ -32,11 +32,7 @@ class Step(_AbstractProcess):
     type = "Step"
     timetype = "discrete"
 
-    def __init__(self,
-                 name,
-                 variables,
-                 specification
-                 ):
+    def __init__(self, name, variables, specification):
         """Instantiate a process of type step.
 
         Parameters

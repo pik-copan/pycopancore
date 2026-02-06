@@ -21,6 +21,7 @@ It sets the basic structure of runner modules (for integration).
 # Definition of class _AbstractRunner
 #
 
+
 class _AbstractRunner(object):
     """Abstract class that every runner class needs to implement."""
 

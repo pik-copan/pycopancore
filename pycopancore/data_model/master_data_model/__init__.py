@@ -7,13 +7,13 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-# Dimension and Unit objects are defined at attributes in 
+# Dimension and Unit objects are defined at attributes in
 # dimensions_and_units.DimensionsAndUnits so that sphinx will document them.
 # The following makes them accessible as package attributes:
 from .dimensions_and_units import *
-for k, o in DimensionsAndUnits.__dict__.items():
-    if isinstance(o, (Dimension, Unit)):
-        globals()[k] = o
+from .dimensions_and_units import DimensionsAndUnits
+from .dimensions_and_units import Dimension
+from .dimensions_and_units import Unit
 
 from .environment import Environment as ENV
 from .environment import Environment as environment
@@ -41,3 +41,6 @@ from .group import Group as G
 from .group import Group as group
 from .group import Group
 
+for k, o in DimensionsAndUnits.__dict__.items():
+    if isinstance(o, (Dimension, Unit)):
+        globals()[k] = o
