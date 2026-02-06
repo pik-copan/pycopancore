@@ -15,6 +15,7 @@ from networkx import Graph
 from ... import abstract
 from .. import interface as Interface
 
+
 class Environment(I.Environment, abstract.Environment):
     """Environment process taxon mixin implementation class."""
 

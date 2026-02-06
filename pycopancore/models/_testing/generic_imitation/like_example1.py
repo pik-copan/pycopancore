@@ -42,10 +42,6 @@ config.generic_imitation = {
         base.interface.Culture.social_systems.emissions_tax_level,
     ]
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/pypi_support
 
 # entity types:
 

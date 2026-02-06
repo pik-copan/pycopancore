@@ -18,6 +18,7 @@ config.generic_imitation = {
     ]
 }
 
+
 class World(base.World):
     pass
 

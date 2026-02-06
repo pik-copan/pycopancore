@@ -10,7 +10,6 @@ pycopancore is a Python implementation of the copan:CORE modeling framework for 
 
 ## Installation
 
-<<<<<<< HEAD
 An extensive documentation is found at https://pik-copan.github.io/pycopancore
 
 Table of Contents:
@@ -76,8 +75,6 @@ This creates a link instead of copying the files, so modifications in this direc
 ### Running a model
 
 To run one of the preconfigured models, execute a python script in the `studies` folder, for example
-=======
->>>>>>> origin/pypi_support
 ```bash
 pip install pycopancore
 ```

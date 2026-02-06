@@ -182,11 +182,7 @@ html_sidebars = {
         "relations.html",
         "sourcelink.html",
         "searchbox.html",
-<<<<<<< HEAD
     ],
-=======
-    ],  # noqa: E501
->>>>>>> origin/pypi_support
 }
 
 # Additional templates that should be rendered to pages, maps page names to

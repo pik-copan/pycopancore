@@ -23,7 +23,6 @@ from .. import interface as Interface
 
 
 class World(I.World, abstract.World):
-
     """World process taxon mixin implementation class."""
 
     def __init__(

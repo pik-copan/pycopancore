@@ -31,13 +31,8 @@ class Individual(I.Individual):
     # TODO: only uncomment when adding custom code!
 
     #     def __init__(self,
-<<<<<<< HEAD
     #                  # *,  # TODO: uncomment when adding named args behind
     #                  **kwargs):
-=======
-    #         # *,  # TODO: uncomment when adding named args behind here
-    #         **kwargs):
->>>>>>> origin/pypi_support
     #         """Initialize an instance of Individual."""
     #         super().__init__(**kwargs)  # must be the first line
     #         # TODO: add custom code here:
