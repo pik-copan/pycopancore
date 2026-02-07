@@ -39,24 +39,6 @@ import re
 import numpy as np
 from networkx import DiGraph
 
-from pycopancore.data_model import (
-    OrderedSet,
-    ReferenceVariable,
-    SetVariable,
-    Variable,
-)
-from pycopancore.model_components import abstract
-from pycopancore.private._abstract_entity_mixin import (
-    _AbstractEntityMixin,
-)
-from pycopancore.private._abstract_process import _AbstractProcess
-from pycopancore.private._abstract_process_taxon_mixin import (
-    _AbstractProcessTaxonMixin,
-)
-from pycopancore.private._expressions import get_vars
-from pycopancore.private._simple_expressions import unknown
-from pycopancore.process_types import ODE, Event, Explicit, Step
-
 
 # helper function:
 def guess_deps(method, variable_pool):

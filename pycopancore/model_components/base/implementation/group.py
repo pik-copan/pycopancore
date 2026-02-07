@@ -15,7 +15,7 @@ from pycopancore.model_components import abstract
 from .. import interface as Interface
 
 
-class Group(I.Group, abstract.Group):
+class Group(Interface.Group, abstract.Group):
     """Gropp entity type mixin implementation class.
 
     Base component's Group mixin that every model must use in composing
@@ -106,7 +106,7 @@ class Group(I.Group, abstract.Group):
             self._culture.groups.remove(self)
         if c is not None:
             assert isinstance(
-                c, I.Culture
+                c, Interface.Culture
             ), "Culture must be taxon type Culture"
             c._groups.add(self)
         self._culture = c

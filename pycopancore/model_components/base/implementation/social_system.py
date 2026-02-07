@@ -16,12 +16,12 @@ from pycopancore.private._simple_expressions import unknown
 from .. import interface as Interface
 
 
-class SocialSystem(I.SocialSystem, abstract.SocialSystem):
+class SocialSystem(Interface.SocialSystem, abstract.SocialSystem):
     """SocialSystem entity type mixin implementation class.
 
     Base component's SocialSystem mixin that every model must use in
-    composing their SocialSystem class. Inherits from I.SocialSystem as the
-    interface with all necessary variables and parameters.
+    composing their SocialSystem class. Inherits from Interface.SocialSystem
+    as the interface with all necessary variables and parameters.
     """
 
     # standard methods:
@@ -87,7 +87,7 @@ class SocialSystem(I.SocialSystem, abstract.SocialSystem):
             self._next_higher_social_system.cells = unknown
         if s is not None:
             assert isinstance(
-                s, I.SocialSystem
+                s, Interface.SocialSystem
             ), "next_higher_social_system must be of entity type SocialSystem"
             s._next_lower_social_systems.add(self)
             # reset dependent cache:

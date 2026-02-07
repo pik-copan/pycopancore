@@ -20,9 +20,10 @@ from pycopancore.private._simple_expressions import unknown
 from pycopancore.process_types import Explicit
 
 from .. import interface as Interface
+from networkx import Graph, DiGraph
 
 
-class World(I.World, abstract.World):
+class World(Interface.World, abstract.World):
     """World process taxon mixin implementation class."""
 
     def __init__(
@@ -83,7 +84,7 @@ class World(I.World, abstract.World):
             self._environment.worlds.remove(self)
         if n is not None:
             assert isinstance(
-                n, I.Environment
+                n, Interface.Environment
             ), "Environment must be taxon type Environment"
             n._worlds.add(self)
         self._environment = n
@@ -101,7 +102,7 @@ class World(I.World, abstract.World):
             self._metabolism.worlds.remove(self)
         if m is not None:
             assert isinstance(
-                m, I.Metabolism
+                m, Interface.Metabolism
             ), "Metabolism must be of process taxon type Metabolism"
             m._worlds.add(self)
         self._metabolism = m

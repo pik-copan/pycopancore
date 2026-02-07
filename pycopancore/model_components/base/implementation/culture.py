@@ -19,7 +19,7 @@ from networkx import Graph
 from networkx import DiGraph
 
 
-class Culture(I.Culture, abstract.Culture):
+class Culture(Interface.Culture, abstract.Culture):
     """Culture process taxon mixin implementation class."""
 
     # standard methods:

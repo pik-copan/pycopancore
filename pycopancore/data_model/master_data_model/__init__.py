@@ -25,7 +25,6 @@ from .culture import Culture as CUL
 from .culture import Culture as culture
 from .culture import Culture
 
-
 for k, o in DimensionsAndUnits.__dict__.items():
     if isinstance(o, (Dimension, Unit)):
         globals()[k] = o

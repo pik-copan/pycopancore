@@ -29,7 +29,6 @@ from pycopancore.private._trajectory_dictionary import _TrajectoryDictionary
 # TODO: discuss whether this makes sense or leads to problems:
 from pycopancore.runners.hooks import Hooks
 
-
 # import sys
 
 # from profilehooks import coverage, profile

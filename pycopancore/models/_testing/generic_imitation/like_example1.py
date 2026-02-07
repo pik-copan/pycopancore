@@ -33,7 +33,6 @@ from ....model_components import config
 
 from ....model_components import generic_imitation as imi
 
-
 config.generic_imitation = {
     "variables": [
         base.interface.Culture.individuals.is_environmentally_friendly,

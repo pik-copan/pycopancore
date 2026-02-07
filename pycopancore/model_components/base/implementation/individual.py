@@ -19,7 +19,7 @@ from pycopancore.private._simple_expressions import unknown
 from .. import interface as Interface
 
 
-class Individual(I.Individual, abstract.Individual):
+class Individual(Interface.Individual, abstract.Individual):
     """Individual entity type mixin implementation class.
 
     Base component's Individual mixin that every model must use in composing

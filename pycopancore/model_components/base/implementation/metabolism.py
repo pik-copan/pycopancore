@@ -14,7 +14,7 @@ from ... import abstract
 from .. import interface as Interface
 
 
-class Metabolism(I.Metabolism, abstract.Metabolism):
+class Metabolism(Interface.Metabolism, abstract.Metabolism):
     """Metabolism process taxon mixin implementation class."""
 
     # standard methods:

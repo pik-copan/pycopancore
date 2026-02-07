@@ -5,7 +5,6 @@ from ....model_components import config
 from ....model_components import generic_imitation as imi
 from . import other_component as other
 
-
 config.generic_imitation = {
     "variables": [
         base.interface.Culture.social_systems.is_active,

@@ -19,7 +19,7 @@ from pycopancore.process_types import Explicit
 from .. import interface as Interface
 
 
-class Group(I.Group):
+class Group(Interface.Group):
     """Group entity type mixin implementation class."""
 
     # standard methods:
@@ -60,5 +60,9 @@ class Group(I.Group):
     # TODO: add some if needed...
 
     processes = [
-        Explicit("simple test", [I.Group.having_members], check_if_member)
+        Explicit(
+            "simple test",
+            [Interface.Group.having_members],
+            check_if_member
+        )
     ]  # TODO: instantiate and list process objects here

@@ -14,7 +14,7 @@ derives from ModelLogics.
 # License: BSD 2-clause license
 
 from .. import abstract
-from . import interface
+from . import interface as Interface
 from . import (
     Cell,
     Culture,
@@ -30,21 +30,8 @@ from . import (
 # (this import occurs ONLY in the base component):
 from .model_logics import ModelLogics
 
-from .. import abstract
-from . import interface as I
-from . import (
-    World,
-    Cell,
-    Environment,
-    Individual,
-    Culture,
-    SocialSystem,
-    Metabolism,
-    Group,
-)
 
-
-class Model(I.Model, abstract.Model, ModelLogics):
+class Model(Interface.Model, abstract.Model, ModelLogics):
     """base model component mixin class.
 
     This is the base.Model class. It serves two purposes:

@@ -16,7 +16,7 @@ from ... import abstract
 from .. import interface as Interface
 
 
-class Environment(I.Environment, abstract.Environment):
+class Environment(Interface.Environment, abstract.Environment):
     """Environment process taxon mixin implementation class."""
 
     def __init__(self, *, geographic_network=None, **kwargs):
