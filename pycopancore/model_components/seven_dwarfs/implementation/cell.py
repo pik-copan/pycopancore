@@ -18,7 +18,7 @@ from .. import interface as Interface
 # from .... import master_data_model as D
 
 
-class Cell(I.Cell):
+class Cell(Interface.Cell):
     """Cell entity type mixin implementation class."""
 
     # standard methods:

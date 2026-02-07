@@ -17,13 +17,10 @@ from .. import interface as I
 from pycopancore.model_components.base import interface as B
 
 # from .... import master_data_model as D
-from pycopancore.process_types import ODE, Step, Explicit, Event
+from pycopancore.process_types import ODE, Step, Explicit
 import numpy as np
 
-from pycopancore.model_components.base import interface as B
-
 # from .... import master_data_model as D
-from pycopancore.process_types import ODE, Explicit, Step
 
 from .. import interface as Interface
 

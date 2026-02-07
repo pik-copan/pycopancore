@@ -12,7 +12,7 @@ then remove these instructions
 # URL: <http://www.pik-potsdam.de/copan/software>
 # License: MIT license
 
-from .. import interface as I
+from .. import interface as Interface
 from pycopancore.model_components.base import interface as B
 
 # from .... import master_data_model as D

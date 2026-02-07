@@ -15,9 +15,10 @@
 # defines logics to deal with symbolic expressions and their evaluation
 
 import numpy as np
-import scipy.special
 import sympy as sp
+import scipy.special
 
+from ._simple_expressions import unknown
 from pycopancore import data_model as D
 
 # hierarchical aggregation functions:

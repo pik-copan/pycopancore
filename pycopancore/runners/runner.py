@@ -18,10 +18,8 @@ from time import time
 import numpy as np
 from scipy import integrate
 
+from pycopancore.process_types import Event, Step
 from pycopancore.data_model import Variable
-from pycopancore.private._abstract_entity_mixin import (
-    _AbstractEntityMixin,
-)
 from pycopancore.private._abstract_runner import _AbstractRunner
 from pycopancore.private._expressions import eval
 from pycopancore.private._simple_expressions import unknown
@@ -31,10 +29,6 @@ from pycopancore.private._trajectory_dictionary import _TrajectoryDictionary
 # TODO: discuss whether this makes sense or leads to problems:
 from pycopancore.runners.hooks import Hooks
 
-from scipy import integrate
-import numpy as np
-
-from time import time
 
 # import sys
 

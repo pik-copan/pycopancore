@@ -17,7 +17,7 @@ from pycopancore.private._simple_expressions import unknown
 from .. import interface as Interface
 
 
-class Cell(I.Cell, abstract.Cell):
+class Cell(Interface.Cell, abstract.Cell):
     """Cell entity type mixin implementation class.
 
     Base component's Cell mixin that every model must use in composing their
@@ -97,7 +97,7 @@ class Cell(I.Cell, abstract.Cell):
             self._social_system.direct_individuals = unknown
         if s is not None:
             assert isinstance(
-                s, I.SocialSystem
+                s, Interface.SocialSystem
             ), "social_system must be of entity type SocialSystem"
             s._direct_cells.add(self)
             # reset dependent caches:

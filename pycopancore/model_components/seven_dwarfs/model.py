@@ -13,7 +13,7 @@ then remove these instructions
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from . import interface as I
+from . import interface as Interface
 
 # import all needed entity type implementation classes:
 from .implementation import (

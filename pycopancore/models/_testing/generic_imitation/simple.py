@@ -5,9 +5,6 @@ from ....model_components import config
 from ....model_components import generic_imitation as imi
 from . import other_component as other
 
-from ....model_components import config
-
-from ....model_components import generic_imitation as imi
 
 config.generic_imitation = {
     "variables": [

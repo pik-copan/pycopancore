@@ -32,8 +32,7 @@ from ....model_components import voting_on_climate_policy as vote
 from ....model_components import config
 
 from ....model_components import generic_imitation as imi
-from ....model_components import voting_on_climate_policy as vote
-from ....model_components import wellbeing_driven_migration as mig
+
 
 config.generic_imitation = {
     "variables": [
