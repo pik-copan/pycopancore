@@ -61,8 +61,6 @@ class Group(Interface.Group):
 
     processes = [
         Explicit(
-            "simple test",
-            [Interface.Group.having_members],
-            check_if_member
+            "simple test", [Interface.Group.having_members], check_if_member
         )
     ]  # TODO: instantiate and list process objects here

@@ -46,7 +46,8 @@ dev = [
     "pylint",
     "pylama_pylint",
     "black",
-    "flake8"
+    "flake8",
+    "setuptools"  # Required for pylama's pkg_resources dependency
 ]
 
 [project.urls]
