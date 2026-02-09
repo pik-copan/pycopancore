@@ -255,13 +255,13 @@ class Variable(Symbol):
 
     @property
     def default(self):  # noqa: F811
-        return self._default
+        return self._default_value
 
     @default.setter
     def default(self, value):
         if value is not unset:
             self.assert_valid(value)
-        self._default = value
+        self._default_value = value
 
     def __eq__(self, other):
         return object.__eq__(self, other)
