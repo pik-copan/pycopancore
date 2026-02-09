@@ -138,19 +138,18 @@ Additional guidelines:
 Tests
 -----
 
-We are using the python testing framework `pytest <http://pytest.org/latest/>`_ with `pylama <https://github.com/klen/pylama>`_ for style and error checking. Please write corresponding unittests while developing and make sure that all test pass by executing
+We are using the python testing framework `pytest <http://pytest.org/latest/>`_ with `black <https://github.com/psf/black>`_ for code formatting and `flake8 <https://flake8.pycqa.org/>`_ for style checking. Please write corresponding unittests while developing and make sure that all tests pass by executing
 ```
-py.test
+pytest
 ```
 in the root of the project tree.
 
 Requires
 
 - pytest
-- pylama
-- pylint
-- pylama_pylint
-- pytest-cov, to check of test coverage
+- pytest-cov (to check test coverage)
+- black (code formatting)
+- flake8 (style checking)
 
 .. _licence:
 

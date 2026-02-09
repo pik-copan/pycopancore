@@ -42,12 +42,8 @@ dependencies = [
 dev = [
     "pytest>=4.6",
     "pytest-cov>=2.5.1",
-    "pylama",
-    "pylint",
-    "pylama_pylint",
     "black",
-    "flake8",
-    "setuptools"  # Required for pylama's pkg_resources dependency
+    "flake8"
 ]
 
 [project.urls]
