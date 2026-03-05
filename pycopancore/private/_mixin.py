@@ -122,8 +122,9 @@ class _Mixin(object, metaclass=_MixinType):
     # class (!) attributes:
     processes = []
     """All processes of this entity type"""
-    model = None
-    """Current model using this entity type"""
+    # Note: 'model' was removed as a class attribute because it blocked
+    # subclasses from defining a 'model' property. Entity instances should
+    # access the model via their world reference (e.g., self._world._model).
     instances = None
     """Active entities of this type"""
     _composite_class = None
@@ -156,6 +157,10 @@ class _Mixin(object, metaclass=_MixinType):
     def __init__(self, **kwargs):
         """Initialize a _Mixin instance by assigning specified values to
         all variables."""
+        # Extract and store model reference if provided
+        if "model" in kwargs:
+            self._model = kwargs.pop("model")
+
         # extract kwargs that correspond to Variables:
         varvals = {}
         nonvarkwargs = {}
@@ -173,6 +178,32 @@ class _Mixin(object, metaclass=_MixinType):
         # assign Variable values:
         for var, val in varvals.items():
             var.set_value(self, val)
+
+    @property
+    def model(self):
+        """Reference to the Model instance.
+
+        Traverses entity hierarchy: Individual -> Cell -> World -> Model.
+        """
+        # Direct model reference (set via __init__ or deserialization)
+        if hasattr(self, "_model") and self._model is not None:
+            return self._model
+
+        # For Individuals: cell -> world -> model
+        if hasattr(self, "_cell") and self._cell is not None:
+            world = getattr(self._cell, "_world", None)
+            if world is not None:
+                model = getattr(world, "_model", None)
+                if model is not None:
+                    return model
+
+        # For Cells/Regions: world -> model
+        if hasattr(self, "_world") and self._world is not None:
+            model = getattr(self._world, "_model", None)
+            if model is not None:
+                return model
+
+        return None
 
     def complete_values(self):
         """assign default values to all unset Variables"""
