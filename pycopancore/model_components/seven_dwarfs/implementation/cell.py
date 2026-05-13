@@ -13,22 +13,17 @@ then remove these instructions
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from .. import interface as I
-from pycopancore.process_types import Event
-import numpy as np
+from .. import interface as Interface
 
 # from .... import master_data_model as D
 
 
-class Cell (I.Cell):
+class Cell(Interface.Cell):
     """Cell entity type mixin implementation class."""
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 eating_stock=100,
-                 **kwargs):
+    def __init__(self, *, eating_stock=100, **kwargs):
         """Initialize an instance of Cell."""
         super().__init__(**kwargs)
         self.eating_stock = eating_stock

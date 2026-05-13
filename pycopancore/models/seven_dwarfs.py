@@ -15,7 +15,6 @@
 
 # all models must use the base component
 from pycopancore.model_components import base
-
 from pycopancore.model_components import seven_dwarfs as sd
 from pycopancore.model_components import snowwhite as sw
 
@@ -26,8 +25,7 @@ from pycopancore.model_components import snowwhite as sw
 # delete the templates for the unneeded ones, and add those for missing ones:
 
 
-class World(sd.World,
-            base.World):
+class World(sd.World, base.World):
     """World entity type."""
 
     pass
@@ -39,32 +37,22 @@ class SocialSystem(base.SocialSystem):
     pass
 
 
-class Cell(sd.Cell,
-           sw.Cell,
-           base.Cell):
+class Cell(sd.Cell, sw.Cell, base.Cell):
     """Cell entity type."""
 
     pass
 
 
-class Individual(sd.Individual,
-                 base.Individual):
+class Individual(sd.Individual, base.Individual):
     """Individual entity type."""
-
-    pass
-
-
-class SocialSystem(sd.SocialSystem,
-              base.SocialSystem):
-    """SocialSystem entity type."""
 
     pass
 
 
 # process taxa:
 
-class Culture(sd.Culture,
-              base.Culture):
+
+class Culture(sd.Culture, base.Culture):
     """Culture process taxon."""
 
     pass
@@ -72,9 +60,8 @@ class Culture(sd.Culture,
 
 # Model class:
 
-class Model(sd.Model,
-            sw.Model,
-            base.Model):
+
+class Model(sd.Model, sw.Model, base.Model):
     """Class representing the whole model."""
 
     name = "Seven dwarfs"

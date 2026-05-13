@@ -15,7 +15,7 @@ authors = [
     { name = "COPAN team @ PIK", email = "core@pik-potsdam.de" },
 ]
 requires-python = ">=3.9"
-keywords = ["DGVM", "ABM", "World-Earth", "modelling", "framework"]
+keywords = ["ABM", "World-Earth models", "social-ecological systems", "copan:CORE"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -41,10 +41,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=4.6",
-    "pylama",
-    "pylint",
     "pytest-cov>=2.5.1",
-    "pylama_pylint"
+    "black",
+    "flake8"
 ]
 
 [project.urls]
@@ -52,16 +51,26 @@ Homepage = "https://github.com/pik-copan/pycopancore"
 Issues = "https://github.com/pik-copan/pycopancore/issues"
 Repository = "https://github.com/pik-copan/pycopancore"
 
-[tool.hatch.envs.default.scripts]
+[tool.aliases]
 test = "pytest"
+docs = "sphinx-build -b html ./docs ./docs/_build"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "--strict-markers"
+norecursedirs = [".git", ".cache", "build", "studies"]
+
+[tool.black]
+line-length = 79
+target-version = ['py37', 'py38', 'py39', 'py310']
+exclude = "pycopancore/_version.py"
+
+[tool.flake8]
+max-line-length = 79
 
 [tool.hatch.version]
 source = "vcs"
-fallback_version = "0.8.6"
+fallback_version = "0.8.3"
 
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version"

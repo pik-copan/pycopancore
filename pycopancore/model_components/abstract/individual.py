@@ -9,11 +9,13 @@
 # Contact: core@pik-potsdam.de
 # License: BSD 2-clause license
 
-from pycopancore.private._abstract_entity_mixin import _AbstractEntityMixin
 from pycopancore.data_model.ordered_set import OrderedSet
+from pycopancore.private._abstract_entity_mixin import (
+    _AbstractEntityMixin,
+)
 
 
-class Individual (_AbstractEntityMixin):
+class Individual(_AbstractEntityMixin):
     """Abstract Individual entity type class.
 
     Inherited by base model component.

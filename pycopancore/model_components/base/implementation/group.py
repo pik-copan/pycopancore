@@ -11,25 +11,21 @@
 
 # only used in this component, not in others:
 from pycopancore.model_components import abstract
-from .. import interface as I
+
+from .. import interface as Interface
 
 
-class Group (I.Group, abstract.Group):
+class Group(Interface.Group, abstract.Group):
     """Gropp entity type mixin implementation class.
 
     Base component's Group mixin that every model must use in composing
-    their Group class. Inherits from I.Group as the interface with all
+    their Group class. Inherits from Interface.Group as the interface with all
     necessary variables and parameters.
     """
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 world,
-                 culture=None,
-                 **kwargs
-                 ):
+    def __init__(self, *, world, culture=None, **kwargs):
         """Initialize an instance of Group.
 
         Parameters
@@ -53,11 +49,15 @@ class Group (I.Group, abstract.Group):
 
         # Register with appropriate network
         if self.culture:
-            self.culture.group_membership_network.add_node(self, type="Group", color="green")
+            self.culture.group_membership_network.add_node(
+                self, type="Group", color="green"
+            )
         elif self.world:
             # Use world's group membership network if no culture
-            if hasattr(self.world, 'group_membership_network'):
-                self.world.group_membership_network.add_node(self, type="Group", color="green")
+            if hasattr(self.world, "group_membership_network"):
+                self.world.group_membership_network.add_node(
+                    self, type="Group", color="green"
+                )
 
     def deactivate(self):
         """Deactivate a group.
@@ -69,7 +69,7 @@ class Group (I.Group, abstract.Group):
         if self.culture:
             self.culture.group_membership_network.remove_node(self)
         elif self.world:
-            if hasattr(self.world, 'group_membership_network'):
+            if hasattr(self.world, "group_membership_network"):
                 self.world.group_membership_network.remove_node(self)
         super().deactivate()  # must be the last line
 
@@ -82,10 +82,14 @@ class Group (I.Group, abstract.Group):
         super().reactivate()  # must be the first line
         # reregister with all mandatory networks:
         if self.culture:
-            self.culture.group_membership_network.add_node(self, type="Group", color="green")
+            self.culture.group_membership_network.add_node(
+                self, type="Group", color="green"
+            )
         elif self.world:
-            if hasattr(self.world, 'group_membership_network'):
-                self.world.group_membership_network.add_node(self, type="Group", color="green")
+            if hasattr(self.world, "group_membership_network"):
+                self.world.group_membership_network.add_node(
+                    self, type="Group", color="green"
+                )
 
     # getters and setters for references:
 
@@ -101,8 +105,9 @@ class Group (I.Group, abstract.Group):
             # first deregister from previous culture's list of groups:
             self._culture.groups.remove(self)
         if c is not None:
-            assert isinstance(c, I.Culture), \
-                "Culture must be taxon type Culture"
+            assert isinstance(
+                c, Interface.Culture
+            ), "Culture must be taxon type Culture"
             c._groups.add(self)
         self._culture = c
 
@@ -116,12 +121,12 @@ class Group (I.Group, abstract.Group):
         """Set the World the Group is part of."""
         if self._world is not None:
             # first deregister from previous world's list of groups:
-            if hasattr(self._world, 'groups'):
+            if hasattr(self._world, "groups"):
                 self._world.groups.remove(self)
         # Accept any world object that has a groups attribute
-        if hasattr(w, 'groups'):
+        if hasattr(w, "groups"):
             # Try to add to _groups first (pycopancore style)
-            if hasattr(w, '_groups'):
+            if hasattr(w, "_groups"):
                 w._groups.add(self)
             else:
                 # For worlds with groups but no _groups, add to groups list
@@ -148,7 +153,7 @@ class Group (I.Group, abstract.Group):
         """Get the set of Individuals associated with this Group."""
         if self.culture:
             return self.culture.group_membership_network.predecessors(self)
-        elif self.world and hasattr(self.world, 'group_membership_network'):
+        elif self.world and hasattr(self.world, "group_membership_network"):
             return self.world.group_membership_network.predecessors(self)
         else:
             # Return empty set if no network available
@@ -157,5 +162,3 @@ class Group (I.Group, abstract.Group):
     # no process-related methods
 
     processes = []  # no processes in base
-
-

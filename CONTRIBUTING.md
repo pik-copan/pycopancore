@@ -19,10 +19,8 @@ to your own GitHub account.
    git clone https://github.com/YourUsername/pycopancore.git
    cd pycopancore
    ```
-3. Install the library and its dependencies:
-   ```shell
-   pip install -e .[dev]
-   ```
+3. Install the library and its dependencies following the instructions in the
+documentation.
 
 Now you're ready to start making contributions!
 
@@ -31,86 +29,96 @@ Now you're ready to start making contributions!
 To create a new release with automatic CITATION.cff updates, use the release script:
 
 ```bash
-# Install development dependencies (required for release script)
-pip install -e .[dev]
+python3 -m pycoupler.release <version>
+```
 
-# Create a local release (updates CITATION.cff, commits, tags)
-./scripts/release.sh 0.8.7
-
-# Push to repository (triggers CI pipeline)
-# The script will show the correct branch name to push
-git push origin <current-branch> --tags
+For example:
+```bash
+python3 -m pycoupler.release 0.8.4
 ```
 
 The release script will:
-- Update CITATION.cff to the specified version
-- Commit the changes
 - Format code with black
-- Run tests with pytest (fails if tests fail)
-- Run linting with flake8 (fails if issues found)
-- Create the git tag (only if all checks pass)
+- Run tests with pytest
+- Run linting with flake8
+- Update CITATION.cff (if needed)
+- Commit CITATION.cff changes (if updated)
+- Create Git tag
 
-**Prerequisites:** Install development dependencies first:
+**Note:** Commit your changes manually before running the release script.
+The script will only commit CITATION.cff updates automatically.
+
+## Code Style
+
+We use several tools to maintain code quality:
+
+- **Black** for code formatting (line length: 79)
+- **flake8** for linting
+- **pytest** for testing
+
+Before submitting a pull request, please ensure:
+
+1. Your code is formatted with Black:
+   ```bash
+   black .
+   ```
+
+2. Your code passes flake8 checks:
+   ```bash
+   flake8 .
+   ```
+
+3. All tests pass:
+   ```bash
+   pytest
+   ```
+
+## Development Installation
+
+For development, install the package in editable mode with development dependencies:
+
 ```bash
 pip install -e .[dev]
 ```
 
-The CI pipeline will then automatically:
-- Build the package
-- Validate package with twine check
-- Test package installation
-- Update CITATION.cff (if tag push)
-- Upload to PyPI (if tag push)
-- Create GitHub release (if tag push)
+This will install the package along with all development tools (pytest, black, flake8, etc.).
 
-This ensures that CITATION.cff always reflects the exact version of the release.
+## Testing
 
-## Contributing
+We use pytest for testing. Run tests with:
 
-To contribute to *pycopancore*, please follow these steps:
+```bash
+pytest
+```
 
-1. Check for existing issues in the
-[**issue tracker**](https://github.com/pik-copan/pycopancore/issues) to see if
-your contribution idea has already been discussed or reported.
-2. If the issue doesn't already exist, create a **new issue** to discuss the
-problem or feature you want to address. Be sure to provide as much detail as
-possible to help others understand the context and purpose.
-3. **Fork the repository** if you haven't already and create a **new branch**
-for your contribution.
-4. Make your changes in that new branch, following best practices and
-adhering to the **coding style** of the project.
-5. Write **unit tests** if applicable and ensure that all tests pass.
-6. Submit a **pull request (PR)** referencing the issue you created earlier.
-Describe your changes, and our team will review it as soon as possible.
-7. All discussion threads of the PR need to be resolved before the PR can be merged.
+For coverage reports:
 
-Your contributions will be greatly appreciated and will help make *pycopancore*
-even better.
+```bash
+pytest --cov=pycopancore --cov-report=html
+```
 
-## Code Quality
-We use the
-[**PEP8 - Style Guide for Python Code**](https://peps.python.org/pep-0008/).
+## Pull Request Process
 
-Please make sure that your code passes all tests and static code analysis before
-submitting a pull request.
+1. Create a new branch for your changes:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
-## Code of Conduct
+2. Make your changes and commit them with clear, descriptive commit messages.
 
-Please note that by contributing to *pycopancore*, you are expected to adhere to
-our Code of Conduct. We strive to maintain a welcoming and inclusive community,
-and we expect respectful and considerate behavior from all contributors:
-* **Be Respectful**: Treat all community members with respect and kindness.
-* **Inclusivity**: Ensure that your language and actions are inclusive and
-respectful of diversity.
-* **Collaboration**: Encourage a collaborative and supportive atmosphere.
+3. Ensure all tests pass and code is properly formatted.
 
-We do not tolerate:
-* **Harassment**: Any form of harassment, trolling, or offensive behavior.
-* **Discrimination**: Discrimination, derogatory comments, or exclusionary
-practices.
-* **Bullying**: Bullying or aggressive behavior towards others.
+4. Push your branch to your fork:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
 
-Reporting Incidents  
-If you witness or experience any violations, please report them to
-[core@pik-potsdam.de](mailto:core@pik-potsdam.de).
-All reports will be handled confidentially and promptly.
+5. Create a pull request on GitHub with a clear description of your changes.
+
+## Questions
+
+If you have questions or need help, please:
+- Open an issue on GitHub
+- Contact the maintainers at core@pik-potsdam.de
+
+Thank you for contributing to pycopancore!

@@ -3,7 +3,8 @@ Model component package template.
 
 TODO:
 Copy this folder, rename it to the name of your model component,
-then adjust or fill in code and documentation in all modules wherever marked by "TODO:",
+then adjust or fill in code and documentation in all modules wherever
+marked by "TODO:",
 finally remove these instructions.
 See the model component development tutorial for details.
 """
@@ -24,3 +25,5 @@ from .implementation import *
 
 # export model component mixin class:
 from .model import Model
+
+__all__ = ["interface", "Model"]

@@ -16,7 +16,6 @@ Implicit functions are not yet implemented.
 # Imports
 #
 
-
 #
 # Definition of class Event
 #
@@ -30,11 +29,7 @@ class Implicit(_AbstractProcess):
     type = "Implicit"
     timetype = "discrete"
 
-    def __init__(self,
-                 name,
-                 variables,
-                 specification
-                ):
+    def __init__(self, name, variables, specification):
         """Instantiate an instance of an implicit process.
 
         Parameters

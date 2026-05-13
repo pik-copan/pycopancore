@@ -15,23 +15,30 @@ then remove these instructions
 
 from .. import interface as I
 from pycopancore.model_components.base import interface as B
+
 # from .... import master_data_model as D
-from pycopancore.process_types import ODE, Step, Explicit, Event
+from pycopancore.process_types import ODE, Step, Explicit
 import numpy as np
 
+# from .... import master_data_model as D
 
-class Individual(I.Individual):
+from .. import interface as Interface
+
+
+class Individual(Interface.Individual):
     """Individual entity type mixin implementation class."""
 
     # standard methods:
 
-    def __init__(self,
-                 *,
-                 age=0,
-                 beard_length=0,
-                 beard_growth_parameter=0.1,
-                 eating_parameter=1,
-                 **kwargs):
+    def __init__(
+        self,
+        *,
+        age=0,
+        beard_length=0,
+        beard_growth_parameter=0.1,
+        eating_parameter=1,
+        **kwargs,
+    ):
         """Initialize an instance of dwarf."""
         super().__init__(**kwargs)
 
@@ -61,7 +68,7 @@ class Individual(I.Individual):
     def eating(self, t):
         """Let dwarf eat from stock."""
 
-        # else:  I.Cell.d_stock -= self.eating_parameter
+        # else:  Interface.Cell.d_stock -= self.eating_parameter
         if self.cell.eating_stock >= self.eating_parameter:
             self.cell.d_eating_stock -= self.eating_parameter
         else:
@@ -73,17 +80,16 @@ class Individual(I.Individual):
 
     def beard_growing(self, t):
         """Grow beard of dwarf in explicit manner."""
-        self.beard_length = (self.beard_growth_parameter
-                             * self.age * np.sin(t)**2
-                             )
+        self.beard_length = (
+            self.beard_growth_parameter * self.age * np.sin(t) ** 2
+        )
 
     def birthdate(self, t):
         """Determine Birthday."""
         return t + 1
 
     processes = [
-        Step("aging", [I.Individual.age],
-             [step_timing, aging]),
+        Step("aging", [I.Individual.age], [step_timing, aging]),
         ODE("eating", [B.Individual.cell.eating_stock], eating),
-        Explicit("beard_growth", [I.Individual.beard_length], beard_growing)
+        Explicit("beard_growth", [I.Individual.beard_length], beard_growing),
     ]

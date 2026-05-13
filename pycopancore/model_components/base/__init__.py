@@ -1,5 +1,5 @@
 """
-This is the base model-component package, 
+This is the base model-component package,
 also including internal framework logics (module model_logics)
 """
 
@@ -16,7 +16,9 @@ also including internal framework logics (module model_logics)
 from . import interface
 
 # export all implementation classes:
-from .implementation import *
+from .implementation import *  # noqa: F403, F401
 
 # export model component mixin class:
 from .model import Model
+
+__all__ = ["interface", "Model"]
