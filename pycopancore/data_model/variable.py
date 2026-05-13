@@ -175,6 +175,10 @@ class Variable(Symbol):
         self.symbol = symbol
         self.ref = ref
 
+        # Store any extra kwargs as attributes (e.g., output_scale for scaling)
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
         assert scale in (
             "ratio",
             "interval",
