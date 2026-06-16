@@ -19,7 +19,7 @@ pip install pycopancore
 ### Documentation
 Comprehensive documentation is available at: https://pik-copan.github.io/pycopancore
 
-See [examples](./examples/) for examples on how to use the framework.
+Example models can be found at [pik-copan/pycopanmodels](https://github.com/pik-copan/pycopanmodels).
 
 ## Questions / Problems
 
