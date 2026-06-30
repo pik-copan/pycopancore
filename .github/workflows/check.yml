@@ -15,15 +15,15 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0  # Fetch all history and tags
         fetch-tags: true  # Ensure all tags are fetched for version resolution
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.12'
+        python-version: '3.9.25' # This must be matched to the version in the pyproject.toml
 
     - name: Install dependencies
       run: |
@@ -37,6 +37,7 @@ jobs:
     #     pytest --cov=pycopancore --cov-report=xml
 
     - name: Upload coverage reports to Codecov
+      if: ${{ !env.ACT }} # When testing the action with act (https://nektosact.com), this should not run.
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
