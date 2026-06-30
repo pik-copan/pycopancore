@@ -62,18 +62,15 @@ For running pycopancore, an installation with python > 3.6 with some additional 
 
 An easy way to install python is to use the `Anaconda environment <https://www.anaconda.com/download/>`_.
 
-The package can be installed by downloading the repository and and running the setup.py script with
+The package can be installed by downloading the repository and and running the setup.py script with::
 
-```
-$ pip install
-```
+    $ pip install
+
 from the root directory of the package. The script should automatically install all the required and missing packages.
 
-For developers, the recommended way of installing is to run in the package main directory
+For developers, the recommended way of installing is to run in the package main directory::
 
-```
-$ pip install -e
-```
+    $ pip install -e
 
 This creates a link instead of copying the files, so modifications in this directory are modifications in the installed package.
 
@@ -82,10 +79,9 @@ This creates a link instead of copying the files, so modifications in this direc
 Running a model
 ---------------
 
-To run one of the preconfigured models, execute a python script in the `studies` folder, for example
-```bash
-python run_seven_dwarfs.py
-```
+To run one of the preconfigured models, execute a python script in the `studies` folder, for example::
+
+    python run_seven_dwarfs.py
 
 .. _docu:
 
@@ -94,16 +90,15 @@ Documentation
 
 The documentation can be accessed under `https://pik-copan.github.io/pycopancore <https://pik-copan.github.io/pycopancore>`_ and provides an introduction to the framework, its different entity and process types, a full documentation of the API as well as a step-by-step tutorial.
 
-To create a local html version of the documentation, access the `docs` directory and type
-```
-> make html
-```
+To create a local html version of the documentation, access the `docs` directory and type::
+
+    > make html
+
 The documentation can then be accessed under `docs/_build/html/index.html`.
 
-To be able to create the automatic UML-Diagrams, `pylint <https://www.pylint.org/>`_ and `graphviz <http://www.graphviz.org/>`_ needs to be installed. To finally create the diagrams, use
-```
-> make uml
-```
+To be able to create the automatic UML-Diagrams, `pylint <https://www.pylint.org/>`_ and `graphviz <http://www.graphviz.org/>`_ needs to be installed. To finally create the diagrams, use::
+
+    > make uml
 
 .. _CoC:
 
@@ -132,10 +127,10 @@ Additional guidelines:
 Tests
 -----
 
-We are using the python testing framework `pytest <http://pytest.org/latest/>`_ with `pylama <https://github.com/klen/pylama>`_ for style and error checking. Please write corresponding unittests while developing and make sure that all test pass by executing
-```
-py.test
-```
+We are using the python testing framework `pytest <http://pytest.org/latest/>`_ with `pylama <https://github.com/klen/pylama>`_ for style and error checking. Please write corresponding unittests while developing and make sure that all test pass by executing::
+    
+    py.test
+
 in the root of the project tree.
 
 Requires

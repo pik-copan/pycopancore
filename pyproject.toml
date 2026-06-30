@@ -46,6 +46,9 @@ dev = [
     "pytest-cov>=2.5.1",
     "pylama_pylint"
 ]
+docs = [
+    "sphinx"
+]
 
 [project.urls]
 Homepage = "https://github.com/pik-copan/pycopancore"
