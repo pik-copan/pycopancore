@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pages: write
-      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -36,6 +34,9 @@ jobs:
           path: docs/_build/html
       
   deploy-pages:
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{steps.deployment.outputs.page_url}}
