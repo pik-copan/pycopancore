@@ -59,6 +59,9 @@ authors:
   given-names: Paula
 - family-names: Prawitz
   given-names: Hannah
+- family-names: Sieben
+  given-names: Lorenz
+  orcid: 0009-0006-5307-9391
 
 license: BSD-2-Clause
 repository-code: https://github.com/pik-copan/pycopancore

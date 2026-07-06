@@ -208,7 +208,7 @@ class ModelLogics (object):
                                 "different codename."
                 # find and register all processes defined directly in this
                 # mixin's "process" attribute:
-                if "processes" not in mixin_interface.__dict__:
+                if "processes" not in mixin.__dict__:
                     mixin.processes = []
 
                 for p in mixin.processes:
