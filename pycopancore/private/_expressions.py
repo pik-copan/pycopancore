@@ -681,7 +681,7 @@ def _eval(expr, iteration=None):
             vals[wh] = 0  # TODO: is this a good idea?
     # TODO: other types of expressions, including function evaluations!
     # other functions/unary operators:
-    elif tt == sp.FunctionClass:
+    elif isinstance(t, sp.FunctionClass):
         # it is a sympy function
         vals = func2numpy[t](*argvals)
     else:
